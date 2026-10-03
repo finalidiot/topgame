@@ -2,7 +2,8 @@ SPINNING METAL — GODOT SOURCE / TASK 002A
 
 Open project.godot in Godot 4.7.2 (standard GDScript build), allow imports to finish,
 and press F6/F5 to play. The project has no add-ons or external runtime dependencies.
-The Windows package beside this source is ready to play without the editor.
+Run releases/windows/SpinningMetal.exe to play without the editor.
+This single Windows x86_64 executable includes the game data.
 
 Playable features
 - Title, workshop, how-to-play, settings, pause, result and live battle HUD.

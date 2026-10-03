@@ -11,6 +11,11 @@ Core direction:
 - Aseprite-heavy pixel-art presentation
 
 Open `project.godot` with Godot 4.7.2, let assets import, and press **F5**.
+For the ready-to-play Windows build, run
+[`releases/windows/SpinningMetal.exe`](releases/windows/SpinningMetal.exe).
+The executable includes the game data; no Godot installation is needed.
+The executable is stored with Git LFS: after cloning, run `git lfs pull` if
+needed, or use GitHub's Download raw file button on the executable page.
 WASD/arrows steer, Space bursts, Shift brakes, and Esc pauses.
 Gamepad: left stick steers, bottom face button bursts/confirms, either shoulder
 or trigger brakes, and Menu/Start pauses. D-pad or stick navigates every menu;
