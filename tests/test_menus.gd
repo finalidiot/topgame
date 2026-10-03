@@ -186,7 +186,7 @@ func _test_hud_cleanup() -> void:
 	await process_frame
 	check(_find_label(menus, "RUN 8 / 8") != null, "Run HUD shows current encounter progress")
 	check(_find_label(menus, "BREAKER") != null, "Combat identifies the selected starter")
-	check(menus._hud.xp_panel.visible and menus._hud.xp_bar.visible and menus._hud.xp_label.text == "LV 4  /  NEXT POWER", "Run level remains separate from RPM")
+	check(menus._hud.xp_panel.visible and menus._hud.xp_bar.visible and menus._hud.xp_label.text == "LV 4  /  NEXT INVESTMENT", "Run level remains separate from RPM")
 	check(menus._xp_near and menus._hud.xp_detail.text == "ALMOST THERE", "Near level state creates visible anticipation")
 	menus._process(0.1)
 	check(menus._hud.xp_bar.value > 0.0 and menus._hud.xp_bar.value < 0.88, "XP fill eases meaningful increments instead of jumping")

@@ -147,6 +147,9 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBoxFlat:
 
 func _clear(next_screen: String, dim: bool = true) -> void:
 	screen = next_screen
+	# F2 can hide combat HUD for the visual checkpoint. Required choices and
+	# results must restore their own visibility when combat ends or pauses.
+	if next_screen != "hud": visible = true
 	_default_focus = null
 	_accept_needs_release = next_screen != "hud" and Input.is_action_pressed("ui_accept")
 	_card_animations.clear()
@@ -520,26 +523,28 @@ func show_pause(is_run: bool = false) -> void:
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
 	_header(str(context.get("title", "VICTORY  /  PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)))
-	_label(_content, "MAKE THE NEXT HIT COUNT  /  " + ("FINAL POWER IN THIS POOL" if offer.size() == 1 else "CHOOSE ONE. KEEP IT FOR THE RUN."), Rect2(24, 60, 592, 18), 10, ORANGE)
+	_label(_content, "MAKE THE NEXT HIT COUNT  /  " + ("FINAL INVESTMENT IN THIS POOL" if offer.size() == 1 else "CHOOSE ONE. KEEP IT FOR THE RUN."), Rect2(24, 60, 592, 18), 10, ORANGE)
 	var cards: Array[Button] = []
 	var selected: Control
 	var start_x: float = (640.0 - offer.size() * 192.0 - (offer.size() - 1) * 10.0) * 0.5
 	for index: int in range(offer.size()):
 		var id: String = str(offer[index])
-		var power: Dictionary = Powers.get_power(id)
+		var power: Dictionary = Powers.get_offer(id, int(context.get("power_ranks", {}).get(id, 0)), str(context.get("power_mutations", {}).get(id, "")))
+		if power.is_empty(): power = Powers.get_power(id)
 		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
+		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
 		card.tooltip_text = str(power.name) + ": " + str(power.description)
 		var color: Color = _power_accent(id)
 		_style_card(card, color)
-		_label(card, str(power.get("category", "RUN POWER")), Rect2(12, 5, 168, 13), 9, color)
-		_power_art(card, id, Rect2(64, 19, 64, 64), card)
+		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(12, 5, 168, 13), 9, color)
+		_power_art(card, id, Rect2(64, 19, 64, 64), card, power)
 		_label(card, str(power.name), Rect2(12, 87, 168, 25), 16, TEXT)
 		var description: Label = _label(card, str(power.get("card_copy", power.description)), Rect2(12, 112, 168, 48), 11, TEXT)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 		description.add_theme_constant_override("line_spacing", -1)
-		_label(card, "CONFIRM  /  " + str(context.get("resume_label", "COLLECT")), Rect2(12, 166, 168, 16), 9, color)
+		_label(card, "CONFIRM  /  " + ("CHOOSE BRANCH" if int(context.get("power_ranks", {}).get(id, 0)) == 2 else str(context.get("resume_label", "COLLECT"))), Rect2(12, 166, 168, 16), 9, color)
 		cards.append(card)
 		if id == focus_id: selected = card
 	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
@@ -548,17 +553,50 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 	if not cards.is_empty(): _focus_rows([cards], selected)
 
 func _power_accent(power_id: String) -> Color:
-	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
+	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "dead_centre":Color("e9c67b"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
+
+func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "") -> void:
+	_clear("mutation")
+	var color: Color = _power_accent(power_id)
+	_rect(_content, Rect2(0, 0, 640, 4), color)
+	_label(_content, "MUTATION AVAILABLE", Rect2(24, 12, 592, 32), 26, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(Powers.get_power(power_id).name).to_upper() + " III  /  CHOOSE HOW YOUR MACHINE CHANGES", Rect2(24, 46, 592, 17), 11, color, HORIZONTAL_ALIGNMENT_CENTER)
+	var cards: Array[Button] = []
+	var selected: Control
+	# This event has exactly two valid, opposing branches, separate from drafts.
+	for index: int in range(mini(2, branches.size())):
+		var id: String = str(branches[index])
+		if not id in Powers.mutation_choices(power_id): continue
+		var branch: Dictionary = Powers.get_mutation(id)
+		var card: Button = _button(_content, "", Rect2(28 + index * 318, 73, 266, 248), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed})
+		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+		card.set_meta("power_id", id)
+		card.tooltip_text = str(branch.name) + ": " + str(branch.description)
+		_style_card(card, color)
+		_label(card, "PERMANENT FOR THIS RUN", Rect2(13, 6, 240, 15), 9, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_power_art(card, power_id, Rect2(69, 23, 128, 128), card, branch)
+		_label(card, str(branch.name).to_upper(), Rect2(13, 154, 240, 29), 22, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		var copy: Label = _label(card, str(branch.get("card_copy", branch.description)), Rect2(16, 186, 234, 39), 11, TEXT)
+		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		copy.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		copy.add_theme_constant_override("line_spacing", -1)
+		_label(card, "CONFIRM  /  TRANSFORM", Rect2(13, 227, 240, 16), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		cards.append(card)
+		if id == focus_id: selected = card
+	_label(_content, "VS", Rect2(300, 176, 40, 29), 16, color, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "BATTLE PAUSED   /   LEFT OR RIGHT TO CHOOSE   /   CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	if not cards.is_empty(): _focus_rows([cards], selected)
 
 func focused_power_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	return str(focused.get_meta("power_id", "")) if focused != null else ""
 
-func _power_texture(power_id: String) -> Texture2D:
-	var power: Dictionary = Powers.get_power(power_id)
-	if not bool(power.get("active", false)) or not ResourceLoader.exists(Powers.ICON_SHEET): return null
+func _power_texture(power_id: String, metadata: Dictionary = {}) -> Texture2D:
+	var power: Dictionary = Powers.get_power(power_id) if metadata.is_empty() else metadata
+	var path: String = str(power.get("icon", ""))
+	if path.is_empty() or not ResourceLoader.exists(path): return null
 	var atlas: AtlasTexture = AtlasTexture.new()
-	atlas.atlas = load(Powers.ICON_SHEET)
+	atlas.atlas = load(path)
 	atlas.region = Rect2(int(power.icon_frame) * 16, 0, 16, 16)
 	return atlas
 
@@ -574,8 +612,8 @@ func _power_icon(parent: Node, power_id: String, area: Rect2) -> TextureRect:
 	icon.size = area.size
 	return icon
 
-func _power_art(parent: Node, power_id: String, area: Rect2, focused_card: Button = null) -> TextureRect:
-	var power: Dictionary = Powers.get_power(power_id)
+func _power_art(parent: Node, power_id: String, area: Rect2, focused_card: Button = null, metadata: Dictionary = {}) -> TextureRect:
+	var power: Dictionary = Powers.get_power(power_id) if metadata.is_empty() else metadata
 	var icon: TextureRect = _power_icon(parent, power_id, area)
 	var path: String = str(power.get("card_texture", ""))
 	if path.is_empty() or not ResourceLoader.exists(path): return icon
@@ -618,24 +656,29 @@ func show_level_up(level: int) -> void:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused != null: focused.release_focus()
 
-func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT") -> void:
+func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT", rank: int = 1, mutation: String = "") -> void:
 	_clear("acquisition", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.82))
 	_panel(_content, Rect2(104, 67, 432, 226), PANEL, _power_accent(power_id))
 	_rect(_content, Rect2(106, 69, 428, 2), _power_accent(power_id))
-	var power: Dictionary = Powers.get_power(power_id)
+	var power: Dictionary = Powers.get_owned_power(power_id, rank, mutation)
 	_acquisition_elapsed = 0.0
-	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128))
-	_label(_content, str(power.name).to_upper() + " ACQUIRED", Rect2(114, 222, 412, 32), 21, _power_accent(power_id), HORIZONTAL_ALIGNMENT_CENTER)
+	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128), null, power)
+	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, _power_accent(power_id), HORIZONTAL_ALIGNMENT_CENTER)
+	if rank > 1:
+		_label(_content, "MACHINE TRANSFORMED" if rank == 3 else "RANK II  /  MECHANISM TUNED", Rect2(114, 68, 412, 14), 9, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_rect(_content, Rect2(104, 67, 3, 226), _power_accent(power_id))
+		_rect(_content, Rect2(533, 67, 3, 226), _power_accent(power_id))
 	_label(_content, "LOCKED IN  /  " + resume_label, Rect2(114, 263, 412, 18), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(_power_accent(power_id), 0.18))
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused != null: focused.release_focus()
 
 func _power_labels(ids: Array, y: float) -> void:
+	var step: float = minf(101.0, 592.0 / maxf(1.0, float(ids.size())))
 	for index: int in range(ids.size()):
 		var power: Dictionary = Powers.get_power(str(ids[index]))
-		var area: Rect2 = Rect2(22 + index * 101, y, 96, 20)
+		var area: Rect2 = Rect2(roundf(24 + index * step), y, floorf(step) - 5, 20)
 		_panel(_content, area, PANEL, BORDER)
 		_label(_content, str(power.name), area, 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 
@@ -733,20 +776,27 @@ func show_hud(stats: Dictionary) -> void:
 		_xp_flash = 1.0
 		_xp_last_level = level
 	_xp_near = not progression_max and _xp_target >= 0.8
-	_hud.xp_label.text = "LV %d  /  NEXT POWER" % level if not progression_max else "LV %d  /  FULL BUILD" % level
+	_hud.xp_label.text = "LV %d  /  NEXT INVESTMENT" % level if not progression_max else "LV %d  /  FULL BUILD" % level
 	_hud.xp_label.add_theme_color_override("font_color", ORANGE if _xp_near else BLUE)
 	_hud.xp_detail.text = "MAX" if progression_max else ("ALMOST THERE" if _xp_near else "%d / %d XP" % [int(xp), int(threshold)])
 	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
 	var ids: Array = stats.get("owned_power_ids", [])
-	for index: int in range(6):
+	for index: int in range(8):
 		var icon: TextureRect = _hud["power_%d" % index]
 		var id: String = str(ids[index]) if index < ids.size() else ""
 		icon.visible = not id.is_empty()
 		_hud["power_panel_%d" % index].visible = not id.is_empty()
-		if str(icon.get_meta("power_id", "")) != id:
+		var rank: int = int(stats.get("power_ranks", {}).get(id, 1))
+		var mutation: String = str(stats.get("power_mutations", {}).get(id, ""))
+		var key: String = "%s/%d/%s" % [id, rank, mutation]
+		if str(icon.get_meta("power_state", "")) != key:
 			icon.set_meta("power_id", id)
-			icon.texture = _power_texture(id) if not id.is_empty() else null
-			icon.tooltip_text = str(Powers.get_power(id).get("name", ""))
+			icon.set_meta("power_state", key)
+			var power: Dictionary = Powers.get_owned_power(id, rank, mutation)
+			icon.texture = _power_texture(id, power) if not id.is_empty() else null
+			icon.tooltip_text = str(power.get("name", "")) + " / RANK " + str(rank)
+		_hud["power_rank_%d" % index].text = ["", "I", "II", "III"][clampi(rank, 0, 3)] if not id.is_empty() else ""
+		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
 	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
 
@@ -773,9 +823,10 @@ func _create_hud() -> void:
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	for index: int in range(6):
-		_hud["power_panel_%d" % index] = _panel(_content, Rect2(238 + index * 28, 303, 24, 20))
-		var icon: TextureRect = _power_icon(_content, "", Rect2(242 + index * 28, 305, 16, 16))
+	for index: int in range(8):
+		_hud["power_panel_%d" % index] = _panel(_content, Rect2(192 + index * 32, 303, 28, 20))
+		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
+		_hud["power_rank_%d" % index] = _label(_content, "", Rect2(210 + index * 32, 307, 9, 12), 7, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
 		_hud["power_%d" % index] = icon
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))

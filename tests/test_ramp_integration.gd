@@ -33,7 +33,14 @@ func save_frame(label: String) -> void:
 	if image != null: check(image.save_png(captures.path_join(label + ".png")) == OK, "Saved " + label)
 
 func choose() -> void:
-	game._action("choose_power", {"encounter_id":game.run_context.pending_draft_id,"power_id":game.run_context.pending_offer[0],"run_seed":game.run_context.run_seed})
+	var chosen: String = game.run_context.pending_offer[0]
+	for power_id: String in game.run_context.pending_offer:
+		if not power_id in game.run_context.owned_power_ids:
+			chosen = power_id
+			break
+	game._action("choose_power", {"encounter_id":game.run_context.pending_draft_id,"power_id":chosen,"run_seed":game.run_context.run_seed})
+	if game.screen == "mutation":
+		game._action("choose_mutation", {"encounter_id":game.run_context.pending_draft_id,"branch_id":game.run_context.pending_mutation_offer[0],"run_seed":game.run_context.run_seed})
 
 func earn_level() -> void:
 	var b = game.battle

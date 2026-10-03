@@ -1,0 +1,100 @@
+TASK 002C / BUILD ESCALATION EDITABLE PRODUCTION SOURCES
+
+The existing 002B / 002B.1 masters and their runtime sheets are untouched.
+Three new ordinary native Aseprite RGBA masters contain all escalation art:
+
+escalation_cards_002c.aseprite
+64x64 native, contact_pivot (32,32), 60 frames, five named normal layers:
+industrial backplate / ground braces and machine depth / editable rotor and
+mechanism / route force and stress / confirmation glints and fragments.
+Ten forward-loop tags, six frames each, stable row order:
+dead_centre, redline_ii, dead_centre_ii, afterimage_ii, runaway, breakneck,
+bulwark, counterweight, ghost_circuit, slipstream.
+Every row has 110,90,75,75,100,170ms timing (620ms readable loop).
+Runtime assets/powers/escalation_cards.png is 384x640, six columns.
+
+Card phenomena are distinct mechanisms: small grounding jaws; overheat vents;
+floor-lock plates; segmented path bearings; torn overload wake; compressed
+one-way charge corridor; massive vise repelling a smaller rotor; paired force
+storage stacks and directional release; a green closed/enclosed circuit; a
+cyan figure-eight that becomes a propulsion engine at its crossing.
+All six mutation branches have their own animated artwork and independent
+16px HUD silhouette, never a recolour or downsample of an earlier card.
+
+escalation_icons_002c.aseprite
+16x16 native, contact_pivot (8,8), ten frames, one named normal layer:
+independent compact mechanism glyphs. The same ten stable ID tags and row
+order as the card master. 100ms frame timing. Native sheet is 160x16.
+
+escalation_fx_002c.aseprite
+128x128 native, contact_pivot (64,64), 116 frames, four named normal layers:
+projected floor locks and chassis / stress trajectory and force plates /
+energised mechanical surfaces / contact flashes and fragments.
+Ground geometry uses fixed 2:1 projection; rotor effects are centred 14px
+above the contact pivot. Native sheet is 1024x1920 with eight columns.
+Tags and durations are recorded individually in escalation_manifest.json:
+redline_ii, runaway, runaway_hit, breakneck_charge_headings (eight baked
+directions, never temporal playback or whole-sprite rotation), breakneck_impact,
+anchor, anchor_ii, anchor_break, bulwark, bulwark_impact, counterweight (six
+physical stored-force stages), counterweight_store, counterweight_release,
+afterimage_ii, ghost_closure, ghost_activation, slipstream_cross, rank_up,
+mutation_select. All other tags have six authored temporal frames.
+
+This source collection uses opaque integer pixel clusters and an embedded
+named 15-colour palette. Runtime fades the complete cel, keeping authored
+edges crisp and avoiding fractional blend-rounding colours. Persistent state
+rendering reads real charge, heat and stored force. Runaway wakes grow more
+frantic with heat. Anchor/Bulwark settle the top body around its fixed Bit.
+Counterweight literally lights more compression stages as force is stored.
+Rank-II routes use connected readable lanes and evenly spaced sockets;
+Ghost Circuit energises a green connected enclosure with sparse pressure
+stripes; Slipstream has cyan directional reuse chevrons and propulsion jets.
+All runtime placement is integer-rounded; filtering remains nearest.
+
+NORMAL ARTIST WORKFLOW
+1. Edit any new master in Aseprite. Keep native size, named tags/layers and
+   contact_pivot. Normal RGBA layers, compressed/raw/linked cels are supported.
+2. Run python tools/build_escalation_art.py to read and export the edited
+   sources plus assets/powers/escalation_manifest.json. This does not reauthor
+   cels and does not export any older production source or arena.
+3. Import Godot and inspect at native640x360 and integer multiples.
+4. For groups, non-normal blends or cel Z-order, use Aseprite's own batch
+   exporter with six card columns, ten icon columns, eight FX columns and
+   preserve timing/tags/layers/pivots in the runtime manifest.
+
+--author-new deliberately recreates ONLY these three new 002C sources.
+Do not use it after artist edits. No destructive switches on older exporters
+were used for this task. Existing power/top/arena source art remains intact.
+
+NATIVE VERIFICATION
+The installed Aseprite1.3.x batch exporter opens all three new native masters.
+Its three exported RGBA sheets match the maintained exporter pixel-for-pixel.
+Its JSON records five/one/four normal named layers, ten/ten/nineteen tags,
+the native contact_pivot slice and all source per-frame durations.
+
+DEDICATED ESCALATION AUDIO
+python tools/build_escalation_audio.py writes ONLY seventeen new original,
+deterministically synthesised mono PCM16/22050Hz finite mechanical signatures:
+rank_up.wav 430ms; mutation_available.wav 660ms; mutation_select.wav 610ms;
+redline_ii.wav 320ms; runaway.wav 270ms; runaway_hit.wav 180ms;
+breakneck_charge.wav 280ms; breakneck_impact.wav 440ms; anchor.wav 220ms;
+anchor_break.wav 240ms; bulwark_impact.wav 380ms;
+counterweight_store.wav 240ms; counterweight_release.wav 420ms;
+afterimage_ii.wav 150ms; ghost_closure.wav 300ms;
+ghost_activation.wav 470ms; slipstream_cross.wav 180ms.
+assets/audio/escalation_manifest.json records exact synthesis duration,
+format, peak and non-loop status. Existing audio files are not rebuilt.
+
+These are staggered component strikes/sweeps: irregular overload gallop,
+compressed charge, low catastrophe, hydraulic grounding latches, deep brace
+clang, force compression/expulsion, paired closure latch, enclosed pressure
+activation and a short acceleration sweep. None runs a continuous noisy loop.
+Sound preserves eight channels, priority replacement and explicit cooldowns;
+mutation milestones outrank crowd contacts, force release outranks storage.
+
+QA
+Godot --headless --path . --script res://tests/test_escalation_assets.gd
+validates source/atlas/timing/card-animation/audio/cap contracts. Native
+roundtrip and automated presentation checks are implementation evidence;
+readability, extreme feel and the HUD-hidden recognition test still require
+physical human playtesting.

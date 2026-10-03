@@ -36,8 +36,8 @@ func _run() -> void:
 		check(source.decode_u16(4) == 0xA5E0, "Aseprite master file magic")
 		check(source.decode_u16(6) == 36 and source.decode_u16(8) == 64 and source.decode_u16(10) == 64, "Source has all frames at native dimensions")
 		check(source.decode_u16(12) == 32 and source.decode_u32(0) == source.size(), "RGBA source header length valid")
-	for row: int in range(Powers.ACTIVE_IDS.size()):
-		var id: String = Powers.ACTIVE_IDS[row]
+	for row: int in range(Powers.LEGACY_ART_IDS.size()):
+		var id: String = Powers.LEGACY_ART_IDS[row]
 		var power: Dictionary = Powers.get_power(id)
 		var tag: Dictionary = meta.tags.get(id, {})
 		check(int(tag.get("from", -1)) == row * 6 and int(tag.get("to", -1)) == row * 6 + 5, id + " stable source tag")

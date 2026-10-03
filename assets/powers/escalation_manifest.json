@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "projection": "fixed 2:1 ground plane; authored headings; no whole-sprite rotation",
+  "card_ids": [
+    "dead_centre",
+    "redline_ii",
+    "dead_centre_ii",
+    "afterimage_ii",
+    "runaway",
+    "breakneck",
+    "bulwark",
+    "counterweight",
+    "ghost_circuit",
+    "slipstream"
+  ],
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "industrial backplate",
+      "ground braces and machine depth",
+      "editable rotor and mechanism",
+      "route force and stress",
+      "confirmation glints and fragments"
+    ],
+    "tags": {
+      "dead_centre": {
+        "from": 0,
+        "to": 5
+      },
+      "redline_ii": {
+        "from": 6,
+        "to": 11
+      },
+      "dead_centre_ii": {
+        "from": 12,
+        "to": 17
+      },
+      "afterimage_ii": {
+        "from": 18,
+        "to": 23
+      },
+      "runaway": {
+        "from": 24,
+        "to": 29
+      },
+      "breakneck": {
+        "from": 30,
+        "to": 35
+      },
+      "bulwark": {
+        "from": 36,
+        "to": 41
+      },
+      "counterweight": {
+        "from": 42,
+        "to": 47
+      },
+      "ghost_circuit": {
+        "from": 48,
+        "to": 53
+      },
+      "slipstream": {
+        "from": 54,
+        "to": 59
+      }
+    },
+    "durations_ms": [
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170
+    ],
+    "texture": "escalation_cards.png",
+    "columns": 6,
+    "frame_count": 60,
+    "source": "../source-art/escalation_cards_002c.aseprite"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "independent compact mechanism glyphs"
+    ],
+    "tags": {
+      "dead_centre": {
+        "from": 0,
+        "to": 0
+      },
+      "redline_ii": {
+        "from": 1,
+        "to": 1
+      },
+      "dead_centre_ii": {
+        "from": 2,
+        "to": 2
+      },
+      "afterimage_ii": {
+        "from": 3,
+        "to": 3
+      },
+      "runaway": {
+        "from": 4,
+        "to": 4
+      },
+      "breakneck": {
+        "from": 5,
+        "to": 5
+      },
+      "bulwark": {
+        "from": 6,
+        "to": 6
+      },
+      "counterweight": {
+        "from": 7,
+        "to": 7
+      },
+      "ghost_circuit": {
+        "from": 8,
+        "to": 8
+      },
+      "slipstream": {
+        "from": 9,
+        "to": 9
+      }
+    },
+    "durations_ms": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "texture": "escalation_icons.png",
+    "columns": 10,
+    "frame_count": 10,
+    "source": "../source-art/escalation_icons_002c.aseprite"
+  },
+  "effects": {
+    "cell": [
+      128,
+      128
+    ],
+    "pivot": [
+      64,
+      64
+    ],
+    "layers": [
+      "projected floor locks and chassis",
+      "stress trajectory and force plates",
+      "energised mechanical surfaces",
+      "contact flashes and fragments"
+    ],
+    "tags": {
+      "redline_ii": {
+        "from": 0,
+        "to": 5
+      },
+      "runaway": {
+        "from": 6,
+        "to": 11
+      },
+      "runaway_hit": {
+        "from": 12,
+        "to": 17
+      },
+      "breakneck_charge_headings": {
+        "from": 18,
+        "to": 25
+      },
+      "breakneck_impact": {
+        "from": 26,
+        "to": 31
+      },
+      "anchor": {
+        "from": 32,
+        "to": 37
+      },
+      "anchor_ii": {
+        "from": 38,
+        "to": 43
+      },
+      "anchor_break": {
+        "from": 44,
+        "to": 49
+      },
+      "bulwark": {
+        "from": 50,
+        "to": 55
+      },
+      "bulwark_impact": {
+        "from": 56,
+        "to": 61
+      },
+      "counterweight": {
+        "from": 62,
+        "to": 67
+      },
+      "counterweight_store": {
+        "from": 68,
+        "to": 73
+      },
+      "counterweight_release": {
+        "from": 74,
+        "to": 79
+      },
+      "afterimage_ii": {
+        "from": 80,
+        "to": 85
+      },
+      "ghost_closure": {
+        "from": 86,
+        "to": 91
+      },
+      "ghost_activation": {
+        "from": 92,
+        "to": 97
+      },
+      "slipstream_cross": {
+        "from": 98,
+        "to": 103
+      },
+      "rank_up": {
+        "from": 104,
+        "to": 109
+      },
+      "mutation_select": {
+        "from": 110,
+        "to": 115
+      }
+    },
+    "durations_ms": [
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      35,
+      40,
+      30,
+      35,
+      30,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      70,
+      70,
+      70,
+      70,
+      70,
+      70,
+      70,
+      70,
+      35,
+      45,
+      55,
+      70,
+      90,
+      110,
+      95,
+      95,
+      95,
+      95,
+      95,
+      95,
+      85,
+      85,
+      85,
+      85,
+      85,
+      85,
+      60,
+      60,
+      60,
+      60,
+      60,
+      60,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      35,
+      45,
+      55,
+      65,
+      85,
+      110,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      60,
+      60,
+      60,
+      60,
+      60,
+      60,
+      35,
+      45,
+      55,
+      65,
+      85,
+      110,
+      70,
+      70,
+      70,
+      70,
+      70,
+      70,
+      60,
+      55,
+      45,
+      50,
+      90,
+      120,
+      65,
+      65,
+      65,
+      65,
+      65,
+      65,
+      55,
+      55,
+      55,
+      55,
+      55,
+      55,
+      50,
+      55,
+      65,
+      75,
+      95,
+      120,
+      45,
+      55,
+      75,
+      95,
+      110,
+      140
+    ],
+    "texture": "escalation_effects.png",
+    "columns": 8,
+    "frame_count": 116,
+    "source": "../source-art/escalation_fx_002c.aseprite"
+  }
+}

@@ -24,6 +24,8 @@ func _state(game: QuietMain) -> Dictionary:
 	var context = game.run_context
 	return {"slot":context.slot, "seed":context.run_seed, "build":context.selected_build,
 		"powers":context.owned_power_ids, "offer":context.pending_offer,
+		"ranks":context.power_ranks, "mutations":context.power_mutations,
+		"mutation_power":context.pending_mutation_power, "mutation_offer":context.pending_mutation_offer,
 		"draft":context.pending_draft_id, "kind":context.pending_draft_kind,
 		"results":context.committed_results, "rewards":context.committed_rewards,
 		"starter":context.starter_id, "progress":context.progression_snapshot(), "status":context.status}
@@ -67,6 +69,8 @@ func _physical_state(game: QuietMain) -> Dictionary:
 	for fighter: Dictionary in game.battle.fighters:
 		var physical: Dictionary = fighter.duplicate(true)
 		physical.erase("powers")
+		physical.erase("power_ranks")
+		physical.erase("power_mutations")
 		entities[int(fighter.entity_id)] = physical
 	return {"entities":entities, "elapsed":game.battle.elapsed, "status":game.battle.battle_status,
 		"swarm":game.battle.swarm.telemetry(), "runtime":game.battle.powers._states.duplicate(true)}

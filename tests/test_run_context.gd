@@ -40,7 +40,7 @@ func _test_seed_and_catalogs() -> void:
 		var definition: Dictionary = Powers.get_power(power_id)
 		check(not ids.has(power_id) and definition.id == power_id, "Power identities are unique and explicit")
 		ids[power_id] = true
-		check(bool(definition.active) == (power_id in Powers.ACTIVE_IDS), "Only six implemented powers are active")
+		check(bool(definition.active) == (power_id in Powers.ACTIVE_IDS), "Only seven implemented powers are active")
 		if definition.active:
 			check(not str(definition.condition).is_empty() and definition.icon_frame >= 0, "Active power has a condition and signature icon")
 		check(not str(definition.name).is_empty() and not str(definition.description).is_empty() and definition.has("icon"), "Each power has card and future icon data")
@@ -73,15 +73,20 @@ func _claim_pending(run: RefCounted) -> void:
 	while not run.pending_offer.is_empty():
 		var offer: Array[String] = run.pending_offer
 		var claim: String = run.pending_draft_id
-		check(offer.size() == mini(3, Powers.ACTIVE_IDS.size() - run.owned_power_ids.size()), "Only available functional cards enter a draft")
+		var eligible: int = 0
+		for power_id: String in Powers.ACTIVE_IDS:
+			if Powers.can_progress(power_id, int(run.power_ranks.get(power_id, 0)), str(run.power_mutations.get(power_id, ""))): eligible += 1
+		check(offer.size() == mini(3, eligible), "Only available functional investments enter a draft")
 		var unique: Dictionary = {}
 		for power_id: String in offer:
 			unique[power_id] = true
-			check(power_id in Powers.ACTIVE_IDS and not power_id in run.owned_power_ids, "Draft cards are functional and unowned")
+			check(Powers.can_progress(power_id, int(run.power_ranks.get(power_id, 0))), "Draft cards can acquire or develop a functional power")
 		check(unique.size() == offer.size(), "Draft cards are unique")
 		check(not run.choose_power(claim, "invalid"), "Only an offered power may be acquired")
 		check(run.choose_power(claim, offer[0]), "Pending claim acquires one card")
 		check(not run.choose_power(claim, offer.back()), "Repeated claim cannot acquire another card")
+		if not run.pending_mutation_power.is_empty():
+			check(run.choose_mutation(claim, run.pending_mutation_offer[0]), "Rank III commits exactly one valid branch")
 
 func _earn_contact(run: RefCounted, time: float, event_id: int) -> void:
 	run.award_xp({"kind":"collision", "encounter_id":run.current_encounter().id, "time":time,
@@ -124,7 +129,9 @@ func _test_complete_run() -> void:
 			check(not run.advance(), "Repeated advance cannot skip an unresolved encounter")
 			check(not run.commit_result(encounter_id, true), "A stale previous-encounter result is ignored")
 	check(run.status == "complete" and not run.is_active(), "Eighth victory completes the Run")
-	check(run.owned_power_ids.size() == 6 and run.committed_results.size() == 8 and run.committed_rewards.size() == 6, "Completion retains eight encounters and six unique starting/earned claims")
+	var investments: int = 0
+	for rank: int in run.power_ranks.values(): investments += rank
+	check(run.owned_power_ids.size() <= 7 and run.committed_results.size() == 8 and investments == run.committed_rewards.size(), "Completion retains eight encounters and each real starting/earned investment")
 	check(not run.advance() and not run.commit_result("run_slot_08", true), "Completed Run cannot advance or recommit")
 	run.clear()
 	check(run.status == "empty" and run.slot == 0 and run.run_seed == 0 and run.selected_build.is_empty(), "Leaving clears Run identity and assembly")
@@ -166,6 +173,10 @@ func _test_draft_determinism() -> void:
 			var claim: String = first.pending_draft_id
 			first.choose_power(claim, chosen)
 			second.choose_power(claim, chosen)
+			if not first.pending_mutation_power.is_empty():
+				var branch: String = first.pending_mutation_offer[slot_number % 2]
+				first.choose_mutation(claim, branch)
+				second.choose_mutation(claim, branch)
 		check(first.current_encounter() == second.current_encounter(), "Draft/cosmetic consumption cannot perturb encounter seeds")
 		first.commit_result(first.current_encounter().id, true)
 		second.commit_result(second.current_encounter().id, true)

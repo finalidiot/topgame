@@ -475,7 +475,7 @@ func _test_run() -> void:
 	await _draft_and_resume(true)
 	for slot: int in range(1, 9):
 		check(game.screen == "battle" and game.run_context.slot == slot, "Controller flow reaches Run encounter %d" % slot)
-		if slot <= 5:
+		if slot <= 6:
 			await _fixture_level_up()
 			check(game.screen == "reward" and game.battle.paused, "Earned level pauses and immediately drafts in encounter %d" % slot)
 			await _draft_and_resume(false)
@@ -504,7 +504,7 @@ func _test_run() -> void:
 			check(game.screen == "result" and game.run_context.status == "complete", "Controller flow completes all eight encounters")
 			_focus_is_visible("Run completion")
 			await _capture("11-controller-run-complete")
-	check(game.run_context.owned_power_ids.size() == 6, "Completed controller Run collected six powers")
+	check(game.run_context.level == 7 and game.run_context.owned_power_ids.size() <= 7, "Completed controller Run committed six earned investments plus its starting power")
 	old_seed = game.run_context.run_seed
 	await _activate("RESTART RUN")
 	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a completed Run at its initial power offer")
@@ -557,8 +557,10 @@ func _fixture_level_up() -> void:
 func _physical_snapshot() -> Dictionary:
 	var state: Dictionary = game.battle.snapshot()
 	state.erase("paused")
-	for key: String in ["player", "enemy"]: state[key].erase("powers")
-	for fighter: Dictionary in state.entities.values(): fighter.erase("powers")
+	for key: String in ["player", "enemy"]:
+		for field: String in ["powers", "power_ranks", "power_mutations"]: state[key].erase(field)
+	for fighter: Dictionary in state.entities.values():
+		for field: String in ["powers", "power_ranks", "power_mutations"]: fighter.erase(field)
 	return state
 
 func _draft_and_resume(starting: bool) -> void:
@@ -568,7 +570,7 @@ func _draft_and_resume(starting: bool) -> void:
 	var cards: Array[Button] = []
 	for node: Node in _descendants(game.menus):
 		if node is Button and node.has_meta("power_id"): cards.append(node)
-	check(cards.size() == mini(3, 6 - game.run_context.owned_power_ids.size()) and root.gui_get_focus_owner() == cards[0], "Draft focuses its first functional card, including shrinking offers")
+	check(cards.size() == offer.size() and root.gui_get_focus_owner() == cards[0], "Draft focuses its first valid acquisition or upgrade card")
 	if cards.is_empty(): return
 	for index: int in range(1, cards.size()):
 		if index == 1: await _tap(JOY_BUTTON_DPAD_RIGHT)
@@ -598,20 +600,26 @@ func _draft_and_resume(starting: bool) -> void:
 	game.battle._physics_process(1.0 / 60.0)
 	check(_physical_snapshot() == frozen, "Draft selection consumes no simulation time or positions")
 	var owned_before: int = game.run_context.owned_power_ids.size()
+	var rank_before: int = int(game.run_context.power_ranks.get(chosen_id, 0))
+	var expected_owned: int = owned_before + (1 if rank_before == 0 else 0)
 	await _tap(JOY_BUTTON_A)
+	if game.screen == "mutation":
+		check(rank_before == 2 and game.run_context.pending_mutation_offer.size() == 2, "Third investment opens exactly two valid mutation branches")
+		await _tap(JOY_BUTTON_DPAD_RIGHT)
+		await _tap(JOY_BUTTON_A)
 	check(game.screen == "acquisition" and game.run_context.slot == slot, "Confirm enters a short acquisition payoff")
-	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.owned_power_ids.back() == chosen_id, "Confirm commits the selected power once")
+	check(game.run_context.owned_power_ids.size() == expected_owned and int(game.run_context.power_ranks.get(chosen_id, 0)) == rank_before + 1, "Confirm commits exactly one acquisition or upgrade")
 	if not starting:
 		check(_physical_snapshot() == frozen and chosen_id in game.battle.player_entity().powers, "New power is installed without rebuilding live combat")
 	await _tap(JOY_BUTTON_A)
-	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot, "Repeated acquisition Confirm cannot claim or advance twice")
+	check(game.run_context.owned_power_ids.size() == expected_owned and game.run_context.slot == slot, "Repeated acquisition Confirm cannot claim or advance twice")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "pause" and game.pause_origin == "acquisition", "Acquisition can be paused with the controller")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "acquisition", "Controller resumes the acquisition payoff")
-	await create_timer(0.61).timeout
+	await create_timer(1.11).timeout
 	await _settle()
 	check(game.screen == "battle" and game.run_context.slot == slot, "Acquisition resumes exactly the intended encounter")
 	if not starting: check(_physical_snapshot() == frozen, "Menu and acquisition durations preserve combat state exactly")
 	await _tap(JOY_BUTTON_A)
-	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot, "Rapid confirmation cannot skip another encounter after resume")
+	check(game.run_context.owned_power_ids.size() == expected_owned and game.run_context.slot == slot, "Rapid confirmation cannot skip another encounter after resume")

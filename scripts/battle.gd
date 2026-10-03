@@ -16,6 +16,7 @@ const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 const Starters = preload("res://scripts/starters.gd")
+const RunPowers = preload("res://scripts/run_powers.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
 const NEUTRAL_TEAM: String = "neutral"
@@ -135,6 +136,8 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	add_full_top(player_build, player_entity_id, PLAYER_TEAM, PLAYER_OWNER, Vector2(-59.0, 19.0), Vector2(64.0, -26.0))
 	swarm.setup(self, descriptor)
 	player_entity()["powers"] = descriptor.get("player_power_ids", []).duplicate()
+	player_entity()["power_ranks"] = descriptor.get("player_power_ranks", {}).duplicate(true)
+	player_entity()["power_mutations"] = descriptor.get("player_power_mutations", {}).duplicate(true)
 	player_entity()["starter_id"] = str(descriptor.get("starter_id", "custom")) if int(descriptor.get("slot",0)) > 0 else "custom"
 	var handling: Dictionary = Starters.HANDLING.get(player_entity()["starter_id"], {}).duplicate(true)
 	player_entity()["handling"] = handling
@@ -142,6 +145,8 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	if not swarm.enabled:
 		add_full_top(descriptor.get("opponent_build", {}), 2, HOSTILE_TEAM, "rival_1", Vector2(59.0, -19.0), Vector2(-64.0, 26.0))
 		entity(2)["powers"] = descriptor.get("opponent_power_ids", []).duplicate()
+		entity(2)["power_ranks"] = descriptor.get("opponent_power_ranks", {}).duplicate(true)
+		entity(2)["power_mutations"] = descriptor.get("opponent_power_mutations", {}).duplicate(true)
 	powers.setup(self)
 	_power_fx.clear()
 	battle_status = "countdown"
@@ -188,6 +193,8 @@ func _make_fighter(build: Dictionary, entity_id: int, team_id: String, owner_id:
 		"build": clean, "stats": stats, "pos": start,
 		"entity_id": entity_id, "team_id": team_id, "owner_id": owner_id,
 		"combatant_type": "full_top", "launch_velocity": launch_velocity, "powers": [], "impulse_time": 0.0,
+		"power_ranks": {}, "power_mutations": {}, "anchor_charge": 0.0, "stored_force": 0.0,
+		"runaway_heat": 0.0, "slipstream_time": 0.0, "redline_heading": Vector2.ZERO,
 		"ai_clock": 0.0, "ai_direction": Vector2.ZERO,
 		"ai_burst_delay": 2.5 + ai_rng.randf_range(0.0, 1.1),
 		"vel": Vector2.ZERO, "rpm": 1.0, "energy": 1.0, "wobble": 0.0,
@@ -251,13 +258,29 @@ func set_paused(value: bool) -> void:
 func combat_input_neutral() -> bool:
 	return Input.get_vector("move_left", "move_right", "move_up", "move_down").length() <= 0.05 and not Input.is_action_pressed("burst") and not Input.is_action_pressed("brake")
 
-func acquire_run_power(power_id: String) -> bool:
+func acquire_run_power(power_id: String, rank_value: int = 1, mutation_value: String = "") -> bool:
 	# Preserve the live PowerRuntime and every existing cooldown/cause/trace.
 	# Its semantic hooks read this list, so a newly owned power is live next tick.
 	var player: Dictionary = player_entity()
-	if player.is_empty() or power_id in player.get("powers", []): return false
-	player["powers"].append(power_id)
+	if player.is_empty() or rank_value < 1 or rank_value > RunPowers.max_rank(power_id): return false
+	var old_rank: int = powers.rank(player, power_id)
+	if rank_value != old_rank + 1: return false
+	if rank_value > 1 and not PowerRuntime.MUTATIONS.has(power_id): return false
+	if rank_value == 3:
+		if mutation_value not in PowerRuntime.MUTATIONS.get(power_id, []) or not str(player["power_mutations"].get(power_id, "")).is_empty(): return false
+	elif not mutation_value.is_empty(): return false
+	if old_rank == 0: player["powers"].append(power_id)
+	player["power_ranks"][power_id] = rank_value
+	if rank_value == 3: player["power_mutations"][power_id] = mutation_value
 	encounter["player_power_ids"] = player["powers"].duplicate()
+	encounter["player_power_ranks"] = player["power_ranks"].duplicate(true)
+	encounter["player_power_mutations"] = player["power_mutations"].duplicate(true)
+	# Cosmetic previews change no reserve, force, cooldown or semantic runtime.
+	if rank_value >= 2:
+		var preview: String = {"redline": "redline_ii", "dead_centre": "anchor", "afterimage": "afterimage_ii"}.get(power_id, "")
+		if rank_value == 3:
+			preview = {"runaway": "runaway", "breakneck": "breakneck_charge", "bulwark": "bulwark_impact", "counterweight": "counterweight_store", "ghost_circuit": "ghost_closure", "slipstream": "slipstream_cross"}.get(mutation_value, preview)
+		add_power_fx(preview, player["pos"], Vector2(player["vel"]).normalized(), float(rank_value))
 	return true
 
 func _physics_process(delta: float) -> void:
@@ -521,6 +544,9 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	event_sfx.emit("burst")
 
 func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt: float) -> void:
+	var modifiers: Dictionary = powers.movement_control(fighter, direction, braking, dt)
+	direction = modifiers["direction"]
+	braking = bool(modifiers["braking"])
 	var stats: Dictionary = fighter["stats"]
 	var position_world: Vector2 = fighter["pos"]
 	var velocity_world: Vector2 = fighter["vel"]
@@ -534,6 +560,8 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var handling: Dictionary = fighter.get("handling", {})
 	acceleration *= float(handling.get("acceleration", 1.0))
 	top_speed *= float(handling.get("speed", 1.0))
+	acceleration *= float(modifiers["acceleration"])
+	top_speed *= float(modifiers["speed"])
 	var burst_time: float = maxf(0.0, float(fighter["burst_time"]) - dt)
 	if burst_time > 0.0 or powers.redline_active(fighter):
 		acceleration *= 1.65
@@ -549,8 +577,9 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 		acceleration_world -= position_world.normalized() * (9.0 + bank) * float(handling.get("bank", 1.0))
 		var tangent: Vector2 = Vector2(-position_world.y, position_world.x).normalized()
 		acceleration_world += tangent * (6.0 + rpm * 8.0) * float(handling.get("orbit", 1.0))
-	velocity_world += acceleration_world.limit_length(365.0) * dt
+	velocity_world += acceleration_world.limit_length(float(modifiers["acceleration_limit"])) * dt
 	var drag: float = 0.54 + grip * 0.030
+	drag += float(modifiers["drag"])
 	if braking:
 		drag += 3.8 + grip * 0.20
 	velocity_world *= exp(-drag * dt)
@@ -565,7 +594,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var moving_loss: float = velocity_world.length() / 230.0 * 0.0014
 	var brake_loss: float = 0.0055 if braking else 0.0
 	var wobble_loss: float = float(fighter["wobble"]) * 0.0048
-	rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)))
+	rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]))
 	var low_spin_wobble: float = clampf((0.32 - rpm) * 2.5, 0.0, 0.80)
 	var current_wobble: float = float(fighter["wobble"])
 	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0)))
@@ -624,8 +653,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	if distance >= min_distance:
 		return
 	var normal: Vector2 = difference / distance if distance > 0.001 else Vector2.RIGHT
-	var inv_a: float = 1.0 / float(first["mass"])
-	var inv_b: float = 1.0 / float(second["mass"])
+	var inv_a: float = powers.inverse_mass(first)
+	var inv_b: float = powers.inverse_mass(second)
 	var inv_sum: float = inv_a + inv_b
 	var separation: float = (min_distance - distance) + 0.05
 	first["pos"] = a - normal * separation * inv_a / inv_sum
@@ -643,6 +672,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var b_attack: float = (0.66 + float(b_stats["power"]) * 0.073) * b_burst * (0.45 + powers.effective_rpm(second) * 0.55)
 	a_attack *= float(first.get("handling", {}).get("impact", 1.0))
 	b_attack *= float(second.get("handling", {}).get("impact", 1.0))
+	a_attack *= powers.attack_multiplier(first)
+	b_attack *= powers.attack_multiplier(second)
 	var impulse: float = (1.70 * closing + 19.0) / inv_sum
 	var attack_bias: float = clampf((a_attack - b_attack) * 0.19, -0.25, 0.25)
 	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias)
@@ -673,7 +704,7 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		fighter["impact_strength"] = severity
 		if severity > 0.75:
 			fighter["height_vel"] = 27.0
-	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb)
+	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
 	# The authored impact hold remains gameplay timing and is independent of
@@ -700,11 +731,16 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	if target.combatant_type == "full_top" and target.team_id == HOSTILE_TEAM and str(_cause.get("owner_id", "")) == PLAYER_OWNER and int(_cause.get("owner_entity_id", -1)) == player_entity_id and float(_cause.get("expires_at", -1.0)) >= powers.time and delta_velocity.length_squared() > 0.0001:
 		_progression_contacted[int(target.entity_id)] = true
 	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
-	target.vel = (Vector2(target.vel) + delta_velocity.limit_length(100.0)).limit_length(cap)
+	var braced_velocity: Vector2 = delta_velocity.limit_length(100.0)
+	powers.incoming_power_impulse(target, braced_velocity, _cause)
+	if float(target.get("anchor_charge", 0.0)) > 0.0:
+		braced_velocity *= powers.inverse_mass(target) * float(target.mass)
+	target.vel = (Vector2(target.vel) + braced_velocity).limit_length(cap)
 	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
 
 func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0) -> void:
-	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38}
+	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38,
+		"redline_ii":0.40,"runaway":0.44,"runaway_hit":0.30,"breakneck_charge":0.36,"breakneck_impact":0.45,"anchor":0.42,"anchor_break":0.30,"bulwark_impact":0.48,"counterweight_store":0.36,"counterweight_release":0.45,"afterimage_ii":0.24,"ghost_closure":0.48,"ghost_activation":0.60,"slipstream_cross":0.42}
 	if _power_fx.size() >= 32:
 		var discard: int = 0
 		for index: int in range(_power_fx.size()):
@@ -730,8 +766,8 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	var reach: float = float(first.radius)+float(second.radius)
 	if distance >= reach: return
 	var normal: Vector2 = difference/distance if distance > 0.001 else Vector2.RIGHT
-	var inv_a: float = 1.0/float(first.mass)
-	var inv_b: float = 1.0/float(second.mass)
+	var inv_a: float = powers.inverse_mass(first)
+	var inv_b: float = powers.inverse_mass(second)
 	var inv_sum: float = inv_a+inv_b
 	first.pos = a-normal*(reach-distance+0.05)*inv_a/inv_sum
 	second.pos = b+normal*(reach-distance+0.05)*inv_b/inv_sum
@@ -748,7 +784,11 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	if float(_pair_cooldowns.get(key,0.0)) > 0.0: return
 	_pair_cooldowns[key] = 0.24
 	var severity: float = clampf(closing/220.0,0.08,1.3)
-	powers.accepted_contact(first,second,severity,normal,a+normal*float(first.radius),Vector2(first.vel)-va,Vector2(second.vel)-vb)
+	var attack_outputs: Dictionary = {
+		int(first.entity_id): powers.attack_multiplier(first) * (1.43 if float(first.get("burst_time", 0.0)) > 0.0 else 1.0),
+		int(second.entity_id): powers.attack_multiplier(second) * (1.43 if float(second.get("burst_time", 0.0)) > 0.0 else 1.0)}
+	var rpm_outputs: Dictionary = {int(first.entity_id): powers.effective_rpm(first), int(second.entity_id): powers.effective_rpm(second)}
+	powers.accepted_contact(first,second,severity,normal,a+normal*float(first.radius),Vector2(first.vel)-va,Vector2(second.vel)-vb,impulse/float(first.mass),impulse/float(second.mass))
 	_progression_contact(first, second, severity)
 	for pair: Array in [[first,second],[second,first]]:
 		var target: Dictionary = pair[0]
@@ -759,9 +799,9 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 			swarm.contact_budget = maxf(0.0,swarm.contact_budget-loss)
 			target.wobble = minf(1.0,float(target.wobble)+loss*3.1)
 		elif source.combatant_type == "full_top":
-			var attack: float = (0.66+float(source.stats.power)*0.073)*(0.45+powers.effective_rpm(source)*0.55)
+			var attack: float = (0.66+float(source.stats.power)*0.073)*(0.45+float(rpm_outputs[int(source.entity_id)])*0.55)
 			attack *= float(source.get("handling", {}).get("impact", 1.0))
-			if float(source.burst_time)>0.0: attack *= 1.43
+			attack *= float(attack_outputs[int(source.entity_id)])
 			loss = (0.045+severity*0.12)*attack
 		elif not powers.cause_for(source).is_empty():
 			loss = 0.01+severity*0.075
@@ -1046,6 +1086,9 @@ func _draw() -> void:
 		var path: PackedVector2Array = PackedVector2Array()
 		for point: Vector2 in trace.get("points",[trace.a,trace.b]): path.append(project(point))
 		PowerVisuals.draw_trace_path(self, trace, path)
+		var circuit_path: PackedVector2Array = PackedVector2Array()
+		for point: Vector2 in trace.get("circuit_points", []): circuit_path.append(project(point))
+		if circuit_path.size() >= 4: PowerVisuals.draw_circuit_field(self, trace, circuit_path)
 	for fx: Dictionary in _power_fx:
 		PowerVisuals.draw_effect(self, fx, project(fx.pos))
 	# Every complete rig sorts by ground contact Y, with stable ID ties.

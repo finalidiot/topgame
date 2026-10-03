@@ -19,11 +19,40 @@ const SOUNDS: Dictionary = {
 	"card_select": preload("res://assets/audio/card_select.wav"),
 	"near_level": preload("res://assets/audio/near_level.wav"),
 	"level_up": preload("res://assets/audio/level_up.wav"),
-	"resume": preload("res://assets/audio/resume.wav")
+	"resume": preload("res://assets/audio/resume.wav"),
+	"rank_up": preload("res://assets/audio/rank_up.wav"),
+	"mutation_available": preload("res://assets/audio/mutation_available.wav"),
+	"mutation_select": preload("res://assets/audio/mutation_select.wav"),
+	"redline_ii": preload("res://assets/audio/redline_ii.wav"),
+	"runaway": preload("res://assets/audio/runaway.wav"),
+	"runaway_hit": preload("res://assets/audio/runaway_hit.wav"),
+	"breakneck_charge": preload("res://assets/audio/breakneck_charge.wav"),
+	"breakneck_impact": preload("res://assets/audio/breakneck_impact.wav"),
+	"anchor": preload("res://assets/audio/anchor.wav"),
+	"anchor_break": preload("res://assets/audio/anchor_break.wav"),
+	"bulwark_impact": preload("res://assets/audio/bulwark_impact.wav"),
+	"counterweight_store": preload("res://assets/audio/counterweight_store.wav"),
+	"counterweight_release": preload("res://assets/audio/counterweight_release.wav"),
+	"afterimage_ii": preload("res://assets/audio/afterimage_ii.wav"),
+	"ghost_closure": preload("res://assets/audio/ghost_closure.wav"),
+	"ghost_activation": preload("res://assets/audio/ghost_activation.wav"),
+	"slipstream_cross": preload("res://assets/audio/slipstream_cross.wav")
 }
 const MAX_CHANNELS: int = 8
-const PRIORITY: Dictionary = {"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6}
-const COOLDOWN: Dictionary = {"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20}
+const PRIORITY: Dictionary = {"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
+	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
+	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
+	"breakneck_charge": 5, "breakneck_impact": 5,
+	"anchor": 3, "anchor_break": 3, "bulwark_impact": 5,
+	"counterweight_store": 3, "counterweight_release": 5,
+	"afterimage_ii": 1, "ghost_closure": 5, "ghost_activation": 5, "slipstream_cross": 3}
+const COOLDOWN: Dictionary = {"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
+	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
+	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
+	"breakneck_charge": 0.25, "breakneck_impact": 0.20,
+	"anchor": 0.45, "anchor_break": 0.25, "bulwark_impact": 0.22,
+	"counterweight_store": 0.28, "counterweight_release": 0.28,
+	"afterimage_ii": 0.22, "ghost_closure": 0.40, "ghost_activation": 0.35, "slipstream_cross": 0.30}
 var channels: Array[AudioStreamPlayer] = []
 var current: int = 0
 var muted: bool = false
@@ -105,6 +134,18 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -4.5
 	elif key in ["power_wake", "redline", "comet_charge", "comet_release", "second_wind", "chain", "wave", "acquire"]:
 		player.volume_db = -4.5
+	elif key in ["rank_up", "mutation_select", "breakneck_impact", "bulwark_impact", "counterweight_release"]:
+		player.volume_db = -4.5
+	elif key in ["anchor", "anchor_break", "counterweight_store", "runaway_hit", "slipstream_cross"]:
+		player.volume_db = -7.0
+	elif key == "afterimage_ii":
+		player.volume_db = -12.0
+	elif key == "runaway":
+		player.volume_db = -7.5
+	elif key == "mutation_available":
+		player.volume_db = -5.0
+	elif key in ["redline_ii", "breakneck_charge", "ghost_closure", "ghost_activation"]:
+		player.volume_db = -6.0
 	player.play()
 
 func audio_snapshot() -> Dictionary:

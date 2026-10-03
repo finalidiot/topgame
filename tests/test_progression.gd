@@ -134,28 +134,35 @@ func _test_deterministic_overflow_and_cap() -> void:
 	first.choose_power(first.pending_draft_id, first_choice)
 	second.choose_power(second.pending_draft_id, first_choice)
 	# Multiple independent eliminations can legitimately arrive in one fixed tick.
-	for entity_id: int in range(100, 184):
+	for entity_id: int in range(100, 368):
 		var event: Dictionary = elimination(10.0, entity_id)
 		first.award_xp(event)
 		for _sample: int in range(7): cosmetics.randf()
 		second.award_xp(event)
-	check(first.level == 6 and first.progression_snapshot().maxed, "A batch crossing several costs preserves all five level entitlements and caps at six")
+	check(first.level == 13 and first.progression_snapshot().maxed, "A batch crossing costs preserves twelve earned entitlements and caps at thirteen investments")
 	check(first.pending_draft_id == "draft/level_02", "Queued overflow presents the earliest earned draft first")
 	check(not first.advance(), "Unclaimed earned drafts cannot skip the encounter")
-	for earned_level: int in range(2, 7):
+	for earned_level: int in range(2, 14):
 		var draft_id: String = first.pending_draft_id
 		var offer: Array[String] = first.pending_offer
 		check(first.pending_draft_level == earned_level and first.pending_draft_kind == "level", "Overflow draft retains a stable level identity")
 		check(offer == second.pending_offer and draft_id == second.pending_draft_id, "Recorded events and choices reproduce the offer independently of cosmetic RNG")
-		check(offer.size() == mini(3, 6 - first.owned_power_ids.size()), "Exhaustion offers only real unowned powers")
-		for power_id: String in offer: check(not power_id in first.owned_power_ids, "No duplicate ranks enter later offers")
+		var eligible: int = 0
+		for power_id: String in Powers.ACTIVE_IDS:
+			if Powers.can_progress(power_id, int(first.power_ranks.get(power_id, 0))): eligible += 1
+		check(offer.size() == mini(3, eligible), "Exhaustion offers only real remaining investments")
+		for power_id: String in offer: check(Powers.can_progress(power_id, int(first.power_ranks.get(power_id, 0))), "Owned powers reappear only while they can progress")
 		var exposed: Array[String] = first.pending_offer
 		exposed.clear()
 		check(first.pending_offer == offer, "Reopening and mutating UI copies cannot reroll a pending draft")
 		var choice: String = offer[earned_level % offer.size()]
 		check(first.choose_power(draft_id, choice) and second.choose_power(draft_id, choice), "Each earned entitlement can be claimed")
 		check(not first.choose_power(draft_id, choice), "Stale same-encounter claim cannot consume the next queued entitlement")
-	check(first.owned_power_ids.size() == 6 and first.pending_offer.is_empty() and first.pending_draft_id.is_empty(), "All six unique powers end drafting cleanly")
+		if not first.pending_mutation_power.is_empty():
+			var branch: String = first.pending_mutation_offer[earned_level % 2]
+			check(first.choose_mutation(draft_id, branch) and second.choose_mutation(draft_id, branch), "Queued mutation entitlement commits a mutually exclusive branch")
+			check(not first.choose_mutation(draft_id, branch), "Stale branch claim cannot consume the next queued entitlement")
+	check(first.owned_power_ids.size() == 7 and first.pending_offer.is_empty() and first.pending_draft_id.is_empty(), "All seven powers and six vertical upgrades end drafting cleanly")
 	var max_state: Dictionary = first.progression_snapshot()
 	first.award_xp(elimination(20.0, 999))
 	check(first.level == max_state.level and first.progression_snapshot().total_xp == max_state.total_xp and first.xp == 0 and first.pending_offer.is_empty(), "MAX ignores further XP without fake duplicate ranks")

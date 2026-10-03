@@ -10,7 +10,7 @@ var report: Dictionary = {"scope":"Deterministic sampled bot combat; active comb
 func _initialize() -> void: call_deferred("_run")
 
 func _pick(offer: Array) -> String:
-	for preferred: String in ["iron_comet", "redline", "impact_wake", "second_wind", "afterimage", "chain_impact"]:
+	for preferred: String in ["iron_comet", "redline", "impact_wake", "second_wind", "dead_centre", "afterimage", "chain_impact"]:
 		if preferred in offer: return preferred
 	return str(offer[0])
 
@@ -65,8 +65,10 @@ func _play(starter_id: String, seed_value: int, swarm_only: bool = false) -> Dic
 					var power_id: String = _pick(context.pending_offer)
 					var earned_level: int = context.pending_draft_level
 					assert(context.choose_power(context.pending_draft_id, power_id))
-					assert(b.acquire_run_power(power_id))
-					record.choices.append({"active_seconds":snappedf(active_seconds,0.01), "encounter_seconds":snappedf(b.elapsed,0.01), "slot":context.slot, "level":earned_level, "power":power_id, "wave":b.swarm.wave})
+					if not context.pending_mutation_power.is_empty():
+						assert(context.choose_mutation(context.pending_draft_id, context.pending_mutation_offer[0]))
+					assert(b.acquire_run_power(power_id, int(context.power_ranks.get(power_id, 1)), str(context.power_mutations.get(power_id, ""))))
+					record.choices.append({"active_seconds":snappedf(active_seconds,0.01), "encounter_seconds":snappedf(b.elapsed,0.01), "slot":context.slot, "level":earned_level, "power":power_id, "rank":context.power_ranks[power_id], "mutation":context.power_mutations.get(power_id,""), "wave":b.swarm.wave})
 					if float(record.first_level_seconds) < 0.0: record.first_level_seconds = snappedf(active_seconds,0.01)
 				b.set_paused(false)
 			if not first_minute_seen and active_seconds >= 60.0:

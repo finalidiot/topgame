@@ -1,0 +1,3457 @@
+{
+	"capture_dir": "",
+	"gpu": "",
+	"processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+	"renderer": "headless",
+	"runs": [
+		{
+			"active_seconds": 4.99999999999999,
+			"actual_proc_counters": {
+				"impact_wake": 3,
+				"redline": 1,
+				"runaway_hit": 7
+			},
+			"actual_proc_events": [
+				{
+					"generation": 0,
+					"kind": "redline",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 0.266666666666667
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 0.533333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "impact_wake",
+					"owner": 1,
+					"root": 1,
+					"target": 2,
+					"time": 0.533333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 1.1
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 1.76666666666667
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 2.16666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "impact_wake",
+					"owner": 1,
+					"root": 11,
+					"target": 2,
+					"time": 2.16666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 2.81666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 3.19999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "runaway_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 3.54999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "impact_wake",
+					"owner": 1,
+					"root": 24,
+					"target": 2,
+					"time": 4.48333333333332
+				}
+			],
+			"branch": "runaway",
+			"completed_five_seconds": true,
+			"defining_proc": "runaway_hit",
+			"draw_submission_cpu_ms": {},
+			"final": {
+				"anchor": 0.0,
+				"counters": {
+					"impact_wake": 3,
+					"redline": 1,
+					"runaway_hit": 7
+				},
+				"hits": 8,
+				"position": [
+					43.1877593994141,
+					97.0337982177734
+				],
+				"redline_seconds": 0.0,
+				"rpm": 0.578541903441473,
+				"runaway_heat": 0.0,
+				"speed": 228.033798217773,
+				"time": 5.0,
+				"traces": 0,
+				"wobble": 0.970653333333334
+			},
+			"fixed_ticks": 312,
+			"harness_fixed_ticks_per_wall_second_including_png_saves": 4357.96795776123,
+			"id": "runaway-breaker",
+			"initial": {
+				"anchor": 0.0,
+				"counters": {},
+				"hits": 0,
+				"position": [
+					-59.0,
+					19.0
+				],
+				"redline_seconds": 0.0,
+				"rpm": 1.0,
+				"runaway_heat": 0.0,
+				"speed": 0.0,
+				"time": 0.0,
+				"traces": 0,
+				"wobble": 0.0
+			},
+			"natural_proc_capture_seconds": 0.666666666666667,
+			"performance_scope": "Single HUD-free duel, measured CPU simulation/draw submission. Harness frame/rate includes waiting and capture overhead; excludes asynchronous GPU time and is not an end-user FPS claim.",
+			"policy": "pursuit_burst",
+			"power": "redline",
+			"render_harness_frame_ms": {},
+			"result": {},
+			"simulation_cpu_ms": {
+				"max": 0.675,
+				"median": 0.179,
+				"p95": 0.362,
+				"samples": 312
+			},
+			"starter": "breaker",
+			"support": "impact_wake",
+			"timeline": [
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						-57.5401840209961,
+						18.4054183959961
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.997815905380816,
+					"runaway_heat": 0.0,
+					"speed": 26.7674427032471,
+					"time": 0.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						-53.6963844299316,
+						16.8438358306885
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.995616151243472,
+					"runaway_heat": 0.0,
+					"speed": 51.7672843933105,
+					"time": 0.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"redline": 1
+					},
+					"hits": 0,
+					"position": [
+						-40.9586143493652,
+						12.3089437484741
+					],
+					"redline_seconds": 1.06666666666667,
+					"rpm": 0.904385122419092,
+					"runaway_heat": 0.0,
+					"speed": 216.150588989258,
+					"time": 0.3,
+					"traces": 0,
+					"wobble": 0.16966
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"redline": 1
+					},
+					"hits": 0,
+					"position": [
+						-18.7908229827881,
+						4.71177291870117
+					],
+					"redline_seconds": 0.966666666666667,
+					"rpm": 0.899185583046289,
+					"runaway_heat": 0.0,
+					"speed": 247.030044555664,
+					"time": 0.4,
+					"traces": 0,
+					"wobble": 0.17148
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"redline": 1
+					},
+					"hits": 0,
+					"position": [
+						6.20647716522217,
+						-3.77884912490845
+					],
+					"redline_seconds": 0.866666666666667,
+					"rpm": 0.893967113169039,
+					"runaway_heat": 0.0,
+					"speed": 275.815032958984,
+					"time": 0.5,
+					"traces": 0,
+					"wobble": 0.1733
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 1
+					},
+					"hits": 1,
+					"position": [
+						21.1662044525146,
+						-10.269736289978
+					],
+					"redline_seconds": 1.18333333333333,
+					"rpm": 0.89989317059492,
+					"runaway_heat": 0.284,
+					"speed": 141.734512329102,
+					"time": 0.6,
+					"traces": 0,
+					"wobble": 0.241982895234067
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 1
+					},
+					"hits": 1,
+					"position": [
+						36.4470176696777,
+						-16.5192794799805
+					],
+					"redline_seconds": 1.08333333333333,
+					"rpm": 0.893336805872222,
+					"runaway_heat": 0.284,
+					"speed": 181.489135742188,
+					"time": 0.7,
+					"traces": 0,
+					"wobble": 0.247494895234066
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 1
+					},
+					"hits": 1,
+					"position": [
+						55.7533149719238,
+						-22.8213176727295
+					],
+					"redline_seconds": 0.983333333333332,
+					"rpm": 0.886754665406754,
+					"runaway_heat": 0.284,
+					"speed": 218.147109985352,
+					"time": 0.8,
+					"traces": 0,
+					"wobble": 0.253006895234067
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 1
+					},
+					"hits": 1,
+					"position": [
+						78.8449401855469,
+						-28.729434967041
+					],
+					"redline_seconds": 0.883333333333332,
+					"rpm": 0.88014842170908,
+					"runaway_heat": 0.284,
+					"speed": 252.701583862305,
+					"time": 0.9,
+					"traces": 0,
+					"wobble": 0.258518895234067
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 1
+					},
+					"hits": 1,
+					"position": [
+						105.460906982422,
+						-34.5176963806152
+					],
+					"redline_seconds": 0.783333333333332,
+					"rpm": 0.873518834961455,
+					"runaway_heat": 0.284,
+					"speed": 286.239685058594,
+					"time": 1.0,
+					"traces": 0,
+					"wobble": 0.264030895234067
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						133.197143554688,
+						-40.1369743347168
+					],
+					"redline_seconds": 1.10333333333333,
+					"rpm": 0.879833337834447,
+					"runaway_heat": 0.568,
+					"speed": 166.760848999023,
+					"time": 1.1,
+					"traces": 0,
+					"wobble": 0.331026757523478
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						138.135223388672,
+						-38.4907379150391
+					],
+					"redline_seconds": 1.00333333333333,
+					"rpm": 0.871917212830619,
+					"runaway_heat": 0.568,
+					"speed": 45.8946914672852,
+					"time": 1.2,
+					"traces": 0,
+					"wobble": 0.340230757523478
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						139.125152587891,
+						-36.5479316711426
+					],
+					"redline_seconds": 0.903333333333333,
+					"rpm": 0.864033620077584,
+					"runaway_heat": 0.568,
+					"speed": 28.3921489715576,
+					"time": 1.3,
+					"traces": 0,
+					"wobble": 0.349434757523478
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						136.13948059082,
+						-35.1549034118652
+					],
+					"redline_seconds": 0.803333333333333,
+					"rpm": 0.856140209755993,
+					"runaway_heat": 0.568,
+					"speed": 32.7122917175293,
+					"time": 1.4,
+					"traces": 0,
+					"wobble": 0.358638757523478
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						133.070281982422,
+						-39.251880645752
+					],
+					"redline_seconds": 0.703333333333334,
+					"rpm": 0.84823229789939,
+					"runaway_heat": 0.568,
+					"speed": 69.8853378295898,
+					"time": 1.5,
+					"traces": 0,
+					"wobble": 0.367842757523478
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						130.753494262695,
+						-48.6531410217285
+					],
+					"redline_seconds": 0.603333333333334,
+					"rpm": 0.840292745807814,
+					"runaway_heat": 0.568,
+					"speed": 116.815376281738,
+					"time": 1.6,
+					"traces": 0,
+					"wobble": 0.377046757523479
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 2
+					},
+					"hits": 2,
+					"position": [
+						128.722534179688,
+						-63.0060195922852
+					],
+					"redline_seconds": 0.503333333333334,
+					"rpm": 0.832319594638034,
+					"runaway_heat": 0.568,
+					"speed": 164.754959106445,
+					"time": 1.7,
+					"traces": 0,
+					"wobble": 0.386250757523479
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 3
+					},
+					"hits": 3,
+					"position": [
+						124.832611083984,
+						-73.8831558227539
+					],
+					"redline_seconds": 0.823333333333335,
+					"rpm": 0.834708832148921,
+					"runaway_heat": 0.793285924738104,
+					"speed": 61.3257026672363,
+					"time": 1.8,
+					"traces": 0,
+					"wobble": 0.428481760215763
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 3
+					},
+					"hits": 3,
+					"position": [
+						118.238510131836,
+						-77.0899429321289
+					],
+					"redline_seconds": 0.723333333333335,
+					"rpm": 0.825672082097614,
+					"runaway_heat": 0.793285924738104,
+					"speed": 88.5353164672852,
+					"time": 1.9,
+					"traces": 0,
+					"wobble": 0.440614477237359
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 3
+					},
+					"hits": 3,
+					"position": [
+						109.43334197998,
+						-84.2904052734375
+					],
+					"redline_seconds": 0.623333333333335,
+					"rpm": 0.816605009048021,
+					"runaway_heat": 0.793285924738104,
+					"speed": 133.685577392578,
+					"time": 2.0,
+					"traces": 0,
+					"wobble": 0.452747194258954
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 1,
+						"redline": 1,
+						"runaway_hit": 3
+					},
+					"hits": 3,
+					"position": [
+						98.4297180175781,
+						-96.3401565551758
+					],
+					"redline_seconds": 0.523333333333336,
+					"rpm": 0.807502230149054,
+					"runaway_heat": 0.793285924738104,
+					"speed": 184.282165527344,
+					"time": 2.1,
+					"traces": 0,
+					"wobble": 0.46487991128055
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						86.3618011474609,
+						-108.727684020996
+					],
+					"redline_seconds": 0.843333333333336,
+					"rpm": 0.809960216180398,
+					"runaway_heat": 1.0,
+					"speed": 136.733917236328,
+					"time": 2.2,
+					"traces": 0,
+					"wobble": 0.515856452820753
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						74.6577758789063,
+						-120.637413024902
+					],
+					"redline_seconds": 0.743333333333336,
+					"rpm": 0.799831774874813,
+					"runaway_heat": 1.0,
+					"speed": 188.003280639648,
+					"time": 2.3,
+					"traces": 0,
+					"wobble": 0.530676452820753
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						60.962028503418,
+						-134.528839111328
+					],
+					"redline_seconds": 0.643333333333337,
+					"rpm": 0.789678829759091,
+					"runaway_heat": 1.0,
+					"speed": 186.10905456543,
+					"time": 2.4,
+					"traces": 0,
+					"wobble": 0.545496452820753
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						45.970458984375,
+						-141.859725952148
+					],
+					"redline_seconds": 0.543333333333337,
+					"rpm": 0.779535709946956,
+					"runaway_heat": 1.0,
+					"speed": 155.620269775391,
+					"time": 2.5,
+					"traces": 0,
+					"wobble": 0.560316452820753
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						31.1421680450439,
+						-142.328857421875
+					],
+					"redline_seconds": 0.443333333333337,
+					"rpm": 0.769396635682664,
+					"runaway_heat": 1.0,
+					"speed": 151.236328125,
+					"time": 2.6,
+					"traces": 0,
+					"wobble": 0.575136452820753
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						14.94908618927,
+						-137.062408447266
+					],
+					"redline_seconds": 0.343333333333338,
+					"rpm": 0.759237678328918,
+					"runaway_heat": 1.0,
+					"speed": 190.508071899414,
+					"time": 2.7,
+					"traces": 0,
+					"wobble": 0.589956452820752
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 4
+					},
+					"hits": 4,
+					"position": [
+						-4.73718738555908,
+						-127.801544189453
+					],
+					"redline_seconds": 0.243333333333338,
+					"rpm": 0.749042854319876,
+					"runaway_heat": 1.0,
+					"speed": 234.892013549805,
+					"time": 2.8,
+					"traces": 0,
+					"wobble": 0.604776452820752
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 5
+					},
+					"hits": 5,
+					"position": [
+						-22.8996200561523,
+						-118.032234191895
+					],
+					"redline_seconds": 0.563333333333338,
+					"rpm": 0.749681425829032,
+					"runaway_heat": 1.0,
+					"speed": 210.138198852539,
+					"time": 2.9,
+					"traces": 0,
+					"wobble": 0.645866385206032
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 5
+					},
+					"hits": 5,
+					"position": [
+						-40.6731567382813,
+						-103.342727661133
+					],
+					"redline_seconds": 0.463333333333339,
+					"rpm": 0.739451804480935,
+					"runaway_heat": 1.0,
+					"speed": 247.868957519531,
+					"time": 3.0,
+					"traces": 0,
+					"wobble": 0.660686385206032
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 5
+					},
+					"hits": 5,
+					"position": [
+						-59.7019195556641,
+						-83.6779632568359
+					],
+					"redline_seconds": 0.363333333333339,
+					"rpm": 0.729188959045715,
+					"runaway_heat": 1.0,
+					"speed": 291.699432373047,
+					"time": 3.1,
+					"traces": 0,
+					"wobble": 0.675506385206031
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 6
+					},
+					"hits": 6,
+					"position": [
+						-78.9775695800781,
+						-59.783805847168
+					],
+					"redline_seconds": 0.683333333333339,
+					"rpm": 0.731257493836727,
+					"runaway_heat": 1.0,
+					"speed": 246.18815612793,
+					"time": 3.2,
+					"traces": 0,
+					"wobble": 0.723265577957136
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 6
+					},
+					"hits": 6,
+					"position": [
+						-95.3660049438477,
+						-39.3592491149902
+					],
+					"redline_seconds": 0.58333333333334,
+					"rpm": 0.720971618514402,
+					"runaway_heat": 1.0,
+					"speed": 275.086456298828,
+					"time": 3.3,
+					"traces": 0,
+					"wobble": 0.738085577957136
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 6
+					},
+					"hits": 6,
+					"position": [
+						-110.982208251953,
+						-13.9097633361816
+					],
+					"redline_seconds": 0.48333333333334,
+					"rpm": 0.710656445573957,
+					"runaway_heat": 1.0,
+					"speed": 316.531311035156,
+					"time": 3.4,
+					"traces": 0,
+					"wobble": 0.752905577957136
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 6
+					},
+					"hits": 6,
+					"position": [
+						-127.300354003906,
+						16.0475368499756
+					],
+					"redline_seconds": 0.38333333333334,
+					"rpm": 0.700308280198911,
+					"runaway_heat": 1.0,
+					"speed": 357.957855224609,
+					"time": 3.5,
+					"traces": 0,
+					"wobble": 0.767725577957136
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-142.198059082031,
+						47.0772323608398
+					],
+					"redline_seconds": 0.703333333333341,
+					"rpm": 0.697824476634306,
+					"runaway_heat": 1.0,
+					"speed": 307.042144775391,
+					"time": 3.6,
+					"traces": 0,
+					"wobble": 0.813183251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-147.556030273438,
+						63.6540679931641
+					],
+					"redline_seconds": 0.603333333333341,
+					"rpm": 0.687084329496027,
+					"runaway_heat": 1.0,
+					"speed": 112.313079833984,
+					"time": 3.7,
+					"traces": 0,
+					"wobble": 0.828003251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-146.864593505859,
+						71.1053314208984
+					],
+					"redline_seconds": 0.503333333333341,
+					"rpm": 0.676311531429166,
+					"runaway_heat": 1.0,
+					"speed": 58.4917297363281,
+					"time": 3.8,
+					"traces": 0,
+					"wobble": 0.842823251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-143.068298339844,
+						74.2157897949219
+					],
+					"redline_seconds": 0.403333333333342,
+					"rpm": 0.665547105778011,
+					"runaway_heat": 1.0,
+					"speed": 48.6226081848145,
+					"time": 3.9,
+					"traces": 0,
+					"wobble": 0.857643251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-137.919998168945,
+						73.9177093505859
+					],
+					"redline_seconds": 0.303333333333342,
+					"rpm": 0.654774542418744,
+					"runaway_heat": 1.0,
+					"speed": 56.254093170166,
+					"time": 4.0,
+					"traces": 0,
+					"wobble": 0.872463251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-131.654891967773,
+						71.4239349365234
+					],
+					"redline_seconds": 0.203333333333342,
+					"rpm": 0.644168923482129,
+					"runaway_heat": 1.0,
+					"speed": 84.8224029541016,
+					"time": 4.1,
+					"traces": 0,
+					"wobble": 0.887283251491193
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-120.678428649902,
+						67.6152038574219
+					],
+					"redline_seconds": 0.103333333333342,
+					"rpm": 0.633893049245874,
+					"runaway_heat": 1.0,
+					"speed": 132.22785949707,
+					"time": 4.2,
+					"traces": 0,
+					"wobble": 0.902103251491192
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-102.916946411133,
+						68.435791015625
+					],
+					"redline_seconds": 0.00333333333334274,
+					"rpm": 0.610571572679009,
+					"runaway_heat": 1.0,
+					"speed": 246.887756347656,
+					"time": 4.3,
+					"traces": 0,
+					"wobble": 0.916923251491192
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 2,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 7,
+					"position": [
+						-77.8932800292969,
+						74.2756805419922
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.607761787145673,
+					"runaway_heat": 0.0,
+					"speed": 264.092437744141,
+					"time": 4.4,
+					"traces": 0,
+					"wobble": 0.99432
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						-54.6772994995117,
+						79.8894195556641
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.592384000762573,
+					"runaway_heat": 0.0,
+					"speed": 150.234252929688,
+					"time": 4.5,
+					"traces": 0,
+					"wobble": 0.999053333333333
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						-38.4082717895508,
+						82.3512268066406
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.589630928709101,
+					"runaway_heat": 0.0,
+					"speed": 174.703994750977,
+					"time": 4.6,
+					"traces": 0,
+					"wobble": 0.993373333333333
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						-19.8790321350098,
+						85.6264801025391
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.586866209523348,
+					"runaway_heat": 0.0,
+					"speed": 196.291412353516,
+					"time": 4.7,
+					"traces": 0,
+					"wobble": 0.987693333333334
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						0.0905892848968506,
+						89.2767868041992
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.584095184420807,
+					"runaway_heat": 0.0,
+					"speed": 207.678268432617,
+					"time": 4.8,
+					"traces": 0,
+					"wobble": 0.982013333333334
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						21.1347179412842,
+						93.1049423217773
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.581320257117412,
+					"runaway_heat": 0.0,
+					"speed": 218.225524902344,
+					"time": 4.9,
+					"traces": 0,
+					"wobble": 0.976333333333334
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"impact_wake": 3,
+						"redline": 1,
+						"runaway_hit": 7
+					},
+					"hits": 8,
+					"position": [
+						43.1877593994141,
+						97.0337982177734
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.578541903441473,
+					"runaway_heat": 0.0,
+					"speed": 228.033798217773,
+					"time": 5.0,
+					"traces": 0,
+					"wobble": 0.970653333333334
+				}
+			]
+		},
+		{
+			"active_seconds": 4.99999999999999,
+			"actual_proc_counters": {
+				"anchor": 1,
+				"bulwark_impact": 3
+			},
+			"actual_proc_events": [
+				{
+					"generation": 0,
+					"kind": "anchor",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 0.6
+				},
+				{
+					"generation": 0,
+					"kind": "bulwark_impact",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 0.666666666666667
+				},
+				{
+					"generation": 0,
+					"kind": "bulwark_impact",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 3.64999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "bulwark_impact",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 4.79999999999999
+				}
+			],
+			"branch": "bulwark",
+			"completed_five_seconds": true,
+			"defining_proc": "bulwark_impact",
+			"draw_submission_cpu_ms": {},
+			"final": {
+				"anchor": 1.0,
+				"counters": {
+					"anchor": 1,
+					"bulwark_impact": 3
+				},
+				"hits": 5,
+				"position": [
+					-0.176767691969872,
+					0.0248741582036018
+				],
+				"redline_seconds": 0.0,
+				"rpm": 0.891470302816781,
+				"runaway_heat": 0.0,
+				"speed": 0.0162419714033604,
+				"time": 5.0,
+				"traces": 0,
+				"wobble": 0.0
+			},
+			"fixed_ticks": 300,
+			"harness_fixed_ticks_per_wall_second_including_png_saves": 3847.78175381892,
+			"id": "bulwark-bastion",
+			"initial": {
+				"anchor": 0.0,
+				"counters": {},
+				"hits": 0,
+				"position": [
+					0.0,
+					0.0
+				],
+				"redline_seconds": 0.0,
+				"rpm": 1.0,
+				"runaway_heat": 0.0,
+				"speed": 0.0,
+				"time": 0.0,
+				"traces": 0,
+				"wobble": 0.0
+			},
+			"natural_proc_capture_seconds": 0.800000000000001,
+			"performance_scope": "Single HUD-free duel, measured CPU simulation/draw submission. Harness frame/rate includes waiting and capture overhead; excludes asynchronous GPU time and is not an end-user FPS claim.",
+			"policy": "centre_brake",
+			"power": "dead_centre",
+			"render_harness_frame_ms": {},
+			"result": {},
+			"simulation_cpu_ms": {
+				"max": 0.681,
+				"median": 0.246,
+				"p95": 0.374,
+				"samples": 300
+			},
+			"starter": "bastion",
+			"support": "second_wind",
+			"timeline": [
+				{
+					"anchor": 0.117647058823529,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.99846865,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.235294117647059,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.9969373,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.352941176470588,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.995405950000001,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.470588235294117,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.993874600000001,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.588235294117647,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.992343250000001,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.5,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.705882352941177,
+					"counters": {
+						"anchor": 1
+					},
+					"hits": 0,
+					"position": [
+						0.0,
+						0.0
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.990811900000001,
+					"runaway_heat": 0.0,
+					"speed": 0.0,
+					"time": 0.6,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.814160966216528,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.0800452753901482,
+						0.0330467522144318
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.982136065463453,
+					"runaway_heat": 0.0,
+					"speed": 1.94641435146332,
+					"time": 0.7,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.931808025040058,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.147679507732391,
+						0.0609695948660374
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.980604314610709,
+					"runaway_heat": 0.0,
+					"speed": 0.272512018680573,
+					"time": 0.8,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.156439274549484,
+						0.0645860731601715
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.979072912693493,
+					"runaway_heat": 0.0,
+					"speed": 0.0323710218071938,
+					"time": 0.9,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157460138201714,
+						0.0650075301527977
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.977541556643097,
+					"runaway_heat": 0.0,
+					"speed": 0.00375715969130397,
+					"time": 1.0,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157578632235527,
+						0.0650564432144165
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.976010205940854,
+					"runaway_heat": 0.0,
+					"speed": 0.000436076748883352,
+					"time": 1.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157592386007309,
+						0.065062128007412
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.974478855859348,
+					"runaway_heat": 0.0,
+					"speed": 0.0000506134820170701,
+					"time": 1.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157593995332718,
+						0.0650627836585045
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.972947505849888,
+					"runaway_heat": 0.0,
+					"speed": 0.00000587448084843345,
+					"time": 1.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157594174146652,
+						0.0650628656148911
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.97141615584879,
+					"runaway_heat": 0.0,
+					"speed": 0.000000681824815274013,
+					"time": 1.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157594174146652,
+						0.0650628656148911
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.969884805848663,
+					"runaway_heat": 0.0,
+					"speed": 0.0000000791363703456227,
+					"time": 1.5,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157594174146652,
+						0.0650628656148911
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.968353455848648,
+					"runaway_heat": 0.0,
+					"speed": 0.00000000918500564495162,
+					"time": 1.6,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157594174146652,
+						0.0650628656148911
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.966822105848646,
+					"runaway_heat": 0.0,
+					"speed": 0.00000000106606257155306,
+					"time": 1.7,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 1,
+					"position": [
+						-0.157594174146652,
+						0.0650628656148911
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.965290755848646,
+					"runaway_heat": 0.0,
+					"speed": 0.000000000123733148726934,
+					"time": 1.8,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.172928795218468,
+						0.0961540564894676
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.957776854232092,
+					"runaway_heat": 0.0,
+					"speed": 0.255246788263321,
+					"time": 1.9,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.17678090929985,
+						0.103964284062386
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.956245456524469,
+					"runaway_heat": 0.0,
+					"speed": 0.0296253580600023,
+					"time": 2.0,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177228018641472,
+						0.104870781302452
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.954714100987258,
+					"runaway_heat": 0.0,
+					"speed": 0.0034384832251817,
+					"time": 2.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.17727991938591,
+						0.104975990951061
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.953182750344579,
+					"runaway_heat": 0.0,
+					"speed": 0.00039908938924782,
+					"time": 2.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177285939455032,
+						0.10498820990324
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.951651400269986,
+					"runaway_heat": 0.0,
+					"speed": 0.0000463205287815072,
+					"time": 2.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286639809608,
+						0.104989625513554
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.950120050261328,
+					"runaway_heat": 0.0,
+					"speed": 0.00000537621735929861,
+					"time": 2.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286714315414,
+						0.104989796876907
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.948588700260323,
+					"runaway_heat": 0.0,
+					"speed": 0.000000623993571480241,
+					"time": 2.5,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286714315414,
+						0.104989811778069
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.947057350260206,
+					"runaway_heat": 0.0,
+					"speed": 0.0000000724241644434187,
+					"time": 2.6,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286714315414,
+						0.104989811778069
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.945526000260193,
+					"runaway_heat": 0.0,
+					"speed": 0.00000000840594971407427,
+					"time": 2.7,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286714315414,
+						0.104989811778069
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.943994650260191,
+					"runaway_heat": 0.0,
+					"speed": 0.000000000975641012423978,
+					"time": 2.8,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 2,
+					"position": [
+						-0.177286714315414,
+						0.104989811778069
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.942463300260191,
+					"runaway_heat": 0.0,
+					"speed": 0.000000000113238300680774,
+					"time": 2.9,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.167258352041245,
+						0.106746137142181
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.936754180607146,
+					"runaway_heat": 0.0,
+					"speed": 0.369624823331833,
+					"time": 3.0,
+					"traces": 0,
+					"wobble": 0.00677778003297647
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.154836535453796,
+						0.108921632170677
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.935222549521212,
+					"runaway_heat": 0.0,
+					"speed": 0.0429007038474083,
+					"time": 3.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.153394788503647,
+						0.109174139797688
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.933691191502735,
+					"runaway_heat": 0.0,
+					"speed": 0.00497929332777858,
+					"time": 3.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.15322744846344,
+						0.109203442931175
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.932159840572066,
+					"runaway_heat": 0.0,
+					"speed": 0.000577924365643412,
+					"time": 3.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.153208017349243,
+						0.109206847846508
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.930628490464048,
+					"runaway_heat": 0.0,
+					"speed": 0.0000670771041768603,
+					"time": 3.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.153205752372742,
+						0.10920724272728
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.92909714045151,
+					"runaway_heat": 0.0,
+					"speed": 0.0000077853410402895,
+					"time": 3.5,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 1
+					},
+					"hits": 3,
+					"position": [
+						-0.153205499053001,
+						0.109207279980183
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.927565790450055,
+					"runaway_heat": 0.0,
+					"speed": 0.000000903609873148525,
+					"time": 3.6,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.140905365347862,
+						0.0728308111429214
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.91752088811645,
+					"runaway_heat": 0.0,
+					"speed": 0.412432819604874,
+					"time": 3.7,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.136398047208786,
+						0.0595007985830307
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.915989461029528,
+					"runaway_heat": 0.0,
+					"speed": 0.0478692427277565,
+					"time": 3.8,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135874882340431,
+						0.0579536445438862
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.914458102082392,
+					"runaway_heat": 0.0,
+					"speed": 0.00555597012862563,
+					"time": 3.9,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135814160108566,
+						0.0577740743756294
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.912926751043937,
+					"runaway_heat": 0.0,
+					"speed": 0.000644856714643538,
+					"time": 4.0,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135807111859322,
+						0.0577532351016998
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.911395400923409,
+					"runaway_heat": 0.0,
+					"speed": 0.0000748456441215239,
+					"time": 4.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806307196617,
+						0.0577508136630058
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.90986405090942,
+					"runaway_heat": 0.0,
+					"speed": 0.00000868699953571195,
+					"time": 4.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806202888489,
+						0.0577505305409431
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.908332700907796,
+					"runaway_heat": 0.0,
+					"speed": 0.00000100826127891196,
+					"time": 4.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806202888489,
+						0.0577505007386208
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.906801350907607,
+					"runaway_heat": 0.0,
+					"speed": 0.000000117024384849174,
+					"time": 4.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806202888489,
+						0.0577505007386208
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.905270000907586,
+					"runaway_heat": 0.0,
+					"speed": 0.000000013582497793152,
+					"time": 4.5,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806202888489,
+						0.0577505007386208
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.903738650907583,
+					"runaway_heat": 0.0,
+					"speed": 0.00000000157645985154886,
+					"time": 4.6,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 2
+					},
+					"hits": 4,
+					"position": [
+						-0.135806202888489,
+						0.0577505007386208
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.902207300907583,
+					"runaway_heat": 0.0,
+					"speed": 0.000000000182972664797276,
+					"time": 4.7,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.991861655969378,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 3
+					},
+					"hits": 5,
+					"position": [
+						-0.140963792800903,
+						0.0536109432578087
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.89453325432337,
+					"runaway_heat": 0.0,
+					"speed": 1.20568037033081,
+					"time": 4.8,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 3
+					},
+					"hits": 5,
+					"position": [
+						-0.173044264316559,
+						0.0278626494109631
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.893001678972277,
+					"runaway_heat": 0.0,
+					"speed": 0.139937937259674,
+					"time": 4.9,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 1.0,
+					"counters": {
+						"anchor": 1,
+						"bulwark_impact": 3
+					},
+					"hits": 5,
+					"position": [
+						-0.176767691969872,
+						0.0248741582036018
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.891470302816781,
+					"runaway_heat": 0.0,
+					"speed": 0.0162419714033604,
+					"time": 5.0,
+					"traces": 0,
+					"wobble": 0.0
+				}
+			]
+		},
+		{
+			"active_seconds": 4.99999999999999,
+			"actual_proc_counters": {
+				"afterimage": 25,
+				"afterimage_hit": 5,
+				"ghost_activation": 1,
+				"ghost_closure": 1
+			},
+			"actual_proc_events": [
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 0.45
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 0.633333333333334
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 0.816666666666668
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.0
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 1.01666666666667
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.18333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.36666666666667
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.55
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 1.63333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.73333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 1.91666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 2.1
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 2.25
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 2.28333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 2.46666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 2.65
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 2.83333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 2.89999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.01666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.19999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.38333333333333
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage_hit",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 3.51666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.56666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.74999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 3.93333333333332
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.11666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.29999999999999
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.48333333333332
+				},
+				{
+					"generation": 0,
+					"kind": "ghost_activation",
+					"owner": 1,
+					"root": 0,
+					"target": 2,
+					"time": 4.48333333333332
+				},
+				{
+					"generation": 0,
+					"kind": "ghost_closure",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.48333333333332
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.66666666666666
+				},
+				{
+					"generation": 0,
+					"kind": "afterimage",
+					"owner": 1,
+					"root": 0,
+					"target": 0,
+					"time": 4.84999999999999
+				}
+			],
+			"branch": "ghost_circuit",
+			"completed_five_seconds": true,
+			"defining_proc": "ghost_closure",
+			"draw_submission_cpu_ms": {},
+			"final": {
+				"anchor": 0.0,
+				"counters": {
+					"afterimage": 25,
+					"afterimage_hit": 5,
+					"ghost_activation": 1,
+					"ghost_closure": 1
+				},
+				"hits": 0,
+				"position": [
+					63.6778335571289,
+					115.444313049316
+				],
+				"redline_seconds": 0.0,
+				"rpm": 0.815923901378846,
+				"runaway_heat": 0.0,
+				"speed": 185.79167175293,
+				"time": 5.0,
+				"traces": 25,
+				"wobble": 0.0
+			},
+			"fixed_ticks": 300,
+			"harness_fixed_ticks_per_wall_second_including_png_saves": 2413.7681334331,
+			"id": "ghost-circuit-vane",
+			"initial": {
+				"anchor": 0.0,
+				"counters": {},
+				"hits": 0,
+				"position": [
+					132.0,
+					0.0
+				],
+				"redline_seconds": 0.0,
+				"rpm": 1.0,
+				"runaway_heat": 0.0,
+				"speed": 0.0,
+				"time": 0.0,
+				"traces": 0,
+				"wobble": 0.0
+			},
+			"natural_proc_capture_seconds": 4.61666666666666,
+			"performance_scope": "Single HUD-free duel, measured CPU simulation/draw submission. Harness frame/rate includes waiting and capture overhead; excludes asynchronous GPU time and is not an end-user FPS claim.",
+			"policy": "orbit",
+			"power": "afterimage",
+			"render_harness_frame_ms": {},
+			"result": {},
+			"simulation_cpu_ms": {
+				"max": 1.298,
+				"median": 0.297,
+				"p95": 0.978,
+				"samples": 300
+			},
+			"starter": "vane",
+			"support": "iron_comet",
+			"timeline": [
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						128.834182739258,
+						9.99170780181885
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.985380663761579,
+					"runaway_heat": 0.0,
+					"speed": 116.512977600098,
+					"time": 0.1,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						124.464210510254,
+						22.4448890686035
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.983747765966102,
+					"runaway_heat": 0.0,
+					"speed": 142.690414428711,
+					"time": 0.2,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						118.55199432373,
+						36.883186340332
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.982102860159841,
+					"runaway_heat": 0.0,
+					"speed": 164.357650756836,
+					"time": 0.3,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {},
+					"hits": 0,
+					"position": [
+						110.916542053223,
+						52.3448104858398
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.980449747348195,
+					"runaway_heat": 0.0,
+					"speed": 177.282943725586,
+					"time": 0.4,
+					"traces": 0,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 1
+					},
+					"hits": 0,
+					"position": [
+						101.559768676758,
+						67.819206237793
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.975792433712459,
+					"runaway_heat": 0.0,
+					"speed": 183.500350952148,
+					"time": 0.5,
+					"traces": 1,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 1
+					},
+					"hits": 0,
+					"position": [
+						90.2616882324219,
+						82.592658996582
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.974132530515177,
+					"runaway_heat": 0.0,
+					"speed": 187.559768676758,
+					"time": 0.6,
+					"traces": 1,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 2
+					},
+					"hits": 0,
+					"position": [
+						77.006965637207,
+						96.0224990844727
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.969471260618043,
+					"runaway_heat": 0.0,
+					"speed": 189.522277832031,
+					"time": 0.7,
+					"traces": 2,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 2
+					},
+					"hits": 0,
+					"position": [
+						61.9210433959961,
+						107.559509277344
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.967809366617463,
+					"runaway_heat": 0.0,
+					"speed": 190.363037109375,
+					"time": 0.8,
+					"traces": 2,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 3
+					},
+					"hits": 0,
+					"position": [
+						45.2807464599609,
+						116.781341552734
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.963147303397986,
+					"runaway_heat": 0.0,
+					"speed": 190.355728149414,
+					"time": 0.9,
+					"traces": 3,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 4
+					},
+					"hits": 0,
+					"position": [
+						27.4844360351563,
+						123.410659790039
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.958485406785075,
+					"runaway_heat": 0.0,
+					"speed": 189.847717285156,
+					"time": 1.0,
+					"traces": 4,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 4,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						8.95413970947266,
+						127.27172088623
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.956823821702182,
+					"runaway_heat": 0.0,
+					"speed": 189.17822265625,
+					"time": 1.1,
+					"traces": 4,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 5,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						-9.8824577331543,
+						128.272644042969
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.952162560811117,
+					"runaway_heat": 0.0,
+					"speed": 188.565322875977,
+					"time": 1.2,
+					"traces": 5,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 5,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						-28.6001281738281,
+						126.395668029785
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.950501557312109,
+					"runaway_heat": 0.0,
+					"speed": 188.132049560547,
+					"time": 1.3,
+					"traces": 5,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 6,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						-46.7833442687988,
+						121.690368652344
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.945840700624084,
+					"runaway_heat": 0.0,
+					"speed": 187.941375732422,
+					"time": 1.4,
+					"traces": 6,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 6,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						-64.0324554443359,
+						114.268463134766
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.944179864667155,
+					"runaway_heat": 0.0,
+					"speed": 188.006500244141,
+					"time": 1.5,
+					"traces": 6,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 7,
+						"afterimage_hit": 1
+					},
+					"hits": 0,
+					"position": [
+						-79.97021484375,
+						104.299270629883
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.939518925623421,
+					"runaway_heat": 0.0,
+					"speed": 188.308715820313,
+					"time": 1.6,
+					"traces": 7,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 7,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-94.2477111816406,
+						92.0055236816406
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.93785777698136,
+					"runaway_heat": 0.0,
+					"speed": 188.806655883789,
+					"time": 1.7,
+					"traces": 7,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 8,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-106.550712585449,
+						77.6586380004883
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.933196336371301,
+					"runaway_heat": 0.0,
+					"speed": 189.444961547852,
+					"time": 1.8,
+					"traces": 8,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 8,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-116.605621337891,
+						61.5739517211914
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.93153455087386,
+					"runaway_heat": 0.0,
+					"speed": 190.166000366211,
+					"time": 1.9,
+					"traces": 8,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 9,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-124.185569763184,
+						44.1046180725098
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.926872396424618,
+					"runaway_heat": 0.0,
+					"speed": 190.910202026367,
+					"time": 2.0,
+					"traces": 9,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 10,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-129.115783691406,
+						25.6349620819092
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.922209875940552,
+					"runaway_heat": 0.0,
+					"speed": 191.629776000977,
+					"time": 2.1,
+					"traces": 10,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 10,
+						"afterimage_hit": 2
+					},
+					"hits": 0,
+					"position": [
+						-131.278396606445,
+						6.57256412506104
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.920547014794785,
+					"runaway_heat": 0.0,
+					"speed": 192.281097412109,
+					"time": 2.2,
+					"traces": 10,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 11,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-130.616104125977,
+						-12.6606473922729
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.915883854735112,
+					"runaway_heat": 0.0,
+					"speed": 192.838790893555,
+					"time": 2.3,
+					"traces": 11,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 11,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-127.134315490723,
+						-31.6377639770508
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.914220448859894,
+					"runaway_heat": 0.0,
+					"speed": 193.283737182617,
+					"time": 2.4,
+					"traces": 11,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 12,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-120.901634216309,
+						-49.937084197998
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.909556854634072,
+					"runaway_heat": 0.0,
+					"speed": 193.611907958984,
+					"time": 2.5,
+					"traces": 12,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 12,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-112.048736572266,
+						-67.1517562866211
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.907893130423827,
+					"runaway_heat": 0.0,
+					"speed": 193.825729370117,
+					"time": 2.6,
+					"traces": 12,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 13,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-100.765350341797,
+						-82.8995971679688
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.903229329964737,
+					"runaway_heat": 0.0,
+					"speed": 193.935852050781,
+					"time": 2.7,
+					"traces": 13,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 13,
+						"afterimage_hit": 3
+					},
+					"hits": 0,
+					"position": [
+						-87.2959213256836,
+						-96.831672668457
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.901565501158425,
+					"runaway_heat": 0.0,
+					"speed": 193.95768737793,
+					"time": 2.8,
+					"traces": 13,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 14,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						-71.9336242675781,
+						-108.64037322998
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.896901682854751,
+					"runaway_heat": 0.0,
+					"speed": 193.90788269043,
+					"time": 2.9,
+					"traces": 14,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 14,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						-55.0136489868164,
+						-118.065956115723
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.895237905383668,
+					"runaway_heat": 0.0,
+					"speed": 193.806457519531,
+					"time": 3.0,
+					"traces": 14,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 15,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						-36.9052696228027,
+						-124.902198791504
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.890574189543546,
+					"runaway_heat": 0.0,
+					"speed": 193.669250488281,
+					"time": 3.1,
+					"traces": 15,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 16,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						-18.0035247802734,
+						-129.000549316406
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.885910547798174,
+					"runaway_heat": 0.0,
+					"speed": 193.515243530273,
+					"time": 3.2,
+					"traces": 16,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 16,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						1.27960228919983,
+						-130.27294921875
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.884246985231319,
+					"runaway_heat": 0.0,
+					"speed": 193.35514831543,
+					"time": 3.3,
+					"traces": 16,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 17,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						20.5243797302246,
+						-128.693557739258
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.879583500354026,
+					"runaway_heat": 0.0,
+					"speed": 193.203475952148,
+					"time": 3.4,
+					"traces": 17,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 17,
+						"afterimage_hit": 4
+					},
+					"hits": 0,
+					"position": [
+						39.3122634887695,
+						-124.298759460449
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.877920087454202,
+					"runaway_heat": 0.0,
+					"speed": 193.066131591797,
+					"time": 3.5,
+					"traces": 17,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 18,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						57.2351837158203,
+						-117.186302185059
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.873256736737507,
+					"runaway_heat": 0.0,
+					"speed": 192.950469970703,
+					"time": 3.6,
+					"traces": 18,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 18,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						73.9039993286133,
+						-107.512939453125
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.871593437150406,
+					"runaway_heat": 0.0,
+					"speed": 192.858505249023,
+					"time": 3.7,
+					"traces": 18,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 19,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						88.9571075439453,
+						-95.4908599853516
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.866930176001892,
+					"runaway_heat": 0.0,
+					"speed": 192.791290283203,
+					"time": 3.8,
+					"traces": 19,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 19,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						102.067909240723,
+						-81.3831634521484
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.865266941556786,
+					"runaway_heat": 0.0,
+					"speed": 192.748153686523,
+					"time": 3.9,
+					"traces": 19,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 20,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						112.95206451416,
+						-65.4979934692383
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.860603722322352,
+					"runaway_heat": 0.0,
+					"speed": 192.725616455078,
+					"time": 4.0,
+					"traces": 20,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 20,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						117.768745422363,
+						-43.0817985534668
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.845921418405129,
+					"runaway_heat": 0.0,
+					"speed": 232.793106079102,
+					"time": 4.1,
+					"traces": 20,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 21,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						120.869033813477,
+						-20.8341941833496
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.841242270013932,
+					"runaway_heat": 0.0,
+					"speed": 219.482528686523,
+					"time": 4.2,
+					"traces": 21,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 22,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						122.315368652344,
+						0.477430105209351
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.836568595866903,
+					"runaway_heat": 0.0,
+					"speed": 209.952362060547,
+					"time": 4.3,
+					"traces": 22,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 22,
+						"afterimage_hit": 5
+					},
+					"hits": 0,
+					"position": [
+						121.454818725586,
+						21.0172462463379
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.834898899635187,
+					"runaway_heat": 0.0,
+					"speed": 202.989730834961,
+					"time": 4.4,
+					"traces": 22,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 23,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						118.006958007813,
+						40.6574249267578
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.830232275620502,
+					"runaway_heat": 0.0,
+					"speed": 197.358184814453,
+					"time": 4.5,
+					"traces": 23,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 23,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						111.851753234863,
+						59.1331214904785
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.828567963218114,
+					"runaway_heat": 0.0,
+					"speed": 193.316757202148,
+					"time": 4.6,
+					"traces": 23,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 24,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						103.100387573242,
+						76.1367492675781
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.823905399092376,
+					"runaway_heat": 0.0,
+					"speed": 190.189926147461,
+					"time": 4.7,
+					"traces": 24,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 24,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						91.9737091064453,
+						91.3668975830078
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.822244141878631,
+					"runaway_heat": 0.0,
+					"speed": 187.929718017578,
+					"time": 4.8,
+					"traces": 24,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 25,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						78.7332916259766,
+						104.549407958984
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.817583771986725,
+					"runaway_heat": 0.0,
+					"speed": 186.487640380859,
+					"time": 4.9,
+					"traces": 25,
+					"wobble": 0.0
+				},
+				{
+					"anchor": 0.0,
+					"counters": {
+						"afterimage": 25,
+						"afterimage_hit": 5,
+						"ghost_activation": 1,
+						"ghost_closure": 1
+					},
+					"hits": 0,
+					"position": [
+						63.6778335571289,
+						115.444313049316
+					],
+					"redline_seconds": 0.0,
+					"rpm": 0.815923901378846,
+					"runaway_heat": 0.0,
+					"speed": 185.79167175293,
+					"time": 5.0,
+					"traces": 25,
+					"wobble": 0.0
+				}
+			]
+		}
+	],
+	"scope": "Five active simulation seconds per HUD-free build. Explicit initial build/pose fixtures, then real movement/contact mechanics and normal rival AI. No injected procs, teleports, reserve refills, paths, FX or victories. This is bot/render evidence; build recognition and feel require human review.",
+	"sequence_fps": 0
+}

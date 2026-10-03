@@ -2,7 +2,8 @@ extends RefCounted
 class_name RunProgression
 
 ## All progression tuning lives here. Costs are incremental: the opening power
-## is free, then five earned levels fill this slice's six functional power pool.
+## is free; earned levels buy acquisitions, tunes or mutations. The original
+## five costs remain intact, then plateau for this slice's 13 investments.
 ## No clock tick awards XP; combat supplies immutable events using live time.
 const TUNING: Dictionary = {
 	"level_costs": [18, 22, 36, 56, 84],
@@ -22,7 +23,7 @@ var xp: int = 0
 var total_xp: int = 0
 var last_award: int = 0
 var _tuning: Dictionary = TUNING.duplicate(true)
-var _max_level: int = 6
+var _max_level: int = 13
 var _seen_events: Dictionary = {}
 var _seen_eliminations: Dictionary = {}
 var _seen_waves: Dictionary = {}
@@ -30,9 +31,9 @@ var _pair_awards: Dictionary = {}
 var _last_collision_awards: Dictionary = {}
 var _last_event_times: Dictionary = {}
 
-func setup(power_count: int = 6, tuning: Dictionary = {}) -> void:
+func setup(investment_count: int = 13, tuning: Dictionary = {}) -> void:
 	clear()
-	_max_level = maxi(1, power_count)
+	_max_level = maxi(1, investment_count)
 	_tuning = TUNING.duplicate(true)
 	_tuning.merge(tuning.duplicate(true), true)
 
@@ -61,7 +62,7 @@ func snapshot() -> Dictionary:
 	var next_cost: int = threshold()
 	return {"level":level, "xp":xp, "total_xp":total_xp,
 		"threshold":next_cost, "fraction":1.0 if is_maxed() else float(xp) / float(next_cost),
-		"maxed":is_maxed(), "earned_levels":level - 1, "last_award":last_award}
+		"maxed":is_maxed(), "max_level":_max_level, "earned_levels":level - 1, "last_award":last_award}
 
 ## Returns the levels newly crossed, in order. A large meaningful award retains
 ## its overflow and queues every entitlement; presentation does not consume RNG.

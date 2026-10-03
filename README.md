@@ -31,11 +31,16 @@ Task 002B.1 opens a Run with three authored identities: **Breaker**
 through meaningful combat. The visible Level bar leads to an immediate
 mid-battle draft, a brief acquisition, and the exact same encounter.
 
-The six functional powers remain Impact Wake, Second Wind, Redline,
-Iron Comet, Afterimage, and Chain Impact. Their mechanical rules are preserved.
+Task 002C adds repeated investment: **Redline**, **Dead Centre** and
+**Afterimage** progress from acquisition to Rank II, then a choice between
+two mutually exclusive behavioural mutations. Owned powers can return in
+the draft alongside new powers. The seven functional powers are Impact Wake,
+Second Wind, Redline, Iron Comet, Dead Centre, Afterimage, and Chain Impact.
 All powers are legal for every starter. The physical assembly stays locked
-through the eight encounters; the pool ends at six unique powers and the
-Level bar becomes **FULL BUILD / MAX**. Starter handling profiles make
+through the eight encounters. There are thirteen available investments;
+seven owned powers are supported and the HUD has eight slots. The Level bar
+becomes **FULL BUILD / MAX** only when every available investment is earned.
+XP awards, early level costs and enemy schedules are preserved. Starter handling profiles make
 aggression, centre control, and efficient mobility more pronounced in Runs.
 Custom assemblies and Quick Duel retain the original part physics.
 
@@ -43,7 +48,7 @@ Slot 3 is **Ammunition Waves**: 24 lightweight small tops in waves of 6/8/10,
 with at most 12 active. XP drafts freeze tops, RPM, power cooldowns and wave
 scheduling, and the new ability is usable in that same wave. The other seven
 slots retain ordinary duel fixtures. Further powers, specialist AI, bosses,
-meta progression and power evolutions remain deferred.
+meta progression remain deferred.
 
 The Garage is preserved. Select **CUSTOM ASSEMBLY RUN** below the three
 starters for an advanced custom Run. D-pad or left/right chooses a starter;
@@ -52,9 +57,17 @@ transition. Release steering, Burst and brake after a draft to rearm combat.
 
 Power cards now have 64px authored animations and editable Aseprite production
 masters. Export edited art with `python tools/build_power_art.py` and
-`python tools/build_starter_art.py`; ordinary exports never overwrite artist
+`python tools/build_starter_art.py`; export the new escalation masters with
+`python tools/build_escalation_art.py`. Ordinary exports never overwrite artist
 edits. See [TASK-002B1.md](TASK-002B1.md) for implementation, measured pacing,
-controller results, acceptance findings and limitations. Historical Task 002B
+controller results, acceptance findings and limitations. For the current
+escalation rules, source-art/audio additions, tests and outstanding human
+checkpoint, see [TASK-002C.md](TASK-002C.md) and
+[TASK-002C-PLAYTEST.md](TASK-002C-PLAYTEST.md). Optional targeted build practice
+uses `SpinningMetal.exe -- --practice=runaway` (also breakneck, bulwark,
+counterweight, ghost_circuit, slipstream, hybrid). Practice presets equip
+seven powers independently of ordinary Run randomness. Press F2 in combat
+to hide/show the HUD for build recognition; pause restores it. Historical Task 002B
 notes remain in [TASK-002B.md](TASK-002B.md).
 
 Run automated suites with Godot 4.7.2:
@@ -75,6 +88,12 @@ Godot --headless --path . --script res://tests/test_starter_physics.gd
 Godot --headless --path . --script res://tests/test_xp_observer.gd
 Godot --headless --path . --script res://tests/test_ramp_integration.gd
 Godot --headless --path . --script res://tests/test_card_assets.gd
+Godot --headless --path . --script res://tests/test_escalation_progression.gd
+Godot --headless --path . --script res://tests/test_escalation_physics.gd
+Godot --headless --path . --script res://tests/test_escalation_assets.gd
+Godot --headless --path . --script res://tests/test_escalation_integration.gd
+Godot --headless --path . --script res://tests/test_escalation_completion.gd
+Godot --headless --path . --script res://tests/test_escalation_visual_playthrough.gd
 ```
 
 Run `tests/test_prototype.gd` only in a disposable copy: the preserved baseline

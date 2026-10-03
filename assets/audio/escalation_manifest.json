@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "authoring": "deterministic original component synthesis; finite mono mechanical one-shots",
+  "cues": {
+    "rank_up": {
+      "file": "rank_up.wav",
+      "duration_ms": 430,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.445
+    },
+    "mutation_available": {
+      "file": "mutation_available.wav",
+      "duration_ms": 660,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3461
+    },
+    "mutation_select": {
+      "file": "mutation_select.wav",
+      "duration_ms": 610,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.5972
+    },
+    "redline_ii": {
+      "file": "redline_ii.wav",
+      "duration_ms": 320,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.6596
+    },
+    "runaway": {
+      "file": "runaway.wav",
+      "duration_ms": 270,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4911
+    },
+    "runaway_hit": {
+      "file": "runaway_hit.wav",
+      "duration_ms": 180,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.53
+    },
+    "breakneck_charge": {
+      "file": "breakneck_charge.wav",
+      "duration_ms": 280,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.5339
+    },
+    "breakneck_impact": {
+      "file": "breakneck_impact.wav",
+      "duration_ms": 440,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.86
+    },
+    "anchor": {
+      "file": "anchor.wav",
+      "duration_ms": 220,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4667
+    },
+    "anchor_break": {
+      "file": "anchor_break.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.5648
+    },
+    "bulwark_impact": {
+      "file": "bulwark_impact.wav",
+      "duration_ms": 380,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.8165
+    },
+    "counterweight_store": {
+      "file": "counterweight_store.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3734
+    },
+    "counterweight_release": {
+      "file": "counterweight_release.wav",
+      "duration_ms": 420,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.6951
+    },
+    "afterimage_ii": {
+      "file": "afterimage_ii.wav",
+      "duration_ms": 150,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.2904
+    },
+    "ghost_closure": {
+      "file": "ghost_closure.wav",
+      "duration_ms": 300,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3411
+    },
+    "ghost_activation": {
+      "file": "ghost_activation.wav",
+      "duration_ms": 470,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.6104
+    },
+    "slipstream_cross": {
+      "file": "slipstream_cross.wav",
+      "duration_ms": 180,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3629
+    }
+  }
+}
