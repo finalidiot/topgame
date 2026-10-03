@@ -4,6 +4,7 @@ extends Control
 signal action(name: String, value: Variant)
 
 const Preview = preload("res://scripts/top_preview.gd")
+const Powers = preload("res://scripts/run_powers.gd")
 const INK: Color = Color("0b141e")
 const PANEL: Color = Color("172737")
 const BORDER: Color = Color("30495d")
@@ -167,7 +168,7 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 	_label(_content, "SPINNING METAL", Rect2(28, 24, 565, 42), 32)
 	_label(_content, "FOUNDRY EIGHT  /  PLAYABLE PROTOTYPE", Rect2(30, 65, 570, 16), 10, ORANGE)
 	var first: Button = _button(_content, "QUICK DUEL", Rect2(30, 104, 268, 31), "quick_duel", null, true)
-	_button(_content, "THREE-BATTLE RUN", Rect2(30, 143, 268, 31), "start_battle", "gauntlet")
+	_button(_content, "EIGHT-ENCOUNTER RUN", Rect2(30, 143, 268, 31), "start_run")
 	_button(_content, "CUSTOMIZE TOP", Rect2(30, 182, 268, 31), "customize")
 	_button(_content, "HOW TO PLAY", Rect2(30, 221, 128, 31), "help")
 	_button(_content, "SETTINGS", Rect2(168, 221, 130, 31), "settings")
@@ -205,7 +206,7 @@ func show_garage(build: Dictionary) -> void:
 	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 221)
 	_button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
 	_button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
-	_button(_content, "THREE-BATTLE RUN", Rect2(342, 319, 276, 27), "start_battle", "gauntlet")
+	_button(_content, "EIGHT-ENCOUNTER RUN", Rect2(342, 319, 276, 27), "start_run")
 	_refresh_garage()
 	(_part_buttons["blade"][_build.get("blade", "balance")] as Button).grab_focus()
 
@@ -314,16 +315,52 @@ func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> vo
 		button.text = "ON" if _settings[key] else "OFF"
 		action.emit("settings_changed", _settings.duplicate()))
 
-func show_pause() -> void:
+func show_pause(is_run: bool = false) -> void:
 	_clear("pause", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(0.02, 0.04, 0.065, 0.8))
 	_panel(_content, Rect2(186, 48, 268, 268))
-	_label(_content, "DUEL PAUSED", Rect2(202, 66, 236, 31), 23, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(202, 66, 236, 31), 23, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Take a breath. Your spin can wait.", Rect2(202, 101, 236, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_button(_content, "RESUME", Rect2(207, 135, 226, 31), "resume", null, true).grab_focus()
-	_button(_content, "RESTART BATTLE" if _run_active else "RESTART DUEL", Rect2(207, 176, 226, 31), "rematch")
-	_button(_content, "CUSTOMIZE TOP", Rect2(207, 217, 226, 31), "customize")
-	_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")
+	_button(_content, "RESTART RUN" if is_run else "RESTART DUEL", Rect2(207, 176, 226, 31), "restart_run" if is_run else "rematch")
+	if is_run:
+		_button(_content, "END RUN", Rect2(207, 217, 226, 31), "end_run")
+		_label(_content, "Assembly locked for this run", Rect2(202, 258, 236, 22), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	else:
+		_button(_content, "CUSTOMIZE TOP", Rect2(207, 217, 226, 31), "customize")
+		_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")
+
+func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int) -> void:
+	_clear("reward")
+	_header("VICTORY  /  PICK A POWER", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)
+	_label(_content, "COLLECTION PREVIEW  /  Power effects are inactive in this build.", Rect2(24, 60, 592, 18), 10, ORANGE)
+	var cards: Array[Button] = []
+	for index: int in range(offer.size()):
+		var id: String = str(offer[index])
+		var power: Dictionary = Powers.get_power(id)
+		var card: Button = _button(_content, "", Rect2(22 + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
+		card.tooltip_text = str(power.name) + ": " + str(power.description)
+		_label(card, "%02d" % (index + 1), Rect2(12, 10, 168, 22), 17, ORANGE)
+		_label(card, str(power.name), Rect2(12, 41, 168, 25), 16, TEXT)
+		var description: Label = _label(card, str(power.description), Rect2(12, 72, 168, 77), 12, MUTED)
+		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		_label(card, "COLLECT & CONTINUE", Rect2(12, 161, 168, 16), 10, BLUE)
+		cards.append(card)
+	for index: int in range(cards.size()):
+		cards[index].focus_neighbor_left = cards[index].get_path_to(cards[(index + cards.size() - 1) % cards.size()])
+		cards[index].focus_neighbor_right = cards[index].get_path_to(cards[(index + 1) % cards.size()])
+	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
+	_power_labels(owned, 302)
+	_label(_content, "ARROWS / D-PAD  CHOOSE     ENTER / A  SELECT     ESC  PAUSE", Rect2(24, 334, 592, 16), 9, MUTED)
+	if not cards.is_empty(): cards[0].grab_focus()
+
+func _power_labels(ids: Array, y: float) -> void:
+	for index: int in range(ids.size()):
+		var power: Dictionary = Powers.get_power(str(ids[index]))
+		var area: Rect2 = Rect2(22 + index * 101, y, 96, 20)
+		_panel(_content, area, PANEL, BORDER)
+		_label(_content, str(power.name), area, 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 
 func show_result(result: Dictionary) -> void:
 	_clear("result", false)
@@ -351,11 +388,14 @@ func show_result(result: Dictionary) -> void:
 		remaining *= 100.0
 	_label(_content, "%d%%" % roundi(remaining), Rect2(389, 178, 102, 25), 18, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	var next_available: bool = bool(result.get("next_available", false))
-	var is_run: bool = str(result.get("run_label", "")).contains("GAUNTLET") or _run_active
-	var retry_text: String = ("RUN AGAIN" if won else "RETRY BATTLE") if is_run else "REMATCH"
-	var primary: Button = _button(_content, "NEXT RIVAL" if next_available else retry_text, Rect2(149, 222, 342, 31), "next_battle" if next_available else "rematch", null, true)
-	_button(_content, "CUSTOMIZE TOP", Rect2(149, 268, 166, 28), "customize")
-	_button(_content, "MAIN MENU", Rect2(325, 268, 166, 28), "main_menu")
+	var is_run: bool = bool(result.get("is_run", false))
+	var retry_text: String = "RESTART RUN" if is_run else "REMATCH"
+	var primary: Button = _button(_content, "NEXT ENCOUNTER" if next_available else retry_text, Rect2(149, 222, 342, 31), "next_battle" if next_available else ("restart_run" if is_run else "rematch"), null, true)
+	if is_run and next_available:
+		_button(_content, "END RUN", Rect2(149, 268, 342, 28), "end_run")
+	else:
+		_button(_content, "GARAGE" if is_run else "CUSTOMIZE TOP", Rect2(149, 268, 166, 28), "customize")
+		_button(_content, "MAIN MENU", Rect2(325, 268, 166, 28), "main_menu")
 	primary.grab_focus()
 
 func show_hud(stats: Dictionary) -> void:
@@ -384,9 +424,12 @@ func show_hud(stats: Dictionary) -> void:
 	elif phase == "launch":
 		announcement = "LET IT RIP"
 	_hud["announcement"].text = announcement
-	var round_number: int = int(stats.get("round", 0))
-	_run_active = round_number > 0 or str(stats.get("run_label", "")).contains("GAUNTLET")
-	_hud["round"].text = str(stats.get("run_label", "FOUNDRY RUN  %d / 3" % round_number if round_number > 0 else "FOUNDRY EIGHT  /  DUEL"))
+	_run_active = bool(stats.get("is_run", false))
+	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
+	var ids: Array = stats.get("owned_power_ids", [])
+	for index: int in range(6):
+		_hud["power_%d" % index].text = str(Powers.get_power(str(ids[index])).name) if index < ids.size() else ""
+	_hud["power_note"].text = "POWERS COLLECTED  /  EFFECTS INACTIVE" if _run_active else ""
 	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
 
 func _create_hud() -> void:
@@ -405,6 +448,9 @@ func _create_hud() -> void:
 	_hud["round"] = _label(_content, "", Rect2(175, 76, 290, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	for index: int in range(6):
+		_hud["power_%d" % index] = _label(_content, "", Rect2(22 + index * 101, 305, 96, 15), 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["burst"] = _label(_content, "SPACE  BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
 	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)

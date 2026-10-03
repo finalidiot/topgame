@@ -4,6 +4,7 @@ const BattleScript = preload("res://scripts/battle.gd")
 const MenuScript = preload("res://scripts/menus.gd")
 const SoundScript = preload("res://scripts/sound.gd")
 const Catalog = preload("res://scripts/parts.gd")
+const RunContext = preload("res://scripts/run_context.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -19,6 +20,9 @@ var smoke_mode: bool = false
 var capture_dir: String = ""
 var audit_actions: Array = []
 var opponent_build: Dictionary = {}
+var run_context = RunContext.new()
+var pause_origin: String = "battle"
+var _previous_run_seed: int = 0
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -26,6 +30,7 @@ func _ready() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument == "--smoke-test": smoke_mode = true
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
+	if smoke_mode: rng.seed = 7341
 	if not smoke_mode: _load_preferences()
 	battle = BattleScript.new()
 	add_child(battle)
@@ -76,22 +81,20 @@ func _hide_battle() -> void:
 	battle.visible = false
 
 func _title() -> void:
+	if run_context.is_active(): return
+	_clear_run()
 	_hide_battle()
 	screen = "title"
 	menus.show_title(build, settings)
 
 func _garage() -> void:
+	if run_context.is_active(): return
+	_clear_run()
 	_hide_battle()
 	screen = "garage"
 	menus.show_garage(build)
 
 func _opponent() -> Dictionary:
-	if mode == "gauntlet":
-		return [
-			{"blade":"smash", "ratchet":"low", "bit":"flat"},
-			{"blade":"hook", "ratchet":"high", "bit":"rubber"},
-			{"blade":"guard", "ratchet":"mid", "bit":"needle"}
-		][mini(round_index, 2)].duplicate()
 	var rivals: Array = [
 		{"blade":"smash", "ratchet":"low", "bit":"flat"},
 		{"blade":"guard", "ratchet":"mid", "bit":"needle"},
@@ -101,33 +104,98 @@ func _opponent() -> Dictionary:
 	return rivals[rng.randi_range(0, rivals.size()-1)].duplicate()
 
 func _start_battle(selected_mode: String = "duel", next: bool = false, replay: bool = false) -> void:
-	mode = selected_mode
-	if not next and not replay: round_index = 0
+	if selected_mode == "run":
+		if not run_context.is_active(): _start_run()
+		return
+	if run_context.is_active(): return
+	_clear_run()
+	mode = "duel"
+	round_index = 0
 	if not replay or opponent_build.is_empty(): opponent_build = _opponent()
 	last_result.clear()
 	screen = "battle"
 	battle.visible = true
 	battle.set_physics_process(true)
 	battle.set_paused(false)
-	battle.begin(build.duplicate(), opponent_build.duplicate(), round_index+1 if mode == "gauntlet" else 1, 7341+round_index if smoke_mode else rng.randi())
+	battle.begin(build.duplicate(), opponent_build.duplicate(), 1, 7341 if smoke_mode else rng.randi())
 	_apply_settings()
-	menus.show_hud({"player_rpm":1.0, "enemy_rpm":1.0, "status":"countdown", "countdown":3, "player_name":Catalog.title(build), "enemy_name":"RIVAL", "time_left":60.0, "burst_ready":true, "burst_cooldown":0.0})
+	battle._emit_hud()
+
+func _clear_run() -> void:
+	run_context.clear()
+	mode = "duel"
+	round_index = 0
+	pause_origin = "battle"
+
+func _start_run() -> void:
+	if run_context.is_active(): return
+	_restart_run()
+
+func _restart_run() -> void:
+	# Entropy is sampled only here, never from menu duration or encounter timing.
+	var selected: Dictionary = build if run_context.status == "empty" else run_context.selected_build
+	var fresh_seed: int = rng.randi()
+	while fresh_seed == 0 or fresh_seed == _previous_run_seed:
+		fresh_seed = rng.randi()
+	_previous_run_seed = fresh_seed
+	run_context.start(selected, fresh_seed)
+	_launch_run_encounter()
+
+func _launch_run_encounter() -> void:
+	if not run_context.is_active(): return
+	var encounter: Dictionary = run_context.current_encounter()
+	mode = "run"
+	round_index = run_context.slot - 1
+	opponent_build = encounter.opponent_build.duplicate(true)
+	last_result.clear()
+	screen = "battle"
+	battle.visible = true
+	battle.set_physics_process(true)
+	battle.begin_encounter(run_context.selected_build, encounter)
+	_apply_settings()
+	battle._emit_hud()
+
+func _show_reward() -> void:
+	if not run_context.is_active() or run_context.pending_offer.is_empty(): return
+	screen = "reward"
+	battle.set_paused(true)
+	menus.show_reward(run_context.pending_offer, run_context.owned_power_ids, run_context.slot, run_context.current_encounter().id, run_context.run_seed)
+
+func _advance_run() -> void:
+	if run_context.advance(): _launch_run_encounter()
 
 func _hud_updated(stats: Dictionary) -> void:
 	if screen != "battle": return
 	stats = stats.duplicate()
-	stats["run_label"] = "DUEL" if mode == "duel" else "GAUNTLET %d / 3" % (round_index+1)
+	stats["run_label"] = "RUN %d / 8" % run_context.slot if mode == "run" else "DUEL"
+	stats["owned_power_ids"] = run_context.owned_power_ids if mode == "run" else []
+	stats["is_run"] = mode == "run"
 	menus.show_hud(stats)
 
 func _round_finished(result: Dictionary) -> void:
+	if screen != "battle": return
+	if mode == "run":
+		var encounter: Dictionary = run_context.current_encounter()
+		# Reject delayed results from an earlier slot or a discarded run.
+		if result.get("encounter_id", "") != encounter.id or int(result.get("seed", -1)) != int(encounter.seed): return
+		if not run_context.commit_result(encounter.id, bool(result.get("won", false))): return
 	screen = "result"
 	battle.set_paused(true)
-	last_result = result.duplicate()
+	last_result = result.duplicate(true)
 	if not smoke_mode: sounds.play_sound("win" if bool(result.get("won", false)) else "loss")
-	last_result["next_available"] = bool(result.get("won", false)) and mode == "gauntlet" and round_index < 2
-	last_result["run_label"] = "DUEL" if mode == "duel" else "GAUNTLET %d / 3" % (round_index+1)
-	if mode == "gauntlet" and round_index == 2 and bool(result.get("won", false)):
-		last_result["title"] = "GAUNTLET CLEARED"
+	last_result["is_run"] = mode == "run"
+	last_result["next_available"] = mode == "run" and run_context.is_active() and run_context.pending_offer.is_empty()
+	last_result["run_label"] = "RUN %d / 8" % run_context.slot if mode == "run" else "DUEL"
+	if mode == "run":
+		if not run_context.pending_offer.is_empty():
+			_show_reward()
+			return
+		if run_context.status == "complete":
+			last_result["title"] = "RUN CLEARED"
+			last_result["subtitle"] = "Eight duels complete. Six powers collected."
+		elif run_context.status == "failed":
+			last_result["title"] = "RUN ENDED"
+			last_result["subtitle"] = "Restart from encounter 1 with the same assembly."
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:
@@ -135,8 +203,22 @@ func _battle_sound(kind: String) -> void:
 
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
+	# All build/menu routes respect the lock, including stale UI signals.
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch"]: return
 	if not smoke_mode: sounds.play_sound("ui")
 	match name:
+		"start_run": _start_run()
+		"restart_run":
+			if mode == "run" and screen in ["pause", "result"]: _restart_run()
+		"end_run":
+			if mode == "run":
+				_clear_run()
+				last_result.clear()
+				_garage()
+		"choose_power":
+			if mode == "run" and screen == "reward" and value is Dictionary:
+				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if run_context.choose_power(str(value.get("encounter_id", "")), str(value.get("power_id", ""))): _advance_run()
 		"quick_duel": _start_battle("duel")
 		"start_battle": _start_battle(str(value) if value != null else "duel")
 		"customize": _garage()
@@ -150,8 +232,8 @@ func _action(name: String, value: Variant = null) -> void:
 			menus.show_settings(settings)
 		"main_menu": _title()
 		"build_changed":
-			if value is Dictionary:
-				build = value.duplicate()
+			if screen == "garage" and value is Dictionary:
+				build = Catalog.validate_build(value)
 				_save_preferences()
 		"settings_changed":
 			if value is Dictionary:
@@ -161,31 +243,36 @@ func _action(name: String, value: Variant = null) -> void:
 		"pause": _pause()
 		"resume": _resume()
 		"rematch":
-			if str(last_result.get("title", "")) == "GAUNTLET CLEARED": _start_battle(mode)
-			else: _start_battle(mode, true, true)
+			if mode == "duel" and screen in ["pause", "result"]: _start_battle("duel", true, true)
 		"next_battle":
-			if bool(last_result.get("next_available", false)):
-				round_index += 1
-				_start_battle("gauntlet", true)
+			if mode == "run" and screen == "result" and bool(last_result.get("next_available", false)): _advance_run()
 		"quit": get_tree().quit()
 
 func _pause() -> void:
-	if screen != "battle": return
-	battle.set_paused(true)
+	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "result"]): return
+	pause_origin = screen
 	screen = "pause"
-	menus.show_pause()
+	battle.set_paused(true)
+	menus.show_pause(mode == "run")
 
 func _resume() -> void:
 	if screen != "pause": return
-	screen = "battle"
-	battle.set_paused(false)
+	screen = pause_origin
+	if screen == "reward": _show_reward()
+	elif screen == "result": menus.show_result(last_result)
+	else:
+		battle.set_paused(false)
+		battle._emit_hud()
+
+func _escape() -> void:
+	if screen == "pause": _resume()
+	elif screen == "battle" or run_context.is_active(): _pause()
+	else: _title()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.physical_keycode == KEY_ESCAPE:
-			if screen == "battle": _pause()
-			elif screen == "pause": _resume()
-			else: _title()
+			_escape()
 			get_viewport().set_input_as_handled()
 		elif event.physical_keycode == KEY_F11:
 			settings.fullscreen = not bool(settings.fullscreen)
@@ -228,14 +315,14 @@ func _smoke_test() -> void:
 	await _capture("04-help")
 	_action("settings")
 	await _capture("05-settings")
-	_action("start_battle", "gauntlet")
+	_action("quick_duel")
 	await get_tree().create_timer(3.5).timeout
 	await _capture("06-battle")
 	var key: InputEventKey = InputEventKey.new()
 	key.physical_keycode = KEY_D
 	key.keycode = KEY_D
 	key.pressed = true
-	var before_position: Vector2 = battle.fighters[0].pos
+	var before_position: Vector2 = battle.player_entity().pos
 	Input.parse_input_event(key)
 	await get_tree().create_timer(0.6).timeout
 	key = InputEventKey.new()
@@ -243,7 +330,7 @@ func _smoke_test() -> void:
 	key.keycode = KEY_D
 	key.pressed = false
 	Input.parse_input_event(key)
-	var after_position: Vector2 = battle.fighters[0].pos
+	var after_position: Vector2 = battle.player_entity().pos
 	print("INPUT_SMOKE screen_dx="+str((after_position.x-after_position.y)-(before_position.x-before_position.y)))
 	await get_tree().create_timer(4.0).timeout
 	await _capture("06b-live-battle")
@@ -253,8 +340,36 @@ func _smoke_test() -> void:
 	await get_tree().create_timer(0.15).timeout
 	_round_finished({"won":true, "reason":"ring_out", "duration":28.4, "hits":9, "player_remaining":0.43, "enemy_remaining":0.0})
 	await _capture("08-victory")
-	_action("next_battle")
-	await get_tree().create_timer(0.1).timeout
-	assert(round_index == 1)
-	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" gauntlet_round="+str(round_index))
+	_action("main_menu")
+	_action("start_run")
+	for slot: int in range(1, 9):
+		assert(run_context.slot == slot)
+		await _capture("run-%02d-hud" % slot)
+		var encounter: Dictionary = run_context.current_encounter()
+		_round_finished({"won":true, "reason":"ring_out", "duration":28.4, "hits":9, "player_remaining":0.43, "encounter_id":encounter.id, "seed":encounter.seed})
+		if screen == "reward":
+			await _capture("run-%02d-reward" % slot)
+			var offer: Array = run_context.pending_offer
+			_escape()
+			await _capture("run-%02d-pause" % slot)
+			_escape()
+			assert(offer == run_context.pending_offer)
+			var card: Button = get_viewport().gui_get_focus_owner() as Button
+			assert(card != null)
+			card.pressed.emit()
+		elif slot == 5:
+			await _capture("run-05-result")
+			_action("next_battle")
+	assert(run_context.status == "complete" and run_context.owned_power_ids.size() == 6)
+	await _capture("run-complete")
+	_action("restart_run")
+	var failed_encounter: Dictionary = run_context.current_encounter()
+	_round_finished({"won":false, "reason":"spin_out", "duration":30.0, "encounter_id":failed_encounter.id, "seed":failed_encounter.seed})
+	await _capture("run-failed")
+	_action("restart_run")
+	_pause()
+	await _capture("run-battle-pause")
+	_action("end_run")
+	assert(run_context.status == "empty" and screen == "garage")
+	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" run_slots=8 drafts=6 (flow fixtures)")
 	get_tree().quit()
