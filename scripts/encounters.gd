@@ -3,7 +3,9 @@ class_name EncounterCatalog
 
 const Seeds = preload("res://scripts/seed_utils.gd")
 const SLOT_COUNT: int = 8
-const DRAFT_SLOTS: Array[int] = [1, 2, 3, 4, 6, 7]
+# Power growth now comes from Run XP. Keep this descriptor seam available for
+# future authored encounter rewards without adding a second menu cadence.
+const DRAFT_SLOTS: Array[int] = []
 
 ## Slot 3 is the first real swarm. Later rival/elite/arena/boss identities
 ## remain ordinary duel fixtures until Task 002C.

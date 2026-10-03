@@ -4,6 +4,7 @@ All oscillators/noise are authored here; no downloaded samples or dependencies.
 Audio randomness is local to offline export and cannot touch combat randomness.
 """
 from pathlib import Path
+import argparse
 import math
 import random
 import struct
@@ -35,8 +36,11 @@ def render(name,duration,frequency,end_frequency,noise,mix,pulses=1):
 
 
 if __name__=="__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--progression-only",action="store_true",help="Export 002B.1 progression cues without overwriting existing power/combat audio")
+    args=parser.parse_args()
     OUT.mkdir(parents=True,exist_ok=True)
-    for args in [
+    power_cues=[
         ("power_wake",.28,180,45,1.30,.68,1),
         ("redline",.31,190,630,.45,.78,1),
         ("comet_charge",.22,720,1150,.22,.72,1),
@@ -46,5 +50,19 @@ if __name__=="__main__":
         ("wave",.36,500,360,.35,.55,3),
         ("afterimage",.12,580,260,.38,.40,1),
         ("acquire",.37,520,1040,.10,.60,3),
-    ]: render(*args)
-    print("Exported 9 mechanical cues; maximum 0.56 seconds, no loops.")
+    ]
+    progression_cues=[
+        # The focus detent stays deliberately quiet and under 60 ms.
+        ("ui_focus",.055,920,670,.70,.24,1),
+        # A positive latch; acquisition's existing three-strike cue follows it.
+        ("card_select",.16,390,940,.54,.70,2),
+        # One restrained tension ping on crossing the near-level threshold.
+        ("near_level",.13,680,880,.08,.38,1),
+        # Heavier three-step pressure release, distinct from all combat cues.
+        ("level_up",.49,250,1420,.55,.78,3),
+        # A short flywheel clutch settles the player back into combat.
+        ("resume",.18,760,310,.52,.49,2),
+    ]
+    for cue in progression_cues if args.progression_only else power_cues+progression_cues:
+        render(*cue)
+    print("Exported %d mechanical cues; maximum 0.56 seconds, no loops." % (5 if args.progression_only else 14))

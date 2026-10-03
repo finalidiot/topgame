@@ -14,11 +14,16 @@ const SOUNDS: Dictionary = {
 	"chain": preload("res://assets/audio/chain.wav"),
 	"wave": preload("res://assets/audio/wave.wav"),
 	"afterimage": preload("res://assets/audio/afterimage.wav"),
-	"acquire": preload("res://assets/audio/acquire.wav")
+	"acquire": preload("res://assets/audio/acquire.wav"),
+	"ui_focus": preload("res://assets/audio/ui_focus.wav"),
+	"card_select": preload("res://assets/audio/card_select.wav"),
+	"near_level": preload("res://assets/audio/near_level.wav"),
+	"level_up": preload("res://assets/audio/level_up.wav"),
+	"resume": preload("res://assets/audio/resume.wav")
 }
 const MAX_CHANNELS: int = 8
-const PRIORITY: Dictionary = {"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6}
-const COOLDOWN: Dictionary = {"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06}
+const PRIORITY: Dictionary = {"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6}
+const COOLDOWN: Dictionary = {"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20}
 var channels: Array[AudioStreamPlayer] = []
 var current: int = 0
 var muted: bool = false
@@ -50,7 +55,7 @@ func apply_settings(settings: Dictionary) -> void:
 
 func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
-	var aliases: Dictionary = {"impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire"}
+	var aliases: Dictionary = {"impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
 	var sample_key: String = "hit" if key == "small_hit" else key
 	if not SOUNDS.has(sample_key): return
@@ -90,6 +95,14 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -8.0
 	elif key == "afterimage":
 		player.volume_db = -10.0
+	elif key == "ui_focus":
+		player.volume_db = -10.0
+	elif key == "near_level":
+		player.volume_db = -8.0
+	elif key == "level_up":
+		player.volume_db = -3.5
+	elif key in ["card_select", "resume"]:
+		player.volume_db = -4.5
 	elif key in ["power_wake", "redline", "comet_charge", "comet_release", "second_wind", "chain", "wave", "acquire"]:
 		player.volume_db = -4.5
 	player.play()

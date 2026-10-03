@@ -5,6 +5,7 @@ extends SceneTree
 const Menus = preload("res://scripts/menus.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
+const Starters = preload("res://scripts/starters.gd")
 const NATIVE_RECT: Rect2 = Rect2(0, 0, 640, 360)
 
 var checks: int = 0
@@ -35,6 +36,7 @@ func _run() -> void:
 	await process_frame
 	check(root.get_visible_rect().size == Vector2(640, 360), "UI tests run in the native 640x360 viewport")
 	await _test_reward_cards()
+	await _test_starters()
 	await _test_small_offers_and_acquisition()
 	await _test_hud_cleanup()
 	await _test_garage_assemblies()
@@ -128,13 +130,13 @@ func _test_reward_cards() -> void:
 			var power: Dictionary = Powers.get_power(str(offer[index]))
 			seen[power.id] = true
 			check(_find_label(card, str(power.name)) != null, "Card shows full power name: "+str(power.name))
-			check(_find_label(card, str(power.description)) != null, "Card shows full description: "+str(power.name))
+			check(_find_label(card, str(power.get("card_copy", power.description))) != null, "Card shows short clear description: "+str(power.name))
 			check(NATIVE_RECT.encloses(card.get_global_rect()), "Reward card remains inside native viewport")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
 			var focus: StyleBoxFlat = card.get_theme_stylebox("focus") as StyleBoxFlat
 			var normal: StyleBoxFlat = card.get_theme_stylebox("normal") as StyleBoxFlat
-			check(focus != null and focus.border_color.a > 0 and focus.border_color != normal.border_color and focus.get_border_width(SIDE_LEFT) >= 1, "Card has a visible distinct focus border")
+			check(focus != null and focus.border_color.a > 0 and focus.get_border_width(SIDE_LEFT) > normal.get_border_width(SIDE_LEFT), "Card has a visible distinct focus border")
 		for power_id: String in owned:
 			var label: Label = _find_label(menus, str(Powers.get_power(power_id).name))
 			check(label != null and label.get_global_rect().position.y >= 300, "Collected power has a compact visible label: "+power_id)
@@ -180,14 +182,19 @@ func _test_small_offers_and_acquisition() -> void:
 
 func _test_hud_cleanup() -> void:
 	var owned: Array = Powers.ACTIVE_IDS.duplicate()
-	menus.show_hud({"is_run":true, "run_label":"RUN 8 / 8", "owned_power_ids":owned, "status":"battle"})
+	menus.show_hud({"is_run":true, "run_label":"RUN 8 / 8", "owned_power_ids":owned, "status":"battle", "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
 	await process_frame
 	check(_find_label(menus, "RUN 8 / 8") != null, "Run HUD shows current encounter progress")
+	check(_find_label(menus, "BREAKER") != null, "Combat identifies the selected starter")
+	check(menus._hud.xp_panel.visible and menus._hud.xp_bar.visible and menus._hud.xp_label.text == "LV 4  /  NEXT POWER", "Run level remains separate from RPM")
+	check(menus._xp_near and menus._hud.xp_detail.text == "ALMOST THERE", "Near level state creates visible anticipation")
+	menus._process(0.1)
+	check(menus._hud.xp_bar.value > 0.0 and menus._hud.xp_bar.value < 0.88, "XP fill eases meaningful increments instead of jumping")
 	for index: int in range(owned.size()):
 		var icon: TextureRect = menus._hud["power_%d" % index]
 		check(icon.visible and icon.get_meta("power_id") == owned[index] and icon.texture != null, "Run HUD displays authored owned-power icon")
 		check(icon.size == Vector2(16, 16) and NATIVE_RECT.encloses(icon.get_global_rect()), "HUD power stays native, compact, and on screen")
-	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"RUN 3 / 8", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18})
+	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"RUN 3 / 8", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18, "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
 	await process_frame
 	check(not menus._hud.enemy_bar.visible and menus._hud.swarm_objective.visible, "Swarm replaces rival RPM bar with objective")
 	check(_find_label(menus, "AMMUNITION WAVES  2 / 3") != null and _find_label(menus, "11 ACTIVE") != null and _find_label(menus, "18 LEFT IN SCHEDULE") != null, "Swarm HUD shows wave, active count, and remaining schedule")
@@ -202,6 +209,7 @@ func _test_hud_cleanup() -> void:
 		check(not menus._hud["power_%d" % index].visible, "Quick Duel clears stale power icons")
 	check(menus._hud.enemy_bar.visible and not menus._hud.swarm_objective.visible, "Quick Duel restores rival information")
 	check(_find_label(menus, "RUN POWERS") == null, "Quick Duel clears Run power notice")
+	check(not menus._hud.xp_panel.visible and not menus._hud.xp_bar.visible, "Quick Duel clears Run progression")
 	var pause: Button = _buttons(menus)[0]
 	check(pause.focus_mode == Control.FOCUS_NONE, "Gameplay HUD cannot capture steering/Confirm focus")
 	var action_count: int = actions.size()
@@ -222,6 +230,62 @@ func _test_hud_cleanup() -> void:
 		Input.parse_input_event(click)
 		await process_frame
 	check(actions.size() == action_count + 1 and actions.back().name == "pause", "Mouse still activates the HUD pause button")
+
+func _test_starters() -> void:
+	menus.show_starters()
+	await process_frame
+	var cards: Array[Button] = []
+	for button: Button in _buttons(menus):
+		if button.has_meta("starter_id"): cards.append(button)
+	check(cards.size() == 3 and menus.focused_starter_id() == "breaker", "Three authored starters open with Breaker in focus")
+	for index: int in range(cards.size()):
+		var data: Dictionary = Starters.get_starter(Starters.IDS[index])
+		check(_find_label(cards[index], data.name) != null and _find_label(cards[index], data.tagline) != null, "Starter identity and tagline are readable")
+		var previews: Array[Node] = []
+		for child: Node in cards[index].get_children():
+			if child is Menus.Preview: previews.append(child)
+		check(previews.size() == 1 and previews[0].build == data.assembly and previews[0].animated, "Starter preview uses its real authored assembly")
+	for label: Label in _labels(menus): _check_label_fits(label)
+	await _capture("three-starters")
+	await _key(KEY_LEFT)
+	check(menus.focused_starter_id() == "vane", "Starter focus wraps left to Vane")
+	await _key(KEY_RIGHT)
+	check(menus.focused_starter_id() == "breaker", "Starter focus wraps right to Breaker")
+	for id: String in Starters.IDS:
+		var before: int = actions.size()
+		await _key(KEY_ENTER)
+		check(actions.size() == before + 1 and actions.back() == {"name":"choose_starter", "value":id}, "Starter Confirm emits a stable ID exactly once")
+		await _key(KEY_RIGHT)
+	var last: String = menus.focused_starter_id()
+	root.gui_get_focus_owner().release_focus()
+	menus._process(0.01)
+	check(menus.focused_starter_id() == last, "Lost menu focus restores the last focused starter")
+	await _analogue(JOY_AXIS_LEFT_X, 0.9)
+	var after: String = menus.focused_starter_id()
+	for value: float in [0.89, 0.95, 0.7, -0.85]: await _analogue(JOY_AXIS_LEFT_X, value)
+	check(menus.focused_starter_id() == after, "Held analogue excursion and direction jitter navigate only once")
+	await _analogue(JOY_AXIS_LEFT_X, 0.0)
+	await _analogue(JOY_AXIS_LEFT_X, 0.9)
+	check(menus.focused_starter_id() != after, "Centred stick rearms a new deliberate navigation")
+	await _analogue(JOY_AXIS_LEFT_X, 0.0)
+	menus.show_reward(Powers.ACTIVE_IDS.slice(0, 3), [], 1, "start_draft", 42, "", {"title":"CHOOSE YOUR FIRST POWER", "subtitle":"Enter the arena already dangerous.", "resume_label":"LAUNCH"})
+	await process_frame
+	check(_find_label(menus, "CHOOSE YOUR FIRST POWER") != null, "Starting draft uses contextual copy")
+	for label: Label in _labels(menus): _check_label_fits(label)
+	await _capture("starting-power-draft")
+	menus.show_level_up(2)
+	await process_frame
+	check(_find_label(menus, "LEVEL UP") != null and _buttons(menus).is_empty(), "Level completion hit has no extra confirmation")
+	for label: Label in _labels(menus): _check_label_fits(label)
+	await _capture("level-up-hit")
+
+func _analogue(axis: JoyAxis, value: float) -> void:
+	var event: InputEventJoypadMotion = InputEventJoypadMotion.new()
+	event.device = 0
+	event.axis = axis
+	event.axis_value = value
+	Input.parse_input_event(event)
+	await process_frame
 
 func _test_garage_assemblies() -> void:
 	menus.show_garage({"blade":"balance", "ratchet":"mid", "bit":"ball"})

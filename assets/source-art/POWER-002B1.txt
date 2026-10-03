@@ -1,0 +1,98 @@
+TASK 002B.1 / IMPOSSIBLE MECHANICAL PHENOMENA
+
+power_cards_002b1.aseprite is the editable production master for the
+new power-card illustrations: 64x64 pixels, 36 frames, five normal RGBA
+layers, one embedded named 12-colour palette and a contact_pivot slice
+at (32,32). All cels are deliberately authored integer geometry.
+No filtered/downsampled painting, image-generation output or downloaded
+art is used. Pixel clusters and plate edges stay sharp at native scale.
+
+Layers (bottom to top):
+industrial backplate
+machine depth and chassis
+authored moving bearings
+pressure and trajectory
+contact glints and fragments
+
+Six forward-loop tags, each six frames, in the stable active-ID order:
+impact_wake 0-5: expanding toothed cyan pressure race, white contact core.
+second_wind 6-11: fragmented steel bearing contracts, aligns and releases.
+redline 12-17: overloaded deep rotor, jagged hot teeth, opposed white arcs.
+iron_comet 18-23: heavy steel wedge follows an angular wall rebound path.
+afterimage 24-29: original solid rotor splits into staggered hollow echoes.
+chain_impact 30-35: pressure detonations travel between three real rotors.
+
+Frame timing per tag is 110,90,75,75,100,170 milliseconds (620ms loop).
+The longer last pose gives each phenomenon a readable resting beat.
+Only the focused reward card loops; non-focused cards hold a readable
+mechanical pose. Acquisition reuses the same authored sequence.
+
+Export assets/powers/cards.png uses six columns: 384x384, 64px cells,
+one power per row. assets/powers/manifest.json records all layer names,
+tag spans, frame durations and pivot. RunPowerCatalog exposes matching
+card metadata and very short category/copy. Chain Impact copy includes
+both knockout chains and the existing heavy-hit-to-Burst duel rule.
+
+power_icons_002b.aseprite is revised at 16x16 native pixels with six
+dedicated compact mechanical glyphs. It is hand-authored independently,
+not a downsample of card art. Its six legacy IDs/frames, 96x16 export
+and pivot remain compatible with the combat HUD and power visuals.
+
+EDIT / EXPORT
+1. Open and edit the master .aseprite. Keep normal RGBA layers, six
+   stable ID tags, canvas size and contact_pivot convention.
+2. Run python tools/build_power_art.py to export edited source pixels.
+   This reads sources, exports losslessly and never reauthors cels.
+3. Import in Godot. Inspect native 640x360 and 2x integer output.
+   Draw at integer positions with nearest filtering, no mipmaps.
+
+python tools/build_power_art.py --author-cards deliberately rebuilds
+ONLY the card master and compact icon master from the initial authored
+geometry. It overwrites those two sources; do not run after artist edits.
+The combat power_fx_002b and small_top_002b sources remain untouched.
+The older --author switch still reconstructs the three original 002B
+masters and must not be used for an ordinary artist export.
+
+PROGRESSION AUDIO
+Five deterministic offline-authored mono PCM16 / 22050Hz one-shots:
+ui_focus.wav: 55ms quiet mechanical detent, navigation only.
+card_select.wav: 160ms positive two-strike selection latch.
+near_level.wav: 130ms restrained tension ping, once near each level.
+level_up.wav: 490ms rising three-step pressure release, highest priority.
+resume.wav: 180ms clutch settling back into the paused encounter.
+
+The existing acquire.wav remains the power acquisition strike.
+No XP-increment ding is added. Existing combat and power cues are kept.
+python tools/build_power_audio.py --progression-only exports only these
+five cues; the normal command reproduces all fourteen original/new
+power/progression cues. Sound retains its eight-channel cap and contact
+aggregation; added cues have dedicated levels, priorities and cooldowns.
+
+QA
+godot --headless --path . --script res://tests/test_card_assets.gd
+checks native dimensions, stable tag mapping, layered source magic,
+animation frames, catalog/export timing and finite progression audio.
+
+The installed Aseprite batch exporter has opened the new card master.
+Its 384x384 exported RGBA pixels match cards.png exactly. Aseprite's
+own JSON reports all five layers, six tags, per-frame duration and
+the contact_pivot slice; this is a real native file, not renamed PNG.
+
+STARTER ENAMEL PRODUCTION MASTER
+starter_blade_accents_002b1.aseprite: 48x48, 24 frames, three normal
+RGBA layers, named 16-colour palette, contact pivot (24,40).
+Layers: preserved authored steel silhouette / identity enamel plates /
+rotational rim signature bands. Tags: breaker 0-7 (65ms), bastion 8-15
+(160ms), vane 16-23 (100ms). All frame silhouettes match the original
+smash, guard and hook source poses exactly; enamel/rim masks reinforce
+their existing angular, broad and swept mechanical shapes.
+
+No original parts/source assets are overwritten. Custom assemblies keep
+their original sprites. The three starter exports live separately at
+assets/top/starters/{breaker,bastion,vane}_spin.png, 384x48 each, with
+source/layer/pivot/timing metadata in assets/top/starters/manifest.json.
+
+python tools/build_starter_art.py exports the edited starter source.
+python tools/build_starter_art.py --author deliberately rebuilds ONLY
+that new source from the preserved authored blade master and identity
+rim masks. Do not use --author after editing its production cels.

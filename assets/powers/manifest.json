@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "native_pixels": true,
   "filter": "nearest",
   "projection": "fixed 2:1 ground plane; no whole-sprite rotation",
@@ -157,7 +157,7 @@
       8
     ],
     "layers": [
-      "signature glyphs"
+      "compact mechanical silhouettes"
     ],
     "tags": {
       "impact_wake": {
@@ -197,5 +197,90 @@
     "columns": 6,
     "frame_count": 6,
     "source": "../source-art/power_icons_002b.aseprite"
+  },
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "industrial backplate",
+      "machine depth and chassis",
+      "authored moving bearings",
+      "pressure and trajectory",
+      "contact glints and fragments"
+    ],
+    "tags": {
+      "impact_wake": {
+        "from": 0,
+        "to": 5
+      },
+      "second_wind": {
+        "from": 6,
+        "to": 11
+      },
+      "redline": {
+        "from": 12,
+        "to": 17
+      },
+      "iron_comet": {
+        "from": 18,
+        "to": 23
+      },
+      "afterimage": {
+        "from": 24,
+        "to": 29
+      },
+      "chain_impact": {
+        "from": 30,
+        "to": 35
+      }
+    },
+    "durations_ms": [
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170
+    ],
+    "texture": "cards.png",
+    "columns": 6,
+    "frame_count": 36,
+    "source": "../source-art/power_cards_002b1.aseprite"
   }
 }

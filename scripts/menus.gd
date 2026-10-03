@@ -2,9 +2,11 @@ extends Control
 ## Native 640 x 360 menu and HUD layer. Only emits intent; the game owns state.
 
 signal action(name: String, value: Variant)
+signal focus_sound(kind: String)
 
 const Preview = preload("res://scripts/top_preview.gd")
 const Powers = preload("res://scripts/run_powers.gd")
+const Starters = preload("res://scripts/starters.gd")
 const INK: Color = Color("0b141e")
 const PANEL: Color = Color("172737")
 const BORDER: Color = Color("30495d")
@@ -39,6 +41,16 @@ var _default_focus: Control
 var _accept_needs_release: bool = false
 var _acquisition_elapsed: float = 0.0
 var _acquisition_icon: TextureRect
+var _acquisition_flash: ColorRect
+var _card_animations: Array[Dictionary] = []
+var _art_animations: Array[Dictionary] = []
+var _menu_clock: float = 0.0
+var _axis_latches: Dictionary = {}
+var _xp_target: float = 0.0
+var _xp_display: float = 0.0
+var _xp_last_level: int = 1
+var _xp_near: bool = false
+var _xp_flash: float = 0.0
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -48,10 +60,21 @@ func _ready() -> void:
 	theme = _make_theme()
 
 func _process(_delta: float) -> void:
+	_menu_clock += _delta
+	_animate_cards()
+	_animate_power_art(_delta)
 	if screen == "acquisition" and is_instance_valid(_acquisition_icon):
 		_acquisition_elapsed += _delta
-		_acquisition_icon.modulate.a = minf(1.0, 0.5 + _acquisition_elapsed * 3.0)
-		_acquisition_icon.position.y = 119.0 - minf(4.0, _acquisition_elapsed * 12.0)
+		_acquisition_icon.modulate.a = minf(1.0, 0.6 + _acquisition_elapsed * 5.0)
+		_acquisition_icon.position.y = 83.0 - roundf(minf(2.0, _acquisition_elapsed * 15.0))
+		if is_instance_valid(_acquisition_flash): _acquisition_flash.color.a = maxf(0.0, 0.18 - _acquisition_elapsed * 1.1)
+	if screen == "hud" and _run_active:
+		_xp_display = move_toward(_xp_display, _xp_target, _delta * 1.6)
+		# Quantise the fill to native pixels, while easing meaningful XP increments.
+		_hud.xp_bar.value = roundf(_xp_display * 354.0) / 354.0
+		_xp_flash = maxf(0.0, _xp_flash - _delta * 2.5)
+		_hud.xp_bar.modulate = Color(1.0, 1.0, 1.0, 1.0 if not _xp_near else (1.0 if int(_menu_clock * 7.0) % 2 == 0 else 0.65))
+		_hud.xp_hit.color.a = _xp_flash * 0.32
 	if _accept_needs_release and not Input.is_action_pressed("ui_accept"):
 		_accept_needs_release = false
 	if screen == "hud" or not is_instance_valid(_default_focus): return
@@ -66,6 +89,30 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_released("ui_accept"):
 			_accept_needs_release = Input.is_action_pressed("ui_accept")
 		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventJoypadMotion and event.axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+		# Navigate exactly once per excursion. Jitter and a held stick cannot race
+		# across cards, or advance focus when a draft replaces combat under it.
+		var key: String = "%d:%d" % [event.device, event.axis]
+		var value: float = event.axis_value
+		if absf(value) < 0.28:
+			_axis_latches.erase(key)
+		elif absf(value) >= 0.55 and not _axis_latches.has(key):
+			_axis_latches[key] = true
+			if screen != "hud":
+				var direction: String = ("left" if value < 0 else "right") if event.axis == JOY_AXIS_LEFT_X else ("top" if value < 0 else "bottom")
+				_move_analogue_focus(direction)
+		if screen != "hud": get_viewport().set_input_as_handled()
+
+func _move_analogue_focus(direction: String) -> void:
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused == null: return
+	if focused is HSlider and direction in ["left", "right"]:
+		focused.value += focused.step * (-1.0 if direction == "left" else 1.0)
+		return
+	var path: NodePath = focused.get("focus_neighbor_" + direction)
+	var target: Control = focused.get_node_or_null(path) as Control
+	if target != null: target.grab_focus()
 
 func _make_theme() -> Theme:
 	var value: Theme = Theme.new()
@@ -102,6 +149,11 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	screen = next_screen
 	_default_focus = null
 	_accept_needs_release = next_screen != "hud" and Input.is_action_pressed("ui_accept")
+	_card_animations.clear()
+	_art_animations.clear()
+	for device: int in Input.get_connected_joypads():
+		for axis: int in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			if absf(Input.get_joy_axis(device, axis)) >= 0.55: _axis_latches["%d:%d" % [device, axis]] = true
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -128,6 +180,8 @@ func _focus_rows(rows: Array, first: Control = null) -> void:
 		for column: int in range(row.size()):
 			var control: Control = row[column]
 			controls.append(control)
+			control.focus_entered.connect(func() -> void: _default_focus = control)
+			control.focus_entered.connect(func() -> void: focus_sound.emit("ui_focus"))
 			control.focus_neighbor_left = control.get_path_to(row[(column + row.size() - 1) % row.size()])
 			control.focus_neighbor_right = control.get_path_to(row[(column + 1) % row.size()])
 			control.focus_neighbor_top = control.get_path_to(_nearest_control(control, rows[(row_index + rows.size() - 1) % rows.size()]))
@@ -278,6 +332,62 @@ func show_garage(build: Dictionary) -> void:
 	_refresh_garage()
 	_focus_rows([_part_buttons["blade"].values(), _part_buttons["ratchet"].values(), _part_buttons["bit"].values(), [back_button, duel_button, run_button]], _part_buttons["blade"][_build.get("blade", "balance")])
 
+func show_starters(focus_id: String = "breaker") -> void:
+	_clear("starters")
+	_header("CHOOSE YOUR STARTER", "Pick a fighting style. Choose a power. Make this run yours.")
+	var cards: Array[Button] = []
+	var selected: Control
+	for index: int in range(Starters.IDS.size()):
+		var id: String = Starters.IDS[index]
+		var data: Dictionary = Starters.get_starter(id)
+		var color: Color = data.accent
+		var card: Button = _button(_content, "", Rect2(22 + index * 202, 70, 192, 236), "choose_starter", id)
+		card.set_meta("starter_id", id)
+		card.tooltip_text = data.name + " / " + PartCatalog.title(data.assembly)
+		_style_card(card, color)
+		_rect(card, Rect2(11, 11, 3, 18), color)
+		_label(card, str(data.name), Rect2(21, 7, 159, 25), 21, color)
+		var preview: Preview = Preview.new()
+		preview.position = Vector2(15, 35)
+		preview.size = Vector2(162, 111)
+		preview.preview_scale = 3.0
+		preview.set_build(data.assembly)
+		preview.set_identity(id, color)
+		card.add_child(preview)
+		var tagline: Label = _label(card, str(data.tagline), Rect2(12, 142, 168, 29), 9, TEXT)
+		tagline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		tagline.add_theme_constant_override("line_spacing", -1)
+		_label(card, str(data.strengths), Rect2(12, 178, 168, 16), 9, color)
+		_label(card, str(data.weakness), Rect2(12, 195, 168, 15), 9, MUTED)
+		_label(card, "CONFIRM  /  MAKE IT YOURS", Rect2(12, 216, 168, 14), 9, TEXT)
+		cards.append(card)
+		if id == focus_id: selected = card
+	_label(_content, "LEFT / RIGHT  CHOOSE      CONFIRM  LOCK IN", Rect2(22, 323, 384, 18), 9, MUTED)
+	var custom: Button = _button(_content, "CUSTOM ASSEMBLY RUN", Rect2(426, 321, 192, 25), "custom_run")
+	custom.add_theme_font_size_override("font_size", 9)
+	_focus_rows([cards, [custom]], selected)
+
+func focused_starter_id() -> String:
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	return str(focused.get_meta("starter_id", "")) if focused != null else ""
+
+func _style_card(card: Button, accent: Color) -> void:
+	card.add_theme_stylebox_override("normal", _box(Color("172737"), Color("385266"), 1))
+	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, 1))
+	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, 2))
+	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, 2))
+	_card_animations.append({"card":card, "position":card.position, "accent":accent, "focused":null})
+
+func _animate_cards() -> void:
+	for entry: Dictionary in _card_animations:
+		var card: Button = entry.card
+		if not is_instance_valid(card): continue
+		var focused: bool = card.has_focus()
+		if entry.focused == focused: continue
+		entry.focused = focused
+		card.position = entry.position + Vector2(0, -2 if focused else 0)
+		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else Color("385266"), 1))
+
 func _part_row(category: String, title: String, ids: Array, y: float) -> void:
 	_label(_content, title, Rect2(256, y, 345, 15), 10, ORANGE)
 	_part_buttons[category] = {}
@@ -407,10 +517,10 @@ func show_pause(is_run: bool = false) -> void:
 		focus_rows.append([_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")])
 	_focus_rows(focus_rows)
 
-func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "") -> void:
+func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
-	_header("VICTORY  /  PICK A POWER", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)
-	_label(_content, "ONE POWER. EVERY ENCOUNTER.  /  " + ("FINAL POWER IN THIS POOL" if offer.size() == 1 else "%d UNOWNED POWERS TO CHOOSE FROM" % offer.size()), Rect2(24, 60, 592, 18), 10, ORANGE)
+	_header(str(context.get("title", "VICTORY  /  PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)))
+	_label(_content, "MAKE THE NEXT HIT COUNT  /  " + ("FINAL POWER IN THIS POOL" if offer.size() == 1 else "CHOOSE ONE. KEEP IT FOR THE RUN."), Rect2(24, 60, 592, 18), 10, ORANGE)
 	var cards: Array[Button] = []
 	var selected: Control
 	var start_x: float = (640.0 - offer.size() * 192.0 - (offer.size() - 1) * 10.0) * 0.5
@@ -420,21 +530,25 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
 		card.set_meta("power_id", id)
 		card.tooltip_text = str(power.name) + ": " + str(power.description)
-		_power_icon(card, id, Rect2(12, 10, 32, 32))
-		_label(card, str(power.name), Rect2(12, 41, 168, 25), 16, TEXT)
-		var description: Label = _label(card, str(power.description), Rect2(12, 69, 168, 60), 11, MUTED)
+		var color: Color = _power_accent(id)
+		_style_card(card, color)
+		_label(card, str(power.get("category", "RUN POWER")), Rect2(12, 5, 168, 13), 9, color)
+		_power_art(card, id, Rect2(64, 19, 64, 64), card)
+		_label(card, str(power.name), Rect2(12, 87, 168, 25), 16, TEXT)
+		var description: Label = _label(card, str(power.get("card_copy", power.description)), Rect2(12, 112, 168, 48), 11, TEXT)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		var condition: Label = _label(card, str(power.condition), Rect2(12, 130, 168, 30), 9, ORANGE)
-		condition.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		condition.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		_label(card, "COLLECT & CONTINUE", Rect2(12, 161, 168, 16), 10, BLUE)
+		description.add_theme_constant_override("line_spacing", -1)
+		_label(card, "CONFIRM  /  " + str(context.get("resume_label", "COLLECT")), Rect2(12, 166, 168, 16), 9, color)
 		cards.append(card)
 		if id == focus_id: selected = card
 	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
 	_power_labels(owned, 302)
 	_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
 	if not cards.is_empty(): _focus_rows([cards], selected)
+
+func _power_accent(power_id: String) -> Color:
+	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
 
 func focused_power_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -460,15 +574,61 @@ func _power_icon(parent: Node, power_id: String, area: Rect2) -> TextureRect:
 	icon.size = area.size
 	return icon
 
-func show_acquisition(power_id: String) -> void:
+func _power_art(parent: Node, power_id: String, area: Rect2, focused_card: Button = null) -> TextureRect:
+	var power: Dictionary = Powers.get_power(power_id)
+	var icon: TextureRect = _power_icon(parent, power_id, area)
+	var path: String = str(power.get("card_texture", ""))
+	if path.is_empty() or not ResourceLoader.exists(path): return icon
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = load(path)
+	atlas.region = Rect2(0, int(power.get("card_row", 0)) * 64, 64, 64)
+	icon.texture = atlas
+	_art_animations.append({"icon":icon, "atlas":atlas, "power":power, "elapsed":0.0, "frame":0, "card":focused_card, "active":false})
+	return icon
+
+func _animate_power_art(delta: float) -> void:
+	for entry: Dictionary in _art_animations:
+		var icon: TextureRect = entry.icon
+		if not is_instance_valid(icon): continue
+		var card: Button = entry.card
+		var active: bool = card == null or card.has_focus()
+		if not active:
+			entry.elapsed = 0.0
+			entry.frame = int(entry.power.get("card_static_frame", 0))
+		elif not entry.active:
+			entry.elapsed = 0.0
+			entry.frame = 0
+		else:
+			entry.elapsed += delta * 1000.0
+			var durations: Array = entry.power.get("card_durations_ms", [120, 90, 70, 70, 100, 180])
+			while entry.elapsed >= float(durations[int(entry.frame) % durations.size()]):
+				entry.elapsed -= float(durations[int(entry.frame) % durations.size()])
+				entry.frame = (int(entry.frame) + 1) % int(entry.power.get("card_frames", 6))
+		entry.active = active
+		(entry.atlas as AtlasTexture).region = Rect2(int(entry.frame) * 64, int(entry.power.get("card_row", 0)) * 64, 64, 64)
+
+func show_level_up(level: int) -> void:
+	_clear("level_up", false)
+	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.28))
+	_rect(_content, Rect2(0, 124, 640, 108), Color(INK.r, INK.g, INK.b, 0.9))
+	_rect(_content, Rect2(0, 123, 640, 2), ORANGE)
+	_rect(_content, Rect2(0, 231, 640, 2), ORANGE)
+	_label(_content, "LEVEL UP", Rect2(110, 137, 420, 46), 37, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "LV %d  /  MORE POWER" % level, Rect2(110, 187, 420, 24), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused != null: focused.release_focus()
+
+func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT") -> void:
 	_clear("acquisition", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.82))
-	_panel(_content, Rect2(104, 99, 432, 151), PANEL, ORANGE)
+	_panel(_content, Rect2(104, 67, 432, 226), PANEL, _power_accent(power_id))
+	_rect(_content, Rect2(106, 69, 428, 2), _power_accent(power_id))
 	var power: Dictionary = Powers.get_power(power_id)
 	_acquisition_elapsed = 0.0
-	_acquisition_icon = _power_icon(_content, power_id, Rect2(304, 119, 32, 32))
-	_label(_content, str(power.name).to_upper() + " ACQUIRED", Rect2(114, 164, 412, 32), 21, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "LOCKED IN  /  NEXT LAUNCH", Rect2(114, 207, 412, 18), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128))
+	_label(_content, str(power.name).to_upper() + " ACQUIRED", Rect2(114, 222, 412, 32), 21, _power_accent(power_id), HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "LOCKED IN  /  " + resume_label, Rect2(114, 263, 412, 18), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(_power_accent(power_id), 0.18))
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused != null: focused.release_focus()
 
@@ -551,6 +711,31 @@ func show_hud(stats: Dictionary) -> void:
 		announcement = "LET IT RIP"
 	_hud["announcement"].text = announcement
 	_run_active = bool(stats.get("is_run", false))
+	var starter_id: String = str(stats.get("starter_id", ""))
+	if _run_active:
+		_hud.player_name.text = Starters.display_name(starter_id)
+		_hud.player_name.add_theme_color_override("font_color", Starters.get_starter(starter_id).get("accent", BLUE))
+	else:
+		_hud.player_name.add_theme_color_override("font_color", BLUE)
+	_hud.xp_panel.visible = _run_active
+	_hud.xp_bar.visible = _run_active
+	_hud.xp_label.visible = _run_active
+	_hud.xp_detail.visible = _run_active
+	_hud.xp_hit.visible = _run_active
+	_hud.controls.visible = not _run_active
+	var level: int = int(stats.get("level", 1))
+	var xp: float = float(stats.get("xp", 0))
+	var threshold: float = maxf(1.0, float(stats.get("xp_threshold", 1)))
+	var progression_max: bool = bool(stats.get("progression_max", false))
+	_xp_target = 1.0 if progression_max else clampf(xp / threshold, 0.0, 1.0)
+	if level != _xp_last_level:
+		_xp_display = 0.0
+		_xp_flash = 1.0
+		_xp_last_level = level
+	_xp_near = not progression_max and _xp_target >= 0.8
+	_hud.xp_label.text = "LV %d  /  NEXT POWER" % level if not progression_max else "LV %d  /  FULL BUILD" % level
+	_hud.xp_label.add_theme_color_override("font_color", ORANGE if _xp_near else BLUE)
+	_hud.xp_detail.text = "MAX" if progression_max else ("ALMOST THERE" if _xp_near else "%d / %d XP" % [int(xp), int(threshold)])
 	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(6):
@@ -567,6 +752,7 @@ func show_hud(stats: Dictionary) -> void:
 
 func _create_hud() -> void:
 	_clear("hud", false)
+	_xp_display = 0.0
 	_panel(_content, Rect2(12, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("335a70"))
 	_panel(_content, Rect2(406, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("73513b"))
 	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 13, 202, 17), 11, BLUE)
@@ -595,7 +781,12 @@ func _create_hud() -> void:
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
 	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)
-	_label(_content, "STEER    /    BURST    /    BRAKE    /    PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["controls"] = _label(_content, "STEER    /    BURST    /    BRAKE    /    PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_panel"] = _panel(_content, Rect2(252, 324, 376, 28), Color(0.035, 0.065, 0.095, 0.94), Color("477877"))
+	_hud["xp_label"] = _label(_content, "LV 1  /  NEXT POWER", Rect2(261, 327, 232, 13), 9, BLUE)
+	_hud["xp_detail"] = _label(_content, "0 / 1 XP", Rect2(496, 327, 122, 13), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_bar"] = _bar(_content, Rect2(261, 343, 354, 5), Color("83d89a"))
+	_hud["xp_hit"] = _rect(_content, Rect2(252, 324, 376, 28), Color(1, 0.9, 0.6, 0))
 	var focus: Control = get_viewport().gui_get_focus_owner()
 	if focus != null:
 		focus.release_focus()

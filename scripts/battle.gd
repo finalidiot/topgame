@@ -7,12 +7,15 @@ signal round_finished(result: Dictionary)
 signal hud_updated(stats: Dictionary)
 signal event_sfx(kind: String)
 signal contact_accepted(first_entity_id: int, second_entity_id: int)
+signal progression_events(events: Array)
 
 const Catalog = preload("res://scripts/parts.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const PowerRuntime = preload("res://scripts/power_runtime.gd")
 const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
+const Progression = preload("res://scripts/run_progression.gd")
+const Starters = preload("res://scripts/starters.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
 const NEUTRAL_TEAM: String = "neutral"
@@ -68,6 +71,12 @@ var _burst_buffer: float = 0.0
 var _buffered_burst_direction: Vector2 = Vector2.ZERO
 var _particles: Array[Dictionary] = []
 var _rings: Array[Dictionary] = []
+var _progression_queue: Array[Dictionary] = []
+var _progression_sequence: int = 0
+var _progression_eliminated: Dictionary = {}
+var _progression_contacted: Dictionary = {}
+var _progression_waves: Dictionary = {}
+var _combat_needs_release: bool = false
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -86,6 +95,8 @@ func _load_assets() -> void:
 		_cache_texture("ratchet/" + ratchet, Catalog.texture_path("ratchet", ratchet))
 	for bit: String in Catalog.BIT_IDS:
 		_cache_texture("bit/" + bit, Catalog.texture_path("bit", bit))
+	for starter_id: String in ["breaker", "bastion", "vane"]:
+		_cache_texture("identity/" + starter_id, "res://assets/top/starters/%s_spin.png" % starter_id)
 	_cache_texture("rival/smash", "res://assets/top/rivals/smash_blade_warm_spin.png")
 	_cache_texture("rival/low", "res://assets/top/rivals/smash_low_flat_warm_ratchet.png")
 	_cache_texture("rival/flat", "res://assets/top/rivals/smash_low_flat_warm_bit.png")
@@ -106,6 +117,11 @@ func begin(player_build: Dictionary, enemy_build: Dictionary, level: int = 1, re
 func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	_load_assets()
 	encounter = descriptor.duplicate(true)
+	_progression_queue.clear()
+	_progression_sequence = 0
+	_progression_eliminated.clear()
+	_progression_contacted.clear()
+	_progression_waves.clear()
 	difficulty = clampi(int(descriptor.get("difficulty", 1)), 1, 5)
 	live_time_limit = maxf(FIXED_DT, float(descriptor.get("live_time_limit", ROUND_LIMIT)))
 	# Zero is a valid replay seed. Seed creation belongs to the caller; opening
@@ -119,6 +135,10 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	add_full_top(player_build, player_entity_id, PLAYER_TEAM, PLAYER_OWNER, Vector2(-59.0, 19.0), Vector2(64.0, -26.0))
 	swarm.setup(self, descriptor)
 	player_entity()["powers"] = descriptor.get("player_power_ids", []).duplicate()
+	player_entity()["starter_id"] = str(descriptor.get("starter_id", "custom")) if int(descriptor.get("slot",0)) > 0 else "custom"
+	var handling: Dictionary = Starters.HANDLING.get(player_entity()["starter_id"], {}).duplicate(true)
+	player_entity()["handling"] = handling
+	player_entity()["mass"] = float(player_entity()["mass"]) * float(handling.get("mass", 1.0))
 	if not swarm.enabled:
 		add_full_top(descriptor.get("opponent_build", {}), 2, HOSTILE_TEAM, "rival_1", Vector2(59.0, -19.0), Vector2(-64.0, 26.0))
 		entity(2)["powers"] = descriptor.get("opponent_power_ids", []).duplicate()
@@ -145,6 +165,7 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	_particles.clear()
 	_rings.clear()
 	_burst_was_down = Input.is_action_pressed("burst")
+	_combat_needs_release = not combat_input_neutral()
 	_emit_hud()
 	queue_redraw()
 
@@ -212,7 +233,7 @@ func _target_for(fighter: Dictionary) -> Dictionary:
 
 func _team_color(fighter: Dictionary) -> Color:
 	if str(fighter["team_id"]) == PLAYER_TEAM:
-		return PLAYER_COLOR
+		return {"breaker":Color("ef7052"), "bastion":Color("69bafa"), "vane":Color("82d978")}.get(str(fighter.get("starter_id", "custom")), PLAYER_COLOR)
 	return Color("b8c2c8") if str(fighter["team_id"]) == NEUTRAL_TEAM else ENEMY_COLOR
 
 func set_paused(value: bool) -> void:
@@ -220,8 +241,24 @@ func set_paused(value: bool) -> void:
 	# The same face button confirms menus and bursts. A held confirmation must
 	# be released before it can become a new combat press after launch/resume.
 	_burst_was_down = Input.is_action_pressed("burst")
+	if not value:
+		_combat_needs_release = not combat_input_neutral()
+		_burst_buffer = 0.0
+		_buffered_burst_direction = Vector2.ZERO
 	_emit_hud()
 	queue_redraw()
+
+func combat_input_neutral() -> bool:
+	return Input.get_vector("move_left", "move_right", "move_up", "move_down").length() <= 0.05 and not Input.is_action_pressed("burst") and not Input.is_action_pressed("brake")
+
+func acquire_run_power(power_id: String) -> bool:
+	# Preserve the live PowerRuntime and every existing cooldown/cause/trace.
+	# Its semantic hooks read this list, so a newly owned power is live next tick.
+	var player: Dictionary = player_entity()
+	if player.is_empty() or power_id in player.get("powers", []): return false
+	player["powers"].append(power_id)
+	encounter["player_power_ids"] = player["powers"].duplicate()
+	return true
 
 func _physics_process(delta: float) -> void:
 	if paused or battle_status == "idle":
@@ -233,6 +270,11 @@ func _physics_process(delta: float) -> void:
 	var trigger_burst: bool = burst_down and not _burst_was_down
 	_burst_was_down = burst_down
 	var brake: bool = Input.is_action_pressed("brake")
+	if _combat_needs_release:
+		if combat_input_neutral(): _combat_needs_release = false
+		direction = Vector2.ZERO
+		trigger_burst = false
+		brake = false
 	test_step(delta, direction, trigger_burst, brake)
 
 ## Deterministic QA and interactive play use exactly the same 60 Hz simulation.
@@ -244,7 +286,7 @@ func test_step(dt: float, input_direction: Vector2 = Vector2.ZERO, burst: bool =
 		_burst_buffer = 0.12
 		_buffered_burst_direction = input_direction.limit_length(1.0)
 	_accumulator += clampf(dt, 0.0, 0.25)
-	while _accumulator + 0.000001 >= FIXED_DT:
+	while not paused and _accumulator + 0.000001 >= FIXED_DT:
 		_accumulator -= FIXED_DT
 		_step(FIXED_DT, input_direction.limit_length(1.0), brake)
 	queue_redraw()
@@ -356,8 +398,59 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 	swarm.account_outcomes()
 	_check_result()
 	powers.end_tick(battle_status == "finished")
+	_collect_progression_outcomes()
+	if not _progression_queue.is_empty():
+		var earned: Array[Dictionary] = _progression_queue.duplicate(true)
+		_progression_queue.clear()
+		# Only publish at the fixed-tick boundary. Menu pause cannot bisect
+		# contact resolution, chain propagation, recovery or swarm scheduling.
+		progression_events.emit(earned)
 	if _hud_clock <= 0.0:
 		_emit_hud()
+
+func _queue_progression(data: Dictionary) -> void:
+	if int(encounter.get("slot", 0)) <= 0: return
+	_progression_sequence += 1
+	data["event_id"] = _progression_sequence
+	data["encounter_id"] = str(encounter.get("id", ""))
+	data["time"] = elapsed
+	_progression_queue.append(data)
+
+func _progression_contact(first: Dictionary, second: Dictionary, severity: float) -> void:
+	if int(encounter.get("slot", 0)) <= 0 or not _opposes(first, second): return
+	if int(first.entity_id) != player_entity_id and int(second.entity_id) != player_entity_id: return
+	var hostile: Dictionary = second if int(first.entity_id) == player_entity_id else first
+	if severity >= float(Progression.TUNING.collision_min_severity):
+		_progression_contacted[int(hostile.entity_id)] = true
+	_queue_progression({"kind":"collision", "first_entity_id":int(first.entity_id), "second_entity_id":int(second.entity_id), "severity":severity, "player_attributed":true})
+
+func _collect_progression_outcomes() -> void:
+	if int(encounter.get("slot", 0)) <= 0: return
+	for fighter: Dictionary in _ordered_fighters():
+		var id: int = int(fighter.entity_id)
+		if str(fighter.outcome).is_empty() or fighter.team_id != HOSTILE_TEAM or _progression_eliminated.has(id): continue
+		_progression_eliminated[id] = true
+		# Timeout presentation sets a defeated full top's visual outcome to
+		# spin_out. It is not a physical knockout and must not generate XP.
+		if fighter.combatant_type == "full_top" and battle_status == "finished" and str(last_result.get("reason", "")) in ["timeout", "draw"]: continue
+		var cause: Dictionary = powers.cause_for(fighter)
+		var credited: bool = str(cause.get("owner_id", "")) == PLAYER_OWNER if fighter.combatant_type == "small_top" else _progression_contacted.has(id)
+		if credited and fighter.outcome in ["impact", "ring_out", "spin_out"]:
+			_queue_progression({"kind":"elimination", "entity_id":id, "combatant_type":str(fighter.combatant_type), "reason":str(fighter.outcome), "wave":int(fighter.get("wave",0)), "player_attributed":true})
+			if fighter.combatant_type == "small_top": _progression_waves["credit_%d" % int(fighter.wave)] = true
+	if not swarm.enabled: return
+	for wave_id: int in range(1, swarm.total_waves + 1):
+		if _progression_waves.has(wave_id): continue
+		var resolved: bool = true
+		for entry: Dictionary in swarm.schedule:
+			if int(entry.wave) != wave_id: continue
+			if entry.state not in ["spawned", "cancelled"]: resolved = false; break
+			var body: Dictionary = entity(int(entry.id))
+			if not body.is_empty() and str(body.outcome).is_empty(): resolved = false; break
+		if resolved:
+			_progression_waves[wave_id] = true
+			if _progression_waves.has("credit_%d" % wave_id):
+				_queue_progression({"kind":"wave_complete", "wave":wave_id, "player_attributed":true})
 
 static func project(world_position: Vector2, height: float = 0.0) -> Vector2:
 	return Vector2(320.0 + world_position.x - world_position.y, 165.0 + (world_position.x + world_position.y) * 0.5 - height)
@@ -438,6 +531,9 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var alive_factor: float = clampf(rpm * 2.3 + 0.20, 0.18, 1.0)
 	var acceleration: float = (123.0 + grip * 17.0) * alive_factor
 	var top_speed: float = (110.0 + float(stats["speed"]) * 13.0) * (0.64 + alive_factor * 0.36)
+	var handling: Dictionary = fighter.get("handling", {})
+	acceleration *= float(handling.get("acceleration", 1.0))
+	top_speed *= float(handling.get("speed", 1.0))
 	var burst_time: float = maxf(0.0, float(fighter["burst_time"]) - dt)
 	if burst_time > 0.0 or powers.redline_active(fighter):
 		acceleration *= 1.65
@@ -450,9 +546,9 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var radial_distance: float = position_world.length()
 	if radial_distance > 2.0:
 		var bank: float = maxf(0.0, radial_distance - 105.0) * 0.83
-		acceleration_world -= position_world.normalized() * (9.0 + bank)
+		acceleration_world -= position_world.normalized() * (9.0 + bank) * float(handling.get("bank", 1.0))
 		var tangent: Vector2 = Vector2(-position_world.y, position_world.x).normalized()
-		acceleration_world += tangent * (6.0 + rpm * 8.0)
+		acceleration_world += tangent * (6.0 + rpm * 8.0) * float(handling.get("orbit", 1.0))
 	velocity_world += acceleration_world.limit_length(365.0) * dt
 	var drag: float = 0.54 + grip * 0.030
 	if braking:
@@ -469,10 +565,10 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var moving_loss: float = velocity_world.length() / 230.0 * 0.0014
 	var brake_loss: float = 0.0055 if braking else 0.0
 	var wobble_loss: float = float(fighter["wobble"]) * 0.0048
-	rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt)
+	rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)))
 	var low_spin_wobble: float = clampf((0.32 - rpm) * 2.5, 0.0, 0.80)
 	var current_wobble: float = float(fighter["wobble"])
-	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt)
+	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0)))
 	fighter["pos"] = position_world
 	fighter["vel"] = velocity_world
 	fighter["rpm"] = rpm
@@ -545,6 +641,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var b_burst: float = 1.43 if float(second["burst_time"]) > 0.0 else 1.0
 	var a_attack: float = (0.66 + float(a_stats["power"]) * 0.073) * a_burst * (0.45 + powers.effective_rpm(first) * 0.55)
 	var b_attack: float = (0.66 + float(b_stats["power"]) * 0.073) * b_burst * (0.45 + powers.effective_rpm(second) * 0.55)
+	a_attack *= float(first.get("handling", {}).get("impact", 1.0))
+	b_attack *= float(second.get("handling", {}).get("impact", 1.0))
 	var impulse: float = (1.70 * closing + 19.0) / inv_sum
 	var attack_bias: float = clampf((a_attack - b_attack) * 0.19, -0.25, 0.25)
 	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias)
@@ -576,6 +674,7 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		if severity > 0.75:
 			fighter["height_vel"] = 27.0
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb)
+	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
 	# The authored impact hold remains gameplay timing and is independent of
 	# particle/audio throttling. Another valid pair still receives its damage.
@@ -595,6 +694,11 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 
 func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Dictionary) -> void:
 	if not _is_live(target): return
+	# Attribution is an observer only. Full tops do not use the small-body
+	# propagation tag, but a live player-owned pressure effect still earns
+	# credit if its physical impulse knocks a rival out before direct contact.
+	if target.combatant_type == "full_top" and target.team_id == HOSTILE_TEAM and str(_cause.get("owner_id", "")) == PLAYER_OWNER and int(_cause.get("owner_entity_id", -1)) == player_entity_id and float(_cause.get("expires_at", -1.0)) >= powers.time and delta_velocity.length_squared() > 0.0001:
+		_progression_contacted[int(target.entity_id)] = true
 	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
 	target.vel = (Vector2(target.vel) + delta_velocity.limit_length(100.0)).limit_length(cap)
 	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
@@ -645,6 +749,7 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	_pair_cooldowns[key] = 0.24
 	var severity: float = clampf(closing/220.0,0.08,1.3)
 	powers.accepted_contact(first,second,severity,normal,a+normal*float(first.radius),Vector2(first.vel)-va,Vector2(second.vel)-vb)
+	_progression_contact(first, second, severity)
 	for pair: Array in [[first,second],[second,first]]:
 		var target: Dictionary = pair[0]
 		var source: Dictionary = pair[1]
@@ -655,6 +760,7 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 			target.wobble = minf(1.0,float(target.wobble)+loss*3.1)
 		elif source.combatant_type == "full_top":
 			var attack: float = (0.66+float(source.stats.power)*0.073)*(0.45+powers.effective_rpm(source)*0.55)
+			attack *= float(source.get("handling", {}).get("impact", 1.0))
 			if float(source.burst_time)>0.0: attack *= 1.43
 			loss = (0.045+severity*0.12)*attack
 		elif not powers.cause_for(source).is_empty():
@@ -1019,6 +1125,8 @@ func _draw_fighter(fighter: Dictionary) -> void:
 	var bit_texture: Texture2D = _textures.get("bit/" + str(build["bit"]))
 	var ratchet_texture: Texture2D = _textures.get("ratchet/" + str(build["ratchet"]))
 	var blade_texture: Texture2D = _textures.get("blade/" + str(build["blade"]))
+	if player:
+		blade_texture = _textures.get("identity/" + str(fighter.get("starter_id", "custom")), blade_texture)
 	if not player and str(build["blade"]) == "smash":
 		blade_texture = _textures.get("rival/smash", blade_texture)
 		if str(build["ratchet"]) == "low":

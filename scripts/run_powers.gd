@@ -9,6 +9,18 @@ const IDS: Array[String] = [
 ]
 const ACTIVE_IDS: Array[String] = ["impact_wake", "second_wind", "redline", "iron_comet", "afterimage", "chain_impact"]
 const ICON_SHEET: String = "res://assets/powers/icons.png"
+const CARD_SHEET: String = "res://assets/powers/cards.png"
+# Native 64px, six discrete poses per row. Presentation reads source timing.
+const CARD_DURATIONS_MS: Array[int] = [110, 90, 75, 75, 100, 170]
+const CARD_STATIC_FRAMES: Dictionary = {"impact_wake":2, "second_wind":3, "redline":2, "iron_comet":4, "afterimage":3, "chain_impact":4}
+const CARD_COPY: Dictionary = {
+	"impact_wake": {"category":"IMPACT", "copy":"Heavy hits blast nearby tops away."},
+	"second_wind": {"category":"RECOVERY", "copy":"Once per battle, recover from near spin-out."},
+	"redline": {"category":"OVERDRIVE", "copy":"Burst beyond safe RPM. Hit hard. Burn spin."},
+	"iron_comet": {"category":"RICOCHET", "copy":"Hard wall rebounds charge your next hit."},
+	"afterimage": {"category":"MOBILITY", "copy":"High speed leaves dangerous pressure traces."},
+	"chain_impact": {"category":"CHAIN", "copy":"Knockouts chain blasts. Heavy hit primes Burst."}
+}
 const CONDITIONS: Dictionary = {
 	"impact_wake":"Heavy contact / 1.25 s cooldown",
 	"second_wind":"Low spin or severe wobble / once per battle",
@@ -39,6 +51,15 @@ static func get_power(power_id: String) -> Dictionary:
 	power.icon = ICON_SHEET if power.active else ""
 	power["icon_frame"] = ACTIVE_IDS.find(power_id)
 	power["condition"] = CONDITIONS.get(power_id, "")
+	if power.active:
+		power["card_texture"] = CARD_SHEET
+		power["card_row"] = ACTIVE_IDS.find(power_id)
+		power["card_frames"] = 6
+		power["card_cell"] = 64
+		power["card_static_frame"] = CARD_STATIC_FRAMES[power_id]
+		power["card_durations_ms"] = CARD_DURATIONS_MS.duplicate()
+		power["category"] = CARD_COPY[power_id].category
+		power["card_copy"] = CARD_COPY[power_id].copy
 	return power
 
 static func display_names(power_ids: Array) -> Array[String]:

@@ -1,7 +1,8 @@
 extends SceneTree
 # Synthetic gamepad regression coverage, including a nonzero device index.
 # UI routes use Input.parse_input_event through Godot's normal GUI dispatch.
-# Only combat results are fixtures; no UI action or button signal is invoked.
+# Combat results and accepted XP contacts are fixtures. Every menu choice uses
+# real mapped input; no UI action or button signal is invoked.
 
 class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void:
@@ -16,12 +17,13 @@ const Parts = preload("res://scripts/parts.gd")
 const Battle = preload("res://scripts/battle.gd")
 const PAD: int = 3
 const DEFAULT_BUILD: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-const DRAFT_SLOTS: Array[int] = [1, 2, 3, 4, 6, 7]
+const Starters = preload("res://scripts/starters.gd")
 const NAV_BUTTONS: Array[JoyButton] = [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_DOWN]
 var checks: int = 0
 var failures: int = 0
 var game: QuietMain
 var capture_dir: String = ""
+var _xp_fixture_time: float = 0.0
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -186,6 +188,20 @@ func _test_actions_and_combat() -> void:
 	check(bool(_sample(battle).brake), "Keyboard brake remains available")
 	_key(KEY_SHIFT, false)
 	check(not bool(_sample(battle).brake), "Releasing all brake controls clears the action")
+	_axis(JOY_AXIS_LEFT_X, 0.9)
+	_joy_button(JOY_BUTTON_A, true)
+	_joy_button(JOY_BUTTON_RIGHT_SHOULDER, true)
+	battle.set_paused(true)
+	battle.set_paused(false)
+	var gated: Dictionary = _sample(battle)
+	check(Vector2(gated.direction).is_zero_approx() and not gated.burst and not gated.brake, "Held menu stick, Confirm and brake all require neutral after combat resume")
+	_axis(JOY_AXIS_LEFT_X, 0.0)
+	_joy_button(JOY_BUTTON_A, false)
+	_joy_button(JOY_BUTTON_RIGHT_SHOULDER, false)
+	_sample(battle)
+	_axis(JOY_AXIS_LEFT_X, 0.9)
+	check(Vector2(_sample(battle).direction).x > 0.0, "A deliberate fresh stick excursion steers after neutral resume")
+	_axis(JOY_AXIS_LEFT_X, 0.0)
 	battle.free()
 
 func _launch_live(battle: Node2D) -> void:
@@ -421,22 +437,49 @@ func _result(won: bool) -> void:
 
 func _test_run() -> void:
 	await _activate("EIGHT-ENCOUNTER RUN")
-	check(game.screen == "battle" and game.run_context.slot == 1, "Controller launches Run from title")
+	check(game.screen == "starters", "Controller opens the authored Run identities")
+	_focus_is_visible("Starter selection")
+	check(game.menus.focused_starter_id() == "breaker", "Breaker is the focused opening identity")
+	await _tap(JOY_BUTTON_DPAD_LEFT)
+	check(game.menus.focused_starter_id() == "vane", "D-pad wraps left through the three starter identities")
+	await _stick_tap(JOY_AXIS_LEFT_X, 0.9)
+	check(game.menus.focused_starter_id() == "breaker", "Analogue right wraps to Breaker")
+	await _tap(JOY_BUTTON_DPAD_RIGHT)
+	check(game.menus.focused_starter_id() == "bastion", "Blue identity is reachable without a mouse")
+	await _capture("08-controller-starters")
+	_joy_button(JOY_BUTTON_A, true)
+	await _settle()
+	_joy_button(JOY_BUTTON_A, false)
+	await _settle()
+	check(game.screen == "reward" and game.run_context.starter_id == "bastion", "Confirm locks the real Bastion assembly and immediately drafts a power")
+	check(game.run_context.selected_build == Starters.build_for("bastion"), "Authored assembly survives the transition into the Run")
+	var starting_offer: Array = game.run_context.pending_offer.duplicate()
+	check(game.screen == "reward" and game.run_context.owned_power_ids.is_empty(), "Held starter confirmation cannot also select the initial power")
+	check(game.run_context.pending_offer == starting_offer and starting_offer.size() == 3, "Starting offer is stored with three functional powers")
+	await _draft_and_resume(true)
+	check(game.screen == "battle" and game.run_context.slot == 1 and game.run_context.owned_power_ids.size() == 1, "Encounter one starts already powered")
 	var old_seed: int = game.run_context.run_seed
 	await _tap(JOY_BUTTON_START)
 	_focus_is_visible("Run pause")
 	await _activate("RESTART RUN")
-	check(game.screen == "battle" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Pause Restart Run resets to a fresh Run")
+	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed and game.run_context.starter_id == "bastion", "Pause Restart Run resets to a fresh initial offer with the same identity")
+	await _draft_and_resume(true)
 	_result(false)
 	await _settle()
 	check(game.screen == "result" and game.run_context.status == "failed", "Failure opens the Run result screen")
 	_focus_is_visible("Run failure")
-	await _capture("08-controller-run-failure")
+	await _capture("09-controller-run-failure")
 	old_seed = game.run_context.run_seed
 	await _activate("RESTART RUN")
-	check(game.screen == "battle" and game.run_context.run_seed != old_seed, "Controller restarts a failed Run")
+	check(game.screen == "reward" and game.run_context.run_seed != old_seed, "Controller restarts a failed Run at the initial draft")
+	await _draft_and_resume(true)
 	for slot: int in range(1, 9):
 		check(game.screen == "battle" and game.run_context.slot == slot, "Controller flow reaches Run encounter %d" % slot)
+		if slot <= 5:
+			await _fixture_level_up()
+			check(game.screen == "reward" and game.battle.paused, "Earned level pauses and immediately drafts in encounter %d" % slot)
+			await _draft_and_resume(false)
+			check(game.screen == "battle" and game.run_context.slot == slot, "Acquisition resumes the same live encounter")
 		if slot == 1 or slot == 8:
 			_joy_button(JOY_BUTTON_A, true)
 			await _settle()
@@ -447,59 +490,16 @@ func _test_run() -> void:
 			var original_seed: int = game.run_context.run_seed
 			_joy_button(JOY_BUTTON_A, false)
 			await _settle()
-			check(game.screen == original_screen and game.run_context.slot == slot and game.run_context.run_seed == original_seed, "Held combat face button cannot confirm newly opened draft/completion")
-		if slot in DRAFT_SLOTS:
-			check(game.screen == "reward", "Controller flow opens draft after encounter %d" % slot)
-			_focus_is_visible("Run power draft %d" % slot)
-			var offer: Array = game.run_context.pending_offer.duplicate()
-			var cards: Array[Button] = []
-			for node: Node in _descendants(game.menus):
-				if node is Button: cards.append(node)
-			check(cards.size() == mini(3, 6 - game.run_context.owned_power_ids.size()) and root.gui_get_focus_owner() == cards[0], "Draft opens with its first real available card focused")
-			for index: int in range(1, cards.size()):
-				if index == 1: await _tap(JOY_BUTTON_DPAD_RIGHT)
-				else: await _stick_tap(JOY_AXIS_LEFT_X, 0.9)
-				check(root.gui_get_focus_owner() == cards[index], "Controller reaches each available draft card")
-			await _tap(JOY_BUTTON_DPAD_RIGHT)
-			check(root.gui_get_focus_owner() == cards[0], "Draft wraps safely with one, two, or three cards")
-			var chosen_index: int = mini(1, cards.size() - 1)
-			if chosen_index > 0: await _tap(JOY_BUTTON_DPAD_RIGHT)
-			if slot == 1: await _capture("09-controller-draft-middle-focus")
-			await _tap(JOY_BUTTON_B)
-			check(game.screen == "pause" and game.pause_origin == "reward", "Controller Back opens draft overlay")
-			_focus_is_visible("Draft overlay")
-			if slot == 1: await _capture("10-controller-draft-overlay")
-			check(game.run_context.pending_offer == offer, "Opening overlay retains stored offer")
-			await _tap(JOY_BUTTON_B)
-			check(game.screen == "reward" and game.run_context.pending_offer == offer, "Back resumes the identical stored offer")
-			_focus_is_visible("Restored draft")
-			check(game.menus.focused_power_id() == offer[chosen_index], "Draft reopening preserves the focused power")
-			var owned_before: int = game.run_context.owned_power_ids.size()
-			await _tap(JOY_BUTTON_A)
-			check(game.screen == "acquisition" and game.run_context.slot == slot, "Confirm opens a brief acquisition beat before launch")
-			check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.owned_power_ids.back() == offer[chosen_index], "Confirm collects precisely the focused card")
-			await _tap(JOY_BUTTON_A)
-			check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot, "Repeated Confirm during feedback cannot acquire or advance twice")
-			if slot == 1:
-				await _capture("09b-controller-acquired")
-				await _tap(JOY_BUTTON_B)
-				check(game.screen == "pause" and game.pause_origin == "acquisition", "Controller can pause the acquisition beat")
-				await _tap(JOY_BUTTON_B)
-				check(game.screen == "acquisition", "Controller resumes the acquisition beat")
-			await create_timer(0.7).timeout
-			await _settle()
-			check(game.screen == "battle" and game.run_context.slot == slot + 1, "Acquisition launches the next encounter without extra input")
-			await _tap(JOY_BUTTON_A)
-			check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot + 1, "Rapid repeated Confirm cannot acquire another power or skip an encounter")
-		elif slot == 5:
+			check(game.screen == original_screen and game.run_context.slot == slot and game.run_context.run_seed == original_seed, "Held combat face button cannot confirm newly opened result/completion")
+		if slot < 8:
 			_focus_is_visible("Run intermediate result")
-			check(game.screen == "result", "Encounter 5 opens a navigable result")
+			check(game.screen == "result", "Cleared encounter opens its result without a duplicate automatic reward")
 			await _tap(JOY_BUTTON_B)
 			check(game.screen == "pause" and game.pause_origin == "result", "Back opens overlay from intermediate Run result")
 			await _tap(JOY_BUTTON_B)
 			check(game.screen == "result", "Back restores intermediate Run result")
 			await _activate("NEXT ENCOUNTER")
-			check(game.screen == "battle" and game.run_context.slot == 6, "Controller result Confirm advances to encounter 6")
+			check(game.screen == "battle" and game.run_context.slot == slot + 1, "Controller result Confirm advances exactly one encounter")
 		else:
 			check(game.screen == "result" and game.run_context.status == "complete", "Controller flow completes all eight encounters")
 			_focus_is_visible("Run completion")
@@ -507,19 +507,111 @@ func _test_run() -> void:
 	check(game.run_context.owned_power_ids.size() == 6, "Completed controller Run collected six powers")
 	old_seed = game.run_context.run_seed
 	await _activate("RESTART RUN")
-	check(game.screen == "battle" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a completed Run")
-	_result(true)
-	await _settle()
-	check(game.screen == "reward", "Restarted Run reopens a draft before End Run, observed "+game.screen)
+	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a completed Run at its initial power offer")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "pause", "Back opens restarted Run draft overlay, observed "+game.screen)
 	await _activate("END RUN")
 	check(game.screen == "garage" and game.run_context.status == "empty", "Controller ends Run from draft overlay")
 	_focus_is_visible("Garage after End Run")
 	await _activate("EIGHT-ENCOUNTER RUN")
-	check(game.screen == "battle" and game.run_context.slot == 1, "Controller launches Run from garage")
+	check(game.screen == "starters", "Garage Run button also opens authored starter selection")
+	await _activate("CUSTOM ASSEMBLY RUN")
+	check(game.screen == "reward" and game.run_context.starter_id == "custom", "Advanced custom assembly remains a secondary controller choice")
+	await _draft_and_resume(true)
 	await _tap(JOY_BUTTON_START)
 	await _activate("END RUN")
 	check(game.screen == "garage" and game.run_context.status == "empty", "Controller ends Run from battle pause")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "title", "Controller returns to title after ending Run")
+
+func _fixture_level_up() -> void:
+	# Accepted heavy contacts exercise the real deterministic XP/claim system.
+	# Real menu navigation still owns every subsequent choice.
+	var before: int = game.run_context.level
+	var owned_before: int = game.run_context.owned_power_ids.size()
+	if before == 1:
+		_joy_button(JOY_BUTTON_A, true)
+		_axis(JOY_AXIS_LEFT_X, 0.9)
+		await _settle()
+	var count: int = 0
+	while game.screen == "battle" and game.run_context.level == before and count < 100:
+		_xp_fixture_time += 1.3
+		game._progression_events([{"kind":"collision", "encounter_id":game.run_context.current_encounter().id,
+			"time":_xp_fixture_time, "first_entity_id":game.battle.player_entity_id, "second_entity_id":2,
+			"severity":0.9, "player_attributed":true, "event_id":"controller/%d/%d" % [before, count]}])
+		count += 1
+	check(game.screen == "level_up" and game.run_context.level == before + 1, "Meaningful contacts cross exactly one earned level")
+	await _capture("10a-controller-level-up")
+	await create_timer(0.22).timeout
+	await _settle()
+	if before == 1:
+		var focus: String = game.menus.focused_power_id()
+		_axis(JOY_AXIS_LEFT_X, 0.86)
+		await _settle()
+		check(game.menus.focused_power_id() == focus, "A combat stick held across level-up cannot advance card focus")
+		_joy_button(JOY_BUTTON_A, false)
+		_axis(JOY_AXIS_LEFT_X, 0.0)
+		await _settle()
+		check(game.screen == "reward" and game.run_context.owned_power_ids.size() == owned_before, "Held combat Confirm release cannot select the earned power")
+
+func _physical_snapshot() -> Dictionary:
+	var state: Dictionary = game.battle.snapshot()
+	state.erase("paused")
+	for key: String in ["player", "enemy"]: state[key].erase("powers")
+	for fighter: Dictionary in state.entities.values(): fighter.erase("powers")
+	return state
+
+func _draft_and_resume(starting: bool) -> void:
+	_focus_is_visible("Starting power" if starting else "Mid-battle power")
+	var slot: int = game.run_context.slot
+	var offer: Array = game.run_context.pending_offer.duplicate()
+	var cards: Array[Button] = []
+	for node: Node in _descendants(game.menus):
+		if node is Button and node.has_meta("power_id"): cards.append(node)
+	check(cards.size() == mini(3, 6 - game.run_context.owned_power_ids.size()) and root.gui_get_focus_owner() == cards[0], "Draft focuses its first functional card, including shrinking offers")
+	if cards.is_empty(): return
+	for index: int in range(1, cards.size()):
+		if index == 1: await _tap(JOY_BUTTON_DPAD_RIGHT)
+		else: await _stick_tap(JOY_AXIS_LEFT_X, 0.9)
+		check(root.gui_get_focus_owner() == cards[index], "Controller reaches every available power card")
+	await _tap(JOY_BUTTON_DPAD_RIGHT)
+	check(root.gui_get_focus_owner() == cards[0], "Power draft wraps with one, two or three cards")
+	_axis(JOY_AXIS_LEFT_X, 0.9)
+	await _settle()
+	var analogue_focus: String = game.menus.focused_power_id()
+	for amount: float in [0.8, 0.95, 0.6]:
+		_axis(JOY_AXIS_LEFT_X, amount)
+		await _settle()
+	check(game.menus.focused_power_id() == analogue_focus, "Held stick cannot race across power cards")
+	_axis(JOY_AXIS_LEFT_X, 0.0)
+	await _settle()
+	var chosen_id: String = game.menus.focused_power_id()
+	await _capture("10b-controller-power-focus")
+	await _tap(JOY_BUTTON_B)
+	check(game.screen == "pause" and game.pause_origin == "reward", "Controller Back opens draft pause overlay")
+	_focus_is_visible("Draft pause overlay")
+	check(game.run_context.pending_offer == offer, "Pause retains the deterministic stored offer")
+	await _tap(JOY_BUTTON_B)
+	check(game.screen == "reward" and game.run_context.pending_offer == offer, "Back restores the same offer")
+	check(game.menus.focused_power_id() == chosen_id, "Restored draft preserves its selected power focus")
+	var frozen: Dictionary = _physical_snapshot()
+	game.battle._physics_process(1.0 / 60.0)
+	check(_physical_snapshot() == frozen, "Draft selection consumes no simulation time or positions")
+	var owned_before: int = game.run_context.owned_power_ids.size()
+	await _tap(JOY_BUTTON_A)
+	check(game.screen == "acquisition" and game.run_context.slot == slot, "Confirm enters a short acquisition payoff")
+	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.owned_power_ids.back() == chosen_id, "Confirm commits the selected power once")
+	if not starting:
+		check(_physical_snapshot() == frozen and chosen_id in game.battle.player_entity().powers, "New power is installed without rebuilding live combat")
+	await _tap(JOY_BUTTON_A)
+	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot, "Repeated acquisition Confirm cannot claim or advance twice")
+	await _tap(JOY_BUTTON_B)
+	check(game.screen == "pause" and game.pause_origin == "acquisition", "Acquisition can be paused with the controller")
+	await _tap(JOY_BUTTON_B)
+	check(game.screen == "acquisition", "Controller resumes the acquisition payoff")
+	await create_timer(0.61).timeout
+	await _settle()
+	check(game.screen == "battle" and game.run_context.slot == slot, "Acquisition resumes exactly the intended encounter")
+	if not starting: check(_physical_snapshot() == frozen, "Menu and acquisition durations preserve combat state exactly")
+	await _tap(JOY_BUTTON_A)
+	check(game.run_context.owned_power_ids.size() == owned_before + 1 and game.run_context.slot == slot, "Rapid confirmation cannot skip another encounter after resume")

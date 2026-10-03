@@ -1,15 +1,15 @@
 extends SceneTree
-# Integration coverage for the original title/garage/duel flow and the eight-slot Run.
-# Results are controlled fixtures; physical combat outcomes remain covered in test_prototype.
+# Screen and ownership integration uses controlled result/XP fixtures. Actual
+# combat pacing and power outcomes are separately measured by playthrough tests.
 
 class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void:
 		pass
 
+const SELECTED_BUILD: Dictionary = {"blade":"guard", "ratchet":"low", "bit":"needle"}
+const Starters = preload("res://scripts/starters.gd")
 var failures: int = 0
 var checks: int = 0
-const DRAFT_SLOTS: Array[int] = [1, 2, 3, 4, 6, 7]
-const SELECTED_BUILD: Dictionary = {"blade":"guard", "ratchet":"low", "bit":"needle"}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -22,12 +22,11 @@ func check(value: bool, message: String) -> void:
 
 func _state(game: QuietMain) -> Dictionary:
 	var context = game.run_context
-	return {
-		"slot":context.slot, "seed":context.run_seed, "build":context.selected_build.duplicate(true),
-		"powers":context.owned_power_ids.duplicate(), "offer":context.pending_offer.duplicate(),
-		"results":context.committed_results.duplicate(true), "rewards":context.committed_rewards.duplicate(true),
-		"status":context.status
-	}
+	return {"slot":context.slot, "seed":context.run_seed, "build":context.selected_build,
+		"powers":context.owned_power_ids, "offer":context.pending_offer,
+		"draft":context.pending_draft_id, "kind":context.pending_draft_kind,
+		"results":context.committed_results, "rewards":context.committed_rewards,
+		"starter":context.starter_id, "progress":context.progression_snapshot(), "status":context.status}
 
 func _result(game: QuietMain, won: bool = true) -> Dictionary:
 	var encounter: Dictionary = game.run_context.current_encounter()
@@ -35,21 +34,55 @@ func _result(game: QuietMain, won: bool = true) -> Dictionary:
 		"encounter_id":encounter.id, "seed":encounter.seed}
 
 func _choice(game: QuietMain, power_id: String) -> Dictionary:
-	return {"encounter_id":game.run_context.current_encounter().id,
+	return {"encounter_id":game.run_context.pending_draft_id,
 		"power_id":power_id, "run_seed":game.run_context.run_seed}
 
-func _check_reset(game: QuietMain, previous_seed: int, message: String) -> void:
-	check(game.screen == "battle" and game.run_context.slot == 1 and game.run_context.status == "active", message+": starts slot 1")
-	check(game.run_context.run_seed != previous_seed, message+": gets a fresh seed")
-	check(game.run_context.owned_power_ids.is_empty() and game.run_context.pending_offer.is_empty(), message+": clears powers and draft")
-	check(game.run_context.committed_results.is_empty() and game.run_context.committed_rewards.is_empty(), message+": clears commitments")
-	check(game.run_context.selected_build == SELECTED_BUILD and game.battle.player_entity().build == SELECTED_BUILD, message+": keeps selected assembly")
+func _claim(game: QuietMain) -> void:
+	game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
+	game._process(0.6)
 
-func _check_cleared(game: QuietMain, message: String) -> void:
-	check(game.run_context.status == "empty", message+": no active/terminal Run remains")
-	check(game.run_context.owned_power_ids.is_empty() and game.run_context.pending_offer.is_empty(), message+": clears Run powers and offer")
-	check(game.run_context.committed_results.is_empty() and game.run_context.committed_rewards.is_empty(), message+": clears Run commitments")
-	check(not game.battle.visible and game.battle.paused, message+": hides and stops battle")
+func _start_custom(game: QuietMain) -> void:
+	game._action("start_run")
+	check(game.screen == "starters" and game.run_context.status == "empty", "Run opens three starter identities before generating its seed")
+	game._action("custom_run")
+	check(game.screen == "reward" and game.run_context.pending_draft_kind == "starting", "Secondary custom Run also chooses a power before combat")
+	_claim(game)
+	check(game.screen == "battle" and game.run_context.owned_power_ids.size() == 1, "Opening acquisition launches already powered")
+
+func _check_restart(game: QuietMain, old_seed: int, expected_starter: String = "custom") -> void:
+	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.status == "active", "Restart returns to opening power choice")
+	check(game.run_context.run_seed != old_seed and game.run_context.starter_id == expected_starter, "Restart gives a fresh seed and keeps chosen identity")
+	check(game.run_context.owned_power_ids.is_empty() and game.run_context.pending_offer.size() == 3, "Restart clears ownership and prepares three starting cards")
+	check(game.run_context.level == 1 and game.run_context.xp == 0 and game.run_context.committed_results.is_empty() and game.run_context.committed_rewards.is_empty(), "Restart clears all XP and commitments")
+	check(not game.battle.visible and game.battle.paused, "Restart safely hides previous combat during the opening draft")
+
+func _check_cleared(game: QuietMain) -> void:
+	check(game.run_context.status == "empty" and game.run_context.slot == 0, "Exit clears the Run")
+	check(game.run_context.owned_power_ids.is_empty() and game.run_context.pending_offer.is_empty(), "Exit clears powers and offers")
+	check(game.run_context.committed_results.is_empty() and game.run_context.committed_rewards.is_empty(), "Exit clears all claims and results")
+	check(not game.battle.visible and game.battle.paused, "Exit hides and stops combat")
+
+func _physical_state(game: QuietMain) -> Dictionary:
+	var entities: Dictionary = {}
+	for fighter: Dictionary in game.battle.fighters:
+		var physical: Dictionary = fighter.duplicate(true)
+		physical.erase("powers")
+		entities[int(fighter.entity_id)] = physical
+	return {"entities":entities, "elapsed":game.battle.elapsed, "status":game.battle.battle_status,
+		"swarm":game.battle.swarm.telemetry(), "runtime":game.battle.powers._states.duplicate(true)}
+
+func _earn_level(game: QuietMain) -> void:
+	var events: Array[Dictionary] = []
+	# Eight distinct credited small knockouts in one fixed tick are a plausible
+	# chain/wave event batch. This is a controlled screen-flow fixture.
+	for index: int in range(8):
+		events.append({"kind":"elimination", "encounter_id":game.run_context.current_encounter().id,
+			"time":game.battle.elapsed, "event_id":100000 + index,
+			"entity_id":100000 + index, "combatant_type":"small_top", "reason":"impact", "player_attributed":true})
+	game._progression_events(events)
+	check(game.screen == "level_up" and game.battle.paused, "Earned threshold pauses immediately with a level-up hit")
+	game._process(0.2)
+	check(game.screen == "reward" and game.run_context.pending_draft_kind == "level", "Brief hit opens the earned draft")
 
 func _run() -> void:
 	var game: QuietMain = QuietMain.new()
@@ -57,240 +90,195 @@ func _run() -> void:
 	root.add_child(game)
 	check(game.screen == "title", "Fresh game enters title")
 	game._action("customize")
-	check(game.screen == "garage", "Title customization enters garage")
-	var submitted_build: Dictionary = SELECTED_BUILD.duplicate()
-	game._action("build_changed", submitted_build)
-	submitted_build.blade = "smash"
-	check(game.build == SELECTED_BUILD, "Build selection does not retain the menu's mutable dictionary")
-	game._action("start_battle", "run")
-	check(game.mode == "run" and game.run_context.slot == 1 and game.run_context.status == "active", "Run begins at slot 1")
-	check(game.run_context.selected_build == SELECTED_BUILD, "Run locks the chosen assembly")
-	var first_result: Dictionary = _result(game)
-	_test_complete_run(game)
-	var completed_seed: int = game.run_context.run_seed
-	game._action("restart_run")
-	_check_reset(game, completed_seed, "Restart completed Run")
-	var fresh_state: Dictionary = _state(game)
-	game._round_finished(first_result)
-	check(_state(game) == fresh_state and game.screen == "battle", "Prior Run result is rejected even when slot ID matches")
-	_test_failure_restart(game)
-	_test_explicit_exit(game)
+	check(game.screen == "garage", "Garage remains available")
+	var submitted: Dictionary = SELECTED_BUILD.duplicate()
+	game._action("build_changed", submitted)
+	submitted.blade = "smash"
+	check(game.build == SELECTED_BUILD, "Garage selection copies its input")
+	_test_opening(game)
+	_test_midbattle_and_swarm(game)
+	_test_failure_and_exit(game)
+	_test_completion(game)
+	_test_authored_starters(game)
 	_test_quick_duel(game)
 	print("FLOW_TEST_%s checks=%d failures=%d" % ["PASS" if failures == 0 else "FAIL", checks, failures])
 	game.queue_free()
 	quit(1 if failures else 0)
 
-func _test_complete_run(game: QuietMain) -> void:
-	var observed_drafts: Array[int] = []
-	var previous_result: Dictionary = {}
-	var previous_choice: Dictionary = {}
-	for slot_number: int in range(1, 9):
-		check(game.screen == "battle" and game.run_context.slot == slot_number, "Expected Run slot %d" % slot_number)
-		check(game.run_context.current_encounter().id == "run_slot_%02d" % slot_number, "Stable encounter identity for slot %d" % slot_number)
-		var player: Dictionary = game.battle.player_entity()
-		check(player.build == SELECTED_BUILD, "Locked physical parts reach slot %d" % slot_number)
-		check(is_equal_approx(player.rpm, 1.0) and is_zero_approx(player.wobble) and is_zero_approx(player.cooldown), "Slot %d resets RPM, wobble, and Burst cooldown" % slot_number)
-		if slot_number == 8:
-			check(game.run_context.owned_power_ids.size() == 6, "Player enters slot 8 with six owned powers")
-		var before: Dictionary = _state(game)
-		for action_name: String in ["customize", "main_menu", "quick_duel", "start_run", "rematch"]:
-			game._action(action_name)
-			check(game.screen == "battle" and _state(game) == before, "Active Run rejects %s in slot %d" % [action_name, slot_number])
-		game._action("build_changed", {"blade":"smash", "ratchet":"high", "bit":"flat"})
-		check(game.build == SELECTED_BUILD and _state(game) == before, "Physical assembly cannot change mid-Run")
-		game._escape()
-		check(game.screen == "pause" and game.battle.paused and game.pause_origin == "battle", "Battle Escape pauses Run")
-		var paused_snapshot: Dictionary = game.battle.snapshot()
-		game.battle.test_step(1.0 / 60.0, Vector2.RIGHT, true, true)
-		check(_state(game) == before and game.battle.snapshot() == paused_snapshot, "Pause preserves Run state and stops simulated input")
-		game._escape()
-		check(game.screen == "battle" and not game.battle.paused and _state(game) == before, "Escape resumes the same Run encounter")
-		if not previous_result.is_empty():
-			game._round_finished(previous_result)
-			game._action("choose_power", previous_choice)
-			check(game.screen == "battle" and _state(game) == before, "Stale result and reward cannot affect a later slot")
-		var result: Dictionary = _result(game)
-		var invalid: Dictionary = result.duplicate()
-		invalid.encounter_id = "not_this_encounter"
-		game._round_finished(invalid)
-		invalid = result.duplicate()
-		invalid.seed = int(result.seed) + 1
-		game._round_finished(invalid)
-		game._round_finished({"won":true, "reason":"ring_out"})
-		check(_state(game) == before and game.screen == "battle", "Unbound or mismatched result cannot commit a Run encounter")
-		# Damage the outgoing fixture so the next launch's reset is meaningful.
-		player.rpm = 0.25
-		player.wobble = 0.6
-		player.cooldown = 2.0
-		game._round_finished(result)
-		check(game.run_context.committed_results.size() == slot_number, "Encounter result commits once for slot %d" % slot_number)
-		var committed: Dictionary = _state(game)
-		var committed_screen: String = game.screen
-		game._round_finished(result)
-		check(_state(game) == committed and game.screen == committed_screen, "Duplicate result cannot commit twice")
-		previous_result = result
-		if slot_number in DRAFT_SLOTS:
-			observed_drafts.append(slot_number)
-			check(game.screen == "reward", "Win opens draft after slot %d" % slot_number)
-			var offer: Array = game.run_context.pending_offer.duplicate()
-			check(offer.size() == mini(3, 6 - game.run_context.owned_power_ids.size()), "Draft offers only available functional cards")
-			var unique: Dictionary = {}
-			for power_id: String in offer:
-				unique[power_id] = true
-				check(not power_id in game.run_context.owned_power_ids, "Draft never offers an owned power")
-			check(unique.size() == offer.size(), "All draft cards are distinct")
-			game._action("next_battle")
-			game._action("choose_power", _choice(game, "not_an_offered_power"))
-			var wrong_choice: Dictionary = _choice(game, str(offer[0]))
-			wrong_choice.run_seed = int(wrong_choice.run_seed) + 1
-			game._action("choose_power", wrong_choice)
-			wrong_choice = _choice(game, str(offer[0]))
-			wrong_choice.encounter_id = "not_this_encounter"
-			game._action("choose_power", wrong_choice)
-			check(game.screen == "reward" and _state(game) == committed, "Draft rejects skipped, invalid, wrong-Run, and wrong-encounter choices")
-			game._escape()
-			check(game.screen == "pause" and game.pause_origin == "reward", "Reward Escape opens Run overlay")
-			check(_state(game) == committed, "Opening reward overlay preserves offer and Run state")
-			game._escape()
-			check(game.screen == "reward" and game.run_context.pending_offer == offer, "Closing overlay restores the exact pending offer")
-			game._pause()
-			game._resume()
-			check(game.screen == "reward" and _state(game) == committed, "Repeated reward reopening never rerolls")
-			var choice: Dictionary = _choice(game, str(offer[0]))
-			game._action("choose_power", choice)
-			check(game.screen == "acquisition" and game.run_context.slot == slot_number, "Power choice starts a short acquisition beat before launch")
-			var acquired_state: Dictionary = _state(game)
-			game._action("choose_power", choice)
-			check(_state(game) == acquired_state, "Repeated choice during feedback cannot acquire twice")
-			game._pause()
-			game._process(1.0)
-			check(game.screen == "pause" and _state(game) == acquired_state, "Pause freezes acquisition before launch")
-			game._resume()
-			check(game.screen == "acquisition", "Resume restores acquisition beat")
-			game._process(0.7)
-			check(game.screen == "battle" and game.run_context.slot == slot_number + 1, "Acquisition automatically launches the next encounter")
-			check(game.battle.encounter.player_power_ids == game.run_context.owned_power_ids, "Next battle receives all acquired Run powers")
-			check(game.run_context.owned_power_ids.size() == observed_drafts.size() and str(offer[0]) in game.run_context.owned_power_ids, "Choice persists exactly one power")
-			check(game.run_context.committed_rewards.size() == observed_drafts.size() and game.run_context.pending_offer.is_empty(), "Choice commits and clears pending offer")
-			var after_choice: Dictionary = _state(game)
-			game._action("choose_power", choice)
-			game._round_finished(result)
-			check(_state(game) == after_choice and game.screen == "battle", "Double card click and reentrant result cannot grant or advance twice")
-			previous_choice = choice
-		elif slot_number == 5:
-			check(game.screen == "result" and game.run_context.pending_offer.is_empty(), "Slot 5 win has no draft")
-			check(game.last_result.next_available, "Slot 5 win allows Continue")
-			game._escape()
-			check(game.screen == "pause" and game.pause_origin == "result" and _state(game) == committed, "Result overlay preserves active Run")
-			game._escape()
-			check(game.screen == "result" and _state(game) == committed, "Result overlay resumes without advancing")
-			game._action("next_battle")
-			check(game.run_context.slot == 6 and game.screen == "battle", "Slot 5 Continue launches slot 6")
-			var after_continue: Dictionary = _state(game)
-			game._action("next_battle")
-			check(_state(game) == after_continue, "Double Continue cannot skip a slot")
-		else:
-			check(game.screen == "result" and game.run_context.status == "complete", "Slot 8 victory completes Run")
-			check(game.run_context.pending_offer.is_empty() and not game.last_result.next_available, "Completed Run has no final draft or ninth encounter")
-			game._action("next_battle")
-			game._action("rematch")
-			check(_state(game) == committed and game.screen == "result", "Completion cannot replay only final encounter or advance")
-	check(observed_drafts == DRAFT_SLOTS, "Draft schedule is exactly 1, 2, 3, 4, 6, 7")
-	var owned_unique: Dictionary = {}
-	for power_id: String in game.run_context.owned_power_ids: owned_unique[power_id] = true
-	check(owned_unique.size() == 6 and game.run_context.committed_rewards.size() == 6, "Completed Run owns exactly six distinct powers from six rewards")
+func _test_opening(game: QuietMain) -> void:
+	game._action("start_battle", "run")
+	check(game.screen == "starters", "Primary Run route opens authored identities")
+	game._action("custom_run")
+	check(game.run_context.selected_build == SELECTED_BUILD and game.run_context.starter_id == "custom", "Advanced custom route locks the existing assembly")
+	var opening_state: Dictionary = _state(game)
+	var offer: Array[String] = game.run_context.pending_offer
+	game._round_finished(_result(game))
+	game._action("next_battle")
+	game._action("choose_power", _choice(game, "invalid"))
+	var wrong: Dictionary = _choice(game, offer[0])
+	wrong.run_seed = int(wrong.run_seed) + 1
+	game._action("choose_power", wrong)
+	check(game.screen == "reward" and _state(game) == opening_state, "Opening rejects combat results, skipped choices, and wrong-run input")
+	game._escape()
+	check(game.screen == "pause" and game.pause_origin == "reward", "Opening draft supports pause")
+	game._process(2.0)
+	check(_state(game) == opening_state, "Opening pause preserves the exact offer")
+	game._escape()
+	check(game.screen == "reward" and game.run_context.pending_offer == offer, "Opening resume restores cards without rerolling")
+	var chosen: Dictionary = _choice(game, offer[0])
+	game._action("choose_power", chosen)
+	check(game.screen == "acquisition" and game.run_context.owned_power_ids == [offer[0]], "Opening choice has a short payoff")
+	var acquired: Dictionary = _state(game)
+	game._action("choose_power", chosen)
+	game._pause()
+	game._process(2.0)
+	check(game.screen == "pause" and _state(game) == acquired, "Pause stops acquisition and repeated confirm acquires once")
+	game._resume()
+	game._process(0.6)
+	check(game.screen == "battle" and game.run_context.slot == 1 and game.battle.player_entity().powers == [offer[0]], "First encounter receives the chosen power")
+	check(game.battle.player_entity().build == SELECTED_BUILD, "Custom assembly reaches powered combat")
+	var locked: Dictionary = _state(game)
+	for name: String in ["customize", "main_menu", "quick_duel", "start_run", "rematch", "build_changed"]:
+		game._action(name, {"blade":"smash", "ratchet":"high", "bit":"flat"})
+		check(game.screen == "battle" and _state(game) == locked, "Active Run rejects stale route %s" % name)
 
-func _test_failure_restart(game: QuietMain) -> void:
-	# Retain rewards before losing to exercise failure cleanup with real Run progress.
+func _test_midbattle_and_swarm(game: QuietMain) -> void:
 	for _slot: int in range(2):
 		game._round_finished(_result(game))
-		game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
-		game._process(0.7)
-	check(game.run_context.slot == 3 and game.run_context.owned_power_ids.size() == 2, "Failure fixture has prior progress")
+		check(game.screen == "result" and game.run_context.pending_offer.is_empty(), "Victory alone does not add fixed slot rewards")
+		game._action("next_battle")
+	check(game.run_context.slot == 3 and game.battle.swarm.enabled, "Ammunition Waves remains slot three")
+	for _step: int in range(360):
+		game.battle.test_step(1.0 / 60.0)
+		if game.battle.swarm.spawned >= 6: break
+	check(game.battle.swarm.spawned == 6, "First authored wave enters combat before the draft")
+	game.battle.test_set_entity_state(game.battle.player_entity_id, {"rpm":0.63, "wobble":0.41, "cooldown":1.7, "vel":Vector2(27.0, -12.0)})
+	var physical: Dictionary = _physical_state(game)
+	var runtime_id: int = game.battle.powers.get_instance_id()
+	_earn_level(game)
+	var pending: Dictionary = _state(game)
+	var offer: Array[String] = game.run_context.pending_offer
+	var choice: Dictionary = _choice(game, offer[0])
+	game._action("next_battle")
+	game._action("choose_power", {"encounter_id":"draft/start", "power_id":offer[0], "run_seed":game.run_context.run_seed})
+	game._progression_events([{"kind":"wave_complete", "encounter_id":"run_slot_03", "time":900.0, "wave":1, "player_attributed":true}])
+	check(_state(game) == pending, "Paused draft rejects advancement, stale claims, and combat XP leakage")
+	game._escape()
+	game.battle.test_step(1.0, Vector2.RIGHT, true, true)
+	game._process(1.0)
+	check(_physical_state(game) == physical and _state(game) == pending, "Card selection/pause cannot move tops, spend RPM, or consume wave timers")
+	game._escape()
+	check(game.screen == "reward" and game.run_context.pending_offer == offer, "Midbattle focus/offer survives reopening")
+	game._action("choose_power", choice)
+	check(game.screen == "acquisition" and offer[0] in game.battle.player_entity().powers, "Acquired power is attached to the same live encounter")
+	check(game.battle.powers.get_instance_id() == runtime_id and _physical_state(game) == physical, "New ownership preserves positions, RPM, wobble, cooldown, waves, and all existing power state")
+	var acquired: Dictionary = _state(game)
+	game._action("choose_power", choice)
+	game._pause()
+	game._process(2.0)
+	check(game.screen == "pause" and _state(game) == acquired and _physical_state(game) == physical, "Acquisition pause freezes live combat and ignores repeated confirm")
+	game._resume()
+	game._process(0.6)
+	check(game.screen == "battle" and not game.battle.paused and game.run_context.slot == 3, "Acquisition resumes the same swarm instead of relaunching")
+	check(_physical_state(game) == physical and game.battle.encounter.player_power_ids == game.run_context.owned_power_ids, "Resume preserves the exact encounter and applies the new power immediately")
+	game.battle.test_step(1.0 / 60.0)
+	check(game.battle.elapsed > float(physical.elapsed), "Wave simulation continues from the paused timestamp")
+
+func _test_failure_and_exit(game: QuietMain) -> void:
+	var stale_result: Dictionary = _result(game)
 	game._round_finished(_result(game, false))
-	check(game.screen == "result" and game.run_context.status == "failed", "Losing ends Run")
-	check(not game.last_result.next_available and game.run_context.pending_offer.is_empty(), "Loss grants no advancement or draft")
-	var failed_state: Dictionary = _state(game)
+	check(game.screen == "result" and game.run_context.status == "failed" and not game.last_result.next_available, "Loss ends Run without advancement")
+	var failed: Dictionary = _state(game)
 	game._action("next_battle")
 	game._action("rematch")
-	check(game.screen == "result" and _state(game) == failed_state, "Lost Run cannot advance or retry only the lost encounter")
-	var failed_seed: int = game.run_context.run_seed
+	check(_state(game) == failed, "Failure cannot replay only the lost encounter")
+	var old_seed: int = game.run_context.run_seed
 	game._action("restart_run")
-	_check_reset(game, failed_seed, "Restart failed Run")
-	game._round_finished(_result(game))
-	check(game.screen == "reward", "Restart can earn a new draft")
-	var reward_seed: int = game.run_context.run_seed
+	_check_restart(game, old_seed)
+	_claim(game)
+	var fresh: Dictionary = _state(game)
+	game._round_finished(stale_result)
+	check(game.screen == "battle" and _state(game) == fresh, "Old-run result cannot commit after restart")
+	game._pause()
+	game._action("end_run")
+	check(game.screen == "garage", "End Run returns to Garage")
+	_check_cleared(game)
+	_start_custom(game)
+	_earn_level(game)
+	game._action("choose_power", _choice(game, game.run_context.pending_offer[0]))
+	old_seed = game.run_context.run_seed
+	game._pause()
+	game._action("restart_run")
+	game._process(2.0)
+	_check_restart(game, old_seed)
 	game._escape()
-	game._action("restart_run")
-	_check_reset(game, reward_seed, "Restart from pending reward overlay")
+	game._action("end_run")
+	game._process(2.0)
+	check(game.screen == "garage", "End during opening/acquisition cancels delayed launch")
+	_check_cleared(game)
 
-func _test_explicit_exit(game: QuietMain) -> void:
-	game._round_finished(_result(game))
-	game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
-	var acquisition_seed: int = game.run_context.run_seed
-	game._pause()
-	game._action("restart_run")
-	game._process(1.0)
-	_check_reset(game, acquisition_seed, "Restart during acquisition cancels the old advance")
-	game._round_finished(_result(game))
-	game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
-	game._pause()
-	game._action("end_run")
-	game._process(1.0)
-	check(game.screen == "garage", "End Run during acquisition cannot leave a delayed launch")
-	_check_cleared(game, "End Run during acquisition")
-	game._action("start_run")
-	game._round_finished(_result(game))
-	game._escape()
-	game._action("end_run")
-	check(game.screen == "garage", "Explicit End Run from reward overlay returns to garage")
-	_check_cleared(game, "End Run from reward")
-	game._action("start_run")
-	check(game.screen == "battle" and game.run_context.slot == 1, "Garage starts a fresh Run")
-	game._escape()
-	game._action("end_run")
-	check(game.screen == "garage", "Explicit End Run from battle overlay returns to garage")
-	_check_cleared(game, "End Run from battle")
-	game._action("start_run")
-	game._round_finished(_result(game, false))
-	game._action("customize")
-	check(game.screen == "garage", "Failed Run can return to garage")
-	_check_cleared(game, "Leave failed Run")
-	game._action("start_run")
+func _test_completion(game: QuietMain) -> void:
+	_start_custom(game)
 	for slot_number: int in range(1, 9):
-		game._round_finished(_result(game))
-		if slot_number in DRAFT_SLOTS:
-			game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
-			game._process(0.7)
-		elif slot_number == 5:
+		check(game.screen == "battle" and game.run_context.slot == slot_number, "Eight-encounter structure stays sequential")
+		var before: Dictionary = _state(game)
+		var result: Dictionary = _result(game)
+		var wrong: Dictionary = result.duplicate()
+		wrong.seed = int(result.seed) + 1
+		game._round_finished(wrong)
+		game._round_finished({"won":true, "reason":"ring_out"})
+		check(game.screen == "battle" and _state(game) == before, "Unbound/mismatched results cannot commit")
+		game._round_finished(result)
+		var committed: Dictionary = _state(game)
+		game._round_finished(result)
+		check(_state(game) == committed and game.screen == "result", "Duplicate result commits once")
+		check(game.run_context.pending_offer.is_empty(), "Completion fixture earns no passive result XP")
+		if slot_number < 8:
+			check(game.last_result.next_available, "Resolved active encounter allows Continue")
+			game._escape()
+			game._escape()
+			check(game.screen == "result" and _state(game) == committed, "Result pause does not advance")
 			game._action("next_battle")
-	check(game.run_context.status == "complete", "Return-to-title fixture completes Run")
+			var advanced: Dictionary = _state(game)
+			game._action("next_battle")
+			check(_state(game) == advanced, "Double Continue cannot skip an encounter")
+		else:
+			check(game.run_context.status == "complete" and not game.last_result.next_available, "Eighth win completes with no ninth encounter")
+			game._action("next_battle")
+			check(_state(game) == committed, "Completion cannot advance")
+	check(game.run_context.owned_power_ids.size() == 1 and game.run_context.committed_rewards.size() == 1, "XP replaces six forced post-encounter powers; no fake power growth")
 	game._action("main_menu")
 	check(game.screen == "title", "Completed Run can return to title")
-	_check_cleared(game, "Leave completed Run")
+	_check_cleared(game)
+
+func _test_authored_starters(game: QuietMain) -> void:
+	for identity: String in Starters.IDS:
+		game._action("start_run")
+		game._action("choose_starter", identity)
+		check(game.run_context.starter_id == identity and game.run_context.selected_build == Starters.build_for(identity), "Authored starter locks identity and physical assembly")
+		_claim(game)
+		check(game.battle.player_entity().build == Starters.build_for(identity), "Authored assembly reaches the opening battle")
+		check(game.battle.player_entity().starter_id == identity and game.battle.player_entity().powers.size() == 1, "Opening battle carries starter visuals and one power")
+		var old_seed: int = game.run_context.run_seed
+		game._pause()
+		game._action("restart_run")
+		_check_restart(game, old_seed, identity)
+		game._escape()
+		game._action("end_run")
+		_check_cleared(game)
+	check(game.build == SELECTED_BUILD, "Authored Run selection preserves the custom Garage assembly")
 
 func _test_quick_duel(game: QuietMain) -> void:
 	game.last_result = {"title":"RUN COMPLETE"}
 	game._action("quick_duel")
-	check(game.mode == "duel" and game.screen == "battle", "Quick Duel launches after Run")
-	check(game.last_result.is_empty(), "New duel clears previous result")
-	check(game.battle.player_entity().build == SELECTED_BUILD, "Quick Duel keeps chosen physical assembly")
-	check(game.run_context.status == "empty", "Quick Duel does not create a Run")
-	var duel_opponent: Dictionary = game.opponent_build.duplicate()
+	check(game.mode == "duel" and game.screen == "battle" and game.run_context.status == "empty", "Quick Duel remains independent of Run progression")
+	check(game.last_result.is_empty() and game.battle.player_entity().build == SELECTED_BUILD, "Quick Duel keeps Garage assembly and clears previous result")
+	var opponent: Dictionary = game.opponent_build.duplicate()
 	game._pause()
-	check(game.screen == "pause" and game.battle.paused, "Quick Duel pause stops battle")
-	game._resume()
-	check(game.screen == "battle" and not game.battle.paused, "Quick Duel resume restores battle")
-	game._pause()
+	check(game.battle.paused and game.screen == "pause", "Quick Duel pauses")
 	game._action("rematch")
-	check(game.mode == "duel" and game.screen == "battle" and game.opponent_build == duel_opponent, "Quick Duel restart preserves opponent")
-	game._round_finished({"won":false, "reason":"timeout", "duration":60.0, "hits":12})
-	check(game.screen == "result" and not game.last_result.next_available, "Quick Duel timeout result has no progression")
-	game._action("rematch")
-	check(game.screen == "battle" and game.opponent_build == duel_opponent, "Quick Duel retry keeps opponent after loss")
+	check(game.screen == "battle" and game.opponent_build == opponent, "Quick Duel restart preserves opponent")
 	game._round_finished({"won":true, "reason":"ring_out", "duration":29.0, "hits":8})
-	check(game.screen == "result" and game.run_context.pending_offer.is_empty(), "Quick Duel victory never opens draft")
+	check(game.screen == "result" and game.run_context.pending_offer.is_empty(), "Quick Duel never opens a progression draft")
 	game._action("rematch")
-	check(game.screen == "battle" and game.opponent_build == duel_opponent, "Quick Duel rematch works after victory")
-	game._action("main_menu")
-	check(game.screen == "title" and not game.battle.visible, "Main menu hides Quick Duel")
+	check(game.screen == "battle" and game.opponent_build == opponent, "Quick Duel rematch still works")
