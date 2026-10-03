@@ -35,7 +35,9 @@ func start(build: Dictionary, seed_value: int) -> void:
 	status = "active"
 
 func current_encounter() -> Dictionary:
-	return Encounters.for_slot(slot, run_seed)
+	var descriptor: Dictionary = Encounters.for_slot(slot, run_seed)
+	if not descriptor.is_empty(): descriptor["player_power_ids"] = owned_power_ids
+	return descriptor
 
 func is_active() -> bool:
 	return status == "active"
@@ -91,7 +93,7 @@ func _generate_offer(encounter_id: String) -> void:
 	# This is called only by the first committed result. Rendering/reopening a
 	# reward has no RNG path, and other streams cannot perturb this slot's offer.
 	var candidates: Array[String] = []
-	for power_id: String in Powers.IDS:
+	for power_id: String in Powers.ACTIVE_IDS:
 		if not power_id in _owned_power_ids: candidates.append(power_id)
 	var draft_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	draft_rng.seed = Seeds.derive(run_seed, "draft/" + encounter_id)

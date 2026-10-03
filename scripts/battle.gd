@@ -10,6 +10,9 @@ signal contact_accepted(first_entity_id: int, second_entity_id: int)
 
 const Catalog = preload("res://scripts/parts.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
+const PowerRuntime = preload("res://scripts/power_runtime.gd")
+const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
+const PowerVisuals = preload("res://scripts/power_visuals.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
 const NEUTRAL_TEAM: String = "neutral"
@@ -24,6 +27,9 @@ const BURST_COOLDOWN: float = 4.0
 const PLAYER_COLOR: Color = Color("69c7e3")
 const ENEMY_COLOR: Color = Color("f0a468")
 
+var powers = PowerRuntime.new()
+var swarm = SwarmRuntime.new()
+var _power_fx: Array[Dictionary] = []
 var fighters: Array[Dictionary] = []
 var battle_status: String = "idle"
 var elapsed: float = 0.0
@@ -111,7 +117,13 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	fighters.clear()
 	player_entity_id = 1
 	add_full_top(player_build, player_entity_id, PLAYER_TEAM, PLAYER_OWNER, Vector2(-59.0, 19.0), Vector2(64.0, -26.0))
-	add_full_top(descriptor.get("opponent_build", {}), 2, HOSTILE_TEAM, "rival_1", Vector2(59.0, -19.0), Vector2(-64.0, 26.0))
+	swarm.setup(self, descriptor)
+	player_entity()["powers"] = descriptor.get("player_power_ids", []).duplicate()
+	if not swarm.enabled:
+		add_full_top(descriptor.get("opponent_build", {}), 2, HOSTILE_TEAM, "rival_1", Vector2(59.0, -19.0), Vector2(-64.0, 26.0))
+		entity(2)["powers"] = descriptor.get("opponent_power_ids", []).duplicate()
+	powers.setup(self)
+	_power_fx.clear()
 	battle_status = "countdown"
 	elapsed = 0.0
 	paused = false
@@ -154,7 +166,7 @@ func _make_fighter(build: Dictionary, entity_id: int, team_id: String, owner_id:
 	return {
 		"build": clean, "stats": stats, "pos": start,
 		"entity_id": entity_id, "team_id": team_id, "owner_id": owner_id,
-		"combatant_type": "full_top", "launch_velocity": launch_velocity,
+		"combatant_type": "full_top", "launch_velocity": launch_velocity, "powers": [], "impulse_time": 0.0,
 		"ai_clock": 0.0, "ai_direction": Vector2.ZERO,
 		"ai_burst_delay": 2.5 + ai_rng.randf_range(0.0, 1.1),
 		"vel": Vector2.ZERO, "rpm": 1.0, "energy": 1.0, "wobble": 0.0,
@@ -181,7 +193,7 @@ func _ordered_fighters() -> Array[Dictionary]:
 	return ordered
 
 func _is_live(fighter: Dictionary) -> bool:
-	return str(fighter["outcome"]).is_empty() and str(fighter["combatant_type"]) == "full_top"
+	return str(fighter["outcome"]).is_empty() and str(fighter["combatant_type"]) in ["full_top", "small_top"]
 
 func _opposes(first: Dictionary, second: Dictionary) -> bool:
 	return str(first["team_id"]) != str(second["team_id"]) and str(first["team_id"]) != NEUTRAL_TEAM and str(second["team_id"]) != NEUTRAL_TEAM
@@ -280,6 +292,8 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_hit_stop = maxf(0.0, _hit_stop - dt)
 		return
 	elapsed += dt
+	powers.begin_tick(dt)
+	swarm.begin_tick(dt)
 	for pair_key: String in _pair_cooldowns.keys():
 		_pair_cooldowns[pair_key] = maxf(0.0, float(_pair_cooldowns[pair_key]) - dt)
 		if float(_pair_cooldowns[pair_key]) <= 0.0:
@@ -290,7 +304,9 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 	# Decide all controls before integrating any entity, so array order cannot
 	# make an AI read a target one simulation tick ahead of another AI.
 	for fighter: Dictionary in ordered:
-		if _is_live(fighter) and str(fighter["owner_id"]) != PLAYER_OWNER:
+		if _is_live(fighter) and str(fighter["combatant_type"]) == "small_top":
+			swarm.decide(fighter, dt)
+		elif _is_live(fighter) and str(fighter["owner_id"]) != PLAYER_OWNER:
 			fighter["ai_burst_delay"] = float(fighter["ai_burst_delay"]) - dt
 			_update_ai(fighter, dt)
 	var player: Dictionary = player_entity()
@@ -298,7 +314,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_attempt_burst(player, unproject_direction(_buffered_burst_direction))
 		_burst_buffer = 0.0
 	for fighter: Dictionary in ordered:
-		if not _is_live(fighter) or str(fighter["owner_id"]) == PLAYER_OWNER:
+		if not _is_live(fighter) or str(fighter["owner_id"]) == PLAYER_OWNER or str(fighter["combatant_type"]) == "small_top":
 			continue
 		var target: Dictionary = _target_for(fighter)
 		if not target.is_empty() and float(fighter["ai_burst_delay"]) <= 0.0 and float(fighter["cooldown"]) <= 0.0:
@@ -307,16 +323,39 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 				_attempt_burst(fighter, fighter["ai_direction"])
 				var ai_rng: RandomNumberGenerator = _ai_rngs[int(fighter["entity_id"])]
 				fighter["ai_burst_delay"] = ai_rng.randf_range(2.0, 3.8)
+	var starts: Dictionary = {}
+	var has_small: bool = swarm.active_count() > 0
 	for fighter: Dictionary in ordered:
-		if not _is_live(fighter):
-			continue
-		var controlled: bool = str(fighter["owner_id"]) == PLAYER_OWNER
-		_update_fighter(fighter, player_world_direction if controlled else Vector2(fighter["ai_direction"]), brake if controlled else _ai_should_brake(fighter), dt)
-	_resolve_contact()
-	for fighter: Dictionary in ordered:
-		if _is_live(fighter):
-			_resolve_boundary(fighter)
+		if not _is_live(fighter): continue
+		starts[int(fighter.entity_id)] = fighter.pos
+		if fighter.combatant_type == "small_top":
+			swarm.move(fighter, dt)
+		else:
+			var controlled: bool = str(fighter["owner_id"]) == PLAYER_OWNER
+			_update_fighter(fighter, player_world_direction if controlled else Vector2(fighter["ai_direction"]), brake if controlled else _ai_should_brake(fighter), dt)
+	if has_small:
+		# Four bounded motion slices: even opposing 400-unit/s bodies move less
+		# than their combined radius per slice. Full-top no-swarm path is unchanged.
+		for fighter: Dictionary in ordered:
+			if starts.has(int(fighter.entity_id)): fighter.pos = starts[int(fighter.entity_id)]
+		for slice: int in range(4):
+			for fighter: Dictionary in ordered:
+				if _is_live(fighter): fighter.pos = Vector2(fighter.pos) + Vector2(fighter.vel) * dt * 0.25
+			_resolve_contact()
+			powers.flush_contact_powers()
+			for fighter: Dictionary in ordered:
+				if _is_live(fighter): _resolve_boundary(fighter)
+	else:
+		_resolve_contact()
+		powers.flush_contact_powers()
+		for fighter: Dictionary in ordered:
+			if _is_live(fighter): _resolve_boundary(fighter)
+	powers.after_movement()
+	powers.flush_contact_powers()
+	powers.recover()
+	swarm.account_outcomes()
 	_check_result()
+	powers.end_tick(battle_status == "finished")
 	if _hud_clock <= 0.0:
 		_emit_hud()
 
@@ -376,6 +415,7 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 			heading = (Vector2(other["pos"]) - position_world).normalized()
 	if heading.length_squared() < 0.01:
 		heading = velocity_world.normalized()
+	var pre_cost_rpm: float = float(fighter["rpm"])
 	var stats: Dictionary = fighter["stats"]
 	var push: float = 67.0 + float(stats["grip"]) * 3.0
 	fighter["vel"] = velocity_world + heading.normalized() * push
@@ -384,6 +424,7 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - 0.013)
 	fighter["energy"] = fighter["rpm"]
 	_spawn_ring(project(position_world), _team_color(fighter), 0.30)
+	powers.burst_started(fighter, heading.normalized(), pre_cost_rpm)
 	event_sfx.emit("burst")
 
 func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt: float) -> void:
@@ -398,7 +439,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var acceleration: float = (123.0 + grip * 17.0) * alive_factor
 	var top_speed: float = (110.0 + float(stats["speed"]) * 13.0) * (0.64 + alive_factor * 0.36)
 	var burst_time: float = maxf(0.0, float(fighter["burst_time"]) - dt)
-	if burst_time > 0.0:
+	if burst_time > 0.0 or powers.redline_active(fighter):
 		acceleration *= 1.65
 		top_speed *= 1.46
 	if braking:
@@ -417,6 +458,9 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	if braking:
 		drag += 3.8 + grip * 0.20
 	velocity_world *= exp(-drag * dt)
+	if float(fighter.get("impulse_time",0.0)) > 0.0:
+		top_speed = maxf(top_speed, 340.0)
+		fighter["impulse_time"] = maxf(0.0, float(fighter.impulse_time)-dt)
 	velocity_world = velocity_world.limit_length(top_speed)
 	position_world += velocity_world * dt
 	# Low spin loses both control and stability. Braking buys position at a
@@ -437,7 +481,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	fighter["cooldown"] = maxf(0.0, float(fighter["cooldown"]) - dt)
 	fighter["burst_time"] = burst_time
 	fighter["impact_time"] = maxf(0.0, float(fighter["impact_time"]) - dt)
-	fighter["phase"] = fmod(float(fighter["phase"]) + dt * (3.2 + rpm * 13.5), 8.0)
+	fighter["phase"] = fmod(float(fighter["phase"]) + dt * (3.2 + powers.effective_rpm(fighter) * 13.5), 8.0)
 	fighter["height_vel"] = float(fighter["height_vel"]) - 140.0 * dt
 	fighter["height"] = maxf(0.0, float(fighter["height"]) + float(fighter["height_vel"]) * dt)
 	if float(fighter["height"]) <= 0.0:
@@ -452,10 +496,12 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 		fighter["scrape_clock"] = 0.24
 
 func _resolve_contact() -> void:
-	var ordered: Array[Dictionary] = _ordered_fighters()
+	var ordered: Array[Dictionary] = []
+	for fighter: Dictionary in _ordered_fighters():
+		if _is_live(fighter): ordered.append(fighter)
 	for first_index: int in range(ordered.size()):
 		for second_index: int in range(first_index + 1, ordered.size()):
-			resolve_pair(int(ordered[first_index]["entity_id"]), int(ordered[second_index]["entity_id"]))
+			_resolve_pair_records(ordered[first_index], ordered[second_index])
 
 ## Canonical ID ordering gives exact overlaps the same normal and resolves
 ## simultaneous pairs in the same order even if the backing array is reversed.
@@ -464,7 +510,14 @@ func resolve_pair(first_entity_id: int, second_entity_id: int) -> void:
 		return
 	var first: Dictionary = entity(mini(first_entity_id, second_entity_id))
 	var second: Dictionary = entity(maxi(first_entity_id, second_entity_id))
+	_resolve_pair_records(first, second)
+
+func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
+	if battle_status != "battle": return
 	if first.is_empty() or second.is_empty() or not _is_live(first) or not _is_live(second):
+		return
+	if first.combatant_type == "small_top" or second.combatant_type == "small_top":
+		_resolve_small_pair(first, second)
 		return
 	var pair_key: String = "%d:%d" % [int(first["entity_id"]), int(second["entity_id"])]
 	var a: Vector2 = first["pos"]
@@ -490,8 +543,8 @@ func resolve_pair(first_entity_id: int, second_entity_id: int) -> void:
 	var b_stats: Dictionary = second["stats"]
 	var a_burst: float = 1.43 if float(first["burst_time"]) > 0.0 else 1.0
 	var b_burst: float = 1.43 if float(second["burst_time"]) > 0.0 else 1.0
-	var a_attack: float = (0.66 + float(a_stats["power"]) * 0.073) * a_burst * (0.45 + float(first["rpm"]) * 0.55)
-	var b_attack: float = (0.66 + float(b_stats["power"]) * 0.073) * b_burst * (0.45 + float(second["rpm"]) * 0.55)
+	var a_attack: float = (0.66 + float(a_stats["power"]) * 0.073) * a_burst * (0.45 + powers.effective_rpm(first) * 0.55)
+	var b_attack: float = (0.66 + float(b_stats["power"]) * 0.073) * b_burst * (0.45 + powers.effective_rpm(second) * 0.55)
 	var impulse: float = (1.70 * closing + 19.0) / inv_sum
 	var attack_bias: float = clampf((a_attack - b_attack) * 0.19, -0.25, 0.25)
 	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias)
@@ -522,6 +575,7 @@ func resolve_pair(first_entity_id: int, second_entity_id: int) -> void:
 		fighter["impact_strength"] = severity
 		if severity > 0.75:
 			fighter["height_vel"] = 27.0
+	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
 	# The authored impact hold remains gameplay timing and is independent of
 	# particle/audio throttling. Another valid pair still receives its damage.
@@ -538,6 +592,85 @@ func resolve_pair(first_entity_id: int, second_entity_id: int) -> void:
 		event_sfx.emit("heavy_impact")
 	else:
 		event_sfx.emit("hit")
+
+func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Dictionary) -> void:
+	if not _is_live(target): return
+	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
+	target.vel = (Vector2(target.vel) + delta_velocity.limit_length(100.0)).limit_length(cap)
+	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
+
+func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0) -> void:
+	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38}
+	if _power_fx.size() >= 32:
+		var discard: int = 0
+		for index: int in range(_power_fx.size()):
+			if str(_power_fx[index].kind) != "second_wind":
+				discard = index
+				break
+		_power_fx.remove_at(discard)
+	var effect: Dictionary = {"kind":kind,"pos":pos,"dir":direction,"direction":direction,"strength":strength,"age":0.0,"duration":durations.get(kind,0.4)}
+	if kind == "second_wind":
+		for fighter: Dictionary in _ordered_fighters():
+			if Vector2(fighter.pos).is_equal_approx(pos):
+				effect["owner_entity_id"] = fighter.entity_id
+				effect["phase"] = fighter.phase
+				break
+	_power_fx.append(effect)
+	event_sfx.emit(kind)
+
+func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
+	var a: Vector2 = first.pos
+	var b: Vector2 = second.pos
+	var difference: Vector2 = b-a
+	var distance: float = difference.length()
+	var reach: float = float(first.radius)+float(second.radius)
+	if distance >= reach: return
+	var normal: Vector2 = difference/distance if distance > 0.001 else Vector2.RIGHT
+	var inv_a: float = 1.0/float(first.mass)
+	var inv_b: float = 1.0/float(second.mass)
+	var inv_sum: float = inv_a+inv_b
+	first.pos = a-normal*(reach-distance+0.05)*inv_a/inv_sum
+	second.pos = b+normal*(reach-distance+0.05)*inv_b/inv_sum
+	var va: Vector2 = first.vel
+	var vb: Vector2 = second.vel
+	var closing: float = (va-vb).dot(normal)
+	if closing <= 0.0: return
+	var impulse: float = (1.65*closing+7.0)/inv_sum
+	first.vel = (va-normal*impulse*inv_a).limit_length(400.0)
+	second.vel = (vb+normal*impulse*inv_b).limit_length(400.0)
+	for f: Dictionary in [first,second]:
+		if f.combatant_type == "small_top": f.impulse_time = 0.4
+	var key: String = "%d:%d" % [int(first.entity_id),int(second.entity_id)]
+	if float(_pair_cooldowns.get(key,0.0)) > 0.0: return
+	_pair_cooldowns[key] = 0.24
+	var severity: float = clampf(closing/220.0,0.08,1.3)
+	powers.accepted_contact(first,second,severity,normal,a+normal*float(first.radius),Vector2(first.vel)-va,Vector2(second.vel)-vb)
+	for pair: Array in [[first,second],[second,first]]:
+		var target: Dictionary = pair[0]
+		var source: Dictionary = pair[1]
+		var loss: float = 0.0
+		if target.combatant_type == "full_top":
+			loss = minf(swarm.contact_budget,(0.004+severity*0.012)*0.20)
+			swarm.contact_budget = maxf(0.0,swarm.contact_budget-loss)
+			target.wobble = minf(1.0,float(target.wobble)+loss*3.1)
+		elif source.combatant_type == "full_top":
+			var attack: float = (0.66+float(source.stats.power)*0.073)*(0.45+powers.effective_rpm(source)*0.55)
+			if float(source.burst_time)>0.0: attack *= 1.43
+			loss = (0.045+severity*0.12)*attack
+		elif not powers.cause_for(source).is_empty():
+			loss = 0.01+severity*0.075
+		else: loss = severity*0.004
+		target.rpm = maxf(0.0,float(target.rpm)-loss)
+		target.energy = target.rpm
+		target.impact_time = 0.12
+		target.impact_strength = severity
+	hits += 1
+	contact_accepted.emit(int(first.entity_id),int(second.entity_id))
+	# Swarm contacts never freeze the simulation; only important player contacts sound.
+	if (first.owner_id == PLAYER_OWNER or second.owner_id == PLAYER_OWNER) and _contact_fx_cooldown <= 0.0:
+		_contact_fx_cooldown = 0.12
+		_spawn_sparks(project(a+normal*float(first.radius)),normal,4,severity*0.6)
+		event_sfx.emit("small_hit")
 
 func _resolve_boundary(fighter: Dictionary) -> void:
 	var position_world: Vector2 = fighter["pos"]
@@ -569,7 +702,8 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + minf(0.16, outward * 0.00055))
 			fighter["impact_time"] = 0.12
 			fighter["impact_strength"] = 0.3
-			if outward > 70.0:
+			powers.wall_rebound(fighter, outward, normal, position_world)
+			if outward > 70.0 and fighter.combatant_type == "full_top":
 				_spawn_sparks(project(position_world), -normal, 4, 0.6)
 				event_sfx.emit("wall")
 	fighter["pos"] = position_world
@@ -580,6 +714,14 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 # elimination), the highest remaining RPM wins; ties favor the lowest stable ID.
 func _check_result() -> void:
 	if battle_status == "finished":
+		return
+	if swarm.enabled:
+		var player: Dictionary = player_entity()
+		if float(player.rpm) <= 0.045 and str(player.outcome).is_empty(): player.outcome = "spin_out"
+		if not str(player.outcome).is_empty():
+			_finish(0,str(player.outcome))
+		elif swarm.clear():
+			_finish(player_entity_id,"swarm_clear")
 		return
 	var live_teams: Dictionary = {}
 	var competitors: Array[Dictionary] = []
@@ -593,6 +735,18 @@ func _check_result() -> void:
 			live_teams[str(fighter["team_id"])] = true
 	if competitors.is_empty():
 		return
+	# Runs prioritize confirmed player elimination. Quick Duel keeps its
+	# historical simultaneous-elimination and stable-ID timeout tie behavior.
+	if int(encounter.get("slot", 0)) > 0:
+		var run_player: Dictionary = player_entity()
+		var run_enemy: Dictionary = _hud_enemy()
+		if not run_enemy.is_empty():
+			if not _is_live(run_player):
+				_finish(int(run_enemy.entity_id), str(run_player.outcome))
+				return
+			if elapsed >= live_time_limit and _is_live(run_enemy) and absf(float(run_player.rpm)-float(run_enemy.rpm)) <= 0.000001:
+				_finish(int(run_enemy.entity_id), "draw")
+				return
 	var winner: Dictionary = {}
 	if live_teams.size() <= 1 or elapsed >= live_time_limit:
 		for fighter: Dictionary in competitors:
@@ -627,10 +781,13 @@ func _finish(winner_entity_id: int, reason: String) -> void:
 		return
 	var winner: Dictionary = entity(winner_entity_id)
 	if winner.is_empty():
-		return
+		if swarm.enabled and winner_entity_id == 0: winner = {"team_id":HOSTILE_TEAM}
+		else: return
 	battle_status = "finished"
+	powers.finish()
 	_finish_timer = 1.35 if reason == "ring_out" else 2.38
 	for loser: Dictionary in _ordered_fighters():
+		if loser.combatant_type == "small_top" and not str(loser.outcome).is_empty(): continue
 		if not _opposes(winner, loser):
 			continue
 		loser["out_time"] = 0.0
@@ -648,7 +805,7 @@ func _finish(winner_entity_id: int, reason: String) -> void:
 		"winner_entity_id": winner_entity_id, "winner_team_id": str(winner["team_id"]),
 		"reason": reason, "player_remaining": float(player.get("rpm", 0.0)),
 		"enemy_remaining": float(enemy.get("rpm", 0.0)), "duration": elapsed,
-		"hits": hits, "seed": seed_value, "encounter_id": str(encounter.get("id", ""))}
+		"hits": hits, "seed": seed_value, "encounter_id": str(encounter.get("id", "")), "swarm":swarm.telemetry()}
 	_emit_hud()
 
 func _update_finish(dt: float) -> void:
@@ -679,8 +836,8 @@ func _emit_hud() -> void:
 	_hud_clock = 0.05
 	var player: Dictionary = player_entity()
 	var enemy: Dictionary = _hud_enemy()
-	if player.is_empty() or enemy.is_empty():
-		return
+	if player.is_empty(): return
+	if enemy.is_empty(): enemy = {"rpm":0.0,"wobble":0.0,"name":"AMMUNITION WAVES","entity_id":0}
 	var player_rpm: float = float(player["rpm"])
 	var enemy_rpm: float = float(enemy["rpm"])
 	var stats: Dictionary = {
@@ -696,6 +853,11 @@ func _emit_hud() -> void:
 		"hits": hits, "paused": paused, "player_entity_id": int(player["entity_id"]),
 		"enemy_entity_id": int(enemy["entity_id"]), "entity_count": fighters.size()
 	}
+	stats["is_swarm"] = swarm.enabled
+	stats["swarm_wave"] = swarm.wave
+	stats["swarm_total_waves"] = swarm.total_waves
+	stats["swarm_active"] = swarm.active_count()
+	stats["swarm_remaining"] = swarm.schedule.size()-swarm.spawned-swarm.cancelled
 	hud_updated.emit(stats)
 
 func snapshot() -> Dictionary:
@@ -706,7 +868,7 @@ func snapshot() -> Dictionary:
 		"entities": entities, "elapsed": elapsed, "status": battle_status,
 		"active": battle_status == "battle", "paused": paused,
 		"winner": last_result.get("winner", -1), "reason": last_result.get("reason", ""),
-		"hits": hits, "result": last_result.duplicate(true)}
+		"hits": hits, "result": last_result.duplicate(true), "swarm":swarm.telemetry()}
 
 ## Positional seam retained only for the Task 001 regression fixtures.
 ## New callers should use explicit entity IDs through test_set_entity_state.
@@ -743,6 +905,9 @@ func _spawn_ring(screen_position: Vector2, color: Color, duration: float) -> voi
 	_rings.append({"pos": screen_position, "life": duration, "max_life": duration, "color": color})
 
 func _update_effects(dt: float) -> void:
+	for index: int in range(_power_fx.size()-1,-1,-1):
+		_power_fx[index].age += dt
+		if float(_power_fx[index].age) >= float(_power_fx[index].duration): _power_fx.remove_at(index)
 	_shake_time = maxf(0.0, _shake_time - dt)
 	_shake_phase += dt * 81.0
 	for index: int in range(_particles.size() - 1, -1, -1):
@@ -768,6 +933,15 @@ func _draw() -> void:
 		var texture: Texture2D = _textures.get("arena/" + layer)
 		if texture != null:
 			draw_texture(texture, Vector2.ZERO)
+	for entry: Dictionary in swarm.schedule:
+		if entry.state == "telegraph":
+			PowerVisuals.draw_spawn(self, project(swarm.PORTS[int(entry.port)]), clampf(1.0-(float(entry.ready)-elapsed)/swarm.TELEGRAPH,0.0,1.0))
+	for trace: Dictionary in powers.traces:
+		var path: PackedVector2Array = PackedVector2Array()
+		for point: Vector2 in trace.get("points",[trace.a,trace.b]): path.append(project(point))
+		PowerVisuals.draw_trace_path(self, trace, path)
+	for fx: Dictionary in _power_fx:
+		PowerVisuals.draw_effect(self, fx, project(fx.pos))
 	# Every complete rig sorts by ground contact Y, with stable ID ties.
 	var order: Array[Dictionary] = _ordered_fighters()
 	for fighter: Dictionary in order:
@@ -789,6 +963,7 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 
 func _draw_shadow(fighter: Dictionary) -> void:
+	if fighter.combatant_type == "small_top": return
 	var grounded: Vector2 = project(fighter["pos"]).round()
 	var height: float = float(fighter["height"])
 	var shadow_scale: float = clampf(1.0 - maxf(0.0, height) / 70.0, 0.30, 1.0)
@@ -806,6 +981,10 @@ func _draw_shadow(fighter: Dictionary) -> void:
 	draw_polyline(selected, side_color, 1.0)
 
 func _draw_fighter(fighter: Dictionary) -> void:
+	if fighter.combatant_type == "small_top":
+		PowerVisuals.draw_small(self, fighter, project(fighter.pos,fighter.height), _visual_time)
+		return
+	PowerVisuals.draw_aura(self, fighter, project(fighter.pos,fighter.height), _visual_time)
 	var position_world: Vector2 = fighter["pos"]
 	var height: float = float(fighter["height"])
 	var contact: Vector2 = project(position_world, height).round()
@@ -820,6 +999,11 @@ func _draw_fighter(fighter: Dictionary) -> void:
 	var build: Dictionary = fighter["build"]
 	var stance: float = {"low": 3.0, "mid": 0.0, "high": -3.0}[build["ratchet"]]
 	var phase: int = int(fighter["phase"]) % 8
+	var pose: Dictionary = PowerVisuals.recovery_pose(fighter, _power_fx)
+	if not pose.is_empty():
+		phase = int(pose.phase)
+		lean = pose.lean
+		stance += float(pose.stance)
 	var body_origin: Vector2 = contact - Vector2(24.0, 40.0)
 	var player: bool = str(fighter["team_id"]) == PLAYER_TEAM
 	var tint: Color = Color.WHITE if player else Color(1.0, 0.88, 0.72)

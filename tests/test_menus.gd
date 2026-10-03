@@ -11,6 +11,7 @@ var checks: int = 0
 var failures: int = 0
 var actions: Array[Dictionary] = []
 var menus: Control
+var capture_dir: String = ""
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -22,6 +23,9 @@ func check(value: bool, message: String) -> void:
 		push_error(message)
 
 func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
+	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
 	root.size = Vector2i(640, 360)
 	root.content_scale_size = Vector2i(640, 360)
 	menus = Menus.new()
@@ -31,11 +35,21 @@ func _run() -> void:
 	await process_frame
 	check(root.get_visible_rect().size == Vector2(640, 360), "UI tests run in the native 640x360 viewport")
 	await _test_reward_cards()
+	await _test_small_offers_and_acquisition()
 	await _test_hud_cleanup()
 	await _test_garage_assemblies()
 	print("MENU_TEST_%s checks=%d failures=%d" % ["PASS" if failures == 0 else "FAIL", checks, failures])
 	menus.queue_free()
 	quit(1 if failures else 0)
+
+func _capture(name: String) -> void:
+	if capture_dir.is_empty() or DisplayServer.get_name() == "headless": return
+	await RenderingServer.frame_post_draw
+	await RenderingServer.frame_post_draw
+	var screenshot: Image = root.get_texture().get_image()
+	check(screenshot != null and not screenshot.is_empty(), "UI screenshot renders: "+name)
+	if screenshot != null and not screenshot.is_empty():
+		check(screenshot.save_png(capture_dir.path_join(name + ".png")) == OK, "UI screenshot saved: "+name)
 
 func _descendants(parent: Node) -> Array[Node]:
 	var found: Array[Node] = []
@@ -139,23 +153,55 @@ func _test_reward_cards() -> void:
 		check(root.gui_get_focus_owner() == cards[0], "Three right presses complete a focus cycle")
 	check(seen.size() == 12, "Every power title and description has been measured")
 
+func _test_small_offers_and_acquisition() -> void:
+	for count: int in [1, 2, 3]:
+		var offer: Array = Powers.ACTIVE_IDS.slice(0, count)
+		menus.show_reward(offer, [], 6, "run_slot_06", 123)
+		await process_frame
+		var cards: Array[Button] = _buttons(menus)
+		check(cards.size() == count and root.gui_get_focus_owner() == cards[0], "Shrinking active pool has exactly its available cards and visible initial focus")
+		for label: Label in _labels(menus): _check_label_fits(label)
+		await _key(KEY_LEFT)
+		check(root.gui_get_focus_owner() == cards.back(), "One/two/three-card draft focus wraps without a trap")
+		var focus_id: String = menus.focused_power_id()
+		menus.show_pause(true)
+		menus.show_reward(offer, [], 6, "run_slot_06", 123, focus_id)
+		await process_frame
+		check(menus.focused_power_id() == focus_id, "Restored draft preserves the previously focused power")
+		await _capture("draft-%d-cards" % count)
+	for power_id: String in Powers.ACTIVE_IDS:
+		menus.show_acquisition(power_id)
+		await process_frame
+		check(_find_label(menus, str(Powers.get_power(power_id).name).to_upper() + " ACQUIRED") != null, "Acquisition identifies the committed power")
+		check(_buttons(menus).is_empty() and root.gui_get_focus_owner() == null, "Acquisition beat never introduces a confirmation trap")
+		check(menus._acquisition_icon.texture != null, "Acquisition displays the power's authored icon")
+		for label: Label in _labels(menus): _check_label_fits(label)
+		await _capture("acquired-" + power_id)
+
 func _test_hud_cleanup() -> void:
-	var owned: Array = ["impact_wake", "second_wind", "chain_impact", "flywheel_cache", "dead_centre", "afterimage"]
+	var owned: Array = Powers.ACTIVE_IDS.duplicate()
 	menus.show_hud({"is_run":true, "run_label":"RUN 8 / 8", "owned_power_ids":owned, "status":"battle"})
 	await process_frame
 	check(_find_label(menus, "RUN 8 / 8") != null, "Run HUD shows current encounter progress")
-	for power_id: String in owned:
-		var label: Label = _find_label(menus, str(Powers.get_power(power_id).name))
-		check(label != null, "Run HUD displays owned power: "+power_id)
-		if label != null: _check_label_fits(label)
+	for index: int in range(owned.size()):
+		var icon: TextureRect = menus._hud["power_%d" % index]
+		check(icon.visible and icon.get_meta("power_id") == owned[index] and icon.texture != null, "Run HUD displays authored owned-power icon")
+		check(icon.size == Vector2(16, 16) and NATIVE_RECT.encloses(icon.get_global_rect()), "HUD power stays native, compact, and on screen")
+	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"RUN 3 / 8", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18})
+	await process_frame
+	check(not menus._hud.enemy_bar.visible and menus._hud.swarm_objective.visible, "Swarm replaces rival RPM bar with objective")
+	check(_find_label(menus, "AMMUNITION WAVES  2 / 3") != null and _find_label(menus, "11 ACTIVE") != null and _find_label(menus, "18 LEFT IN SCHEDULE") != null, "Swarm HUD shows wave, active count, and remaining schedule")
+	for label: Label in _labels(menus): _check_label_fits(label)
+	await _capture("swarm-hud-six-powers")
 	var before: Node = menus._content
 	menus.show_hud({"is_run":false, "run_label":"DUEL", "owned_power_ids":[], "status":"battle"})
 	await process_frame
 	check(menus._content == before, "HUD cleanup is tested on reused controls")
 	check(_find_label(menus, "DUEL") != null and _find_label(menus, "RUN 8 / 8") == null, "Quick Duel replaces Run progress label")
-	for power_id: String in owned:
-		check(_find_label(menus, str(Powers.get_power(power_id).name)) == null, "Quick Duel clears stale power label: "+power_id)
-	check(_find_label(menus, "POWERS COLLECTED  /  EFFECTS INACTIVE") == null, "Quick Duel clears Run collection notice")
+	for index: int in range(owned.size()):
+		check(not menus._hud["power_%d" % index].visible, "Quick Duel clears stale power icons")
+	check(menus._hud.enemy_bar.visible and not menus._hud.swarm_objective.visible, "Quick Duel restores rival information")
+	check(_find_label(menus, "RUN POWERS") == null, "Quick Duel clears Run power notice")
 	var pause: Button = _buttons(menus)[0]
 	check(pause.focus_mode == Control.FOCUS_NONE, "Gameplay HUD cannot capture steering/Confirm focus")
 	var action_count: int = actions.size()

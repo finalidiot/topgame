@@ -5,12 +5,12 @@ const Seeds = preload("res://scripts/seed_utils.gd")
 const SLOT_COUNT: int = 8
 const DRAFT_SLOTS: Array[int] = [1, 2, 3, 4, 6, 7]
 
-## Intended encounter identity is retained for later implementation. Every
-## Task 002A slot explicitly resolves as an ordinary duel with baseline AI.
+## Slot 3 is the first real swarm. Later rival/elite/arena/boss identities
+## remain ordinary duel fixtures until Task 002C.
 const SLOTS: Array[Dictionary] = [
 	{"type":"standard_duel", "name":"Standard Duel", "build":{"blade":"balance", "ratchet":"mid", "bit":"ball"}},
 	{"type":"specialist_duel", "name":"Specialist / Vane", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
-	{"type":"swarm", "name":"Swarm Event", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}},
+	{"type":"swarm", "name":"Ammunition Waves", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}},
 	{"type":"elite_duel", "name":"Iron Comet Elite", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}},
 	{"type":"arena_event", "name":"Arena Event", "build":{"blade":"balance", "ratchet":"high", "bit":"ball"}},
 	{"type":"rival_rematch", "name":"Vane Rematch", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
@@ -25,13 +25,15 @@ static func for_slot(slot: int, run_seed: int) -> Dictionary:
 	if slot < 1 or slot > SLOT_COUNT: return {}
 	var source: Dictionary = SLOTS[slot - 1]
 	var encounter_id: String = "run_slot_%02d" % slot
+	var is_swarm: bool = slot == 3
 	return {
 		"id":encounter_id, "slot_id":encounter_id, "slot":slot,
 		"type":source.type, "name":source.name,
-		"fixture":true, "fixture_type":"duel", "fixture_label":"DUEL FIXTURE",
+		"fixture":not is_swarm, "fixture_type":"swarm" if is_swarm else "duel", "fixture_label":"AMMUNITION WAVES" if is_swarm else "DUEL FIXTURE",
 		"opponent_build":source.build.duplicate(true),
 		"behavior_profile":"pursuit", "arena_modifier":"none",
-		"objective":"defeat_hostiles", "live_time_limit":60.0,
+		"objective":"clear_schedule" if is_swarm else "defeat_hostiles", "live_time_limit":32.0 if is_swarm else 60.0,
+		"swarm_parameters":{"waves":[6, 8, 10], "wave_times":[0.0, 9.0, 18.0], "active_cap":12, "cleanup_time":32.0} if is_swarm else {},
 		"seed":Seeds.derive(run_seed, "encounter/" + encounter_id),
 		"selection_seed":Seeds.derive(run_seed, "encounter_selection/" + encounter_id),
 		"boss_parameters":{}, "opponent_power_ids":[],

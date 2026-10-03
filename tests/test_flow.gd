@@ -133,12 +133,12 @@ func _test_complete_run(game: QuietMain) -> void:
 			observed_drafts.append(slot_number)
 			check(game.screen == "reward", "Win opens draft after slot %d" % slot_number)
 			var offer: Array = game.run_context.pending_offer.duplicate()
-			check(offer.size() == 3, "Draft offers three cards")
+			check(offer.size() == mini(3, 6 - game.run_context.owned_power_ids.size()), "Draft offers only available functional cards")
 			var unique: Dictionary = {}
 			for power_id: String in offer:
 				unique[power_id] = true
 				check(not power_id in game.run_context.owned_power_ids, "Draft never offers an owned power")
-			check(unique.size() == 3, "Three draft cards are distinct")
+			check(unique.size() == offer.size(), "All draft cards are distinct")
 			game._action("next_battle")
 			game._action("choose_power", _choice(game, "not_an_offered_power"))
 			var wrong_choice: Dictionary = _choice(game, str(offer[0]))
@@ -158,7 +158,18 @@ func _test_complete_run(game: QuietMain) -> void:
 			check(game.screen == "reward" and _state(game) == committed, "Repeated reward reopening never rerolls")
 			var choice: Dictionary = _choice(game, str(offer[0]))
 			game._action("choose_power", choice)
-			check(game.screen == "battle" and game.run_context.slot == slot_number + 1, "One card choice launches next encounter")
+			check(game.screen == "acquisition" and game.run_context.slot == slot_number, "Power choice starts a short acquisition beat before launch")
+			var acquired_state: Dictionary = _state(game)
+			game._action("choose_power", choice)
+			check(_state(game) == acquired_state, "Repeated choice during feedback cannot acquire twice")
+			game._pause()
+			game._process(1.0)
+			check(game.screen == "pause" and _state(game) == acquired_state, "Pause freezes acquisition before launch")
+			game._resume()
+			check(game.screen == "acquisition", "Resume restores acquisition beat")
+			game._process(0.7)
+			check(game.screen == "battle" and game.run_context.slot == slot_number + 1, "Acquisition automatically launches the next encounter")
+			check(game.battle.encounter.player_power_ids == game.run_context.owned_power_ids, "Next battle receives all acquired Run powers")
 			check(game.run_context.owned_power_ids.size() == observed_drafts.size() and str(offer[0]) in game.run_context.owned_power_ids, "Choice persists exactly one power")
 			check(game.run_context.committed_rewards.size() == observed_drafts.size() and game.run_context.pending_offer.is_empty(), "Choice commits and clears pending offer")
 			var after_choice: Dictionary = _state(game)
@@ -194,6 +205,7 @@ func _test_failure_restart(game: QuietMain) -> void:
 	for _slot: int in range(2):
 		game._round_finished(_result(game))
 		game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
+		game._process(0.7)
 	check(game.run_context.slot == 3 and game.run_context.owned_power_ids.size() == 2, "Failure fixture has prior progress")
 	game._round_finished(_result(game, false))
 	check(game.screen == "result" and game.run_context.status == "failed", "Losing ends Run")
@@ -213,6 +225,21 @@ func _test_failure_restart(game: QuietMain) -> void:
 	_check_reset(game, reward_seed, "Restart from pending reward overlay")
 
 func _test_explicit_exit(game: QuietMain) -> void:
+	game._round_finished(_result(game))
+	game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
+	var acquisition_seed: int = game.run_context.run_seed
+	game._pause()
+	game._action("restart_run")
+	game._process(1.0)
+	_check_reset(game, acquisition_seed, "Restart during acquisition cancels the old advance")
+	game._round_finished(_result(game))
+	game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
+	game._pause()
+	game._action("end_run")
+	game._process(1.0)
+	check(game.screen == "garage", "End Run during acquisition cannot leave a delayed launch")
+	_check_cleared(game, "End Run during acquisition")
+	game._action("start_run")
 	game._round_finished(_result(game))
 	game._escape()
 	game._action("end_run")
@@ -234,6 +261,7 @@ func _test_explicit_exit(game: QuietMain) -> void:
 		game._round_finished(_result(game))
 		if slot_number in DRAFT_SLOTS:
 			game._action("choose_power", _choice(game, str(game.run_context.pending_offer[0])))
+			game._process(0.7)
 		elif slot_number == 5:
 			game._action("next_battle")
 	check(game.run_context.status == "complete", "Return-to-title fixture completes Run")

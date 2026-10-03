@@ -23,6 +23,16 @@ var opponent_build: Dictionary = {}
 var run_context = RunContext.new()
 var pause_origin: String = "battle"
 var _previous_run_seed: int = 0
+var _acquisition_remaining: float = 0.0
+var _acquired_power_id: String = ""
+var _reward_focus_id: String = ""
+
+func _process(delta: float) -> void:
+	# Only the visible acquisition beat advances. Pause and End/Restart cannot
+	# leave a delayed timer behind that could launch an unrelated encounter.
+	if screen != "acquisition" or not run_context.is_active(): return
+	_acquisition_remaining -= delta
+	if _acquisition_remaining <= 0.0: _advance_run()
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -122,6 +132,9 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	battle._emit_hud()
 
 func _clear_run() -> void:
+	_acquisition_remaining = 0.0
+	_acquired_power_id = ""
+	_reward_focus_id = ""
 	run_context.clear()
 	mode = "duel"
 	round_index = 0
@@ -143,6 +156,9 @@ func _restart_run() -> void:
 
 func _launch_run_encounter() -> void:
 	if not run_context.is_active(): return
+	_acquisition_remaining = 0.0
+	_acquired_power_id = ""
+	_reward_focus_id = ""
 	var encounter: Dictionary = run_context.current_encounter()
 	mode = "run"
 	round_index = run_context.slot - 1
@@ -159,7 +175,14 @@ func _show_reward() -> void:
 	if not run_context.is_active() or run_context.pending_offer.is_empty(): return
 	screen = "reward"
 	battle.set_paused(true)
-	menus.show_reward(run_context.pending_offer, run_context.owned_power_ids, run_context.slot, run_context.current_encounter().id, run_context.run_seed)
+	menus.show_reward(run_context.pending_offer, run_context.owned_power_ids, run_context.slot, run_context.current_encounter().id, run_context.run_seed, _reward_focus_id)
+
+func _show_acquisition(power_id: String) -> void:
+	screen = "acquisition"
+	_acquired_power_id = power_id
+	_acquisition_remaining = 0.65
+	menus.show_acquisition(power_id)
+	if not smoke_mode: sounds.play_sound("acquire")
 
 func _advance_run() -> void:
 	if run_context.advance(): _launch_run_encounter()
@@ -192,7 +215,7 @@ func _round_finished(result: Dictionary) -> void:
 			return
 		if run_context.status == "complete":
 			last_result["title"] = "RUN CLEARED"
-			last_result["subtitle"] = "Eight duels complete. Six powers collected."
+			last_result["subtitle"] = "Eight encounters complete. Six powers unleashed."
 		elif run_context.status == "failed":
 			last_result["title"] = "RUN ENDED"
 			last_result["subtitle"] = "Restart from encounter 1 with the same assembly."
@@ -218,7 +241,7 @@ func _action(name: String, value: Variant = null) -> void:
 		"choose_power":
 			if mode == "run" and screen == "reward" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
-				if run_context.choose_power(str(value.get("encounter_id", "")), str(value.get("power_id", ""))): _advance_run()
+				if run_context.choose_power(str(value.get("encounter_id", "")), str(value.get("power_id", ""))): _show_acquisition(str(value.power_id))
 		"quick_duel": _start_battle("duel")
 		"start_battle": _start_battle(str(value) if value != null else "duel")
 		"customize": _garage()
@@ -249,7 +272,8 @@ func _action(name: String, value: Variant = null) -> void:
 		"quit": get_tree().quit()
 
 func _pause() -> void:
-	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "result"]): return
+	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "result", "acquisition"]): return
+	if screen == "reward": _reward_focus_id = menus.focused_power_id()
 	pause_origin = screen
 	screen = "pause"
 	battle.set_paused(true)
@@ -259,6 +283,7 @@ func _resume() -> void:
 	if screen != "pause": return
 	screen = pause_origin
 	if screen == "reward": _show_reward()
+	elif screen == "acquisition": menus.show_acquisition(_acquired_power_id)
 	elif screen == "result": menus.show_result(last_result)
 	else:
 		battle.set_paused(false)
@@ -357,6 +382,8 @@ func _smoke_test() -> void:
 			var card: Button = get_viewport().gui_get_focus_owner() as Button
 			assert(card != null)
 			card.pressed.emit()
+			await _capture("run-%02d-acquired" % slot)
+			await get_tree().create_timer(0.7).timeout
 		elif slot == 5:
 			await _capture("run-05-result")
 			_action("next_battle")

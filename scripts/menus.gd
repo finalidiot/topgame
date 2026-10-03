@@ -37,6 +37,8 @@ var _hud: Dictionary = {}
 var _run_active: bool = false
 var _default_focus: Control
 var _accept_needs_release: bool = false
+var _acquisition_elapsed: float = 0.0
+var _acquisition_icon: TextureRect
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -46,6 +48,10 @@ func _ready() -> void:
 	theme = _make_theme()
 
 func _process(_delta: float) -> void:
+	if screen == "acquisition" and is_instance_valid(_acquisition_icon):
+		_acquisition_elapsed += _delta
+		_acquisition_icon.modulate.a = minf(1.0, 0.5 + _acquisition_elapsed * 3.0)
+		_acquisition_icon.position.y = 119.0 - minf(4.0, _acquisition_elapsed * 12.0)
 	if _accept_needs_release and not Input.is_action_pressed("ui_accept"):
 		_accept_needs_release = false
 	if screen == "hud" or not is_instance_valid(_default_focus): return
@@ -401,27 +407,70 @@ func show_pause(is_run: bool = false) -> void:
 		focus_rows.append([_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")])
 	_focus_rows(focus_rows)
 
-func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int) -> void:
+func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "") -> void:
 	_clear("reward")
 	_header("VICTORY  /  PICK A POWER", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)
-	_label(_content, "COLLECTION PREVIEW  /  Power effects are inactive in this build.", Rect2(24, 60, 592, 18), 10, ORANGE)
+	_label(_content, "ONE POWER. EVERY ENCOUNTER.  /  " + ("FINAL POWER IN THIS POOL" if offer.size() == 1 else "%d UNOWNED POWERS TO CHOOSE FROM" % offer.size()), Rect2(24, 60, 592, 18), 10, ORANGE)
 	var cards: Array[Button] = []
+	var selected: Control
+	var start_x: float = (640.0 - offer.size() * 192.0 - (offer.size() - 1) * 10.0) * 0.5
 	for index: int in range(offer.size()):
 		var id: String = str(offer[index])
 		var power: Dictionary = Powers.get_power(id)
-		var card: Button = _button(_content, "", Rect2(22 + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
+		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
+		card.set_meta("power_id", id)
 		card.tooltip_text = str(power.name) + ": " + str(power.description)
-		_label(card, "%02d" % (index + 1), Rect2(12, 10, 168, 22), 17, ORANGE)
+		_power_icon(card, id, Rect2(12, 10, 32, 32))
 		_label(card, str(power.name), Rect2(12, 41, 168, 25), 16, TEXT)
-		var description: Label = _label(card, str(power.description), Rect2(12, 72, 168, 77), 12, MUTED)
+		var description: Label = _label(card, str(power.description), Rect2(12, 69, 168, 60), 11, MUTED)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		var condition: Label = _label(card, str(power.condition), Rect2(12, 130, 168, 30), 9, ORANGE)
+		condition.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		condition.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 		_label(card, "COLLECT & CONTINUE", Rect2(12, 161, 168, 16), 10, BLUE)
 		cards.append(card)
+		if id == focus_id: selected = card
 	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
 	_power_labels(owned, 302)
 	_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
-	if not cards.is_empty(): _focus_rows([cards])
+	if not cards.is_empty(): _focus_rows([cards], selected)
+
+func focused_power_id() -> String:
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	return str(focused.get_meta("power_id", "")) if focused != null else ""
+
+func _power_texture(power_id: String) -> Texture2D:
+	var power: Dictionary = Powers.get_power(power_id)
+	if not bool(power.get("active", false)) or not ResourceLoader.exists(Powers.ICON_SHEET): return null
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = load(Powers.ICON_SHEET)
+	atlas.region = Rect2(int(power.icon_frame) * 16, 0, 16, 16)
+	return atlas
+
+func _power_icon(parent: Node, power_id: String, area: Rect2) -> TextureRect:
+	var icon: TextureRect = TextureRect.new()
+	icon.texture = _power_texture(power_id)
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(icon)
+	icon.position = area.position
+	icon.size = area.size
+	return icon
+
+func show_acquisition(power_id: String) -> void:
+	_clear("acquisition", false)
+	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.82))
+	_panel(_content, Rect2(104, 99, 432, 151), PANEL, ORANGE)
+	var power: Dictionary = Powers.get_power(power_id)
+	_acquisition_elapsed = 0.0
+	_acquisition_icon = _power_icon(_content, power_id, Rect2(304, 119, 32, 32))
+	_label(_content, str(power.name).to_upper() + " ACQUIRED", Rect2(114, 164, 412, 32), 21, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "LOCKED IN  /  NEXT LAUNCH", Rect2(114, 207, 412, 18), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused != null: focused.release_focus()
 
 func _power_labels(ids: Array, y: float) -> void:
 	for index: int in range(ids.size()):
@@ -479,6 +528,13 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
 	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 7000.0))
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
+	var is_swarm: bool = bool(stats.get("is_swarm", false))
+	_hud["enemy_bar"].visible = not is_swarm
+	_hud["swarm_objective"].visible = is_swarm
+	if is_swarm:
+		_hud["enemy_name"].text = "AMMUNITION WAVES  %d / %d" % [int(stats.get("swarm_wave", 0)), int(stats.get("swarm_total_waves", 3))]
+		_hud["swarm_objective"].text = "%d ACTIVE" % int(stats.get("swarm_active", 0))
+		_hud["enemy_rpm"].text = "%d LEFT IN SCHEDULE" % int(stats.get("swarm_remaining", 24))
 	var seconds: int = maxi(0, ceili(float(stats.get("time_left", 90.0))))
 	_hud["time"].text = "%02d:%02d" % [seconds / 60, seconds % 60]
 	var cooldown: float = float(stats.get("burst_cooldown", 0.0))
@@ -498,8 +554,15 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(6):
-		_hud["power_%d" % index].text = str(Powers.get_power(str(ids[index])).name) if index < ids.size() else ""
-	_hud["power_note"].text = "POWERS COLLECTED  /  EFFECTS INACTIVE" if _run_active else ""
+		var icon: TextureRect = _hud["power_%d" % index]
+		var id: String = str(ids[index]) if index < ids.size() else ""
+		icon.visible = not id.is_empty()
+		_hud["power_panel_%d" % index].visible = not id.is_empty()
+		if str(icon.get_meta("power_id", "")) != id:
+			icon.set_meta("power_id", id)
+			icon.texture = _power_texture(id) if not id.is_empty() else null
+			icon.tooltip_text = str(Powers.get_power(id).get("name", ""))
+	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
 	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
 
 func _create_hud() -> void:
@@ -512,6 +575,7 @@ func _create_hud() -> void:
 	_hud["enemy_bar"] = _bar(_content, Rect2(416, 34, 202, 8), ORANGE)
 	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
 	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 30, 202, 14), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause")
@@ -524,7 +588,10 @@ func _create_hud() -> void:
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	for index: int in range(6):
-		_hud["power_%d" % index] = _label(_content, "", Rect2(22 + index * 101, 305, 96, 15), 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+		_hud["power_panel_%d" % index] = _panel(_content, Rect2(238 + index * 28, 303, 24, 20))
+		var icon: TextureRect = _power_icon(_content, "", Rect2(242 + index * 28, 305, 16, 16))
+		icon.mouse_filter = Control.MOUSE_FILTER_PASS
+		_hud["power_%d" % index] = icon
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
 	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)

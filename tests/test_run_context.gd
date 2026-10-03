@@ -40,7 +40,9 @@ func _test_seed_and_catalogs() -> void:
 		var definition: Dictionary = Powers.get_power(power_id)
 		check(not ids.has(power_id) and definition.id == power_id, "Power identities are unique and explicit")
 		ids[power_id] = true
-		check(not bool(definition.active), "Task 002A powers have no active combat effect")
+		check(bool(definition.active) == (power_id in Powers.ACTIVE_IDS), "Only six implemented powers are active")
+		if definition.active:
+			check(not str(definition.condition).is_empty() and definition.icon_frame >= 0, "Active power has a condition and signature icon")
 		check(not str(definition.name).is_empty() and not str(definition.description).is_empty() and definition.has("icon"), "Each power has card and future icon data")
 		definition.name = "MUTATED COPY"
 		check(Powers.get_power(power_id).name != "MUTATED COPY", "Card callers cannot mutate the catalogue")
@@ -54,9 +56,14 @@ func _test_seed_and_catalogs() -> void:
 		check(not encounter_seeds.has(encounter.seed), "Each slot has its own deterministic combat seed")
 		encounter_seeds[encounter.seed] = true
 		check(encounter == Encounters.for_slot(slot, 9012), "Encounter descriptors are deterministic")
-		check(encounter.fixture and encounter.fixture_type == "duel" and encounter.behavior_profile == "pursuit", "All eight encounters explicitly use ordinary duel fixtures")
+		check(encounter.behavior_profile == "pursuit", "Later specialist behavior remains deferred")
+		if slot == 3:
+			check(not encounter.fixture and encounter.fixture_type == "swarm" and encounter.objective == "clear_schedule", "Slot 3 is a real Ammunition Waves encounter")
+			check(encounter.swarm_parameters.waves == [6, 8, 10] and encounter.swarm_parameters.wave_times == [0.0, 9.0, 18.0] and encounter.swarm_parameters.active_cap == 12, "Swarm descriptor preserves finite 24-entry schedule and cap")
+		else:
+			check(encounter.fixture and encounter.fixture_type == "duel", "Other slots retain ordinary duel fixtures")
 		check(encounter.arena_modifier == "none" and encounter.boss_parameters.is_empty() and encounter.opponent_power_ids.is_empty(), "Future hazards, enemy powers and bosses remain inactive")
-		check(encounter.live_time_limit == 60.0, "Every ordinary duel fixture retains the baseline time limit")
+		check(encounter.live_time_limit == (32.0 if slot == 3 else 60.0), "Only swarm uses its finite cleanup ceiling")
 		check(Catalog.validate_build(encounter.opponent_build) == encounter.opponent_build, "Encounter opponents are real catalogue assemblies")
 		encounter.opponent_build.blade = "invalid"
 		check(Encounters.for_slot(slot, 9012).opponent_build.blade != "invalid", "Encounter descriptors do not share mutable builds")
@@ -86,17 +93,24 @@ func _test_complete_run() -> void:
 		if slot in [1, 2, 3, 4, 6, 7]:
 			draft_slots.append(slot)
 			var offer: Array[String] = run.pending_offer
-			check(offer.size() == 3, "Every draft has three cards")
-			check(offer[0] != offer[1] and offer[0] != offer[2] and offer[1] != offer[2], "Each offer is internally unique")
+			check(offer.size() == mini(3, Powers.ACTIVE_IDS.size() - run.owned_power_ids.size()), "Late drafts show only the real unowned cards in the six-power pool")
+			var unique: Dictionary = {}
 			for power_id: String in offer:
+				unique[power_id] = true
+				check(power_id in Powers.ACTIVE_IDS, "No inactive placeholder enters a draft")
 				check(not power_id in run.owned_power_ids, "Draft cards are unowned")
+			check(unique.size() == offer.size(), "Each offer is internally unique")
 			check(not run.advance(), "A pending choice blocks progression")
 			check(not run.choose_power(encounter_id, "invalid"), "Only an offered power may be acquired")
 			var offer_copy: Array[String] = run.pending_offer
 			offer_copy.clear()
 			check(run.pending_offer == offer, "Reading/reopening cannot discard or reroll the offer")
 			check(run.choose_power(encounter_id, offer[0]), "One offered card is acquired")
-			check(not run.choose_power(encounter_id, offer[1]), "Repeated card input cannot acquire another reward")
+			check(not run.choose_power(encounter_id, offer.back()), "Repeated card input cannot acquire another reward")
+			check(run.current_encounter().player_power_ids == run.owned_power_ids, "Combat descriptor carries owned powers")
+			var exposed_descriptor: Dictionary = run.current_encounter()
+			exposed_descriptor.player_power_ids.clear()
+			check(not run.owned_power_ids.is_empty(), "Combat descriptor cannot mutate Run ownership")
 			check(run.pending_offer.is_empty() and run.owned_power_ids.size() == draft_slots.size(), "Claim clears the pending offer and retains exactly one power")
 			var owned_copy: Array[String] = run.owned_power_ids
 			owned_copy.clear()
@@ -151,7 +165,7 @@ func _test_draft_determinism() -> void:
 		second.commit_result(encounter_id, true)
 		check(first.pending_offer == second.pending_offer, "Recorded seed/choices reproduce draft regardless of cosmetic consumption")
 		if not first.pending_offer.is_empty():
-			var chosen: String = first.pending_offer[slot % 3]
+			var chosen: String = first.pending_offer[slot % first.pending_offer.size()]
 			first.choose_power(encounter_id, chosen)
 			second.choose_power(encounter_id, chosen)
 		check(first.current_encounter() == second.current_encounter(), "Draft/cosmetic consumption cannot perturb encounter seeds")

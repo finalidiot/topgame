@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "projection": "fixed 2:1 ground plane; no whole-sprite rotation",
+  "small_top": {
+    "cell": [
+      24,
+      24
+    ],
+    "pivot": [
+      12,
+      20
+    ],
+    "layers": [
+      "contact shadow",
+      "steel rotor",
+      "amber cap",
+      "flash and retirement"
+    ],
+    "tags": {
+      "spin": {
+        "from": 0,
+        "to": 3
+      },
+      "contact": {
+        "from": 4,
+        "to": 4
+      },
+      "retire": {
+        "from": 5,
+        "to": 7
+      }
+    },
+    "durations_ms": [
+      90,
+      90,
+      90,
+      90,
+      55,
+      90,
+      105,
+      145
+    ],
+    "texture": "small_top.png",
+    "columns": 8,
+    "frame_count": 8,
+    "source": "../source-art/small_top_002b.aseprite"
+  },
+  "effects": {
+    "cell": [
+      128,
+      128
+    ],
+    "pivot": [
+      64,
+      64
+    ],
+    "layers": [
+      "mechanical sectors",
+      "edge teeth",
+      "contact light",
+      "angular scars"
+    ],
+    "tags": {
+      "contact_arc": {
+        "from": 0,
+        "to": 5
+      },
+      "pressure": {
+        "from": 6,
+        "to": 13
+      },
+      "echo": {
+        "from": 14,
+        "to": 19
+      },
+      "corona": {
+        "from": 20,
+        "to": 27
+      },
+      "recovery": {
+        "from": 28,
+        "to": 35
+      },
+      "comet_headings": {
+        "from": 36,
+        "to": 43
+      },
+      "floor_stamp": {
+        "from": 44,
+        "to": 47
+      }
+    },
+    "durations_ms": [
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      65,
+      65,
+      65,
+      65,
+      65,
+      65,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      70,
+      70,
+      70,
+      70
+    ],
+    "texture": "effects.png",
+    "columns": 8,
+    "frame_count": 48,
+    "source": "../source-art/power_fx_002b.aseprite"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "signature glyphs"
+    ],
+    "tags": {
+      "impact_wake": {
+        "from": 0,
+        "to": 0
+      },
+      "second_wind": {
+        "from": 1,
+        "to": 1
+      },
+      "redline": {
+        "from": 2,
+        "to": 2
+      },
+      "iron_comet": {
+        "from": 3,
+        "to": 3
+      },
+      "afterimage": {
+        "from": 4,
+        "to": 4
+      },
+      "chain_impact": {
+        "from": 5,
+        "to": 5
+      }
+    },
+    "durations_ms": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "texture": "icons.png",
+    "columns": 6,
+    "frame_count": 6,
+    "source": "../source-art/power_icons_002b.aseprite"
+  }
+}

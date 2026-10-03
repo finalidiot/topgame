@@ -1,4 +1,4 @@
-SPINNING METAL — GODOT SOURCE / TASK 002A
+SPINNING METAL — GODOT SOURCE / TASK 002B
 
 Open project.godot in Godot 4.7.2 (standard GDScript build), allow imports to finish,
 and press F6/F5 to play. The project has no add-ons or external runtime dependencies.
@@ -9,7 +9,8 @@ Playable features
 - Title, workshop, how-to-play, settings, pause, result and live battle HUD.
 - 48 modular assemblies with live layered previews and six derived stats.
 - Quick Duel with rematches, plus an eight-slot Run with a locked assembly.
-- Six deterministic three-card drafts; all twelve power effects remain inactive.
+- Six functional powers and six deterministic drafts (3/3/3/3/2/1 choices).
+- Ammunition Waves: 24 small tops, 6/8/10 waves, maximum 12 simultaneously active.
 - Fixed-camera isometric arena, steering, Burst, braking, AI, impacts and banks.
 - RPM decay, wobble, spin-outs, collision-driven ring-outs, hit stop and screen shake.
 - Original short sound cues; automatic build and settings persistence.
@@ -19,7 +20,7 @@ WASD/arrows steer; Space bursts; Shift brakes; Esc pauses; F11 toggles full scre
 Mouse or Tab/Enter operates menus. Gamepad support covers combat and every menu:
 left stick steers; bottom face bursts/confirms; shoulders/triggers brake;
 Menu/Start pauses; east face goes back; D-pad/stick moves menu focus.
-Keyboard and gamepad share named Godot InputMap actions. See TASK-002A.md for
+Keyboard and gamepad share named Godot InputMap actions. See TASK-002B.md for
 controller acceptance coverage and physical-hardware testing results.
 
 Source map
@@ -30,8 +31,11 @@ scripts/parts.gd       Part descriptions and derived stats
 scripts/battle.gd      Fixed-step world physics, AI, render order, combat outcomes
 scripts/sound.gd       Sound pool, cue map and volume/mute
 scripts/run_context.gd Locked Run state, committed results and stored draft choices
-scripts/encounters.gd  Eight ordinary-duel fixtures with future encounter metadata
-scripts/run_powers.gd  Twelve inactive power definitions, separate from physical parts
+scripts/encounters.gd  Seven duel fixtures and the real Slot 3 swarm
+scripts/run_powers.gd  Twelve catalogue IDs, six active in this slice
+scripts/power_runtime.gd Deterministic powers, attribution and capped cascades
+scripts/swarm_runtime.gd Lightweight bodies, safe telegraphed waves and accounting
+scripts/power_visuals.gd Authored atlas effects, echoes and recovery poses
 scripts/seed_utils.gd  Stable, versioned seed derivation for independent RNG streams
 assets/               Production pixel layers, part sheets, arena and audio
 tests/                Reproducible combat and complete run-flow checks
@@ -44,7 +48,7 @@ authored rotational phases. Foreground rails and body height control occlusion.
 The playable arena adds guard rails around the two narrow physics gate mouths.
 Original editable Aseprite art and visual-foundation notes remain in the earlier art package.
 
-Historical Task 001 verification (see TASK-002A.md for current results)
+Historical Task 001 verification (see TASK-002B.md for current results)
 Run the prototype harness only in a disposable copy: it overwrites QA/balance files.
 Godot --headless --path . --script res://tests/test_prototype.gd
 Godot --headless --path . --script res://tests/test_flow.gd

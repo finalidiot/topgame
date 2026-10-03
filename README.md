@@ -25,16 +25,21 @@ Godot input actions. Controller support is a core Task 002A requirement.
 Editable pixel-art sources are in `assets/source-art/`. Existing prototype details
 and validation notes are retained in `README.txt` and `QA.txt`.
 
-Task 002A adds an eight-encounter Run alongside Quick Duel. Choose your assembly
-before starting; it stays locked until the Run ends. Wins after slots 1, 2, 3, 4,
-6 and 7 offer three unowned powers. Collect six, finish eight duels, or restart
-from slot 1 after defeat. Escape pauses both combat and the stored reward choice.
+Task 002B adds six functional Run Powers: Impact Wake, Second Wind, Redline,
+Iron Comet, Afterimage, and Chain Impact. Your physical assembly stays locked
+through the eight-slot Run. Six rewards offer up to three unowned powers;
+the last two offers contain two and one card as this prototype pool is exhausted.
+A short acquisition beat leads straight into the next launch.
 
-All Run encounters currently use ordinary duel fixtures. The twelve power cards
-are collectible **inactive scaffolding**; their combat effects, special rivals,
-swarm, arena events and boss are deferred. The old three-battle gauntlet is replaced
-by this Run. See [TASK-002A.md](TASK-002A.md) for architecture, test results, replay
-changes and the arena source-art follow-up.
+Slot 3 is **Ammunition Waves**: 24 lightweight small tops in waves of 6/8/10,
+with at most 12 active. Throw them into each other, use pressure waves to clear
+space, and build bounded knockout cascades. The other seven slots retain ordinary
+duel fixtures. Specialist AI, bosses, arena events and the other six catalogue
+powers remain deferred. Quick Duel retains ordinary no-power combat.
+
+See [TASK-002B.md](TASK-002B.md) for the implementation and measured validation,
+[TASK-002B-PLAYTEST.md](TASK-002B-PLAYTEST.md) for human acceptance checks, and
+[TASK-002A.md](TASK-002A.md) for the preserved architectural history.
 
 Run automated suites with Godot 4.7.2:
 
@@ -45,6 +50,9 @@ Godot --headless --path . --script res://tests/test_run_context.gd
 Godot --headless --path . --script res://tests/test_combat_architecture.gd
 Godot --headless --path . --script res://tests/test_menus.gd
 Godot --headless --path . --script res://tests/test_controller.gd
+Godot --headless --path . --script res://tests/test_powers.gd
+Godot --headless --path . --script res://tests/test_swarm.gd
+Godot --headless --path . --script res://tests/test_presentation.gd
 ```
 
 Run `tests/test_prototype.gd` only in a disposable copy: the preserved baseline
