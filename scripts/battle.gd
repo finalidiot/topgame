@@ -57,7 +57,7 @@ var _shake_time: float = 0.0
 var _shake_phase: float = 0.0
 var _visual_time: float = 0.0
 var _hud_clock: float = 0.0
-var _space_was_down: bool = false
+var _burst_was_down: bool = false
 var _burst_buffer: float = 0.0
 var _buffered_burst_direction: Vector2 = Vector2.ZERO
 var _particles: Array[Dictionary] = []
@@ -132,7 +132,7 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	_buffered_burst_direction = Vector2.ZERO
 	_particles.clear()
 	_rings.clear()
-	_space_was_down = Input.is_physical_key_pressed(KEY_SPACE)
+	_burst_was_down = Input.is_action_pressed("burst")
 	_emit_hud()
 	queue_redraw()
 
@@ -205,31 +205,22 @@ func _team_color(fighter: Dictionary) -> Color:
 
 func set_paused(value: bool) -> void:
 	paused = value
-	_space_was_down = Input.is_physical_key_pressed(KEY_SPACE)
+	# The same face button confirms menus and bursts. A held confirmation must
+	# be released before it can become a new combat press after launch/resume.
+	_burst_was_down = Input.is_action_pressed("burst")
 	_emit_hud()
 	queue_redraw()
 
 func _physics_process(delta: float) -> void:
 	if paused or battle_status == "idle":
 		return
-	var direction: Vector2 = Vector2.ZERO
-	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT):
-		direction.x -= 1.0
-	if Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT):
-		direction.x += 1.0
-	if Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP):
-		direction.y -= 1.0
-	if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN):
-		direction.y += 1.0
-	if Input.get_connected_joypads().size() > 0:
-		var stick: Vector2 = Vector2(Input.get_joy_axis(0, JOY_AXIS_LEFT_X), Input.get_joy_axis(0, JOY_AXIS_LEFT_Y))
-		if stick.length() > 0.18:
-			direction = stick
-	direction = direction.limit_length(1.0)
-	var space_down: bool = Input.is_physical_key_pressed(KEY_SPACE) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
-	var trigger_burst: bool = space_down and not _space_was_down
-	_space_was_down = space_down
-	var brake: bool = Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+	# InputMap merges keyboard and Godot-mapped gamepads. get_vector applies a
+	# circular deadzone while retaining analogue direction and magnitude.
+	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var burst_down: bool = Input.is_action_pressed("burst")
+	var trigger_burst: bool = burst_down and not _burst_was_down
+	_burst_was_down = burst_down
+	var brake: bool = Input.is_action_pressed("brake")
 	test_step(delta, direction, trigger_burst, brake)
 
 ## Deterministic QA and interactive play use exactly the same 60 Hz simulation.

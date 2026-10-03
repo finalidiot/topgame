@@ -15,7 +15,11 @@ Playable features
 
 Controls
 WASD/arrows steer; Space bursts; Shift brakes; Esc pauses; F11 toggles full screen.
-Mouse or Tab/Enter operates menus. Combat gamepad inputs are experimental.
+Mouse or Tab/Enter operates menus. Gamepad support covers combat and every menu:
+left stick steers; bottom face bursts/confirms; shoulders/triggers brake;
+Menu/Start pauses; east face goes back; D-pad/stick moves menu focus.
+Keyboard and gamepad share named Godot InputMap actions. See TASK-002A.md for
+controller acceptance coverage and physical-hardware testing results.
 
 Source map
 scripts/main.gd        Screen state, run progression, settings and save file

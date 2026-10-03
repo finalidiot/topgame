@@ -80,6 +80,79 @@ because AI no longer shares particle draws; this is not a balance retune.
 
 ## Validation
 
+### Controller addendum — required acceptance
+
+Controller support is a core requirement of Task 002A. Every currently playable
+screen must be usable with a Godot-mapped standard gamepad, with keyboard and
+mouse support retained. Full rebinding UI, rumble and branded glyph packs remain
+outside this task.
+
+| Action | Keyboard | Standard gamepad position |
+| --- | --- | --- |
+| Steer | WASD / arrows | Left analogue stick |
+| Burst | Space | Bottom face button (XInput A) |
+| Brake | Shift | Either shoulder or trigger |
+| Pause / resume | Escape | Menu / Start |
+| Navigate menus | Arrows / Tab | D-pad / left stick |
+| Confirm | Enter / Space | Bottom face button |
+| Back | Escape | East face button (XInput B) |
+
+`project.godot` defines `move_left/right/up/down`, `burst`, `brake`, `pause`,
+`toggle_fullscreen` and the standard `ui_*` actions. Every binding accepts any
+mapped device (`device = -1`); gameplay does not select controller index 0 or
+poll keyboard keycodes. Keyboard-specific events in the existing smoke fixture
+are test input, not gameplay logic. The controller names above describe the
+baseline layout; Godot's normal controller mapping remains responsible for
+Nintendo, PlayStation and generic devices.
+
+One shared gameplay input path uses `Input.get_vector` with a circular 0.22
+deadzone. It retains noncardinal direction and partial analogue magnitude, with
+full deflection capped at 1. Menu direction actions use a separate 0.5 threshold
+and triggers use 0.25. This intentionally replaces the old raw-stick cutoff
+with a rescaled deadzone response; keyboard/full-deflection inputs and physical
+combat equations are unchanged.
+
+Explicit focus neighbors cover unequal garage rows, launch buttons, title,
+settings slider/toggles, help, pause, results and reward cards. Each screen
+chooses a visible initial control and recovers lost focus. The HUD pause button
+remains clickable with the mouse but cannot take keyboard/gamepad focus, so
+steering and Burst do not activate it accidentally. Escape/Menu/Back route
+through the existing state-preserving Run overlay. Held confirmation must be
+released across new menus and battle launches/resumes, preventing accidental
+reward selection, restart or Burst. Help uses shared keyboard/gamepad hints;
+HUD and draft prompts use neutral action labels.
+
+Required controller acceptance cases:
+
+- Analogue steering, drift rejection, Burst press/cost/cooldown, brake and
+  pause/resume; keyboard and gamepad coexist through the same actions.
+- Title, help, settings, all garage parts, Quick Duel and Run launch are reachable
+  by D-pad/stick with visible focus and Confirm/Back.
+- Drafts focus a card, support left/right navigation, acquire only the focused
+  power once, and preserve their stored offers when Back opens/closes the overlay.
+- Quick Duel results/rematches, intermediate Run results, Run failure/completion,
+  Restart Run and End Run are usable without mouse/keyboard navigation.
+- Controller tests exercise real Godot input-event dispatch, including nonzero
+  gamepad device IDs, held-button screen transitions and lost-focus recovery.
+- Perform physical gamepad smoke testing when hardware is available, and state
+  the limitation explicitly otherwise.
+
+The initial hardware probe found no controller. After the user connected their
+Switch controller in XInput mode, native Windows Godot detected device 0 as
+`XInput Controller`, with a recognized mapping. Connection/mapping detection is
+verified; physical play coverage is recorded separately from synthetic events.
+The normal game was launched at 1280x720 with a passive observer outside the
+repository. At report finalization it had received no physical button or stick
+events. Hands-on steering, Burst, braking, menu navigation and Run interaction
+therefore remain pending user play; connection alone is not a physical smoke
+pass. No controller-brand glyph accuracy or hardware feel is claimed.
+
+Relevant engine contracts: [analogue vectors and global input state](https://docs.godotengine.org/en/4.7/classes/class_input.html),
+[focus navigation](https://docs.godotengine.org/en/4.7/tutorials/ui/gui_navigation.html),
+and [mapped controllers](https://docs.godotengine.org/en/4.7/tutorials/inputs/controllers_gamepads_joysticks.html).
+
+### Automated and rendered results
+
 Tested with Godot `4.7.2.stable.official.ed1daf0bf` on Windows. Baseline and
 regression combat harnesses run in separate disposable checkouts so historical
 tracked QA and balance evidence is preserved.
@@ -91,10 +164,19 @@ tracked QA and balance evidence is preserved.
 - New combat architecture suite: 35 checks passed, including independent same-tick
   pairs, reversed storage, multi-entity fixtures, zero seeds, late contact rejection
   and identical physical/AI ticks through a completed bout with altered cosmetics.
-- Native menu suite: 796 checks passed. Real keyboard navigation/activation checks
+- Native menu suite: 798 checks passed. Real keyboard navigation/activation checks
   all twelve reward cards and all 48 garage assemblies; shaped text measurements
   cover descriptions, names and six collected labels. This caught and prompted a
-  fix for the longest card (Chain Impact) being clipped.
+  fix for the longest card (Chain Impact) being clipped. The controller addendum
+  replaces the old focusable-HUD assertion with coverage for input-safe HUD focus
+  and retained real mouse activation of Pause.
+- Controller suite: 498 headless checks passed through Godot's normal input-event
+  dispatch, including devices 3 and 6, live combat input, keyboard coexistence,
+  all menu routes, six drafts across eight Run slots, held-confirm guards and
+  lost-focus recovery. Its native 640x360 rendered run passed 520 checks,
+  including 22 screenshot-output checks. All eleven captures were reviewed;
+  this caught and fixed an initially invisible settings-slider focus outline.
+  The slider now draws an explicit orange outline when focused.
 - Original combat regression: all 51 checks and 144 seeded bouts passed unchanged.
   New median 30.77 seconds, range 24.87–37.17, versus baseline 30.52 / 24.72–35.38.
   RNG isolation changes historical AI trajectories; no tuning coefficients changed.

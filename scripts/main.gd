@@ -270,15 +270,15 @@ func _escape() -> void:
 	else: _title()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.physical_keycode == KEY_ESCAPE:
-			_escape()
-			get_viewport().set_input_as_handled()
-		elif event.physical_keycode == KEY_F11:
-			settings.fullscreen = not bool(settings.fullscreen)
-			_apply_settings()
-			_save_preferences()
-			if screen == "settings": menus.show_settings(settings)
+	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
+		_escape()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("toggle_fullscreen"):
+		settings.fullscreen = not bool(settings.fullscreen)
+		_apply_settings()
+		_save_preferences()
+		if screen == "settings": menus.show_settings(settings)
+		get_viewport().set_input_as_handled()
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Button and node.text.to_lower().contains(text.to_lower()): return node

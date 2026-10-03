@@ -157,10 +157,25 @@ func _test_hud_cleanup() -> void:
 		check(_find_label(menus, str(Powers.get_power(power_id).name)) == null, "Quick Duel clears stale power label: "+power_id)
 	check(_find_label(menus, "POWERS COLLECTED  /  EFFECTS INACTIVE") == null, "Quick Duel clears Run collection notice")
 	var pause: Button = _buttons(menus)[0]
-	pause.grab_focus()
+	check(pause.focus_mode == Control.FOCUS_NONE, "Gameplay HUD cannot capture steering/Confirm focus")
 	var action_count: int = actions.size()
-	await _key(KEY_ENTER)
-	check(actions.size() == action_count + 1 and actions.back().name == "pause", "Quick Duel HUD pause button still activates by keyboard")
+	await _key(KEY_RIGHT)
+	await _key(KEY_SPACE)
+	check(root.gui_get_focus_owner() == null and actions.size() == action_count, "Steering and Burst keys never activate the HUD pause button")
+	var point: Vector2 = pause.get_global_rect().get_center()
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = point
+	motion.global_position = point
+	Input.parse_input_event(motion)
+	for pressed: bool in [true, false]:
+		var click: InputEventMouseButton = InputEventMouseButton.new()
+		click.position = point
+		click.global_position = point
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.pressed = pressed
+		Input.parse_input_event(click)
+		await process_frame
+	check(actions.size() == action_count + 1 and actions.back().name == "pause", "Mouse still activates the HUD pause button")
 
 func _test_garage_assemblies() -> void:
 	menus.show_garage({"blade":"balance", "ratchet":"mid", "bit":"ball"})

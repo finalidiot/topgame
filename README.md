@@ -12,6 +12,10 @@ Core direction:
 
 Open `project.godot` with Godot 4.7.2, let assets import, and press **F5**.
 WASD/arrows steer, Space bursts, Shift brakes, and Esc pauses.
+Gamepad: left stick steers, bottom face button bursts/confirms, either shoulder
+or trigger brakes, and Menu/Start pauses. D-pad or stick navigates every menu;
+the east face button goes back. Keyboard, mouse and gamepad coexist through
+Godot input actions. Controller support is a core Task 002A requirement.
 
 Editable pixel-art sources are in `assets/source-art/`. Existing prototype details
 and validation notes are retained in `README.txt` and `QA.txt`.
@@ -35,6 +39,7 @@ Godot --headless --path . --script res://tests/test_flow.gd
 Godot --headless --path . --script res://tests/test_run_context.gd
 Godot --headless --path . --script res://tests/test_combat_architecture.gd
 Godot --headless --path . --script res://tests/test_menus.gd
+Godot --headless --path . --script res://tests/test_controller.gd
 ```
 
 Run `tests/test_prototype.gd` only in a disposable copy: the preserved baseline

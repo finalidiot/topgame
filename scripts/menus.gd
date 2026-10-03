@@ -12,6 +12,16 @@ const TEXT: Color = Color("e2eaf0")
 const MUTED: Color = Color("95aabc")
 const BLUE: Color = Color("67c9e7")
 const ORANGE: Color = Color("f0a15c")
+# Shared action language keeps HUD/menu prompts independent of controller glyphs.
+# Platform glyph presentation can replace these hints without changing screens.
+const INPUT_HINTS: Dictionary = {
+	"steer": "LEFT STICK / WASD / ARROWS",
+	"burst": "BOTTOM FACE / SPACE",
+	"brake": "SHOULDER / TRIGGER / SHIFT",
+	"pause": "MENU / ESC",
+	"confirm": "BOTTOM FACE / ENTER",
+	"back": "EAST FACE / ESC",
+}
 
 var screen: String = ""
 var _content: Control
@@ -25,6 +35,8 @@ var _stat_numbers: Dictionary = {}
 var _assembly_name: Label
 var _hud: Dictionary = {}
 var _run_active: bool = false
+var _default_focus: Control
+var _accept_needs_release: bool = false
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -32,6 +44,22 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	theme = _make_theme()
+
+func _process(_delta: float) -> void:
+	if _accept_needs_release and not Input.is_action_pressed("ui_accept"):
+		_accept_needs_release = false
+	if screen == "hud" or not is_instance_valid(_default_focus): return
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused == null or not _content.is_ancestor_of(focused):
+		_default_focus.grab_focus()
+
+func _input(event: InputEvent) -> void:
+	# A result/draft may open while Burst/Confirm is held. Require its release
+	# before any new screen can accept it, including keyboard echo events.
+	if screen != "hud" and _accept_needs_release and event.is_action("ui_accept"):
+		if event.is_action_released("ui_accept"):
+			_accept_needs_release = Input.is_action_pressed("ui_accept")
+		get_viewport().set_input_as_handled()
 
 func _make_theme() -> Theme:
 	var value: Theme = Theme.new()
@@ -50,6 +78,7 @@ func _make_theme() -> Theme:
 	value.set_stylebox("fill", "ProgressBar", _box(BLUE, BLUE, 0))
 	value.set_stylebox("slider", "HSlider", _box(Color("30495d"), Color("30495d"), 0))
 	value.set_stylebox("grabber_area", "HSlider", _box(BLUE, BLUE, 0))
+	value.set_stylebox("focus", "HSlider", _box(Color(0, 0, 0, 0), ORANGE, 2))
 	return value
 
 func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBoxFlat:
@@ -65,6 +94,8 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBoxFlat:
 
 func _clear(next_screen: String, dim: bool = true) -> void:
 	screen = next_screen
+	_default_focus = null
+	_accept_needs_release = next_screen != "hud" and Input.is_action_pressed("ui_accept")
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -81,6 +112,37 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 		_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.97))
 		_rect(_content, Rect2(0, 0, 640, 3), ORANGE)
 		_rect(_content, Rect2(0, 357, 640, 3), Color("23394c"))
+
+func _focus_rows(rows: Array, first: Control = null) -> void:
+	# Explicit links make every control reachable even across the workshop's
+	# unequal rows and the settings slider. Keep tab traversal equivalent.
+	var controls: Array[Control] = []
+	for row_index: int in range(rows.size()):
+		var row: Array = rows[row_index]
+		for column: int in range(row.size()):
+			var control: Control = row[column]
+			controls.append(control)
+			control.focus_neighbor_left = control.get_path_to(row[(column + row.size() - 1) % row.size()])
+			control.focus_neighbor_right = control.get_path_to(row[(column + 1) % row.size()])
+			control.focus_neighbor_top = control.get_path_to(_nearest_control(control, rows[(row_index + rows.size() - 1) % rows.size()]))
+			control.focus_neighbor_bottom = control.get_path_to(_nearest_control(control, rows[(row_index + 1) % rows.size()]))
+	for index: int in range(controls.size()):
+		controls[index].focus_next = controls[index].get_path_to(controls[(index + 1) % controls.size()])
+		controls[index].focus_previous = controls[index].get_path_to(controls[(index + controls.size() - 1) % controls.size()])
+	if controls.is_empty(): return
+	_default_focus = first if first != null else controls[0]
+	_default_focus.grab_focus()
+
+func _nearest_control(origin: Control, candidates: Array) -> Control:
+	var nearest: Control = candidates[0]
+	var center_x: float = origin.position.x + origin.size.x * 0.5
+	var distance: float = INF
+	for candidate: Control in candidates:
+		var candidate_distance: float = absf(candidate.position.x + candidate.size.x * 0.5 - center_x)
+		if candidate_distance < distance:
+			nearest = candidate
+			distance = candidate_distance
+	return nearest
 
 func _rect(parent: Node, area: Rect2, color: Color) -> ColorRect:
 	var node: ColorRect = ColorRect.new()
@@ -168,19 +230,19 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 	_label(_content, "SPINNING METAL", Rect2(28, 24, 565, 42), 32)
 	_label(_content, "FOUNDRY EIGHT  /  PLAYABLE PROTOTYPE", Rect2(30, 65, 570, 16), 10, ORANGE)
 	var first: Button = _button(_content, "QUICK DUEL", Rect2(30, 104, 268, 31), "quick_duel", null, true)
-	_button(_content, "EIGHT-ENCOUNTER RUN", Rect2(30, 143, 268, 31), "start_run")
-	_button(_content, "CUSTOMIZE TOP", Rect2(30, 182, 268, 31), "customize")
-	_button(_content, "HOW TO PLAY", Rect2(30, 221, 128, 31), "help")
-	_button(_content, "SETTINGS", Rect2(168, 221, 130, 31), "settings")
-	_button(_content, "QUIT", Rect2(30, 260, 268, 28), "quit")
+	var run_button: Button = _button(_content, "EIGHT-ENCOUNTER RUN", Rect2(30, 143, 268, 31), "start_run")
+	var garage_button: Button = _button(_content, "CUSTOMIZE TOP", Rect2(30, 182, 268, 31), "customize")
+	var help_button: Button = _button(_content, "HOW TO PLAY", Rect2(30, 221, 128, 31), "help")
+	var settings_button: Button = _button(_content, "SETTINGS", Rect2(168, 221, 130, 31), "settings")
+	var quit_button: Button = _button(_content, "QUIT", Rect2(30, 260, 268, 28), "quit")
 	_panel(_content, Rect2(324, 104, 286, 211))
 	_label(_content, "YOUR LOADOUT", Rect2(339, 114, 255, 16), 10, BLUE)
 	_new_preview(Rect2(358, 127, 218, 148), 3.0)
 	_label(_content, PartCatalog.title(_build), Rect2(334, 264, 266, 23), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "11 PARTS  /  48 ASSEMBLIES", Rect2(334, 287, 266, 15), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Steer. Time your burst. Stay in the dish.", Rect2(30, 303, 285, 28), 11, MUTED)
-	_label(_content, "WASD / ARROWS   MOVE     SPACE   BURST     SHIFT   BRAKE     ESC   PAUSE", Rect2(30, 333, 582, 16), 9, MUTED)
-	first.grab_focus()
+	_label(_content, "KEYBOARD + GAMEPAD    /    STEER   BURST   BRAKE   PAUSE    /    CONTROLS IN HOW TO PLAY", Rect2(30, 333, 582, 16), 9, MUTED)
+	_focus_rows([[first], [run_button], [garage_button], [help_button, settings_button], [quit_button]])
 
 func show_garage(build: Dictionary) -> void:
 	_build = build.duplicate()
@@ -204,11 +266,11 @@ func show_garage(build: Dictionary) -> void:
 	_part_row("blade", "01   BLADE", PartCatalog.BLADE_IDS, 73)
 	_part_row("ratchet", "02   RATCHET", PartCatalog.RATCHET_IDS, 147)
 	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 221)
-	_button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
-	_button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
-	_button(_content, "EIGHT-ENCOUNTER RUN", Rect2(342, 319, 276, 27), "start_run")
+	var back_button: Button = _button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
+	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
+	var run_button: Button = _button(_content, "EIGHT-ENCOUNTER RUN", Rect2(342, 319, 276, 27), "start_run")
 	_refresh_garage()
-	(_part_buttons["blade"][_build.get("blade", "balance")] as Button).grab_focus()
+	_focus_rows([_part_buttons["blade"].values(), _part_buttons["ratchet"].values(), _part_buttons["bit"].values(), [back_button, duel_button, run_button]], _part_buttons["blade"][_build.get("blade", "balance")])
 
 func _part_row(category: String, title: String, ids: Array, y: float) -> void:
 	_label(_content, title, Rect2(256, y, 345, 15), 10, ORANGE)
@@ -256,17 +318,16 @@ func show_help() -> void:
 	_panel(_content, Rect2(22, 65, 279, 238))
 	_panel(_content, Rect2(313, 65, 305, 238))
 	_label(_content, "CONTROL YOUR TOP", Rect2(37, 78, 242, 18), 12, BLUE)
-	_keycap("W", Rect2(116, 110, 35, 25))
-	_keycap("A", Rect2(76, 140, 35, 25))
-	_keycap("S", Rect2(116, 140, 35, 25))
-	_keycap("D", Rect2(156, 140, 35, 25))
-	_label(_content, "or Arrow keys", Rect2(201, 127, 87, 31), 10, MUTED)
-	_label(_content, "Movement follows the screen directions.", Rect2(37, 177, 246, 18), 10, TEXT)
-	_keycap("SPACE", Rect2(37, 207, 69, 24))
-	_label(_content, "Burst toward your steering direction", Rect2(115, 207, 171, 24), 9, TEXT)
-	_keycap("SHIFT", Rect2(37, 241, 69, 24))
-	_label(_content, "Brake to line up a hit or avoid a gate", Rect2(115, 241, 171, 24), 9, TEXT)
-	_label(_content, "ESC pauses the duel. Enter selects menu buttons.", Rect2(37, 277, 246, 17), 9, MUTED)
+	_label(_content, "STEER", Rect2(37, 104, 246, 17), 11, TEXT)
+	_label(_content, INPUT_HINTS.steer, Rect2(37, 122, 246, 16), 9, BLUE)
+	_label(_content, "Movement follows the screen directions.", Rect2(37, 139, 246, 16), 9, MUTED)
+	_label(_content, "BURST   /   Dash toward your steering", Rect2(37, 164, 246, 17), 10, TEXT)
+	_label(_content, INPUT_HINTS.burst, Rect2(37, 181, 246, 16), 9, BLUE)
+	_label(_content, "BRAKE   /   Line up a hit or avoid a gate", Rect2(37, 204, 246, 17), 10, TEXT)
+	_label(_content, INPUT_HINTS.brake, Rect2(37, 221, 246, 16), 9, BLUE)
+	_label(_content, "PAUSE   " + INPUT_HINTS.pause, Rect2(37, 247, 246, 14), 9, MUTED)
+	_label(_content, "CONFIRM   " + INPUT_HINTS.confirm, Rect2(37, 263, 246, 14), 9, MUTED)
+	_label(_content, "BACK   " + INPUT_HINTS.back, Rect2(37, 279, 246, 14), 9, MUTED)
 	_label(_content, "WIN THE EXCHANGE", Rect2(329, 78, 272, 18), 12, ORANGE)
 	_label(_content, "RING OUT", Rect2(329, 110, 268, 20), 12, TEXT)
 	_label(_content, "Knock your rival through either orange side gate.\nThe remaining rim keeps tops inside.", Rect2(329, 133, 269, 39), 11, MUTED)
@@ -274,13 +335,10 @@ func show_help() -> void:
 	_label(_content, "Drain your rival's spin through collisions.\nSteering and bursts also spend your own spin.", Rect2(329, 207, 269, 39), 11, MUTED)
 	_label(_content, "BUILD FOR YOUR STYLE", Rect2(329, 258, 268, 18), 10, BLUE)
 	_label(_content, "Speed for pursuit. Grip for control. Mass for recoil.", Rect2(329, 278, 269, 17), 9, MUTED)
-	_button(_content, "BACK TO MENU", Rect2(22, 318, 184, 28), "main_menu").grab_focus()
-	_button(_content, "CUSTOMIZE TOP", Rect2(218, 318, 184, 28), "customize")
-	_button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
-
-func _keycap(value: String, area: Rect2) -> void:
-	_panel(_content, area, Color("223a4d"), Color("57738a"))
-	_label(_content, value, area, 11, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	var back_button: Button = _button(_content, "BACK TO MENU", Rect2(22, 318, 184, 28), "main_menu")
+	var garage_button: Button = _button(_content, "CUSTOMIZE TOP", Rect2(218, 318, 184, 28), "customize")
+	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
+	_focus_rows([[back_button, garage_button, duel_button]])
 
 func show_settings(settings: Dictionary) -> void:
 	_settings = settings.duplicate()
@@ -295,25 +353,36 @@ func show_settings(settings: Dictionary) -> void:
 	slider.min_value = 0.0
 	slider.max_value = 1.0
 	slider.step = 0.05
+	slider.focus_mode = Control.FOCUS_ALL
 	slider.value = float(_settings.get("volume", 0.75))
 	slider.value_changed.connect(func(value: float) -> void:
 		_settings["volume"] = value
 		volume_label.text = "%d%%" % roundi(value * 100.0)
 		action.emit("settings_changed", _settings.duplicate()))
 	_content.add_child(slider)
-	_toggle_setting("muted", "MUTE AUDIO", 163, false)
-	_toggle_setting("screen_shake", "SCREEN SHAKE", 201, true)
-	_toggle_setting("fullscreen", "FULL SCREEN", 239, false)
+	# HSlider does not draw the Button-style focus box itself. Draw a separate
+	# outline so controller focus remains visible even without a mouse hover.
+	var focus_outline: Panel = _panel(slider, Rect2(Vector2(-4, -4), slider.size + Vector2(8, 8)), Color(0, 0, 0, 0), ORANGE)
+	focus_outline.name = "FocusOutline"
+	focus_outline.add_theme_stylebox_override("panel", slider.get_theme_stylebox("focus"))
+	focus_outline.visible = false
+	slider.focus_entered.connect(focus_outline.show)
+	slider.focus_exited.connect(focus_outline.hide)
+	var mute_button: Button = _toggle_setting("muted", "MUTE AUDIO", 163, false)
+	var shake_button: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 201, true)
+	var fullscreen_button: Button = _toggle_setting("fullscreen", "FULL SCREEN", 239, false)
 	_label(_content, "Pixel art uses nearest-neighbor scaling. 1280 × 720 recommended.", Rect2(90, 302, 460, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_button(_content, "BACK TO MENU", Rect2(226, 325, 188, 26), "main_menu").grab_focus()
+	var back_button: Button = _button(_content, "BACK TO MENU", Rect2(226, 325, 188, 26), "main_menu")
+	_focus_rows([[slider], [mute_button], [shake_button], [fullscreen_button], [back_button]])
 
-func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> void:
+func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> Button:
 	_label(_content, title, Rect2(111, y, 300, 24), 12)
 	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(444, y, 81, 25))
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
 		button.text = "ON" if _settings[key] else "OFF"
 		action.emit("settings_changed", _settings.duplicate()))
+	return button
 
 func show_pause(is_run: bool = false) -> void:
 	_clear("pause", false)
@@ -321,14 +390,16 @@ func show_pause(is_run: bool = false) -> void:
 	_panel(_content, Rect2(186, 48, 268, 268))
 	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(202, 66, 236, 31), 23, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Take a breath. Your spin can wait.", Rect2(202, 101, 236, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_button(_content, "RESUME", Rect2(207, 135, 226, 31), "resume", null, true).grab_focus()
-	_button(_content, "RESTART RUN" if is_run else "RESTART DUEL", Rect2(207, 176, 226, 31), "restart_run" if is_run else "rematch")
+	var resume_button: Button = _button(_content, "RESUME", Rect2(207, 135, 226, 31), "resume", null, true)
+	var restart_button: Button = _button(_content, "RESTART RUN" if is_run else "RESTART DUEL", Rect2(207, 176, 226, 31), "restart_run" if is_run else "rematch")
+	var focus_rows: Array = [[resume_button], [restart_button]]
 	if is_run:
-		_button(_content, "END RUN", Rect2(207, 217, 226, 31), "end_run")
+		focus_rows.append([_button(_content, "END RUN", Rect2(207, 217, 226, 31), "end_run")])
 		_label(_content, "Assembly locked for this run", Rect2(202, 258, 236, 22), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	else:
-		_button(_content, "CUSTOMIZE TOP", Rect2(207, 217, 226, 31), "customize")
-		_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")
+		focus_rows.append([_button(_content, "CUSTOMIZE TOP", Rect2(207, 217, 226, 31), "customize")])
+		focus_rows.append([_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")])
+	_focus_rows(focus_rows)
 
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int) -> void:
 	_clear("reward")
@@ -347,13 +418,10 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 		_label(card, "COLLECT & CONTINUE", Rect2(12, 161, 168, 16), 10, BLUE)
 		cards.append(card)
-	for index: int in range(cards.size()):
-		cards[index].focus_neighbor_left = cards[index].get_path_to(cards[(index + cards.size() - 1) % cards.size()])
-		cards[index].focus_neighbor_right = cards[index].get_path_to(cards[(index + 1) % cards.size()])
 	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
 	_power_labels(owned, 302)
-	_label(_content, "ARROWS / D-PAD  CHOOSE     ENTER / A  SELECT     ESC  PAUSE", Rect2(24, 334, 592, 16), 9, MUTED)
-	if not cards.is_empty(): cards[0].grab_focus()
+	_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
+	if not cards.is_empty(): _focus_rows([cards])
 
 func _power_labels(ids: Array, y: float) -> void:
 	for index: int in range(ids.size()):
@@ -391,12 +459,14 @@ func show_result(result: Dictionary) -> void:
 	var is_run: bool = bool(result.get("is_run", false))
 	var retry_text: String = "RESTART RUN" if is_run else "REMATCH"
 	var primary: Button = _button(_content, "NEXT ENCOUNTER" if next_available else retry_text, Rect2(149, 222, 342, 31), "next_battle" if next_available else ("restart_run" if is_run else "rematch"), null, true)
+	var focus_rows: Array = [[primary]]
 	if is_run and next_available:
-		_button(_content, "END RUN", Rect2(149, 268, 342, 28), "end_run")
+		focus_rows.append([_button(_content, "END RUN", Rect2(149, 268, 342, 28), "end_run")])
 	else:
-		_button(_content, "GARAGE" if is_run else "CUSTOMIZE TOP", Rect2(149, 268, 166, 28), "customize")
-		_button(_content, "MAIN MENU", Rect2(325, 268, 166, 28), "main_menu")
-	primary.grab_focus()
+		var garage_button: Button = _button(_content, "GARAGE" if is_run else "CUSTOMIZE TOP", Rect2(149, 268, 166, 28), "customize")
+		var menu_button: Button = _button(_content, "MAIN MENU", Rect2(325, 268, 166, 28), "main_menu")
+		focus_rows.append([garage_button, menu_button])
+	_focus_rows(focus_rows)
 
 func show_hud(stats: Dictionary) -> void:
 	if screen != "hud":
@@ -414,7 +484,7 @@ func show_hud(stats: Dictionary) -> void:
 	var cooldown: float = float(stats.get("burst_cooldown", 0.0))
 	var ready: bool = bool(stats.get("burst_ready", cooldown <= 0.0))
 	var exhausted: bool = not ready and cooldown <= 0.0
-	_hud["burst"].text = "SPACE  BURST READY" if ready else ("LOW SPIN  /  BURST UNAVAILABLE" if exhausted else "BURST RECHARGING   %.1f s" % cooldown)
+	_hud["burst"].text = "BURST READY" if ready else ("LOW SPIN  /  BURST UNAVAILABLE" if exhausted else "BURST RECHARGING   %.1f s" % cooldown)
 	_hud["burst"].add_theme_color_override("font_color", BLUE if ready else MUTED)
 	_hud["burst_bar"].value = 1.0 if ready else (0.0 if exhausted else clampf(1.0 - cooldown / float(stats.get("burst_cooldown_max", 4.0)), 0.0, 1.0))
 	var phase: String = str(stats.get("status", "battle"))
@@ -444,7 +514,11 @@ func _create_hud() -> void:
 	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause").add_theme_font_size_override("font_size", 9)
+	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause")
+	pause_button.add_theme_font_size_override("font_size", 9)
+	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
+	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
+	pause_button.focus_mode = Control.FOCUS_NONE
 	_hud["round"] = _label(_content, "", Rect2(175, 76, 290, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
@@ -452,9 +526,9 @@ func _create_hud() -> void:
 	for index: int in range(6):
 		_hud["power_%d" % index] = _label(_content, "", Rect2(22 + index * 101, 305, 96, 15), 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
-	_hud["burst"] = _label(_content, "SPACE  BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
+	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
 	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)
-	_label(_content, "WASD / ARROWS  MOVE    SHIFT  BRAKE    ESC  PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_label(_content, "STEER    /    BURST    /    BRAKE    /    PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	var focus: Control = get_viewport().gui_get_focus_owner()
 	if focus != null:
 		focus.release_focus()
