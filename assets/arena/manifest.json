@@ -1,0 +1,127 @@
+{
+  "name": "Foundry Eight",
+  "canvas": [
+    640,
+    360
+  ],
+  "projection": {
+    "origin": [
+      320,
+      165
+    ],
+    "formula": "screen_x=320+u-v; screen_y=165+(u+v)/2-z",
+    "ratio": "2:1",
+    "camera_rotation": false
+  },
+  "bounds": {
+    "world_outer": [
+      [
+        -180,
+        -110
+      ],
+      [
+        -110,
+        -180
+      ],
+      [
+        110,
+        -180
+      ],
+      [
+        180,
+        -110
+      ],
+      [
+        180,
+        110
+      ],
+      [
+        110,
+        180
+      ],
+      [
+        -110,
+        180
+      ],
+      [
+        -180,
+        110
+      ]
+    ],
+    "world_playable": [
+      [
+        -166,
+        -104
+      ],
+      [
+        -104,
+        -166
+      ],
+      [
+        104,
+        -166
+      ],
+      [
+        166,
+        -104
+      ],
+      [
+        166,
+        104
+      ],
+      [
+        104,
+        166
+      ],
+      [
+        -104,
+        166
+      ],
+      [
+        -166,
+        104
+      ]
+    ],
+    "clear_width_px": 540
+  },
+  "layers": [
+    {
+      "name": "backdrop",
+      "path": "assets/arena/backdrop.png"
+    },
+    {
+      "name": "structure",
+      "path": "assets/arena/structure.png"
+    },
+    {
+      "name": "surface",
+      "path": "assets/arena/surface.png"
+    },
+    {
+      "name": "markings",
+      "path": "assets/arena/markings.png"
+    },
+    {
+      "name": "rear_rim",
+      "path": "assets/arena/rear_rim.png"
+    },
+    {
+      "name": "front_rim",
+      "path": "assets/arena/front_rim.png"
+    }
+  ],
+  "foreground_rule": "front_rim above grounded tops, flying tops only cross above guard after height clearance",
+  "ring_out_gates": [
+    {
+      "side": "left",
+      "region": "u-v < -264 and abs(u+v)<=36",
+      "ramp": "Bank opens into unguarded lip"
+    },
+    {
+      "side": "right",
+      "region": "u-v > 264 and abs(u+v)<=36",
+      "ramp": "Bank opens into unguarded lip"
+    }
+  ],
+  "design_status": "playable prototype revision: narrow side guard mouths match world-space gate checks"
+}

@@ -1,0 +1,22 @@
+# Godot import caches, editor state and generated native reload files.
+.godot/
+.import/
+.nomedia
+~*.dll
+
+# Local export credentials and temporary files.
+export_credentials.cfg
+export.cfg
+*.tmp
+
+# Generated exports in the project root.
+/build/
+/builds/
+/exports/
+
+# Operating-system metadata.
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Keep actual source assets, *.import settings, *.uid sidecars and export_presets.cfg.

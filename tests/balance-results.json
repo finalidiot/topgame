@@ -1,0 +1,3170 @@
+[
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 171.1,
+		"resolved": true,
+		"result": {
+			"duration": 33.8499999999994,
+			"enemy_remaining": 0.0443604899236552,
+			"hits": 66,
+			"player_remaining": 0.220603459611007,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.85,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 187.95,
+		"resolved": true,
+		"result": {
+			"duration": 32.7833333333328,
+			"enemy_remaining": 0.0447703186318882,
+			"hits": 69,
+			"player_remaining": 0.20432351726231,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.78,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 171.1,
+		"resolved": true,
+		"result": {
+			"duration": 34.516666666666,
+			"enemy_remaining": 0.0422190656195866,
+			"hits": 63,
+			"player_remaining": 0.217218702459539,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.52,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 190.6,
+		"resolved": true,
+		"result": {
+			"duration": 30.3499999999996,
+			"enemy_remaining": 0.0449805415215794,
+			"hits": 78,
+			"player_remaining": 0.172197717098033,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.35,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 190.63,
+		"resolved": true,
+		"result": {
+			"duration": 30.2166666666662,
+			"enemy_remaining": 0.0449702786643432,
+			"hits": 76,
+			"player_remaining": 0.176134096681788,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.22,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 190.64,
+		"resolved": true,
+		"result": {
+			"duration": 31.6166666666662,
+			"enemy_remaining": 0.0448132706418377,
+			"hits": 75,
+			"player_remaining": 0.166015739983383,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.62,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.18,
+		"resolved": true,
+		"result": {
+			"duration": 30.2166666666662,
+			"enemy_remaining": 0.0448118131050883,
+			"hits": 79,
+			"player_remaining": 0.0649977984254883,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.22,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.24,
+		"resolved": true,
+		"result": {
+			"duration": 30.0166666666662,
+			"enemy_remaining": 0.0432496994806252,
+			"hits": 78,
+			"player_remaining": 0.0748604318742002,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.02,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.25,
+		"resolved": true,
+		"result": {
+			"duration": 31.7999999999995,
+			"enemy_remaining": 0.0449533352063688,
+			"hits": 74,
+			"player_remaining": 0.0596946930053364,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.8,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 194.5,
+		"resolved": true,
+		"result": {
+			"duration": 30.0333333333329,
+			"enemy_remaining": 0.043500309078431,
+			"hits": 83,
+			"player_remaining": 0.0902694780038759,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.03,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 194.5,
+		"resolved": true,
+		"result": {
+			"duration": 29.1999999999996,
+			"enemy_remaining": 0.0427997512928468,
+			"hits": 87,
+			"player_remaining": 0.09568860206683,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.2,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 194.5,
+		"resolved": true,
+		"result": {
+			"duration": 30.4833333333329,
+			"enemy_remaining": 0.0448350297580768,
+			"hits": 79,
+			"player_remaining": 0.116431016915146,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.48,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 172.06,
+		"resolved": true,
+		"result": {
+			"duration": 31.8833333333328,
+			"enemy_remaining": 0.0447502729393205,
+			"hits": 76,
+			"player_remaining": 0.160880467456381,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.88,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 172.2,
+		"resolved": true,
+		"result": {
+			"duration": 33.0166666666661,
+			"enemy_remaining": 0.0428520884158255,
+			"hits": 74,
+			"player_remaining": 0.161091285634828,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.02,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 172.21,
+		"resolved": true,
+		"result": {
+			"duration": 32.1166666666661,
+			"enemy_remaining": 0.0447999352759238,
+			"hits": 73,
+			"player_remaining": 0.156405641853657,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.12,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 188.44,
+		"resolved": true,
+		"result": {
+			"duration": 30.9333333333329,
+			"enemy_remaining": 0.0447180265492331,
+			"hits": 78,
+			"player_remaining": 0.11485711031832,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.93,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 188.47,
+		"resolved": true,
+		"result": {
+			"duration": 30.7499999999995,
+			"enemy_remaining": 0.0448952596976481,
+			"hits": 77,
+			"player_remaining": 0.109380102616113,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.75,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 188.48,
+		"resolved": true,
+		"result": {
+			"duration": 31.5833333333328,
+			"enemy_remaining": 0.0449783051814754,
+			"hits": 76,
+			"player_remaining": 0.121860664211555,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.58,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.89,
+		"resolved": true,
+		"result": {
+			"duration": 31.5666666666662,
+			"enemy_remaining": 0.0750429213548429,
+			"hits": 71,
+			"player_remaining": 0.0449292540118427,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 31.57,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 29.3833333333329,
+			"enemy_remaining": 0.0653061019237812,
+			"hits": 76,
+			"player_remaining": 0.0448200731815201,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.38,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 30.7666666666662,
+			"enemy_remaining": 0.0825080064924835,
+			"hits": 69,
+			"player_remaining": 0.0447223003138221,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.77,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 30.3999999999996,
+			"enemy_remaining": 0.0448826435594296,
+			"hits": 80,
+			"player_remaining": 0.0604600770308367,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.4,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 30.4333333333329,
+			"enemy_remaining": 0.044867464575007,
+			"hits": 78,
+			"player_remaining": 0.0586906209917915,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.43,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 30.9333333333329,
+			"enemy_remaining": 0.0448948494347172,
+			"hits": 73,
+			"player_remaining": 0.0674776016971916,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.93,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 172.06,
+		"resolved": true,
+		"result": {
+			"duration": 31.4999999999995,
+			"enemy_remaining": 0.0449705621939445,
+			"hits": 74,
+			"player_remaining": 0.145362552116948,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.5,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 172.2,
+		"resolved": true,
+		"result": {
+			"duration": 31.7166666666661,
+			"enemy_remaining": 0.0416770249307643,
+			"hits": 71,
+			"player_remaining": 0.132698781078133,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.72,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 172.21,
+		"resolved": true,
+		"result": {
+			"duration": 31.7333333333328,
+			"enemy_remaining": 0.0448386263804215,
+			"hits": 69,
+			"player_remaining": 0.134557956897462,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.73,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 191.9,
+		"resolved": true,
+		"result": {
+			"duration": 30.5166666666662,
+			"enemy_remaining": 0.0438008060414707,
+			"hits": 79,
+			"player_remaining": 0.0843058156921568,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.52,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 191.9,
+		"resolved": true,
+		"result": {
+			"duration": 30.2166666666662,
+			"enemy_remaining": 0.0448236292137973,
+			"hits": 72,
+			"player_remaining": 0.0941400050218491,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.22,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 191.9,
+		"resolved": true,
+		"result": {
+			"duration": 30.7333333333329,
+			"enemy_remaining": 0.0432291679533293,
+			"hits": 76,
+			"player_remaining": 0.0849528213627403,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.73,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.89,
+		"resolved": true,
+		"result": {
+			"duration": 28.1166666666664,
+			"enemy_remaining": 0.0957103823959688,
+			"hits": 76,
+			"player_remaining": 0.0447634788366428,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.12,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 27.8999999999997,
+			"enemy_remaining": 0.0975113753285864,
+			"hits": 70,
+			"player_remaining": 0.0447373145257206,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.9,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 28.9666666666663,
+			"enemy_remaining": 0.0892528751969189,
+			"hits": 70,
+			"player_remaining": 0.044783168402993,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.97,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.35,
+		"resolved": true,
+		"result": {
+			"duration": 28.1666666666663,
+			"enemy_remaining": 0.0582928416335028,
+			"hits": 81,
+			"player_remaining": 0.0420059400220642,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.17,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.41,
+		"resolved": true,
+		"result": {
+			"duration": 29.7999999999996,
+			"enemy_remaining": 0.0553780011918437,
+			"hits": 78,
+			"player_remaining": 0.0447787728912055,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.8,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "balance",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.7999999999995,
+			"enemy_remaining": 0.0470608615547806,
+			"hits": 72,
+			"player_remaining": 0.0446973207316943,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.8,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 162.88,
+		"resolved": true,
+		"result": {
+			"duration": 30.1666666666662,
+			"enemy_remaining": 0.0447966938536549,
+			"hits": 66,
+			"player_remaining": 0.139188237396601,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.17,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 163.0,
+		"resolved": true,
+		"result": {
+			"duration": 30.4166666666662,
+			"enemy_remaining": 0.0429402402471875,
+			"hits": 66,
+			"player_remaining": 0.136226985692424,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.42,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 163.01,
+		"resolved": true,
+		"result": {
+			"duration": 31.6166666666662,
+			"enemy_remaining": 0.0448607138003035,
+			"hits": 64,
+			"player_remaining": 0.151355269471863,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.62,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 184.1,
+		"resolved": true,
+		"result": {
+			"duration": 28.283333333333,
+			"enemy_remaining": 0.0448914379150955,
+			"hits": 74,
+			"player_remaining": 0.106509573972359,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 28.28,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 184.1,
+		"resolved": true,
+		"result": {
+			"duration": 28.783333333333,
+			"enemy_remaining": 0.0449438700295959,
+			"hits": 71,
+			"player_remaining": 0.1003740346798,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 28.78,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 184.1,
+		"resolved": true,
+		"result": {
+			"duration": 30.5166666666662,
+			"enemy_remaining": 0.0432778216283178,
+			"hits": 68,
+			"player_remaining": 0.0887711217897782,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.52,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.1,
+		"resolved": true,
+		"result": {
+			"duration": 27.2499999999997,
+			"enemy_remaining": 0.0772922648223187,
+			"hits": 71,
+			"player_remaining": 0.0446059983948204,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.25,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.8,
+		"resolved": true,
+		"result": {
+			"duration": 27.5333333333331,
+			"enemy_remaining": 0.0766368233551594,
+			"hits": 68,
+			"player_remaining": 0.044996685879305,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.53,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.95,
+		"resolved": true,
+		"result": {
+			"duration": 27.3999999999997,
+			"enemy_remaining": 0.0857239350208399,
+			"hits": 68,
+			"player_remaining": 0.0449268155738716,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.4,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 195.14,
+		"resolved": true,
+		"result": {
+			"duration": 28.8999999999996,
+			"enemy_remaining": 0.0448505653318347,
+			"hits": 70,
+			"player_remaining": 0.0565765305977872,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 28.9,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 195.81,
+		"resolved": true,
+		"result": {
+			"duration": 28.1499999999997,
+			"enemy_remaining": 0.0511265251313119,
+			"hits": 72,
+			"player_remaining": 0.0448779065697097,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.15,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 195.96,
+		"resolved": true,
+		"result": {
+			"duration": 29.4666666666663,
+			"enemy_remaining": 0.0481515208017551,
+			"hits": 70,
+			"player_remaining": 0.0449708109102533,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.47,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 161.33,
+		"resolved": true,
+		"result": {
+			"duration": 31.4499999999995,
+			"enemy_remaining": 0.0448060072918432,
+			"hits": 67,
+			"player_remaining": 0.0995307779440714,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.45,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 160.65,
+		"resolved": true,
+		"result": {
+			"duration": 30.5999999999995,
+			"enemy_remaining": 0.0429969421142629,
+			"hits": 65,
+			"player_remaining": 0.0790237808158436,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.6,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 160.66,
+		"resolved": true,
+		"result": {
+			"duration": 31.0833333333328,
+			"enemy_remaining": 0.0448327863826938,
+			"hits": 65,
+			"player_remaining": 0.0975974228763602,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.08,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 184.65,
+		"resolved": true,
+		"result": {
+			"duration": 29.5166666666663,
+			"enemy_remaining": 0.0447365041756982,
+			"hits": 72,
+			"player_remaining": 0.0472906975055541,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.52,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 184.75,
+		"resolved": true,
+		"result": {
+			"duration": 28.7999999999996,
+			"enemy_remaining": 0.0448298194892683,
+			"hits": 72,
+			"player_remaining": 0.0491849314403341,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 28.8,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 184.76,
+		"resolved": true,
+		"result": {
+			"duration": 30.7333333333329,
+			"enemy_remaining": 0.0475454319326219,
+			"hits": 67,
+			"player_remaining": 0.0447641927220817,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.73,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 192.44,
+		"resolved": true,
+		"result": {
+			"duration": 25.9833333333331,
+			"enemy_remaining": 0.126490008054878,
+			"hits": 66,
+			"player_remaining": 0.044605173647472,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 25.98,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 193.01,
+		"resolved": true,
+		"result": {
+			"duration": 26.2999999999998,
+			"enemy_remaining": 0.123135514290695,
+			"hits": 64,
+			"player_remaining": 0.044915177468916,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 26.3,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 193.16,
+		"resolved": true,
+		"result": {
+			"duration": 25.8166666666665,
+			"enemy_remaining": 0.122539838295429,
+			"hits": 65,
+			"player_remaining": 0.0447438894006506,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 25.82,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 27.6999999999997,
+			"enemy_remaining": 0.0878876167594359,
+			"hits": 65,
+			"player_remaining": 0.043036638857699,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.7,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 27.3333333333331,
+			"enemy_remaining": 0.0806947973525849,
+			"hits": 71,
+			"player_remaining": 0.0449721300316202,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.33,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.4,
+		"resolved": true,
+		"result": {
+			"duration": 27.9166666666664,
+			"enemy_remaining": 0.0927745871007111,
+			"hits": 69,
+			"player_remaining": 0.0446780927150948,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.92,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 162.02,
+		"resolved": true,
+		"result": {
+			"duration": 31.9833333333328,
+			"enemy_remaining": 0.0418900406726956,
+			"hits": 58,
+			"player_remaining": 0.0503087090892599,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.98,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 161.97,
+		"resolved": true,
+		"result": {
+			"duration": 30.1499999999996,
+			"enemy_remaining": 0.0448553752524217,
+			"hits": 64,
+			"player_remaining": 0.0597146810925582,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.15,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 162.16,
+		"resolved": true,
+		"result": {
+			"duration": 31.2833333333328,
+			"enemy_remaining": 0.0448546034757241,
+			"hits": 61,
+			"player_remaining": 0.0601902872123728,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.28,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 188.62,
+		"resolved": true,
+		"result": {
+			"duration": 29.183333333333,
+			"enemy_remaining": 0.0599685206350472,
+			"hits": 66,
+			"player_remaining": 0.0438537435958329,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.18,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 189.36,
+		"resolved": true,
+		"result": {
+			"duration": 28.2666666666663,
+			"enemy_remaining": 0.056294798403535,
+			"hits": 69,
+			"player_remaining": 0.0449941793215903,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.27,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 189.53,
+		"resolved": true,
+		"result": {
+			"duration": 28.033333333333,
+			"enemy_remaining": 0.0634887769527385,
+			"hits": 68,
+			"player_remaining": 0.0449870750630272,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.03,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 197.92,
+		"resolved": true,
+		"result": {
+			"duration": 24.7166666666665,
+			"enemy_remaining": 0.152521965504317,
+			"hits": 64,
+			"player_remaining": 0.044652908816616,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 24.72,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 198.6,
+		"resolved": true,
+		"result": {
+			"duration": 24.7999999999999,
+			"enemy_remaining": 0.15176561613421,
+			"hits": 63,
+			"player_remaining": 0.0447833638862513,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 24.8,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 198.74,
+		"resolved": true,
+		"result": {
+			"duration": 25.0499999999999,
+			"enemy_remaining": 0.15586404152841,
+			"hits": 63,
+			"player_remaining": 0.0410804468688346,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 25.05,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 206.14,
+		"resolved": true,
+		"result": {
+			"duration": 26.0333333333331,
+			"enemy_remaining": 0.106408944460523,
+			"hits": 68,
+			"player_remaining": 0.0448996967319147,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 26.03,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 207.2,
+		"resolved": true,
+		"result": {
+			"duration": 25.7333333333332,
+			"enemy_remaining": 0.112265724293408,
+			"hits": 67,
+			"player_remaining": 0.0419703443343256,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 25.73,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "smash",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 207.36,
+		"resolved": true,
+		"result": {
+			"duration": 26.3499999999998,
+			"enemy_remaining": 0.113126816740013,
+			"hits": 68,
+			"player_remaining": 0.0429870658117711,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 26.35,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 202.2,
+		"resolved": true,
+		"result": {
+			"duration": 31.3333333333328,
+			"enemy_remaining": 0.0395256093514506,
+			"hits": 78,
+			"player_remaining": 0.331788847505599,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.33,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 191.45,
+		"resolved": true,
+		"result": {
+			"duration": 35.166666666666,
+			"enemy_remaining": 0.0448076412108488,
+			"hits": 66,
+			"player_remaining": 0.29815316390557,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 35.17,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 176.89,
+		"resolved": true,
+		"result": {
+			"duration": 35.1499999999993,
+			"enemy_remaining": 0.0448371071056118,
+			"hits": 67,
+			"player_remaining": 0.306501384382874,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 35.15,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 210.08,
+		"resolved": true,
+		"result": {
+			"duration": 33.1166666666661,
+			"enemy_remaining": 0.0449671863226969,
+			"hits": 75,
+			"player_remaining": 0.254932350891483,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.12,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 190.63,
+		"resolved": true,
+		"result": {
+			"duration": 32.4833333333328,
+			"enemy_remaining": 0.0448958377419961,
+			"hits": 77,
+			"player_remaining": 0.269130163895353,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.48,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 190.64,
+		"resolved": true,
+		"result": {
+			"duration": 34.516666666666,
+			"enemy_remaining": 0.044892560378074,
+			"hits": 70,
+			"player_remaining": 0.267924654942741,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.52,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 193.55,
+		"resolved": true,
+		"result": {
+			"duration": 31.1999999999995,
+			"enemy_remaining": 0.0447363070879664,
+			"hits": 82,
+			"player_remaining": 0.179870290036677,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.2,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 193.55,
+		"resolved": true,
+		"result": {
+			"duration": 31.4666666666662,
+			"enemy_remaining": 0.0449720112477127,
+			"hits": 85,
+			"player_remaining": 0.175723874093695,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.47,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 193.55,
+		"resolved": true,
+		"result": {
+			"duration": 31.7666666666661,
+			"enemy_remaining": 0.0447243966308375,
+			"hits": 78,
+			"player_remaining": 0.191223000534715,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.77,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 194.28,
+		"resolved": true,
+		"result": {
+			"duration": 33.0333333333327,
+			"enemy_remaining": 0.0449654189658,
+			"hits": 73,
+			"player_remaining": 0.215503850208124,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.03,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 194.28,
+		"resolved": true,
+		"result": {
+			"duration": 31.8333333333328,
+			"enemy_remaining": 0.0445903187031787,
+			"hits": 76,
+			"player_remaining": 0.210701092915996,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.83,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 195.99,
+		"resolved": true,
+		"result": {
+			"duration": 32.4333333333328,
+			"enemy_remaining": 0.0445002038157035,
+			"hits": 71,
+			"player_remaining": 0.220851686310218,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.43,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.48,
+		"resolved": true,
+		"result": {
+			"duration": 34.916666666666,
+			"enemy_remaining": 0.0449040837990038,
+			"hits": 69,
+			"player_remaining": 0.298646901095585,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.92,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 171.67,
+		"resolved": true,
+		"result": {
+			"duration": 34.8333333333326,
+			"enemy_remaining": 0.044746398907171,
+			"hits": 71,
+			"player_remaining": 0.270981215166029,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.83,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 198.56,
+		"resolved": true,
+		"result": {
+			"duration": 35.3833333333326,
+			"enemy_remaining": 0.0448733775839721,
+			"hits": 66,
+			"player_remaining": 0.280742202040354,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 35.38,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 188.44,
+		"resolved": true,
+		"result": {
+			"duration": 32.7666666666661,
+			"enemy_remaining": 0.0449937591912275,
+			"hits": 76,
+			"player_remaining": 0.241586903361357,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.77,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 188.47,
+		"resolved": true,
+		"result": {
+			"duration": 32.7333333333328,
+			"enemy_remaining": 0.0433216472402096,
+			"hits": 77,
+			"player_remaining": 0.23416165293692,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.73,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 214.54,
+		"resolved": true,
+		"result": {
+			"duration": 34.766666666666,
+			"enemy_remaining": 0.0420070711795537,
+			"hits": 71,
+			"player_remaining": 0.227717144105732,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.77,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.0666666666662,
+			"enemy_remaining": 0.0448747636602732,
+			"hits": 84,
+			"player_remaining": 0.133791206493544,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.07,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.4333333333329,
+			"enemy_remaining": 0.0440265341691731,
+			"hits": 88,
+			"player_remaining": 0.13532426943262,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.43,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 32.2999999999995,
+			"enemy_remaining": 0.0449435606585555,
+			"hits": 81,
+			"player_remaining": 0.138472501193572,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.3,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.16,
+		"resolved": true,
+		"result": {
+			"duration": 32.5999999999994,
+			"enemy_remaining": 0.0448355393709621,
+			"hits": 78,
+			"player_remaining": 0.172381355588934,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.6,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.16,
+		"resolved": true,
+		"result": {
+			"duration": 31.4499999999995,
+			"enemy_remaining": 0.0443020857398045,
+			"hits": 81,
+			"player_remaining": 0.165102147872361,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.45,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.16,
+		"resolved": true,
+		"result": {
+			"duration": 31.6999999999995,
+			"enemy_remaining": 0.0449522430570615,
+			"hits": 78,
+			"player_remaining": 0.19304965719918,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.7,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 186.37,
+		"resolved": true,
+		"result": {
+			"duration": 33.6499999999994,
+			"enemy_remaining": 0.0447490771505593,
+			"hits": 68,
+			"player_remaining": 0.277713907974058,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.65,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 176.04,
+		"resolved": true,
+		"result": {
+			"duration": 34.166666666666,
+			"enemy_remaining": 0.0447396127167108,
+			"hits": 70,
+			"player_remaining": 0.258287686849436,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.17,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 204.19,
+		"resolved": true,
+		"result": {
+			"duration": 34.466666666666,
+			"enemy_remaining": 0.0448355036756497,
+			"hits": 65,
+			"player_remaining": 0.263218715171471,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 34.47,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 188.44,
+		"resolved": true,
+		"result": {
+			"duration": 25.5499999999998,
+			"enemy_remaining": 0.18508175474397,
+			"hits": 72,
+			"player_remaining": 0.325722901513505,
+			"reason": "ring_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 25.55,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 188.47,
+		"resolved": true,
+		"result": {
+			"duration": 31.6666666666661,
+			"enemy_remaining": 0.0448906002253963,
+			"hits": 74,
+			"player_remaining": 0.230668243424839,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.67,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 188.48,
+		"resolved": true,
+		"result": {
+			"duration": 33.2999999999994,
+			"enemy_remaining": 0.0449092643457426,
+			"hits": 67,
+			"player_remaining": 0.236659987844227,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 33.3,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.7999999999995,
+			"enemy_remaining": 0.0430677722542302,
+			"hits": 81,
+			"player_remaining": 0.11819538206591,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.8,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.4833333333329,
+			"enemy_remaining": 0.0447382718357418,
+			"hits": 82,
+			"player_remaining": 0.121730049005545,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.48,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 193.42,
+		"resolved": true,
+		"result": {
+			"duration": 32.1666666666661,
+			"enemy_remaining": 0.0447314080817694,
+			"hits": 77,
+			"player_remaining": 0.120082146974674,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.17,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.29,
+		"resolved": true,
+		"result": {
+			"duration": 30.6333333333329,
+			"enemy_remaining": 0.0448453728687104,
+			"hits": 76,
+			"player_remaining": 0.169788082621886,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.63,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.16,
+		"resolved": true,
+		"result": {
+			"duration": 29.7166666666663,
+			"enemy_remaining": 0.0442139636200091,
+			"hits": 84,
+			"player_remaining": 0.15034660200659,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.72,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "guard",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.16,
+		"resolved": true,
+		"result": {
+			"duration": 30.7999999999995,
+			"enemy_remaining": 0.044824383378759,
+			"hits": 82,
+			"player_remaining": 0.15204309574121,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.8,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 173.52,
+		"resolved": true,
+		"result": {
+			"duration": 31.3499999999995,
+			"enemy_remaining": 0.0415232147066012,
+			"hits": 68,
+			"player_remaining": 0.180736534805256,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.35,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 173.63,
+		"resolved": true,
+		"result": {
+			"duration": 31.5666666666662,
+			"enemy_remaining": 0.0448794757963884,
+			"hits": 62,
+			"player_remaining": 0.174259581599123,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.57,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 173.64,
+		"resolved": true,
+		"result": {
+			"duration": 32.1833333333328,
+			"enemy_remaining": 0.044505720148853,
+			"hits": 63,
+			"player_remaining": 0.176752512643866,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.18,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.7,
+		"resolved": true,
+		"result": {
+			"duration": 30.2833333333329,
+			"enemy_remaining": 0.0449332371626731,
+			"hits": 69,
+			"player_remaining": 0.1425026455685,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.28,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.8,
+		"resolved": true,
+		"result": {
+			"duration": 29.7833333333329,
+			"enemy_remaining": 0.044896868452304,
+			"hits": 76,
+			"player_remaining": 0.137668468668123,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.78,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 196.81,
+		"resolved": true,
+		"result": {
+			"duration": 31.1499999999995,
+			"enemy_remaining": 0.0448125846872273,
+			"hits": 66,
+			"player_remaining": 0.142078464855921,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.15,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.18,
+		"resolved": true,
+		"result": {
+			"duration": 29.7999999999996,
+			"enemy_remaining": 0.0641263570514428,
+			"hits": 70,
+			"player_remaining": 0.0446446600949978,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.8,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.24,
+		"resolved": true,
+		"result": {
+			"duration": 30.0166666666662,
+			"enemy_remaining": 0.0525532946650689,
+			"hits": 69,
+			"player_remaining": 0.0446924758482964,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.02,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 200.25,
+		"resolved": true,
+		"result": {
+			"duration": 29.9999999999996,
+			"enemy_remaining": 0.0587735766198933,
+			"hits": 68,
+			"player_remaining": 0.0448913212174414,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.0,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 201.62,
+		"resolved": true,
+		"result": {
+			"duration": 29.9333333333329,
+			"enemy_remaining": 0.0447925761804325,
+			"hits": 73,
+			"player_remaining": 0.0662362068598737,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.93,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 201.69,
+		"resolved": true,
+		"result": {
+			"duration": 30.0833333333329,
+			"enemy_remaining": 0.0448985983893323,
+			"hits": 69,
+			"player_remaining": 0.0727897824047687,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.08,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "low"
+		},
+		"finite": true,
+		"peak_speed": 201.69,
+		"resolved": true,
+		"result": {
+			"duration": 28.8499999999996,
+			"enemy_remaining": 0.0432728156658497,
+			"hits": 73,
+			"player_remaining": 0.0780482950888135,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 28.85,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 177.99,
+		"resolved": true,
+		"result": {
+			"duration": 32.1999999999995,
+			"enemy_remaining": 0.0449755983375426,
+			"hits": 66,
+			"player_remaining": 0.116688125966273,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.2,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 171.29,
+		"resolved": true,
+		"result": {
+			"duration": 31.3833333333328,
+			"enemy_remaining": 0.0429502873278165,
+			"hits": 66,
+			"player_remaining": 0.125060092980956,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.38,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 171.3,
+		"resolved": true,
+		"result": {
+			"duration": 32.6833333333328,
+			"enemy_remaining": 0.0449835590771039,
+			"hits": 64,
+			"player_remaining": 0.129666073097861,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.68,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.51,
+		"resolved": true,
+		"result": {
+			"duration": 32.2666666666661,
+			"enemy_remaining": 0.044852304681336,
+			"hits": 65,
+			"player_remaining": 0.0856577955912685,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.27,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.6,
+		"resolved": true,
+		"result": {
+			"duration": 30.7166666666662,
+			"enemy_remaining": 0.0449923779288917,
+			"hits": 67,
+			"player_remaining": 0.0890125992083172,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.72,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 194.61,
+		"resolved": true,
+		"result": {
+			"duration": 30.1333333333329,
+			"enemy_remaining": 0.0448603138680144,
+			"hits": 73,
+			"player_remaining": 0.0851611551470064,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.13,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.89,
+		"resolved": true,
+		"result": {
+			"duration": 29.0999999999996,
+			"enemy_remaining": 0.0994963378248142,
+			"hits": 65,
+			"player_remaining": 0.0443582720453749,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.1,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 29.0999999999996,
+			"enemy_remaining": 0.0894215431189773,
+			"hits": 67,
+			"player_remaining": 0.0420707971004878,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.1,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 28.6999999999997,
+			"enemy_remaining": 0.104717379163012,
+			"hits": 64,
+			"player_remaining": 0.0449447347824567,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.7,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 201.35,
+		"resolved": true,
+		"result": {
+			"duration": 30.1166666666662,
+			"enemy_remaining": 0.0635297402355162,
+			"hits": 67,
+			"player_remaining": 0.0446902622778152,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.12,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 201.41,
+		"resolved": true,
+		"result": {
+			"duration": 29.133333333333,
+			"enemy_remaining": 0.066317666322683,
+			"hits": 71,
+			"player_remaining": 0.0432091264091968,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 29.13,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "mid"
+		},
+		"finite": true,
+		"peak_speed": 201.42,
+		"resolved": true,
+		"result": {
+			"duration": 30.3166666666662,
+			"enemy_remaining": 0.059508182036673,
+			"hits": 67,
+			"player_remaining": 0.0425874557811738,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 30.32,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 172.06,
+		"resolved": true,
+		"result": {
+			"duration": 31.3166666666662,
+			"enemy_remaining": 0.0431754639929635,
+			"hits": 65,
+			"player_remaining": 0.106827679832732,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.32,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 171.29,
+		"resolved": true,
+		"result": {
+			"duration": 30.9666666666662,
+			"enemy_remaining": 0.0448555423814346,
+			"hits": 64,
+			"player_remaining": 0.101863874490809,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.97,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "needle",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 171.3,
+		"resolved": true,
+		"result": {
+			"duration": 32.2999999999995,
+			"enemy_remaining": 0.0447663256455892,
+			"hits": 58,
+			"player_remaining": 0.0960413026266136,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 32.3,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.51,
+		"resolved": true,
+		"result": {
+			"duration": 30.5999999999995,
+			"enemy_remaining": 0.0447122834992126,
+			"hits": 70,
+			"player_remaining": 0.0614958042788486,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 30.6,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.6,
+		"resolved": true,
+		"result": {
+			"duration": 29.7666666666663,
+			"enemy_remaining": 0.0447059559913235,
+			"hits": 71,
+			"player_remaining": 0.0592466733305503,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 29.77,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "ball",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 194.61,
+		"resolved": true,
+		"result": {
+			"duration": 31.6999999999995,
+			"enemy_remaining": 0.0448797470225224,
+			"hits": 63,
+			"player_remaining": 0.0644780202867109,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 0,
+			"won": true
+		},
+		"seconds": 31.7,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.89,
+		"resolved": true,
+		"result": {
+			"duration": 27.583333333333,
+			"enemy_remaining": 0.125532313229685,
+			"hits": 64,
+			"player_remaining": 0.0447265358016424,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.58,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 27.1333333333331,
+			"enemy_remaining": 0.123601520652463,
+			"hits": 62,
+			"player_remaining": 0.044710911813291,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.13,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "flat",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 199.95,
+		"resolved": true,
+		"result": {
+			"duration": 27.983333333333,
+			"enemy_remaining": 0.1132832877002,
+			"hits": 62,
+			"player_remaining": 0.0449929002093481,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.98,
+		"seed": 307
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.35,
+		"resolved": true,
+		"result": {
+			"duration": 28.1666666666663,
+			"enemy_remaining": 0.0892305888106187,
+			"hits": 67,
+			"player_remaining": 0.0447049573851974,
+			"reason": "spin_out",
+			"seed": 101,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.17,
+		"seed": 101
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.41,
+		"resolved": true,
+		"result": {
+			"duration": 28.0166666666664,
+			"enemy_remaining": 0.073690730500546,
+			"hits": 68,
+			"player_remaining": 0.0448776319126232,
+			"reason": "spin_out",
+			"seed": 211,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 28.02,
+		"seed": 211
+	},
+	{
+		"build": {
+			"bit": "rubber",
+			"blade": "hook",
+			"ratchet": "high"
+		},
+		"finite": true,
+		"peak_speed": 201.42,
+		"resolved": true,
+		"result": {
+			"duration": 27.7166666666664,
+			"enemy_remaining": 0.0802858880317043,
+			"hits": 70,
+			"player_remaining": 0.0448774794363944,
+			"reason": "spin_out",
+			"seed": 307,
+			"winner": 1,
+			"won": false
+		},
+		"seconds": 27.72,
+		"seed": 307
+	}
+]

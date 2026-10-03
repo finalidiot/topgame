@@ -1,0 +1,4070 @@
+{
+  "version": 1,
+  "name": "IRONLINE / starter top",
+  "canvas": {
+    "width": 48,
+    "height": 48,
+    "pivot": [
+      24,
+      40
+    ],
+    "blade_center": [
+      24,
+      26
+    ],
+    "bit_socket": [
+      24,
+      35
+    ]
+  },
+  "projection": {
+    "locked": true,
+    "world_plane_y_scale": 0.5,
+    "native_pixel_art": true
+  },
+  "layers": [
+    "shadow",
+    "bit",
+    "ratchet",
+    "blade",
+    "fx"
+  ],
+  "palette": {
+    "outline": "#10151f",
+    "dark": "#202b36",
+    "gunmetal": "#344451",
+    "slate": "#4c626e",
+    "steel": "#768e99",
+    "silver": "#abc0c7",
+    "light": "#e3e8dc",
+    "darkblue": "#16354b",
+    "blue": "#245c7b",
+    "accent": "#4595b5",
+    "oxide": "#a94c35",
+    "orange": "#df8740",
+    "gold": "#f3c36a"
+  },
+  "sheet": {
+    "columns": 12,
+    "rows": 11,
+    "cell_width": 48,
+    "cell_height": 48,
+    "order": "row-major"
+  },
+  "sheets": {
+    "shadow": "sheets/starter_shadow.png",
+    "bit": "sheets/starter_bit.png",
+    "ratchet": "sheets/starter_ratchet.png",
+    "blade": "sheets/starter_blade.png",
+    "fx": "sheets/starter_fx.png",
+    "composite": "sheets/starter_composite.png"
+  },
+  "frames": [
+    {
+      "index": 0,
+      "tag": "launch",
+      "local_frame": 0,
+      "duration_ms": 60,
+      "layers": {
+        "shadow": "cels/launch_00_shadow.png",
+        "bit": "cels/launch_00_bit.png",
+        "ratchet": "cels/launch_00_ratchet.png",
+        "blade": "cels/launch_00_blade.png",
+        "fx": "cels/launch_00_fx.png"
+      },
+      "composite": "cels/launch_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          -14
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 14,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 1,
+      "tag": "launch",
+      "local_frame": 1,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/launch_01_shadow.png",
+        "bit": "cels/launch_01_bit.png",
+        "ratchet": "cels/launch_01_ratchet.png",
+        "blade": "cels/launch_01_blade.png",
+        "fx": "cels/launch_01_fx.png"
+      },
+      "composite": "cels/launch_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          0,
+          -7
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 7,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 2,
+      "tag": "launch",
+      "local_frame": 2,
+      "duration_ms": 45,
+      "layers": {
+        "shadow": "cels/launch_02_shadow.png",
+        "bit": "cels/launch_02_bit.png",
+        "ratchet": "cels/launch_02_ratchet.png",
+        "blade": "cels/launch_02_blade.png",
+        "fx": "cels/launch_02_fx.png"
+      },
+      "composite": "cels/launch_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          2
+        ],
+        "lean_screen": [
+          0,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 3,
+      "tag": "launch",
+      "local_frame": 3,
+      "duration_ms": 60,
+      "layers": {
+        "shadow": "cels/launch_03_shadow.png",
+        "bit": "cels/launch_03_bit.png",
+        "ratchet": "cels/launch_03_ratchet.png",
+        "blade": "cels/launch_03_blade.png",
+        "fx": "cels/launch_03_fx.png"
+      },
+      "composite": "cels/launch_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          0,
+          -2
+        ],
+        "lean_screen": [
+          0,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 4,
+      "tag": "launch",
+      "local_frame": 4,
+      "duration_ms": 55,
+      "layers": {
+        "shadow": "cels/launch_04_shadow.png",
+        "bit": "cels/launch_04_bit.png",
+        "ratchet": "cels/launch_04_ratchet.png",
+        "blade": "cels/launch_04_blade.png",
+        "fx": "cels/launch_04_fx.png"
+      },
+      "composite": "cels/launch_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 5,
+      "tag": "launch",
+      "local_frame": 5,
+      "duration_ms": 65,
+      "layers": {
+        "shadow": "cels/launch_05_shadow.png",
+        "bit": "cels/launch_05_bit.png",
+        "ratchet": "cels/launch_05_ratchet.png",
+        "blade": "cels/launch_05_blade.png",
+        "fx": "cels/launch_05_fx.png"
+      },
+      "composite": "cels/launch_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 6,
+      "tag": "low_rpm",
+      "local_frame": 0,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_00_shadow.png",
+        "bit": "cels/low_rpm_00_bit.png",
+        "ratchet": "cels/low_rpm_00_ratchet.png",
+        "blade": "cels/low_rpm_00_blade.png",
+        "fx": "cels/low_rpm_00_fx.png"
+      },
+      "composite": "cels/low_rpm_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 7,
+      "tag": "low_rpm",
+      "local_frame": 1,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_01_shadow.png",
+        "bit": "cels/low_rpm_01_bit.png",
+        "ratchet": "cels/low_rpm_01_ratchet.png",
+        "blade": "cels/low_rpm_01_blade.png",
+        "fx": "cels/low_rpm_01_fx.png"
+      },
+      "composite": "cels/low_rpm_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 8,
+      "tag": "low_rpm",
+      "local_frame": 2,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_02_shadow.png",
+        "bit": "cels/low_rpm_02_bit.png",
+        "ratchet": "cels/low_rpm_02_ratchet.png",
+        "blade": "cels/low_rpm_02_blade.png",
+        "fx": "cels/low_rpm_02_fx.png"
+      },
+      "composite": "cels/low_rpm_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 9,
+      "tag": "low_rpm",
+      "local_frame": 3,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_03_shadow.png",
+        "bit": "cels/low_rpm_03_bit.png",
+        "ratchet": "cels/low_rpm_03_ratchet.png",
+        "blade": "cels/low_rpm_03_blade.png",
+        "fx": "cels/low_rpm_03_fx.png"
+      },
+      "composite": "cels/low_rpm_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 10,
+      "tag": "low_rpm",
+      "local_frame": 4,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_04_shadow.png",
+        "bit": "cels/low_rpm_04_bit.png",
+        "ratchet": "cels/low_rpm_04_ratchet.png",
+        "blade": "cels/low_rpm_04_blade.png",
+        "fx": "cels/low_rpm_04_fx.png"
+      },
+      "composite": "cels/low_rpm_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 11,
+      "tag": "low_rpm",
+      "local_frame": 5,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_05_shadow.png",
+        "bit": "cels/low_rpm_05_bit.png",
+        "ratchet": "cels/low_rpm_05_ratchet.png",
+        "blade": "cels/low_rpm_05_blade.png",
+        "fx": "cels/low_rpm_05_fx.png"
+      },
+      "composite": "cels/low_rpm_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 12,
+      "tag": "low_rpm",
+      "local_frame": 6,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_06_shadow.png",
+        "bit": "cels/low_rpm_06_bit.png",
+        "ratchet": "cels/low_rpm_06_ratchet.png",
+        "blade": "cels/low_rpm_06_blade.png",
+        "fx": "cels/low_rpm_06_fx.png"
+      },
+      "composite": "cels/low_rpm_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 13,
+      "tag": "low_rpm",
+      "local_frame": 7,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/low_rpm_07_shadow.png",
+        "bit": "cels/low_rpm_07_bit.png",
+        "ratchet": "cels/low_rpm_07_ratchet.png",
+        "blade": "cels/low_rpm_07_blade.png",
+        "fx": "cels/low_rpm_07_fx.png"
+      },
+      "composite": "cels/low_rpm_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 14,
+      "tag": "normal_rpm",
+      "local_frame": 0,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_00_shadow.png",
+        "bit": "cels/normal_rpm_00_bit.png",
+        "ratchet": "cels/normal_rpm_00_ratchet.png",
+        "blade": "cels/normal_rpm_00_blade.png",
+        "fx": "cels/normal_rpm_00_fx.png"
+      },
+      "composite": "cels/normal_rpm_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 15,
+      "tag": "normal_rpm",
+      "local_frame": 1,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_01_shadow.png",
+        "bit": "cels/normal_rpm_01_bit.png",
+        "ratchet": "cels/normal_rpm_01_ratchet.png",
+        "blade": "cels/normal_rpm_01_blade.png",
+        "fx": "cels/normal_rpm_01_fx.png"
+      },
+      "composite": "cels/normal_rpm_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 16,
+      "tag": "normal_rpm",
+      "local_frame": 2,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_02_shadow.png",
+        "bit": "cels/normal_rpm_02_bit.png",
+        "ratchet": "cels/normal_rpm_02_ratchet.png",
+        "blade": "cels/normal_rpm_02_blade.png",
+        "fx": "cels/normal_rpm_02_fx.png"
+      },
+      "composite": "cels/normal_rpm_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 17,
+      "tag": "normal_rpm",
+      "local_frame": 3,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_03_shadow.png",
+        "bit": "cels/normal_rpm_03_bit.png",
+        "ratchet": "cels/normal_rpm_03_ratchet.png",
+        "blade": "cels/normal_rpm_03_blade.png",
+        "fx": "cels/normal_rpm_03_fx.png"
+      },
+      "composite": "cels/normal_rpm_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 18,
+      "tag": "normal_rpm",
+      "local_frame": 4,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_04_shadow.png",
+        "bit": "cels/normal_rpm_04_bit.png",
+        "ratchet": "cels/normal_rpm_04_ratchet.png",
+        "blade": "cels/normal_rpm_04_blade.png",
+        "fx": "cels/normal_rpm_04_fx.png"
+      },
+      "composite": "cels/normal_rpm_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 19,
+      "tag": "normal_rpm",
+      "local_frame": 5,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_05_shadow.png",
+        "bit": "cels/normal_rpm_05_bit.png",
+        "ratchet": "cels/normal_rpm_05_ratchet.png",
+        "blade": "cels/normal_rpm_05_blade.png",
+        "fx": "cels/normal_rpm_05_fx.png"
+      },
+      "composite": "cels/normal_rpm_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 20,
+      "tag": "normal_rpm",
+      "local_frame": 6,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_06_shadow.png",
+        "bit": "cels/normal_rpm_06_bit.png",
+        "ratchet": "cels/normal_rpm_06_ratchet.png",
+        "blade": "cels/normal_rpm_06_blade.png",
+        "fx": "cels/normal_rpm_06_fx.png"
+      },
+      "composite": "cels/normal_rpm_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 21,
+      "tag": "normal_rpm",
+      "local_frame": 7,
+      "duration_ms": 80,
+      "layers": {
+        "shadow": "cels/normal_rpm_07_shadow.png",
+        "bit": "cels/normal_rpm_07_bit.png",
+        "ratchet": "cels/normal_rpm_07_ratchet.png",
+        "blade": "cels/normal_rpm_07_blade.png",
+        "fx": "cels/normal_rpm_07_fx.png"
+      },
+      "composite": "cels/normal_rpm_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 22,
+      "tag": "high_rpm",
+      "local_frame": 0,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_00_shadow.png",
+        "bit": "cels/high_rpm_00_bit.png",
+        "ratchet": "cels/high_rpm_00_ratchet.png",
+        "blade": "cels/high_rpm_00_blade.png",
+        "fx": "cels/high_rpm_00_fx.png"
+      },
+      "composite": "cels/high_rpm_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 23,
+      "tag": "high_rpm",
+      "local_frame": 1,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_01_shadow.png",
+        "bit": "cels/high_rpm_01_bit.png",
+        "ratchet": "cels/high_rpm_01_ratchet.png",
+        "blade": "cels/high_rpm_01_blade.png",
+        "fx": "cels/high_rpm_01_fx.png"
+      },
+      "composite": "cels/high_rpm_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 24,
+      "tag": "high_rpm",
+      "local_frame": 2,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_02_shadow.png",
+        "bit": "cels/high_rpm_02_bit.png",
+        "ratchet": "cels/high_rpm_02_ratchet.png",
+        "blade": "cels/high_rpm_02_blade.png",
+        "fx": "cels/high_rpm_02_fx.png"
+      },
+      "composite": "cels/high_rpm_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 25,
+      "tag": "high_rpm",
+      "local_frame": 3,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_03_shadow.png",
+        "bit": "cels/high_rpm_03_bit.png",
+        "ratchet": "cels/high_rpm_03_ratchet.png",
+        "blade": "cels/high_rpm_03_blade.png",
+        "fx": "cels/high_rpm_03_fx.png"
+      },
+      "composite": "cels/high_rpm_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 26,
+      "tag": "high_rpm",
+      "local_frame": 4,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_04_shadow.png",
+        "bit": "cels/high_rpm_04_bit.png",
+        "ratchet": "cels/high_rpm_04_ratchet.png",
+        "blade": "cels/high_rpm_04_blade.png",
+        "fx": "cels/high_rpm_04_fx.png"
+      },
+      "composite": "cels/high_rpm_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 27,
+      "tag": "high_rpm",
+      "local_frame": 5,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_05_shadow.png",
+        "bit": "cels/high_rpm_05_bit.png",
+        "ratchet": "cels/high_rpm_05_ratchet.png",
+        "blade": "cels/high_rpm_05_blade.png",
+        "fx": "cels/high_rpm_05_fx.png"
+      },
+      "composite": "cels/high_rpm_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 28,
+      "tag": "high_rpm",
+      "local_frame": 6,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_06_shadow.png",
+        "bit": "cels/high_rpm_06_bit.png",
+        "ratchet": "cels/high_rpm_06_ratchet.png",
+        "blade": "cels/high_rpm_06_blade.png",
+        "fx": "cels/high_rpm_06_fx.png"
+      },
+      "composite": "cels/high_rpm_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 29,
+      "tag": "high_rpm",
+      "local_frame": 7,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/high_rpm_07_shadow.png",
+        "bit": "cels/high_rpm_07_bit.png",
+        "ratchet": "cels/high_rpm_07_ratchet.png",
+        "blade": "cels/high_rpm_07_blade.png",
+        "fx": "cels/high_rpm_07_fx.png"
+      },
+      "composite": "cels/high_rpm_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 30,
+      "tag": "overspin",
+      "local_frame": 0,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_00_shadow.png",
+        "bit": "cels/overspin_00_bit.png",
+        "ratchet": "cels/overspin_00_ratchet.png",
+        "blade": "cels/overspin_00_blade.png",
+        "fx": "cels/overspin_00_fx.png"
+      },
+      "composite": "cels/overspin_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          1,
+          0
+        ],
+        "lean_screen": [
+          1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 31,
+      "tag": "overspin",
+      "local_frame": 1,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_01_shadow.png",
+        "bit": "cels/overspin_01_bit.png",
+        "ratchet": "cels/overspin_01_ratchet.png",
+        "blade": "cels/overspin_01_blade.png",
+        "fx": "cels/overspin_01_fx.png"
+      },
+      "composite": "cels/overspin_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 32,
+      "tag": "overspin",
+      "local_frame": 2,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_02_shadow.png",
+        "bit": "cels/overspin_02_bit.png",
+        "ratchet": "cels/overspin_02_ratchet.png",
+        "blade": "cels/overspin_02_blade.png",
+        "fx": "cels/overspin_02_fx.png"
+      },
+      "composite": "cels/overspin_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          1,
+          0
+        ],
+        "lean_screen": [
+          1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 33,
+      "tag": "overspin",
+      "local_frame": 3,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_03_shadow.png",
+        "bit": "cels/overspin_03_bit.png",
+        "ratchet": "cels/overspin_03_ratchet.png",
+        "blade": "cels/overspin_03_blade.png",
+        "fx": "cels/overspin_03_fx.png"
+      },
+      "composite": "cels/overspin_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 34,
+      "tag": "overspin",
+      "local_frame": 4,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_04_shadow.png",
+        "bit": "cels/overspin_04_bit.png",
+        "ratchet": "cels/overspin_04_ratchet.png",
+        "blade": "cels/overspin_04_blade.png",
+        "fx": "cels/overspin_04_fx.png"
+      },
+      "composite": "cels/overspin_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          1,
+          0
+        ],
+        "lean_screen": [
+          1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 35,
+      "tag": "overspin",
+      "local_frame": 5,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_05_shadow.png",
+        "bit": "cels/overspin_05_bit.png",
+        "ratchet": "cels/overspin_05_ratchet.png",
+        "blade": "cels/overspin_05_blade.png",
+        "fx": "cels/overspin_05_fx.png"
+      },
+      "composite": "cels/overspin_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 36,
+      "tag": "overspin",
+      "local_frame": 6,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_06_shadow.png",
+        "bit": "cels/overspin_06_bit.png",
+        "ratchet": "cels/overspin_06_ratchet.png",
+        "blade": "cels/overspin_06_blade.png",
+        "fx": "cels/overspin_06_fx.png"
+      },
+      "composite": "cels/overspin_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          1,
+          0
+        ],
+        "lean_screen": [
+          1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 37,
+      "tag": "overspin",
+      "local_frame": 7,
+      "duration_ms": 40,
+      "layers": {
+        "shadow": "cels/overspin_07_shadow.png",
+        "bit": "cels/overspin_07_bit.png",
+        "ratchet": "cels/overspin_07_ratchet.png",
+        "blade": "cels/overspin_07_blade.png",
+        "fx": "cels/overspin_07_fx.png"
+      },
+      "composite": "cels/overspin_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 38,
+      "tag": "lean_n",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_n_00_shadow.png",
+        "bit": "cels/lean_n_00_bit.png",
+        "ratchet": "cels/lean_n_00_ratchet.png",
+        "blade": "cels/lean_n_00_blade.png",
+        "fx": "cels/lean_n_00_fx.png"
+      },
+      "composite": "cels/lean_n_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          -3
+        ],
+        "lean_screen": [
+          0,
+          -3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 39,
+      "tag": "lean_n",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_n_01_shadow.png",
+        "bit": "cels/lean_n_01_bit.png",
+        "ratchet": "cels/lean_n_01_ratchet.png",
+        "blade": "cels/lean_n_01_blade.png",
+        "fx": "cels/lean_n_01_fx.png"
+      },
+      "composite": "cels/lean_n_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          -3
+        ],
+        "lean_screen": [
+          0,
+          -3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 40,
+      "tag": "lean_n",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_n_02_shadow.png",
+        "bit": "cels/lean_n_02_bit.png",
+        "ratchet": "cels/lean_n_02_ratchet.png",
+        "blade": "cels/lean_n_02_blade.png",
+        "fx": "cels/lean_n_02_fx.png"
+      },
+      "composite": "cels/lean_n_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          0,
+          -3
+        ],
+        "lean_screen": [
+          0,
+          -3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 41,
+      "tag": "lean_n",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_n_03_shadow.png",
+        "bit": "cels/lean_n_03_bit.png",
+        "ratchet": "cels/lean_n_03_ratchet.png",
+        "blade": "cels/lean_n_03_blade.png",
+        "fx": "cels/lean_n_03_fx.png"
+      },
+      "composite": "cels/lean_n_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          -3
+        ],
+        "lean_screen": [
+          0,
+          -3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 42,
+      "tag": "lean_ne",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_ne_00_shadow.png",
+        "bit": "cels/lean_ne_00_bit.png",
+        "ratchet": "cels/lean_ne_00_ratchet.png",
+        "blade": "cels/lean_ne_00_blade.png",
+        "fx": "cels/lean_ne_00_fx.png"
+      },
+      "composite": "cels/lean_ne_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          3,
+          -2
+        ],
+        "lean_screen": [
+          3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 43,
+      "tag": "lean_ne",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_ne_01_shadow.png",
+        "bit": "cels/lean_ne_01_bit.png",
+        "ratchet": "cels/lean_ne_01_ratchet.png",
+        "blade": "cels/lean_ne_01_blade.png",
+        "fx": "cels/lean_ne_01_fx.png"
+      },
+      "composite": "cels/lean_ne_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          3,
+          -2
+        ],
+        "lean_screen": [
+          3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 44,
+      "tag": "lean_ne",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_ne_02_shadow.png",
+        "bit": "cels/lean_ne_02_bit.png",
+        "ratchet": "cels/lean_ne_02_ratchet.png",
+        "blade": "cels/lean_ne_02_blade.png",
+        "fx": "cels/lean_ne_02_fx.png"
+      },
+      "composite": "cels/lean_ne_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          3,
+          -2
+        ],
+        "lean_screen": [
+          3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 45,
+      "tag": "lean_ne",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_ne_03_shadow.png",
+        "bit": "cels/lean_ne_03_bit.png",
+        "ratchet": "cels/lean_ne_03_ratchet.png",
+        "blade": "cels/lean_ne_03_blade.png",
+        "fx": "cels/lean_ne_03_fx.png"
+      },
+      "composite": "cels/lean_ne_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          3,
+          -2
+        ],
+        "lean_screen": [
+          3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 46,
+      "tag": "lean_e",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_e_00_shadow.png",
+        "bit": "cels/lean_e_00_bit.png",
+        "ratchet": "cels/lean_e_00_ratchet.png",
+        "blade": "cels/lean_e_00_blade.png",
+        "fx": "cels/lean_e_00_fx.png"
+      },
+      "composite": "cels/lean_e_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          4,
+          0
+        ],
+        "lean_screen": [
+          4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 47,
+      "tag": "lean_e",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_e_01_shadow.png",
+        "bit": "cels/lean_e_01_bit.png",
+        "ratchet": "cels/lean_e_01_ratchet.png",
+        "blade": "cels/lean_e_01_blade.png",
+        "fx": "cels/lean_e_01_fx.png"
+      },
+      "composite": "cels/lean_e_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          4,
+          0
+        ],
+        "lean_screen": [
+          4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 48,
+      "tag": "lean_e",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_e_02_shadow.png",
+        "bit": "cels/lean_e_02_bit.png",
+        "ratchet": "cels/lean_e_02_ratchet.png",
+        "blade": "cels/lean_e_02_blade.png",
+        "fx": "cels/lean_e_02_fx.png"
+      },
+      "composite": "cels/lean_e_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          4,
+          0
+        ],
+        "lean_screen": [
+          4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 49,
+      "tag": "lean_e",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_e_03_shadow.png",
+        "bit": "cels/lean_e_03_bit.png",
+        "ratchet": "cels/lean_e_03_ratchet.png",
+        "blade": "cels/lean_e_03_blade.png",
+        "fx": "cels/lean_e_03_fx.png"
+      },
+      "composite": "cels/lean_e_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          4,
+          0
+        ],
+        "lean_screen": [
+          4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 50,
+      "tag": "lean_se",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_se_00_shadow.png",
+        "bit": "cels/lean_se_00_bit.png",
+        "ratchet": "cels/lean_se_00_ratchet.png",
+        "blade": "cels/lean_se_00_blade.png",
+        "fx": "cels/lean_se_00_fx.png"
+      },
+      "composite": "cels/lean_se_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          3,
+          2
+        ],
+        "lean_screen": [
+          3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 51,
+      "tag": "lean_se",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_se_01_shadow.png",
+        "bit": "cels/lean_se_01_bit.png",
+        "ratchet": "cels/lean_se_01_ratchet.png",
+        "blade": "cels/lean_se_01_blade.png",
+        "fx": "cels/lean_se_01_fx.png"
+      },
+      "composite": "cels/lean_se_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          3,
+          2
+        ],
+        "lean_screen": [
+          3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 52,
+      "tag": "lean_se",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_se_02_shadow.png",
+        "bit": "cels/lean_se_02_bit.png",
+        "ratchet": "cels/lean_se_02_ratchet.png",
+        "blade": "cels/lean_se_02_blade.png",
+        "fx": "cels/lean_se_02_fx.png"
+      },
+      "composite": "cels/lean_se_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          3,
+          2
+        ],
+        "lean_screen": [
+          3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 53,
+      "tag": "lean_se",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_se_03_shadow.png",
+        "bit": "cels/lean_se_03_bit.png",
+        "ratchet": "cels/lean_se_03_ratchet.png",
+        "blade": "cels/lean_se_03_blade.png",
+        "fx": "cels/lean_se_03_fx.png"
+      },
+      "composite": "cels/lean_se_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          3,
+          2
+        ],
+        "lean_screen": [
+          3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 54,
+      "tag": "lean_s",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_s_00_shadow.png",
+        "bit": "cels/lean_s_00_bit.png",
+        "ratchet": "cels/lean_s_00_ratchet.png",
+        "blade": "cels/lean_s_00_blade.png",
+        "fx": "cels/lean_s_00_fx.png"
+      },
+      "composite": "cels/lean_s_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          3
+        ],
+        "lean_screen": [
+          0,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 55,
+      "tag": "lean_s",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_s_01_shadow.png",
+        "bit": "cels/lean_s_01_bit.png",
+        "ratchet": "cels/lean_s_01_ratchet.png",
+        "blade": "cels/lean_s_01_blade.png",
+        "fx": "cels/lean_s_01_fx.png"
+      },
+      "composite": "cels/lean_s_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          3
+        ],
+        "lean_screen": [
+          0,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 56,
+      "tag": "lean_s",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_s_02_shadow.png",
+        "bit": "cels/lean_s_02_bit.png",
+        "ratchet": "cels/lean_s_02_ratchet.png",
+        "blade": "cels/lean_s_02_blade.png",
+        "fx": "cels/lean_s_02_fx.png"
+      },
+      "composite": "cels/lean_s_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          0,
+          3
+        ],
+        "lean_screen": [
+          0,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 57,
+      "tag": "lean_s",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_s_03_shadow.png",
+        "bit": "cels/lean_s_03_bit.png",
+        "ratchet": "cels/lean_s_03_ratchet.png",
+        "blade": "cels/lean_s_03_blade.png",
+        "fx": "cels/lean_s_03_fx.png"
+      },
+      "composite": "cels/lean_s_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          3
+        ],
+        "lean_screen": [
+          0,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 58,
+      "tag": "lean_sw",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_sw_00_shadow.png",
+        "bit": "cels/lean_sw_00_bit.png",
+        "ratchet": "cels/lean_sw_00_ratchet.png",
+        "blade": "cels/lean_sw_00_blade.png",
+        "fx": "cels/lean_sw_00_fx.png"
+      },
+      "composite": "cels/lean_sw_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -3,
+          2
+        ],
+        "lean_screen": [
+          -3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 59,
+      "tag": "lean_sw",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_sw_01_shadow.png",
+        "bit": "cels/lean_sw_01_bit.png",
+        "ratchet": "cels/lean_sw_01_ratchet.png",
+        "blade": "cels/lean_sw_01_blade.png",
+        "fx": "cels/lean_sw_01_fx.png"
+      },
+      "composite": "cels/lean_sw_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          -3,
+          2
+        ],
+        "lean_screen": [
+          -3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 60,
+      "tag": "lean_sw",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_sw_02_shadow.png",
+        "bit": "cels/lean_sw_02_bit.png",
+        "ratchet": "cels/lean_sw_02_ratchet.png",
+        "blade": "cels/lean_sw_02_blade.png",
+        "fx": "cels/lean_sw_02_fx.png"
+      },
+      "composite": "cels/lean_sw_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -3,
+          2
+        ],
+        "lean_screen": [
+          -3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 61,
+      "tag": "lean_sw",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_sw_03_shadow.png",
+        "bit": "cels/lean_sw_03_bit.png",
+        "ratchet": "cels/lean_sw_03_ratchet.png",
+        "blade": "cels/lean_sw_03_blade.png",
+        "fx": "cels/lean_sw_03_fx.png"
+      },
+      "composite": "cels/lean_sw_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          -3,
+          2
+        ],
+        "lean_screen": [
+          -3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 62,
+      "tag": "lean_w",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_w_00_shadow.png",
+        "bit": "cels/lean_w_00_bit.png",
+        "ratchet": "cels/lean_w_00_ratchet.png",
+        "blade": "cels/lean_w_00_blade.png",
+        "fx": "cels/lean_w_00_fx.png"
+      },
+      "composite": "cels/lean_w_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -4,
+          0
+        ],
+        "lean_screen": [
+          -4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 63,
+      "tag": "lean_w",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_w_01_shadow.png",
+        "bit": "cels/lean_w_01_bit.png",
+        "ratchet": "cels/lean_w_01_ratchet.png",
+        "blade": "cels/lean_w_01_blade.png",
+        "fx": "cels/lean_w_01_fx.png"
+      },
+      "composite": "cels/lean_w_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          -4,
+          0
+        ],
+        "lean_screen": [
+          -4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 64,
+      "tag": "lean_w",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_w_02_shadow.png",
+        "bit": "cels/lean_w_02_bit.png",
+        "ratchet": "cels/lean_w_02_ratchet.png",
+        "blade": "cels/lean_w_02_blade.png",
+        "fx": "cels/lean_w_02_fx.png"
+      },
+      "composite": "cels/lean_w_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -4,
+          0
+        ],
+        "lean_screen": [
+          -4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 65,
+      "tag": "lean_w",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_w_03_shadow.png",
+        "bit": "cels/lean_w_03_bit.png",
+        "ratchet": "cels/lean_w_03_ratchet.png",
+        "blade": "cels/lean_w_03_blade.png",
+        "fx": "cels/lean_w_03_fx.png"
+      },
+      "composite": "cels/lean_w_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          -4,
+          0
+        ],
+        "lean_screen": [
+          -4,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 66,
+      "tag": "lean_nw",
+      "local_frame": 0,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_nw_00_shadow.png",
+        "bit": "cels/lean_nw_00_bit.png",
+        "ratchet": "cels/lean_nw_00_ratchet.png",
+        "blade": "cels/lean_nw_00_blade.png",
+        "fx": "cels/lean_nw_00_fx.png"
+      },
+      "composite": "cels/lean_nw_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -3,
+          -2
+        ],
+        "lean_screen": [
+          -3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 67,
+      "tag": "lean_nw",
+      "local_frame": 1,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_nw_01_shadow.png",
+        "bit": "cels/lean_nw_01_bit.png",
+        "ratchet": "cels/lean_nw_01_ratchet.png",
+        "blade": "cels/lean_nw_01_blade.png",
+        "fx": "cels/lean_nw_01_fx.png"
+      },
+      "composite": "cels/lean_nw_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          -3,
+          -2
+        ],
+        "lean_screen": [
+          -3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 68,
+      "tag": "lean_nw",
+      "local_frame": 2,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_nw_02_shadow.png",
+        "bit": "cels/lean_nw_02_bit.png",
+        "ratchet": "cels/lean_nw_02_ratchet.png",
+        "blade": "cels/lean_nw_02_blade.png",
+        "fx": "cels/lean_nw_02_fx.png"
+      },
+      "composite": "cels/lean_nw_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -3,
+          -2
+        ],
+        "lean_screen": [
+          -3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 69,
+      "tag": "lean_nw",
+      "local_frame": 3,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/lean_nw_03_shadow.png",
+        "bit": "cels/lean_nw_03_bit.png",
+        "ratchet": "cels/lean_nw_03_ratchet.png",
+        "blade": "cels/lean_nw_03_blade.png",
+        "fx": "cels/lean_nw_03_fx.png"
+      },
+      "composite": "cels/lean_nw_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          -3,
+          -2
+        ],
+        "lean_screen": [
+          -3,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 70,
+      "tag": "light_impact",
+      "local_frame": 0,
+      "duration_ms": 35,
+      "layers": {
+        "shadow": "cels/light_impact_00_shadow.png",
+        "bit": "cels/light_impact_00_bit.png",
+        "ratchet": "cels/light_impact_00_ratchet.png",
+        "blade": "cels/light_impact_00_blade.png",
+        "fx": "cels/light_impact_00_fx.png"
+      },
+      "composite": "cels/light_impact_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 71,
+      "tag": "light_impact",
+      "local_frame": 1,
+      "duration_ms": 45,
+      "layers": {
+        "shadow": "cels/light_impact_01_shadow.png",
+        "bit": "cels/light_impact_01_bit.png",
+        "ratchet": "cels/light_impact_01_ratchet.png",
+        "blade": "cels/light_impact_01_blade.png",
+        "fx": "cels/light_impact_01_fx.png"
+      },
+      "composite": "cels/light_impact_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -2,
+          0
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 72,
+      "tag": "light_impact",
+      "local_frame": 2,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/light_impact_02_shadow.png",
+        "bit": "cels/light_impact_02_bit.png",
+        "ratchet": "cels/light_impact_02_ratchet.png",
+        "blade": "cels/light_impact_02_blade.png",
+        "fx": "cels/light_impact_02_fx.png"
+      },
+      "composite": "cels/light_impact_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          -4,
+          -1
+        ],
+        "lean_screen": [
+          -4,
+          -1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 73,
+      "tag": "light_impact",
+      "local_frame": 3,
+      "duration_ms": 65,
+      "layers": {
+        "shadow": "cels/light_impact_03_shadow.png",
+        "bit": "cels/light_impact_03_bit.png",
+        "ratchet": "cels/light_impact_03_ratchet.png",
+        "blade": "cels/light_impact_03_blade.png",
+        "fx": "cels/light_impact_03_fx.png"
+      },
+      "composite": "cels/light_impact_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -2,
+          0
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 74,
+      "tag": "light_impact",
+      "local_frame": 4,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/light_impact_04_shadow.png",
+        "bit": "cels/light_impact_04_bit.png",
+        "ratchet": "cels/light_impact_04_ratchet.png",
+        "blade": "cels/light_impact_04_blade.png",
+        "fx": "cels/light_impact_04_fx.png"
+      },
+      "composite": "cels/light_impact_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 75,
+      "tag": "heavy_impact",
+      "local_frame": 0,
+      "duration_ms": 30,
+      "layers": {
+        "shadow": "cels/heavy_impact_00_shadow.png",
+        "bit": "cels/heavy_impact_00_bit.png",
+        "ratchet": "cels/heavy_impact_00_ratchet.png",
+        "blade": "cels/heavy_impact_00_blade.png",
+        "fx": "cels/heavy_impact_00_fx.png"
+      },
+      "composite": "cels/heavy_impact_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -1,
+          0
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 76,
+      "tag": "heavy_impact",
+      "local_frame": 1,
+      "duration_ms": 35,
+      "layers": {
+        "shadow": "cels/heavy_impact_01_shadow.png",
+        "bit": "cels/heavy_impact_01_bit.png",
+        "ratchet": "cels/heavy_impact_01_ratchet.png",
+        "blade": "cels/heavy_impact_01_blade.png",
+        "fx": "cels/heavy_impact_01_fx.png"
+      },
+      "composite": "cels/heavy_impact_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          -2,
+          0
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 77,
+      "tag": "heavy_impact",
+      "local_frame": 2,
+      "duration_ms": 45,
+      "layers": {
+        "shadow": "cels/heavy_impact_02_shadow.png",
+        "bit": "cels/heavy_impact_02_bit.png",
+        "ratchet": "cels/heavy_impact_02_ratchet.png",
+        "blade": "cels/heavy_impact_02_blade.png",
+        "fx": "cels/heavy_impact_02_fx.png"
+      },
+      "composite": "cels/heavy_impact_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          -4,
+          1
+        ],
+        "lean_screen": [
+          -4,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 78,
+      "tag": "heavy_impact",
+      "local_frame": 3,
+      "duration_ms": 50,
+      "layers": {
+        "shadow": "cels/heavy_impact_03_shadow.png",
+        "bit": "cels/heavy_impact_03_bit.png",
+        "ratchet": "cels/heavy_impact_03_ratchet.png",
+        "blade": "cels/heavy_impact_03_blade.png",
+        "fx": "cels/heavy_impact_03_fx.png"
+      },
+      "composite": "cels/heavy_impact_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -4,
+          -7
+        ],
+        "lean_screen": [
+          -4,
+          -5
+        ],
+        "elevation_px": 2,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 79,
+      "tag": "heavy_impact",
+      "local_frame": 4,
+      "duration_ms": 65,
+      "layers": {
+        "shadow": "cels/heavy_impact_04_shadow.png",
+        "bit": "cels/heavy_impact_04_bit.png",
+        "ratchet": "cels/heavy_impact_04_ratchet.png",
+        "blade": "cels/heavy_impact_04_blade.png",
+        "fx": "cels/heavy_impact_04_fx.png"
+      },
+      "composite": "cels/heavy_impact_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          -3,
+          -3
+        ],
+        "lean_screen": [
+          -3,
+          -2
+        ],
+        "elevation_px": 1,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 80,
+      "tag": "heavy_impact",
+      "local_frame": 5,
+      "duration_ms": 75,
+      "layers": {
+        "shadow": "cels/heavy_impact_05_shadow.png",
+        "bit": "cels/heavy_impact_05_bit.png",
+        "ratchet": "cels/heavy_impact_05_ratchet.png",
+        "blade": "cels/heavy_impact_05_blade.png",
+        "fx": "cels/heavy_impact_05_fx.png"
+      },
+      "composite": "cels/heavy_impact_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          1,
+          1
+        ],
+        "lean_screen": [
+          1,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 81,
+      "tag": "heavy_impact",
+      "local_frame": 6,
+      "duration_ms": 90,
+      "layers": {
+        "shadow": "cels/heavy_impact_06_shadow.png",
+        "bit": "cels/heavy_impact_06_bit.png",
+        "ratchet": "cels/heavy_impact_06_ratchet.png",
+        "blade": "cels/heavy_impact_06_blade.png",
+        "fx": "cels/heavy_impact_06_fx.png"
+      },
+      "composite": "cels/heavy_impact_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 82,
+      "tag": "light_wobble",
+      "local_frame": 0,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_00_shadow.png",
+        "bit": "cels/light_wobble_00_bit.png",
+        "ratchet": "cels/light_wobble_00_ratchet.png",
+        "blade": "cels/light_wobble_00_blade.png",
+        "fx": "cels/light_wobble_00_fx.png"
+      },
+      "composite": "cels/light_wobble_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          2,
+          0
+        ],
+        "lean_screen": [
+          2,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 83,
+      "tag": "light_wobble",
+      "local_frame": 1,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_01_shadow.png",
+        "bit": "cels/light_wobble_01_bit.png",
+        "ratchet": "cels/light_wobble_01_ratchet.png",
+        "blade": "cels/light_wobble_01_blade.png",
+        "fx": "cels/light_wobble_01_fx.png"
+      },
+      "composite": "cels/light_wobble_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          1,
+          1
+        ],
+        "lean_screen": [
+          1,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 84,
+      "tag": "light_wobble",
+      "local_frame": 2,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_02_shadow.png",
+        "bit": "cels/light_wobble_02_bit.png",
+        "ratchet": "cels/light_wobble_02_ratchet.png",
+        "blade": "cels/light_wobble_02_blade.png",
+        "fx": "cels/light_wobble_02_fx.png"
+      },
+      "composite": "cels/light_wobble_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          1
+        ],
+        "lean_screen": [
+          0,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 85,
+      "tag": "light_wobble",
+      "local_frame": 3,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_03_shadow.png",
+        "bit": "cels/light_wobble_03_bit.png",
+        "ratchet": "cels/light_wobble_03_ratchet.png",
+        "blade": "cels/light_wobble_03_blade.png",
+        "fx": "cels/light_wobble_03_fx.png"
+      },
+      "composite": "cels/light_wobble_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -1,
+          1
+        ],
+        "lean_screen": [
+          -1,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 86,
+      "tag": "light_wobble",
+      "local_frame": 4,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_04_shadow.png",
+        "bit": "cels/light_wobble_04_bit.png",
+        "ratchet": "cels/light_wobble_04_ratchet.png",
+        "blade": "cels/light_wobble_04_blade.png",
+        "fx": "cels/light_wobble_04_fx.png"
+      },
+      "composite": "cels/light_wobble_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -2,
+          0
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 87,
+      "tag": "light_wobble",
+      "local_frame": 5,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_05_shadow.png",
+        "bit": "cels/light_wobble_05_bit.png",
+        "ratchet": "cels/light_wobble_05_ratchet.png",
+        "blade": "cels/light_wobble_05_blade.png",
+        "fx": "cels/light_wobble_05_fx.png"
+      },
+      "composite": "cels/light_wobble_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          -1,
+          -1
+        ],
+        "lean_screen": [
+          -1,
+          -1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 88,
+      "tag": "light_wobble",
+      "local_frame": 6,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_06_shadow.png",
+        "bit": "cels/light_wobble_06_bit.png",
+        "ratchet": "cels/light_wobble_06_ratchet.png",
+        "blade": "cels/light_wobble_06_blade.png",
+        "fx": "cels/light_wobble_06_fx.png"
+      },
+      "composite": "cels/light_wobble_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          -1
+        ],
+        "lean_screen": [
+          0,
+          -1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 89,
+      "tag": "light_wobble",
+      "local_frame": 7,
+      "duration_ms": 95,
+      "layers": {
+        "shadow": "cels/light_wobble_07_shadow.png",
+        "bit": "cels/light_wobble_07_bit.png",
+        "ratchet": "cels/light_wobble_07_ratchet.png",
+        "blade": "cels/light_wobble_07_blade.png",
+        "fx": "cels/light_wobble_07_fx.png"
+      },
+      "composite": "cels/light_wobble_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          1,
+          -1
+        ],
+        "lean_screen": [
+          1,
+          -1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 90,
+      "tag": "heavy_wobble",
+      "local_frame": 0,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_00_shadow.png",
+        "bit": "cels/heavy_wobble_00_bit.png",
+        "ratchet": "cels/heavy_wobble_00_ratchet.png",
+        "blade": "cels/heavy_wobble_00_blade.png",
+        "fx": "cels/heavy_wobble_00_fx.png"
+      },
+      "composite": "cels/heavy_wobble_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          5,
+          0
+        ],
+        "lean_screen": [
+          5,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 91,
+      "tag": "heavy_wobble",
+      "local_frame": 1,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_01_shadow.png",
+        "bit": "cels/heavy_wobble_01_bit.png",
+        "ratchet": "cels/heavy_wobble_01_ratchet.png",
+        "blade": "cels/heavy_wobble_01_blade.png",
+        "fx": "cels/heavy_wobble_01_fx.png"
+      },
+      "composite": "cels/heavy_wobble_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          4,
+          2
+        ],
+        "lean_screen": [
+          4,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 92,
+      "tag": "heavy_wobble",
+      "local_frame": 2,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_02_shadow.png",
+        "bit": "cels/heavy_wobble_02_bit.png",
+        "ratchet": "cels/heavy_wobble_02_ratchet.png",
+        "blade": "cels/heavy_wobble_02_blade.png",
+        "fx": "cels/heavy_wobble_02_fx.png"
+      },
+      "composite": "cels/heavy_wobble_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          2
+        ],
+        "lean_screen": [
+          0,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 93,
+      "tag": "heavy_wobble",
+      "local_frame": 3,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_03_shadow.png",
+        "bit": "cels/heavy_wobble_03_bit.png",
+        "ratchet": "cels/heavy_wobble_03_ratchet.png",
+        "blade": "cels/heavy_wobble_03_blade.png",
+        "fx": "cels/heavy_wobble_03_fx.png"
+      },
+      "composite": "cels/heavy_wobble_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -4,
+          2
+        ],
+        "lean_screen": [
+          -4,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 94,
+      "tag": "heavy_wobble",
+      "local_frame": 4,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_04_shadow.png",
+        "bit": "cels/heavy_wobble_04_bit.png",
+        "ratchet": "cels/heavy_wobble_04_ratchet.png",
+        "blade": "cels/heavy_wobble_04_blade.png",
+        "fx": "cels/heavy_wobble_04_fx.png"
+      },
+      "composite": "cels/heavy_wobble_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -5,
+          0
+        ],
+        "lean_screen": [
+          -5,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 95,
+      "tag": "heavy_wobble",
+      "local_frame": 5,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_05_shadow.png",
+        "bit": "cels/heavy_wobble_05_bit.png",
+        "ratchet": "cels/heavy_wobble_05_ratchet.png",
+        "blade": "cels/heavy_wobble_05_blade.png",
+        "fx": "cels/heavy_wobble_05_fx.png"
+      },
+      "composite": "cels/heavy_wobble_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          -4,
+          -2
+        ],
+        "lean_screen": [
+          -4,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 96,
+      "tag": "heavy_wobble",
+      "local_frame": 6,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_06_shadow.png",
+        "bit": "cels/heavy_wobble_06_bit.png",
+        "ratchet": "cels/heavy_wobble_06_ratchet.png",
+        "blade": "cels/heavy_wobble_06_blade.png",
+        "fx": "cels/heavy_wobble_06_fx.png"
+      },
+      "composite": "cels/heavy_wobble_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          -2
+        ],
+        "lean_screen": [
+          0,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 97,
+      "tag": "heavy_wobble",
+      "local_frame": 7,
+      "duration_ms": 110,
+      "layers": {
+        "shadow": "cels/heavy_wobble_07_shadow.png",
+        "bit": "cels/heavy_wobble_07_bit.png",
+        "ratchet": "cels/heavy_wobble_07_ratchet.png",
+        "blade": "cels/heavy_wobble_07_blade.png",
+        "fx": "cels/heavy_wobble_07_fx.png"
+      },
+      "composite": "cels/heavy_wobble_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          4,
+          -2
+        ],
+        "lean_screen": [
+          4,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 98,
+      "tag": "death_wobble",
+      "local_frame": 0,
+      "duration_ms": 140,
+      "layers": {
+        "shadow": "cels/death_wobble_00_shadow.png",
+        "bit": "cels/death_wobble_00_bit.png",
+        "ratchet": "cels/death_wobble_00_ratchet.png",
+        "blade": "cels/death_wobble_00_blade.png",
+        "fx": "cels/death_wobble_00_fx.png"
+      },
+      "composite": "cels/death_wobble_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          5,
+          0
+        ],
+        "lean_screen": [
+          5,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 99,
+      "tag": "death_wobble",
+      "local_frame": 1,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/death_wobble_01_shadow.png",
+        "bit": "cels/death_wobble_01_bit.png",
+        "ratchet": "cels/death_wobble_01_ratchet.png",
+        "blade": "cels/death_wobble_01_blade.png",
+        "fx": "cels/death_wobble_01_fx.png"
+      },
+      "composite": "cels/death_wobble_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 45,
+        "blade_offset_px": [
+          4,
+          2
+        ],
+        "lean_screen": [
+          4,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 100,
+      "tag": "death_wobble",
+      "local_frame": 2,
+      "duration_ms": 160,
+      "layers": {
+        "shadow": "cels/death_wobble_02_shadow.png",
+        "bit": "cels/death_wobble_02_bit.png",
+        "ratchet": "cels/death_wobble_02_ratchet.png",
+        "blade": "cels/death_wobble_02_blade.png",
+        "fx": "cels/death_wobble_02_fx.png"
+      },
+      "composite": "cels/death_wobble_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 90,
+        "blade_offset_px": [
+          0,
+          3
+        ],
+        "lean_screen": [
+          0,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 101,
+      "tag": "death_wobble",
+      "local_frame": 3,
+      "duration_ms": 170,
+      "layers": {
+        "shadow": "cels/death_wobble_03_shadow.png",
+        "bit": "cels/death_wobble_03_bit.png",
+        "ratchet": "cels/death_wobble_03_ratchet.png",
+        "blade": "cels/death_wobble_03_blade.png",
+        "fx": "cels/death_wobble_03_fx.png"
+      },
+      "composite": "cels/death_wobble_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -4,
+          2
+        ],
+        "lean_screen": [
+          -4,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 102,
+      "tag": "death_wobble",
+      "local_frame": 4,
+      "duration_ms": 180,
+      "layers": {
+        "shadow": "cels/death_wobble_04_shadow.png",
+        "bit": "cels/death_wobble_04_bit.png",
+        "ratchet": "cels/death_wobble_04_ratchet.png",
+        "blade": "cels/death_wobble_04_blade.png",
+        "fx": "cels/death_wobble_04_fx.png"
+      },
+      "composite": "cels/death_wobble_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -5,
+          0
+        ],
+        "lean_screen": [
+          -5,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 103,
+      "tag": "death_wobble",
+      "local_frame": 5,
+      "duration_ms": 190,
+      "layers": {
+        "shadow": "cels/death_wobble_05_shadow.png",
+        "bit": "cels/death_wobble_05_bit.png",
+        "ratchet": "cels/death_wobble_05_ratchet.png",
+        "blade": "cels/death_wobble_05_blade.png",
+        "fx": "cels/death_wobble_05_fx.png"
+      },
+      "composite": "cels/death_wobble_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 225,
+        "blade_offset_px": [
+          -4,
+          -2
+        ],
+        "lean_screen": [
+          -4,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 104,
+      "tag": "death_wobble",
+      "local_frame": 6,
+      "duration_ms": 200,
+      "layers": {
+        "shadow": "cels/death_wobble_06_shadow.png",
+        "bit": "cels/death_wobble_06_bit.png",
+        "ratchet": "cels/death_wobble_06_ratchet.png",
+        "blade": "cels/death_wobble_06_blade.png",
+        "fx": "cels/death_wobble_06_fx.png"
+      },
+      "composite": "cels/death_wobble_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 270,
+        "blade_offset_px": [
+          0,
+          -3
+        ],
+        "lean_screen": [
+          0,
+          -3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 105,
+      "tag": "death_wobble",
+      "local_frame": 7,
+      "duration_ms": 210,
+      "layers": {
+        "shadow": "cels/death_wobble_07_shadow.png",
+        "bit": "cels/death_wobble_07_bit.png",
+        "ratchet": "cels/death_wobble_07_ratchet.png",
+        "blade": "cels/death_wobble_07_blade.png",
+        "fx": "cels/death_wobble_07_fx.png"
+      },
+      "composite": "cels/death_wobble_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 315,
+        "blade_offset_px": [
+          4,
+          -2
+        ],
+        "lean_screen": [
+          4,
+          -2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 106,
+      "tag": "spin_out",
+      "local_frame": 0,
+      "duration_ms": 130,
+      "layers": {
+        "shadow": "cels/spin_out_00_shadow.png",
+        "bit": "cels/spin_out_00_bit.png",
+        "ratchet": "cels/spin_out_00_ratchet.png",
+        "blade": "cels/spin_out_00_blade.png",
+        "fx": "cels/spin_out_00_fx.png"
+      },
+      "composite": "cels/spin_out_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          5,
+          0
+        ],
+        "lean_screen": [
+          5,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 107,
+      "tag": "spin_out",
+      "local_frame": 1,
+      "duration_ms": 150,
+      "layers": {
+        "shadow": "cels/spin_out_01_shadow.png",
+        "bit": "cels/spin_out_01_bit.png",
+        "ratchet": "cels/spin_out_01_ratchet.png",
+        "blade": "cels/spin_out_01_blade.png",
+        "fx": "cels/spin_out_01_fx.png"
+      },
+      "composite": "cels/spin_out_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 55,
+        "blade_offset_px": [
+          3,
+          2
+        ],
+        "lean_screen": [
+          3,
+          2
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 108,
+      "tag": "spin_out",
+      "local_frame": 2,
+      "duration_ms": 180,
+      "layers": {
+        "shadow": "cels/spin_out_02_shadow.png",
+        "bit": "cels/spin_out_02_bit.png",
+        "ratchet": "cels/spin_out_02_ratchet.png",
+        "blade": "cels/spin_out_02_blade.png",
+        "fx": "cels/spin_out_02_fx.png"
+      },
+      "composite": "cels/spin_out_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 95,
+        "blade_offset_px": [
+          -1,
+          3
+        ],
+        "lean_screen": [
+          -1,
+          3
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 109,
+      "tag": "spin_out",
+      "local_frame": 3,
+      "duration_ms": 210,
+      "layers": {
+        "shadow": "cels/spin_out_03_shadow.png",
+        "bit": "cels/spin_out_03_bit.png",
+        "ratchet": "cels/spin_out_03_ratchet.png",
+        "blade": "cels/spin_out_03_blade.png",
+        "fx": "cels/spin_out_03_fx.png"
+      },
+      "composite": "cels/spin_out_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 135,
+        "blade_offset_px": [
+          -5,
+          1
+        ],
+        "lean_screen": [
+          -5,
+          1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 110,
+      "tag": "spin_out",
+      "local_frame": 4,
+      "duration_ms": 260,
+      "layers": {
+        "shadow": "cels/spin_out_04_shadow.png",
+        "bit": "cels/spin_out_04_bit.png",
+        "ratchet": "cels/spin_out_04_ratchet.png",
+        "blade": "cels/spin_out_04_blade.png",
+        "fx": "cels/spin_out_04_fx.png"
+      },
+      "composite": "cels/spin_out_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 160,
+        "blade_offset_px": [
+          -5,
+          -1
+        ],
+        "lean_screen": [
+          -5,
+          -1
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 111,
+      "tag": "spin_out",
+      "local_frame": 5,
+      "duration_ms": 330,
+      "layers": {
+        "shadow": "cels/spin_out_05_shadow.png",
+        "bit": "cels/spin_out_05_bit.png",
+        "ratchet": "cels/spin_out_05_ratchet.png",
+        "blade": "cels/spin_out_05_blade.png",
+        "fx": "cels/spin_out_05_fx.png"
+      },
+      "composite": "cels/spin_out_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 175,
+        "blade_offset_px": [
+          -4,
+          5
+        ],
+        "lean_screen": [
+          -4,
+          5
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 112,
+      "tag": "spin_out",
+      "local_frame": 6,
+      "duration_ms": 420,
+      "layers": {
+        "shadow": "cels/spin_out_06_shadow.png",
+        "bit": "cels/spin_out_06_bit.png",
+        "ratchet": "cels/spin_out_06_ratchet.png",
+        "blade": "cels/spin_out_06_blade.png",
+        "fx": "cels/spin_out_06_fx.png"
+      },
+      "composite": "cels/spin_out_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 180,
+        "blade_offset_px": [
+          -4,
+          7
+        ],
+        "lean_screen": [
+          -4,
+          7
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 113,
+      "tag": "spin_out",
+      "local_frame": 7,
+      "duration_ms": 650,
+      "layers": {
+        "shadow": "cels/spin_out_07_shadow.png",
+        "bit": "cels/spin_out_07_bit.png",
+        "ratchet": "cels/spin_out_07_ratchet.png",
+        "blade": "cels/spin_out_07_blade.png",
+        "fx": "cels/spin_out_07_fx.png"
+      },
+      "composite": "cels/spin_out_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 185,
+        "blade_offset_px": [
+          -4,
+          8
+        ],
+        "lean_screen": [
+          -4,
+          8
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 114,
+      "tag": "ring_out",
+      "local_frame": 0,
+      "duration_ms": 55,
+      "layers": {
+        "shadow": "cels/ring_out_00_shadow.png",
+        "bit": "cels/ring_out_00_bit.png",
+        "ratchet": "cels/ring_out_00_ratchet.png",
+        "blade": "cels/ring_out_00_blade.png",
+        "fx": "cels/ring_out_00_fx.png"
+      },
+      "composite": "cels/ring_out_00_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 0,
+        "blade_offset_px": [
+          0,
+          0
+        ],
+        "lean_screen": [
+          0,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 115,
+      "tag": "ring_out",
+      "local_frame": 1,
+      "duration_ms": 65,
+      "layers": {
+        "shadow": "cels/ring_out_01_shadow.png",
+        "bit": "cels/ring_out_01_bit.png",
+        "ratchet": "cels/ring_out_01_ratchet.png",
+        "blade": "cels/ring_out_01_blade.png",
+        "fx": "cels/ring_out_01_fx.png"
+      },
+      "composite": "cels/ring_out_01_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 65,
+        "blade_offset_px": [
+          -1,
+          -5
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 5,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 116,
+      "tag": "ring_out",
+      "local_frame": 2,
+      "duration_ms": 70,
+      "layers": {
+        "shadow": "cels/ring_out_02_shadow.png",
+        "bit": "cels/ring_out_02_bit.png",
+        "ratchet": "cels/ring_out_02_ratchet.png",
+        "blade": "cels/ring_out_02_blade.png",
+        "fx": "cels/ring_out_02_fx.png"
+      },
+      "composite": "cels/ring_out_02_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 130,
+        "blade_offset_px": [
+          -1,
+          -10
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 10,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 117,
+      "tag": "ring_out",
+      "local_frame": 3,
+      "duration_ms": 90,
+      "layers": {
+        "shadow": "cels/ring_out_03_shadow.png",
+        "bit": "cels/ring_out_03_bit.png",
+        "ratchet": "cels/ring_out_03_ratchet.png",
+        "blade": "cels/ring_out_03_blade.png",
+        "fx": "cels/ring_out_03_fx.png"
+      },
+      "composite": "cels/ring_out_03_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 195,
+        "blade_offset_px": [
+          -1,
+          -15
+        ],
+        "lean_screen": [
+          -1,
+          0
+        ],
+        "elevation_px": 15,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 118,
+      "tag": "ring_out",
+      "local_frame": 4,
+      "duration_ms": 100,
+      "layers": {
+        "shadow": "cels/ring_out_04_shadow.png",
+        "bit": "cels/ring_out_04_bit.png",
+        "ratchet": "cels/ring_out_04_ratchet.png",
+        "blade": "cels/ring_out_04_blade.png",
+        "fx": "cels/ring_out_04_fx.png"
+      },
+      "composite": "cels/ring_out_04_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 260,
+        "blade_offset_px": [
+          -2,
+          -17
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 17,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 119,
+      "tag": "ring_out",
+      "local_frame": 5,
+      "duration_ms": 85,
+      "layers": {
+        "shadow": "cels/ring_out_05_shadow.png",
+        "bit": "cels/ring_out_05_bit.png",
+        "ratchet": "cels/ring_out_05_ratchet.png",
+        "blade": "cels/ring_out_05_blade.png",
+        "fx": "cels/ring_out_05_fx.png"
+      },
+      "composite": "cels/ring_out_05_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 325,
+        "blade_offset_px": [
+          -2,
+          -12
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 12,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 120,
+      "tag": "ring_out",
+      "local_frame": 6,
+      "duration_ms": 75,
+      "layers": {
+        "shadow": "cels/ring_out_06_shadow.png",
+        "bit": "cels/ring_out_06_bit.png",
+        "ratchet": "cels/ring_out_06_ratchet.png",
+        "blade": "cels/ring_out_06_blade.png",
+        "fx": "cels/ring_out_06_fx.png"
+      },
+      "composite": "cels/ring_out_06_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 390,
+        "blade_offset_px": [
+          -2,
+          -6
+        ],
+        "lean_screen": [
+          -2,
+          0
+        ],
+        "elevation_px": 6,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    },
+    {
+      "index": 121,
+      "tag": "ring_out",
+      "local_frame": 7,
+      "duration_ms": 140,
+      "layers": {
+        "shadow": "cels/ring_out_07_shadow.png",
+        "bit": "cels/ring_out_07_bit.png",
+        "ratchet": "cels/ring_out_07_ratchet.png",
+        "blade": "cels/ring_out_07_blade.png",
+        "fx": "cels/ring_out_07_fx.png"
+      },
+      "composite": "cels/ring_out_07_composite.png",
+      "meta": {
+        "blade_angle_world_deg": 455,
+        "blade_offset_px": [
+          -3,
+          0
+        ],
+        "lean_screen": [
+          -3,
+          0
+        ],
+        "elevation_px": 0,
+        "contact_pivot_px": [
+          24,
+          40
+        ],
+        "tier": "authored prototype animation"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "launch",
+      "from": 0,
+      "to": 5,
+      "direction": "forward",
+      "loop": false
+    },
+    {
+      "name": "low_rpm",
+      "from": 6,
+      "to": 13,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "normal_rpm",
+      "from": 14,
+      "to": 21,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "high_rpm",
+      "from": 22,
+      "to": 29,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "overspin",
+      "from": 30,
+      "to": 37,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_n",
+      "from": 38,
+      "to": 41,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_ne",
+      "from": 42,
+      "to": 45,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_e",
+      "from": 46,
+      "to": 49,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_se",
+      "from": 50,
+      "to": 53,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_s",
+      "from": 54,
+      "to": 57,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_sw",
+      "from": 58,
+      "to": 61,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_w",
+      "from": 62,
+      "to": 65,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "lean_nw",
+      "from": 66,
+      "to": 69,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "light_impact",
+      "from": 70,
+      "to": 74,
+      "direction": "forward",
+      "loop": false
+    },
+    {
+      "name": "heavy_impact",
+      "from": 75,
+      "to": 81,
+      "direction": "forward",
+      "loop": false
+    },
+    {
+      "name": "light_wobble",
+      "from": 82,
+      "to": 89,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "heavy_wobble",
+      "from": 90,
+      "to": 97,
+      "direction": "forward",
+      "loop": true
+    },
+    {
+      "name": "death_wobble",
+      "from": 98,
+      "to": 105,
+      "direction": "forward",
+      "loop": false
+    },
+    {
+      "name": "spin_out",
+      "from": 106,
+      "to": 113,
+      "direction": "forward",
+      "loop": false
+    },
+    {
+      "name": "ring_out",
+      "from": 114,
+      "to": 121,
+      "direction": "forward",
+      "loop": false
+    }
+  ],
+  "parts": {
+    "blades": [
+      "balance",
+      "smash",
+      "guard",
+      "hook"
+    ],
+    "ratchets": [
+      "low",
+      "mid",
+      "high"
+    ],
+    "bits": [
+      "needle",
+      "ball",
+      "flat",
+      "rubber"
+    ],
+    "ratchet_blade_offsets": {
+      "low": [
+        0,
+        3
+      ],
+      "mid": [
+        0,
+        0
+      ],
+      "high": [
+        0,
+        -3
+      ]
+    },
+    "paths": {
+      "blades": {
+        "balance": "parts/blades/balance.png",
+        "smash": "parts/blades/smash.png",
+        "guard": "parts/blades/guard.png",
+        "hook": "parts/blades/hook.png"
+      },
+      "ratchets": {
+        "low": "parts/ratchets/low.png",
+        "mid": "parts/ratchets/mid.png",
+        "high": "parts/ratchets/high.png"
+      },
+      "bits": {
+        "needle": "parts/bits/needle.png",
+        "ball": "parts/bits/ball.png",
+        "flat": "parts/bits/flat.png",
+        "rubber": "parts/bits/rubber.png"
+      }
+    },
+    "blade_spin_sheets": {
+      "balance": "parts/blades/balance_spin.png",
+      "smash": "parts/blades/smash_spin.png",
+      "guard": "parts/blades/guard_spin.png",
+      "hook": "parts/blades/hook_spin.png"
+    },
+    "spin_phase_count": 8,
+    "spin_phase_world_angles_deg": [
+      0,
+      45,
+      90,
+      135,
+      180,
+      225,
+      270,
+      315
+    ]
+  },
+  "tier_notes": {
+    "parts": "Foundation sprite assets: complete family; art review ready.",
+    "animations": "Authored prototype timing and deformation. Hero contact frame and loop polishing remain appropriate in later animation task. Ring-out cel elevation is visual only; world movement supplied by simulation.",
+    "combinations": "48 QA composites, generated from independent component layers, not redraws."
+  },
+  "assembly_rules": [
+    "Place cell origin at screen contact point minus [24,40].",
+    "Draw shadow, bit, ratchet, blade, then FX.",
+    "Set Blade vertical offset from Ratchet selection. Bits share socket [24,35].",
+    "For lean use paired Blade and Ratchet cels, keeping Bit contact near pivot.",
+    "No whole-sprite image rotation; spinning is authored in the projected world plane.",
+    "Render using nearest-neighbour at integral scale; no filtering or mipmaps."
+  ]
+}

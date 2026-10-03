@@ -1,0 +1,13 @@
+Original Task 001A editable production art for this prototype.
+
+starter_balance_mid_ball.aseprite — layered starter animation family
+parts_catalog.aseprite — Blade, Ratchet and Bit part catalog
+blade_rotation_family.aseprite — authored rotational Blade phases
+arena_foundry_eight.aseprite — original layered arena foundation
+mechanical_001A.gpl — shared 16-color production palette
+
+These are byte-identical copies of the earlier source-art deliverables for this game.
+Runtime PNGs in assets/top/ and assets/arena/ are preserved as the current playable baseline.
+The playable arena PNGs include the guard-rail revisions around the narrow gate mouths;
+the original arena Aseprite source predates those revisions. Do not blindly replace the
+current arena PNGs by exporting the older source.

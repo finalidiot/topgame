@@ -1,0 +1,32 @@
+SPINNING METAL PROTOTYPE — QA
+
+Automated checks: 51; failed: 0.
+Engine: Godot 4.7.2 stable official; headless runner exit code 0.
+Tests: all 48 modular visual tuples and finite build stats; intended and physical part tradeoffs; pause; braking; burst cost/cooldown and hit-stop buffering; both gate exits and attack-driven ring-outs; solid walls and side guards; exact-overlap collision; spin-out and one-shot result signal; 20/60 Hz fixed-step consistency; deterministic replay; 144 seeded battles.
+
+Standardized chase controller, 48 builds x 3 fixed seeds against BALANCE/MID/BALL.
+Bout duration: median 30.52s; minimum 24.72s; maximum 35.38s.
+BALANCE REVIEW: median falls within the intended 30–60 second pacing.
+blade balance: 27/36 player wins, 9 losses; mean 30.81s.
+blade smash: 15/36 player wins, 21 losses; mean 28.42s.
+blade guard: 36/36 player wins, 0 losses; mean 32.36s.
+blade hook: 21/36 player wins, 15 losses; mean 30.11s.
+ratchet low: 40/48 player wins, 8 losses; mean 30.88s.
+ratchet mid: 32/48 player wins, 16 losses; mean 30.77s.
+ratchet high: 27/48 player wins, 21 losses; mean 29.63s.
+bit needle: 36/36 player wins, 0 losses; mean 32.41s.
+bit ball: 32/36 player wins, 4 losses; mean 30.73s.
+bit flat: 12/36 player wins, 24 losses; mean 28.99s.
+bit rubber: 19/36 player wins, 17 losses; mean 29.57s.
+
+Balance caveat: this is a standardized bot/chase stress test, not a claim about human win rates.
+Central chase bouts all resolve by spin-out. Guard and Needle each win every bout in their respective groups; endurance dominates repeated central contact. Attack-driven ring-outs are verified separately at both mouths. Human play and gate-seeking strategies are still needed to assess competitive balance.
+
+Independent visual review: title, garage, custom assembly, help, settings, live battle, pause and result captures at 1280 x 720. No clipping remains in reviewed screens. Garage description clipping was found and corrected; refreshed captures show both lines. Small tops remain readable with owner markers and restrained steel highlights, while the open dish leaves ample movement room.
+
+Independent source review: no blocking menu/battle loop issue found. Pause/resume, gauntlet transitions and result timing are coherent. Stale-result restart handling was corrected and regression-tested; landing, countdown and win/loss audio cues are connected.
+
+Final integration: 34 complete run-flow checks passed, including retry, next opponent, run clear, run again and completed-run to quick-duel restart. All 48 builds and 145 UI events passed layout/focus/action checks. Exported Windows build launched on the native graphics driver and passed the rendered input/menu/battle smoke loop. Chrome/WebGL completed real mouse/keyboard customization, Burst/brake, pause/resume, mute, reload persistence and a naturally resolved battle; browser test reported no errors. All final captures were visually reviewed.
+
+Source package portability: clean ZIP extraction imports all 47 assets, including all 11 audio samples. Two independent fresh imports completed with exit 0, and the extracted source passed the combat and flow suites. One initial headless import terminated with a native access violation during texture importing; retry completed cleanly, and subsequent fresh imports did not reproduce it. No script or asset-format error identified the cause. Source archive excludes .godot caches and machine-specific template paths.
+

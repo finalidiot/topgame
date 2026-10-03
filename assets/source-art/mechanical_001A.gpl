@@ -1,0 +1,20 @@
+GIMP Palette
+Name: Spinning Top 001A Provisional
+Columns: 8
+# Palette remains provisional; named ramps for steel, blue and warm accents.
+ 16  21  31	outline
+ 32  43  54	dark
+ 52  68  81	gunmetal
+ 76  98 110	slate
+118 142 153	steel
+171 192 199	silver
+227 232 220	light
+ 22  53  75	darkblue
+ 36  92 123	blue
+ 69 149 181	accent
+169  76  53	oxide
+223 135  64	orange
+243 195 106	gold
+ 21  29  39	arena_seam
+ 25  35  45	arena_deep
+ 43  59  70	arena_floor
