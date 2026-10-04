@@ -1,0 +1,2 @@
+@echo off
+start "" "%~dp0SpinningMetal.exe" -- --practice=redline_ii

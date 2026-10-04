@@ -83,22 +83,26 @@ func _ready() -> void:
 ## Optional isolated human checkpoint. Ordinary seeded Run offers are untouched.
 ## No progression, power procs, damage or victories are injected while playing.
 func _start_build_practice(branch_id: String) -> void:
-	if not Powers.MUTATIONS.has(branch_id) and branch_id != "hybrid": return
+	var requested_power: String = branch_id.trim_suffix("_ii")
+	if not Powers.MUTATIONS.has(branch_id) and branch_id != "hybrid" and requested_power not in Powers.ACTIVE_IDS: return
 	_clear_run()
 	_practice_branch = branch_id
-	var power_id: String = str(Powers.get_mutation(branch_id).get("power_id", "dead_centre"))
-	var starter: String = {"redline":"breaker", "dead_centre":"bastion", "afterimage":"vane"}.get(power_id, "bastion")
+	var power_id: String = str(Powers.get_mutation(branch_id).get("power_id", requested_power))
+	var starter: String = {"redline":"breaker", "dead_centre":"bastion", "afterimage":"vane","high_gear":"vane","orbit_drive":"vane"}.get(power_id, "bastion")
 	var descriptor: Dictionary = Encounters.for_slot(3 if power_id == "afterimage" else 5, 421)
-	descriptor.player_power_ids = Powers.ACTIVE_IDS.duplicate()
+	descriptor.player_power_ids = ["impact_wake","clutch","redline","iron_comet","dead_centre","afterimage","chain_impact"] if Powers.MUTATIONS.has(branch_id) or branch_id == "hybrid" else [power_id]
+	if power_id in Powers.ACTIVE_IDS and power_id not in descriptor.player_power_ids: descriptor.player_power_ids.append(power_id)
+	descriptor.ability_rebalance = true
 	descriptor.player_power_ranks = {}
 	descriptor.player_power_mutations = {}
-	for id: String in Powers.ACTIVE_IDS: descriptor.player_power_ranks[id] = 1
+	for id: String in descriptor.player_power_ids: descriptor.player_power_ranks[id] = 1
 	if branch_id == "hybrid":
 		for id: String in ["redline", "dead_centre", "afterimage"]: descriptor.player_power_ranks[id] = 3
 		descriptor.player_power_mutations = {"redline":"runaway", "dead_centre":"counterweight", "afterimage":"slipstream"}
-	else:
+	elif Powers.MUTATIONS.has(branch_id):
 		descriptor.player_power_ranks[power_id] = 3
 		descriptor.player_power_mutations[power_id] = branch_id
+	else: descriptor.player_power_ranks[power_id] = 2 if branch_id.ends_with("_ii") else 1
 	descriptor.starter_id = starter
 	mode = "duel"
 	screen = "battle"

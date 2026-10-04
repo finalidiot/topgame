@@ -14,6 +14,7 @@ signal threat_started(summary: Dictionary)
 const Catalog = preload("res://scripts/parts.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const PowerRuntime = preload("res://scripts/power_runtime.gd")
+const RosterRuntime = preload("res://scripts/roster_runtime.gd")
 const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
 const SignatureVisuals = preload("res://scripts/signature_visuals.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
@@ -38,6 +39,9 @@ const ENEMY_COLOR: Color = Color("f0a468")
 
 var continuous = null
 var powers = PowerRuntime.new()
+var roster = RosterRuntime.new()
+# QA descriptors may opt into continuous power semantics without a director.
+var ability_rebalance: bool = false
 var swarm = SwarmRuntime.new()
 var _power_fx: Array[Dictionary] = []
 var fighters: Array[Dictionary] = []
@@ -128,6 +132,7 @@ func begin(player_build: Dictionary, enemy_build: Dictionary, level: int = 1, re
 
 func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	continuous = null
+	ability_rebalance = bool(descriptor.get("ability_rebalance",false))
 	_load_assets()
 	encounter = descriptor.duplicate(true)
 	_progression_queue.clear()
@@ -160,6 +165,7 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 		entity(2)["power_ranks"] = descriptor.get("opponent_power_ranks", {}).duplicate(true)
 		entity(2)["power_mutations"] = descriptor.get("opponent_power_mutations", {}).duplicate(true)
 	powers.setup(self)
+	roster.setup(self)
 	_power_fx.clear()
 	battle_status = "countdown"
 	elapsed = 0.0
@@ -327,7 +333,6 @@ func acquire_run_power(power_id: String, rank_value: int = 1, mutation_value: St
 	if player.is_empty() or rank_value < 1 or rank_value > RunPowers.max_rank(power_id): return false
 	var old_rank: int = powers.rank(player, power_id)
 	if rank_value != old_rank + 1: return false
-	if rank_value > 1 and not PowerRuntime.MUTATIONS.has(power_id): return false
 	if rank_value == 3:
 		if mutation_value not in PowerRuntime.MUTATIONS.get(power_id, []) or not str(player["power_mutations"].get(power_id, "")).is_empty(): return false
 	elif not mutation_value.is_empty(): return false
@@ -421,6 +426,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 	elapsed += dt
 	if continuous != null: continuous.economy.begin_tick(dt, screen_direction)
 	powers.begin_tick(dt)
+	roster.begin_tick(dt)
 	swarm.begin_tick(dt)
 	for pair_key: String in _pair_cooldowns.keys():
 		_pair_cooldowns[pair_key] = maxf(0.0, float(_pair_cooldowns[pair_key]) - dt)
@@ -602,12 +608,14 @@ func spend_rpm(fighter: Dictionary, amount: float, source: String) -> void:
 		fighter.rpm = maxf(0.0,float(fighter.rpm)-amount)
 		fighter.energy = fighter.rpm
 
-func gain_rpm(fighter: Dictionary, amount: float, source: String, small: bool = false) -> void:
+func gain_rpm(fighter: Dictionary, amount: float, source: String, small: bool = false) -> float:
 	if continuous != null and int(fighter.entity_id) == player_entity_id:
-		continuous.economy.gain(fighter,amount,source,small)
+		return continuous.economy.gain(fighter,amount,source,small)
 	else:
-		fighter.rpm = minf(1.0,float(fighter.rpm)+amount)
+		var before: float = fighter.rpm
+		fighter.rpm = minf(powers.rpm_cap(fighter),float(fighter.rpm)+amount)
 		fighter.energy = fighter.rpm
+		return float(fighter.rpm)-before
 
 func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	if float(fighter["cooldown"]) > 0.0 or float(fighter["rpm"]) < 0.13:
@@ -631,10 +639,12 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	fighter["energy"] = fighter["rpm"]
 	_spawn_ring(project(position_world), _team_color(fighter), 0.30)
 	powers.burst_started(fighter, heading.normalized(), pre_cost_rpm)
+	roster.burst(fighter,heading.normalized())
 	event_sfx.emit("burst")
 
 func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt: float) -> void:
 	var modifiers: Dictionary = powers.movement_control(fighter, direction, braking, dt)
+	modifiers = roster.movement(fighter,modifiers,dt)
 	direction = modifiers["direction"]
 	braking = bool(modifiers["braking"])
 	var stats: Dictionary = fighter["stats"]
@@ -671,12 +681,14 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var drag: float = 0.54 + grip * 0.030
 	drag += float(modifiers["drag"])
 	if braking:
-		drag += 3.8 + grip * 0.20
+		drag += (3.8 + grip * 0.20)*float(modifiers.get("brake_drag_scale",1.0))*float(modifiers.get("braking_efficiency",1.0))
 	velocity_world *= exp(-drag * dt)
 	if float(fighter.get("impulse_time",0.0)) > 0.0:
 		top_speed = maxf(top_speed, 340.0)
 		fighter["impulse_time"] = maxf(0.0, float(fighter.impulse_time)-dt)
-	velocity_world = velocity_world.limit_length(top_speed)
+	velocity_world = roster.velocity(fighter,Vector2(fighter.vel),velocity_world.limit_length(top_speed),dt)
+	# Expanded movement combinations and overclock share a finite safety ceiling.
+	if continuous != null or ability_rebalance: velocity_world = velocity_world.limit_length(RosterRuntime.SPEED_CLAMP)
 	position_world += velocity_world * dt
 	# Low spin loses both control and stability. Braking buys position at a
 	# measurable spin cost; attack bits naturally spend more reserve.
@@ -691,7 +703,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 		rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]))
 	var low_spin_wobble: float = clampf((0.32 - rpm) * 2.5, 0.0, 0.80)
 	var current_wobble: float = float(fighter["wobble"])
-	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0)))
+	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0))*float(modifiers.get("recovery",1.0)))
 	fighter["pos"] = position_world
 	fighter["vel"] = velocity_world
 	fighter["rpm"] = rpm
@@ -768,6 +780,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	b_attack *= float(second.get("handling", {}).get("impact", 1.0))
 	a_attack *= powers.attack_multiplier(first)
 	b_attack *= powers.attack_multiplier(second)
+	a_attack *= roster.attack_multiplier(first,second)
+	b_attack *= roster.attack_multiplier(second,first)
 	var impulse: float = (1.70 * closing + 19.0) / inv_sum
 	var attack_bias: float = clampf((a_attack - b_attack) * 0.19, -0.25, 0.25)
 	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias)
@@ -778,6 +792,9 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		second["vel"] = Vector2(second["vel"]) + tangent * closing * 0.12
 	if str(second["build"]["blade"]) == "hook":
 		first["vel"] = Vector2(first["vel"]) - tangent * closing * 0.12
+	if continuous != null or ability_rebalance:
+		first.vel = Vector2(first.vel).limit_length(RosterRuntime.SPEED_CLAMP)
+		second.vel = Vector2(second.vel).limit_length(RosterRuntime.SPEED_CLAMP)
 	if float(_pair_cooldowns.get(pair_key, 0.0)) > 0.0:
 		return
 	_pair_cooldowns[pair_key] = 0.24
@@ -785,8 +802,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var severity: float = clampf(closing / 220.0, 0.08, 1.30)
 	var a_defense: float = 0.76 + float(a_stats["stability"]) * 0.055 + float(a_stats["mass"]) * 0.016
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
-	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense
-	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense
+	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first)
+	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second)
 	var actual_a: float = minf(float(first.rpm),loss_a)
 	var actual_b: float = minf(float(second.rpm),loss_b)
 	spend_rpm(first,loss_a,"collisions")
@@ -806,6 +823,7 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	_presentation_full_contact = true
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
 	_presentation_full_contact = false
+	roster.contact(first,second,severity,normal,va,vb)
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
 	# The authored impact hold remains gameplay timing and is independent of
@@ -856,6 +874,10 @@ func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO,
 		"redline_ii":0.40,"runaway":0.44,"runaway_hit":0.30,"breakneck_charge":0.36,"breakneck_impact":0.45,"anchor":0.42,"anchor_break":0.30,"bulwark_impact":0.48,"counterweight_store":0.36,"counterweight_release":0.45,"afterimage_ii":0.24,"ghost_closure":0.48,"ghost_activation":0.60,"slipstream_cross":0.42}
 	if kind in ["boss_entry","boss_defeat"]: durations[kind] = 0.75
 	if kind == "breakneck_recovery": durations[kind] = 0.48
+	if kind == "comet_release": durations[kind] = 0.40
+	if kind == "clutch_recover": durations[kind] = 0.45
+	if kind == "redline_overcap": durations[kind] = 0.25
+	if kind == "ghost_preview": durations[kind] = 0.22
 	if _presentation_full_contact and kind in ["breakneck_impact","bulwark_impact"] and continuous != null and battle_status == "battle" and elapsed >= _signature_ready:
 		_signature_ready = elapsed+0.35
 		_hit_stop = maxf(_hit_stop,SignatureVisuals.impact_hold("signature"))
@@ -986,7 +1008,9 @@ func _check_result() -> void:
 			if f.combatant_type == "full_top" and float(f.rpm) <= 0.045 and str(f.outcome).is_empty(): f.outcome = "spin_out"
 		continuous.observe_outcomes()
 		var player: Dictionary = player_entity()
-		if not _is_live(player): _finish(0, str(player.outcome))
+		if not _is_live(player):
+			powers.eliminated(player,str(player.outcome))
+			_finish(0, str(player.outcome))
 		return
 	if battle_status == "finished":
 		return

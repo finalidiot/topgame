@@ -1,0 +1,546 @@
+{
+  "version": 1,
+  "projection": "fixed isometric2:1; upright cels",
+  "filter": "nearest",
+  "effects": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor contact and silhouette",
+      "02 mechanical structure",
+      "03 active energy",
+      "04 key flash and fragments"
+    ],
+    "tags": {
+      "comet_charge": {
+        "from": 0,
+        "to": 5
+      },
+      "comet_flight": {
+        "from": 6,
+        "to": 11
+      },
+      "comet_impact": {
+        "from": 12,
+        "to": 17
+      },
+      "comet_recovery": {
+        "from": 18,
+        "to": 23
+      },
+      "overcap": {
+        "from": 24,
+        "to": 29
+      },
+      "heat_extreme": {
+        "from": 30,
+        "to": 35
+      },
+      "clutch_danger": {
+        "from": 36,
+        "to": 41
+      },
+      "clutch_recover": {
+        "from": 42,
+        "to": 47
+      },
+      "gear1": {
+        "from": 48,
+        "to": 53
+      },
+      "gear2": {
+        "from": 54,
+        "to": 59
+      },
+      "terminal_surge": {
+        "from": 60,
+        "to": 65
+      },
+      "flow_state": {
+        "from": 66,
+        "to": 71
+      },
+      "orbit_drift": {
+        "from": 72,
+        "to": 77
+      },
+      "crash_guard": {
+        "from": 78,
+        "to": 83
+      },
+      "momentum_store": {
+        "from": 84,
+        "to": 89
+      },
+      "momentum_release": {
+        "from": 90,
+        "to": 95
+      },
+      "predator_lock": {
+        "from": 96,
+        "to": 101
+      },
+      "crosscut": {
+        "from": 102,
+        "to": 107
+      },
+      "ghost_preview": {
+        "from": 108,
+        "to": 113
+      },
+      "ghost_latch": {
+        "from": 114,
+        "to": 119
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140
+    ],
+    "columns": 6,
+    "frame_count": 120,
+    "texture": "roster_effects.png",
+    "source": "assets/source-art/roster_fx_002c5.aseprite"
+  },
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 industrial backplate",
+      "02 ground braces and machine depth",
+      "03 editable rotor and mechanism",
+      "04 route force and stress",
+      "05 confirmation glints and fragments"
+    ],
+    "tags": {
+      "clutch": {
+        "from": 0,
+        "to": 5
+      },
+      "high_gear": {
+        "from": 6,
+        "to": 11
+      },
+      "orbit_drive": {
+        "from": 12,
+        "to": 17
+      },
+      "crash_guard": {
+        "from": 18,
+        "to": 23
+      },
+      "momentum_bank": {
+        "from": 24,
+        "to": 29
+      },
+      "predator_line": {
+        "from": 30,
+        "to": 35
+      },
+      "crosscut": {
+        "from": 36,
+        "to": 41
+      },
+      "clutch_ii": {
+        "from": 42,
+        "to": 47
+      },
+      "high_gear_ii": {
+        "from": 48,
+        "to": 53
+      },
+      "orbit_drive_ii": {
+        "from": 54,
+        "to": 59
+      },
+      "crash_guard_ii": {
+        "from": 60,
+        "to": 65
+      },
+      "momentum_bank_ii": {
+        "from": 66,
+        "to": 71
+      },
+      "predator_line_ii": {
+        "from": 72,
+        "to": 77
+      },
+      "crosscut_ii": {
+        "from": 78,
+        "to": 83
+      },
+      "terminal_velocity": {
+        "from": 84,
+        "to": 89
+      },
+      "flow_state": {
+        "from": 90,
+        "to": 95
+      },
+      "iron_comet": {
+        "from": 96,
+        "to": 101
+      },
+      "iron_comet_ii": {
+        "from": 102,
+        "to": 107
+      }
+    },
+    "durations_ms": [
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170,
+      110,
+      90,
+      75,
+      75,
+      100,
+      170
+    ],
+    "columns": 6,
+    "frame_count": 108,
+    "texture": "roster_cards.png",
+    "source": "assets/source-art/roster_cards_002c5.aseprite"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 steel mechanism",
+      "02 state and motion"
+    ],
+    "tags": {
+      "clutch": {
+        "from": 0,
+        "to": 0
+      },
+      "high_gear": {
+        "from": 1,
+        "to": 1
+      },
+      "orbit_drive": {
+        "from": 2,
+        "to": 2
+      },
+      "crash_guard": {
+        "from": 3,
+        "to": 3
+      },
+      "momentum_bank": {
+        "from": 4,
+        "to": 4
+      },
+      "predator_line": {
+        "from": 5,
+        "to": 5
+      },
+      "crosscut": {
+        "from": 6,
+        "to": 6
+      },
+      "clutch_ii": {
+        "from": 7,
+        "to": 7
+      },
+      "high_gear_ii": {
+        "from": 8,
+        "to": 8
+      },
+      "orbit_drive_ii": {
+        "from": 9,
+        "to": 9
+      },
+      "crash_guard_ii": {
+        "from": 10,
+        "to": 10
+      },
+      "momentum_bank_ii": {
+        "from": 11,
+        "to": 11
+      },
+      "predator_line_ii": {
+        "from": 12,
+        "to": 12
+      },
+      "crosscut_ii": {
+        "from": 13,
+        "to": 13
+      },
+      "terminal_velocity": {
+        "from": 14,
+        "to": 14
+      },
+      "flow_state": {
+        "from": 15,
+        "to": 15
+      },
+      "iron_comet": {
+        "from": 16,
+        "to": 16
+      },
+      "iron_comet_ii": {
+        "from": 17,
+        "to": 17
+      }
+    },
+    "durations_ms": [
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120,
+      120
+    ],
+    "columns": 18,
+    "frame_count": 18,
+    "texture": "roster_icons.png",
+    "source": "assets/source-art/roster_icons_002c5.aseprite"
+  }
+}

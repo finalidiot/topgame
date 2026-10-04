@@ -43,19 +43,25 @@ The Task 002B.1 opening remains: a Run opens with three authored identities: **B
 through meaningful combat. The visible Level bar leads to an immediate
 mid-battle draft, a brief acquisition, and the exact same encounter.
 
-Task 002C adds repeated investment: **Redline**, **Dead Centre** and
-**Afterimage** progress from acquisition to Rank II, then a choice between
-two mutually exclusive behavioural mutations. Owned powers can return in
-the draft alongside new powers. The seven functional powers are Impact Wake,
-Second Wind, Redline, Iron Comet, Dead Centre, Afterimage, and Chain Impact.
-All powers are legal for every starter. The physical assembly stays locked
-through the continuous Run. There are thirteen available investments;
-seven owned powers are supported and the HUD has eight slots. The Level bar
-becomes **FULL BUILD / MAX** only when every available investment is earned.
+Task 002C.5 expands the pool to **thirteen families**: Impact Wake, Redline,
+Iron Comet, Dead Centre, Afterimage, Chain Impact, Clutch, High Gear, Orbit Drive,
+Crash Guard, Momentum Bank, Predator Line and Crosscut. Every family has I/II;
+Redline, Dead Centre, Afterimage and High Gear develop into behavioural mutations.
+Clutch replaces draftable Second Wind with earned continuous-spin comeback.
+High Gear builds real speed; Orbit Drive carries a brake-and-turn drift.
+Redline creates actual overcap RPM with heat-driven control risk; Ghost Circuit
+previews a valid paid closure. Iron Comet uses a fragmented spinning rotor strike.
+All powers remain legal for every starter. The physical assembly stays locked
+through the continuous Run. Seven family slots encourage deeper investments;
+each chosen build has 14–18 available investments from thirty catalogue entries.
+The Level bar becomes **FULL BUILD / MAX** when that machine is fully developed.
 XP awards and early level costs are preserved. Starter handling profiles make
 aggression, centre control, and efficient mobility more pronounced in Runs.
-Quick Duel and build-practice modes retain their original single-battle physics.
+Quick Duel retains its original single-battle physics; labelled power QA presets
+opt into the new ability rules.
 Continuous Runs use the earned RPM survival economy described below.
+See [TASK-002C5.md](TASK-002C5.md) and the
+[human playtest checklist](TASK-002C5-PLAYTEST.md). Human acceptance is pending.
 
 Four roles use different movement: Hunter commits, Flanker orbits, Bulwark holds
 central space, and Harasser alternates glancing approaches and withdrawal.
@@ -71,7 +77,7 @@ Early tiers have stricter limits. The original 24-entry swarm schedule remains;
 standalone swarm fixtures retain their original twelve-small cap.
 
 Drafts and mutations freeze the complete simulation and resume it exactly.
-Second Wind is once per launch, so a spent recovery stays spent across threats.
+Clutch catches the same live top through useful low-RPM contacts without relaunch.
 The active power/investment pool can reach MAX; that never ends the Run.
 
 **RPM survival economy:** natural decay, steering effort, braking and wobble
@@ -80,7 +86,8 @@ Committed impacts and controlled defensive contacts can reclaim spin; recent
 credited kills give small returns, with larger elite/boss payoffs. Per-target and
 global cooldowns plus capped recovery buckets prevent contact/swarm farming.
 No-input play generates no baseline regeneration, and no threat transition heals.
-The old 12% net-loss rule is removed. Second Wind remains an emergency once per launch.
+The old 12% net-loss rule is removed. Clutch has finite danger windows and catch
+quotas; overclock motion, normal contacts and small bodies use bounded budgets.
 Below 25% the HUD warns LOW SPIN; meaningful recovery briefly shows +RPM RECLAIM.
 
 The Garage is preserved. Select **CUSTOM ASSEMBLY RUN** below the three

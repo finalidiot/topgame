@@ -6,12 +6,15 @@ class QuietMain extends "res://scripts/main.gd":
 const Starters = preload("res://scripts/starters.gd")
 const Battle = preload("res://scripts/battle.gd")
 const LIMIT: float = 1200.0
+var sample_limit: float = LIMIT
 const Bot = preload("res://tests/rpm_bot.gd")
 var style: String = "hybrid"
 var override_power: String = ""
 var mutation_preference: String = ""
 var opening_preference: String = "second_wind"
 var report: Dictionary = {"scope":"Real fixed-step continuous combat; sampled bot input, normal enemy AI, ordinary earned claims. No injected outcomes or reserve refill. Active seconds exclude menus/countdown/hit-stop; not human playtesting.","runs":[]}
+func controls(b: Node2D, playstyle: String, tick: int) -> Dictionary:
+	return Bot.input(b,playstyle,tick)
 func _initialize() -> void: call_deferred("_run")
 func choose(game: QuietMain) -> void:
 	var choice: String = game.run_context.pending_offer[0]
@@ -59,10 +62,10 @@ func play(starter: String, seed_value: int) -> Dictionary:
 	var direction: Vector2 = Vector2.ZERO
 	var brake: bool = false
 	for tick: int in range(180000):
-		if b.elapsed >= LIMIT or game.screen == "result": break
+		if b.elapsed >= sample_limit or game.screen == "result": break
 		var burst: bool = false
 		if tick % 12 == 0:
-			var input: Dictionary = Bot.input(b,style,tick)
+			var input: Dictionary = controls(b,style,tick)
 			direction = input.direction
 			brake = input.brake
 			burst = input.burst
@@ -111,6 +114,8 @@ func play(starter: String, seed_value: int) -> Dictionary:
 	result["ranks"] = game.run_context.power_ranks
 	result["mutations"] = game.run_context.power_mutations
 	result["power_procs"] = b.powers.counters.duplicate()
+	result["redline"] = b.powers.diagnostics(player)
+	result["roster"] = b.roster.diagnostics(player)
 	result["remaining_rpm"] = player.rpm
 	result["rpm"] = b.continuous.economy.snapshot()
 	var loss_sum: float = 0.0

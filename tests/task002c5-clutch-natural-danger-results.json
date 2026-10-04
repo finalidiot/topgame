@@ -1,0 +1,1122 @@
+{
+	"controller_sampling_ticks": 12,
+	"diagnostic_ceiling_seconds": 300.0,
+	"runs": [
+		{
+			"accounting_error": 0.0000000000000920929998926567,
+			"clutch_activations": 1,
+			"clutch_catches": 2,
+			"clutch_gain": 0.054317309060138,
+			"danger_observation": {
+				"clutch_acquired_at": 58.4833333333313,
+				"clutch_rank_at_first_danger": 1,
+				"danger_at": 113.433333333328,
+				"danger_contacts": [
+					{
+						"after_rpm": 0.369923186558449,
+						"approach_rpm": 0.265016465192177,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.725856989080256,
+						"speed": 153.818069458008,
+						"target_kind": "full_top",
+						"time": 113.749999999995,
+						"tokens": 0.0
+					},
+					{
+						"after_rpm": 0.360294360508962,
+						"approach_rpm": 0.366577651547817,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.599621096524325,
+						"speed": 141.535888671875,
+						"target_kind": "full_top",
+						"time": 114.533333333328,
+						"tokens": 0.03525
+					},
+					{
+						"after_rpm": 0.34876610432719,
+						"approach_rpm": 0.358504567108505,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.705531727183949,
+						"speed": 87.888053894043,
+						"target_kind": "full_top",
+						"time": 114.966666666661,
+						"tokens": 0.05475
+					},
+					{
+						"after_rpm": 0.338555189841254,
+						"approach_rpm": 0.346123221486415,
+						"clutch_active": false,
+						"input": 0.800000011920929,
+						"rank": 1,
+						"severity": 0.226187272505327,
+						"speed": 2.11324238777161,
+						"target_kind": "full_top",
+						"time": 115.466666666661,
+						"tokens": 0.0772500000000001
+					},
+					{
+						"after_rpm": 0.327924319300367,
+						"approach_rpm": 0.335353202591772,
+						"clutch_active": false,
+						"input": 0.800000011920929,
+						"rank": 1,
+						"severity": 0.224077467484908,
+						"speed": 33.5173110961914,
+						"target_kind": "full_top",
+						"time": 115.983333333328,
+						"tokens": 0.1005
+					},
+					{
+						"after_rpm": 0.317138627125508,
+						"approach_rpm": 0.326235750865496,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.361705294522372,
+						"speed": 61.9099159240723,
+						"target_kind": "full_top",
+						"time": 116.399999999995,
+						"tokens": 0.11925
+					},
+					{
+						"after_rpm": 0.307731943751865,
+						"approach_rpm": 0.315941111216352,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.299984567815607,
+						"speed": 55.1159934997559,
+						"target_kind": "full_top",
+						"time": 116.699999999995,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.299180151697504,
+						"approach_rpm": 0.306617598145921,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.245591285011985,
+						"speed": 49.9757232666016,
+						"target_kind": "full_top",
+						"time": 116.983333333328,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.291275708628277,
+						"approach_rpm": 0.298070941174204,
+						"clutch_active": true,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.200049625743519,
+						"speed": 61.9479598999023,
+						"target_kind": "full_top",
+						"time": 117.266666666661,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.38652683060436,
+						"approach_rpm": 0.277022107309395,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.500879218361594,
+						"speed": 158.839736938477,
+						"target_kind": "full_top",
+						"time": 117.583333333328,
+						"tokens": 0.0
+					},
+					{
+						"after_rpm": 0.380780970378516,
+						"approach_rpm": 0.385035950353334,
+						"clutch_active": false,
+						"input": 0.86000007390976,
+						"rank": 1,
+						"severity": 0.374563980102539,
+						"speed": 173.420013427734,
+						"target_kind": "full_top",
+						"time": 117.933333333328,
+						"tokens": 0.01575
+					},
+					{
+						"after_rpm": 0.37507502497374,
+						"approach_rpm": 0.378902626249515,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.313202875310724,
+						"speed": 164.765396118164,
+						"target_kind": "full_top",
+						"time": 118.366666666661,
+						"tokens": 0.03525
+					},
+					{
+						"after_rpm": 0.36993983164035,
+						"approach_rpm": 0.373679456475702,
+						"clutch_active": false,
+						"input": 0.860000133514404,
+						"rank": 1,
+						"severity": 0.305968232588335,
+						"speed": 144.898696899414,
+						"target_kind": "full_top",
+						"time": 118.699999999995,
+						"tokens": 0.05025
+					},
+					{
+						"after_rpm": 0.365923617301019,
+						"approach_rpm": 0.368877421500049,
+						"clutch_active": false,
+						"input": 0.850000023841858,
+						"rank": 1,
+						"severity": 0.1795429056341,
+						"speed": 57.2394523620605,
+						"target_kind": "full_top",
+						"time": 118.966666666661,
+						"tokens": 0.06225
+					}
+				],
+				"events": [
+					{
+						"kind": "clutch_activate",
+						"rank": 1,
+						"rpm": 0.279928934590934,
+						"time": 113.333333333328
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 1,
+						"rpm": 0.369923186558449,
+						"time": 113.749999999995
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 1,
+						"rpm": 0.38652683060436,
+						"time": 117.583333333328
+					}
+				],
+				"recovery_peak_after_danger": 0.385798461133038
+			},
+			"drafts": [
+				{
+					"id": "draft/start",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"high_gear",
+						"crash_guard"
+					],
+					"power": "crash_guard",
+					"rank": 1,
+					"time": 0.0
+				},
+				{
+					"id": "draft/level_02",
+					"mutation": "",
+					"offers": [
+						"impact_wake",
+						"crash_guard",
+						"clutch"
+					],
+					"power": "crash_guard",
+					"rank": 2,
+					"time": 38.5333333333324
+				},
+				{
+					"id": "draft/level_03",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"redline",
+						"impact_wake"
+					],
+					"power": "impact_wake",
+					"rank": 1,
+					"time": 40.7166666666656
+				},
+				{
+					"id": "draft/level_04",
+					"mutation": "",
+					"offers": [
+						"redline",
+						"impact_wake",
+						"iron_comet"
+					],
+					"power": "impact_wake",
+					"rank": 2,
+					"time": 47.8333333333319
+				},
+				{
+					"id": "draft/level_05",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"momentum_bank",
+						"clutch"
+					],
+					"power": "clutch",
+					"rank": 1,
+					"time": 58.3666666666646
+				},
+				{
+					"id": "draft/level_06",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"clutch",
+						"momentum_bank"
+					],
+					"power": "clutch",
+					"rank": 2,
+					"time": 139.016666666669
+				}
+			],
+			"level": 6,
+			"minimum_rpm": 0.0448741731792842,
+			"mutations": {},
+			"powers": [
+				"crash_guard",
+				"impact_wake",
+				"clutch"
+			],
+			"ranks": {
+				"clutch": 2,
+				"crash_guard": 2,
+				"impact_wake": 2
+			},
+			"reason": "spin_out",
+			"remaining_rpm": 0.0448741731792842,
+			"seed": 7341,
+			"starter": "breaker",
+			"survival_time": 140.16666666667
+		},
+		{
+			"accounting_error": 0.000000000000203836947321179,
+			"clutch_activations": 1,
+			"clutch_catches": 1,
+			"clutch_gain": 0.035,
+			"danger_observation": {
+				"clutch_acquired_at": 117.799999999995,
+				"clutch_rank_at_first_danger": 1,
+				"danger_at": 152.333333333347,
+				"danger_contacts": [
+					{
+						"after_rpm": 0.260820493645174,
+						"approach_rpm": 0.264818917833126,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.211063731800426,
+						"speed": 50.7990570068359,
+						"target_kind": "full_top",
+						"time": 152.800000000014,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.255612784420689,
+						"approach_rpm": 0.259500733030019,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.197994908419522,
+						"speed": 38.273509979248,
+						"target_kind": "full_top",
+						"time": 153.383333333348,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.249206450610854,
+						"approach_rpm": 0.254772614941444,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.206097256053578,
+						"speed": 35.719539642334,
+						"target_kind": "full_top",
+						"time": 153.733333333348,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.244335710949519,
+						"approach_rpm": 0.248030395541736,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.178491592407227,
+						"speed": 35.4174652099609,
+						"target_kind": "full_top",
+						"time": 154.200000000015,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.239559354688874,
+						"approach_rpm": 0.24333731298223,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.191761415654963,
+						"speed": 32.8471336364746,
+						"target_kind": "full_top",
+						"time": 154.600000000015,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.234356874421028,
+						"approach_rpm": 0.238132866970699,
+						"clutch_active": true,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.193569668856534,
+						"speed": 20.4365081787109,
+						"target_kind": "full_top",
+						"time": 155.166666666682,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.22915677097429,
+						"approach_rpm": 0.232941282309824,
+						"clutch_active": true,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.196763368086381,
+						"speed": 17.8598957061768,
+						"target_kind": "full_top",
+						"time": 155.733333333349,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.224034058791249,
+						"approach_rpm": 0.227786746439058,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.194272509488192,
+						"speed": 8.8246898651123,
+						"target_kind": "full_top",
+						"time": 156.28333333335,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.304141326555717,
+						"approach_rpm": 0.210183328092865,
+						"clutch_active": true,
+						"input": 0.86000007390976,
+						"rank": 1,
+						"severity": 0.415735556862571,
+						"speed": 68.8748092651367,
+						"target_kind": "full_top",
+						"time": 156.616666666683,
+						"tokens": 0.0207400134278232
+					},
+					{
+						"after_rpm": 0.298232463363958,
+						"approach_rpm": 0.302466542261781,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.268030218644576,
+						"speed": 43.6004219055176,
+						"target_kind": "full_top",
+						"time": 157.300000000017,
+						"tokens": 0.0514900134278232
+					},
+					{
+						"after_rpm": 0.292949630743861,
+						"approach_rpm": 0.296911531955825,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.23205829967152,
+						"speed": 31.4816551208496,
+						"target_kind": "full_top",
+						"time": 157.900000000018,
+						"tokens": 0.0784900134278232
+					}
+				],
+				"events": [
+					{
+						"kind": "clutch_activate",
+						"rank": 1,
+						"rpm": 0.278921139430437,
+						"time": 152.31666666668
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 1,
+						"rpm": 0.304141326555717,
+						"time": 156.616666666683
+					}
+				],
+				"recovery_peak_after_danger": 0.607340137484142
+			},
+			"drafts": [
+				{
+					"id": "draft/start",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"high_gear",
+						"crash_guard"
+					],
+					"power": "crash_guard",
+					"rank": 1,
+					"time": 0.0
+				},
+				{
+					"id": "draft/level_02",
+					"mutation": "",
+					"offers": [
+						"impact_wake",
+						"crash_guard",
+						"clutch"
+					],
+					"power": "crash_guard",
+					"rank": 2,
+					"time": 38.7499999999991
+				},
+				{
+					"id": "draft/level_03",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"redline",
+						"impact_wake"
+					],
+					"power": "impact_wake",
+					"rank": 1,
+					"time": 46.083333333332
+				},
+				{
+					"id": "draft/level_04",
+					"mutation": "",
+					"offers": [
+						"redline",
+						"impact_wake",
+						"iron_comet"
+					],
+					"power": "impact_wake",
+					"rank": 2,
+					"time": 49.0833333333318
+				},
+				{
+					"id": "draft/level_05",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"momentum_bank",
+						"clutch"
+					],
+					"power": "clutch",
+					"rank": 1,
+					"time": 117.733333333328
+				},
+				{
+					"id": "draft/level_06",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"clutch",
+						"momentum_bank"
+					],
+					"power": "clutch",
+					"rank": 2,
+					"time": 191.833333333378
+				},
+				{
+					"id": "draft/level_07",
+					"mutation": "",
+					"offers": [
+						"afterimage",
+						"chain_impact",
+						"momentum_bank"
+					],
+					"power": "afterimage",
+					"rank": 1,
+					"time": 216.283333333398
+				},
+				{
+					"id": "draft/level_08",
+					"mutation": "",
+					"offers": [
+						"afterimage",
+						"chain_impact",
+						"redline"
+					],
+					"power": "afterimage",
+					"rank": 2,
+					"time": 265.98333333342
+				},
+				{
+					"id": "draft/level_09",
+					"mutation": "",
+					"offers": [
+						"dead_centre",
+						"afterimage",
+						"high_gear"
+					],
+					"power": "dead_centre",
+					"rank": 1,
+					"time": 275.116666666745
+				}
+			],
+			"level": 9,
+			"minimum_rpm": 0.154218663729466,
+			"mutations": {},
+			"powers": [
+				"crash_guard",
+				"impact_wake",
+				"clutch",
+				"afterimage",
+				"dead_centre"
+			],
+			"ranks": {
+				"afterimage": 2,
+				"clutch": 2,
+				"crash_guard": 2,
+				"dead_centre": 1,
+				"impact_wake": 2
+			},
+			"reason": "sample_limit",
+			"remaining_rpm": 0.385942076218499,
+			"seed": 7341,
+			"starter": "bastion",
+			"survival_time": 300.000000000056
+		},
+		{
+			"accounting_error": 0.000000000000167310609811011,
+			"clutch_activations": 2,
+			"clutch_catches": 3,
+			"clutch_gain": 0.145,
+			"danger_observation": {
+				"clutch_acquired_at": 105.649999999995,
+				"clutch_rank_at_first_danger": 1,
+				"danger_at": 146.583333333342,
+				"danger_contacts": [
+					{
+						"after_rpm": 0.367469683292341,
+						"approach_rpm": 0.266181540919453,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.477227679165927,
+						"speed": 93.4351196289063,
+						"target_kind": "full_top",
+						"time": 146.616666666675,
+						"tokens": 0.0110400130589394
+					},
+					{
+						"after_rpm": 0.363289669131858,
+						"approach_rpm": 0.366371003290837,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.342178899591619,
+						"speed": 85.1312484741211,
+						"target_kind": "full_top",
+						"time": 147.000000000009,
+						"tokens": 0.0282900130589394
+					},
+					{
+						"after_rpm": 0.356153115817876,
+						"approach_rpm": 0.362177900956612,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.610787547718395,
+						"speed": 67.2204437255859,
+						"target_kind": "full_top",
+						"time": 147.400000000009,
+						"tokens": 0.0462900130589395
+					},
+					{
+						"after_rpm": 0.378395048753066,
+						"approach_rpm": 0.354318100409809,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.452825199473988,
+						"speed": 39.934440612793,
+						"target_kind": "full_top",
+						"time": 148.05000000001,
+						"tokens": 0.047960620628012
+					},
+					{
+						"after_rpm": 0.370683230115244,
+						"approach_rpm": 0.376965366887437,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.351255070079457,
+						"speed": 44.0048599243164,
+						"target_kind": "full_top",
+						"time": 148.583333333344,
+						"tokens": 0.071960620628012
+					},
+					{
+						"after_rpm": 0.363582538535862,
+						"approach_rpm": 0.369299234328247,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.292177685824308,
+						"speed": 64.8915939331055,
+						"target_kind": "full_top",
+						"time": 149.100000000011,
+						"tokens": 0.0952106206280121
+					},
+					{
+						"after_rpm": 0.356950146400344,
+						"approach_rpm": 0.362433851334821,
+						"clutch_active": false,
+						"input": 0.86000007390976,
+						"rank": 1,
+						"severity": 0.269131261652166,
+						"speed": 67.2339477539063,
+						"target_kind": "full_top",
+						"time": 149.533333333344,
+						"tokens": 0.114710620628012
+					},
+					{
+						"after_rpm": 0.350711495791363,
+						"approach_rpm": 0.355950504021781,
+						"clutch_active": false,
+						"input": 0.86000007390976,
+						"rank": 1,
+						"severity": 0.244463556463068,
+						"speed": 59.7465324401855,
+						"target_kind": "full_top",
+						"time": 149.916666666678,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.344773547224656,
+						"approach_rpm": 0.349816052554119,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.224827593023127,
+						"speed": 52.6265182495117,
+						"target_kind": "full_top",
+						"time": 150.266666666678,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.338940128719284,
+						"approach_rpm": 0.343931167934527,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.221194839477539,
+						"speed": 47.3898239135742,
+						"target_kind": "full_top",
+						"time": 150.600000000012,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.31916691328768,
+						"approach_rpm": 0.324793346823093,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.294930787519975,
+						"speed": 78.4779663085938,
+						"target_kind": "full_top",
+						"time": 151.033333333346,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.314161387309686,
+						"approach_rpm": 0.318520219753497,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.154914127696644,
+						"speed": 55.9732627868652,
+						"target_kind": "full_top",
+						"time": 151.283333333346,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.308954455422414,
+						"approach_rpm": 0.31337165229752,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 1,
+						"severity": 0.163326714255593,
+						"speed": 42.5368919372559,
+						"target_kind": "full_top",
+						"time": 151.583333333346,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.303656383386526,
+						"approach_rpm": 0.308075385363568,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.165394072099165,
+						"speed": 19.3254852294922,
+						"target_kind": "full_top",
+						"time": 151.91666666668,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.2981509661299,
+						"approach_rpm": 0.302737036798794,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 1,
+						"severity": 0.186193431507457,
+						"speed": 19.4679088592529,
+						"target_kind": "full_top",
+						"time": 152.26666666668,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.325594393252527,
+						"approach_rpm": 0.274760368403258,
+						"clutch_active": true,
+						"input": 0.859999895095825,
+						"rank": 2,
+						"severity": 0.222785446860574,
+						"speed": 33.1371536254883,
+						"target_kind": "full_top",
+						"time": 166.366666666691,
+						"tokens": 0.065
+					},
+					{
+						"after_rpm": 0.320576710776654,
+						"approach_rpm": 0.324720792218667,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.222417519309304,
+						"speed": 42.3913307189941,
+						"target_kind": "full_top",
+						"time": 166.683333333358,
+						"tokens": 0.07925
+					},
+					{
+						"after_rpm": 0.315743171991976,
+						"approach_rpm": 0.319710736873934,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.200891182639382,
+						"speed": 46.049991607666,
+						"target_kind": "full_top",
+						"time": 167.000000000025,
+						"tokens": 0.0935
+					},
+					{
+						"after_rpm": 0.310932808128122,
+						"approach_rpm": 0.314893074091232,
+						"clutch_active": false,
+						"input": 0.86000007390976,
+						"rank": 2,
+						"severity": 0.202333138205788,
+						"speed": 42.735523223877,
+						"target_kind": "full_top",
+						"time": 167.316666666692,
+						"tokens": 0.10775
+					},
+					{
+						"after_rpm": 0.318841842137759,
+						"approach_rpm": 0.296886399382139,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.332219245217063,
+						"speed": 35.9480934143066,
+						"target_kind": "full_top",
+						"time": 167.700000000026,
+						"tokens": 0.0931646353316601
+					},
+					{
+						"after_rpm": 0.314213772175973,
+						"approach_rpm": 0.31809260461569,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 2,
+						"severity": 0.197965275157582,
+						"speed": 8.97684574127197,
+						"target_kind": "full_top",
+						"time": 167.983333333359,
+						"tokens": 0.10591463533166
+					},
+					{
+						"after_rpm": 0.309662633956756,
+						"approach_rpm": 0.313428216410522,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 2,
+						"severity": 0.184600067138672,
+						"speed": 5.71193408966064,
+						"target_kind": "full_top",
+						"time": 168.283333333359,
+						"tokens": 0.11941463533166
+					},
+					{
+						"after_rpm": 0.305158619926096,
+						"approach_rpm": 0.308884357588992,
+						"clutch_active": false,
+						"input": 0.859999895095825,
+						"rank": 2,
+						"severity": 0.181198952414773,
+						"speed": 9.71935272216797,
+						"target_kind": "full_top",
+						"time": 168.58333333336,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.300711303791044,
+						"approach_rpm": 0.304376576412879,
+						"clutch_active": false,
+						"input": 0.85999995470047,
+						"rank": 2,
+						"severity": 0.174796364524148,
+						"speed": 10.3496360778809,
+						"target_kind": "full_top",
+						"time": 168.88333333336,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.296291195746169,
+						"approach_rpm": 0.299923978016318,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.172249273820357,
+						"speed": 12.0627737045288,
+						"target_kind": "full_top",
+						"time": 169.18333333336,
+						"tokens": 0.12
+					},
+					{
+						"after_rpm": 0.381253439297637,
+						"approach_rpm": 0.296099208853544,
+						"clutch_active": true,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.663979408957741,
+						"speed": 38.1402435302734,
+						"target_kind": "full_top",
+						"time": 169.266666666694,
+						"tokens": 0.0243679935065029
+					},
+					{
+						"after_rpm": 0.377521544508841,
+						"approach_rpm": 0.379863940560615,
+						"clutch_active": false,
+						"input": 0.860000014305115,
+						"rank": 2,
+						"severity": 0.129227178747004,
+						"speed": 89.2914276123047,
+						"target_kind": "full_top",
+						"time": 169.766666666694,
+						"tokens": 0.0468679935065029
+					}
+				],
+				"events": [
+					{
+						"kind": "clutch_activate",
+						"rank": 1,
+						"rpm": 0.279943789498378,
+						"time": 146.416666666675
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 1,
+						"rpm": 0.367469683292341,
+						"time": 146.616666666675
+					},
+					{
+						"kind": "clutch_activate",
+						"rank": 2,
+						"rpm": 0.275860913396636,
+						"time": 165.983333333358
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 2,
+						"rpm": 0.325594393252527,
+						"time": 166.366666666691
+					},
+					{
+						"kind": "clutch_recover",
+						"rank": 2,
+						"rpm": 0.381253439297637,
+						"time": 169.266666666694
+					}
+				],
+				"recovery_peak_after_danger": 0.670061881336632
+			},
+			"drafts": [
+				{
+					"id": "draft/start",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"high_gear",
+						"crash_guard"
+					],
+					"power": "crash_guard",
+					"rank": 1,
+					"time": 0.0
+				},
+				{
+					"id": "draft/level_02",
+					"mutation": "",
+					"offers": [
+						"impact_wake",
+						"crash_guard",
+						"clutch"
+					],
+					"power": "crash_guard",
+					"rank": 2,
+					"time": 38.6999999999991
+				},
+				{
+					"id": "draft/level_03",
+					"mutation": "",
+					"offers": [
+						"momentum_bank",
+						"redline",
+						"impact_wake"
+					],
+					"power": "impact_wake",
+					"rank": 1,
+					"time": 47.0666666666653
+				},
+				{
+					"id": "draft/level_04",
+					"mutation": "",
+					"offers": [
+						"redline",
+						"impact_wake",
+						"iron_comet"
+					],
+					"power": "impact_wake",
+					"rank": 2,
+					"time": 49.8333333333318
+				},
+				{
+					"id": "draft/level_05",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"momentum_bank",
+						"clutch"
+					],
+					"power": "clutch",
+					"rank": 1,
+					"time": 105.649999999995
+				},
+				{
+					"id": "draft/level_06",
+					"mutation": "",
+					"offers": [
+						"predator_line",
+						"clutch",
+						"momentum_bank"
+					],
+					"power": "clutch",
+					"rank": 2,
+					"time": 156.716666666684
+				},
+				{
+					"id": "draft/level_07",
+					"mutation": "",
+					"offers": [
+						"afterimage",
+						"chain_impact",
+						"momentum_bank"
+					],
+					"power": "afterimage",
+					"rank": 1,
+					"time": 193.350000000046
+				},
+				{
+					"id": "draft/level_08",
+					"mutation": "",
+					"offers": [
+						"afterimage",
+						"chain_impact",
+						"redline"
+					],
+					"power": "afterimage",
+					"rank": 2,
+					"time": 243.400000000086
+				},
+				{
+					"id": "draft/level_09",
+					"mutation": "",
+					"offers": [
+						"dead_centre",
+						"afterimage",
+						"high_gear"
+					],
+					"power": "dead_centre",
+					"rank": 1,
+					"time": 265.283333333421
+				},
+				{
+					"id": "draft/level_10",
+					"mutation": "",
+					"offers": [
+						"orbit_drive",
+						"dead_centre",
+						"afterimage"
+					],
+					"power": "dead_centre",
+					"rank": 2,
+					"time": 280.850000000073
+				},
+				{
+					"id": "draft/level_11",
+					"mutation": "bulwark",
+					"offers": [
+						"dead_centre",
+						"orbit_drive",
+						"afterimage"
+					],
+					"power": "dead_centre",
+					"rank": 3,
+					"time": 297.583333333391
+				}
+			],
+			"level": 11,
+			"minimum_rpm": 0.25850969635128,
+			"mutations": {
+				"dead_centre": "bulwark"
+			},
+			"powers": [
+				"crash_guard",
+				"impact_wake",
+				"clutch",
+				"afterimage",
+				"dead_centre"
+			],
+			"ranks": {
+				"afterimage": 2,
+				"clutch": 2,
+				"crash_guard": 2,
+				"dead_centre": 3,
+				"impact_wake": 2
+			},
+			"reason": "sample_limit",
+			"remaining_rpm": 0.457834400328619,
+			"seed": 7341,
+			"starter": "vane",
+			"survival_time": 300.000000000056
+		}
+	],
+	"scope": "Natural Main draft offers with Clutch-first existing comeback preferences; full RPM launch, ordinary AI/director/economy and inputs only. Paid braking and weak correction until actual RPM <=0.28, then aggressive pursuit with normal edge correction. No injected ranks, reserve/body edits, loss protection or outcome injection. Not human acceptance.",
+	"seed": 7341
+}

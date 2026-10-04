@@ -8,11 +8,17 @@ const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
 const ESCALATION_EFFECTS: Texture2D = preload("res://assets/powers/escalation_effects.png")
 const ESCALATION_ICONS: Texture2D = preload("res://assets/powers/escalation_icons.png")
+const ROSTER_ICONS: Texture2D = preload("res://assets/powers/roster_icons.png")
 const ESCALATION_KINDS: Array[String] = ["redline_ii", "runaway", "runaway_hit", "breakneck_charge", "breakneck_impact", "anchor", "anchor_ii", "anchor_break", "bulwark", "bulwark_impact", "counterweight", "counterweight_store", "counterweight_release", "afterimage_ii", "ghost_closure", "ghost_activation", "slipstream_cross", "rank_up", "mutation_select"]
 static var metadata: Dictionary = {}
 static var escalation_metadata: Dictionary = {}
+static var roster_metadata: Dictionary = {}
 
 static func _meta(group: String) -> Dictionary:
+	if group.begins_with("roster_"):
+		if roster_metadata.is_empty():
+			roster_metadata=JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/roster_manifest.json"))
+		return roster_metadata.get(group.trim_prefix("roster_"),{})
 	if group.begins_with("escalation_"):
 		if escalation_metadata.is_empty():
 			var parsed_escalation: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/escalation_manifest.json"))
@@ -124,14 +130,6 @@ static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2
 	Signature.aura(canvas,fighter,position,clock)
 	if float(fighter.get("slipstream_time", 0.0)) > 0.0:
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
-	if float(fighter.get("iron_comet_time", 0.0)) > 0.0:
-		var velocity: Vector2 = fighter.get("vel", Vector2.RIGHT)
-		if velocity.length_squared() < 1.0:
-			velocity = fighter.get("facing", Vector2.RIGHT)
-		var angle: float = Vector2(velocity.x - velocity.y, velocity.x + velocity.y).angle()
-		var heading: int = posmod(int(roundf(angle / (TAU / 8.0))), 8)
-		var first: int = int(_meta("effects")["tags"]["comet_headings"]["from"])
-		_cell(canvas, "effects", EFFECTS, first + heading, position)
 
 static func draw_trace(canvas: CanvasItem, trace: Dictionary, from_screen: Vector2, to_screen: Vector2, quality: float = 1.0) -> void:
 	draw_trace_path(canvas, trace, PackedVector2Array([from_screen, to_screen]), quality)
@@ -196,6 +194,8 @@ static func draw_spawn(canvas: CanvasItem, position: Vector2, progress: float) -
 	_cell(canvas, "effects", EFFECTS, _frame("effects", "floor_stamp", age), position, Color(1.0, 0.90, 0.65))
 
 static func icon_region(power_id: String) -> Rect2:
+	var roster_tags: Dictionary=_meta("roster_icons").get("tags",{})
+	if roster_tags.has(power_id): return Rect2(float(roster_tags[power_id].from)*16.0,0.0,16.0,16.0)
 	var escalation_tags: Dictionary = _meta("escalation_icons").get("tags", {})
 	if escalation_tags.has(power_id):
 		return Rect2(float(escalation_tags[power_id].from) * 16.0, 0.0, 16.0, 16.0)
@@ -205,6 +205,7 @@ static func icon_region(power_id: String) -> Rect2:
 	return Rect2(float(frame) * 16.0, 0.0, 16.0, 16.0)
 
 static func icon_texture(power_id: String) -> Texture2D:
+	if _meta("roster_icons").get("tags",{}).has(power_id): return ROSTER_ICONS
 	return ESCALATION_ICONS if _meta("escalation_icons").get("tags", {}).has(power_id) else ICONS
 
 static func _heading(direction: Vector2) -> int:

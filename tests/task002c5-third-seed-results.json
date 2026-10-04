@@ -1,0 +1,1967 @@
+{
+  "scope": "Real fixed-step continuous combat; sampled bot input, normal enemy AI, ordinary earned claims. No injected outcomes or reserve refill. Active seconds exclude menus/countdown/hit-stop; not human playtesting.",
+  "diagnostic_ceiling_seconds": 300,
+  "seed": 2026,
+  "sample_count": 9,
+  "provenance": "Supplemental final-runtime third seed; Main real offers, normal AI/director and sampled ordinary controls only. No fixed starting abilities, forced outcomes, reserve refills, enemy removal or body-state edits. Primary matrix remains 42 runs with a separate 600-second ceiling.",
+  "median_note": "Observed durations are right-censored at the 300-second diagnostic ceiling; ceiling rows are not proven survival durations beyond that point.",
+  "outcomes": {
+    "ring_out": 4,
+    "sample_limit": 4,
+    "spin_out": 1
+  },
+  "profile_medians": {
+    "overclock": {
+      "samples": 3,
+      "observed_duration_median_seconds": 231.966666666743,
+      "outcomes": {
+        "ring_out": 3
+      }
+    },
+    "speed": {
+      "samples": 3,
+      "observed_duration_median_seconds": 300.000000000056,
+      "outcomes": {
+        "ring_out": 1,
+        "sample_limit": 2
+      }
+    },
+    "defence": {
+      "samples": 3,
+      "observed_duration_median_seconds": 300.000000000056,
+      "outcomes": {
+        "sample_limit": 2,
+        "spin_out": 1
+      }
+    }
+  },
+  "maximum_accounting_error": 3.38340466754516E-13,
+  "runs": [
+    {
+      "profile": "overclock",
+      "starter": "breaker",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 231.966666666743,
+      "reason": "ring_out",
+      "status": "failed",
+      "level": 11,
+      "powers": [
+        "crosscut",
+        "redline",
+        "predator_line",
+        "high_gear",
+        "impact_wake"
+      ],
+      "ranks": {
+        "crosscut": 2,
+        "high_gear": 3,
+        "impact_wake": 1,
+        "predator_line": 2,
+        "redline": 3
+      },
+      "mutations": {
+        "high_gear": "terminal_velocity",
+        "redline": "runaway"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 5.03333333333332
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 17.9500000000003
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 40.6166666666656
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "predator_line",
+          "rank": 1,
+          "time": 47.6999999999986
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "runaway",
+          "offers": [
+            "momentum_bank",
+            "redline",
+            "dead_centre"
+          ],
+          "power": "redline",
+          "rank": 3,
+          "time": 78.6666666666635
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "orbit_drive",
+            "predator_line"
+          ],
+          "power": "predator_line",
+          "rank": 2,
+          "time": 127.799999999994
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "high_gear",
+            "chain_impact"
+          ],
+          "power": "high_gear",
+          "rank": 1,
+          "time": 156.93333333335
+        },
+        {
+          "id": "draft/level_09",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "chain_impact",
+            "high_gear"
+          ],
+          "power": "high_gear",
+          "rank": 2,
+          "time": 173.233333333363
+        },
+        {
+          "id": "draft/level_10",
+          "mutation": "terminal_velocity",
+          "offers": [
+            "high_gear",
+            "clutch",
+            "dead_centre"
+          ],
+          "power": "high_gear",
+          "rank": 3,
+          "time": 189.316666666709
+        },
+        {
+          "id": "draft/level_11",
+          "mutation": "",
+          "offers": [
+            "momentum_bank",
+            "orbit_drive",
+            "impact_wake"
+          ],
+          "power": "impact_wake",
+          "rank": 1,
+          "time": 213.116666666728
+        }
+      ],
+      "remaining_rpm": 1.07369098273951,
+      "minimum_rpm": 0.817776709182982,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 146.150000000008,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.956666666666667,
+        "heat_max": 1.0,
+        "high_speed_contacts": 96,
+        "max_overcap": 0.225657959170169,
+        "mean_overcap_active": 0.0499180311680576,
+        "motion_quota_remaining": 0.104499999999997,
+        "overcap_integral": 7.29552025521204,
+        "overcap_seconds": 89.3166666666629,
+        "ring_outs_active": 1,
+        "rpm_gained": 4.38978557935791,
+        "rpm_spent": 4.67591890286835,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 30068.9559940836,
+        "drift_seconds": 0.0,
+        "mean_speed": 129.626193393089,
+        "orbit_seconds": 0.0,
+        "peak_speed": 368.094360351563,
+        "procs": {
+          "crosscut": 28,
+          "high_gear_surge": 10,
+          "predator_lock": 55
+        },
+        "states": 4
+      },
+      "power_procs": {
+        "impact_wake": 3,
+        "redline": 35,
+        "redline_heat": 22,
+        "redline_overcap": 37,
+        "runaway_hit": 44
+      },
+      "rpm_gains": {
+        "boss": 0.0,
+        "clutch": 0.0,
+        "combat_reclamation": 4.13241731788791,
+        "elimination": 0.188602936900242,
+        "elite": 0.09675,
+        "redline_contact": 0.246056526415276,
+        "redline_motion": 3.43550000000007,
+        "runaway": 0.708229052942533,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0792289817337374,
+        "burst": 0.663,
+        "collisions": 1.57284960655311,
+        "movement": 0.275902681345573,
+        "passive": 0.574215185333424,
+        "powers": 5.00791890286835,
+        "steering": 0.0793379074459512,
+        "walls": 0.184489380180836,
+        "wobble": 0.296922205945495
+      },
+      "accounting_error": 5.39568389967826E-14,
+      "max_full": 3,
+      "max_reserved_full": 3,
+      "max_active_entities": 12,
+      "max_small": 10
+    },
+    {
+      "profile": "overclock",
+      "starter": "bastion",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 298.73333333339,
+      "reason": "ring_out",
+      "status": "failed",
+      "level": 12,
+      "powers": [
+        "crosscut",
+        "redline",
+        "predator_line",
+        "high_gear",
+        "impact_wake"
+      ],
+      "ranks": {
+        "crosscut": 2,
+        "high_gear": 3,
+        "impact_wake": 2,
+        "predator_line": 2,
+        "redline": 3
+      },
+      "mutations": {
+        "high_gear": "terminal_velocity",
+        "redline": "runaway"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 10.3166666666668
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 29.4333333333329
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 50.6166666666651
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "predator_line",
+          "rank": 1,
+          "time": 67.8166666666641
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "runaway",
+          "offers": [
+            "momentum_bank",
+            "redline",
+            "dead_centre"
+          ],
+          "power": "redline",
+          "rank": 3,
+          "time": 124.533333333328
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "orbit_drive",
+            "predator_line"
+          ],
+          "power": "predator_line",
+          "rank": 2,
+          "time": 172.90000000003
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "high_gear",
+            "chain_impact"
+          ],
+          "power": "high_gear",
+          "rank": 1,
+          "time": 195.950000000048
+        },
+        {
+          "id": "draft/level_09",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "chain_impact",
+            "high_gear"
+          ],
+          "power": "high_gear",
+          "rank": 2,
+          "time": 228.833333333408
+        },
+        {
+          "id": "draft/level_10",
+          "mutation": "terminal_velocity",
+          "offers": [
+            "high_gear",
+            "clutch",
+            "dead_centre"
+          ],
+          "power": "high_gear",
+          "rank": 3,
+          "time": 245.166666666754
+        },
+        {
+          "id": "draft/level_11",
+          "mutation": "",
+          "offers": [
+            "momentum_bank",
+            "orbit_drive",
+            "impact_wake"
+          ],
+          "power": "impact_wake",
+          "rank": 1,
+          "time": 265.866666666754
+        },
+        {
+          "id": "draft/level_12",
+          "mutation": "",
+          "offers": [
+            "clutch",
+            "impact_wake",
+            "orbit_drive"
+          ],
+          "power": "impact_wake",
+          "rank": 2,
+          "time": 291.400000000064
+        }
+      ],
+      "remaining_rpm": 1.18664953832189,
+      "minimum_rpm": 0.808224685359684,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 178.483333333368,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.996666666666667,
+        "heat_max": 1.0,
+        "high_speed_contacts": 117,
+        "max_overcap": 0.24,
+        "mean_overcap_active": 0.0444136810994472,
+        "motion_quota_remaining": 0.0604999999999941,
+        "overcap_integral": 7.92710184823453,
+        "overcap_seconds": 90.6166666666628,
+        "ring_outs_active": 1,
+        "rpm_gained": 3.57451305449765,
+        "rpm_spent": 4.66950942910032,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 29626.0966588368,
+        "drift_seconds": 0.0,
+        "mean_speed": 99.172383370353,
+        "orbit_seconds": 0.0,
+        "peak_speed": 363.891296386719,
+        "procs": {
+          "crosscut": 35,
+          "high_gear_surge": 13,
+          "predator_lock": 73
+        },
+        "states": 2
+      },
+      "power_procs": {
+        "impact_wake": 11,
+        "redline": 43,
+        "redline_heat": 17,
+        "redline_overcap": 33,
+        "runaway_hit": 53
+      },
+      "rpm_gains": {
+        "boss": 0.0475300989485572,
+        "clutch": 0.0,
+        "combat_reclamation": 5.14235263454395,
+        "elimination": 0.277917682970047,
+        "elite": 0.0461334402452543,
+        "redline_contact": 0.393955647381869,
+        "redline_motion": 2.30505594295767,
+        "runaway": 0.875501464158091,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0720062528706638,
+        "burst": 0.845000000000001,
+        "collisions": 1.91553356877171,
+        "movement": 0.304287524112723,
+        "passive": 0.328632156000006,
+        "powers": 5.08950942910039,
+        "steering": 0.0681822802370782,
+        "walls": 0.222400694799423,
+        "wobble": 0.0562454669912991
+      },
+      "accounting_error": 2.60236276972137E-13,
+      "max_full": 3,
+      "max_reserved_full": 3,
+      "max_active_entities": 13,
+      "max_small": 10
+    },
+    {
+      "profile": "overclock",
+      "starter": "vane",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 96.5333333333291,
+      "reason": "ring_out",
+      "status": "failed",
+      "level": 6,
+      "powers": [
+        "crosscut",
+        "redline",
+        "predator_line"
+      ],
+      "ranks": {
+        "crosscut": 2,
+        "predator_line": 1,
+        "redline": 3
+      },
+      "mutations": {
+        "redline": "runaway"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 11.7166666666668
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 24.9333333333332
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 46.2166666666653
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "predator_line",
+          "rank": 1,
+          "time": 57.3666666666647
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "runaway",
+          "offers": [
+            "momentum_bank",
+            "redline",
+            "dead_centre"
+          ],
+          "power": "redline",
+          "rank": 3,
+          "time": 79.8499999999968
+        }
+      ],
+      "remaining_rpm": 1.15954822519872,
+      "minimum_rpm": 0.813357057801061,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 50.7499999999984,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.430577230943887,
+        "heat_max": 0.484603733086338,
+        "high_speed_contacts": 25,
+        "max_overcap": 0.16196152630732,
+        "mean_overcap_active": 0.0183768326257742,
+        "motion_quota_remaining": 0.0979999999999984,
+        "overcap_integral": 0.932624255758012,
+        "overcap_seconds": 19.7166666666668,
+        "ring_outs_active": 1,
+        "rpm_gained": 1.0997103162301,
+        "rpm_spent": 1.26792115144212,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 9389.40597265564,
+        "drift_seconds": 0.0,
+        "mean_speed": 97.265945849333,
+        "orbit_seconds": 0.0,
+        "peak_speed": 341.342987060547,
+        "procs": {
+          "crosscut": 7,
+          "predator_lock": 10
+        },
+        "states": 2
+      },
+      "power_procs": {
+        "redline": 15,
+        "redline_overcap": 11,
+        "runaway_hit": 3
+      },
+      "rpm_gains": {
+        "boss": 0.0,
+        "clutch": 0.0,
+        "combat_reclamation": 1.57877047112036,
+        "elimination": 0.145208326911159,
+        "elite": 0.0,
+        "redline_contact": 0.307378895251724,
+        "redline_motion": 0.73575,
+        "runaway": 0.0565814209783481,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0233699999999996,
+        "burst": 0.286,
+        "collisions": 0.707808433737329,
+        "movement": 0.0883502611481128,
+        "passive": 0.178253574560008,
+        "powers": 1.34792115144214,
+        "steering": 0.0,
+        "walls": 0.0281309507751465,
+        "wobble": 0.00430651740027692
+      },
+      "accounting_error": 1.35225164399344E-13,
+      "max_full": 2,
+      "max_reserved_full": 2,
+      "max_active_entities": 8,
+      "max_small": 6
+    },
+    {
+      "profile": "speed",
+      "starter": "breaker",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 300.000000000056,
+      "reason": "sample_limit",
+      "status": "active",
+      "level": 14,
+      "powers": [
+        "afterimage",
+        "orbit_drive",
+        "crosscut",
+        "redline",
+        "high_gear",
+        "iron_comet"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crosscut": 2,
+        "high_gear": 3,
+        "iron_comet": 2,
+        "orbit_drive": 2,
+        "redline": 2
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit",
+        "high_gear": "terminal_velocity"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "afterimage",
+          "rank": 2,
+          "time": 13.8333333333336
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 1,
+          "time": 26.2333333333331
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 2,
+          "time": 47.2166666666653
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 61.6833333333311
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "ghost_circuit",
+          "offers": [
+            "predator_line",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 3,
+          "time": 124.966666666661
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crash_guard",
+            "crosscut"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 160.483333333353
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crosscut",
+            "chain_impact"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 189.81666666671
+        },
+        {
+          "id": "draft/level_09",
+          "mutation": "",
+          "offers": [
+            "chain_impact",
+            "high_gear",
+            "redline"
+          ],
+          "power": "high_gear",
+          "rank": 1,
+          "time": 218.416666666733
+        },
+        {
+          "id": "draft/level_10",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "high_gear",
+            "redline"
+          ],
+          "power": "high_gear",
+          "rank": 2,
+          "time": 235.066666666746
+        },
+        {
+          "id": "draft/level_11",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "momentum_bank",
+            "redline"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 242.183333333418
+        },
+        {
+          "id": "draft/level_12",
+          "mutation": "terminal_velocity",
+          "offers": [
+            "iron_comet",
+            "high_gear",
+            "clutch"
+          ],
+          "power": "high_gear",
+          "rank": 3,
+          "time": 267.966666666752
+        },
+        {
+          "id": "draft/level_13",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "chain_impact",
+            "redline"
+          ],
+          "power": "iron_comet",
+          "rank": 1,
+          "time": 279.400000000075
+        },
+        {
+          "id": "draft/level_14",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "chain_impact",
+            "impact_wake"
+          ],
+          "power": "iron_comet",
+          "rank": 2,
+          "time": 298.566666666724
+        }
+      ],
+      "remaining_rpm": 0.990114161186263,
+      "minimum_rpm": 0.363683510709841,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 95.6666666666625,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.0119184122602759,
+        "heat_max": 0.813263322819606,
+        "high_speed_contacts": 60,
+        "max_overcap": 0.134696264156268,
+        "mean_overcap_active": 0.00603472798518593,
+        "motion_quota_remaining": 0.0,
+        "overcap_integral": 0.577322310582763,
+        "overcap_seconds": 19.6333333333335,
+        "ring_outs_active": 0,
+        "rpm_gained": 2.62484117191461,
+        "rpm_spent": 2.74982619272896,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 36705.8966181399,
+        "drift_seconds": 31.3333333333328,
+        "mean_speed": 122.352988727132,
+        "orbit_seconds": 51.3833333333317,
+        "peak_speed": 372.591979980469,
+        "procs": {
+          "crosscut": 27,
+          "high_gear_surge": 7,
+          "orbit_drift": 206
+        },
+        "states": 2
+      },
+      "power_procs": {
+        "afterimage": 1099,
+        "afterimage_hit": 526,
+        "comet_charge": 1,
+        "comet_release": 1,
+        "ghost_activation": 8,
+        "ghost_closure": 11,
+        "ghost_preview": 20,
+        "redline": 30,
+        "redline_heat": 1,
+        "redline_overcap": 21,
+        "slipstream_cross": 9
+      },
+      "rpm_gains": {
+        "boss": 0.0533009041344857,
+        "clutch": 0.0,
+        "combat_reclamation": 4.83141920755246,
+        "elimination": 0.352999888322189,
+        "elite": 0.213,
+        "redline_contact": 0.633591171914532,
+        "redline_motion": 1.99125000000005,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.125389147793028,
+        "burst": 0.845000000000001,
+        "collisions": 1.98961052431496,
+        "movement": 0.360639039508536,
+        "passive": 0.734232199793993,
+        "powers": 3.711426192729,
+        "steering": 0.0516098444202088,
+        "walls": 0.100174996623993,
+        "wobble": 0.167365065553924
+      },
+      "accounting_error": 1.9195756095769E-13,
+      "max_full": 3,
+      "max_reserved_full": 3,
+      "max_active_entities": 13,
+      "max_small": 10
+    },
+    {
+      "profile": "speed",
+      "starter": "bastion",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 300.000000000056,
+      "reason": "sample_limit",
+      "status": "active",
+      "level": 11,
+      "powers": [
+        "afterimage",
+        "orbit_drive",
+        "crosscut",
+        "redline",
+        "high_gear"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crosscut": 2,
+        "high_gear": 2,
+        "orbit_drive": 2,
+        "redline": 2
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "afterimage",
+          "rank": 2,
+          "time": 12.8666666666669
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 1,
+          "time": 29.3499999999996
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 2,
+          "time": 50.6166666666651
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 74.3499999999971
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "ghost_circuit",
+          "offers": [
+            "predator_line",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 3,
+          "time": 120.933333333328
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crash_guard",
+            "crosscut"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 157.583333333351
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crosscut",
+            "chain_impact"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 189.233333333376
+        },
+        {
+          "id": "draft/level_09",
+          "mutation": "",
+          "offers": [
+            "chain_impact",
+            "high_gear",
+            "redline"
+          ],
+          "power": "high_gear",
+          "rank": 1,
+          "time": 232.566666666744
+        },
+        {
+          "id": "draft/level_10",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "high_gear",
+            "redline"
+          ],
+          "power": "high_gear",
+          "rank": 2,
+          "time": 255.683333333429
+        },
+        {
+          "id": "draft/level_11",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "momentum_bank",
+            "redline"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 286.183333333402
+        }
+      ],
+      "remaining_rpm": 0.949512138276791,
+      "minimum_rpm": 0.787178829350957,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 104.033333333329,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.364526195847473,
+        "heat_max": 0.979347094589957,
+        "high_speed_contacts": 49,
+        "max_overcap": 0.153747474602438,
+        "mean_overcap_active": 0.015098467108195,
+        "motion_quota_remaining": 0.086749999999998,
+        "overcap_integral": 1.57074386148915,
+        "overcap_seconds": 27.733333333333,
+        "ring_outs_active": 0,
+        "rpm_gained": 2.32063960522889,
+        "rpm_spent": 3.17532890043577,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 26597.7381992598,
+        "drift_seconds": 20.3500000000001,
+        "mean_speed": 88.6591273308661,
+        "orbit_seconds": 36.2666666666659,
+        "peak_speed": 331.316253662109,
+        "procs": {
+          "crosscut": 29,
+          "orbit_drift": 28
+        },
+        "states": 3
+      },
+      "power_procs": {
+        "afterimage": 553,
+        "afterimage_hit": 304,
+        "ghost_activation": 10,
+        "ghost_closure": 6,
+        "ghost_preview": 10,
+        "redline": 33,
+        "redline_heat": 3,
+        "redline_overcap": 20,
+        "slipstream_cross": 1
+      },
+      "rpm_gains": {
+        "boss": 0.0,
+        "clutch": 0.0,
+        "combat_reclamation": 4.26309278011081,
+        "elimination": 0.339716079433057,
+        "elite": 0.213986011647349,
+        "redline_contact": 0.827389605228834,
+        "redline_motion": 1.49325000000003,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0641379360000003,
+        "burst": 0.910000000000001,
+        "collisions": 1.92326309995677,
+        "movement": 0.302308405865449,
+        "passive": 0.324918539555869,
+        "powers": 3.60932890043583,
+        "steering": 0.0,
+        "walls": 0.0465535774230957,
+        "wobble": 0.00741187890626688
+      },
+      "accounting_error": 9.99200722162641E-15,
+      "max_full": 4,
+      "max_reserved_full": 4,
+      "max_active_entities": 8,
+      "max_small": 6
+    },
+    {
+      "profile": "speed",
+      "starter": "vane",
+      "seed": 2026,
+      "style": "aggressive",
+      "survival_time": 208.483333333391,
+      "reason": "ring_out",
+      "status": "failed",
+      "level": 8,
+      "powers": [
+        "afterimage",
+        "orbit_drive",
+        "crosscut",
+        "redline"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crosscut": 1,
+        "orbit_drive": 2,
+        "redline": 2
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "afterimage",
+          "rank": 2,
+          "time": 8.16666666666665
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 1,
+          "time": 25.7333333333332
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "predator_line"
+          ],
+          "power": "orbit_drive",
+          "rank": 2,
+          "time": 46.1999999999987
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 57.8833333333313
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "ghost_circuit",
+          "offers": [
+            "predator_line",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "afterimage",
+          "rank": 3,
+          "time": 113.699999999995
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crash_guard",
+            "crosscut"
+          ],
+          "power": "redline",
+          "rank": 1,
+          "time": 165.800000000024
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "redline",
+            "crosscut",
+            "chain_impact"
+          ],
+          "power": "redline",
+          "rank": 2,
+          "time": 191.400000000044
+        }
+      ],
+      "remaining_rpm": 1.07767247662047,
+      "minimum_rpm": 0.348010189031904,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 27.9999999999997,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.363669211085535,
+        "heat_max": 0.518516399163768,
+        "high_speed_contacts": 13,
+        "max_overcap": 0.104488437229699,
+        "mean_overcap_active": 0.00836530575265889,
+        "motion_quota_remaining": 0.0837499999999979,
+        "overcap_integral": 0.234228561074446,
+        "overcap_seconds": 3.89999999999999,
+        "ring_outs_active": 1,
+        "rpm_gained": 0.810213762213597,
+        "rpm_spent": 0.672690753423239,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 22686.7987891918,
+        "drift_seconds": 19.1833333333335,
+        "mean_speed": 108.818285022904,
+        "orbit_seconds": 43.7499999999988,
+        "peak_speed": 313.741973876953,
+        "procs": {
+          "crosscut": 10,
+          "orbit_drift": 55
+        },
+        "states": 3
+      },
+      "power_procs": {
+        "afterimage": 644,
+        "afterimage_hit": 174,
+        "ghost_preview": 5,
+        "redline": 9,
+        "redline_overcap": 4,
+        "slipstream_cross": 6
+      },
+      "rpm_gains": {
+        "boss": 0.0802500000000001,
+        "clutch": 0.0,
+        "combat_reclamation": 2.70060343309525,
+        "elimination": 0.19289468614848,
+        "elite": 0.0,
+        "redline_contact": 0.210213762213574,
+        "redline_motion": 0.599999999999995,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0455988114666668,
+        "burst": 0.598,
+        "collisions": 1.14535540944949,
+        "movement": 0.20448607032755,
+        "passive": 0.370139314527955,
+        "powers": 1.30629075342326,
+        "steering": 0.0,
+        "walls": 0.0335333433151245,
+        "wobble": 0.00288570232692287
+      },
+      "accounting_error": 1.45439216225896E-13,
+      "max_full": 2,
+      "max_reserved_full": 2,
+      "max_active_entities": 8,
+      "max_small": 6
+    },
+    {
+      "profile": "defence",
+      "starter": "breaker",
+      "seed": 2026,
+      "style": "defensive",
+      "survival_time": 262.966666666756,
+      "reason": "spin_out",
+      "status": "failed",
+      "level": 8,
+      "powers": [
+        "crosscut",
+        "momentum_bank",
+        "impact_wake",
+        "clutch"
+      ],
+      "ranks": {
+        "clutch": 2,
+        "crosscut": 2,
+        "impact_wake": 2,
+        "momentum_bank": 2
+      },
+      "mutations": {},
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 19.4666666666668
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 1,
+          "time": 30.8499999999995
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 2,
+          "time": 52.0833333333317
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "impact_wake",
+          "rank": 1,
+          "time": 69.6499999999973
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "",
+          "offers": [
+            "crash_guard",
+            "impact_wake",
+            "dead_centre"
+          ],
+          "power": "impact_wake",
+          "rank": 2,
+          "time": 128.433333333328
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "orbit_drive",
+            "clutch"
+          ],
+          "power": "clutch",
+          "rank": 1,
+          "time": 172.683333333363
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "clutch",
+            "chain_impact"
+          ],
+          "power": "clutch",
+          "rank": 2,
+          "time": 225.383333333405
+        }
+      ],
+      "remaining_rpm": 0.0435454209354597,
+      "minimum_rpm": 0.0435454209354597,
+      "clutch_activations": 1,
+      "clutch_catches": 3,
+      "redline": {
+        "active_seconds": 0.0,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.0,
+        "heat_max": 0.0,
+        "high_speed_contacts": 0,
+        "max_overcap": 0.0,
+        "mean_overcap_active": 0.0,
+        "motion_quota_remaining": 0.0,
+        "overcap_integral": 0.0,
+        "overcap_seconds": 0.0,
+        "ring_outs_active": 0,
+        "rpm_gained": 0.0,
+        "rpm_spent": 0.0,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 7514.87750906203,
+        "drift_seconds": 0.0,
+        "mean_speed": 28.5773007062821,
+        "orbit_seconds": 0.0,
+        "peak_speed": 159.537567138672,
+        "procs": {},
+        "states": 5
+      },
+      "power_procs": {
+        "clutch_activate": 1,
+        "clutch_recover": 3,
+        "impact_wake": 7
+      },
+      "rpm_gains": {
+        "boss": 0.0,
+        "clutch": 0.13,
+        "combat_reclamation": 1.35927744172305,
+        "elimination": 0.157,
+        "elite": 0.075,
+        "redline_contact": 0.0,
+        "redline_motion": 0.0,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.0,
+        "burst": 0.0,
+        "collisions": 1.87850542583968,
+        "movement": 0.0570558419989876,
+        "passive": 0.716366669333232,
+        "powers": 0.0,
+        "steering": 0.0,
+        "walls": 0.0,
+        "wobble": 0.0258040836160319
+      },
+      "accounting_error": 3.38340466754516E-13,
+      "max_full": 4,
+      "max_reserved_full": 4,
+      "max_active_entities": 8,
+      "max_small": 6
+    },
+    {
+      "profile": "defence",
+      "starter": "bastion",
+      "seed": 2026,
+      "style": "defensive",
+      "survival_time": 300.000000000056,
+      "reason": "sample_limit",
+      "status": "active",
+      "level": 10,
+      "powers": [
+        "crosscut",
+        "momentum_bank",
+        "impact_wake",
+        "clutch",
+        "dead_centre"
+      ],
+      "ranks": {
+        "clutch": 2,
+        "crosscut": 2,
+        "dead_centre": 2,
+        "impact_wake": 2,
+        "momentum_bank": 2
+      },
+      "mutations": {},
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 23.4999999999999
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 1,
+          "time": 38.5333333333324
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 2,
+          "time": 41.5666666666656
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "impact_wake",
+          "rank": 1,
+          "time": 57.299999999998
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "",
+          "offers": [
+            "crash_guard",
+            "impact_wake",
+            "dead_centre"
+          ],
+          "power": "impact_wake",
+          "rank": 2,
+          "time": 103.583333333329
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "orbit_drive",
+            "clutch"
+          ],
+          "power": "clutch",
+          "rank": 1,
+          "time": 154.733333333349
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "clutch",
+            "chain_impact"
+          ],
+          "power": "clutch",
+          "rank": 2,
+          "time": 215.750000000064
+        },
+        {
+          "id": "draft/level_09",
+          "mutation": "",
+          "offers": [
+            "afterimage",
+            "high_gear",
+            "dead_centre"
+          ],
+          "power": "dead_centre",
+          "rank": 1,
+          "time": 268.300000000085
+        },
+        {
+          "id": "draft/level_10",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "high_gear",
+            "afterimage"
+          ],
+          "power": "dead_centre",
+          "rank": 2,
+          "time": 283.90000000007
+        }
+      ],
+      "remaining_rpm": 0.552345072254754,
+      "minimum_rpm": 0.552345072254754,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 0.0,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.0,
+        "heat_max": 0.0,
+        "high_speed_contacts": 0,
+        "max_overcap": 0.0,
+        "mean_overcap_active": 0.0,
+        "motion_quota_remaining": 0.0,
+        "overcap_integral": 0.0,
+        "overcap_seconds": 0.0,
+        "ring_outs_active": 0,
+        "rpm_gained": 0.0,
+        "rpm_spent": 0.0,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 8334.45822247809,
+        "drift_seconds": 0.0,
+        "mean_speed": 27.7815274082601,
+        "orbit_seconds": 0.0,
+        "peak_speed": 113.178009033203,
+        "procs": {
+          "momentum_store": 1
+        },
+        "states": 4
+      },
+      "power_procs": {
+        "anchor": 1,
+        "impact_wake": 10
+      },
+      "rpm_gains": {
+        "boss": 0.0,
+        "clutch": 0.0,
+        "combat_reclamation": 0.882663155300011,
+        "elimination": 0.165994576100709,
+        "elite": 0.075,
+        "redline_contact": 0.0,
+        "redline_motion": 0.0,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.00450000000000001,
+        "burst": 0.0,
+        "collisions": 1.16037971522452,
+        "movement": 0.058624316250481,
+        "passive": 0.347220000000074,
+        "powers": 0.0,
+        "steering": 0.0,
+        "walls": 0.0,
+        "wobble": 0.000588627670880643
+      },
+      "accounting_error": 8.65973959207622E-15,
+      "max_full": 3,
+      "max_reserved_full": 4,
+      "max_active_entities": 13,
+      "max_small": 10
+    },
+    {
+      "profile": "defence",
+      "starter": "vane",
+      "seed": 2026,
+      "style": "defensive",
+      "survival_time": 300.000000000056,
+      "reason": "sample_limit",
+      "status": "active",
+      "level": 8,
+      "powers": [
+        "crosscut",
+        "momentum_bank",
+        "impact_wake",
+        "clutch"
+      ],
+      "ranks": {
+        "clutch": 2,
+        "crosscut": 2,
+        "impact_wake": 2,
+        "momentum_bank": 2
+      },
+      "mutations": {},
+      "drafts": [
+        {
+          "id": "draft/start",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "afterimage",
+            "iron_comet"
+          ],
+          "power": "crosscut",
+          "rank": 1,
+          "time": 0.0
+        },
+        {
+          "id": "draft/level_02",
+          "mutation": "",
+          "offers": [
+            "crosscut",
+            "chain_impact",
+            "afterimage"
+          ],
+          "power": "crosscut",
+          "rank": 2,
+          "time": 23.5166666666666
+        },
+        {
+          "id": "draft/level_03",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "redline",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 1,
+          "time": 37.1999999999992
+        },
+        {
+          "id": "draft/level_04",
+          "mutation": "",
+          "offers": [
+            "orbit_drive",
+            "iron_comet",
+            "momentum_bank"
+          ],
+          "power": "momentum_bank",
+          "rank": 2,
+          "time": 46.9999999999986
+        },
+        {
+          "id": "draft/level_05",
+          "mutation": "",
+          "offers": [
+            "predator_line",
+            "impact_wake",
+            "chain_impact"
+          ],
+          "power": "impact_wake",
+          "rank": 1,
+          "time": 57.8333333333313
+        },
+        {
+          "id": "draft/level_06",
+          "mutation": "",
+          "offers": [
+            "crash_guard",
+            "impact_wake",
+            "dead_centre"
+          ],
+          "power": "impact_wake",
+          "rank": 2,
+          "time": 107.933333333328
+        },
+        {
+          "id": "draft/level_07",
+          "mutation": "",
+          "offers": [
+            "iron_comet",
+            "orbit_drive",
+            "clutch"
+          ],
+          "power": "clutch",
+          "rank": 1,
+          "time": 183.783333333372
+        },
+        {
+          "id": "draft/level_08",
+          "mutation": "",
+          "offers": [
+            "dead_centre",
+            "clutch",
+            "chain_impact"
+          ],
+          "power": "clutch",
+          "rank": 2,
+          "time": 231.38333333341
+        }
+      ],
+      "remaining_rpm": 0.358299174059324,
+      "minimum_rpm": 0.31586190799311,
+      "clutch_activations": 0,
+      "clutch_catches": 0,
+      "redline": {
+        "active_seconds": 0.0,
+        "clutch_active": false,
+        "commitments": 0,
+        "failed_commitments": 0,
+        "heat": 0.0,
+        "heat_max": 0.0,
+        "high_speed_contacts": 0,
+        "max_overcap": 0.0,
+        "mean_overcap_active": 0.0,
+        "motion_quota_remaining": 0.0,
+        "overcap_integral": 0.0,
+        "overcap_seconds": 0.0,
+        "ring_outs_active": 0,
+        "rpm_gained": 0.0,
+        "rpm_spent": 0.0,
+        "spin_outs_active": 0
+      },
+      "roster": {
+        "distance": 9579.98095772014,
+        "drift_seconds": 0.0,
+        "mean_speed": 31.9332698590672,
+        "orbit_seconds": 0.0,
+        "peak_speed": 230.309951782227,
+        "procs": {
+          "crosscut": 2,
+          "momentum_store": 1
+        },
+        "states": 4
+      },
+      "power_procs": {
+        "impact_wake": 11
+      },
+      "rpm_gains": {
+        "boss": 0.12,
+        "clutch": 0.0,
+        "combat_reclamation": 1.05765081938175,
+        "elimination": 0.123,
+        "elite": 0.0,
+        "redline_contact": 0.0,
+        "redline_motion": 0.0,
+        "runaway": 0.0,
+        "second_wind": 0.0,
+        "slipstream": 0.0
+      },
+      "rpm_losses": {
+        "braking": 0.000375833333333333,
+        "burst": 0.0,
+        "collisions": 1.26803697630928,
+        "movement": 0.0588140970938974,
+        "passive": 0.58154399999983,
+        "powers": 0.024,
+        "steering": 0.0,
+        "walls": 0.00835724521636963,
+        "wobble": 0.00122349336988505
+      },
+      "accounting_error": 1.71418435002124E-13,
+      "max_full": 4,
+      "max_reserved_full": 4,
+      "max_active_entities": 9,
+      "max_small": 6
+    }
+  ]
+}

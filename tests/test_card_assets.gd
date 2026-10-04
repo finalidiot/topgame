@@ -39,11 +39,13 @@ func _run() -> void:
 	for row: int in range(Powers.LEGACY_ART_IDS.size()):
 		var id: String = Powers.LEGACY_ART_IDS[row]
 		var power: Dictionary = Powers.get_power(id)
+		var replaced: bool = id == "iron_comet"
+		var active_row: int = Powers.ROSTER_ART_IDS.find(id) if replaced else row
 		var tag: Dictionary = meta.tags.get(id, {})
 		check(int(tag.get("from", -1)) == row * 6 and int(tag.get("to", -1)) == row * 6 + 5, id + " stable source tag")
-		check(int(power.card_row) == row and int(power.card_frames) == 6, id + " card/catalog row mapping")
+		check(int(power.card_row) == active_row and int(power.card_frames) == 6, id + " active card/catalog row mapping")
 		check(int(power.card_static_frame) >= 0 and int(power.card_static_frame) < 6, id + " readable non-focused authored pose")
-		check(power.card_texture == Powers.CARD_SHEET and not str(power.category).is_empty() and not str(power.card_copy).is_empty(), id + " production card data")
+		check(power.card_texture == (Powers.ROSTER_CARD_SHEET if replaced else Powers.CARD_SHEET) and not str(power.category).is_empty() and not str(power.card_copy).is_empty(), id + " production card data")
 		check(Visuals._frame("cards", id, 0.0) == row * 6 and Visuals._frame("cards", id, 99.0) == row * 6 + 5, id + " animation bounds")
 		var different: bool = false
 		var first: PackedByteArray = art.get_region(Rect2i(0, row * 64, 64, 64)).get_data()
@@ -52,7 +54,7 @@ func _run() -> void:
 			if art.get_region(Rect2i(frame * 64, row * 64, 64, 64)).get_data() != first:
 				different = true
 		check(different, id + " authored poses genuinely animate")
-		check(Visuals.icon_region(id) == Rect2(row * 16, 0, 16, 16), id + " legacy HUD icon stays compatible")
+		check(Visuals.icon_region(id) == Rect2(active_row * 16, 0, 16, 16) and Visuals.icon_texture(id) == (Visuals.ROSTER_ICONS if replaced else Visuals.ICONS), id + " active HUD icon mapping")
 	for cue: String in ["ui_focus", "card_select", "near_level", "level_up", "resume"]:
 		check(Sound.SOUNDS.has(cue), cue + " audio cue loaded")
 		check(Sound.SOUNDS[cue].get_length() > 0.0 and Sound.SOUNDS[cue].get_length() <= 0.50, cue + " finite short audio")

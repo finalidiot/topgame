@@ -4,6 +4,7 @@ extends SceneTree
 class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void: pass
 const Parts = preload("res://scripts/parts.gd")
+const Powers = preload("res://scripts/run_powers.gd")
 var failures: int = 0
 var checks: int = 0
 func check(condition: bool, message: String) -> void:
@@ -26,7 +27,7 @@ func _run() -> void:
 	game.battle.set_physics_process(false)
 	for _slot: int in range(1,8):
 		preload("res://tests/continuous_fixtures.gd").next_threat(game)
-	for id: int in range(100,368):
+	for id: int in range(100, 100 + int((132 + 84 * (Powers.investment_capacity() - 5)) / 3)):
 		game.run_context.award_xp({"kind":"elimination","encounter_id":"run_slot_08","time":1.0,"entity_id":id,"combatant_type":"small_top","reason":"impact","player_attributed":true})
 	game._progression_events([])
 	game._process(0.2)
@@ -46,10 +47,13 @@ func _run() -> void:
 		check(game.screen == "acquisition", "Each mid-run claim has acquisition")
 		game._process(1.1)
 		check(game.battle.elapsed == expected_elapsed, "Earned choices never relaunch or advance simulation")
-	check(branches == 3 and game.screen == "battle" and game.run_context.is_active(), "Full investment resumes the live Run with three mutations")
+	var owned_flagships: int = 0
+	for id: String in game.run_context.owned_power_ids:
+		if id in Powers.VERTICAL_IDS: owned_flagships += 1
+	check(branches == owned_flagships and game.screen == "battle" and game.run_context.is_active(), "Full investment resumes the live Run with every owned flagship mutation")
 	preload("res://tests/continuous_fixtures.gd").next_threat(game)
 	check(game.run_context.slot == 9 and game.last_result.is_empty(), "Full investment does not terminate at threat eight")
-	check(game.run_context.committed_rewards.size() == 13 and game.run_context.owned_power_ids.size() == 7, "Continuous Run retains all thirteen investments and seven powers")
+	check(game.run_context.committed_rewards.size() == game.run_context.available_investment_capacity() and game.run_context.owned_power_ids.size() == Powers.FAMILY_CAP, "Continuous Run retains every investment of its seven chosen families")
 	print("ESCALATION_COMPLETION_%s checks=%d failures=%d" % ["PASS" if failures == 0 else "FAIL",checks,failures])
 	game.free()
 	quit(1 if failures else 0)

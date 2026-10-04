@@ -89,7 +89,7 @@ func _test_acquisition_pause() -> void:
 		_check(battle.acquire_run_power(power), "All seven powers can coexist: " + power)
 	_check(battle.player_entity().powers.size() == 7, "Seven-power ownership has no small build cap")
 	_check(not battle.acquire_run_power("redline"), "Repeated Rank I is rejected")
-	_check(not battle.acquire_run_power("impact_wake", 2), "Horizontal support power cannot receive invented upgrades")
+	_check(battle.acquire_run_power("impact_wake", 2), "Catalogue support Rank II becomes live without requiring a mutation branch")
 	var runtime: RefCounted = battle.powers
 	battle.player_entity().rpm = 0.13
 	battle.powers.recover()

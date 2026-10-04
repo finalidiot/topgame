@@ -7,6 +7,10 @@ const Encounters = preload("res://scripts/encounters.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 
+# Soft depth preference within seven machine slots. Beyond five owned families
+# another acquisition is less common; at seven the remaining cards deepen them.
+const DRAFT_TUNING: Dictionary = {"soft_family_start":5,"new_weight_floor":0.10,"new_decay":0.55,"rank_weight":2.15,"mutation_weight":2.60,"upgrade_slot_from":3}
+
 var _selected_build: Dictionary = {}
 var _owned_power_ids: Array[String] = []
 var _power_ranks: Dictionary = {}
@@ -62,7 +66,7 @@ func start(build: Dictionary, seed_value: int, selected_starter_id: String = "cu
 	run_seed = seed_value
 	slot = 1
 	status = "active"
-	_progression.setup(Powers.investment_capacity())
+	_progression.setup(Powers.run_investment_capacity())
 	_draft_queue.append({"id":"draft/start", "kind":"starting", "level":1})
 	_generate_offer()
 
@@ -81,7 +85,16 @@ func is_active() -> bool:
 	return status == "active"
 
 func progression_snapshot() -> Dictionary:
-	return _progression.snapshot()
+	var snapshot: Dictionary = _progression.snapshot()
+	snapshot["family_cap"] = Powers.FAMILY_CAP
+	snapshot["families_owned"] = _owned_power_ids.size()
+	return snapshot
+
+func available_investment_capacity() -> int:
+	if _owned_power_ids.size() < Powers.FAMILY_CAP: return Powers.run_investment_capacity()
+	var capacity: int = 0
+	for id: String in _owned_power_ids: capacity += Powers.max_rank(id)
+	return capacity
 
 ## Only current, uncommitted combat can earn XP. Events use simulation seconds,
 ## so menu duration, wall-clock time and cosmetic RNG cannot change progression.
@@ -124,7 +137,13 @@ func choose_power(encounter_id: String, power_id: String) -> bool:
 		_pending_mutation_offer = Powers.mutation_choices(power_id)
 		return true
 	_power_ranks[power_id] = rank + 1
-	if rank == 0: _owned_power_ids.append(power_id)
+	if rank == 0:
+		_owned_power_ids.append(power_id)
+		if _owned_power_ids.size() == Powers.FAMILY_CAP:
+			var capacity: int = available_investment_capacity()
+			_progression.set_investment_limit(capacity)
+			for index: int in range(_draft_queue.size()-1,-1,-1):
+				if int(_draft_queue[index].level) > capacity: _draft_queue.remove_at(index)
 	_finish_claim(encounter_id, power_id)
 	return true
 
@@ -190,24 +209,50 @@ func _generate_offer() -> void:
 	var weights: Array[float] = []
 	for power_id: String in Powers.ACTIVE_IDS:
 		var rank: int = int(_power_ranks.get(power_id, 0))
+		if rank == 0 and _owned_power_ids.size() >= Powers.FAMILY_CAP: continue
 		if Powers.can_progress(power_id, rank, str(_power_mutations.get(power_id, ""))):
 			candidates.append(power_id)
-			weights.append(1.0 if rank == 0 else 1.2)
+			weights.append(draft_weight(_owned_power_ids.size(), rank))
 	var draft_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	draft_rng.seed = Seeds.derive(run_seed, "draft/" + pending_draft_id)
 	_pending_offer.clear()
-	# A small upgrade preference keeps owned powers in circulation; every
-	# candidate remains possible, with no class restrictions or forced branches.
-	for _draw: int in range(mini(3, candidates.size())):
-		var total_weight: float = 0.0
-		for weight: float in weights: total_weight += weight
-		var remaining: float = draft_rng.randf() * total_weight
-		var chosen: int = candidates.size() - 1
+	# Once a build has a few families, one card always develops an eligible owned
+	# family. Other slots still invite new combinations. No investment is forced.
+	if _owned_power_ids.size() >= int(DRAFT_TUNING.upgrade_slot_from):
+		var upgrades: Array[int] = []
+		var upgrade_weights: Array[float] = []
 		for index: int in range(candidates.size()):
-			remaining -= weights[index]
-			if remaining < 0.0:
-				chosen = index
-				break
+			if int(_power_ranks.get(candidates[index], 0)) > 0:
+				upgrades.append(index)
+				upgrade_weights.append(weights[index])
+		if not upgrades.is_empty():
+			var chosen: int = upgrades[_weighted_index(upgrade_weights, draft_rng)]
+			_pending_offer.append(candidates[chosen])
+			candidates.remove_at(chosen)
+			weights.remove_at(chosen)
+	for _draw: int in range(mini(3, candidates.size())):
+		if _pending_offer.size() >= 3: break
+		var chosen: int = _weighted_index(weights, draft_rng)
 		_pending_offer.append(candidates[chosen])
 		candidates.remove_at(chosen)
 		weights.remove_at(chosen)
+	# Keep the guaranteed development card from occupying a predictable UI slot.
+	for index: int in range(_pending_offer.size() - 1, 0, -1):
+		var swap_index: int = draft_rng.randi_range(0, index)
+		var swap: String = _pending_offer[index]
+		_pending_offer[index] = _pending_offer[swap_index]
+		_pending_offer[swap_index] = swap
+
+static func draft_weight(owned_count: int, rank: int) -> float:
+	if rank > 0: return float(DRAFT_TUNING.mutation_weight if rank == 2 else DRAFT_TUNING.rank_weight)
+	var excess: int = maxi(0, owned_count - int(DRAFT_TUNING.soft_family_start) + 1)
+	return maxf(float(DRAFT_TUNING.new_weight_floor), pow(float(DRAFT_TUNING.new_decay), excess))
+
+static func _weighted_index(weights: Array[float], rng: RandomNumberGenerator) -> int:
+	var total: float = 0.0
+	for weight: float in weights: total += weight
+	var remaining: float = rng.randf() * total
+	for index: int in range(weights.size()):
+		remaining -= weights[index]
+		if remaining < 0.0: return index
+	return weights.size() - 1

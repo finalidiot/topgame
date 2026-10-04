@@ -547,7 +547,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		_label(card, "CONFIRM  /  " + ("CHOOSE BRANCH" if int(context.get("power_ranks", {}).get(id, 0)) == 2 else str(context.get("resume_label", "COLLECT"))), Rect2(12, 166, 168, 16), 9, color)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "COLLECTED POWERS", Rect2(24, 281, 592, 15), 9, MUTED)
+	_label(_content, "POWER FAMILIES  %d / %d  /  FILL SLOTS, THEN DEVELOP YOUR POWERS" % [owned.size(),Powers.FAMILY_CAP], Rect2(24, 281, 592, 15), 9, MUTED)
 	_power_labels(owned, 302)
 	_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
 	if not cards.is_empty(): _focus_rows([cards], selected)
@@ -680,7 +680,8 @@ func _power_labels(ids: Array, y: float) -> void:
 		var power: Dictionary = Powers.get_power(str(ids[index]))
 		var area: Rect2 = Rect2(roundf(24 + index * step), y, floorf(step) - 5, 20)
 		_panel(_content, area, PANEL, BORDER)
-		_label(_content, str(power.name), area, 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+		var name_label: Label = _label(_content, str(power.get("short_label",power.name)) if ids.size() > 7 else str(power.name), area, 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+		name_label.tooltip_text = str(power.name)
 
 func show_result(result: Dictionary) -> void:
 	if bool(result.get("continuous_run", false)):
@@ -738,7 +739,7 @@ func _show_run_result(result: Dictionary) -> void:
 	var names: PackedStringArray = []
 	for id: String in result.get("owned_power_ids", []):
 		names.append(str(Powers.get_owned_power(id, int(result.get("power_ranks", {}).get(id, 1)), str(result.get("power_mutations", {}).get(id, ""))).get("name", id)))
-	var collection: Label = _label(_content, " / ".join(names), Rect2(105, 205, 430, 39), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	var collection: Label = _label(_content, " / ".join(names), Rect2(105, 201, 430, 51), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	collection.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var restart: Button = _button(_content, "RESTART RUN", Rect2(105, 257, 430, 28), "restart_run", null, true)
 	var garage: Button = _button(_content, "GARAGE", Rect2(105, 296, 210, 26), "customize")
@@ -758,8 +759,9 @@ func show_hud(stats: Dictionary) -> void:
 	var recovery: float = float(stats.get("rpm_recovery",0.0))
 	if recovery > 0.0:
 		_hud["player_rpm"].text += "  +%d %s" % [int(recovery*9000),"SECOND WIND" if stats.get("rpm_recovery_source","") == "second_wind" else "RECLAIM"]
+	elif player_spin > 1.0: _hud["player_rpm"].text += "  OVERCLOCK"
 	elif player_spin < 0.25: _hud["player_rpm"].text += "  LOW SPIN"
-	_hud["player_rpm"].modulate = Color("8be6aa") if recovery > 0.0 else (Color("ff7864") if player_spin < 0.25 else Color.WHITE)
+	_hud["player_rpm"].modulate = Color("8be6aa") if recovery > 0.0 else (Color("ffb56b") if player_spin > 1.0 else (Color("ff7864") if player_spin < 0.25 else Color.WHITE))
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
 	var is_swarm: bool = bool(stats.get("is_swarm", false))
 	_hud["enemy_bar"].visible = not is_swarm
@@ -832,8 +834,12 @@ func show_hud(stats: Dictionary) -> void:
 	else:
 		_hud["director_callout"].text = ""
 	var ids: Array = stats.get("owned_power_ids", [])
-	for index: int in range(8):
+	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
+		var slot_x: float = 320.0-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
+		_hud["power_panel_%d" % index].position.x = slot_x
+		icon.position.x = slot_x+2.0
+		_hud["power_rank_%d" % index].position.x = slot_x+18.0
 		var id: String = str(ids[index]) if index < ids.size() else ""
 		icon.visible = not id.is_empty()
 		_hud["power_panel_%d" % index].visible = not id.is_empty()
@@ -875,7 +881,7 @@ func _create_hud() -> void:
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	for index: int in range(8):
+	for index: int in range(Powers.ACTIVE_IDS.size()):
 		_hud["power_panel_%d" % index] = _panel(_content, Rect2(192 + index * 32, 303, 28, 20))
 		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
 		_hud["power_rank_%d" % index] = _label(_content, "", Rect2(210 + index * 32, 307, 9, 12), 7, TEXT, HORIZONTAL_ALIGNMENT_CENTER)

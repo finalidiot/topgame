@@ -1,0 +1,65 @@
+{
+	"checks": 92,
+	"failures": [],
+	"measurements": {
+		"ghost": {
+			"closures": 1,
+			"preview_events": 1,
+			"target_reaction_speed": 88.0
+		},
+		"redline_rank_1": {
+			"active_seconds": 2.99999999999999,
+			"clutch_active": false,
+			"commitments": 0,
+			"failed_commitments": 0,
+			"heat": 0.478175582827633,
+			"heat_max": 0.570225551231717,
+			"high_speed_contacts": 0,
+			"max_overcap": 0.12,
+			"mean_overcap_active": 0.0387050907909933,
+			"motion_quota_remaining": 0.0,
+			"overcap_integral": 0.11611527237298,
+			"overcap_seconds": 2.4,
+			"ring_outs_active": 0,
+			"rpm_gained": 0.158747630306323,
+			"rpm_spent": 0.158747630306323,
+			"spin_outs_active": 0
+		},
+		"redline_rank_2": {
+			"active_seconds": 2.99999999999999,
+			"clutch_active": false,
+			"commitments": 0,
+			"failed_commitments": 0,
+			"heat": 0.443637927357802,
+			"heat_max": 0.53595157376037,
+			"high_speed_contacts": 0,
+			"max_overcap": 0.18,
+			"mean_overcap_active": 0.0244242668445983,
+			"motion_quota_remaining": 0.0,
+			"overcap_integral": 0.0732728005337949,
+			"overcap_seconds": 1.9,
+			"ring_outs_active": 0,
+			"rpm_gained": 0.238523480192574,
+			"rpm_spent": 0.238523480192574,
+			"spin_outs_active": 0
+		},
+		"runaway": {
+			"active_seconds": 11.0000000000001,
+			"clutch_active": false,
+			"commitments": 0,
+			"failed_commitments": 0,
+			"heat": 0.0,
+			"heat_max": 1.0,
+			"high_speed_contacts": 11,
+			"max_overcap": 0.24,
+			"mean_overcap_active": 0.182530325867375,
+			"motion_quota_remaining": 0.0,
+			"overcap_integral": 2.00783358454114,
+			"overcap_seconds": 9.90000000000007,
+			"ring_outs_active": 0,
+			"rpm_gained": 0.373209907745468,
+			"rpm_spent": 0.373209907745468,
+			"spin_outs_active": 0
+		}
+	}
+}
