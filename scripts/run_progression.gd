@@ -14,6 +14,8 @@ const TUNING: Dictionary = {
 	"collision_pair_cooldown": 1.15,
 	"collision_global_cooldown": 0.30,
 	"full_elimination_xp": 18,
+	"elite_elimination_xp": 27,
+	"boss_elimination_xp": 45,
 	"small_elimination_xp": 3,
 	"wave_completion_xp": 6
 }
@@ -74,7 +76,7 @@ func record_event(event: Dictionary) -> Array[int]:
 	last_award = 0
 	var crossed: Array[int] = []
 	if is_maxed(): return crossed
-	var encounter_id: String = str(event.get("encounter_id", ""))
+	var encounter_id: String = str(event.get("scope_id",event.get("encounter_id", "")))
 	var time: float = float(event.get("time", -1.0))
 	if encounter_id.is_empty() or not is_finite(time) or time < 0.0: return crossed
 	if time + 0.000001 < float(_last_event_times.get(encounter_id, -1.0)): return crossed
@@ -139,6 +141,8 @@ func _event_xp(event: Dictionary, encounter_id: String, kind: String, time: floa
 			if entity_id < 0 or _seen_eliminations.has(elimination_id): return 0
 			if combatant_type not in ["full_top", "small_top"]: return 0
 			_seen_eliminations[elimination_id] = true
+			if event.get("enemy_kind","") == "elite": return int(_tuning.elite_elimination_xp)
+			if event.get("enemy_kind","") == "boss": return int(_tuning.boss_elimination_xp)
 			return int(_tuning.small_elimination_xp if combatant_type == "small_top" else _tuning.full_elimination_xp)
 		"wave_complete":
 			var wave: int = int(event.get("wave", -1))

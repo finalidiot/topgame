@@ -7,6 +7,8 @@ const LIFETIME: float = 9.0
 const SMALL_RADIUS: float = 5.8
 const IMPULSE_CAP: float = 400.0
 var battle: Node2D
+var started_at: float = 0.0
+var event_serial: int = 0
 var enabled: bool = false
 var active_cap: int = 12
 var cleanup_time: float = 32.0
@@ -24,6 +26,8 @@ var budget_clock: float = 0.0
 
 func setup(host: Node2D, descriptor: Dictionary) -> void:
 	battle = host
+	started_at = float(host.elapsed) if host.continuous != null else 0.0
+	event_serial = int(descriptor.get("director_event",{}).get("serial",0))
 	enabled = str(descriptor.get("fixture_type", "")) == "swarm" or (str(descriptor.get("type", "")) == "swarm" and not bool(descriptor.get("fixture", false)))
 	schedule.clear()
 	wave = 0
@@ -45,6 +49,9 @@ func setup(host: Node2D, descriptor: Dictionary) -> void:
 	for w: int in range(counts.size()):
 		for index: int in range(int(counts[w])):
 			schedule.append({"id":schedule.size()+int(descriptor.get("first_entity_id",2)),"wave":w+1,"due":float(times[w])+float(index)*0.12,"state":"waiting","port":-1,"ready":0.0})
+
+func local_time() -> float:
+	return maxf(0.0,battle.elapsed-started_at)
 
 func active_count() -> int:
 	var count: int = 0
@@ -73,7 +80,7 @@ func begin_tick(dt: float) -> void:
 		if float(f.age) >= LIFETIME or float(f.rpm) <= 0.045:
 			retire(f, "natural_retirement")
 	if not enabled: return
-	if battle.threat_elapsed() >= cleanup_time:
+	if local_time() >= cleanup_time:
 		cleanup_used = true
 		for f: Dictionary in battle._ordered_fighters():
 			if f.combatant_type == "small_top" and str(f.outcome).is_empty(): retire(f,"cleanup")
@@ -84,11 +91,11 @@ func begin_tick(dt: float) -> void:
 		wave = total_waves
 		return
 	for entry: Dictionary in schedule:
-		if entry.state in ["spawned","cancelled"] or battle.threat_elapsed() < float(entry.due): continue
+		if entry.state in ["spawned","cancelled"] or local_time() < float(entry.due): continue
 		if int(entry.wave) > wave:
 			wave = int(entry.wave)
 			battle.event_sfx.emit("swarm_wave")
-		if battle.threat_elapsed() > float(entry.due) + 2.0 + TELEGRAPH:
+		if local_time() > float(entry.due) + 2.0 + TELEGRAPH:
 			entry.state = "cancelled"
 			cancelled += 1
 			continue
@@ -97,9 +104,9 @@ func begin_tick(dt: float) -> void:
 			var port: int = safe_port(entry)
 			if port < 0: continue
 			entry.port = port
-			entry.ready = battle.threat_elapsed() + TELEGRAPH
+			entry.ready = local_time() + TELEGRAPH
 			entry.state = "telegraph"
-		elif battle.threat_elapsed() >= float(entry.ready):
+		elif local_time() >= float(entry.ready):
 			if not port_safe(int(entry.port), int(entry.id)):
 				entry.state = "waiting"
 				entry.port = -1

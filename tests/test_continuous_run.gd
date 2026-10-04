@@ -178,8 +178,10 @@ func _test_rpm_and_clock() -> void:
 	b.set_paused(false)
 	for tick: int in range(119): b.test_step(Battle.FIXED_DT)
 	check(b.continuous.threat_number == 1 and b.elapsed > before and p.rpm < 0.85, "Breathing keeps physics/spin/time alive and respects delay")
-	for tick: int in range(3): b.test_step(Battle.FIXED_DT)
-	check(b.continuous.threat_number == 2 and b.battle_status == "battle", "Next rival enters after exactly the active-time breathing interval")
+	for tick: int in range(240):
+		if b.continuous.threat_number == 2: break
+		b.test_step(Battle.FIXED_DT)
+	check(b.continuous.threat_number == 2 and b.battle_status == "battle", "Next rival enters after the seeded breathing interval and entry warning")
 	check(b.entity(2).is_empty() and not b.powers._states.has(2), "Retirement releases corpse, AI and semantic enemy state")
 	# Ensure long elapsed time cannot immediately clean up a newly introduced swarm.
 	b.elapsed = 200.0

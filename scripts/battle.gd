@@ -18,6 +18,7 @@ const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 const Starters = preload("res://scripts/starters.gd")
+const EnemyRoles = preload("res://scripts/enemy_roles.gd")
 const ContinuousRun = preload("res://scripts/continuous_run.gd")
 const RunPowers = preload("res://scripts/run_powers.gd")
 const PLAYER_TEAM: String = "player"
@@ -197,15 +198,14 @@ func enter_threat(descriptor: Dictionary, entry_position: Vector2) -> void:
 	encounter["player_power_ranks"] = player.power_ranks.duplicate(true)
 	encounter["player_power_mutations"] = player.power_mutations.duplicate(true)
 	encounter["starter_id"] = player.starter_id
-	_progression_eliminated.clear()
-	_progression_contacted.clear()
-	_progression_waves.clear()
-	_pair_cooldowns.clear()
-	swarm.setup(self, descriptor)
-	if not swarm.enabled:
+	if descriptor.fixture_type == "swarm":
+		_progression_waves.clear()
+		swarm.setup(self, descriptor)
+	else:
 		var id: int = int(descriptor.first_entity_id)
 		add_full_top(descriptor.opponent_build, id, HOSTILE_TEAM, "rival_%d" % id, entry_position)
 		var rival: Dictionary = entity(id)
+		EnemyRoles.configure(rival,descriptor.director_event)
 		rival.vel = -entry_position.normalized() * 64.0
 		rival.powers = descriptor.get("opponent_power_ids", []).duplicate()
 		rival.power_ranks = descriptor.get("opponent_power_ranks", {}).duplicate(true)
@@ -287,6 +287,8 @@ func _target_for(fighter: Dictionary) -> Dictionary:
 	return target
 
 func _team_color(fighter: Dictionary) -> Color:
+	if fighter.get("enemy_kind","") == "boss": return Color("ff6278")
+	if fighter.get("enemy_kind","") == "elite": return Color("f5dc68")
 	if str(fighter["team_id"]) == PLAYER_TEAM:
 		return {"breaker":Color("ef7052"), "bastion":Color("69bafa"), "vane":Color("82d978")}.get(str(fighter.get("starter_id", "custom")), PLAYER_COLOR)
 	return Color("b8c2c8") if str(fighter["team_id"]) == NEUTRAL_TEAM else ENEMY_COLOR
@@ -433,7 +435,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		var target: Dictionary = _target_for(fighter)
 		if not target.is_empty() and float(fighter["ai_burst_delay"]) <= 0.0 and float(fighter["cooldown"]) <= 0.0:
 			var ai_pos: Vector2 = fighter["pos"]
-			if ai_pos.distance_to(target["pos"]) < 105.0 and absf(ai_pos.x - ai_pos.y) < 195.0:
+			if (EnemyRoles.wants_burst(fighter,target,elapsed) if fighter.has("role") else ai_pos.distance_to(target["pos"]) < 105.0 and absf(ai_pos.x - ai_pos.y) < 195.0):
 				_attempt_burst(fighter, fighter["ai_direction"])
 				var ai_rng: RandomNumberGenerator = _ai_rngs[int(fighter["entity_id"])]
 				fighter["ai_burst_delay"] = ai_rng.randf_range(2.0, 3.8)
@@ -487,6 +489,7 @@ func _queue_progression(data: Dictionary) -> void:
 	_progression_sequence += 1
 	data["event_id"] = _progression_sequence
 	data["encounter_id"] = str(encounter.get("id", ""))
+	if continuous != null: data["scope_id"] = "continuous/%d" % continuous.run_seed
 	data["time"] = elapsed
 	_progression_queue.append(data)
 
@@ -511,7 +514,7 @@ func _collect_progression_outcomes() -> void:
 		var cause: Dictionary = powers.cause_for(fighter)
 		var credited: bool = str(cause.get("owner_id", "")) == PLAYER_OWNER if fighter.combatant_type == "small_top" else _progression_contacted.has(id)
 		if credited and fighter.outcome in ["impact", "ring_out", "spin_out"]:
-			_queue_progression({"kind":"elimination", "entity_id":id, "combatant_type":str(fighter.combatant_type), "reason":str(fighter.outcome), "wave":int(fighter.get("wave",0)), "player_attributed":true})
+			_queue_progression({"kind":"elimination", "entity_id":id, "combatant_type":str(fighter.combatant_type), "enemy_kind":str(fighter.get("enemy_kind","")), "reason":str(fighter.outcome), "wave":int(fighter.get("wave",0)), "player_attributed":true})
 			if fighter.combatant_type == "small_top": _progression_waves["credit_%d" % int(fighter.wave)] = true
 	if not swarm.enabled: return
 	for wave_id: int in range(1, swarm.total_waves + 1):
@@ -525,7 +528,7 @@ func _collect_progression_outcomes() -> void:
 		if resolved:
 			_progression_waves[wave_id] = true
 			if _progression_waves.has("credit_%d" % wave_id):
-				_queue_progression({"kind":"wave_complete", "wave":wave_id, "player_attributed":true})
+				_queue_progression({"kind":"wave_complete", "wave":wave_id+swarm.event_serial*10, "player_attributed":true})
 
 static func project(world_position: Vector2, height: float = 0.0) -> Vector2:
 	return Vector2(320.0 + world_position.x - world_position.y, 165.0 + (world_position.x + world_position.y) * 0.5 - height)
@@ -537,6 +540,13 @@ static func unproject_direction(screen_direction: Vector2) -> Vector2:
 	return world.normalized() * minf(1.0, screen_direction.length())
 
 func _update_ai(rival: Dictionary, dt: float) -> void:
+	if rival.has("role"):
+		rival.ai_clock -= dt
+		if float(rival.ai_clock) <= 0.0:
+			rival.ai_clock = 0.22
+			var target: Dictionary = _target_for(rival)
+			rival.ai_direction = EnemyRoles.direction(rival,target,elapsed) if not target.is_empty() else Vector2.ZERO
+		return
 	rival["ai_clock"] = float(rival["ai_clock"]) - dt
 	if float(rival["ai_clock"]) > 0.0:
 		return
@@ -970,6 +980,13 @@ func _check_result() -> void:
 		_finish(int(winner["entity_id"]), reason)
 
 func _hud_enemy() -> Dictionary:
+	if continuous != null:
+		var rival: Dictionary = {}
+		for f: Dictionary in fighters:
+			if f.team_id != HOSTILE_TEAM or not _is_live(f) or f.combatant_type != "full_top": continue
+			if f.get("enemy_kind","") == "boss": return f
+			if rival.is_empty(): rival = f
+		if not rival.is_empty(): return rival
 	var player: Dictionary = player_entity()
 	if player.is_empty():
 		return {}
@@ -1149,7 +1166,10 @@ func _draw() -> void:
 			draw_texture(texture, Vector2.ZERO)
 	for entry: Dictionary in swarm.schedule:
 		if entry.state == "telegraph":
-			PowerVisuals.draw_spawn(self, project(swarm.PORTS[int(entry.port)]), clampf(1.0-(float(entry.ready)-elapsed)/swarm.TELEGRAPH,0.0,1.0))
+			PowerVisuals.draw_spawn(self, project(swarm.PORTS[int(entry.port)]), clampf(1.0-(float(entry.ready)-swarm.local_time())/swarm.TELEGRAPH,0.0,1.0))
+	if continuous != null and not continuous.pending.is_empty() and continuous.pending.kind != "swarm" and Vector2(continuous.pending.position).is_finite():
+		var at: Vector2 = project(continuous.pending.position)
+		draw_arc(at,24.0,0.0,TAU,32,Color("ff6278") if continuous.pending.kind == "boss" else ENEMY_COLOR,2.0)
 	for trace: Dictionary in powers.traces:
 		var path: PackedVector2Array = PackedVector2Array()
 		for point: Vector2 in trace.get("points",[trace.a,trace.b]): path.append(project(point))
@@ -1196,6 +1216,11 @@ func _draw_shadow(fighter: Dictionary) -> void:
 		var angle: float = float(index) / 16.0 * TAU
 		selected.append((grounded + Vector2(cos(angle) * 18.0, sin(angle) * 8.0)).round())
 	draw_polyline(selected, side_color, 1.0)
+	if fighter.get("enemy_kind","") in ["elite","boss"]:
+		draw_arc(grounded-Vector2(0,15),23.0 if fighter.enemy_kind == "boss" else 19.0,PI,TAU,24,side_color,2.0)
+		for index: int in range(3 if fighter.enemy_kind == "boss" else 1):
+			draw_rect(Rect2(grounded+Vector2(-5+index*4,-42),Vector2(3,4)),side_color)
+
 
 func _draw_fighter(fighter: Dictionary) -> void:
 	if fighter.combatant_type == "small_top":

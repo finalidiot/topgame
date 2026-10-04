@@ -1,29 +1,22 @@
-SPINNING METAL - TASK 002C.1 - CONTINUOUS RUN CHECKPOINT
+SPINNING METAL - TASK 002C.2 WINDOWS CHECKPOINT
 
-Double-click SpinningMetal.exe. Windows x86_64; no Godot installation required.
-Game data is embedded. Keep the license notices with distributed copies.
+Run SpinningMetal.exe. Game data is embedded; Godot is not required.
+Branch: task-002c2-endless-threat-director
+Accepted main / exact starting SHA: 27cb5f1e6dfbcb1641b5071bb237fc2e15807f36
 
-Choose CONTINUOUS RUN, a starter and a starting power. Launch once and stay in
-the same arena through standard rival, hook rival, Ammunition Waves and smash
-rival. This deterministic sequence repeats without a finite Run-clear screen.
-Only player defeat ends ordinary Run play. XP/investments/power state persist.
+CONTINUOUS RUN: choose starter, choose power, launch once. The seeded director
+introduces rivals, specialists, swarms, elites and bosses into the ongoing arena.
+No normal victory screen or relaunch. Survive, invest in powers, eventually lose.
+Read PLAYTEST.md for the short human checklist and known temporary RPM rule.
 
-Keyboard: WASD/arrows steer, Space Burst, Shift brake, Escape pause.
-Gamepad: left stick steer, bottom face Burst/Confirm, shoulders/triggers brake,
-Menu/Start pause, east face Back, D-pad/stick menu navigation.
-Release controls after a choice to rearm combat. F2 toggles the HUD.
+WASD/arrows: steer. Space: Burst. Shift: brake. Escape: pause.
+Gamepad: left stick steers, bottom face confirms/Bursts, shoulder/trigger brakes,
+Menu/Start pauses, east face goes back. Release controls after drafts to rearm.
+Quick Duel and build-practice modes are preserved.
 
-Temporary architecture-test RPM: 12% of net player reserve expenditure per
-live fixed tick. No threat-completion refill. This is not final balance.
-Quick Duel and Practice-*.bat retain standalone single-battle behaviour.
-The existing seven powers, ranks and mutations are preserved.
+Temporary Run RPM expenditure multiplier remains 0.12, with no transition refill.
+This is not final survival balance. Boss selection is random within eligibility.
+Results show a seed; user://last_run_director.json holds a local debug snapshot.
+Optional seed investigation: SpinningMetal.exe -- --run-seed=421
 
-Branch: task-002c1-continuous-run
-Starting branch: origin/task-002c-build-escalation
-Starting SHA: 3267ef3e89d964e7344c4c1c4d103058b8c8aed0
-Engine: Godot 4.7.2 stable, official Windows x86_64 release template.
-See PLAYTEST.md and ../../TASK-002C1.md for the short checklist and evidence.
-No main merge. Stop at this human checkpoint before Task 002C.2.
-
-Rebuild with matching Godot export templates installed:
-Godot --headless --path . --export-release "Windows Desktop"
+The accompanying .sha256 file verifies the exact executable bytes.

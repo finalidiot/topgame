@@ -6,8 +6,8 @@ const Seeds = preload("res://scripts/seed_utils.gd")
 # future authored encounter rewards without adding a second menu cadence.
 const DRAFT_SLOTS: Array[int] = []
 
-## Temporary continuous-run script, not a procedural director. Repeat this
-## authored cycle indefinitely; threat identity and seeds use the absolute index.
+## Historical authored fixtures for standalone regression/practice and UI smoke.
+## The live Run director does not select content from this cycle.
 const SLOTS: Array[Dictionary] = [
 	{"type":"standard_duel", "name":"Standard Rival", "build":{"blade":"balance", "ratchet":"mid", "bit":"ball"}},
 	{"type":"specialist_duel", "name":"Hook Rival", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
@@ -17,6 +17,16 @@ const SLOTS: Array[Dictionary] = [
 
 static func has_draft(slot: int) -> bool:
 	return slot in DRAFT_SLOTS
+
+static func for_run_event(number: int, run_seed: int) -> Dictionary:
+	if number < 1: return {}
+	var id: String = "run_slot_%02d" % number # Preserve existing identity/seed domain.
+	return {"id":id,"slot_id":id,"slot":number,"type":"rival","name":"Hunter",
+		"fixture":false,"fixture_type":"duel","fixture_label":"CONTINUOUS RUN",
+		"opponent_build":{"blade":"balance","ratchet":"mid","bit":"ball"},
+		"behavior_profile":"hunter","arena_modifier":"none","objective":"survive",
+		"live_time_limit":60.0,"swarm_parameters":{},"opponent_power_ids":[],
+		"seed":Seeds.derive(run_seed,"encounter/"+id),"draft_after":false}
 
 static func for_slot(slot: int, run_seed: int) -> Dictionary:
 	if slot < 1: return {}
