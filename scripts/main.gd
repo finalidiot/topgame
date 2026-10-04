@@ -8,6 +8,7 @@ const RunContext = preload("res://scripts/run_context.gd")
 const Starters = preload("res://scripts/starters.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Encounters = preload("res://scripts/encounters.gd")
+const Collection = preload("res://scripts/collection_save.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -20,6 +21,15 @@ var menus: Control
 var sounds: Node
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var smoke_mode: bool = false
+var review_audio: bool = false
+## Tests/review captures override the path before entering the scene tree.
+var collection_path: String = ""
+var collection: RefCounted
+var reset_collection_requested: bool = false
+var _collection_reset_failed: bool = false
+var _ownership_remaining: float = 0.0
+var _first_starter_focus: String = "breaker"
+var _collection_retry: String = ""
 var capture_dir: String = ""
 var audit_actions: Array = []
 var opponent_build: Dictionary = {}
@@ -36,6 +46,10 @@ var _run_launched: bool = false
 var _practice_branch: String = ""
 
 func _process(delta: float) -> void:
+	if screen == "starter_owned":
+		_ownership_remaining -= delta
+		if _ownership_remaining <= 0.0: _garage()
+		return
 	# Only the visible acquisition beat advances. Pause and End/Restart cannot
 	# leave a delayed timer behind that could launch an unrelated encounter.
 	if not run_context.is_active(): return
@@ -48,14 +62,24 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	DisplayServer.window_set_title("Spinning Metal — 002C.5 + Starter Collection")
 	rng.randomize()
 	var practice_request: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument == "--smoke-test": smoke_mode = true
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
 		if argument.begins_with("--practice="): practice_request = argument.trim_prefix("--practice=")
+		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
+		if argument == "--reset-collection": reset_collection_requested = true
 	if smoke_mode: rng.seed = 7341
 	if not smoke_mode: _load_preferences()
+	if collection_path.is_empty():
+		collection_path = "user://test_collection/main_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()] if smoke_mode else "user://collection.json"
+	collection = Collection.new(collection_path)
+	collection.load_save()
+	if reset_collection_requested:
+		_collection_reset_failed = not bool(collection.reset_collection(true).ok)
+	if collection.can_launch(): build = collection.equipped_build()
 	battle = BattleScript.new()
 	add_child(battle)
 	battle.visible = false
@@ -77,6 +101,8 @@ func _ready() -> void:
 	add_child(sounds)
 	_apply_settings()
 	_title()
+	if _collection_reset_failed:
+		_collection_error("The explicitly requested collection reset could not finish. Close other game instances and check the save folder before retrying.")
 	if smoke_mode: call_deferred("_smoke_test")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 
@@ -147,14 +173,68 @@ func _title() -> void:
 	_clear_run()
 	_hide_battle()
 	screen = "title"
-	menus.show_title(build, settings)
+	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
 
 func _garage() -> void:
 	if run_context.is_active(): return
+	if not collection.is_initialized():
+		_begin_collection()
+		return
 	_clear_run()
 	_hide_battle()
 	screen = "garage"
-	menus.show_garage(build)
+	if collection.can_launch(): build = collection.equipped_build()
+	var snapshot: Dictionary = collection.snapshot()
+	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
+	menus.show_collection_workshop(collection.equipped_build(), snapshot)
+
+func _practice_garage() -> void:
+	if run_context.is_active(): return
+	_clear_run()
+	_hide_battle()
+	screen = "practice_garage"
+	menus.show_garage(build, true)
+
+func _collection_error(message: String, retry: String = "") -> void:
+	_collection_retry = retry
+	screen = "collection_error"
+	menus.show_collection_error(message, "main_menu", not retry.is_empty())
+
+func _begin_collection() -> void:
+	if run_context.is_active(): return
+	if collection.read_only:
+		_collection_error("Collection could not be safely loaded. Your save has been preserved. See the checkpoint reset instructions.")
+		return
+	if collection.is_initialized():
+		_garage()
+		return
+	_clear_run()
+	_hide_battle()
+	screen = "starter_ceremony"
+	menus.show_starter_ceremony(_first_starter_focus)
+
+func _confirm_first_starter(starter_id: String) -> void:
+	if screen != "starter_confirm" or starter_id != _first_starter_focus: return
+	var result: Dictionary = collection.initialize_starter(starter_id)
+	if not bool(result.ok):
+		_collection_error("Could not save your first machine. Nothing was granted. Please retry.", "starter")
+		return
+	build = collection.equipped_build()
+	screen = "starter_owned"
+	_ownership_remaining = 1.4
+	menus.show_starter_owned(starter_id)
+	_battle_sound("acquire")
+
+func _equip_collection_part(value: Dictionary) -> void:
+	if screen != "garage": return
+	var selected: Dictionary = collection.equipped_build()
+	selected[str(value.get("category", ""))] = str(value.get("id", ""))
+	var result: Dictionary = collection.equip_build(selected)
+	if bool(result.ok):
+		_garage()
+		menus.focus_collection_part(str(value.get("category", "")), str(value.get("id", "")))
+	elif str(result.status) in ["write_failed", "stale_save", "read_only"]:
+		_collection_error("Could not save the assembly. The collection has been preserved. Retry reloads the latest saved machine.", "workshop")
 
 func _opponent() -> Dictionary:
 	var rivals: Array = [
@@ -199,18 +279,20 @@ func _clear_run() -> void:
 
 func _start_run() -> void:
 	if run_context.is_active(): return
-	_clear_run()
-	_hide_battle()
-	mode = "run"
-	screen = "starters"
-	menus.show_starters()
+	if not collection.is_initialized():
+		_begin_collection()
+		return
+	if not collection.can_launch():
+		_collection_error("This collection has no complete owned assembly. Your known parts are preserved. See the checkpoint recovery instructions.")
+		return
+	_restart_run()
 
-func _restart_run(starter_id: String = "") -> void:
+func _restart_run() -> void:
+	if not collection.can_launch(): return
 	_run_launched = false
 	# Entropy is sampled only here, never from menu duration or encounter timing.
-	var selected: Dictionary = build if run_context.status == "empty" else run_context.selected_build
-	var identity: String = starter_id if not starter_id.is_empty() else run_context.starter_id
-	if identity in Starters.IDS: selected = Starters.build_for(identity)
+	var selected: Dictionary = collection.equipped_build()
+	var identity: String = Starters.identity_for_build(selected)
 	var fresh_seed: int = rng.randi()
 	while fresh_seed == 0 or fresh_seed == _previous_run_seed:
 		fresh_seed = rng.randi()
@@ -372,19 +454,46 @@ func _round_finished(result: Dictionary) -> void:
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:
-	if not smoke_mode: sounds.play_sound(kind)
+	if not smoke_mode or review_audio: sounds.play_sound(kind)
 
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
 	# All build/menu routes respect the lock, including stale UI signals.
-	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch"]: return
-	if not smoke_mode: sounds.play_sound("ui")
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership"]: return
+	_battle_sound("ui")
 	match name:
+		"begin_collection": _begin_collection()
+		"open_workshop": _garage()
+		"practice_garage": _practice_garage()
+		"select_first_starter":
+			if screen == "starter_ceremony" and str(value) in Starters.IDS and not collection.is_initialized():
+				_first_starter_focus = str(value)
+				screen = "starter_confirm"
+				menus.show_starter_confirmation(_first_starter_focus)
+		"back_to_starters":
+			if screen == "starter_confirm": _begin_collection()
+		"confirm_first_starter": _confirm_first_starter(str(value))
+		"finish_ownership":
+			if screen == "starter_owned" and _ownership_remaining <= 0.6: _garage()
+		"equip_part":
+			if value is Dictionary: _equip_collection_part(value)
+		"inspect_locked_part":
+			# A locked catalogue card is informational, never an equip/grant.
+			if screen == "garage" and value is Dictionary:
+				menus.inspect_locked_part(str(value.get("category", "")), str(value.get("id", "")))
+		"launch_owned_run":
+			if screen == "garage": _start_run()
+		"retry_collection":
+			if screen == "collection_error":
+				collection.load_save()
+				if _collection_retry == "starter":
+					if collection.is_initialized(): _garage()
+					elif collection.read_only: _begin_collection()
+					else:
+						screen = "starter_confirm"
+						_confirm_first_starter(_first_starter_focus)
+				elif _collection_retry == "workshop": _garage()
 		"start_run": _start_run()
-		"choose_starter":
-			if screen == "starters" and str(value) in Starters.IDS: _restart_run(str(value))
-		"custom_run":
-			if screen == "starters": _restart_run("custom")
 		"restart_run":
 			if mode == "run" and screen in ["pause", "result"]: _restart_run()
 		"end_run":
@@ -423,7 +532,7 @@ func _action(name: String, value: Variant = null) -> void:
 			menus.show_settings(settings)
 		"main_menu": _title()
 		"build_changed":
-			if screen == "garage" and value is Dictionary:
+			if screen == "practice_garage" and value is Dictionary:
 				build = Catalog.validate_build(value)
 				_save_preferences()
 		"settings_changed":
@@ -463,6 +572,9 @@ func _resume() -> void:
 func _escape() -> void:
 	if screen == "pause": _resume()
 	elif screen == "battle" or run_context.is_active(): _pause()
+	elif screen == "starter_confirm": _begin_collection()
+	elif screen == "starter_owned":
+		if _ownership_remaining <= 0.6: _garage()
 	else: _title()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -499,9 +611,7 @@ func _smoke_test() -> void:
 	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
 	await get_tree().create_timer(0.3).timeout
 	await _capture("01-title")
-	var button: Button = _find_button(menus, "custom")
-	if button != null: button.pressed.emit()
-	else: _action("customize")
+	_action("practice_garage")
 	await get_tree().create_timer(0.15).timeout
 	await _capture("02-garage")
 	for part_name: String in ["HOOK", "HIGH", "RUBBER"]:
@@ -543,7 +653,14 @@ func _smoke_test() -> void:
 	_action("main_menu")
 	_action("start_run")
 	await _capture("09-starters")
-	_action("choose_starter", "breaker")
+	_action("select_first_starter", "breaker")
+	await _capture("09a-confirm")
+	_action("confirm_first_starter", "breaker")
+	await _capture("09b-owned")
+	await get_tree().create_timer(1.6).timeout
+	assert(screen == "garage" and collection.owned_count() == 3)
+	await _capture("09c-owned-workshop")
+	_action("launch_owned_run")
 	await _capture("10-starting-draft")
 	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed})
 	await _capture("11-starting-acquisition")

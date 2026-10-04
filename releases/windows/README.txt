@@ -1,7 +1,10 @@
-SPINNING METAL - TASK 002C.5 WINDOWS CHECKPOINT
+SPINNING METAL - TASK 002C.5 + STARTER COLLECTION
 
-Run SpinningMetal.exe. No Godot installation is required.
-Start Run -> starter -> starting power -> launch once.
+Run Launch-SpinningMetal.cmd or SpinningMetal.exe. No Godot install is required.
+The window title reads: Spinning Metal - 002C.5 + Starter Collection.
+Fresh save: BEGIN -> first top -> confirm -> ownership -> Workshop.
+Existing save: CONTINUE TO WORKSHOP. LAUNCH OWNED TOP -> opening power -> Run.
+Your existing collection and settings are preserved.
 Thirteen power families, two ranks each, and four mutation families.
 Redline creates real overcap RPM with dangerous heat and handling.
 High Gear builds real speed. Orbit Drive: brake + turn to carry a drift.

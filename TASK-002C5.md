@@ -1,21 +1,62 @@
 # Task 002C.5 — ability rebalance and roster expansion
 
-Playable Windows checkpoint on **`task-002c5-ability-roster`**, based exactly on
+Playable Windows checkpoint on **`task-002c5-ability-roster`**, initially based on
 accepted main **`0c6225f5428e874621f14837e37df47bad505fa7`**. Main was fetched,
 the accepted tree was clean, and all 24 accepted regression suites passed
-before this branch was created. The unrelated starter-collection checkout and
-the synced ChatGPT project sources were left intact. **No main merge. Human
+before this branch was created. The rebuilt delivery also restores the existing
+Task 003A first-save ceremony and collection from commit
+**`989f3f85d4cfde06eb7cf9ac6323dbcb3feb6f4e`** after the user reported the missing
+first-top flow. Its original checkout and synced project sources remain intact.
+**No main merge. Human
 gameplay acceptance remains pending.** The exact delivered commit and binary
 hash are recorded in the external QA `delivery.json`, Windows ZIP's
 `CHECKPOINT.txt`, and delivery message;
 `git rev-parse HEAD` identifies this report's checkpoint commit.
 
+## Corrected Windows checkpoint — existing first-top flow restored
+
+The original C.5 ZIP contained the current C.5 powers but omitted the later
+Task 003A first-save flow because it started at the explicitly requested
+accepted main. The user's report exposed this visible regression. The corrected
+checkpoint integrates the existing ceremony, confirmation, ownership, Workshop,
+safe collection persistence and owned-build launch. No new collection design
+or save migration was introduced. `config/name` and the normal save location
+remain unchanged, and validation uses isolated collections without resetting
+the user's save. The separate primary 003A checkout remains untouched.
+
+All **33 suites pass**, with **37,604 counted checks** plus exact deterministic
+two-Run RPM replay: the retained 29 C.5 suites, three collection suites and a
+174-check owned-launch integration suite covering all thirteen seeded opening
+families, live Rank II and both High Gear mutations without permanent save changes.
+See `tests/task002c5-integration-regression-results.json`. The rebuilt embedded
+Windows executable also passes the native full smoke: first-top selection,
+confirmation, ownership, Workshop, opening power, ten continuing threats,
+midbattle drafts, defeat/restart and Workshop return. These controlled flow
+fixtures do not replace the existing natural balance evidence. Logs and rendered
+states are outside Git under `task-002c5-qa/integration-packaged-smoke`.
+Native collection UI separately passes 2,008 checks and its rendered screens
+remain readable. Source and packaged ceremony, ownership, Workshop and current
+C.5 power-draft frames were inspected; see
+`tests/task002c5-collection-preservation-results.json`.
+
+The corrected EXE is **110,171,560 bytes**, SHA-256
+`6aaec118df4148cc73ce74a4350499d224a3c364c1f6460ededae4b1e83ad4bb`.
+Its window title is **Spinning Metal — 002C.5 + Starter Collection**.
+The direct Desktop launcher is `E:\Desktop\Launch-SpinningMetal-Current.cmd`;
+it opens the uniquely named `Task002C5-Current/SpinningMetal-002C5.exe` and passes
+through optional arguments without resets. A headless startup through this
+actual CMD also succeeds. Portable ZIP uses an adjacent relative-path launcher.
+The original ability videos and mechanical balance findings remain unchanged.
+
 ## Playable delivery
 
 - Windows: `releases/windows/SpinningMetal.exe`, embedded assets, no Godot install.
-- Portable Windows ZIP: external `002c5_windows_checkpoint.zip`.
+- Corrected portable Windows ZIP: external `002c5_windows_checkpoint_current.zip`.
 - Phone review ZIP: external `002c5_mobile_review.zip`, seven required clips plus drift.
-- Ordinary flow: Start Run → starter → opening power → one continuous launch.
+- Ordinary fresh-save flow: BEGIN → first top → confirm → ownership → Workshop
+  → LAUNCH OWNED TOP → opening power → one continuous launch. Existing collections
+  use CONTINUE TO WORKSHOP. The normal save is preserved.
+- Direct launcher: `releases/windows/Launch-SpinningMetal.cmd`.
 - Fast inspection: `releases/windows/QA-*.cmd`, or executable arguments
   `-- --practice=<id>`. These are labelled opening presets, not normal drafting.
 - Full human checklist: `TASK-002C5-PLAYTEST.md`.
@@ -466,7 +507,8 @@ explicit visual/performance fixtures. Native source export/verification uses
   feedback may still change that decision. No starter class restriction exists.
 - All accepted presentation foundation issues remain Task **002C.6**: complete
   menu redesign, adaptive music, Breaker/Bastion static transparency cleanup,
-  save wipe/reset and broader UI polish. No persistent starter/parts collection,
+  save wipe/reset and broader UI polish. The existing Task 003A starter/parts
+  collection is restored in the corrected checkpoint; no new collection feature,
   shop, rarity, drops, campaign or multiplayer was added.
 
 Use the twenty-question checklist in `TASK-002C5-PLAYTEST.md`, including the

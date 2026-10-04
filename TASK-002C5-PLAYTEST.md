@@ -1,7 +1,9 @@
 # Task 002C.5 human playtest
 
-Windows checkpoint: `releases/windows/SpinningMetal.exe`. Start Run normally,
-pick any starter and experiment with cross-starter builds. All thirteen
+Windows checkpoint: `releases/windows/SpinningMetal.exe` or adjacent
+`Launch-SpinningMetal.cmd`. BEGIN opens the existing first-save top selection;
+confirm the choice, enter Workshop, then LAUNCH OWNED TOP. An existing collection
+opens CONTINUE TO WORKSHOP. All thirteen
 families are available to every starter. Seven family slots retain room for
 hybrids while later drafts develop the installed machine.
 

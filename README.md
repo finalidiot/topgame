@@ -37,9 +37,12 @@ Only player defeat ends the Run. See [TASK-002C2.md](TASK-002C2.md) and the
 [human playtest guide](TASK-002C2-PLAYTEST.md). The accepted continuous foundation
 is documented in [TASK-002C1.md](TASK-002C1.md).
 
-The Task 002B.1 opening remains: a Run opens with three authored identities: **Breaker**
+The existing Task 003A first-save ceremony is preserved: BEGIN opens three
+authored identities: **Breaker**
 (SMASH/HIGH/FLAT), **Bastion** (GUARD/LOW/BALL), and **Vane**
-(HOOK/MID/RUBBER). Choose a power before the first launch, then earn more
+(HOOK/MID/RUBBER). Confirm your first machine to own its three parts, then
+enter the Workshop. Later launches use your equipped owned assembly.
+Choose a power before the first launch, then earn more
 through meaningful combat. The visible Level bar leads to an immediate
 mid-battle draft, a brief acquisition, and the exact same encounter.
 
@@ -90,9 +93,11 @@ The old 12% net-loss rule is removed. Clutch has finite danger windows and catch
 quotas; overclock motion, normal contacts and small bodies use bounded budgets.
 Below 25% the HUD warns LOW SPIN; meaningful recovery briefly shows +RPM RECLAIM.
 
-The Garage is preserved. Select **CUSTOM ASSEMBLY RUN** below the three
-starters for an advanced custom Run. D-pad or left/right chooses a starter;
-Confirm selects. Menus require a fresh Confirm and a centred stick after a
+The Workshop preserves owned parts and equipment between Runs. Unowned parts
+remain visible for inspection. The separate Practice Garage makes the complete
+catalogue available for Quick Duel testing without granting ownership.
+D-pad or left/right inspects the first-top choices; Confirm selects and a
+separate confirmation saves the choice. Menus require a fresh Confirm and a centred stick after a
 transition. Release steering, Burst and brake after a draft to rearm combat.
 
 Power cards now have 64px authored animations and editable Aseprite production

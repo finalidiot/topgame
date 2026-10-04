@@ -38,3 +38,11 @@ static func build_for(starter_id: String) -> Dictionary:
 
 static func display_name(starter_id: String) -> String:
 	return str(DEFINITIONS.get(starter_id, {}).get("name", "CUSTOM"))
+
+## Current components determine Run identity. The saved first starter records
+## ownership history, not a permanent class. Exact authored assemblies retain
+## their prototype handling; mixed builds use the physical part catalogue.
+static func identity_for_build(build: Dictionary) -> String:
+	for id: String in IDS:
+		if build == build_for(id): return id
+	return "custom"

@@ -1,6 +1,8 @@
 # Task 002C.5 human checkpoint
 
-Open `releases/windows/SpinningMetal.exe` → START RUN → starter → starting power.
+Open `Launch-SpinningMetal.cmd` or `SpinningMetal.exe`.
+Fresh save: BEGIN → first top → confirm → Workshop → LAUNCH OWNED TOP → power.
+Existing collection: CONTINUE TO WORKSHOP → LAUNCH OWNED TOP → power.
 One launch continues until defeat. Keyboard: WASD/arrows, Space Burst, Shift
 brake, Esc pause. Controller: left stick, bottom face button, shoulder/trigger,
 Start. Release inputs after a draft to rearm combat.

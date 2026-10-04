@@ -1,0 +1,323 @@
+{
+  "scope": "Collection preservation in Task002C.5 plus existing Task003A first-Top choice, confirmation, saved ownership and owned Workshop. All tests/captures use temporary test directories or explicit isolated saves. Production collection/preference files and primary GyroBrothers are never opened or changed.",
+  "suites": [
+    {
+      "suite": "collection_save",
+      "passed": true,
+      "checks": 271,
+      "summary": "COLLECTION_SAVE_PASS checks=271 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-save.log"
+    },
+    {
+      "suite": "collection_flow",
+      "passed": true,
+      "checks": 395,
+      "summary": "COLLECTION_FLOW_TEST_PASS checks=395 failures=0 all_starters=3 isolated_saves=true",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-flow.log"
+    },
+    {
+      "suite": "collection_native_ui",
+      "passed": true,
+      "checks": 2008,
+      "summary": "COLLECTION_UI_TEST_PASS checks=2008 failures=0 synthetic_device=3 all_starters=3",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui.log"
+    },
+    {
+      "suite": "collection_c5_integration",
+      "passed": true,
+      "checks": 174,
+      "summary": "COLLECTION_C5_INTEGRATION_PASS checks=174 failures=0 families=13 mutations=2 isolated_save=true",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\owned-launch-c5.log"
+    }
+  ],
+  "passed_suites": 4,
+  "counted_checks": 2848,
+  "native_source_ui": {
+    "resolution": [
+      640,
+      360
+    ],
+    "input_scope": "Actual GUI dispatch with synthetic mapped device3, keyboard and mouse; no physical-controller claim.",
+    "frames": [
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\01-three-starters.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\02-confirmation.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\03-first-ownership.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\04-owned-workshop.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\05-vane-owned-workshop.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\06-blocked-save-message.png"
+    ],
+    "visually_inspected": [
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\01-three-starters.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\02-confirmation.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\03-first-ownership.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\collection-ui\\04-owned-workshop.png"
+    ]
+  },
+  "packaged_ui_review": {
+    "scope": "Agent inspection of root-provided screenshots from corrected embedded Windows EXE native smoke.",
+    "sha256": "6aaec118df4148cc73ce74a4350499d224a3c364c1f6460ededae4b1e83ad4bb",
+    "size_bytes": 110171560,
+    "visually_inspected": [
+      {
+        "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\integration-packaged-smoke\\09-starters.png",
+        "sha256": "3842aa43fec420a6c53604566b1b6e332f08f0be6f0c0a54e5eaed13cb95ca0b"
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\integration-packaged-smoke\\09a-confirm.png",
+        "sha256": "8e87dd1e8f9fb679cfc902ee57a695ec66be34b4dba40b2529ad79d928414082"
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\integration-packaged-smoke\\09b-owned.png",
+        "sha256": "0df19b5523f5b7277801a59f2cdc71f2852e4bb5ddd8fa6bbff7ed542fbe9625"
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\integration-packaged-smoke\\09c-owned-workshop.png",
+        "sha256": "38296304dee6d5851fcc2256fb1d3a3d1eff836219b6d81e685fba87b7a535df"
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\integration-packaged-smoke\\10-starting-draft.png",
+        "sha256": "1781b875b8e761f7b0a194a897b7c7ba859b6cff8563a627ff03c98f239fba46"
+      }
+    ],
+    "findings": "First-choice, confirmation, ownership and Workshop screens remain intact; exactly three parts equipped, other parts marked unowned. Owned launch opens current C5 starting draft with Momentum Bank, High Gear and Chain Impact native cards visible."
+  },
+  "source_native_smoke": {
+    "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\combined-smoke.log",
+    "isolated_save": "C:\\GPT GAME BUILDING\\task-002c5-qa\\collection-preservation\\isolated-smoke.json",
+    "passed": true,
+    "scope": "Screen-flow fixtures cover practice, first-save ceremony, owned launch, ten continuous threats, restart and End Run; not natural combat efficacy evidence."
+  },
+  "owned_launch_c5": {
+    "checks": 174,
+    "failures": 0,
+    "isolated_save": "E:/AppData/Roaming/Godot/app_userdata/Spinning Metal \u00e2\u20ac\u201d Prototype/task003a-tests/flow-6688-1106841-c5-owned-launch.json",
+    "reloaded_collection": {
+      "can_launch": true,
+      "equipped_build": {
+        "bit": "ball",
+        "blade": "guard",
+        "ratchet": "low"
+      },
+      "load_status": "loaded",
+      "owned_part_ids": [
+        "bit:ball",
+        "blade:guard",
+        "ratchet:low"
+      ],
+      "owned_parts": {
+        "bit": [
+          "ball"
+        ],
+        "blade": [
+          "guard"
+        ],
+        "ratchet": [
+          "low"
+        ]
+      },
+      "read_only": false,
+      "schema_version": 1,
+      "starter_selected": "bastion",
+      "total_owned": 3
+    },
+    "runs": [
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "impact_wake",
+        "seed": 1352667803
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "redline",
+        "seed": 2557656714
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "iron_comet",
+        "seed": 3067972062
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "dead_centre",
+        "seed": 4234453925
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "afterimage",
+        "seed": 2190210323
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "chain_impact",
+        "seed": 2716386800
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "clutch",
+        "seed": 4111313611
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "high_gear",
+        "seed": 492690617
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "orbit_drive",
+        "seed": 2574186742
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "crash_guard",
+        "seed": 766335669
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "momentum_bank",
+        "seed": 1144436089
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "predator_line",
+        "seed": 2388533886
+      },
+      {
+        "branch": "",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 2,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "crosscut",
+        "seed": 2354341442
+      },
+      {
+        "branch": "terminal_velocity",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 3,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "high_gear",
+        "seed": 3784447834
+      },
+      {
+        "branch": "flow_state",
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "live_rank": 3,
+        "modern": true,
+        "permanent_owned": 3,
+        "power": "high_gear",
+        "seed": 3750881529
+      }
+    ],
+    "scope": "Actual isolated first-save ceremony and owned launch with legitimate seeded opening offers; explicit live Rank II/III installation fixtures only. No natural efficacy claim, fabricated permanent grants or production-save access."
+  },
+  "existing_mobile_review": "The eight completed C5 review clips were not regenerated; these are corrective collection/UI integration checks only."
+}
