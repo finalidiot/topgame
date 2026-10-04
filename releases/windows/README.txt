@@ -1,22 +1,15 @@
-SPINNING METAL - TASK 002C.2 WINDOWS CHECKPOINT
+SPINNING METAL - TASK 002C.3 WINDOWS CHECKPOINT
 
-Run SpinningMetal.exe. Game data is embedded; Godot is not required.
-Branch: task-002c2-endless-threat-director
-Accepted main / exact starting SHA: 27cb5f1e6dfbcb1641b5071bb237fc2e15807f36
+Run SpinningMetal.exe. No Godot installation is required.
+Start Run -> choose Breaker/Bastion/Vane -> choose starting power -> launch once.
+RPM is spent for real and recovered through meaningful combat. Controlled movement
+conserves spin. LOW SPIN warns of danger; +RPM RECLAIM shows earned recovery.
+Second Wind remains once per launch. Bosses/waves do not reset your top.
 
-CONTINUOUS RUN: choose starter, choose power, launch once. The seeded director
-introduces rivals, specialists, swarms, elites and bosses into the ongoing arena.
-No normal victory screen or relaunch. Survive, invest in powers, eventually lose.
-Read PLAYTEST.md for the short human checklist and known temporary RPM rule.
+WASD/arrows: steer. Space: Burst. Shift: brake. Esc: pause.
+Controller: left stick, bottom face button, shoulder/trigger, Start.
+Release controls after a draft to rearm combat.
 
-WASD/arrows: steer. Space: Burst. Shift: brake. Escape: pause.
-Gamepad: left stick steers, bottom face confirms/Bursts, shoulder/trigger brakes,
-Menu/Start pauses, east face goes back. Release controls after drafts to rearm.
-Quick Duel and build-practice modes are preserved.
-
-Temporary Run RPM expenditure multiplier remains 0.12, with no transition refill.
-This is not final survival balance. Boss selection is random within eligibility.
-Results show a seed; user://last_run_director.json holds a local debug snapshot.
-Optional seed investigation: SpinningMetal.exe -- --run-seed=421
-
-The accompanying .sha256 file verifies the exact executable bytes.
+See PLAYTEST.md and repository TASK-002C3.md for checks, tuning and known limits.
+Human feel and final balance acceptance are pending. No main merge.
+The executable is tracked with Git LFS; git lfs pull after cloning if needed.

@@ -40,7 +40,7 @@ func physical(b: Node) -> Dictionary:
 	return {"player":b.player_entity().duplicate(true),"elapsed":b.elapsed,
 		"power_time":b.powers.time,"state":b.powers._states.duplicate(true),
 		"traces":b.powers.traces.duplicate(true),"schedule":b.swarm.schedule.duplicate(true),
-		"run":b.continuous.snapshot(),"entities":b.snapshot().entities}
+		"run":b.continuous.snapshot(),"economy":b.continuous.economy.snapshot(),"entities":b.snapshot().entities}
 func _run() -> void:
 	_test_continuity()
 	_test_defeat_and_duel()
@@ -164,12 +164,12 @@ func _test_rpm_and_clock() -> void:
 	var b: Node2D = game.battle
 	b.battle_status = "battle"
 	var p: Dictionary = b.player_entity()
-	p.rpm = 0.7
-	b.continuous.apply_testing_rpm(0.8)
-	check(is_equal_approx(p.rpm,0.788), "Temporary Run-only expenditure scale is exactly 0.12, not a threat refill")
+	p.rpm = 0.8
+	b.spend_rpm(p,0.1,"burst")
+	check(is_equal_approx(p.rpm,0.7), "Continuous Run charges the entire explicit cost without the old 12% discount")
+	b.gain_rpm(p,0.05,"combat_reclamation")
+	check(is_equal_approx(p.rpm,0.75), "Explicit earned recovery is accounted independently of spending")
 	p.rpm = 0.85
-	b.continuous.apply_testing_rpm(0.8)
-	check(is_equal_approx(p.rpm,0.85), "Positive recovery is not multiplied")
 	Fixtures.resolve_threat(game)
 	var before: float = b.elapsed
 	b.set_paused(true)

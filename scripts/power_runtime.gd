@@ -133,7 +133,8 @@ func begin_tick(dt: float) -> void:
 		if _live(fighter) and redline_active(fighter) and active_redline_rank(fighter) >= 2:
 			var heat: float = float(fighter.get("runaway_heat", 0.0))
 			var drain: float = 0.028 + heat * 0.048
-			fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - drain * dt)
+			if _run_player(fighter): drain = float(_host().continuous.economy.TUNING.redline_drain)+heat*float(_host().continuous.economy.TUNING.redline_heat)
+			_spend(fighter,drain*dt)
 			fighter["energy"] = fighter["rpm"]
 			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + (0.075 + heat * 0.13) * dt)
 			if float(fighter["rpm"]) < 0.13:
@@ -181,7 +182,7 @@ func _end_redline(fighter: Dictionary) -> void:
 	if active_redline_mutation(fighter) == "breakneck" and not bool(state["breakneck_recovered"]):
 		state["breakneck_recovered"] = true
 		fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + 0.32)
-		fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - 0.025)
+		_spend(fighter,0.025)
 		fighter["energy"] = fighter["rpm"]
 		fighter["vel"] = Vector2(fighter["vel"]) * 0.72
 		fighter["burst_time"] = 0.0
@@ -216,7 +217,9 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 		fighter["redline_active_rank"] = level
 		fighter["redline_active_mutation"] = branch
 		fighter["runaway_heat"] = 0.0
-		fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - (0.04 if level == 1 else 0.075))
+		var activation_cost: float = 0.04 if level == 1 else 0.075
+		if _run_player(fighter): activation_cost = float(_host().continuous.economy.TUNING.redline_activation_1 if level == 1 else _host().continuous.economy.TUNING.redline_activation_2)
+		_spend(fighter,activation_cost)
 		fighter["energy"] = fighter["rpm"]
 		fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + (0.10 if level == 1 else 0.17))
 		if level >= 2:
@@ -399,7 +402,7 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 		state["redline_until"] = minf(time + 1.25, float(state["redline_until"]) + 0.42)
 		owner["redline_time"] = float(state["redline_until"]) - time
 		owner["runaway_heat"] = minf(1.0, float(owner.get("runaway_heat", 0.0)) + 0.18 + severity * 0.08)
-		owner["rpm"] = minf(1.0, float(owner["rpm"]) + minf(0.034, 0.012 + severity * 0.016))
+		_gain(owner,minf(0.034,0.012+severity*0.016),"runaway",_small(target))
 		owner["energy"] = owner["rpm"]
 		_request(target, normal * (24.0 + float(owner["runaway_heat"]) * 32.0), _power_cause(cause, "runaway", int(owner["entity_id"])))
 		_record("runaway_hit", int(owner["entity_id"]), int(target["entity_id"]))
@@ -470,7 +473,7 @@ func after_movement() -> void:
 			state["trace_path"] = [position]
 		elif time >= float(state["trace_ready"]) and float(owner["rpm"]) >= (0.002 if level == 1 else 0.003):
 			state["trace_ready"] = time + 0.18
-			owner["rpm"] = maxf(0.0, float(owner["rpm"]) - (0.002 if level == 1 else 0.003))
+			_spend(owner,0.002 if level == 1 else 0.003)
 			owner["energy"] = owner["rpm"]
 			var start: Vector2 = path.front()
 			var direction: Vector2 = _outward(start, position, Vector2(owner["vel"]).normalized())
@@ -563,7 +566,7 @@ func _cross_slipstream(owner: Dictionary) -> void:
 		owner["vel"] = (Vector2(owner["vel"]) + heading * 75.0).limit_length(440.0)
 		owner["impulse_time"] = 0.35
 		owner["wobble"] = maxf(0.0, float(owner["wobble"]) - 0.16)
-		owner["rpm"] = minf(1.0, float(owner["rpm"]) + 0.006)
+		_gain(owner,0.006,"slipstream")
 		owner["energy"] = owner["rpm"]
 		crossed["energized"] = true
 		crossed["expires_at"] = minf(float(crossed["created_at"]) + 3.1, float(crossed["expires_at"]) + 0.5)
@@ -654,7 +657,7 @@ func recover() -> void:
 			continue
 		state["second_wind_used"] = true
 		fighter["second_wind_used"] = true
-		fighter["rpm"] = minf(1.0, float(fighter["rpm"]) + minf(0.18, maxf(0.0, 0.40 - reserve)))
+		_gain(fighter,minf(0.18,maxf(0.0,0.40-reserve)),"second_wind")
 		fighter["energy"] = fighter["rpm"]
 		fighter["wobble"] = maxf(0.0, float(fighter["wobble"]) - 0.25)
 		_record("second_wind", int(fighter["entity_id"]))
@@ -801,3 +804,15 @@ func prune_retired_state() -> void:
 
 func _keep_cause_root(roots: Dictionary, cause: Dictionary) -> void:
 	if not cause.is_empty(): roots[int(cause.get("root_event_id", 0))] = true
+
+# Mock/standalone hosts retain the original power contract.
+func _spend(fighter: Dictionary, amount: float) -> void:
+	if _host().has_method("spend_rpm"): _host().spend_rpm(fighter,amount,"powers")
+	else: fighter.rpm = maxf(0.0,float(fighter.rpm)-amount)
+
+func _gain(fighter: Dictionary, amount: float, source: String, small: bool = false) -> void:
+	if _host().has_method("gain_rpm"): _host().gain_rpm(fighter,amount,source,small)
+	else: fighter.rpm = minf(1.0,float(fighter.rpm)+amount)
+
+func _run_player(fighter: Dictionary) -> bool:
+	return _host().get("continuous") != null and int(fighter.entity_id) == int(_host().player_entity_id)

@@ -359,6 +359,7 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["starter_id"] = run_context.starter_id
 		last_result["build"] = run_context.selected_build
 		last_result["director_version"] = "task002c2-v1"
+		last_result["rpm_economy"] = battle.continuous.economy.snapshot()
 		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
 		last_result["investments"] = run_context.committed_rewards
 		if not smoke_mode:

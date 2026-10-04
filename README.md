@@ -25,6 +25,10 @@ Godot input actions. Controller support is a core Task 002A requirement.
 Editable pixel-art sources are in `assets/source-art/`. Existing prototype details
 and validation notes are retained in `README.txt` and `QA.txt`.
 
+Task 002C.3 replaces the temporary RPM rebate with source-aware spending,
+controlled combat reclamation and real spin conservation. See [TASK-002C3.md](TASK-002C3.md)
+and the [RPM playtest guide](TASK-002C3-PLAYTEST.md).
+
 Task 002C.2 adds a seeded **Endless Threat Director** to the one-launch Run.
 Rivals, specialists, Ammunition Waves, elites and bosses can overlap in the same
 live arena. Pressure budgets, population caps, recent history and recovery windows
@@ -51,7 +55,7 @@ becomes **FULL BUILD / MAX** only when every available investment is earned.
 XP awards and early level costs are preserved. Starter handling profiles make
 aggression, centre control, and efficient mobility more pronounced in Runs.
 Quick Duel and build-practice modes retain their original single-battle physics.
-All continuous Runs use the temporary RPM expenditure scale described below.
+Continuous Runs use the earned RPM survival economy described below.
 
 Four roles use different movement: Hunter commits, Flanker orbits, Bulwark holds
 central space, and Harasser alternates glancing approaches and withdrawal.
@@ -70,12 +74,14 @@ Drafts and mutations freeze the complete simulation and resume it exactly.
 Second Wind is once per launch, so a spent recovery stays spent across threats.
 The active power/investment pool can reach MAX; that never ends the Run.
 
-**Temporary testing economy:** `ContinuousRun.TUNING.player_rpm_loss_scale = 0.12`
-scales net player reserve expenditure per live fixed tick, before Second Wind
-recovery. It covers ordinary drain, movement/Burst/power costs and contact/wall
-loss together; positive gains are unchanged. There is no transition refill and
-ring-outs still end the Run. This intentionally generous single setting enables
-multi-minute architecture testing and must be replaced by Task 002C.3 tuning.
+**RPM survival economy:** natural decay, steering effort, braking and wobble
+have separate running costs. Burst, powers, walls and collisions spend real reserve.
+Committed impacts and controlled defensive contacts can reclaim spin; recent
+credited kills give small returns, with larger elite/boss payoffs. Per-target and
+global cooldowns plus capped recovery buckets prevent contact/swarm farming.
+No-input play generates no baseline regeneration, and no threat transition heals.
+The old 12% net-loss rule is removed. Second Wind remains an emergency once per launch.
+Below 25% the HUD warns LOW SPIN; meaningful recovery briefly shows +RPM RECLAIM.
 
 The Garage is preserved. Select **CUSTOM ASSEMBLY RUN** below the three
 starters for an advanced custom Run. D-pad or left/right chooses a starter;

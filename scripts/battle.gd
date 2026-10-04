@@ -218,6 +218,7 @@ func remove_retired_enemy(id: int) -> void:
 	if retired.is_empty() or id == player_entity_id or _is_live(retired): return
 	for index: int in range(fighters.size() - 1, -1, -1):
 		if int(fighters[index].entity_id) == id: fighters.remove_at(index)
+	if continuous != null: continuous.economy.retire(id)
 	_ai_rngs.erase(id)
 	_progression_eliminated.erase(id)
 	_progression_contacted.erase(id)
@@ -407,7 +408,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_hit_stop = maxf(0.0, _hit_stop - dt)
 		return
 	elapsed += dt
-	var previous_player_rpm: float = float(player_entity().rpm)
+	if continuous != null: continuous.economy.begin_tick(dt, screen_direction)
 	powers.begin_tick(dt)
 	swarm.begin_tick(dt)
 	for pair_key: String in _pair_cooldowns.keys():
@@ -468,11 +469,12 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 			if _is_live(fighter): _resolve_boundary(fighter)
 	powers.after_movement()
 	powers.flush_contact_powers()
-	if continuous != null: continuous.apply_testing_rpm(previous_player_rpm)
+	if continuous != null: continuous.economy.outcomes()
 	powers.recover()
 	swarm.account_outcomes()
 	_check_result()
 	powers.end_tick(battle_status == "finished")
+	if continuous != null: continuous.economy.end_tick(dt)
 	_collect_progression_outcomes()
 	if not _progression_queue.is_empty():
 		var earned: Array[Dictionary] = _progression_queue.duplicate(true)
@@ -581,6 +583,21 @@ func _ai_should_brake(rival: Dictionary) -> bool:
 	var own_velocity: Vector2 = rival["vel"]
 	return absf(own_position.x - own_position.y) > 212.0 and own_position.dot(own_velocity) > 0.0
 
+## Source-aware writes. Standalone modes retain their exact previous arithmetic.
+func spend_rpm(fighter: Dictionary, amount: float, source: String) -> void:
+	if continuous != null:
+		continuous.economy.spend(fighter,amount,source)
+	else:
+		fighter.rpm = maxf(0.0,float(fighter.rpm)-amount)
+		fighter.energy = fighter.rpm
+
+func gain_rpm(fighter: Dictionary, amount: float, source: String, small: bool = false) -> void:
+	if continuous != null and int(fighter.entity_id) == player_entity_id:
+		continuous.economy.gain(fighter,amount,source,small)
+	else:
+		fighter.rpm = minf(1.0,float(fighter.rpm)+amount)
+		fighter.energy = fighter.rpm
+
 func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	if float(fighter["cooldown"]) > 0.0 or float(fighter["rpm"]) < 0.13:
 		return
@@ -599,7 +616,7 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	fighter["vel"] = velocity_world + heading.normalized() * push
 	fighter["cooldown"] = BURST_COOLDOWN
 	fighter["burst_time"] = 0.42
-	fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - 0.013)
+	spend_rpm(fighter,0.013,"burst")
 	fighter["energy"] = fighter["rpm"]
 	_spawn_ring(project(position_world), _team_color(fighter), 0.30)
 	powers.burst_started(fighter, heading.normalized(), pre_cost_rpm)
@@ -656,7 +673,11 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var moving_loss: float = velocity_world.length() / 230.0 * 0.0014
 	var brake_loss: float = 0.0055 if braking else 0.0
 	var wobble_loss: float = float(fighter["wobble"]) * 0.0048
-	rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]))
+	if continuous != null and int(fighter.entity_id) == player_entity_id:
+		continuous.economy.running_costs(fighter,velocity_world.length(),direction,braking,float(modifiers.drain),dt)
+		rpm = fighter.rpm
+	else:
+		rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]))
 	var low_spin_wobble: float = clampf((0.32 - rpm) * 2.5, 0.0, 0.80)
 	var current_wobble: float = float(fighter["wobble"])
 	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0)))
@@ -755,8 +776,10 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
 	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense
 	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense
-	first["rpm"] = maxf(0.0, float(first["rpm"]) - loss_a)
-	second["rpm"] = maxf(0.0, float(second["rpm"]) - loss_b)
+	var actual_a: float = minf(float(first.rpm),loss_a)
+	var actual_b: float = minf(float(second.rpm),loss_b)
+	spend_rpm(first,loss_a,"collisions")
+	spend_rpm(second,loss_b,"collisions")
 	first["energy"] = first["rpm"]
 	second["energy"] = second["rpm"]
 	first["wobble"] = minf(1.0, float(first["wobble"]) + loss_a * 3.1)
@@ -766,6 +789,9 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		fighter["impact_strength"] = severity
 		if severity > 0.75:
 			fighter["height_vel"] = 27.0
+	if continuous != null:
+		if int(first.entity_id) == player_entity_id: continuous.economy.contact(second,severity,actual_b,va.dot(normal),va.length())
+		elif int(second.entity_id) == player_entity_id: continuous.economy.contact(first,severity,actual_a,-vb.dot(normal),vb.length())
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
@@ -793,6 +819,7 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	# credit if its physical impulse knocks a rival out before direct contact.
 	if target.combatant_type == "full_top" and target.team_id == HOSTILE_TEAM and str(_cause.get("owner_id", "")) == PLAYER_OWNER and int(_cause.get("owner_entity_id", -1)) == player_entity_id and float(_cause.get("expires_at", -1.0)) >= powers.time and delta_velocity.length_squared() > 0.0001:
 		_progression_contacted[int(target.entity_id)] = true
+		if continuous != null: continuous.economy.credit(target)
 	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
 	var braced_velocity: Vector2 = delta_velocity.limit_length(100.0)
 	powers.incoming_power_impulse(target, braced_velocity, _cause)
@@ -869,7 +896,7 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 		elif not powers.cause_for(source).is_empty():
 			loss = 0.01+severity*0.075
 		else: loss = severity*0.004
-		target.rpm = maxf(0.0,float(target.rpm)-loss)
+		spend_rpm(target,loss,"collisions")
 		target.energy = target.rpm
 		target.impact_time = 0.12
 		target.impact_strength = severity
@@ -907,7 +934,7 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 		if outward > 0.0:
 			velocity_world -= normal * outward * 1.66
 			velocity_world *= 0.91
-			fighter["rpm"] = maxf(0.0, float(fighter["rpm"]) - minf(0.019, outward * 0.000055))
+			spend_rpm(fighter,minf(0.019, outward * 0.000055),"walls")
 			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + minf(0.16, outward * 0.00055))
 			fighter["impact_time"] = 0.12
 			fighter["impact_strength"] = 0.3
@@ -1069,6 +1096,8 @@ func _emit_hud() -> void:
 	var player_rpm: float = float(player["rpm"])
 	var enemy_rpm: float = float(enemy["rpm"])
 	var stats: Dictionary = {
+		"rpm_recovery": continuous.economy.pulse_amount if continuous != null and elapsed < continuous.economy.pulse_until else 0.0,
+		"rpm_recovery_source": continuous.economy.pulse_source if continuous != null else "",
 		"player_rpm": player_rpm, "enemy_rpm": enemy_rpm,
 		"player_stamina": player_rpm, "enemy_stamina": enemy_rpm,
 		"player_rpm_value": int(player_rpm * 9000.0), "enemy_rpm_value": int(enemy_rpm * 9000.0),
