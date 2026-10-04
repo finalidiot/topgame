@@ -1,0 +1,24 @@
+{
+	"draw_submission_ms": {
+		"max": 1.22,
+		"median": 0.604,
+		"p95": 0.99
+	},
+	"frame_wall_ms": {
+		"max": 5.669,
+		"median": 3.227,
+		"p95": 4.77
+	},
+	"fx": 28,
+	"gpu": "NVIDIA GeForce GTX 1660",
+	"os": "Windows",
+	"processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+	"render_draw_calls": 15.0,
+	"samples": 419,
+	"scope": "Windows Godot compatibility renderer, native640, VSync disabled, held12-body fixture with repeated chain FX, no HUD; CPU draw submission excludes asynchronous GPU time; wall-frame includes harness; not a human playtest",
+	"simulation_ms": {
+		"max": 3.654,
+		"median": 1.837,
+		"p95": 2.91
+	}
+}

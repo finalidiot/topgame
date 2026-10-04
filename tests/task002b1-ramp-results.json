@@ -1,0 +1,3488 @@
+{
+	"assemblies": [
+		{
+			"build": {
+				"bit": "flat",
+				"blade": "smash",
+				"ratchet": "high"
+			},
+			"physical_mass": 8.672,
+			"rpm_spent_1s": 0.0223,
+			"speed_after_1s": 145.23,
+			"speed_after_250ms_brake": 29.71,
+			"stats": {
+				"grip": 4.8,
+				"mass": 8.7,
+				"power": 10.0,
+				"speed": 8.3,
+				"stability": 2.4,
+				"stamina": 2.1
+			},
+			"turn_degrees_after_500ms": -43.95
+		},
+		{
+			"build": {
+				"bit": "ball",
+				"blade": "guard",
+				"ratchet": "low"
+			},
+			"physical_mass": 8.952,
+			"rpm_spent_1s": 0.012,
+			"speed_after_1s": 145.1,
+			"speed_after_250ms_brake": 29.02,
+			"stats": {
+				"grip": 5.2,
+				"mass": 9.2,
+				"power": 4.0,
+				"speed": 2.7,
+				"stability": 9.7,
+				"stamina": 8.7
+			},
+			"turn_degrees_after_500ms": -45.0
+		},
+		{
+			"build": {
+				"bit": "needle",
+				"blade": "guard",
+				"ratchet": "low"
+			},
+			"physical_mass": 8.784,
+			"rpm_spent_1s": 0.0099,
+			"speed_after_1s": 126.47,
+			"speed_after_250ms_brake": 33.21,
+			"stats": {
+				"grip": 2.9,
+				"mass": 8.9,
+				"power": 3.6,
+				"speed": 1.7,
+				"stability": 8.5,
+				"stamina": 10.0
+			},
+			"turn_degrees_after_500ms": -38.34
+		},
+		{
+			"build": {
+				"bit": "rubber",
+				"blade": "hook",
+				"ratchet": "mid"
+			},
+			"physical_mass": 6.768,
+			"rpm_spent_1s": 0.0197,
+			"speed_after_1s": 166.15,
+			"speed_after_250ms_brake": 26.11,
+			"stats": {
+				"grip": 7.0,
+				"mass": 5.3,
+				"power": 8.4,
+				"speed": 7.8,
+				"stability": 6.0,
+				"stamina": 3.8
+			},
+			"turn_degrees_after_500ms": -49.45
+		},
+		{
+			"build": {
+				"bit": "ball",
+				"blade": "hook",
+				"ratchet": "mid"
+			},
+			"physical_mass": 6.6,
+			"rpm_spent_1s": 0.0173,
+			"speed_after_1s": 147.15,
+			"speed_after_250ms_brake": 29.36,
+			"stats": {
+				"grip": 5.0,
+				"mass": 5.0,
+				"power": 8.0,
+				"speed": 7.0,
+				"stability": 5.5,
+				"stamina": 5.3
+			},
+			"turn_degrees_after_500ms": -44.48
+		},
+		{
+			"build": {
+				"bit": "rubber",
+				"blade": "balance",
+				"ratchet": "mid"
+			},
+			"physical_mass": 7.328,
+			"rpm_spent_1s": 0.0182,
+			"speed_after_1s": 166.14,
+			"speed_after_250ms_brake": 26.11,
+			"stats": {
+				"grip": 7.0,
+				"mass": 6.3,
+				"power": 6.4,
+				"speed": 6.8,
+				"stability": 7.0,
+				"stamina": 4.8
+			},
+			"turn_degrees_after_500ms": -49.45
+		}
+	],
+	"runs": [
+		{
+			"active_seconds": 20.55,
+			"bouts": [
+				{
+					"duration": 20.5500000000001,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.264339001429075,
+					"hits": 30,
+					"owned": [
+						"redline",
+						"iron_comet"
+					],
+					"player_remaining": 0.0448537674420911,
+					"power_procs": {
+						"redline": 4
+					},
+					"reason": "spin_out",
+					"seed": 2998365425,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 13.22,
+					"encounter_seconds": 13.22,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 13.22,
+			"initial_power": "redline",
+			"powers_at_60": 2,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "breaker",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 127.18,
+			"bouts": [
+				{
+					"duration": 27.833333333333,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0449031758348379,
+					"hits": 42,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline"
+					],
+					"player_remaining": 0.14334164070973,
+					"power_procs": {
+						"comet_charge": 1,
+						"comet_release": 1,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1771200705,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 23.3666666666666,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.04465276650303,
+					"hits": 45,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake"
+					],
+					"player_remaining": 0.0998722441215891,
+					"power_procs": {
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1720867848,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 24.9333333333332,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 44,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage"
+					],
+					"player_remaining": 0.277823960790817,
+					"power_procs": {
+						"afterimage": 3,
+						"impact_wake": 8,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "swarm_clear",
+					"seed": 1737645467,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 11,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 22.5666666666667,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0446780105347012,
+					"hits": 35,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.121188225631012,
+					"power_procs": {
+						"afterimage": 5,
+						"chain_prime": 1,
+						"impact_wake": 4,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1821533562,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.483333333333,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.189037935913962,
+					"hits": 22,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0449197662865792,
+					"power_procs": {
+						"afterimage": 10,
+						"afterimage_hit": 1,
+						"chain_burst": 1,
+						"chain_prime": 4,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 5,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1838311181,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 15.35,
+					"encounter_seconds": 15.35,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 27.83,
+					"encounter_seconds": 27.83,
+					"level": 3,
+					"power": "redline",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 46.7,
+					"encounter_seconds": 18.87,
+					"level": 4,
+					"power": "impact_wake",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 65.53,
+					"encounter_seconds": 14.33,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 2
+				},
+				{
+					"active_seconds": 81.05,
+					"encounter_seconds": 4.92,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 4,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 15.35,
+			"initial_power": "second_wind",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 7341,
+			"starter": "breaker",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 27.58,
+			"bouts": [
+				{
+					"duration": 27.583333333333,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.144350359549963,
+					"hits": 33,
+					"owned": [
+						"iron_comet",
+						"impact_wake"
+					],
+					"player_remaining": 0.0448681205036402,
+					"power_procs": {},
+					"reason": "spin_out",
+					"seed": 3911893144,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 17.12,
+					"encounter_seconds": 17.12,
+					"level": 2,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 17.12,
+			"initial_power": "iron_comet",
+			"powers_at_60": 2,
+			"reached_60": false,
+			"seed": 1609,
+			"starter": "breaker",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 193.58,
+			"bouts": [
+				{
+					"duration": 26.2666666666665,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0448106221417056,
+					"hits": 45,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake"
+					],
+					"player_remaining": 0.182267233377203,
+					"power_procs": {
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 229645987,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 23.5166666666666,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0446475300393268,
+					"hits": 40,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline"
+					],
+					"player_remaining": 0.177017327757099,
+					"power_procs": {
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 4,
+						"redline": 1,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 246423606,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 24.8999999999999,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 38,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.30542912453259,
+					"power_procs": {
+						"afterimage": 6,
+						"afterimage_hit": 1,
+						"chain_impact": 3,
+						"impact_wake": 8,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "swarm_clear",
+					"seed": 263201225,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 20,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 4,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 22.15,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0447603426474793,
+					"hits": 39,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.097298179090161,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 5,
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 279978844,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 24.8166666666665,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0399325729207336,
+					"hits": 44,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0697348108705216,
+					"power_procs": {
+						"afterimage": 6,
+						"chain_burst": 2,
+						"chain_prime": 3,
+						"impact_wake": 3,
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 296756463,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 24.7666666666665,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0403710009542183,
+					"hits": 38,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0911223478074907,
+					"power_procs": {
+						"afterimage": 6,
+						"chain_burst": 1,
+						"chain_prime": 2,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 3,
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 313534082,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 21.3833333333334,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0447761693772593,
+					"hits": 39,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.151029731177437,
+					"power_procs": {
+						"afterimage": 5,
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 4,
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 330311701,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 25.7833333333332,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.10523510850273,
+					"hits": 52,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0446039107568612,
+					"power_procs": {
+						"afterimage": 5,
+						"chain_prime": 1,
+						"impact_wake": 1,
+						"redline": 3,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 347089320,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 7.58,
+					"encounter_seconds": 7.58,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 25.47,
+					"encounter_seconds": 25.47,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 36.25,
+					"encounter_seconds": 9.98,
+					"level": 4,
+					"power": "redline",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 54.13,
+					"encounter_seconds": 4.35,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 72.0,
+					"encounter_seconds": 22.22,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 7.58,
+			"initial_power": "second_wind",
+			"powers_at_60": 5,
+			"reached_60": true,
+			"seed": 975,
+			"starter": "breaker",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 34.32,
+			"bouts": [
+				{
+					"duration": 34.316666666666,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0553314324989508,
+					"hits": 59,
+					"owned": [
+						"redline",
+						"iron_comet"
+					],
+					"player_remaining": 0.0426700132796959,
+					"power_procs": {
+						"redline": 5
+					},
+					"reason": "spin_out",
+					"seed": 2998365425,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 8.43,
+					"encounter_seconds": 8.43,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 8.43,
+			"initial_power": "redline",
+			"powers_at_60": 2,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "bastion",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 259.3,
+			"bouts": [
+				{
+					"duration": 35.2833333333326,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0447041046224292,
+					"hits": 54,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline"
+					],
+					"player_remaining": 0.263073084806181,
+					"power_procs": {},
+					"reason": "spin_out",
+					"seed": 1771200705,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.9333333333328,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0440541608451424,
+					"hits": 43,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake"
+					],
+					"player_remaining": 0.276910370191214,
+					"power_procs": {
+						"impact_wake": 1,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1720867848,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 27.3999999999997,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 52,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage"
+					],
+					"player_remaining": 0.338188752406857,
+					"power_procs": {
+						"impact_wake": 5,
+						"redline": 6
+					},
+					"reason": "swarm_clear",
+					"seed": 1737645467,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 13,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 11,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.783333333333,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.044884055939583,
+					"hits": 50,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.29128008610279,
+					"power_procs": {
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1821533562,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 35.7499999999993,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0448909173882658,
+					"hits": 46,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.231584506880446,
+					"power_procs": {
+						"chain_prime": 1,
+						"impact_wake": 2,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1838311181,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 32.1499999999995,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0446923623363508,
+					"hits": 43,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.261322601014136,
+					"power_procs": {
+						"chain_prime": 2,
+						"impact_wake": 3,
+						"redline": 6,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1787978324,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.7333333333329,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0448115357494436,
+					"hits": 48,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.287688524104036,
+					"power_procs": {
+						"chain_prime": 2,
+						"impact_wake": 4,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1804755943,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 38.2666666666658,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0447937823550799,
+					"hits": 44,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.170619597032142,
+					"power_procs": {
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"impact_wake": 5,
+						"redline": 6,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1620202134,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 8.75,
+					"encounter_seconds": 8.75,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 35.28,
+					"encounter_seconds": 35.28,
+					"level": 3,
+					"power": "redline",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 51.83,
+					"encounter_seconds": 16.55,
+					"level": 4,
+					"power": "impact_wake",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 72.45,
+					"encounter_seconds": 5.23,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 103.38,
+					"encounter_seconds": 8.77,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 4,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 8.75,
+			"initial_power": "second_wind",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 7341,
+			"starter": "bastion",
+			"status": "complete"
+		},
+		{
+			"active_seconds": 257.3,
+			"bouts": [
+				{
+					"duration": 36.9499999999992,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0438542827767564,
+					"hits": 51,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline"
+					],
+					"player_remaining": 0.251403787427288,
+					"power_procs": {
+						"impact_wake": 1
+					},
+					"reason": "spin_out",
+					"seed": 3911893144,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.7166666666661,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0449476857265633,
+					"hits": 42,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind"
+					],
+					"player_remaining": 0.292917443982208,
+					"power_procs": {
+						"impact_wake": 2,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3962226001,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 25.2166666666665,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.00215487869614495,
+					"hits": 48,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.350110991378232,
+					"power_procs": {
+						"chain_impact": 4,
+						"impact_wake": 6,
+						"redline": 6
+					},
+					"reason": "swarm_clear",
+					"seed": 3945448382,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 19,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 5,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.133333333333,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0443318164317929,
+					"hits": 45,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.303414738787744,
+					"power_procs": {
+						"chain_burst": 1,
+						"chain_prime": 2,
+						"impact_wake": 5,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3995781239,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 35.8166666666659,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0449722930666668,
+					"hits": 45,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.237953673743476,
+					"power_procs": {
+						"chain_prime": 1,
+						"impact_wake": 1,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3979003620,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.0166666666662,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0441928696913428,
+					"hits": 48,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.274983250204041,
+					"power_procs": {
+						"chain_prime": 2,
+						"impact_wake": 4,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 4029336477,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.0999999999995,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0447905737708274,
+					"hits": 45,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.311545351696207,
+					"power_procs": {
+						"chain_prime": 1,
+						"impact_wake": 1,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 4012558858,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 36.3499999999992,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0447479859591271,
+					"hits": 61,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.187911008533905,
+					"power_procs": {
+						"chain_prime": 3,
+						"impact_wake": 4,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3794449811,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 12.78,
+					"encounter_seconds": 12.78,
+					"level": 2,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 36.95,
+					"encounter_seconds": 36.95,
+					"level": 3,
+					"power": "redline",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 55.55,
+					"encounter_seconds": 18.6,
+					"level": 4,
+					"power": "second_wind",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 74.27,
+					"encounter_seconds": 5.6,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 91.05,
+					"encounter_seconds": 22.38,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 12.78,
+			"initial_power": "iron_comet",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 1609,
+			"starter": "bastion",
+			"status": "complete"
+		},
+		{
+			"active_seconds": 260.07,
+			"bouts": [
+				{
+					"duration": 37.4166666666658,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0447662530471009,
+					"hits": 46,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake"
+					],
+					"player_remaining": 0.244791151834815,
+					"power_procs": {},
+					"reason": "spin_out",
+					"seed": 229645987,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.7333333333328,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0446872783290733,
+					"hits": 36,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline"
+					],
+					"player_remaining": 0.260616807710294,
+					"power_procs": {
+						"impact_wake": 4,
+						"redline": 2
+					},
+					"reason": "spin_out",
+					"seed": 246423606,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.133333333333,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 43,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.32245674703778,
+					"power_procs": {
+						"impact_wake": 8,
+						"redline": 6
+					},
+					"reason": "swarm_clear",
+					"seed": 263201225,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 18,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 6,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.6166666666663,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0446615674759714,
+					"hits": 48,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.308529657503795,
+					"power_procs": {
+						"chain_prime": 1,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 279978844,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 35.0499999999993,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0448963708787543,
+					"hits": 46,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.19924786325375,
+					"power_procs": {
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"impact_wake": 6,
+						"redline": 6,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 296756463,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.6333333333329,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0447245703280563,
+					"hits": 49,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.280840110683163,
+					"power_procs": {
+						"chain_prime": 3,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 313534082,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.1999999999995,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0448045129054336,
+					"hits": 46,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.293483935208837,
+					"power_procs": {
+						"chain_prime": 1,
+						"impact_wake": 2,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 330311701,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 37.2833333333325,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0428516392247704,
+					"hits": 60,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.179420587185764,
+					"power_procs": {
+						"chain_prime": 3,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 347089320,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 15.6,
+					"encounter_seconds": 15.6,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 37.42,
+					"encounter_seconds": 37.42,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 55.58,
+					"encounter_seconds": 18.17,
+					"level": 4,
+					"power": "redline",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 76.38,
+					"encounter_seconds": 7.23,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 96.52,
+					"encounter_seconds": 27.37,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 15.6,
+			"initial_power": "second_wind",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 975,
+			"starter": "bastion",
+			"status": "complete"
+		},
+		{
+			"active_seconds": 27.8,
+			"bouts": [
+				{
+					"duration": 27.7999999999997,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.179744254969991,
+					"hits": 39,
+					"owned": [
+						"redline",
+						"iron_comet"
+					],
+					"player_remaining": 0.0448587362420271,
+					"power_procs": {
+						"redline": 4
+					},
+					"reason": "spin_out",
+					"seed": 2998365425,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 16.88,
+					"encounter_seconds": 16.88,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 16.88,
+			"initial_power": "redline",
+			"powers_at_60": 2,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "vane",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 240.65,
+			"bouts": [
+				{
+					"duration": 30.1166666666662,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0448339954517955,
+					"hits": 58,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline"
+					],
+					"player_remaining": 0.248530594036448,
+					"power_procs": {
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1771200705,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 30.4833333333329,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0447700557927487,
+					"hits": 29,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake"
+					],
+					"player_remaining": 0.170642667989465,
+					"power_procs": {
+						"impact_wake": 2,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1720867848,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 26.9166666666664,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 43,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.225513482502831,
+					"power_procs": {
+						"afterimage": 6,
+						"afterimage_hit": 1,
+						"chain_impact": 2,
+						"impact_wake": 9,
+						"redline": 5
+					},
+					"reason": "swarm_clear",
+					"seed": 1737645467,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 17,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 7,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 25.7666666666665,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.044853745240422,
+					"hits": 44,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.173789431451534,
+					"power_procs": {
+						"afterimage": 2,
+						"chain_burst": 1,
+						"chain_prime": 2,
+						"impact_wake": 4,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1821533562,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.3333333333328,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.044859761350844,
+					"hits": 43,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0684928169159326,
+					"power_procs": {
+						"afterimage": 9,
+						"afterimage_hit": 1,
+						"chain_burst": 1,
+						"chain_prime": 4,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 5,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1838311181,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 30.5499999999995,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0446807172064476,
+					"hits": 30,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.147294534160945,
+					"power_procs": {
+						"afterimage": 6,
+						"afterimage_hit": 1,
+						"chain_prime": 4,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 6,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1787978324,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 30.3999999999996,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0439687204898653,
+					"hits": 37,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.153286568683267,
+					"power_procs": {
+						"afterimage": 7,
+						"afterimage_hit": 1,
+						"chain_burst": 1,
+						"chain_prime": 2,
+						"impact_wake": 3,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1804755943,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 35.0833333333326,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0997965995368809,
+					"hits": 37,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"redline",
+						"impact_wake",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0427874143505674,
+					"power_procs": {
+						"afterimage": 2,
+						"afterimage_hit": 1,
+						"chain_burst": 1,
+						"chain_prime": 4,
+						"impact_wake": 4,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 1620202134,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 11.63,
+					"encounter_seconds": 11.63,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 30.12,
+					"encounter_seconds": 30.12,
+					"level": 3,
+					"power": "redline",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 45.72,
+					"encounter_seconds": 15.6,
+					"level": 4,
+					"power": "impact_wake",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 65.88,
+					"encounter_seconds": 5.28,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 83.23,
+					"encounter_seconds": 22.63,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 11.63,
+			"initial_power": "second_wind",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 7341,
+			"starter": "vane",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 248.2,
+			"bouts": [
+				{
+					"duration": 35.1333333333326,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0432288291138006,
+					"hits": 37,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline"
+					],
+					"player_remaining": 0.0709608581661489,
+					"power_procs": {
+						"impact_wake": 2
+					},
+					"reason": "spin_out",
+					"seed": 3911893144,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 31.4333333333328,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0449055261464356,
+					"hits": 26,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind"
+					],
+					"player_remaining": 0.142661427399958,
+					"power_procs": {
+						"impact_wake": 6,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3962226001,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 27.7999999999997,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 38,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage"
+					],
+					"player_remaining": 0.216554993419276,
+					"power_procs": {
+						"afterimage": 2,
+						"impact_wake": 5,
+						"redline": 5
+					},
+					"reason": "swarm_clear",
+					"seed": 3945448382,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 6,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 18,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.7666666666663,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0446663442146677,
+					"hits": 35,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.171137068329359,
+					"power_procs": {
+						"afterimage": 4,
+						"afterimage_hit": 1,
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 4,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3995781239,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 32.7833333333328,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0447898765677819,
+					"hits": 46,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0586552970159987,
+					"power_procs": {
+						"afterimage": 7,
+						"afterimage_hit": 1,
+						"chain_prime": 2,
+						"impact_wake": 2,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3979003620,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 27.4833333333331,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.044874808276431,
+					"hits": 42,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.170188261372893,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_burst": 2,
+						"chain_prime": 3,
+						"impact_wake": 5,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 4029336477,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 30.0166666666662,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0449787626036313,
+					"hits": 33,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.15933838776936,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_prime": 3,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 4012558858,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 34.7833333333326,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0688459050990613,
+					"hits": 39,
+					"owned": [
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"second_wind",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0449956138778807,
+					"power_procs": {
+						"afterimage": 4,
+						"afterimage_hit": 2,
+						"chain_burst": 1,
+						"chain_prime": 5,
+						"impact_wake": 5,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 3794449811,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 14.58,
+					"encounter_seconds": 14.58,
+					"level": 2,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 35.13,
+					"encounter_seconds": 35.13,
+					"level": 3,
+					"power": "redline",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 57.02,
+					"encounter_seconds": 21.88,
+					"level": 4,
+					"power": "second_wind",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 78.42,
+					"encounter_seconds": 11.85,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 2
+				},
+				{
+					"active_seconds": 123.13,
+					"encounter_seconds": 28.77,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 4,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 14.58,
+			"initial_power": "iron_comet",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 1609,
+			"starter": "vane",
+			"status": "failed"
+		},
+		{
+			"active_seconds": 245.7,
+			"bouts": [
+				{
+					"duration": 34.2833333333327,
+					"encounter_id": "run_slot_01",
+					"enemy_remaining": 0.0448648535950493,
+					"hits": 36,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake"
+					],
+					"player_remaining": 0.267119601725126,
+					"power_procs": {
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 229645987,
+					"slot": 1,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.5333333333329,
+					"encounter_id": "run_slot_02",
+					"enemy_remaining": 0.0411189705085667,
+					"hits": 34,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline"
+					],
+					"player_remaining": 0.28354676220612,
+					"power_procs": {
+						"impact_wake": 4,
+						"redline": 1,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 246423606,
+					"slot": 2,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.3166666666663,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 35,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage"
+					],
+					"player_remaining": 0.188185764881025,
+					"power_procs": {
+						"afterimage": 4,
+						"impact_wake": 6,
+						"redline": 5
+					},
+					"reason": "swarm_clear",
+					"seed": 263201225,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 29.3333333333329,
+					"encounter_id": "run_slot_04",
+					"enemy_remaining": 0.0449623430743989,
+					"hits": 27,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.184771399431732,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_prime": 2,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 279978844,
+					"slot": 4,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 36.5999999999992,
+					"encounter_id": "run_slot_05",
+					"enemy_remaining": 0.0447461998061454,
+					"hits": 31,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.0531218651012538,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_prime": 1,
+						"impact_wake": 3,
+						"redline": 5,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 296756463,
+					"slot": 5,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 28.3666666666663,
+					"encounter_id": "run_slot_06",
+					"enemy_remaining": 0.0447196658623095,
+					"hits": 34,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.178725156461798,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"impact_wake": 6,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 313534082,
+					"slot": 6,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 24.6333333333332,
+					"encounter_id": "run_slot_07",
+					"enemy_remaining": 0.0431317242835066,
+					"hits": 50,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.228565127173432,
+					"power_procs": {
+						"afterimage": 3,
+						"chain_prime": 1,
+						"impact_wake": 2,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 330311701,
+					"slot": 7,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				},
+				{
+					"duration": 34.6333333333327,
+					"encounter_id": "run_slot_08",
+					"enemy_remaining": 0.0585331623384043,
+					"hits": 49,
+					"owned": [
+						"second_wind",
+						"iron_comet",
+						"impact_wake",
+						"redline",
+						"afterimage",
+						"chain_impact"
+					],
+					"player_remaining": 0.044961555494443,
+					"power_procs": {
+						"afterimage": 1,
+						"chain_burst": 1,
+						"chain_prime": 3,
+						"impact_wake": 3,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "spin_out",
+					"seed": 347089320,
+					"slot": 8,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"winner": 1,
+					"winner_entity_id": 2,
+					"winner_team_id": "hostile",
+					"won": false
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 8.73,
+					"encounter_seconds": 8.73,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 33.82,
+					"encounter_seconds": 33.82,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 1,
+					"wave": 0
+				},
+				{
+					"active_seconds": 48.33,
+					"encounter_seconds": 14.05,
+					"level": 4,
+					"power": "redline",
+					"slot": 2,
+					"wave": 0
+				},
+				{
+					"active_seconds": 73.2,
+					"encounter_seconds": 9.38,
+					"level": 5,
+					"power": "afterimage",
+					"slot": 3,
+					"wave": 2
+				},
+				{
+					"active_seconds": 96.63,
+					"encounter_seconds": 4.5,
+					"level": 6,
+					"power": "chain_impact",
+					"slot": 4,
+					"wave": 0
+				}
+			],
+			"first_level_seconds": 8.73,
+			"initial_power": "second_wind",
+			"powers_at_60": 4,
+			"reached_60": true,
+			"seed": 975,
+			"starter": "vane",
+			"status": "failed"
+		}
+	],
+	"scope": "Deterministic sampled bot combat; active combat seconds exclude countdown and all choices. This is not a human playtest.",
+	"swarm": [
+		{
+			"active_seconds": 27.15,
+			"bouts": [
+				{
+					"duration": 27.1499999999997,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 42,
+					"owned": [
+						"redline",
+						"iron_comet",
+						"impact_wake",
+						"second_wind"
+					],
+					"player_remaining": 0.26216784653687,
+					"power_procs": {
+						"comet_charge": 1,
+						"comet_release": 1,
+						"impact_wake": 5,
+						"redline": 4,
+						"second_wind": 1
+					},
+					"reason": "swarm_clear",
+					"seed": 2964810187,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 16,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 5.45,
+					"encounter_seconds": 5.45,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 10.12,
+					"encounter_seconds": 10.12,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 3,
+					"wave": 2
+				},
+				{
+					"active_seconds": 21.43,
+					"encounter_seconds": 21.43,
+					"level": 4,
+					"power": "second_wind",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 5.45,
+			"initial_power": "redline",
+			"powers_at_60": 4,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "breaker",
+			"status": "active"
+		},
+		{
+			"active_seconds": 27.95,
+			"bouts": [
+				{
+					"duration": 27.9499999999997,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 42,
+					"owned": [
+						"redline",
+						"iron_comet",
+						"impact_wake",
+						"second_wind"
+					],
+					"player_remaining": 0.327077627974938,
+					"power_procs": {
+						"impact_wake": 3,
+						"redline": 6
+					},
+					"reason": "swarm_clear",
+					"seed": 2964810187,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 3.8,
+					"encounter_seconds": 3.8,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 11.68,
+					"encounter_seconds": 11.68,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 3,
+					"wave": 2
+				},
+				{
+					"active_seconds": 14.13,
+					"encounter_seconds": 14.13,
+					"level": 4,
+					"power": "second_wind",
+					"slot": 3,
+					"wave": 2
+				}
+			],
+			"first_level_seconds": 3.8,
+			"initial_power": "redline",
+			"powers_at_60": 4,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "bastion",
+			"status": "active"
+		},
+		{
+			"active_seconds": 24.23,
+			"bouts": [
+				{
+					"duration": 24.2333333333332,
+					"encounter_id": "run_slot_03",
+					"enemy_remaining": 0.0,
+					"hits": 37,
+					"owned": [
+						"redline",
+						"iron_comet",
+						"impact_wake",
+						"second_wind"
+					],
+					"player_remaining": 0.276031216435802,
+					"power_procs": {
+						"impact_wake": 4,
+						"redline": 5
+					},
+					"reason": "swarm_clear",
+					"seed": 2964810187,
+					"slot": 3,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 19,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 5,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"winner": 0,
+					"winner_entity_id": 1,
+					"winner_team_id": "player",
+					"won": true
+				}
+			],
+			"choices": [
+				{
+					"active_seconds": 2.98,
+					"encounter_seconds": 2.98,
+					"level": 2,
+					"power": "iron_comet",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 6.7,
+					"encounter_seconds": 6.7,
+					"level": 3,
+					"power": "impact_wake",
+					"slot": 3,
+					"wave": 1
+				},
+				{
+					"active_seconds": 19.7,
+					"encounter_seconds": 19.7,
+					"level": 4,
+					"power": "second_wind",
+					"slot": 3,
+					"wave": 3
+				}
+			],
+			"first_level_seconds": 2.98,
+			"initial_power": "redline",
+			"powers_at_60": 4,
+			"reached_60": false,
+			"seed": 421,
+			"starter": "vane",
+			"status": "active"
+		}
+	]
+}

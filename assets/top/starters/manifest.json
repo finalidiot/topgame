@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "cell": [
+    48,
+    48
+  ],
+  "pivot": [
+    24,
+    40
+  ],
+  "source": "../../source-art/starter_blade_accents_002b1.aseprite",
+  "layers": [
+    "preserved authored steel silhouette",
+    "identity enamel plates",
+    "rotational rim signature bands"
+  ],
+  "starters": {
+    "breaker": {
+      "texture": "breaker_spin.png",
+      "blade": "smash",
+      "columns": 8,
+      "frame_count": 8,
+      "durations_ms": [
+        65,
+        65,
+        65,
+        65,
+        65,
+        65,
+        65,
+        65
+      ]
+    },
+    "bastion": {
+      "texture": "bastion_spin.png",
+      "blade": "guard",
+      "columns": 8,
+      "frame_count": 8,
+      "durations_ms": [
+        160,
+        160,
+        160,
+        160,
+        160,
+        160,
+        160,
+        160
+      ]
+    },
+    "vane": {
+      "texture": "vane_spin.png",
+      "blade": "hook",
+      "columns": 8,
+      "frame_count": 8,
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    }
+  }
+}

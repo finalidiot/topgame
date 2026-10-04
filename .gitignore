@@ -19,4 +19,8 @@ export.cfg
 Thumbs.db
 desktop.ini
 
+# Local Python art-export caches.
+__pycache__/
+*.pyc
+
 # Keep actual source assets, *.import settings, *.uid sidecars and export_presets.cfg.

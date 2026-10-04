@@ -1,0 +1,72 @@
+TASK 002B / FIRST POWER AND SMALL-TOP PRODUCTION SOURCES
+
+Editable sources:
+small_top_002b.aseprite: 24x24, pivot12,20. Layers: contact shadow,
+steel rotor, amber cap, flash and retirement. Tags: spin(4), contact(1),
+retire(3). Retire settles and dissolves; it never rotates the whole rig.
+
+power_fx_002b.aseprite: 128x128, contact pivot64,64. Named layers:
+mechanical sectors, edge teeth, contact light, angular scars. 48 frames.
+Tags: contact_arc(6), pressure(8), echo(6), corona(8), recovery(8),
+comet_headings(8), floor_stamp(4). Comet frames are discrete headings,
+not a temporal animation. The corona/echo rotor centre is14px above
+the pivot. Ground rings have fixed2:1 projection and stepped sectors.
+
+power_icons_002b.aseprite: 16x16, pivot8,8. Six named power-ID tags.
+The runtime icons sheet is96x16; draw at16px or integer multiples.
+
+All source documents contain an embedded named palette and a
+contact_pivot Aseprite slice with a pivot. These are ordinary RGBA cels
+with normal blending, no external linked dependencies or smooth VFX.
+The small hostile top has no Blade/Ratchet/Bit build. Ghosts omit its
+cap, bit, shadow, and owner marker, preserving the real top's dominance.
+
+NORMAL EDIT/EXPORT WORKFLOW
+1. Edit the appropriate .aseprite source in Aseprite.
+2. Keep canvas, tag IDs, palette, and contact_pivot slice conventions.
+3. Run: python tools/build_power_art.py
+   This reads the edited source and exports PNGs + manifest, preserving
+   per-frame duration, named tags/layers, and pivots.
+4. Import in Godot and inspect movement at native640x360 and integer
+   scales. Texture filtering stays nearest; mipmaps remain disabled.
+
+The small source exporter supports RGBA normal image layers, layer/cel
+opacity, raw/compressed/linked cels, named tags and pivot slices. It
+rejects unsupported blend modes or groups rather than silently losing
+artist work. For those features use Aseprite's own batch export with
+rows/8 columns for effects and small tops,6 columns for icons, preserving
+the metadata conventions in assets/powers/manifest.json.
+
+python tools/build_power_art.py --author intentionally reconstructs and
+OVERWRITES these three sources from the initial deliberate cluster
+definitions. Do not use --author after making manual source edits.
+
+ASSET VERIFICATION
+The installed Aseprite1.3.x batch loader/exporter opens all three
+documents. Aseprite's exported pixels were compared against the
+maintained exporter; the images match exactly. Aseprite's own JSON
+also records named layers, all tags, and the contact-pivot slices.
+The runtime PowerVisuals loader reads effect-specific metadata instead
+of assuming old starter rig frame offsets.
+
+The arena source is intentionally untouched. The older Foundry Eight
+Aseprite document still predates playable guard-mouth revisions; never
+export it over the current arena PNGs without reconciling those changes.
+
+AUDIO
+python tools/build_power_audio.py rebuilds9 short, dry, original mono
+PCM16 mechanical cues using deterministic offline synthesis. Runtime
+mixing has8 channels with priority replacement; ordinary small contacts,
+Afterimage and Chain cues are rate-limited. Recovery/acquisition outrank
+crowd contacts. Audio randomness is independent of gameplay randomness.
+
+QA
+godot --headless --path . --script res://tests/test_presentation.gd
+checks named atlas bounds/timing, native canvases, finite audio, same-
+frame crowd aggregation and the8-channel priority cap.
+
+Optional non-headless --capture-dir=<absolute directory> records a
+seeded all-power swarm motion sequence and a separately held12-body
+stress fixture. It reports simulation CPU, draw-command submission CPU,
+and frame wall time. This fixture is not human playtest evidence and
+does not measure asynchronous GPU time or WebGL performance.

@@ -1,0 +1,182 @@
+{
+	"scope": "Deterministic physical motion/contact measurements without Run Powers. Authored Run handling compared with the same neutral custom Run and Quick Duel assemblies.",
+	"starters": {
+		"bastion": {
+			"assembly": {
+				"bit": "ball",
+				"blade": "guard",
+				"ratchet": "low"
+			},
+			"custom_matches_quick_duel": true,
+			"handling": {
+				"acceleration": 0.72,
+				"bank": 1.35,
+				"impact": 1.0,
+				"mass": 1.35,
+				"orbit": 0.25,
+				"recovery": 1.3,
+				"speed": 0.78,
+				"spin_drain": 0.9
+			},
+			"neutral_collision": {
+				"enemy_recoil": 249.031311035156,
+				"enemy_spin_loss": 0.0142637749559875,
+				"enemy_wobble": 0.0442177023635614,
+				"player_recoil": 210.546356201172,
+				"player_spin_loss": 0.0138569003704008,
+				"player_wobble": 0.0429563911482423
+			},
+			"neutral_motion": {
+				"bank_velocity_250ms": 9.54815578460693,
+				"mass": 8.952,
+				"orbit_velocity_250ms": 3.18181395530701,
+				"speed_1s": 145.100006103516,
+				"spin_spent_1s": 0.0120192725126713,
+				"wobble_recovered_500ms": 0.0539500000000004
+			},
+			"ratios_run_to_neutral": {
+				"enemy_recoil": 1.13021426528426,
+				"enemy_spin_damage": 1.0,
+				"player_recoil": 0.837195723029814,
+				"speed": 0.698689721213207,
+				"spin_drain": 0.888739270850143,
+				"wobble_recovery": 1.30000000000001
+			},
+			"run_collision": {
+				"enemy_recoil": 281.458740234375,
+				"enemy_spin_loss": 0.0142637749559875,
+				"enemy_wobble": 0.0442177023635614,
+				"player_recoil": 176.268508911133,
+				"player_spin_loss": 0.0138569003704008,
+				"player_wobble": 0.0429563911482423
+			},
+			"run_motion": {
+				"bank_velocity_250ms": 12.847222328186,
+				"mass": 12.0852,
+				"orbit_velocity_250ms": 0.794699907302856,
+				"speed_1s": 101.3798828125,
+				"spin_spent_1s": 0.0106819994890607,
+				"wobble_recovered_500ms": 0.0701350000000012
+			},
+			"stray_identity_matches_quick_duel": true
+		},
+		"breaker": {
+			"assembly": {
+				"bit": "flat",
+				"blade": "smash",
+				"ratchet": "high"
+			},
+			"custom_matches_quick_duel": true,
+			"handling": {
+				"acceleration": 1.32,
+				"bank": 0.85,
+				"impact": 1.3,
+				"mass": 1.0,
+				"orbit": 1.5,
+				"recovery": 1.0,
+				"speed": 1.2,
+				"spin_drain": 1.0
+			},
+			"neutral_collision": {
+				"enemy_recoil": 266.522827148438,
+				"enemy_spin_loss": 0.0208263100722927,
+				"enemy_wobble": 0.0645615612241076,
+				"player_recoil": 196.919784545898,
+				"player_spin_loss": 0.0193596163340151,
+				"player_wobble": 0.0600148106354468
+			},
+			"neutral_motion": {
+				"bank_velocity_250ms": 9.56301879882813,
+				"mass": 8.672,
+				"orbit_velocity_250ms": 3.18452715873718,
+				"speed_1s": 141.521759033203,
+				"spin_spent_1s": 0.0222349829804692,
+				"wobble_recovered_500ms": 0.0283999999999995
+			},
+			"ratios_run_to_neutral": {
+				"enemy_recoil": 1.07506532377923,
+				"enemy_spin_damage": 1.3,
+				"player_recoil": 0.916116086874149,
+				"speed": 1.33758454387548,
+				"spin_drain": 1.00735119585769,
+				"wobble_recovery": 1.0
+			},
+			"run_collision": {
+				"enemy_recoil": 286.529449462891,
+				"enemy_spin_loss": 0.0270742030939806,
+				"enemy_wobble": 0.0839300295913399,
+				"player_recoil": 180.401382446289,
+				"player_spin_loss": 0.0193596163340151,
+				"player_wobble": 0.0600148106354468
+			},
+			"run_motion": {
+				"bank_velocity_250ms": 8.14350128173828,
+				"mass": 8.672,
+				"orbit_velocity_250ms": 4.77890110015869,
+				"speed_1s": 189.297317504883,
+				"spin_spent_1s": 0.0223984366952511,
+				"wobble_recovered_500ms": 0.0283999999999995
+			},
+			"stray_identity_matches_quick_duel": true
+		},
+		"vane": {
+			"assembly": {
+				"bit": "rubber",
+				"blade": "hook",
+				"ratchet": "mid"
+			},
+			"custom_matches_quick_duel": true,
+			"handling": {
+				"acceleration": 1.18,
+				"bank": 1.0,
+				"impact": 1.05,
+				"mass": 0.94,
+				"orbit": 1.6,
+				"recovery": 1.15,
+				"speed": 1.12,
+				"spin_drain": 0.82
+			},
+			"neutral_collision": {
+				"enemy_recoil": 233.562835693359,
+				"enemy_spin_loss": 0.0190763007079447,
+				"enemy_wobble": 0.0591365321946286,
+				"player_recoil": 229.098510742188,
+				"player_spin_loss": 0.0169932212833133,
+				"player_wobble": 0.0526789859782709
+			},
+			"neutral_motion": {
+				"bank_velocity_250ms": 9.48161125183105,
+				"mass": 6.768,
+				"orbit_velocity_250ms": 3.15796709060669,
+				"speed_1s": 163.427764892578,
+				"spin_spent_1s": 0.0196802848504622,
+				"wobble_recovered_500ms": 0.0409999999999988
+			},
+			"ratios_run_to_neutral": {
+				"enemy_recoil": 0.979931695600915,
+				"enemy_spin_damage": 1.05,
+				"player_recoil": 1.01714363735664,
+				"speed": 1.18500295320381,
+				"spin_drain": 0.824374607875029,
+				"wobble_recovery": 1.15000000000001
+			},
+			"run_collision": {
+				"enemy_recoil": 228.875625610352,
+				"enemy_spin_loss": 0.0200301157433419,
+				"enemy_wobble": 0.06209335880436,
+				"player_recoil": 233.026092529297,
+				"player_spin_loss": 0.0169932212833133,
+				"player_wobble": 0.0526789859782709
+			},
+			"run_motion": {
+				"bank_velocity_250ms": 9.48655414581299,
+				"mass": 6.36192,
+				"orbit_velocity_250ms": 5.05394172668457,
+				"speed_1s": 193.662384033203,
+				"spin_spent_1s": 0.0162239271064687,
+				"wobble_recovered_500ms": 0.0471499999999991
+			},
+			"stray_identity_matches_quick_duel": true
+		}
+	}
+}

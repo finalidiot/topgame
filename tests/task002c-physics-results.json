@@ -1,0 +1,52 @@
+{
+	"checks": 103,
+	"failures": [],
+	"measurements": {
+		"real_runaway_pursuit": [
+			{
+				"combat_seconds": 16.3333333333337,
+				"longest_overload_seconds": 4.76666666666666,
+				"peak_heat": 1.0,
+				"reason": "spin_out",
+				"redline_starts": 2,
+				"remaining_rpm": 0.144805438245552,
+				"seed": 421,
+				"sustain_hits": 12,
+				"won": true
+			},
+			{
+				"combat_seconds": 18.4000000000002,
+				"longest_overload_seconds": 1.88333333333333,
+				"peak_heat": 0.548749028986151,
+				"reason": "spin_out",
+				"redline_starts": 3,
+				"remaining_rpm": 0.044615787302369,
+				"seed": 7341,
+				"sustain_hits": 2,
+				"won": false
+			},
+			{
+				"combat_seconds": 2.93333333333333,
+				"longest_overload_seconds": 2.79999999999999,
+				"peak_heat": 1.0,
+				"reason": "ring_out",
+				"redline_starts": 1,
+				"remaining_rpm": 0.73871290081555,
+				"seed": 1609,
+				"sustain_hits": 5,
+				"won": true
+			},
+			{
+				"combat_seconds": 17.7666666666669,
+				"longest_overload_seconds": 2.3,
+				"peak_heat": 0.816395202636719,
+				"reason": "spin_out",
+				"redline_starts": 3,
+				"remaining_rpm": 0.0448436070639741,
+				"seed": 975,
+				"sustain_hits": 3,
+				"won": false
+			}
+		]
+	}
+}

@@ -1,0 +1,2034 @@
+{
+	"runs": [
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 10.17
+				},
+				{
+					"level": 3,
+					"threat": 1,
+					"time": 25.53
+				},
+				{
+					"level": 4,
+					"threat": 2,
+					"time": 55.18
+				},
+				{
+					"level": 5,
+					"threat": 3,
+					"time": 69.17
+				},
+				{
+					"level": 6,
+					"threat": 3,
+					"time": 81.98
+				},
+				{
+					"level": 7,
+					"threat": 5,
+					"time": 147.3
+				},
+				{
+					"level": 8,
+					"threat": 7,
+					"time": 181.53
+				},
+				{
+					"level": 9,
+					"threat": 8,
+					"time": 207.43
+				},
+				{
+					"level": 10,
+					"threat": 9,
+					"time": 265.1
+				}
+			],
+			"clears": [
+				{
+					"rpm": 0.889849280784328,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 1,
+					"time": 25.55
+				},
+				{
+					"rpm": 0.772252808171443,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 2,
+					"time": 55.2
+				},
+				{
+					"rpm": 0.684901409061301,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 20,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 4,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 3,
+					"time": 82.0
+				},
+				{
+					"rpm": 0.564944593078752,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 4,
+					"time": 112.73
+				},
+				{
+					"rpm": 0.424930543527043,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 5,
+					"time": 147.32
+				},
+				{
+					"rpm": 0.291794942979784,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 6,
+					"time": 174.9
+				},
+				{
+					"rpm": 0.197988826955275,
+					"swarm": {
+						"active": 0,
+						"cancelled": 1,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 23,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 7,
+					"time": 203.5
+				},
+				{
+					"rpm": 0.244529749953798,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 8,
+					"time": 232.52
+				},
+				{
+					"rpm": 0.095813033491234,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 9,
+					"time": 267.77
+				}
+			],
+			"entries": [
+				{
+					"level": 3,
+					"rpm": 0.884520733715478,
+					"swarm": false,
+					"threat": 2,
+					"time": 27.55
+				},
+				{
+					"level": 4,
+					"rpm": 0.766915076488561,
+					"swarm": true,
+					"threat": 3,
+					"time": 57.2
+				},
+				{
+					"level": 6,
+					"rpm": 0.679636344520017,
+					"swarm": false,
+					"threat": 4,
+					"time": 84.0
+				},
+				{
+					"level": 6,
+					"rpm": 0.559629863338205,
+					"swarm": false,
+					"threat": 5,
+					"time": 114.73
+				},
+				{
+					"level": 7,
+					"rpm": 0.417538556687647,
+					"swarm": false,
+					"threat": 6,
+					"time": 149.32
+				},
+				{
+					"level": 7,
+					"rpm": 0.285629398548677,
+					"swarm": true,
+					"threat": 7,
+					"time": 176.9
+				},
+				{
+					"level": 8,
+					"rpm": 0.192404925572492,
+					"swarm": false,
+					"threat": 8,
+					"time": 205.5
+				},
+				{
+					"level": 9,
+					"rpm": 0.238755990215094,
+					"swarm": false,
+					"threat": 9,
+					"time": 234.52
+				},
+				{
+					"level": 10,
+					"rpm": 0.0899258825165973,
+					"swarm": false,
+					"threat": 10,
+					"time": 269.77
+				}
+			],
+			"launches": 1,
+			"level": 10,
+			"mutations": {
+				"afterimage": "ghost_circuit",
+				"dead_centre": "bulwark"
+			},
+			"next_at": 269.766666666752,
+			"next_entity_id": 58,
+			"peak_entities": 10,
+			"peak_power_states": 10,
+			"phase": "active",
+			"power_procs": {
+				"afterimage": 15,
+				"afterimage_hit": 2,
+				"anchor": 8,
+				"anchor_break": 1,
+				"comet_charge": 4,
+				"comet_release": 2,
+				"impact_wake": 44,
+				"second_wind": 1
+			},
+			"powers": [
+				"impact_wake",
+				"second_wind",
+				"dead_centre",
+				"iron_comet",
+				"afterimage",
+				"redline"
+			],
+			"ranks": {
+				"afterimage": 3,
+				"dead_centre": 3,
+				"impact_wake": 1,
+				"iron_comet": 1,
+				"redline": 1,
+				"second_wind": 1
+			},
+			"reason": "spin_out",
+			"remaining_rpm": 0.0449661795291553,
+			"rivals_defeated": 7,
+			"run_seed": 421,
+			"seed": 421,
+			"small_enemies_defeated": 34,
+			"starter": "breaker",
+			"status": "failed",
+			"survival_time": 279.700000000074,
+			"swarms": 2,
+			"threat_number": 10,
+			"threat_started_at": 269.76666666675,
+			"threats_cleared": 9
+		},
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 7.65
+				}
+			],
+			"clears": [],
+			"entries": [],
+			"launches": 1,
+			"level": 2,
+			"mutations": {},
+			"next_at": 0.0,
+			"next_entity_id": 3,
+			"peak_entities": 2,
+			"peak_power_states": 2,
+			"phase": "active",
+			"power_procs": {
+				"impact_wake": 3
+			},
+			"powers": [
+				"dead_centre",
+				"impact_wake"
+			],
+			"ranks": {
+				"dead_centre": 1,
+				"impact_wake": 1
+			},
+			"reason": "ring_out",
+			"remaining_rpm": 0.905660523470287,
+			"rivals_defeated": 0,
+			"run_seed": 7341,
+			"seed": 7341,
+			"small_enemies_defeated": 0,
+			"starter": "breaker",
+			"status": "failed",
+			"survival_time": 20.1500000000001,
+			"swarms": 0,
+			"threat_number": 1,
+			"threat_started_at": 0.0,
+			"threats_cleared": 0
+		},
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 8.5
+				},
+				{
+					"level": 3,
+					"threat": 1,
+					"time": 25.12
+				},
+				{
+					"level": 4,
+					"threat": 2,
+					"time": 41.37
+				},
+				{
+					"level": 5,
+					"threat": 3,
+					"time": 73.17
+				},
+				{
+					"level": 6,
+					"threat": 3,
+					"time": 91.18
+				},
+				{
+					"level": 7,
+					"threat": 5,
+					"time": 143.57
+				},
+				{
+					"level": 8,
+					"threat": 6,
+					"time": 201.98
+				},
+				{
+					"level": 9,
+					"threat": 7,
+					"time": 224.92
+				},
+				{
+					"level": 10,
+					"threat": 9,
+					"time": 271.23
+				},
+				{
+					"level": 11,
+					"threat": 10,
+					"time": 333.68
+				},
+				{
+					"level": 12,
+					"threat": 11,
+					"time": 356.18
+				},
+				{
+					"level": 13,
+					"threat": 12,
+					"time": 393.37
+				}
+			],
+			"clears": [
+				{
+					"rpm": 0.915618239701627,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 1,
+					"time": 33.52
+				},
+				{
+					"rpm": 0.834926650021024,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 2,
+					"time": 66.2
+				},
+				{
+					"rpm": 0.784775710161791,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 16,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 3,
+					"time": 93.35
+				},
+				{
+					"rpm": 0.70236529404499,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 4,
+					"time": 125.58
+				},
+				{
+					"rpm": 0.610770628671124,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 5,
+					"time": 165.78
+				},
+				{
+					"rpm": 0.531341563742942,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 6,
+					"time": 202.0
+				},
+				{
+					"rpm": 0.477554907423253,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 7,
+					"time": 231.07
+				},
+				{
+					"rpm": 0.393435145960589,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 8,
+					"time": 263.83
+				},
+				{
+					"rpm": 0.286967001697734,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 9,
+					"time": 304.53
+				},
+				{
+					"rpm": 0.195111545641705,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 10,
+					"time": 339.87
+				},
+				{
+					"rpm": 0.31922283720656,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 13,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 11,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 11,
+					"time": 368.0
+				},
+				{
+					"rpm": 0.22619884042623,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 12,
+					"time": 401.27
+				},
+				{
+					"rpm": 0.122025544526776,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 13,
+					"time": 444.05
+				}
+			],
+			"entries": [
+				{
+					"level": 3,
+					"rpm": 0.913060767452281,
+					"swarm": false,
+					"threat": 2,
+					"time": 35.52
+				},
+				{
+					"level": 4,
+					"rpm": 0.832352105762526,
+					"swarm": true,
+					"threat": 3,
+					"time": 68.2
+				},
+				{
+					"level": 6,
+					"rpm": 0.782268073128239,
+					"swarm": false,
+					"threat": 4,
+					"time": 95.35
+				},
+				{
+					"level": 6,
+					"rpm": 0.699421464291106,
+					"swarm": false,
+					"threat": 5,
+					"time": 127.58
+				},
+				{
+					"level": 7,
+					"rpm": 0.608233173989565,
+					"swarm": false,
+					"threat": 6,
+					"time": 167.78
+				},
+				{
+					"level": 8,
+					"rpm": 0.528805611582863,
+					"swarm": true,
+					"threat": 7,
+					"time": 204.0
+				},
+				{
+					"level": 9,
+					"rpm": 0.47503672159309,
+					"swarm": false,
+					"threat": 8,
+					"time": 233.07
+				},
+				{
+					"level": 9,
+					"rpm": 0.390476641876083,
+					"swarm": false,
+					"threat": 9,
+					"time": 265.83
+				},
+				{
+					"level": 10,
+					"rpm": 0.284327316348965,
+					"swarm": false,
+					"threat": 10,
+					"time": 306.53
+				},
+				{
+					"level": 11,
+					"rpm": 0.192285431684034,
+					"swarm": true,
+					"threat": 11,
+					"time": 341.87
+				},
+				{
+					"level": 12,
+					"rpm": 0.316679807260925,
+					"swarm": false,
+					"threat": 12,
+					"time": 370.0
+				},
+				{
+					"level": 13,
+					"rpm": 0.223433175473845,
+					"swarm": false,
+					"threat": 13,
+					"time": 403.27
+				},
+				{
+					"level": 13,
+					"rpm": 0.119022325781935,
+					"swarm": false,
+					"threat": 14,
+					"time": 446.05
+				}
+			],
+			"launches": 1,
+			"level": 13,
+			"mutations": {
+				"afterimage": "ghost_circuit",
+				"dead_centre": "bulwark",
+				"redline": "runaway"
+			},
+			"next_at": 446.049999999925,
+			"next_entity_id": 85,
+			"peak_entities": 11,
+			"peak_power_states": 11,
+			"phase": "active",
+			"power_procs": {
+				"anchor": 16,
+				"anchor_break": 4,
+				"chain_prime": 4,
+				"impact_wake": 73,
+				"redline": 2,
+				"second_wind": 1
+			},
+			"powers": [
+				"impact_wake",
+				"second_wind",
+				"dead_centre",
+				"iron_comet",
+				"afterimage",
+				"redline",
+				"chain_impact"
+			],
+			"ranks": {
+				"afterimage": 3,
+				"chain_impact": 1,
+				"dead_centre": 3,
+				"impact_wake": 1,
+				"iron_comet": 1,
+				"redline": 3,
+				"second_wind": 1
+			},
+			"reason": "spin_out",
+			"remaining_rpm": 0.0449765444392351,
+			"rivals_defeated": 10,
+			"run_seed": 421,
+			"seed": 421,
+			"small_enemies_defeated": 44,
+			"starter": "bastion",
+			"status": "failed",
+			"survival_time": 475.016666666563,
+			"swarms": 3,
+			"threat_number": 14,
+			"threat_started_at": 446.049999999923,
+			"threats_cleared": 13
+		},
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 13.07
+				},
+				{
+					"level": 3,
+					"threat": 1,
+					"time": 35.88
+				},
+				{
+					"level": 4,
+					"threat": 2,
+					"time": 52.55
+				},
+				{
+					"level": 5,
+					"threat": 3,
+					"time": 83.72
+				},
+				{
+					"level": 6,
+					"threat": 4,
+					"time": 115.93
+				},
+				{
+					"level": 7,
+					"threat": 6,
+					"time": 173.55
+				},
+				{
+					"level": 8,
+					"threat": 7,
+					"time": 221.15
+				},
+				{
+					"level": 9,
+					"threat": 8,
+					"time": 252.6
+				},
+				{
+					"level": 10,
+					"threat": 9,
+					"time": 307.33
+				},
+				{
+					"level": 11,
+					"threat": 11,
+					"time": 352.63
+				},
+				{
+					"level": 12,
+					"threat": 12,
+					"time": 377.5
+				},
+				{
+					"level": 13,
+					"threat": 13,
+					"time": 442.73
+				}
+			],
+			"clears": [
+				{
+					"rpm": 0.915016089611546,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 1,
+					"time": 35.9
+				},
+				{
+					"rpm": 0.833150417685713,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 2,
+					"time": 69.88
+				},
+				{
+					"rpm": 0.780500601286897,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 14,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 10,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 3,
+					"time": 99.05
+				},
+				{
+					"rpm": 0.700811727209151,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 4,
+					"time": 131.53
+				},
+				{
+					"rpm": 0.606957843995101,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 5,
+					"time": 169.32
+				},
+				{
+					"rpm": 0.524180066805337,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 6,
+					"time": 205.43
+				},
+				{
+					"rpm": 0.47371304669289,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 7,
+					"time": 233.92
+				},
+				{
+					"rpm": 0.387766140159216,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 8,
+					"time": 266.48
+				},
+				{
+					"rpm": 0.293293196542918,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 9,
+					"time": 307.35
+				},
+				{
+					"rpm": 0.204837120694775,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 10,
+					"time": 343.85
+				},
+				{
+					"rpm": 0.14695456102828,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 18,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 6,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 11,
+					"time": 373.17
+				},
+				{
+					"rpm": 0.233250775594296,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 12,
+					"time": 405.38
+				},
+				{
+					"rpm": 0.128170860706622,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 13,
+					"time": 447.6
+				}
+			],
+			"entries": [
+				{
+					"level": 3,
+					"rpm": 0.912480529243436,
+					"swarm": false,
+					"threat": 2,
+					"time": 37.9
+				},
+				{
+					"level": 4,
+					"rpm": 0.830606016668751,
+					"swarm": true,
+					"threat": 3,
+					"time": 71.88
+				},
+				{
+					"level": 5,
+					"rpm": 0.778000204625059,
+					"swarm": false,
+					"threat": 4,
+					"time": 101.05
+				},
+				{
+					"level": 6,
+					"rpm": 0.698154523022118,
+					"swarm": false,
+					"threat": 5,
+					"time": 133.53
+				},
+				{
+					"level": 6,
+					"rpm": 0.604451871574751,
+					"swarm": false,
+					"threat": 6,
+					"time": 171.32
+				},
+				{
+					"level": 7,
+					"rpm": 0.521258704702067,
+					"swarm": true,
+					"threat": 7,
+					"time": 207.43
+				},
+				{
+					"level": 8,
+					"rpm": 0.471195360976363,
+					"swarm": false,
+					"threat": 8,
+					"time": 235.92
+				},
+				{
+					"level": 9,
+					"rpm": 0.385194984543716,
+					"swarm": false,
+					"threat": 9,
+					"time": 268.48
+				},
+				{
+					"level": 10,
+					"rpm": 0.290720814650823,
+					"swarm": false,
+					"threat": 10,
+					"time": 309.35
+				},
+				{
+					"level": 10,
+					"rpm": 0.20201357360572,
+					"swarm": true,
+					"threat": 11,
+					"time": 345.85
+				},
+				{
+					"level": 11,
+					"rpm": 0.144010156758538,
+					"swarm": false,
+					"threat": 12,
+					"time": 375.17
+				},
+				{
+					"level": 12,
+					"rpm": 0.230525819845076,
+					"swarm": false,
+					"threat": 13,
+					"time": 407.38
+				},
+				{
+					"level": 13,
+					"rpm": 0.12518033325066,
+					"swarm": false,
+					"threat": 14,
+					"time": 449.6
+				}
+			],
+			"launches": 1,
+			"level": 13,
+			"mutations": {
+				"afterimage": "ghost_circuit",
+				"dead_centre": "bulwark",
+				"redline": "runaway"
+			},
+			"next_at": 449.599999999922,
+			"next_entity_id": 85,
+			"peak_entities": 11,
+			"peak_power_states": 11,
+			"phase": "active",
+			"power_procs": {
+				"anchor": 16,
+				"anchor_break": 5,
+				"chain_prime": 2,
+				"impact_wake": 54,
+				"second_wind": 1
+			},
+			"powers": [
+				"dead_centre",
+				"impact_wake",
+				"second_wind",
+				"iron_comet",
+				"afterimage",
+				"redline",
+				"chain_impact"
+			],
+			"ranks": {
+				"afterimage": 3,
+				"chain_impact": 1,
+				"dead_centre": 3,
+				"impact_wake": 1,
+				"iron_comet": 1,
+				"redline": 3,
+				"second_wind": 1
+			},
+			"reason": "sample_limit",
+			"remaining_rpm": 0.0532136744370338,
+			"rivals_defeated": 10,
+			"run_seed": 7341,
+			"seed": 7341,
+			"small_enemies_defeated": 45,
+			"starter": "bastion",
+			"status": "active",
+			"survival_time": 480.016666666559,
+			"swarms": 3,
+			"threat_number": 14,
+			"threat_started_at": 449.59999999992,
+			"threats_cleared": 13
+		},
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 10.93
+				},
+				{
+					"level": 3,
+					"threat": 1,
+					"time": 29.4
+				},
+				{
+					"level": 4,
+					"threat": 2,
+					"time": 48.85
+				},
+				{
+					"level": 5,
+					"threat": 3,
+					"time": 75.1
+				},
+				{
+					"level": 6,
+					"threat": 4,
+					"time": 100.18
+				},
+				{
+					"level": 7,
+					"threat": 5,
+					"time": 159.63
+				},
+				{
+					"level": 8,
+					"threat": 7,
+					"time": 210.43
+				},
+				{
+					"level": 9,
+					"threat": 8,
+					"time": 245.12
+				},
+				{
+					"level": 10,
+					"threat": 9,
+					"time": 295.08
+				},
+				{
+					"level": 11,
+					"threat": 11,
+					"time": 337.5
+				}
+			],
+			"clears": [
+				{
+					"rpm": 0.898845532800283,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 1,
+					"time": 29.42
+				},
+				{
+					"rpm": 0.795974599409549,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 2,
+					"time": 62.25
+				},
+				{
+					"rpm": 0.721612846704083,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 16,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 3,
+					"time": 92.3
+				},
+				{
+					"rpm": 0.619828892766478,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 4,
+					"time": 122.02
+				},
+				{
+					"rpm": 0.502364871526351,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 5,
+					"time": 159.65
+				},
+				{
+					"rpm": 0.394102906723561,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 6,
+					"time": 194.42
+				},
+				{
+					"rpm": 0.324063480104218,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 15,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 9,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 7,
+					"time": 222.12
+				},
+				{
+					"rpm": 0.2085990013314,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 8,
+					"time": 253.45
+				},
+				{
+					"rpm": 0.259640080117334,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 9,
+					"time": 295.1
+				},
+				{
+					"rpm": 0.143994677925529,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 10,
+					"time": 330.82
+				},
+				{
+					"rpm": 0.0792274472166257,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 10,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 14,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 11,
+					"time": 358.07
+				}
+			],
+			"entries": [
+				{
+					"level": 3,
+					"rpm": 0.895019309491821,
+					"swarm": false,
+					"threat": 2,
+					"time": 31.42
+				},
+				{
+					"level": 4,
+					"rpm": 0.792104214013062,
+					"swarm": true,
+					"threat": 3,
+					"time": 64.25
+				},
+				{
+					"level": 5,
+					"rpm": 0.717130751018793,
+					"swarm": false,
+					"threat": 4,
+					"time": 94.3
+				},
+				{
+					"level": 6,
+					"rpm": 0.614796700976465,
+					"swarm": false,
+					"threat": 5,
+					"time": 124.02
+				},
+				{
+					"level": 7,
+					"rpm": 0.498524949717802,
+					"swarm": false,
+					"threat": 6,
+					"time": 161.65
+				},
+				{
+					"level": 7,
+					"rpm": 0.390310753818933,
+					"swarm": true,
+					"threat": 7,
+					"time": 196.42
+				},
+				{
+					"level": 8,
+					"rpm": 0.3202624944585,
+					"swarm": false,
+					"threat": 8,
+					"time": 224.12
+				},
+				{
+					"level": 9,
+					"rpm": 0.204546222170297,
+					"swarm": false,
+					"threat": 9,
+					"time": 255.45
+				},
+				{
+					"level": 10,
+					"rpm": 0.255697512286804,
+					"swarm": false,
+					"threat": 10,
+					"time": 297.1
+				},
+				{
+					"level": 10,
+					"rpm": 0.139809600596328,
+					"swarm": true,
+					"threat": 11,
+					"time": 332.82
+				},
+				{
+					"level": 11,
+					"rpm": 0.0748784041952978,
+					"swarm": false,
+					"threat": 12,
+					"time": 360.07
+				}
+			],
+			"launches": 1,
+			"level": 11,
+			"mutations": {
+				"afterimage": "ghost_circuit",
+				"dead_centre": "bulwark"
+			},
+			"next_at": 360.06666666667,
+			"next_entity_id": 83,
+			"peak_entities": 11,
+			"peak_power_states": 11,
+			"phase": "active",
+			"power_procs": {
+				"afterimage": 14,
+				"afterimage_hit": 10,
+				"anchor": 11,
+				"anchor_break": 1,
+				"comet_charge": 1,
+				"impact_wake": 63,
+				"second_wind": 1
+			},
+			"powers": [
+				"impact_wake",
+				"second_wind",
+				"dead_centre",
+				"iron_comet",
+				"afterimage",
+				"redline"
+			],
+			"ranks": {
+				"afterimage": 3,
+				"dead_centre": 3,
+				"impact_wake": 1,
+				"iron_comet": 1,
+				"redline": 2,
+				"second_wind": 1
+			},
+			"reason": "spin_out",
+			"remaining_rpm": 0.0449694142205732,
+			"rivals_defeated": 8,
+			"run_seed": 421,
+			"seed": 421,
+			"small_enemies_defeated": 40,
+			"starter": "vane",
+			"status": "failed",
+			"survival_time": 368.36666666666,
+			"swarms": 3,
+			"threat_number": 12,
+			"threat_started_at": 360.066666666668,
+			"threats_cleared": 11
+		},
+		{
+			"choices": [
+				{
+					"level": 2,
+					"threat": 1,
+					"time": 9.58
+				},
+				{
+					"level": 3,
+					"threat": 1,
+					"time": 31.92
+				},
+				{
+					"level": 4,
+					"threat": 2,
+					"time": 58.63
+				},
+				{
+					"level": 5,
+					"threat": 3,
+					"time": 76.47
+				},
+				{
+					"level": 6,
+					"threat": 4,
+					"time": 95.42
+				},
+				{
+					"level": 7,
+					"threat": 5,
+					"time": 149.22
+				},
+				{
+					"level": 8,
+					"threat": 7,
+					"time": 199.6
+				},
+				{
+					"level": 9,
+					"threat": 7,
+					"time": 219.25
+				},
+				{
+					"level": 10,
+					"threat": 9,
+					"time": 278.38
+				},
+				{
+					"level": 11,
+					"threat": 10,
+					"time": 327.95
+				},
+				{
+					"level": 12,
+					"threat": 11,
+					"time": 350.28
+				}
+			],
+			"clears": [
+				{
+					"rpm": 0.89594546073984,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 1,
+					"time": 31.93
+				},
+				{
+					"rpm": 0.792980714622021,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 2,
+					"time": 64.17
+				},
+				{
+					"rpm": 0.724233353971228,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 16,
+						"peak_active": 9,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 3,
+					"time": 92.52
+				},
+				{
+					"rpm": 0.622350206717193,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 4,
+					"time": 120.77
+				},
+				{
+					"rpm": 0.500491147696757,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 5,
+					"time": 159.1
+				},
+				{
+					"rpm": 0.395129969399754,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 6,
+					"time": 194.32
+				},
+				{
+					"rpm": 0.322181599702566,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 14,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 10,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 7,
+					"time": 222.65
+				},
+				{
+					"rpm": 0.213482378834805,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 8,
+					"time": 256.22
+				},
+				{
+					"rpm": 0.267435894185353,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 9,
+					"time": 293.58
+				},
+				{
+					"rpm": 0.149534754452039,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 0,
+						"peak_active": 0,
+						"remaining": 0,
+						"retired": 0,
+						"scheduled": 0,
+						"spawned": 0,
+						"total_waves": 3,
+						"wave": 0
+					},
+					"threat": 10,
+					"time": 327.97
+				},
+				{
+					"rpm": 0.0809478692163125,
+					"swarm": {
+						"active": 0,
+						"cancelled": 0,
+						"cleanup_used": false,
+						"eliminated": 16,
+						"peak_active": 10,
+						"remaining": 0,
+						"retired": 8,
+						"scheduled": 24,
+						"spawned": 24,
+						"total_waves": 3,
+						"wave": 3
+					},
+					"threat": 11,
+					"time": 356.02
+				}
+			],
+			"entries": [
+				{
+					"level": 3,
+					"rpm": 0.892152850936883,
+					"swarm": false,
+					"threat": 2,
+					"time": 33.93
+				},
+				{
+					"level": 4,
+					"rpm": 0.788827602084194,
+					"swarm": true,
+					"threat": 3,
+					"time": 66.17
+				},
+				{
+					"level": 5,
+					"rpm": 0.720448080074925,
+					"swarm": false,
+					"threat": 4,
+					"time": 94.52
+				},
+				{
+					"level": 6,
+					"rpm": 0.618531150604228,
+					"swarm": false,
+					"threat": 5,
+					"time": 122.77
+				},
+				{
+					"level": 7,
+					"rpm": 0.496705164695251,
+					"swarm": false,
+					"threat": 6,
+					"time": 161.1
+				},
+				{
+					"level": 7,
+					"rpm": 0.391275454300813,
+					"swarm": true,
+					"threat": 7,
+					"time": 196.32
+				},
+				{
+					"level": 9,
+					"rpm": 0.318408655408107,
+					"swarm": false,
+					"threat": 8,
+					"time": 224.65
+				},
+				{
+					"level": 9,
+					"rpm": 0.209450862574038,
+					"swarm": false,
+					"threat": 9,
+					"time": 258.22
+				},
+				{
+					"level": 10,
+					"rpm": 0.263452879611081,
+					"swarm": false,
+					"threat": 10,
+					"time": 295.58
+				},
+				{
+					"level": 11,
+					"rpm": 0.145340389233306,
+					"swarm": true,
+					"threat": 11,
+					"time": 329.97
+				},
+				{
+					"level": 12,
+					"rpm": 0.0766115780460834,
+					"swarm": false,
+					"threat": 12,
+					"time": 358.02
+				}
+			],
+			"launches": 1,
+			"level": 12,
+			"mutations": {
+				"afterimage": "ghost_circuit",
+				"dead_centre": "bulwark",
+				"redline": "runaway"
+			},
+			"next_at": 358.016666666672,
+			"next_entity_id": 83,
+			"peak_entities": 11,
+			"peak_power_states": 11,
+			"phase": "active",
+			"power_procs": {
+				"afterimage": 33,
+				"afterimage_hit": 16,
+				"anchor": 12,
+				"anchor_break": 2,
+				"comet_charge": 2,
+				"comet_release": 1,
+				"impact_wake": 55,
+				"second_wind": 1
+			},
+			"powers": [
+				"dead_centre",
+				"impact_wake",
+				"second_wind",
+				"iron_comet",
+				"afterimage",
+				"redline"
+			],
+			"ranks": {
+				"afterimage": 3,
+				"dead_centre": 3,
+				"impact_wake": 1,
+				"iron_comet": 1,
+				"redline": 3,
+				"second_wind": 1
+			},
+			"reason": "spin_out",
+			"remaining_rpm": 0.0449931955114589,
+			"rivals_defeated": 8,
+			"run_seed": 7341,
+			"seed": 7341,
+			"small_enemies_defeated": 46,
+			"starter": "vane",
+			"status": "failed",
+			"survival_time": 368.733333333327,
+			"swarms": 3,
+			"threat_number": 12,
+			"threat_started_at": 358.01666666667,
+			"threats_cleared": 11
+		}
+	],
+	"scope": "Real fixed-step continuous combat; sampled bot input, normal enemy AI, ordinary earned claims. No injected outcomes or reserve refill. Active seconds exclude menus/countdown/hit-stop; not human playtesting."
+}
