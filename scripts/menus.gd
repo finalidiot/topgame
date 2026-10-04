@@ -51,6 +51,10 @@ var _xp_display: float = 0.0
 var _xp_last_level: int = 1
 var _xp_near: bool = false
 var _xp_flash: float = 0.0
+var _collection_snapshot: Dictionary = {}
+var _ownership_elapsed: float = 0.0
+var _ownership_flash: ColorRect
+var _ownership_note: Label
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -63,6 +67,10 @@ func _process(_delta: float) -> void:
 	_menu_clock += _delta
 	_animate_cards()
 	_animate_power_art(_delta)
+	if screen == "starter_owned":
+		_ownership_elapsed += _delta
+		if is_instance_valid(_ownership_flash): _ownership_flash.color.a = maxf(0.0, 0.14 - _ownership_elapsed * 0.3)
+		if is_instance_valid(_ownership_note): _ownership_note.modulate.a = minf(1.0, _ownership_elapsed * 2.0)
 	if screen == "acquisition" and is_instance_valid(_acquisition_icon):
 		_acquisition_elapsed += _delta
 		_acquisition_icon.modulate.a = minf(1.0, 0.6 + _acquisition_elapsed * 5.0)
@@ -307,10 +315,234 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 	_label(_content, "KEYBOARD + GAMEPAD    /    STEER   BURST   BRAKE   PAUSE    /    CONTROLS IN HOW TO PLAY", Rect2(30, 333, 582, 16), 9, MUTED)
 	_focus_rows([[first], [run_button], [garage_button], [help_button, settings_button], [quit_button]])
 
-func show_garage(build: Dictionary) -> void:
+## Production collection flow is separate from the unrestricted prototype UI
+## below. These screens emit intent; ownership is only changed by the save API.
+func show_collection_title(build: Dictionary, settings: Dictionary, initialized: bool) -> void:
+	_build = build.duplicate()
+	_settings = settings.duplicate()
+	_clear("collection_title")
+	_label(_content, "SPINNING METAL", Rect2(28, 24, 565, 42), 32)
+	_label(_content, "YOUR MACHINE. YOUR COLLECTION. YOUR RUN.", Rect2(30, 65, 570, 18), 11, ORANGE)
+	var begin: Button = _button(_content, "CONTINUE TO WORKSHOP" if initialized else "BEGIN", Rect2(30, 104, 268, 34), "open_workshop" if initialized else "begin_collection", null, true)
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(30, 148, 268, 31), "quick_duel")
+	var practice_garage: Button = _button(_content, "PRACTICE GARAGE", Rect2(30, 188, 268, 31), "practice_garage")
+	var help: Button = _button(_content, "HOW TO PLAY", Rect2(30, 228, 128, 30), "help")
+	var options: Button = _button(_content, "SETTINGS", Rect2(168, 228, 130, 30), "settings")
+	var quit_button: Button = _button(_content, "QUIT", Rect2(30, 268, 268, 28), "quit")
+	_panel(_content, Rect2(324, 104, 286, 211))
+	if initialized and _complete_build(_build):
+		_label(_content, "YOUR EQUIPPED MACHINE", Rect2(339, 114, 255, 18), 11, BLUE)
+		var preview: Preview = _new_preview(Rect2(351, 133, 230, 135), 4.0)
+		_set_preview_build_identity(preview, _build)
+		_label(_content, PartCatalog.title(_build), Rect2(334, 268, 266, 23), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, "OWNED PARTS STAY WITH YOU", Rect2(334, 291, 266, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	else:
+		_label(_content, "YOUR FIRST MACHINE" if not initialized else "ASSEMBLY INCOMPLETE", Rect2(341, 126, 252, 25), 18, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+		for index: int in range(3):
+			var color: Color = Starters.get_starter(Starters.IDS[index]).accent
+			_rect(_content, Rect2(382 + index * 54, 174, 32, 3), color)
+			_rect(_content, Rect2(389 + index * 54, 183, 18, 2), color.darkened(0.35))
+		var invitation: Label = _label(_content, "Three personalities. One first choice.\nBuild your collection from here." if not initialized else "Inspect your owned parts\nin the Workshop.", Rect2(345, 215, 244, 51), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		invitation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_label(_content, "0 OWNED PARTS" if not initialized else "SAVED COLLECTION", Rect2(341, 285, 252, 18), 11, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "Your Run ends. Your collection stays.", Rect2(30, 302, 285, 24), 11, MUTED)
+	_label(_content, "KEYBOARD + GAMEPAD + MOUSE   /   CONTROLS IN HOW TO PLAY", Rect2(30, 333, 582, 17), 10, MUTED)
+	_focus_rows([[begin], [practice], [practice_garage], [help, options], [quit_button]])
+
+func show_starter_ceremony(focus_id: String = "breaker") -> void:
+	_clear("starter_ceremony")
+	_header("YOUR FIRST MACHINE", "This choice starts your permanent collection. Take a look before you decide.")
+	var cards: Array[Button] = []
+	var selected: Control
+	for index: int in range(Starters.IDS.size()):
+		var id: String = Starters.IDS[index]
+		var data: Dictionary = Starters.get_starter(id)
+		var color: Color = data.accent
+		var card: Button = _button(_content, "", Rect2(22 + index * 202, 68, 192, 240), "select_first_starter", id)
+		card.set_meta("starter_id", id)
+		card.tooltip_text = str(data.name) + " / " + PartCatalog.title(data.assembly)
+		_style_card(card, color)
+		_rect(card, Rect2(11, 12, 3, 18), color)
+		_label(card, str(data.name), Rect2(21, 7, 159, 27), 23, color)
+		var preview: Preview = Preview.new()
+		preview.position = Vector2(11, 34)
+		preview.size = Vector2(170, 138)
+		preview.preview_scale = 4.0
+		preview.set_build(data.assembly)
+		preview.set_identity(id, color)
+		card.add_child(preview)
+		_label(card, _ceremony_role(id), Rect2(11, 172, 170, 16), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		var copy: Label = _label(card, _ceremony_copy(id), Rect2(12, 192, 168, 31), 11, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		copy.add_theme_constant_override("line_spacing", -1)
+		_label(card, "CHOOSE AS FIRST TOP", Rect2(12, 223, 168, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		cards.append(card)
+		if id == focus_id: selected = card
+	_label(_content, "LEFT / RIGHT  INSPECT     CONFIRM  CHOOSE", Rect2(22, 326, 450, 18), 10, MUTED)
+	var back: Button = _button(_content, "BACK", Rect2(510, 321, 108, 27), "main_menu")
+	_focus_rows([cards, [back]], selected)
+
+func show_starter_confirmation(starter_id: String) -> void:
+	var data: Dictionary = Starters.get_starter(starter_id)
+	if data.is_empty(): return
+	_build = data.assembly.duplicate()
+	_clear("starter_confirm")
+	_header("MAKE IT YOURS", "Your first choice stays in your collection history. Your future build can change.")
+	_starter_ownership_stage(data, false)
+	var back: Button = _button(_content, "BACK / KEEP LOOKING", Rect2(22, 319, 256, 29), "back_to_starters", starter_id)
+	var confirm: Button = _button(_content, "CHOOSE " + str(data.name), Rect2(294, 319, 324, 29), "confirm_first_starter", starter_id, true)
+	_focus_rows([[back, confirm]], confirm)
+
+func show_starter_owned(starter_id: String) -> void:
+	var data: Dictionary = Starters.get_starter(starter_id)
+	if data.is_empty(): return
+	_build = data.assembly.duplicate()
+	_clear("starter_owned")
+	_ownership_elapsed = 0.0
+	_header(str(data.name) + " IS YOURS", "Your first machine. Three owned parts. A collection that starts here.")
+	_starter_ownership_stage(data, true)
+	_ownership_note = _label(_content, "PERMANENTLY ADDED TO YOUR COLLECTION", Rect2(22, 310, 382, 27), 11, data.accent)
+	var continue_button: Button = _button(_content, "ENTER WORKSHOP", Rect2(426, 319, 192, 29), "finish_ownership", null, true)
+	_focus_rows([[continue_button]])
+	_ownership_flash = _rect(_content, Rect2(0, 3, 640, 354), Color(data.accent.r, data.accent.g, data.accent.b, 0.14))
+
+func _starter_ownership_stage(data: Dictionary, owned: bool) -> void:
+	_panel(_content, Rect2(22, 65, 256, 241), Color("172737"), data.accent)
+	_label(_content, "YOUR FIRST TOP" if owned else "ONE COMPLETE STARTING MACHINE", Rect2(36, 76, 228, 17), 10, data.accent, HORIZONTAL_ALIGNMENT_CENTER)
+	var preview: Preview = _new_preview(Rect2(33, 94, 234, 183), 4.0)
+	preview.set_identity(str(data.id), data.accent)
+	_label(_content, _ceremony_role(str(data.id)), Rect2(36, 276, 228, 19), 11, data.accent, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(data.name), Rect2(300, 67, 308, 35), 28, data.accent)
+	_label(_content, _ceremony_copy(str(data.id)), Rect2(301, 106, 306, 42), 13)
+	_label(_content, "THESE PARTS ARE YOURS" if owned else "YOU WILL OWN THESE THREE PARTS", Rect2(301, 157, 306, 17), 11, MUTED)
+	for index: int in range(3):
+		var category: String = ["blade", "ratchet", "bit"][index]
+		var id: String = str(data.assembly[category])
+		var y: float = 181 + index * 29
+		_rect(_content, Rect2(301, y + 2, 3, 17), data.accent)
+		_label(_content, category.to_upper(), Rect2(312, y, 91, 22), 11, MUTED)
+		_label(_content, str(PartCatalog.PARTS[category][id].name), Rect2(411, y, 197, 22), 13, TEXT)
+	_label(_content, "Other parts can join your collection later.", Rect2(301, 274, 306, 26), 11, MUTED)
+
+func _ceremony_role(id: String) -> String:
+	return {"breaker":"AGGRESSIVE / FAST / UNSTABLE", "bastion":"HEAVY / CONTROLLED / DURABLE", "vane":"MOBILE / PRECISE / MOMENTUM"}.get(id, "CUSTOM MACHINE")
+
+func _ceremony_copy(id: String) -> String:
+	return {"breaker":"Hits hard. Burns hot.\nLives dangerously.", "bastion":"Plants itself. Takes the hit.\nKeeps spinning.", "vane":"Carries momentum.\nRewards precise control."}.get(id, "Build it your way.")
+
+func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
+	_build = build.duplicate()
+	_collection_snapshot = snapshot.duplicate(true)
+	_clear("collection_workshop")
+	_header("TOP WORKSHOP", "Your collection is permanent. Powers, XP and RPM belong to each Run.")
+	_panel(_content, Rect2(22, 62, 207, 244))
+	_label(_content, "YOUR EQUIPPED MACHINE", Rect2(34, 73, 184, 18), 11, BLUE)
+	var can_launch: bool = _owned_build_is_complete()
+	if can_launch:
+		_preview = _new_preview(Rect2(34, 89, 185, 124), 3.0)
+		_set_preview_build_identity(_preview, _build)
+		_label(_content, PartCatalog.title(_build), Rect2(29, 208, 193, 23), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	else:
+		_label(_content, "ASSEMBLY\nINCOMPLETE", Rect2(35, 117, 181, 56), 18, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var total_owned: int = 0
+	var total_catalogue: int = 0
+	for category: String in ["blade", "ratchet", "bit"]:
+		total_owned += _collection_owned(category).size()
+		total_catalogue += PartCatalog.PARTS[category].size()
+	_label(_content, "%d / %d PARTS OWNED" % [total_owned, total_catalogue], Rect2(34, 234, 184, 23), 13, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+	var historical: String = str(snapshot.get("starter_selected", snapshot.get("starter_id", "")))
+	_label(_content, "FIRST CHOICE: " + Starters.display_name(historical), Rect2(34, 260, 184, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var future: Label = _label(_content, "New parts will open up\nnew ways to build.", Rect2(34, 279, 184, 24), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	future.add_theme_constant_override("line_spacing", -1)
+	_panel(_content, Rect2(244, 62, 374, 244))
+	_collection_part_row("blade", "BLADE", PartCatalog.BLADE_IDS, 73)
+	_collection_part_row("ratchet", "RATCHET", PartCatalog.RATCHET_IDS, 147)
+	_collection_part_row("bit", "BIT", PartCatalog.BIT_IDS, 221)
+	var back: Button = _button(_content, "TITLE", Rect2(22, 319, 98, 29), "main_menu")
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(131, 319, 232, 29), "quick_duel")
+	practice.add_theme_font_size_override("font_size", 11)
+	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(374, 319, 244, 29), "launch_owned_run", null, true)
+	launch.disabled = not can_launch
+	var navigation: Array = [_part_buttons.blade.values(), _part_buttons.ratchet.values(), _part_buttons.bit.values(), [back, practice, launch] if can_launch else [back, practice]]
+	_focus_rows(navigation, launch if can_launch else back)
+
+func _collection_part_row(category: String, title: String, ids: Array, y: float) -> void:
+	var owned: Array = _collection_owned(category)
+	_label(_content, title, Rect2(256, y, 264, 17), 11, ORANGE)
+	_label(_content, "%d / %d OWNED" % [owned.size(), ids.size()], Rect2(527, y, 77, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_part_buttons[category] = {}
+	var width: float = (348.0 - 6.0 * (ids.size() - 1)) / ids.size()
+	for index: int in range(ids.size()):
+		var id: String = str(ids[index])
+		var data: Dictionary = PartCatalog.PARTS[category][id]
+		var is_owned: bool = id in owned
+		var selected: bool = is_owned and str(_build.get(category, "")) == id
+		var button: Button = _button(_content, "", Rect2(256 + index * (width + 6), y + 19, width, 36), "equip_part" if is_owned else "inspect_locked_part", {"category":category,"id":id})
+		button.set_meta("part_category", category)
+		button.set_meta("part_id", id)
+		button.set_meta("owned", is_owned)
+		button.tooltip_text = str(data.description) if is_owned else "NOT OWNED / " + str(data.name)
+		button.add_theme_stylebox_override("normal", _box(Color("9b5a37") if selected else (Color("203548") if is_owned else Color("13212e")), ORANGE if selected else BORDER, 1))
+		_label(button, str(data.name), Rect2(3, 2, width - 6, 17), 11, TEXT if is_owned else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(button, "EQUIPPED" if selected else ("OWNED" if is_owned else "NOT OWNED"), Rect2(3, 20, width - 6, 13), 9, ORANGE if selected else (BLUE if is_owned else MUTED), HORIZONTAL_ALIGNMENT_CENTER)
+		button.focus_entered.connect(func() -> void: _describe_collection_part(category, id))
+		button.mouse_entered.connect(func() -> void: _describe_collection_part(category, id))
+		_part_buttons[category][id] = button
+	var description: Label = _label(_content, "", Rect2(256, y + 58, 348, 14), 9, MUTED)
+	_part_descriptions[category] = description
+	_describe_collection_part(category, str(_build.get(category, str(ids[0]))))
+
+func _describe_collection_part(category: String, id: String) -> void:
+	if not _part_descriptions.has(category): return
+	var owned: bool = id in _collection_owned(category)
+	_part_descriptions[category].text = "OWNED / EQUIPPED" if owned and str(_build.get(category, "")) == id else ("OWNED / READY TO EQUIP" if owned else "NOT OWNED / MORE PARTS TO COLLECT")
+	_part_descriptions[category].add_theme_color_override("font_color", BLUE if owned else MUTED)
+
+func inspect_locked_part(category: String, id: String) -> void:
+	# Kept in-place so an attempted selection never changes layout or focus.
+	if screen == "collection_workshop" and not id in _collection_owned(category):
+		_describe_collection_part(category, id)
+
+func focus_collection_part(category: String, id: String) -> void:
+	if screen != "collection_workshop" or not _part_buttons.has(category): return
+	var button: Button = _part_buttons[category].get(id) as Button
+	if button != null: button.grab_focus()
+
+func _collection_owned(category: String) -> Array:
+	var rows: Variant = _collection_snapshot.get("owned_parts", {})
+	return rows.get(category, []) if rows is Dictionary else []
+
+func _owned_build_is_complete() -> bool:
+	if not _complete_build(_build): return false
+	for category: String in ["blade", "ratchet", "bit"]:
+		if not str(_build[category]) in _collection_owned(category): return false
+	return bool(_collection_snapshot.get("can_launch", true))
+
+func _complete_build(value: Dictionary) -> bool:
+	for category: String in ["blade", "ratchet", "bit"]:
+		if not PartCatalog.PARTS[category].has(str(value.get(category, ""))): return false
+	return true
+
+func _set_preview_build_identity(preview: Preview, value: Dictionary) -> void:
+	# Historical starter ownership never gives a replacement assembly its skin.
+	preview.set_collection_build(value)
+
+func show_collection_error(message: String, return_intent: String = "open_workshop", allow_retry: bool = false) -> void:
+	_clear("collection_error")
+	_header("COLLECTION NEEDS ATTENTION", "Your collection has not been replaced.")
+	_panel(_content, Rect2(80, 87, 480, 184))
+	var note: Label = _label(_content, message, Rect2(102, 110, 436, 102), 13, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var back: Button = _button(_content, "BACK", Rect2(102 if allow_retry else 172, 228, 209 if allow_retry else 296, 29), return_intent)
+	if allow_retry:
+		var retry: Button = _button(_content, "RETRY", Rect2(329, 228, 209, 29), "retry_collection", null, true)
+		_focus_rows([[back, retry]], retry)
+	else:
+		_focus_rows([[back]])
+
+func show_garage(build: Dictionary, practice: bool = false) -> void:
 	_build = build.duplicate()
 	_clear("garage")
-	_header("TOP WORKSHOP", "Choose a Blade, Ratchet and Bit. Every part changes how your top battles.")
+	_header("PRACTICE GARAGE" if practice else "TOP WORKSHOP", "Every catalogue part is available here. Practice builds do not grant ownership." if practice else "Choose a Blade, Ratchet and Bit. Every part changes how your top battles.")
 	_panel(_content, Rect2(22, 62, 207, 244))
 	_label(_content, "LIVE ASSEMBLY", Rect2(35, 72, 180, 16), 10, BLUE)
 	_preview = _new_preview(Rect2(35, 86, 181, 126), 3.0)
@@ -331,7 +563,7 @@ func show_garage(build: Dictionary) -> void:
 	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 221)
 	var back_button: Button = _button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
 	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
-	var run_button: Button = _button(_content, "CONTINUOUS RUN", Rect2(342, 319, 276, 27), "start_run")
+	var run_button: Button = _button(_content, "OWNED WORKSHOP" if practice else "CONTINUOUS RUN", Rect2(342, 319, 276, 27), "open_workshop" if practice else "start_run")
 	_refresh_garage()
 	_focus_rows([_part_buttons["blade"].values(), _part_buttons["ratchet"].values(), _part_buttons["bit"].values(), [back_button, duel_button, run_button]], _part_buttons["blade"][_build.get("blade", "balance")])
 

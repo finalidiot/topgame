@@ -22,8 +22,8 @@ func make_game() -> QuietMain:
 	game.battle.event_sfx.connect(func(kind: String) -> void:
 		if kind == "launch": launches += 1)
 	game.battle.round_finished.connect(func(_result: Dictionary) -> void: results += 1)
+	game.collection.initialize_starter("bastion")
 	game._action("start_run")
-	game._action("choose_starter", "bastion")
 	claim(game)
 	game.battle.set_physics_process(false)
 	return game

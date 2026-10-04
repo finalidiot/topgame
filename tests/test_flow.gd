@@ -46,8 +46,7 @@ func _claim(game: QuietMain) -> void:
 
 func _start_custom(game: QuietMain) -> void:
 	game._action("start_run")
-	check(game.screen == "starters" and game.run_context.status == "empty", "Run opens three starter identities before generating its seed")
-	game._action("custom_run")
+	check(game.screen == "reward", "Owned assembly enters its opening power draft without another starter choice")
 	check(game.screen == "reward" and game.run_context.pending_draft_kind == "starting", "Secondary custom Run also chooses a power before combat")
 	_claim(game)
 	check(game.screen == "battle" and game.run_context.owned_power_ids.size() == 1, "Opening acquisition launches already powered")
@@ -94,8 +93,11 @@ func _run() -> void:
 	game.smoke_mode = true
 	root.add_child(game)
 	check(game.screen == "title", "Fresh game enters title")
-	game._action("customize")
-	check(game.screen == "garage", "Garage remains available")
+	check(game.collection.initialize_starter("bastion").ok, "Collection fixture initializes only Bastion")
+	check(game.collection.grant_part("bit:needle").ok, "Fixture grants one future acquired part through public API")
+	check(game.collection.equip_build(SELECTED_BUILD).ok, "Owned mixed build equips")
+	game._action("practice_garage")
+	check(game.screen == "practice_garage", "Unrestricted practice Garage remains available")
 	var submitted: Dictionary = SELECTED_BUILD.duplicate()
 	game._action("build_changed", submitted)
 	submitted.blade = "smash"
@@ -112,8 +114,7 @@ func _run() -> void:
 
 func _test_opening(game: QuietMain) -> void:
 	game._action("start_battle", "run")
-	check(game.screen == "starters", "Primary Run route opens authored identities")
-	game._action("custom_run")
+	check(game.screen == "reward", "Primary Run route uses the equipped collection immediately")
 	check(game.run_context.selected_build == SELECTED_BUILD and game.run_context.starter_id == "custom", "Advanced custom route locks the existing assembly")
 	var opening_state: Dictionary = _state(game)
 	var offer: Array[String] = game.run_context.pending_offer
@@ -247,8 +248,9 @@ func _test_completion(game: QuietMain) -> void:
 
 func _test_authored_starters(game: QuietMain) -> void:
 	for identity: String in Starters.IDS:
+		game.collection.reset_collection(true)
+		game.collection.initialize_starter(identity)
 		game._action("start_run")
-		game._action("choose_starter", identity)
 		check(game.run_context.starter_id == identity and game.run_context.selected_build == Starters.build_for(identity), "Authored starter locks identity and physical assembly")
 		_claim(game)
 		check(game.battle.player_entity().build == Starters.build_for(identity), "Authored assembly reaches the opening battle")
@@ -260,7 +262,12 @@ func _test_authored_starters(game: QuietMain) -> void:
 		game._escape()
 		game._action("end_run")
 		_check_cleared(game)
-	check(game.build == SELECTED_BUILD, "Authored Run selection preserves the custom Garage assembly")
+	game.collection.reset_collection(true)
+	game.collection.initialize_starter("bastion")
+	game.collection.grant_part("bit:needle")
+	game.collection.equip_build(SELECTED_BUILD)
+	game._garage()
+	check(game.build == SELECTED_BUILD, "Collection API can equip an acquired mixed assembly independently of historical starter")
 
 func _test_quick_duel(game: QuietMain) -> void:
 	game.last_result = {"title":"RUN COMPLETE"}

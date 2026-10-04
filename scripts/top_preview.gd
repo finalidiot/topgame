@@ -1,5 +1,6 @@
 extends Control
 ## Pixel-perfect workshop assembly, built from the same three parts as combat.
+const StarterDefinitions = preload("res://scripts/starters.gd")
 
 var build: Dictionary = {"blade": "balance", "ratchet": "mid", "bit": "ball"}
 var animated: bool = true
@@ -20,6 +21,20 @@ func _ready() -> void:
 
 func set_build(value: Dictionary) -> void:
 	build = value.duplicate()
+	queue_redraw()
+
+func set_collection_build(value: Dictionary) -> void:
+	# The save's first-choice history is not a permanent rendering class. Only
+	# an exact authored assembly keeps that starter's enamel and motion rhythm.
+	set_build(value)
+	identity = ""
+	accent = Color.WHITE
+	for starter_id: String in StarterDefinitions.IDS:
+		if value == StarterDefinitions.build_for(starter_id):
+			var data: Dictionary = StarterDefinitions.get_starter(starter_id)
+			identity = starter_id
+			accent = data.accent
+			break
 	queue_redraw()
 
 func _process(delta: float) -> void:

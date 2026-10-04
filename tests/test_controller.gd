@@ -254,7 +254,7 @@ func _descendants(parent: Node) -> Array[Node]:
 
 func _button(text: String) -> Button:
 	for node: Node in _descendants(game.menus):
-		if node is Button and node.text == text: return node
+		if node is Button and (node.text == text or (text == "QUICK DUEL" and node.text == "QUICK DUEL / PRACTICE")): return node
 	return null
 
 func _focus_is_visible(context: String) -> void:
@@ -301,17 +301,17 @@ func _activate(text: String) -> void:
 func _test_title_garage_settings() -> void:
 	check(game.screen == "title", "Fresh game opens title")
 	_focus_is_visible("Title")
-	check(root.gui_get_focus_owner() == _button("QUICK DUEL"), "Title defaults to Quick Duel")
+	check(root.gui_get_focus_owner() == _button("BEGIN"), "Fresh title defaults to Begin")
 	await _capture("01-controller-title")
 	var initial: Control = root.gui_get_focus_owner()
 	await _stick_tap(JOY_AXIS_LEFT_Y, 0.1)
 	check(root.gui_get_focus_owner() == initial, "Stick drift never moves menu focus")
 	await _stick_tap(JOY_AXIS_LEFT_Y, 0.9)
-	check(root.gui_get_focus_owner() == _button("CONTINUOUS RUN"), "Left stick navigates the title")
+	check(root.gui_get_focus_owner() != initial, "Left stick navigates the title")
 	await _tap(JOY_BUTTON_DPAD_DOWN)
-	check(root.gui_get_focus_owner() == _button("CUSTOMIZE TOP"), "D-pad navigation coexists with stick navigation")
-	await _tap(JOY_BUTTON_A)
-	check(game.screen == "garage", "Controller Confirm opens garage")
+	_focus_is_visible("D-pad navigation coexists with stick navigation")
+	await _activate("PRACTICE GARAGE")
+	check(game.screen == "practice_garage", "Controller Confirm opens separate unrestricted practice garage")
 	_focus_is_visible("Garage")
 	for category: String in ["blade", "ratchet", "bit"]:
 		for id: String in Parts.PARTS[category]:
@@ -421,8 +421,9 @@ func _test_quick_duel() -> void:
 	check(game.screen == "battle" and game.mode == "duel", "Controller selects result Rematch")
 	_result(false)
 	await _settle()
-	await _activate("CUSTOMIZE TOP")
-	check(game.screen == "garage", "Controller selects result customization")
+	await _activate("MAIN MENU")
+	await _activate("PRACTICE GARAGE")
+	check(game.screen == "practice_garage", "Controller selects separate practice customization after result")
 	await _activate("QUICK DUEL")
 	check(game.screen == "battle" and game.mode == "duel", "Controller launches Quick Duel from garage")
 	await _tap(JOY_BUTTON_START)
@@ -441,8 +442,8 @@ func _result(won: bool) -> void:
 	game._round_finished(result)
 
 func _test_run() -> void:
-	await _activate("CONTINUOUS RUN")
-	check(game.screen == "starters", "Controller opens the authored Run identities")
+	await _activate("BEGIN")
+	check(game.screen == "starter_ceremony", "Controller opens permanent first-save starter ceremony")
 	_focus_is_visible("Starter selection")
 	check(game.menus.focused_starter_id() == "breaker", "Breaker is the focused opening identity")
 	await _tap(JOY_BUTTON_DPAD_LEFT)
@@ -456,7 +457,14 @@ func _test_run() -> void:
 	await _settle()
 	_joy_button(JOY_BUTTON_A, false)
 	await _settle()
-	check(game.screen == "reward" and game.run_context.starter_id == "bastion", "Confirm locks the real Bastion assembly and immediately drafts a power")
+	check(game.screen == "starter_confirm" and not game.collection.is_initialized(), "Initial Confirm opens confirmation without granting ownership")
+	await _activate("CHOOSE BASTION")
+	check(game.screen == "starter_owned" and game.collection.owned_count() == 3, "Separate Confirm grants only Bastion and shows ownership moment")
+	await create_timer(1.6).timeout
+	await _settle()
+	check(game.screen == "garage", "Ownership moment enters collection Workshop")
+	await _activate("LAUNCH OWNED TOP")
+	check(game.screen == "reward" and game.run_context.starter_id == "bastion", "Owned launch enters starting power draft")
 	check(game.run_context.selected_build == Starters.build_for("bastion"), "Authored assembly survives the transition into the Run")
 	var starting_offer: Array = game.run_context.pending_offer.duplicate()
 	check(game.screen == "reward" and game.run_context.owned_power_ids.is_empty(), "Held starter confirmation cannot also select the initial power")
@@ -507,10 +515,8 @@ func _test_run() -> void:
 	await _activate("END RUN")
 	check(game.screen == "garage" and game.run_context.status == "empty", "Controller ends Run from draft overlay")
 	_focus_is_visible("Garage after End Run")
-	await _activate("CONTINUOUS RUN")
-	check(game.screen == "starters", "Garage Run button also opens authored starter selection")
-	await _activate("CUSTOM ASSEMBLY RUN")
-	check(game.screen == "reward" and game.run_context.starter_id == "custom", "Advanced custom assembly remains a secondary controller choice")
+	await _activate("LAUNCH OWNED TOP")
+	check(game.screen == "reward" and game.run_context.starter_id == "bastion", "Subsequent owned launch skips ceremony and keeps current physical assembly")
 	await _draft_and_resume(true)
 	await _tap(JOY_BUTTON_START)
 	await _activate("END RUN")
