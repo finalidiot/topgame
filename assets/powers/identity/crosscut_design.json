@@ -1,0 +1,28 @@
+{
+  "family": "crosscut",
+  "initial_tier": "C",
+  "target_tier": "A or B after runtime motion review",
+  "grammar": {
+    "silhouette": "offset glancing bodies, oblique stepped shear ribbon and forked skid",
+    "motion": "fast approach, narrow lateral contact, unequal divergent exits",
+    "location": "glancing contact and actual lateral displacement vector",
+    "persistence": "brief paid glancing event, sparse follow-through scar",
+    "palette": "sea green, bone and desaturated steel",
+    "feature": "one asymmetric slash and split skid, no symmetric X or ring"
+  },
+  "static_frames": {
+    "crosscut": 6,
+    "crosscut_ii": 6
+  },
+  "event_tags": {
+    "crosscut": "shear_slice"
+  },
+  "notes": [
+    "New individually directed native master; old source retained for before/after.",
+    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
+    "Rank II adds physical structure rather than palette substitution.",
+    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
+    "Icon is a separately drawn small-scale silhouette.",
+    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."
+  ]
+}

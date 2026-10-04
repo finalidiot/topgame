@@ -1,0 +1,141 @@
+{
+  "scope": "Read-only independent review of frozen native card/icon assets and real six-second gameplay AVI clips for eight requested names. No repo/source/master edits performed.",
+  "method": "AVI 1280x720 scaled to logical 640x360 with nearest-neighbor before judging. 0.5-second approximate overview keys plus dense 66.7ms event keys, native160x100 crops paired with nearest2x. Native64px cards and native16px icons examined, with nearest4x icon aid and grayscale. Event positions selected from actual_start and paid proc_moments in capture window.",
+  "authenticity": "Opening build selections were explicit scenario setup; subsequent steering/Burst/brake and paid proc counters are actual gameplay. No claim these builds were naturally drafted.",
+  "static_proof": [
+    "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\cards-icons-native.png",
+    "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\cards-icons-gray.png"
+  ],
+  "grades": [
+    {
+      "family": "redline",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "Native broken hot plates and unequal splinters read immediately around the open rotor. Ignition is a clear off-to-on beat (clip ~1.867s), active state survives contact clutter, and whole-window sheets show clean state endings. Cards and icons share the chipped rotor/wake silhouette. Grayscale retains the broken structure. Base/rank-II card poses and 16px icons are close, and the active motion remains less narratively specific than flagship work.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\redline-ignition-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\redline-ignition-dense-gray.png"
+      ],
+      "clip_events": "redline ignition 1.883s; overcap 0.250s and 3.133s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\redline-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\redline-overview-gray.png"
+      ]
+    },
+    {
+      "family": "runaway",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "Paid contact produces a denser directional torn wake at ~0.600s, then leaves individual fragments and returns to the quieter active signature. That frayed contact response corresponds to the card row and remains clear in grayscale. The sustained core still shares most of Redline silhouette and its 16px icon is a close sibling, so this is polished secondary work rather than A.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\runaway-contact-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\runaway-contact-dense-gray.png"
+      ],
+      "clip_events": "two paid runaway_hit procs at 0.600s and 2.950s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\runaway-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\runaway-overview-gray.png"
+      ]
+    },
+    {
+      "family": "breakneck",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "The real committed strike at ~0.533s has a stronger oblique flash, separated rival exit, recoil and lingering floor streak, all bounded. Card stages show rival, load, strike and recovery; native and grayscale action remain identifiable. The successful gameplay commitment and impact are only about 16.7ms apart, so this clip proves the strike/recoil especially well but not a long anticipation beat; the sustained setup is still close to Redline.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\breakneck-strike-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\breakneck-strike-dense-gray.png"
+      ],
+      "clip_events": "commit 0.517s; impact 0.533s; no paid miss in this window",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\breakneck-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\breakneck-overview-gray.png"
+      ]
+    },
+    {
+      "family": "iron_comet",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "The native card wall bank and thick machine give a specific wall-rebound story, and a short cold-metal brace/splinter charge appears at the actual wall-side proc (~0.600\u20130.800s). Release has a bounded flash and short floor scrape. It survives grayscale. Runtime flight and release are quieter than the card promises and are partly masked by ordinary contact stars, so this is a lower B rather than A; no critical failure found.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\iron_comet-charge-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\iron_comet-charge-dense-gray.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\iron_comet-release-dense.png"
+      ],
+      "clip_events": "charge 0.567s; release 1.267s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\iron_comet-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\iron_comet-overview-gray.png"
+      ]
+    },
+    {
+      "family": "momentum_bank",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "The spring cassette is unusually readable at native scale: it appears during actual braking/store, holds beside the moving top, extends as the top releases, and leaves sparse directed traces before clearing. The spring icon and card mechanism correspond well and remain legible in grayscale. The upright cassette can look diagrammatic rather than integrated machinery, and extension is stronger than visible gradual pitch compression in this clip; polished secondary, not flagship.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\momentum_bank-store-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\momentum_bank-release-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\momentum_bank-release-dense-gray.png"
+      ],
+      "clip_events": "stores 0.517s and 5.450s; release 1.417s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\momentum_bank-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\momentum_bank-overview-gray.png"
+      ]
+    },
+    {
+      "family": "predator_line",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "The native cards and 16px pair/connector icon identify hunter and quarry. Runtime pressure teeth sit toward one real rival and the accepted contact adds a bounded comb, with no radial reticle. Grayscale preserves the relationship. The short tracking teeth are subtle at gameplay scale and much less prominent than the card chase scene, so B. The six-second clip ends while real hunt remains active; it does not prove timeout expiry.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\predator_line-lock-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\predator_line-lock-dense-gray.png"
+      ],
+      "clip_events": "five predator_lock procs; first 0.667s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\predator_line-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\predator_line-overview-gray.png"
+      ]
+    },
+    {
+      "family": "crosscut",
+      "grade": "B",
+      "status": "reviewed",
+      "rationale": "Cards show offset bodies, unequal exits and a lateral shear; the native slash icon is distinct from the mechanical family icons. Actual paid glances produce a narrow lateral line/short skid and clean clearing, visible also in grayscale. Ordinary contact stars dominate the first instant and the secondary effect is intentionally sparse; the family is polished but not A. No symmetric decorative X or ring observed.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crosscut-glance-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crosscut-second-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crosscut-second-dense-gray.png"
+      ],
+      "clip_events": "three paid procs at 0.450s, 1.317s and 5.550s",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crosscut-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crosscut-overview-gray.png"
+      ]
+    },
+    {
+      "family": "crash_guard",
+      "grade": "B",
+      "status": "reviewed after corrective native motion retest",
+      "rationale": "Final B after presentation-vector correction and native motion retest. Card telescoping rods, end-stop and compact H-like icon form a coherent damper family. Corrected clip ~0.733\u20130.867s places hardware on the incoming rival/contact side, shows a short mechanical response, and clears by ~1.133s. Grayscale retains the hardware. It remains small and partly obscured by ordinary contact sparks, so polished secondary rather than A.",
+      "event_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-absorb-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-absorb-dense-gray.png"
+      ],
+      "clip_events": "One paid proc at0.767s; guard state expires2.433s into clip; corrected authored damper clears by~1.133s. Native color/grayscale retest passed.",
+      "critical_direction_evidence": "Original wrong-side hardware was confirmed and root corrected presentation direction only inside Identity renderer. Recaptured final motion/crash_guard.avi was re-extracted and retested; no source or master edits made by this reviewer.",
+      "legacy_check": "signature_visuals.gd:97 only draws legacy guard aura when modern family_info is empty; modern manifest present, and modern guarded active tag absent, so no persistent legacy shield observed",
+      "overview_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-overview-native.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-overview-gray.png"
+      ],
+      "before_fix_evidence": [
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-absorb-before-vector-fix-dense.png",
+        "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\independent-motion-review\\crash_guard-absorb-before-vector-fix-dense-gray.png"
+      ]
+    }
+  ],
+  "conclusion": "All eight requested names have final B grades after corrected Crash Guard native motion retest. No A awarded in this subset; no final C. No pending critical motion failure."
+}

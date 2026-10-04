@@ -1,0 +1,383 @@
+{
+  "family": "crash_guard",
+  "grammar": {
+    "silhouette": "contact-side telescoping twin rods and broad end-stop",
+    "motion": "incoming compression, mechanical shortening, damped rebound",
+    "location": "incoming contact side of real top, no floor fortress",
+    "persistence": "contact event only; no automatically orbiting shield",
+    "palette": "cool gray steel, pale mint faceplate and restrained brass seals",
+    "feature": "an exposed piston physically changes length rather than expanding an aura"
+  },
+  "design": "assets/powers/identity/crash_guard_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 quiet chamfered card",
+      "02 floor depth and scars",
+      "03 incoming contact and telescoping rods",
+      "04 physical top illustration",
+      "05 force response and key highlights"
+    ],
+    "tags": {
+      "crash_guard": {
+        "from": 0,
+        "to": 11
+      },
+      "crash_guard_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      180,
+      110,
+      85,
+      65,
+      50,
+      75,
+      65,
+      85,
+      105,
+      130,
+      160,
+      200,
+      180,
+      110,
+      85,
+      65,
+      50,
+      75,
+      65,
+      85,
+      105,
+      130,
+      160,
+      200
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 purpose-designed mechanism silhouette",
+      "02 identifying force and rank structure"
+    ],
+    "tags": {
+      "crash_guard": {
+        "from": 0,
+        "to": 0
+      },
+      "crash_guard_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      150,
+      150
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 contact scar and ground depth",
+      "02 incoming contact and telescoping rods",
+      "03 mechanical force direction",
+      "04 contact accents and fragments"
+    ],
+    "tags": {
+      "damper_contact_e": {
+        "from": 0,
+        "to": 7
+      },
+      "damper_contact_se": {
+        "from": 8,
+        "to": 15
+      },
+      "damper_contact_s": {
+        "from": 16,
+        "to": 23
+      },
+      "damper_contact_sw": {
+        "from": 24,
+        "to": 31
+      },
+      "damper_contact_w": {
+        "from": 32,
+        "to": 39
+      },
+      "damper_contact_nw": {
+        "from": 40,
+        "to": 47
+      },
+      "damper_contact_n": {
+        "from": 48,
+        "to": 55
+      },
+      "damper_contact_ne": {
+        "from": 56,
+        "to": 63
+      },
+      "damper_contact_ii_e": {
+        "from": 64,
+        "to": 71
+      },
+      "damper_contact_ii_se": {
+        "from": 72,
+        "to": 79
+      },
+      "damper_contact_ii_s": {
+        "from": 80,
+        "to": 87
+      },
+      "damper_contact_ii_sw": {
+        "from": 88,
+        "to": 95
+      },
+      "damper_contact_ii_w": {
+        "from": 96,
+        "to": 103
+      },
+      "damper_contact_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "damper_contact_ii_n": {
+        "from": 112,
+        "to": 119
+      },
+      "damper_contact_ii_ne": {
+        "from": 120,
+        "to": 127
+      }
+    },
+    "durations_ms": [
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180,
+      75,
+      45,
+      40,
+      65,
+      80,
+      100,
+      130,
+      180
+    ],
+    "columns": 8,
+    "frame_count": 128,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_fx.png"
+  },
+  "event_tags": {
+    "crash_guard": "damper_contact"
+  },
+  "active_tags": {},
+  "notes": [
+    "New individually directed native master; old source retained for before/after.",
+    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
+    "Rank II adds physical structure rather than palette substitution.",
+    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
+    "Icon is a separately drawn small-scale silhouette.",
+    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."
+  ],
+  "art": {
+    "crash_guard": {
+      "family": "crash_guard",
+      "art_id": "crash_guard",
+      "source_tag": "crash_guard",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        180,
+        110,
+        85,
+        65,
+        50,
+        75,
+        65,
+        85,
+        105,
+        130,
+        160,
+        200
+      ]
+    },
+    "crash_guard_ii": {
+      "family": "crash_guard",
+      "art_id": "crash_guard_ii",
+      "source_tag": "crash_guard_ii",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        180,
+        110,
+        85,
+        65,
+        50,
+        75,
+        65,
+        85,
+        105,
+        130,
+        160,
+        200
+      ]
+    }
+  }
+}

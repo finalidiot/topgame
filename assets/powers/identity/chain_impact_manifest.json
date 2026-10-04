@@ -1,0 +1,211 @@
+{
+  "family": "chain_impact",
+  "grammar": {
+    "silhouette": "Unequal physical receivers joined by diagonal contact transmission",
+    "motion": "One machine hits, a tooth lights, then the next receiver reacts; alternating compressed contact accents",
+    "location": "Real elimination/contact origin and actual eligible receiver links",
+    "persistence": "Discrete transmitted events, no persistent player aura",
+    "palette": "Dark steel receivers, copper stress, short pale amber contact keys",
+    "feature": "Sequential local contact teeth and sparse physical receiver links instead of a radial blast"
+  },
+  "design": "assets/powers/identity/chain_impact_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 floor and contact shadow",
+      "02 load-bearing machine bodies",
+      "03 mechanical jaws and bearings",
+      "04 transmitted action and route",
+      "05 reaction chips and key light",
+      "06 developed structure"
+    ],
+    "tags": {
+      "chain_impact": {
+        "from": 0,
+        "to": 11
+      },
+      "chain_impact_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      150,
+      100,
+      90,
+      45,
+      45,
+      80,
+      45,
+      55,
+      85,
+      100,
+      130,
+      190,
+      160,
+      100,
+      85,
+      40,
+      45,
+      90,
+      45,
+      60,
+      100,
+      110,
+      150,
+      200
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "Independent small-scale silhouette",
+      "Mechanic-specific recognition teeth"
+    ],
+    "tags": {
+      "chain_impact": {
+        "from": 0,
+        "to": 0
+      },
+      "chain_impact_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      120,
+      120
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor and contact shadow",
+      "02 load-bearing machine bodies",
+      "03 mechanical jaws and bearings",
+      "04 transmitted action and route",
+      "05 reaction chips and key light",
+      "06 developed structure"
+    ],
+    "tags": {
+      "transmit": {
+        "from": 0,
+        "to": 7
+      },
+      "transmit_ii": {
+        "from": 8,
+        "to": 15
+      }
+    },
+    "durations_ms": [
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120
+    ],
+    "columns": 8,
+    "frame_count": 16,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_fx.png"
+  },
+  "event_tags": {
+    "chain_impact": "transmit"
+  },
+  "active_tags": {},
+  "notes": "Cards deliberately show unequal machines in a diagonal relay; Rank II extends the relay rather than growing the source pulse. FX are local contact teeth only. Runtime must place accents and short links along actual eligible target positions captured in presentation metadata, not use the legacy fixed RIGHT or fake illustrated runtime tops. Cascade mechanics unchanged.",
+  "art": {
+    "chain_impact": {
+      "family": "chain_impact",
+      "art_id": "chain_impact",
+      "source_tag": "chain_impact",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        150,
+        100,
+        90,
+        45,
+        45,
+        80,
+        45,
+        55,
+        85,
+        100,
+        130,
+        190
+      ]
+    },
+    "chain_impact_ii": {
+      "family": "chain_impact",
+      "art_id": "chain_impact_ii",
+      "source_tag": "chain_impact_ii",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        160,
+        100,
+        85,
+        40,
+        45,
+        90,
+        45,
+        60,
+        100,
+        110,
+        150,
+        200
+      ]
+    }
+  }
+}

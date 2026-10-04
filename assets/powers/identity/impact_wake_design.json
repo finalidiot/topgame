@@ -1,0 +1,20 @@
+{
+  "family": "impact_wake",
+  "grammar": {
+    "silhouette": "Central physical impact and outward pressure teeth",
+    "motion": "Contact flash, spreading pressure fronts, staggered counter-pressure plates, fading chips",
+    "location": "At the actual heavy contact point near the floor",
+    "persistence": "Short paid contact event",
+    "palette": "Cyan pressure, pale steel, sparse amber contact teeth",
+    "feature": "Strong original ring composition; Rank II adds a second structural pressure response"
+  },
+  "event_tags": {
+    "impact_wake": "wake"
+  },
+  "active_tags": {},
+  "static_frames": {
+    "impact_wake": 4,
+    "impact_wake_ii": 6
+  },
+  "notes": "Rank I card preserves the original five editable layer cels and six accepted poses, each held for two half-duration keys. Rank I runtime must retain original 128px pressure tag in power_fx_002b.aseprite; no new wake tag is supplied so renderer falls through. New wake_ii is a structural counter-pressure response, not an enlarged recolour. Original source master retained intact."
+}

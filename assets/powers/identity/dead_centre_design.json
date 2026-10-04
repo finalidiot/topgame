@@ -1,0 +1,32 @@
+{
+  "family": "dead_centre",
+  "grammar": {
+    "silhouette": "Heavy compact machine borne by inward floor jaws",
+    "motion": "Jaws approach, machine settles, grounded teeth take a strike; Counterweight compresses then sends force outward",
+    "location": "Floor contact point and low weight-bearing braces",
+    "persistence": "Charge-stage floor lock, with short impact/release reactions",
+    "palette": "Pale steel and slate ground, restrained cyan teeth, amber stored force",
+    "feature": "Visible mass supported by closing ground jaws; Bulwark redirects incoming contact and Counterweight stores a mechanical load"
+  },
+  "event_tags": {
+    "anchor": "ground_lock",
+    "anchor_ii": "ground_lock_ii",
+    "anchor_break": "jaw_break",
+    "bulwark_impact": "bulwark_impact",
+    "counterweight_store": "counterweight_store",
+    "counterweight_release": "counterweight_release"
+  },
+  "active_tags": {
+    "anchor": "ground_lock",
+    "anchor_ii": "ground_lock_ii",
+    "bulwark": "bulwark_lock",
+    "counterweight": "counterweight_store"
+  },
+  "static_frames": {
+    "dead_centre": 6,
+    "dead_centre_ii": 6,
+    "bulwark": 5,
+    "counterweight": 7
+  },
+  "notes": "Retain accepted exact anchor charge/grounding state, signature posture and actual directional Counterweight force composition. New native jaw cels carry more weight at the same fixed floor pivot. Bulwark card shows a planted rig meeting an attack; Counterweight card gives the loaded side cylinder a different composition. No long trails, aura growth or new mechanics."
+}

@@ -4,6 +4,7 @@ const Run = preload("res://scripts/run_context.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 const Parts = preload("res://scripts/parts.gd")
 const Powers = preload("res://scripts/run_powers.gd")
+const IdentityContract = preload("res://tests/power_identity_contract.gd")
 
 var checks: int = 0
 var failures: int = 0
@@ -64,7 +65,7 @@ func _test_catalog_and_costs() -> void:
 		for branch_id: String in branches:
 			var branch: Dictionary = Powers.get_mutation(branch_id)
 			check(branch.power_id == power_id and branch.rank == 3 and branch.source_tag == branch_id, "Mutation metadata binds its power and dedicated source art")
-			check(branch.card_texture == (Powers.ROSTER_CARD_SHEET if power_id == "high_gear" else Powers.ESCALATION_CARD_SHEET) and branch.icon == (Powers.ROSTER_ICON_SHEET if power_id == "high_gear" else Powers.ESCALATION_ICON_SHEET), "Branches use their separate editable production atlases")
+			IdentityContract.catalog_art(check, branch_id, branch)
 			check(Powers.get_owned_power(power_id, 3, branch_id).name == branch.name, "Current owned metadata names the chosen transformation")
 			branch.name = "UI COPY"
 			check(Powers.get_mutation(branch_id).name != "UI COPY", "Mutation metadata cannot be changed by menu copies")
@@ -75,10 +76,11 @@ func _test_catalog_and_costs() -> void:
 	for row: int in range(Powers.LEGACY_ART_IDS.size()):
 		var id: String = Powers.LEGACY_ART_IDS[row]
 		var power: Dictionary = Powers.get_power(id)
-		var replaced: bool = id == "iron_comet"
-		var active_row: int = Powers.ROSTER_ART_IDS.find(id) if replaced else row
-		check(power.card_row == active_row and power.icon_frame == active_row and power.card_texture == (Powers.ROSTER_CARD_SHEET if replaced else Powers.CARD_SHEET), "Current catalogue maps original rows or the dedicated Iron Comet replacement")
-	check(Powers.get_power("dead_centre").card_row == 0 and Powers.get_power("dead_centre").card_texture == Powers.ESCALATION_CARD_SHEET, "New Anchor art occupies escalation row zero")
+		if id == "second_wind":
+			check(power.card_row == row and power.icon_frame == row and power.card_texture == Powers.CARD_SHEET, "Explicit legacy Second Wind retains original art mapping")
+		else:
+			IdentityContract.catalog_art(check, id, power)
+	IdentityContract.catalog_art(check, "dead_centre")
 	var progression: RefCounted = Progression.new()
 	progression.setup(Powers.investment_capacity())
 	check(progression.threshold() == 18, "Free opening investment preserves the original first earned cost")

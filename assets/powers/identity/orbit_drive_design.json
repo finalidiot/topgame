@@ -1,0 +1,31 @@
+{
+  "family": "orbit_drive",
+  "grammar": {
+    "silhouette": "Large sideways machine over a broad hooked contact-floor skid.",
+    "motion": "Enter turn, cut a growing outside hook, throw grit and release the arc.",
+    "location": "Floor/contact point outside the turn, below the rotor.",
+    "persistence": "Only actual brake-turn drift/arc state; scuffs settle after the carving beat.",
+    "palette": "Worn steel floor scars, muted teal edge and brass grit.",
+    "feature": "One short concave floor cut with displaced outer grit; no rotor aura or long Flow rails."
+  },
+  "static_frames": {
+    "orbit_drive": 7,
+    "orbit_drive_ii": 7
+  },
+  "event_tags": {
+    "orbit_drift": "orbit_drift"
+  },
+  "active_tags": {
+    "drift": "orbit_drift"
+  },
+  "notes": [
+    "Rank II adds a second outside skid groove and extra displaced grit, staying at the contact plane."
+  ],
+  "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
+  "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
+  "review_tier": {
+    "before": "C cards; runtime mixed B/C",
+    "after": "B/A candidate pending full roster, grayscale and motion review"
+  },
+  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+}

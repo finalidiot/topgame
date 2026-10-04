@@ -1,0 +1,10 @@
+{
+  "launcher": "E:/Desktop/Launch-SpinningMetal-Art-Review.cmd",
+  "executable": "C:/GPT GAME BUILDING/task-002c5-qa/Task002C5-ArtReview/SpinningMetal-002C5-Art.exe",
+  "binary_sha256": "8c266be9230b7587b86162cce34ec3be47d87695a21fe4a1fa77bb29926f2a0c",
+  "arguments": "--headless --quit --log-file <external validation log> -- --collection-path=<isolated QA save>",
+  "log": "C:/GPT GAME BUILDING/task-002c5-qa/art-addendum/validation/launcher-final.log",
+  "started_expected_godot": true,
+  "script_or_engine_errors": 0,
+  "save_isolated": true
+}

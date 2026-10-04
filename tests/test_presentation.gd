@@ -7,6 +7,7 @@ const Sound = preload("res://scripts/sound.gd")
 const Battle = preload("res://scripts/battle.gd")
 const MeasuredBattle = preload("res://tests/measured_presentation_battle.gd")
 const Encounters = preload("res://scripts/encounters.gd")
+const IdentityContract = preload("res://tests/power_identity_contract.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var capture_dir: String = ""
@@ -34,7 +35,7 @@ func _run() -> void:
 			check(Visuals._frame(group, tag, 99.0) == int(span.to), group + ":" + tag + " terminal frame")
 	check(Visuals.SMALL.get_size() == Vector2(192, 24), "24px small-top canvas and 8 frames")
 	check(Visuals.EFFECTS.get_size() == Vector2(1024, 768), "128px effects 48 frames")
-	check(Visuals.icon_region("chain_impact") == Rect2(80, 0, 16, 16), "Six icon IDs map to dedicated regions")
+	IdentityContract.catalog_art(check, "chain_impact")
 	var fx_host: Node2D = Battle.new()
 	fx_host.add_power_fx("second_wind",Vector2.ZERO)
 	for index: int in range(40): fx_host.add_power_fx("chain_impact",Vector2(index,0))

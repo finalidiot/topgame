@@ -1,0 +1,32 @@
+{
+  "family": "predator_line",
+  "initial_tier": "C",
+  "target_tier": "A or B after runtime motion review",
+  "grammar": {
+    "silhouette": "unequal two-top rising chase and short serrated pressure comb",
+    "motion": "quarry leads, hunter closes; sequential teeth bite one chase line",
+    "location": "actual hunter-to-rival axis, never a radial HUD reticle",
+    "persistence": "target-related while actual hunt is live, plus brief accepted-contact pressure",
+    "palette": "oxidized iron and vermilion hunter against cool steel quarry",
+    "feature": "directional pressure teeth repeat toward exactly one physical rival"
+  },
+  "static_frames": {
+    "predator_line": 7,
+    "predator_line_ii": 7
+  },
+  "event_tags": {
+    "predator_lock": "predator_pressure"
+  },
+  "notes": [
+    "New individually directed native master; old source retained for before/after.",
+    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
+    "Rank II adds physical structure rather than palette substitution.",
+    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
+    "Icon is a separately drawn small-scale silhouette.",
+    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall.",
+    "Tracking frame stages map actual hunt_stacks 1/2/3 to 0/3/6; place marks on the real hunter-target segment, never draw a target reticle."
+  ],
+  "active_tags": {
+    "tracking": "predator_tracking"
+  }
+}

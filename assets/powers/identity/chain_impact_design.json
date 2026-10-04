@@ -1,0 +1,20 @@
+{
+  "family": "chain_impact",
+  "grammar": {
+    "silhouette": "Unequal physical receivers joined by diagonal contact transmission",
+    "motion": "One machine hits, a tooth lights, then the next receiver reacts; alternating compressed contact accents",
+    "location": "Real elimination/contact origin and actual eligible receiver links",
+    "persistence": "Discrete transmitted events, no persistent player aura",
+    "palette": "Dark steel receivers, copper stress, short pale amber contact keys",
+    "feature": "Sequential local contact teeth and sparse physical receiver links instead of a radial blast"
+  },
+  "event_tags": {
+    "chain_impact": "transmit"
+  },
+  "active_tags": {},
+  "static_frames": {
+    "chain_impact": 6,
+    "chain_impact_ii": 8
+  },
+  "notes": "Cards deliberately show unequal machines in a diagonal relay; Rank II extends the relay rather than growing the source pulse. FX are local contact teeth only. Runtime must place accents and short links along actual eligible target positions captured in presentation metadata, not use the legacy fixed RIGHT or fake illustrated runtime tops. Cascade mechanics unchanged."
+}

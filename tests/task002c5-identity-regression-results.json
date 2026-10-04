@@ -1,0 +1,160 @@
+{
+  "task": "002C.5 art addendum",
+  "base_commit": "d882923c0e2114f6d8b86aa2079dc7365bb4f71a",
+  "godot": "4.7.2 stable official ed1daf0bf",
+  "identity_manifest_sha256": "27f8bb5e4c724e36518361a8567c5092f8e6ebdb021834e0d9191d22b05a97c6",
+  "suite_count": 7,
+  "total_checks": 12678,
+  "failures": 0,
+  "suites": [
+    {
+      "suite": "test_power_identity.gd",
+      "checks": 4405,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\identity-contract-final.log"
+    },
+    {
+      "suite": "test_card_assets.gd",
+      "checks": 132,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_card_assets-identity-final.log"
+    },
+    {
+      "suite": "test_roster_presentation.gd",
+      "checks": 3585,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_roster_presentation-identity-final.log"
+    },
+    {
+      "suite": "test_escalation_assets.gd",
+      "checks": 351,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_escalation_assets-identity-final.log"
+    },
+    {
+      "suite": "test_presentation.gd",
+      "checks": 78,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_presentation-identity-final.log"
+    },
+    {
+      "suite": "test_escalation_progression.gd",
+      "checks": 765,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_escalation_progression-identity-final.log"
+    },
+    {
+      "suite": "test_signature_presentation.gd",
+      "checks": 3362,
+      "failures": 0,
+      "script_or_engine_errors": 0,
+      "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_signature_presentation-identity-final.log"
+    }
+  ],
+  "active_contract": {
+    "families": 13,
+    "developed_states": 34,
+    "native_sources": 39,
+    "card_cell": [
+      64,
+      64
+    ],
+    "card_poses_per_tag": 12,
+    "icon_cell": [
+      16,
+      16
+    ],
+    "icon_poses_per_tag": 1,
+    "fx_cell": [
+      96,
+      80
+    ],
+    "fx_poses_per_tag": 8,
+    "draw_isolation_states": 34
+  },
+  "coverage": [
+    "Actual ASE header/frame/chunk integrity, named visible normal layers, tags, contact-pivot slices and authored frame durations cross-checked against exported metadata.",
+    "Every active family and Rank II/mutation card selects its own twelve-cel native master and separately editable sixteen-pixel icon master.",
+    "Supported runtime events and active semantics resolve; motion/force families select all eight true projected headings.",
+    "Actual headless battle canvas drawing preserves fighters, timers, core and roster counters, traces, economy, director, effect records and simulation/cosmetic/AI/director random streams.",
+    "Retained historical masters keep original native source/header/tag/timing checks. Strong accepted Wake I retains its actual eight-pose pressure source explicitly; Second Wind remains an explicit legacy-owned card/icon.",
+    "Retained cosmetic quality, finite audio, recovery pose and progression mechanics assertions remain unchanged.",
+    "Crash Guard is explicitly authored as a contact-only damper; held guarded and Slipstream states are included in draw-isolation stress fixtures."
+  ],
+  "notes": [
+    "Latest Dead Centre/Afterimage FX exports required native import refresh before checking runtime texture dimensions. Final logs are clean.",
+    "These are asset contracts and deterministic isolation checks, not a substitute for visual motion review or human gameplay assessment.",
+    "Reviewed native and grayscale gameplay crops of Bank II, Predator II, Crosscut II and Guard II: mechanism-to-card correspondence and distinct placement/silhouette remain readable."
+  ],
+  "capture_shutdown": {
+    "harness": "tests/capture_identity_motion.gd",
+    "diagnosis": "Verbose native replay identified pending AudioStreamWAV/AudioStreamPlaybackWAV ownership for heavy.wav and power_wake.wav. Identity texture caches did not leak.",
+    "fix": "Stop and clear audio streams during the existing final rendered frame; free the sound node before quitting. No extra frame or warning suppression.",
+    "verified_movie_frames": 60,
+    "verified_movie_seconds": 1,
+    "stderr_bytes": 0,
+    "leaked_instances": 0,
+    "resources_in_use_at_exit": 0,
+    "proc_count": 1,
+    "raw_prefix": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\motion\\impact_wake-cleanprobe"
+  },
+  "fx_receiver_provenance": {
+    "scope": "Presentation payload only; actual _request calls, events, ordering, power arithmetic and RNG remain unchanged.",
+    "runtime_change": "Optional FX provenance dictionary routes actual owner/recipient IDs through supported five-argument hosts; historical four-argument mock hooks remain compatible.",
+    "burst": "One actual primed full-top target, despite other nearby bodies.",
+    "pulse": "Real owned small-top elimination requests four live hostile full/small recipients; renderer snapshots three actual positions without suppressing the fourth impulse. Ally, neutral, dead and far bodies are excluded by the existing gameplay hook.",
+    "snapshot": "Actual emitter determines Rank II art even when a different Rank I holder is nearer. Later target movement cannot rewrite receiver snapshots. Calls with no provenance cannot fabricate nearby links.",
+    "retained_suites": [
+      {
+        "suite": "test_powers.gd",
+        "checks": 79,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_powers-fx-provenance-final.log"
+      },
+      {
+        "suite": "test_escalation_physics.gd",
+        "checks": 103,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_escalation_physics-fx-provenance-final.log"
+      },
+      {
+        "suite": "test_ability_rebalance.gd",
+        "checks": 92,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_ability_rebalance-fx-provenance-final.log"
+      },
+      {
+        "suite": "test_roster_physics.gd",
+        "checks": 30,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_roster_physics-fx-provenance-final.log"
+      },
+      {
+        "suite": "test_ability_rebalance_integration.gd",
+        "checks": 32,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_ability_rebalance_integration-fx-provenance-final.log"
+      },
+      {
+        "suite": "test_roster_presentation.gd",
+        "checks": 3585,
+        "failures": 0,
+        "raw_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\test_roster_presentation-fx-provenance-final.log"
+      }
+    ],
+    "retained_total_checks": 3921,
+    "retained_failures": 0
+  },
+  "final_hook_regressions": {
+    "redline_aliases": "Ordinary modern Burst emits redline_ii/runaway, resolves authored tags with actual rank provenance and no doubled _ii fallback across ranks.",
+    "paid_ghost_preview": "Full launch reserve and ordinary route inputs produce a production preview on an actual paid trace emission; both a/b match paid path points. Native placement equals Battle.project(a/b), remains fixed when the live fighter origin moves, and actual drawing preserves all state/random streams.",
+    "guard_direction": "Real meaningful contact at eight projected headings emits incoming force; native damper faces the actual rival. Shear/release directions retain their force vector.",
+    "motion_review": "Reviewed grayscale native real motion sequences for all13 families. Guard and Chain samples preceding the final direction/provenance fixes are explicitly superseded and require recapture by delivery owner."
+  }
+}

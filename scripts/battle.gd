@@ -869,7 +869,7 @@ func present_reclaim(amount: float, source: String) -> void:
 	_reclaim_ready = elapsed+0.45
 	add_power_fx("rpm_reclaim",player_entity().pos,Vector2.ZERO,amount)
 
-func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0) -> void:
+func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0, presentation: Dictionary = {}) -> void:
 	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38,
 		"redline_ii":0.40,"runaway":0.44,"runaway_hit":0.30,"breakneck_charge":0.36,"breakneck_impact":0.45,"anchor":0.42,"anchor_break":0.30,"bulwark_impact":0.48,"counterweight_store":0.36,"counterweight_release":0.45,"afterimage_ii":0.24,"ghost_closure":0.48,"ghost_activation":0.60,"slipstream_cross":0.42}
 	if kind in ["boss_entry","boss_defeat"]: durations[kind] = 0.75
@@ -891,6 +891,32 @@ func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO,
 				break
 		_power_fx.remove_at(discard)
 	var effect: Dictionary = {"kind":kind,"pos":pos,"dir":direction,"direction":direction,"strength":strength,"age":0.0,"duration":durations.get(kind,0.4)}
+	var art_family: String = PowerVisuals.Identity.event_family(kind)
+	if not art_family.is_empty():
+		# Presentation-only rank provenance; do not change the source fighter.
+		var owner: Dictionary = entity(int(presentation.get("owner_entity_id",0)))
+		if owner.is_empty():
+			owner = player_entity()
+			if kind != "chain_impact":
+				var closest: float = INF
+				for candidate: Dictionary in fighters:
+					if not candidate.get("power_ranks",{}).has(art_family): continue
+					var distance: float = Vector2(candidate.pos).distance_squared_to(pos)
+					if distance < closest: owner = candidate; closest = distance
+		effect["rank"] = int(owner.get("power_ranks",{}).get(art_family,1))
+		effect["art_family"] = art_family
+		if kind == "chain_impact":
+			var receivers: Array[Vector2] = []
+			var receiver_ids: Array[int] = []
+			for receiver_id: int in presentation.get("receiver_entity_ids",[]):
+				if receivers.size() >= 3: break
+				var receiver: Dictionary = entity(receiver_id)
+				if receiver.is_empty(): continue
+				receivers.append(Vector2(receiver.pos))
+				receiver_ids.append(receiver_id)
+			effect["owner_entity_id"] = int(owner.get("entity_id",0))
+			effect["receiver_entity_ids"] = receiver_ids
+			effect["receivers"] = receivers
 	if kind == "second_wind":
 		for fighter: Dictionary in _ordered_fighters():
 			if Vector2(fighter.pos).is_equal_approx(pos):
@@ -1272,6 +1298,7 @@ func _draw() -> void:
 		if circuit_path.size() >= 4: PowerVisuals.draw_circuit_field(self, trace, circuit_path)
 	for fx: Dictionary in _power_fx:
 		if not str(fx.kind) in SignatureVisuals.FOREGROUND: PowerVisuals.draw_effect(self, fx, project(fx.pos))
+	PowerVisuals.Identity.draw_links(self,fighters,_visual_time)
 	# Every complete rig sorts by ground contact Y, with stable ID ties.
 	var order: Array[Dictionary] = _ordered_fighters()
 	for fighter: Dictionary in order:

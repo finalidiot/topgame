@@ -7,6 +7,7 @@ const B=preload("res://scripts/battle.gd")
 const E=preload("res://scripts/encounters.gd")
 const S=preload("res://scripts/starters.gd")
 const C=preload("res://scripts/run_powers.gd")
+const IdentityContract=preload("res://tests/power_identity_contract.gd")
 const IDS: Array[String]=["clutch","high_gear","orbit_drive","crash_guard","momentum_bank","predator_line","crosscut","clutch_ii","high_gear_ii","orbit_drive_ii","crash_guard_ii","momentum_bank_ii","predator_line_ii","crosscut_ii","terminal_velocity","flow_state","iron_comet","iron_comet_ii"]
 var checks: int=0
 var failures: int=0
@@ -26,17 +27,10 @@ func run() -> void:
 			check(P._frame("roster_"+group,tag,0.0)==int(m.tags[tag].from),"Tag begins "+tag)
 			check(P._frame("roster_"+group,tag,99.0)==int(m.tags[tag].to),"Tag ends "+tag)
 	check(V.meta("roster").pivot==[48.0,48.0],"Effects retain fixed floor contact pivot")
-	check(P.ROSTER_ICONS.get_size()==Vector2(IDS.size()*16,16),"Every roster row has its native 16px icon")
-	check((load(C.ROSTER_CARD_SHEET) as Texture2D).get_size()==Vector2(384,IDS.size()*64),"Eighteen native card rows with six authored poses")
-	for row: int in range(IDS.size()):
-		check(P.icon_region(IDS[row])==Rect2(row*16,0,16,16),"Stable new family icon "+IDS[row])
-		check(P.icon_texture(IDS[row])==P.ROSTER_ICONS,"Distinct roster HUD source "+IDS[row])
-		var art_id: String=IDS[row]
-		var power: Dictionary=C.get_mutation(art_id) if C.MUTATIONS.has(art_id) else (C.get_owned_power(art_id.trim_suffix("_ii"),2) if art_id.ends_with("_ii") else C.get_power(art_id))
-		check(power.card_row==row and power.icon_frame==row and power.source_tag==art_id and power.card_texture==C.ROSTER_CARD_SHEET and power.icon==C.ROSTER_ICON_SHEET,"Catalogue uses dedicated native roster art "+art_id)
-		var meta: Dictionary=P._meta("roster_cards")
-		for frame: int in range(6):
-			check(int(meta.durations_ms[row*6+frame])==int(power.card_durations_ms[frame]),"Catalogue/card timing agrees "+art_id+"/"+str(frame))
+	check(P.ROSTER_ICONS.get_size()==Vector2(IDS.size()*16,16),"Historical roster native 16px icon atlas retained")
+	check((load(C.ROSTER_CARD_SHEET) as Texture2D).get_size()==Vector2(384,IDS.size()*64),"Historical eighteen rows with six authored poses retained")
+	for art_id: String in IDS:
+		IdentityContract.catalog_art(check,art_id)
 	check(not FileAccess.get_file_as_string("res://scripts/power_visuals.gd").contains("comet_headings"),"Rejected filled Iron Comet wedge is absent from active renderer")
 	for tag: String in ["comet_charge","comet_flight","comet_impact","comet_recovery","overcap","heat_extreme","clutch_danger","clutch_recover","orbit_drift","ghost_preview","ghost_latch"]:
 		check(V.meta("roster").tags.has(tag),"Required authored machine state "+tag)

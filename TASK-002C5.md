@@ -1,5 +1,22 @@
 # Task 002C.5 — ability rebalance and roster expansion
 
+## Latest checkpoint — full power art identity review
+
+The visual addendum replaces the nine generic/prototype family presentations
+and reviews all thirteen families together. It adds 39 editable per-family
+Aseprite masters, independent HUD icons, deliberate card animation, real-state
+arena art, native/grayscale matrices, before/after comparisons and a 39-second
+card-to-combat review video. See [the complete art audit, visual grammar and
+source list](TASK-002C5-ART-IDENTITY.md). The current window title is
+**Spinning Metal — 002C.5 Art Review + Starter Collection**. The collection and
+first-top restoration described below remain included; the earlier binary hash
+and counts in that section document the pre-addendum checkpoint.
+
+The latest direct launcher is `E:\Desktop\Launch-SpinningMetal-Art-Review.cmd`.
+The current launcher also opens this art-review build. The frozen executable is
+`C:\GPT GAME BUILDING\task-002c5-qa\Task002C5-ArtReview\SpinningMetal-002C5-Art.exe`.
+No main merge; human visual and drift-feel acceptance remain pending.
+
 Playable Windows checkpoint on **`task-002c5-ability-roster`**, initially based on
 accepted main **`0c6225f5428e874621f14837e37df47bad505fa7`**. Main was fetched,
 the accepted tree was clean, and all 24 accepted regression suites passed

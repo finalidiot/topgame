@@ -1,0 +1,33 @@
+{
+  "family": "momentum_bank",
+  "initial_tier": "C",
+  "target_tier": "A or B after runtime motion review",
+  "grammar": {
+    "silhouette": "rear open spring cassette and broad brake shoe, forward moving top",
+    "motion": "gradual compression, held load, abrupt extension and sparse directed release",
+    "location": "rear braking side/contact plane; release follows actual movement vector",
+    "persistence": "real charge stages while stored; compression/release are events",
+    "palette": "brass, graphite, warm ivory with steel mount",
+    "feature": "visible helical coil pitch shrinks as real stored force rises"
+  },
+  "static_frames": {
+    "momentum_bank": 5,
+    "momentum_bank_ii": 5
+  },
+  "event_tags": {
+    "momentum_store": "bank_load",
+    "momentum_release": "bank_release"
+  },
+  "notes": [
+    "New individually directed native master; old source retained for before/after.",
+    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
+    "Rank II adds physical structure rather than palette substitution.",
+    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
+    "Icon is a separately drawn small-scale silhouette.",
+    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall.",
+    "bank_stored is eight charge stages: select by actual momentum_charge/cap, do not auto-play the charge filling. bank_load is only the contact/compression event."
+  ],
+  "active_tags": {
+    "stored": "bank_stored"
+  }
+}

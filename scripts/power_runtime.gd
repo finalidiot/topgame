@@ -138,8 +138,17 @@ func _record(kind: String, owner: int, target: int = 0, root: int = 0, generatio
 	if events.size() > 256:
 		events.pop_front()
 
-func _fx(kind: String, position: Vector2, direction: Vector2 = Vector2.RIGHT, strength: float = 1.0) -> void:
+func _fx(kind: String, position: Vector2, direction: Vector2 = Vector2.RIGHT, strength: float = 1.0, presentation: Dictionary = {}) -> void:
 	if _host() != null and not _stopped:
+		if not presentation.is_empty():
+			# Real hosts accept explicit visual provenance. Retained semantic
+			# mocks keep their four-argument FX hook and identical power behavior.
+			for method: Dictionary in _host().get_method_list():
+				if str(method.name) == "add_power_fx":
+					if method.args.size() >= 5:
+						_host().add_power_fx(kind, position, direction, strength, presentation)
+						return
+					break
 		_host().add_power_fx(kind, position, direction, strength)
 
 func begin_tick(dt: float) -> void:
@@ -273,7 +282,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 		if _live(target) and _opposes(fighter, target) and Vector2(fighter["pos"]).distance_to(target["pos"]) <= (56.0 if rank(fighter, "chain_impact") >= 2 else CHAIN_RADIUS):
 			var normal: Vector2 = _outward(fighter["pos"], target["pos"], heading)
 			_request(target, normal * (24.0 if rank(fighter, "chain_impact") >= 2 else 15.0), _power_cause(state["chain_cause"], "chain_burst", int(fighter["entity_id"])))
-			_fx("chain_impact", fighter["pos"], normal)
+			_fx("chain_impact", fighter["pos"], normal, 1.0, {"owner_entity_id": int(fighter["entity_id"]), "receiver_entity_ids": [int(target["entity_id"])]})
 			_record("chain_burst", int(fighter["entity_id"]), int(target["entity_id"]))
 
 func wall_rebound(fighter: Dictionary, outward_speed: float, normal: Vector2, contact_pos: Vector2) -> void:
@@ -835,11 +844,13 @@ func _apply_pulse(pulse: Dictionary) -> void:
 	var owner: Dictionary = _host().entity(int(cause["owner_entity_id"]))
 	if not _live(owner):
 		return
+	var presentation_receivers: Array[int] = []
 	for target: Dictionary in _fighters():
 		if _live(target) and _opposes(owner, target) and Vector2(target["pos"]).distance_to(pulse["pos"]) <= (56.0 if rank(owner, "chain_impact") >= 2 else CHAIN_RADIUS):
 			_request(target, _outward(pulse["pos"], target["pos"], Vector2.RIGHT) * ((82.0 if _small(target) else 24.0) if rank(owner, "chain_impact") >= 2 else (65.0 if _small(target) else 15.0)), cause)
+			presentation_receivers.append(int(target["entity_id"]))
 	_record("chain_impact", int(cause["owner_entity_id"]), int(cause["source_entity_id"]), int(cause["root_event_id"]), int(cause["generation"]))
-	_fx("chain_impact", pulse["pos"], Vector2.RIGHT, float(cause["generation"]))
+	_fx("chain_impact", pulse["pos"], Vector2.RIGHT, float(cause["generation"]), {"owner_entity_id": int(cause["owner_entity_id"]), "receiver_entity_ids": presentation_receivers})
 
 func _outward(origin: Vector2, target: Vector2, fallback: Vector2) -> Vector2:
 	var offset: Vector2 = target - origin

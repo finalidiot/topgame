@@ -1,4 +1,5 @@
 extends RefCounted
+const Identity = preload("res://scripts/power_identity.gd")
 ## Pure draw policy for native Aseprite cels. No simulation writes or RNG.
 const SHEETS: Dictionary = {
 	"redline":preload("res://assets/powers/signature_redline.png"),
@@ -21,7 +22,7 @@ const EVENTS: Dictionary = {
 	"high_gear_surge":["roster","terminal_surge"],"orbit_drift":["roster","orbit_drift"],
 	"momentum_store":["roster","momentum_store"],"momentum_release":["roster","momentum_release"],
 	"crash_guard":["roster","crash_guard"],"predator_lock":["roster","predator_lock"],"crosscut":["roster","crosscut"],"ghost_preview":["roster","ghost_preview"]}
-const FOREGROUND: Array[String] = ["breakneck_impact","breakneck_recovery","runaway_hit","counterweight_release","contact_light","contact_meaningful","contact_heavy","contact_signature","boss_defeat","rpm_reclaim","second_wind","slipstream_cross","comet_release","clutch_recover","momentum_release","crosscut"]
+const FOREGROUND: Array[String] = ["breakneck_impact","breakneck_recovery","runaway_hit","counterweight_release","contact_light","contact_meaningful","contact_heavy","contact_signature","boss_defeat","rpm_reclaim","second_wind","slipstream_cross","comet_release","clutch_recover","momentum_release","crosscut","chain_impact","crash_guard"]
 static var metadata: Dictionary = {}
 static var roster_metadata: Dictionary = {}
 static func meta(family: String) -> Dictionary:
@@ -68,38 +69,38 @@ static func aura(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> voi
 			for i: int in range(3): cel(c,"redline",tag,at-forward*float(8+i*12),clock,0.7-float(i)*0.18)
 		elif tag != "rank1_active": cel(c,"redline",tag,at-forward*17.0,clock+0.1,0.40)
 		var heat: float=clampf(float(f.get("redline_heat",f.get("runaway_heat",0.0))),0.0,1.0)
-		if float(f.get("rpm",0.0))>1.0:
+		if float(f.get("rpm",0.0))>1.0 and Identity.family_info("redline").is_empty():
 			cel(c,"roster","overcap",at,clock*(1.1+heat),0.65+heat*0.35)
 			rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,heat,Color(1.0,0.64,0.25,0.75))
-		if heat>=0.70: cel(c,"roster","heat_extreme",at,clock*(1.0+heat),heat)
+		if heat>=0.70 and Identity.family_info("redline").is_empty(): cel(c,"roster","heat_extreme",at,clock*(1.0+heat),heat)
 	var comet: float=float(f.get("iron_comet_time",0.0))
-	if comet>0.0:
+	if comet>0.0 and not Identity.has_active("iron_comet","charged"):
 		var span: float=2.8 if int(f.get("power_ranks",{}).get("iron_comet",1))>=2 else 2.0
 		var age: float=maxf(0.0,span-comet)
 		cel(c,"roster","comet_charge" if age<0.28 else "comet_flight",at,clock)
 		rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,0.55,Color(1.0,0.77,0.40,0.78))
 	var gear: int=int(f.get("power_ranks",{}).get("high_gear",0))
 	var velocity: Vector2=f.get("vel",Vector2.ZERO)
-	if gear>0 and velocity.length_squared()>14400.0:
+	if gear>0 and velocity.length_squared()>14400.0 and not Identity.has_active("high_gear","speed"):
 		var branch: String=f.get("power_mutations",{}).get("high_gear","")
 		var gear_tag: String="terminal_surge" if branch=="terminal_velocity" else ("flow_state" if branch=="flow_state" else ("gear2" if gear>=2 else "gear1"))
 		cel(c,"roster",gear_tag,at,clock,0.70)
 		rotor_wake(c,at,velocity,clock,0.85 if gear>=2 else 0.30,Color(0.50,0.78,0.94,0.65))
 	var floor_at: Vector2=at+Vector2(0.0,float(f.get("height",0.0)))
-	if bool(f.get("drift_active",false)):
+	if bool(f.get("drift_active",false)) and not Identity.has_active("orbit_drive","drift"):
 		cel(c,"roster","orbit_drift",floor_at,clock)
-	elif float(f.get("orbit_charge",0.0))>0.35:
+	elif float(f.get("orbit_charge",0.0))>0.35 and not Identity.has_active("orbit_drive","drift"):
 		cel(c,"roster","flow_state",floor_at,clock,float(f.orbit_charge)*0.60)
-	if bool(f.get("clutch_active",false)) or float(f.get("clutch_time",0.0))>0.0:
+	if (bool(f.get("clutch_active",false)) or float(f.get("clutch_time",0.0))>0.0) and not Identity.has_active("clutch","danger"):
 		cel(c,"roster","clutch_danger",floor_at,clock,0.65)
-	if float(f.get("clutch_recovery_time",0.0))>0.0: cel(c,"roster","clutch_recover",floor_at,clock,0.85)
-	if float(f.get("guard_time",0.0))>0.0: cel(c,"roster","crash_guard",at,clock,0.55)
+	if float(f.get("clutch_recovery_time",0.0))>0.0 and not Identity.has_active("clutch","recover"): cel(c,"roster","clutch_recover",floor_at,clock,0.85)
+	if float(f.get("guard_time",0.0))>0.0 and Identity.family_info("crash_guard").is_empty(): cel(c,"roster","crash_guard",at,clock,0.55)
 	var bank: float=float(f.get("momentum_charge",0.0))
-	if bank>3.0: cel(c,"roster","momentum_store",floor_at,0.0,0.75,clampi(int(ceilf(bank/30.0)),0,5))
-	if int(f.get("hunt_stacks",0))>0: cel(c,"roster","predator_lock",at,clock,0.3+float(f.hunt_stacks)*0.2)
+	if bank>3.0 and not Identity.has_active("momentum_bank","stored"): cel(c,"roster","momentum_store",floor_at,0.0,0.75,clampi(int(ceilf(bank/30.0)),0,5))
+	if int(f.get("hunt_stacks",0))>0 and not Identity.has_active("predator_line","tracking"): cel(c,"roster","predator_lock",at,clock,0.3+float(f.hunt_stacks)*0.2)
 	closure_preview(c,f,floor_at,clock)
 	var charge: float = float(f.get("anchor_charge",0.0))
-	if charge > 0.07:
+	if charge > 0.07 and not Identity.has_active("dead_centre","anchor"):
 		var tag: String = anchor_tag(f)
 		var stage: int = clampi(int(roundf(charge*5.0)),0,5)
 		if tag=="counterweight_store": stage=clampi(int(ceilf(float(f.get("stored_force",0.0))/30.0)),0,5)
@@ -132,18 +133,23 @@ static func rotor_wake(c: CanvasItem, at: Vector2, velocity: Vector2, clock: flo
 static func closure_preview(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> void:
 	var preview: Dictionary=f.get("ghost_preview",{})
 	if preview.is_empty() or not preview.has("a") or not preview.has("b"): return
-	var origin: Vector2=f.get("pos",Vector2.ZERO)
-	var old: Vector2=Vector2(preview.a)-origin
-	var live: Vector2=Vector2(preview.b)-origin
-	var a: Vector2=at+Vector2(old.x-old.y,(old.x+old.y)*0.5)
-	var b: Vector2=at+Vector2(live.x-live.y,(live.x+live.y)*0.5)
+	var endpoints: PackedVector2Array = Identity.ghost_preview_points(f,at)
+	var a: Vector2 = endpoints[0]
+	var b: Vector2 = endpoints[1]
 	var strength: float=clampf(float(preview.get("strength",0.0)),0.0,1.0)
 	var alpha: float=0.62+strength*0.34
 	for dash: int in range(6):
 		var t: float=float(dash)/6.0
 		c.draw_line(a.lerp(b,t).round(),a.lerp(b,t+0.075).round(),Color(0.72,1.0,0.85,alpha),2.0)
-	cel(c,"roster","ghost_preview",a,clock*(1.0+strength),alpha)
-	cel(c,"roster","ghost_preview",b,clock*(1.0+strength)+0.08,alpha)
+	if Identity.has_active("afterimage","ghost_preview"):
+		var tag: String = Identity.variant("afterimage",str(Identity.family_info("afterimage").active_tags.ghost_preview),1,Vector2(preview.b)-Vector2(preview.a))
+		# The two local sockets correspond to real paid route endpoints.
+		var stage: int = clampi(roundi(strength*7.0),0,7)
+		Identity.cel(c,"afterimage",tag,a,clock,alpha,stage)
+		Identity.cel(c,"afterimage",tag,b,clock,alpha,stage)
+	else:
+		cel(c,"roster","ghost_preview",a,clock*(1.0+strength),alpha)
+		cel(c,"roster","ghost_preview",b,clock*(1.0+strength)+0.08,alpha)
 static func entry(c: CanvasItem, at: Vector2, kind: String, remaining: float) -> void:
 	cel(c,"combat","boss_entry" if kind=="boss" else "elite_entry",at,maxf(0.0,2.2-remaining))
 static func marker(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> void:

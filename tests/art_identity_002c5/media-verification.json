@@ -1,0 +1,154 @@
+{
+  "checked_at_utc": "2026-10-04T15:04:13.697314+00:00",
+  "status": "pass",
+  "method": "Full FFmpeg native decoder pass to null for both complete files, followed by lossless PNG extraction from the final encoded MP4s and direct visual inspection. No production, tests or final media modified.",
+  "files": [
+    {
+      "file": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\002c5_power_art_showcase.mp4",
+      "bytes": 3671021,
+      "sha256": "b6c4d681091cc8efaee75eb04e1bf361f6a6c65c6dbf240346fb5f6502169aa7",
+      "video_codec": "H.264 High",
+      "pixel_format": "yuv420p",
+      "progressive": true,
+      "width": 1280,
+      "height": 720,
+      "fps": 60,
+      "full_decoded_frames": 2340,
+      "decoded_duration_seconds": 39.0,
+      "audio_streams": 0,
+      "muted_by_design": true,
+      "decode_exit_code": 0,
+      "decode_errors": 0,
+      "duplicate_frames": 0,
+      "dropped_frames": 0,
+      "faststart_moov_before_mdat": true,
+      "decode_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\002c5_power_art_showcase-decode.log",
+      "decode_progress_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\002c5_power_art_showcase-decode-progress.log"
+    },
+    {
+      "file": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\002c5_power_blind_review.mp4",
+      "bytes": 2659690,
+      "sha256": "4201f39d1c3b13aae05d2a6a19547a5ecaa42e5f90d1b09b97f6147b5ea074c5",
+      "video_codec": "H.264 High",
+      "pixel_format": "yuv420p",
+      "progressive": true,
+      "width": 1280,
+      "height": 720,
+      "fps": 60,
+      "full_decoded_frames": 1404,
+      "decoded_duration_seconds": 23.4,
+      "audio_streams": 0,
+      "muted_by_design": true,
+      "decode_exit_code": 0,
+      "decode_errors": 0,
+      "duplicate_frames": 0,
+      "dropped_frames": 0,
+      "faststart_moov_before_mdat": true,
+      "decode_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\002c5_power_blind_review-decode.log",
+      "decode_progress_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\002c5_power_blind_review-decode-progress.log"
+    }
+  ],
+  "encoded_frame_inspection": [
+    {
+      "family": "momentum_bank",
+      "kind": "card",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 3.55,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\momentum_bank-card.png"
+    },
+    {
+      "family": "momentum_bank",
+      "kind": "gameplay",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 5.4666666667,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\momentum_bank-gameplay.png"
+    },
+    {
+      "family": "momentum_bank",
+      "kind": "blind",
+      "video": "002c5_power_blind_review.mp4",
+      "time": 3.0666666666999998,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\momentum_bank-blind.png"
+    },
+    {
+      "family": "predator_line",
+      "kind": "card",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 6.55,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\predator_line-card.png"
+    },
+    {
+      "family": "predator_line",
+      "kind": "gameplay",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 7.65,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\predator_line-gameplay.png"
+    },
+    {
+      "family": "predator_line",
+      "kind": "blind",
+      "video": "002c5_power_blind_review.mp4",
+      "time": 4.05,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\predator_line-blind.png"
+    },
+    {
+      "family": "chain_impact",
+      "kind": "card",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 21.55,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\chain_impact-card.png"
+    },
+    {
+      "family": "chain_impact",
+      "kind": "gameplay",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 22.566666666699998,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\chain_impact-gameplay.png"
+    },
+    {
+      "family": "chain_impact",
+      "kind": "blind",
+      "video": "002c5_power_blind_review.mp4",
+      "time": 12.9666666667,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\chain_impact-blind.png"
+    },
+    {
+      "family": "crash_guard",
+      "kind": "card",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 33.55,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\crash_guard-card.png"
+    },
+    {
+      "family": "crash_guard",
+      "kind": "gameplay",
+      "video": "002c5_power_art_showcase.mp4",
+      "time": 34.8166666667,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\crash_guard-gameplay.png"
+    },
+    {
+      "family": "crash_guard",
+      "kind": "blind",
+      "video": "002c5_power_blind_review.mp4",
+      "time": 20.4166666667,
+      "png": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\crash_guard-blind.png"
+    }
+  ],
+  "contact_sequence_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\validation\\encoded-frames\\encoded-contact-actions.png",
+  "visual_observations": {
+    "momentum_bank": "Large spring cassette and forward top are clear on the card; encoded action frames show stored spring compression, directed release strokes and disappearance as the top moves away.",
+    "predator_line": "Unequal near/far tops fill the card; encoded gameplay shows the actual pair with successive contact-side pressure teeth.",
+    "chain_impact": "Card shows a sequence of three physical receivers; encoded gameplay retains the foreground contact teeth and pressure reactions in the live arena.",
+    "crash_guard": "Card shows a contact-side telescoping damper; encoded gameplay retains the transient contact damper and rebound strokes around the contacting pair."
+  },
+  "visual_result": {
+    "cards_readable": true,
+    "independent_icons_visible": true,
+    "gameplay_art_visible": true,
+    "arena_and_contact_subjects_uncropped": true,
+    "blind_frames_have_no_names_or_cards": true,
+    "corruption_observed": false,
+    "cropping_issue_observed": false
+  },
+  "issues": []
+}

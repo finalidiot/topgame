@@ -1,0 +1,350 @@
+{
+  "status": "foundation sources frozen pending actual live motion review",
+  "native_export_parity": "all four exact visible RGBA + alpha against native Aseprite",
+  "wake_I_original_pixel_and_total_duration_identity": true,
+  "Wake_I_retained_runtime_source": "assets/source-art/power_fx_002b.aseprite: pressure/contact_arc",
+  "source_inventory": [
+    {
+      "family": "impact_wake",
+      "group": "cards",
+      "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+      "sha256": "1e1115a2384e0c89c9b7146b06fd87cea5f53a1c406f5866a7a5adc96774e0f2",
+      "frames": 24,
+      "tags": [
+        "impact_wake",
+        "impact_wake_ii"
+      ],
+      "layers": [
+        "industrial backplate",
+        "machine depth and chassis",
+        "authored moving bearings",
+        "pressure and trajectory",
+        "contact glints and fragments",
+        "Rank II counter-pressure teeth"
+      ],
+      "pivot": [
+        32,
+        32
+      ],
+      "cell": [
+        64,
+        64
+      ]
+    },
+    {
+      "family": "impact_wake",
+      "group": "icons",
+      "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+      "sha256": "8beffa8758dd00b49420de9dfc5edd718e605a353727b08b65ad9b72b167dc09",
+      "frames": 2,
+      "tags": [
+        "impact_wake",
+        "impact_wake_ii"
+      ],
+      "layers": [
+        "Independent small-scale silhouette",
+        "Mechanic-specific recognition teeth"
+      ],
+      "pivot": [
+        8,
+        8
+      ],
+      "cell": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "impact_wake",
+      "group": "fx",
+      "source": "assets/source-art/power_identity_002c5/impact_wake_fx.aseprite",
+      "sha256": "3c22163afbaf09a0f2cd7a2b6bd7cc6983adec8d7138556eb17a9e53997d9ecd",
+      "frames": 8,
+      "tags": [
+        "wake_ii"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "cell": [
+        96,
+        80
+      ]
+    },
+    {
+      "family": "chain_impact",
+      "group": "cards",
+      "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+      "sha256": "7091b61aeeacad2350894b77fbb116a4f820f55f8b54d40db743976f906e9f8e",
+      "frames": 24,
+      "tags": [
+        "chain_impact",
+        "chain_impact_ii"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        32,
+        32
+      ],
+      "cell": [
+        64,
+        64
+      ]
+    },
+    {
+      "family": "chain_impact",
+      "group": "icons",
+      "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+      "sha256": "56cdd5f832677437fd75cad8b569d3069b6aeda907eca2d5c9b5fde0d9183112",
+      "frames": 2,
+      "tags": [
+        "chain_impact",
+        "chain_impact_ii"
+      ],
+      "layers": [
+        "Independent small-scale silhouette",
+        "Mechanic-specific recognition teeth"
+      ],
+      "pivot": [
+        8,
+        8
+      ],
+      "cell": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "chain_impact",
+      "group": "fx",
+      "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+      "sha256": "974bf480a85873e21ab259a3a1c2844a0fc9bc3ed4fd8e8934be8c839d9d90f7",
+      "frames": 16,
+      "tags": [
+        "transmit",
+        "transmit_ii"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "cell": [
+        96,
+        80
+      ]
+    },
+    {
+      "family": "dead_centre",
+      "group": "cards",
+      "source": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+      "sha256": "ccf4fde0b6f716ad1f48e23f253b5ee428dfee9c0a521ccf257af73897bb78f0",
+      "frames": 48,
+      "tags": [
+        "dead_centre",
+        "dead_centre_ii",
+        "bulwark",
+        "counterweight"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        32,
+        32
+      ],
+      "cell": [
+        64,
+        64
+      ]
+    },
+    {
+      "family": "dead_centre",
+      "group": "icons",
+      "source": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+      "sha256": "04da85d3711bbfcc7a36c74455cd8692764265746ed83aaf74666cca39875ae3",
+      "frames": 4,
+      "tags": [
+        "dead_centre",
+        "dead_centre_ii",
+        "bulwark",
+        "counterweight"
+      ],
+      "layers": [
+        "Independent small-scale silhouette",
+        "Mechanic-specific recognition teeth"
+      ],
+      "pivot": [
+        8,
+        8
+      ],
+      "cell": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "dead_centre",
+      "group": "fx",
+      "source": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+      "sha256": "a953e553464515096aa284601dd4c78be6fde731b4a7814c5e70901a21010a41",
+      "frames": 120,
+      "tags": [
+        "ground_lock",
+        "ground_lock_ii",
+        "bulwark_lock",
+        "bulwark_impact",
+        "jaw_break",
+        "counterweight_store",
+        "counterweight_release",
+        "counterweight_release_e",
+        "counterweight_release_se",
+        "counterweight_release_s",
+        "counterweight_release_sw",
+        "counterweight_release_w",
+        "counterweight_release_nw",
+        "counterweight_release_n",
+        "counterweight_release_ne"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "cell": [
+        96,
+        80
+      ]
+    },
+    {
+      "family": "afterimage",
+      "group": "cards",
+      "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+      "sha256": "3881988f04e158875920430f8520a00687479e5deda2b3c6f223720da1b4a72c",
+      "frames": 48,
+      "tags": [
+        "afterimage",
+        "afterimage_ii",
+        "ghost_circuit",
+        "slipstream"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        32,
+        32
+      ],
+      "cell": [
+        64,
+        64
+      ]
+    },
+    {
+      "family": "afterimage",
+      "group": "icons",
+      "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+      "sha256": "f230227536ef8d57e2b49af092f07ab048b843271c78b34350d416af9c96de6a",
+      "frames": 4,
+      "tags": [
+        "afterimage",
+        "afterimage_ii",
+        "ghost_circuit",
+        "slipstream"
+      ],
+      "layers": [
+        "Independent small-scale silhouette",
+        "Mechanic-specific recognition teeth"
+      ],
+      "pivot": [
+        8,
+        8
+      ],
+      "cell": [
+        16,
+        16
+      ]
+    },
+    {
+      "family": "afterimage",
+      "group": "fx",
+      "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+      "sha256": "a8936ba384badac4d58f5e8a6347a03cbc378b6ee26efd9046cd31668caa0937",
+      "frames": 112,
+      "tags": [
+        "route_scar",
+        "route_scar_ii",
+        "latch_endpoint",
+        "ghost_latch",
+        "circuit_lock",
+        "slipstream_snap",
+        "slipstream_snap_e",
+        "slipstream_snap_se",
+        "slipstream_snap_s",
+        "slipstream_snap_sw",
+        "slipstream_snap_w",
+        "slipstream_snap_nw",
+        "slipstream_snap_n",
+        "slipstream_snap_ne"
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "cell": [
+        96,
+        80
+      ]
+    }
+  ],
+  "tier_limit": "card/icon and explicit static fixtures reviewed; full muted motion not yet reviewed",
+  "no_gameplay_files_edited_for_foundation_art": true
+}

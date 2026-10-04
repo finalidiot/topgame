@@ -1,0 +1,142 @@
+{
+  "baseline": "d882923c0e2114f6d8b86aa2079dc7365bb4f71a",
+  "scope": "Canonical unchanged gameplay, persistent collection and historical native masters. PowerRuntime exception passes exact Chain recipient provenance through FX only; its physical requests, records and ordering remain unchanged. Battle diff is presentation payload/draw only.",
+  "files": [
+    {
+      "path": "scripts/roster_runtime.gd",
+      "canonical_sha256": "b68b292428ab325074ac57e63bce5a1916d8376f5ad77318746e4ed0d227bad0",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/spin_economy.gd",
+      "canonical_sha256": "f8f8afe598ff699f736733a26a3cac2a594a8ea54d437ac655e2a43195121b12",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/run_context.gd",
+      "canonical_sha256": "61902c600baf1fe80b8ada339193621239b5e29b108b3f56c57abbd17ad899c1",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/continuous_run.gd",
+      "canonical_sha256": "bf4bd48b48af0f85a156c59e015b428788714fcaef569ac87bbe436e2406ae21",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/threat_director.gd",
+      "canonical_sha256": "cb0bd8e65a96280dd0fe2237eceb69544f448ac50c7e0066561f4090bedf15f6",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/collection_save.gd",
+      "canonical_sha256": "30404713fe45b29da5d30aad6261f007d5195fb3251f0659454f26566b83a7ac",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/starters.gd",
+      "canonical_sha256": "5e44de44cbd0109f72c57ac42fd0af3be528290e33db8ee195c8a5adc88af288",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/parts.gd",
+      "canonical_sha256": "8efc2536579292f3fb997bf7774902063f413d5df5dfe528df42e07d7ecbaf42",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/afterimage_fx_002c4.aseprite",
+      "canonical_sha256": "4c57973f734b75d3019ce52c1a6bb68c2d10b0e4fd843d4a9fc7bc8479418c07",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/arena_foundry_eight.aseprite",
+      "canonical_sha256": "8ee579e6b81949bf496a6c97a4f09fcd6cbe48d754fe363d2cbfe992f0f1a8be",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/blade_rotation_family.aseprite",
+      "canonical_sha256": "7524341f88a0892c1d9010e7927e9d16862299ef38e61658929341cd3e2cf926",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/combat_fx_002c4.aseprite",
+      "canonical_sha256": "44182c9b06de21665203ac008556ca1daced8e3fb14e77582cf20065235f250e",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/dead_centre_fx_002c4.aseprite",
+      "canonical_sha256": "a00aec1282db9af2f01a6c18bef9f51499fd85d9903c4200f1c2583a361ab851",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/escalation_cards_002c.aseprite",
+      "canonical_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/escalation_fx_002c.aseprite",
+      "canonical_sha256": "184c68435456d8fd28724fcbe56c79e4d917a9eb829a59f424022ec7ae9db86f",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/escalation_icons_002c.aseprite",
+      "canonical_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/parts_catalog.aseprite",
+      "canonical_sha256": "f38a95ac2ed75495b317a30ea14b37614019b47c8a81a8f3fd024425a2c1b468",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/power_cards_002b1.aseprite",
+      "canonical_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/power_fx_002b.aseprite",
+      "canonical_sha256": "39f7a0ccf52f1458ada196cbb9c48d9e2f15604507d6f210b2b9d0a8ca5985dc",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/power_icons_002b.aseprite",
+      "canonical_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/redline_fx_002c4.aseprite",
+      "canonical_sha256": "0f619bff05942c8c8ec638d13276c6a676d84251dd216b8a1774c1f72ef7c54e",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/roster_cards_002c5.aseprite",
+      "canonical_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/roster_fx_002c5.aseprite",
+      "canonical_sha256": "a1904628a27414e37a8a64d3cb1551c16e513ba5ee6dedbe4876b70162321c09",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/roster_icons_002c5.aseprite",
+      "canonical_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/small_top_002b.aseprite",
+      "canonical_sha256": "db1b3a559a075bbe35a21c842d6ea4d1b2d20a3f56d651bdb7c27abd60e2c1c3",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/starter_balance_mid_ball.aseprite",
+      "canonical_sha256": "80dbd0ba4be116ca0636bc460bafaf1120aaee27316025186ad6805dea018da5",
+      "unchanged": true
+    },
+    {
+      "path": "assets/source-art/starter_blade_accents_002b1.aseprite",
+      "canonical_sha256": "b30e1f2ee67673d4811126f503d8058273ef9437f1232fd81ba6e5d2bcaefe7f",
+      "unchanged": true
+    }
+  ],
+  "power_runtime_presentation_diff": "diff --git a/scripts/power_runtime.gd b/scripts/power_runtime.gd\nindex b711130..d167737 100644\n--- a/scripts/power_runtime.gd\n+++ b/scripts/power_runtime.gd\n@@ -138,8 +138,17 @@ func _record(kind: String, owner: int, target: int = 0, root: int = 0, generatio\n \tif events.size() > 256:\n \t\tevents.pop_front()\n \n-func _fx(kind: String, position: Vector2, direction: Vector2 = Vector2.RIGHT, strength: float = 1.0) -> void:\n+func _fx(kind: String, position: Vector2, direction: Vector2 = Vector2.RIGHT, strength: float = 1.0, presentation: Dictionary = {}) -> void:\n \tif _host() != null and not _stopped:\n+\t\tif not presentation.is_empty():\n+\t\t\t# Real hosts accept explicit visual provenance. Retained semantic\n+\t\t\t# mocks keep their four-argument FX hook and identical power behavior.\n+\t\t\tfor method: Dictionary in _host().get_method_list():\n+\t\t\t\tif str(method.name) == \"add_power_fx\":\n+\t\t\t\t\tif method.args.size() >= 5:\n+\t\t\t\t\t\t_host().add_power_fx(kind, position, direction, strength, presentation)\n+\t\t\t\t\t\treturn\n+\t\t\t\t\tbreak\n \t\t_host().add_power_fx(kind, position, direction, strength)\n \n func begin_tick(dt: float) -> void:\n@@ -273,7 +282,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -\n \t\tif _live(target) and _opposes(fighter, target) and Vector2(fighter[\"pos\"]).distance_to(target[\"pos\"]) <= (56.0 if rank(fighter, \"chain_impact\") >= 2 else CHAIN_RADIUS):\n \t\t\tvar normal: Vector2 = _outward(fighter[\"pos\"], target[\"pos\"], heading)\n \t\t\t_request(target, normal * (24.0 if rank(fighter, \"chain_impact\") >= 2 else 15.0), _power_cause(state[\"chain_cause\"], \"chain_burst\", int(fighter[\"entity_id\"])))\n-\t\t\t_fx(\"chain_impact\", fighter[\"pos\"], normal)\n+\t\t\t_fx(\"chain_impact\", fighter[\"pos\"], normal, 1.0, {\"owner_entity_id\": int(fighter[\"entity_id\"]), \"receiver_entity_ids\": [int(target[\"entity_id\"])]})\n \t\t\t_record(\"chain_burst\", int(fighter[\"entity_id\"]), int(target[\"entity_id\"]))\n \n func wall_rebound(fighter: Dictionary, outward_speed: float, normal: Vector2, contact_pos: Vector2) -> void:\n@@ -835,11 +844,13 @@ func _apply_pulse(pulse: Dictionary) -> void:\n \tvar owner: Dictionary = _host().entity(int(cause[\"owner_entity_id\"]))\n \tif not _live(owner):\n \t\treturn\n+\tvar presentation_receivers: Array[int] = []\n \tfor target: Dictionary in _fighters():\n \t\tif _live(target) and _opposes(owner, target) and Vector2(target[\"pos\"]).distance_to(pulse[\"pos\"]) <= (56.0 if rank(owner, \"chain_impact\") >= 2 else CHAIN_RADIUS):\n \t\t\t_request(target, _outward(pulse[\"pos\"], target[\"pos\"], Vector2.RIGHT) * ((82.0 if _small(target) else 24.0) if rank(owner, \"chain_impact\") >= 2 else (65.0 if _small(target) else 15.0)), cause)\n+\t\t\tpresentation_receivers.append(int(target[\"entity_id\"]))\n \t_record(\"chain_impact\", int(cause[\"owner_entity_id\"]), int(cause[\"source_entity_id\"]), int(cause[\"root_event_id\"]), int(cause[\"generation\"]))\n-\t_fx(\"chain_impact\", pulse[\"pos\"], Vector2.RIGHT, float(cause[\"generation\"]))\n+\t_fx(\"chain_impact\", pulse[\"pos\"], Vector2.RIGHT, float(cause[\"generation\"]), {\"owner_entity_id\": int(cause[\"owner_entity_id\"]), \"receiver_entity_ids\": presentation_receivers})\n \n func _outward(origin: Vector2, target: Vector2, fallback: Vector2) -> Vector2:\n \tvar offset: Vector2 = target - origin\n"
+}

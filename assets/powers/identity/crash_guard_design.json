@@ -1,0 +1,28 @@
+{
+  "family": "crash_guard",
+  "initial_tier": "C",
+  "target_tier": "A or B after runtime motion review",
+  "grammar": {
+    "silhouette": "contact-side telescoping twin rods and broad end-stop",
+    "motion": "incoming compression, mechanical shortening, damped rebound",
+    "location": "incoming contact side of real top, no floor fortress",
+    "persistence": "contact event only; no automatically orbiting shield",
+    "palette": "cool gray steel, pale mint faceplate and restrained brass seals",
+    "feature": "an exposed piston physically changes length rather than expanding an aura"
+  },
+  "static_frames": {
+    "crash_guard": 5,
+    "crash_guard_ii": 5
+  },
+  "event_tags": {
+    "crash_guard": "damper_contact"
+  },
+  "notes": [
+    "New individually directed native master; old source retained for before/after.",
+    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
+    "Rank II adds physical structure rather than palette substitution.",
+    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
+    "Icon is a separately drawn small-scale silhouette.",
+    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."
+  ]
+}

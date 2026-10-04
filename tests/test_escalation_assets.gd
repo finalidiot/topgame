@@ -2,6 +2,7 @@ extends SceneTree
 ## Production source/atlas/audio contracts. These checks do not prove human feel.
 const Visuals = preload("res://scripts/power_visuals.gd")
 const Sound = preload("res://scripts/sound.gd")
+const IdentityContract = preload("res://tests/power_identity_contract.gd")
 const Cards: Texture2D = preload("res://assets/powers/escalation_cards.png")
 const IDS: Array[String] = ["dead_centre", "redline_ii", "dead_centre_ii", "afterimage_ii", "runaway", "breakneck", "bulwark", "counterweight", "ghost_circuit", "slipstream"]
 const TIMINGS: Array[int] = [110, 90, 75, 75, 100, 170]
@@ -45,7 +46,7 @@ func _run() -> void:
 		var id: String = IDS[row]
 		var tag: Dictionary = card_meta.tags.get(id, {})
 		check(int(tag.get("from", -1)) == row * 6 and int(tag.get("to", -1)) == row * 6 + 5, id + " stable dedicated card row")
-		check(Visuals.icon_texture(id) == Visuals.ESCALATION_ICONS and Visuals.icon_region(id) == Rect2(row * 16, 0, 16, 16), id + " dedicated HUD glyph")
+		IdentityContract.catalog_art(check, id)
 		var first: PackedByteArray = art.get_region(Rect2i(0, row * 64, 64, 64)).get_data()
 		var animated: bool = false
 		for frame: int in range(6):
@@ -53,7 +54,7 @@ func _run() -> void:
 			if art.get_region(Rect2i(frame * 64, row * 64, 64, 64)).get_data() != first:
 				animated = true
 		check(animated, id + " animated branch illustration")
-	check(Visuals.icon_texture("redline") == Visuals.ICONS and Visuals.icon_region("chain_impact") == Rect2(80, 0, 16, 16), "Legacy atlas remains compatible")
+	check(Visuals.icon_texture("second_wind") == Visuals.ICONS and Visuals.icon_region("second_wind") == Rect2(16, 0, 16, 16), "Explicit legacy Second Wind atlas remains compatible")
 	check(int(fx_meta.tags.breakneck_charge_headings.to) - int(fx_meta.tags.breakneck_charge_headings.from) == 7, "Eight independently baked isometric charge headings")
 	check(Visuals._heading(Vector2(1, -1)) == 0 and Visuals._heading(Vector2.ONE) == 2, "World direction maps to fixed isometric heading")
 	var pose: Dictionary = Visuals.recovery_pose({"anchor_charge": 1.0, "power_mutations": {"dead_centre": "bulwark"}, "phase": 5}, [])

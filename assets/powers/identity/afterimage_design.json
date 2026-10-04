@@ -1,0 +1,28 @@
+{
+  "family": "afterimage",
+  "grammar": {
+    "silhouette": "A leading physical machine and environmental scars; Ghost encloses a rival in an irregular latched route",
+    "motion": "Route is drawn behind motion, aged crossing snaps locally, Ghost sockets meet and the actual path locks",
+    "location": "Recorded routes, endpoints and actual crossing points",
+    "persistence": "Bounded route history plus finite latch/crossing responses",
+    "palette": "Sparse cyan and ice scars; Ghost uses green mechanical route teeth",
+    "feature": "The route occupies the illustration and gameplay space; Ghost closure and Slipstream crossing have different spatial and timing language"
+  },
+  "event_tags": {
+    "afterimage": "route_scar",
+    "afterimage_ii": "route_scar_ii",
+    "ghost_closure": "ghost_latch",
+    "ghost_activation": "circuit_lock",
+    "slipstream_cross": "slipstream_snap"
+  },
+  "active_tags": {
+    "ghost_preview": "latch_endpoint"
+  },
+  "static_frames": {
+    "afterimage": 6,
+    "afterimage_ii": 5,
+    "ghost_circuit": 6,
+    "slipstream": 6
+  },
+  "notes": "Retain strong actual-route geometry and native afterimage_fx_002c4 scar/crossing logic; do not substitute a pre-drawn circle for live recorded routes. New endpoint, lock and crossing tiles are local accents. Ghost card shows an enclosed rival and a closing irregular machine path; Slipstream shows a physical top accelerating across an old route. No persistent player aura."
+}

@@ -1,7 +1,7 @@
-SPINNING METAL - TASK 002C.5 + STARTER COLLECTION
+SPINNING METAL - TASK 002C.5 ART REVIEW + STARTER COLLECTION
 
 Run Launch-SpinningMetal.cmd or SpinningMetal.exe. No Godot install is required.
-The window title reads: Spinning Metal - 002C.5 + Starter Collection.
+The window title reads: Spinning Metal - 002C.5 Art Review + Starter Collection.
 Fresh save: BEGIN -> first top -> confirm -> ownership -> Workshop.
 Existing save: CONTINUE TO WORKSHOP. LAUNCH OWNED TOP -> opening power -> Run.
 Your existing collection and settings are preserved.
@@ -18,6 +18,8 @@ Release controls after a draft to rearm combat.
 
 Optional QA-*.cmd launchers start labelled power inspection presets. They do
 not affect ordinary Run drafting. Low RPM and power procs still need real play.
-See PLAYTEST.md and repository TASK-002C5.md for validation and known limits.
+Includes the full thirteen-family power art pass: distinct cards, independent
+16px icons and mechanically timed arena effects from editable Aseprite masters.
+See PLAYTEST.md and TASK-002C5-ART-IDENTITY.md for validation and known limits.
 Human visual/feel acceptance is pending. No main merge.
 The executable uses Git LFS; git lfs pull after cloning if needed.

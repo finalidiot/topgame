@@ -1,0 +1,35 @@
+{
+  "family": "iron_comet",
+  "grammar": {
+    "silhouette": "Thick compressed physical rotor braced against a visible wall bank.",
+    "motion": "Wall-side squeeze, abruptly separated flight positions, violent contact and short scrape aftermath.",
+    "location": "Wall contact, actual rebound vector, then target contact and floor scars.",
+    "persistence": "Armed wall-rebound lifetime plus bounded charge/contact/aftermath events.",
+    "palette": "Cold iron, silver, brass and small white/gold contact flashes.",
+    "feature": "The wall and the whole spinning machine tell the slingshot story; disconnected heavy plates replace any wedge."
+  },
+  "static_frames": {
+    "iron_comet": 5,
+    "iron_comet_ii": 6
+  },
+  "event_tags": {
+    "comet_charge": "comet_charge",
+    "comet_release": "comet_impact"
+  },
+  "active_tags": {
+    "charged": "comet_charge",
+    "flight": "comet_flight",
+    "aftermath": "comet_scrape"
+  },
+  "notes": [
+    "Rank II adds a second wall-side brace and denser separated metal wakes, not a larger surrounding aura.",
+    "Charge cels leave the machine centre open. Card stack height visibly compresses; runtime may compress cosmetic stack only, preserving collision geometry."
+  ],
+  "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
+  "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
+  "review_tier": {
+    "before": "C cards; runtime mixed B/C",
+    "after": "B/A candidate pending full roster, grayscale and motion review"
+  },
+  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+}

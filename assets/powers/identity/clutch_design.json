@@ -1,0 +1,34 @@
+{
+  "family": "clutch",
+  "grammar": {
+    "silhouette": "Off-axis strained machine with a single large stepped pawl catching its bearing.",
+    "motion": "Uneven slips/misses, decisive pawl contact, a short stutter catch and restrained settlement.",
+    "location": "One side of the low bearing and contact-floor scrape.",
+    "persistence": "Intermittent actual danger window; bounded successful-contact catch.",
+    "palette": "Dull steel/brass, small gold tooth tips, oxide strain marks and one pale catch flash.",
+    "feature": "Asymmetric toothed L-shaped pawl and leaning bit; no recovery-ring expansion or relaunch."
+  },
+  "static_frames": {
+    "clutch": 6,
+    "clutch_ii": 6
+  },
+  "event_tags": {
+    "clutch_activate": "clutch_danger",
+    "clutch_recover": "clutch_catch"
+  },
+  "active_tags": {
+    "danger": "clutch_danger",
+    "recover": "clutch_catch"
+  },
+  "notes": [
+    "Rank II adds a second small staggered bearing stop, not a surrounding symmetric clamp.",
+    "The authored catch never resets the physical player, reserve, collision radius or position."
+  ],
+  "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
+  "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
+  "review_tier": {
+    "before": "C cards; runtime mixed B/C",
+    "after": "B/A candidate pending full roster, grayscale and motion review"
+  },
+  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+}

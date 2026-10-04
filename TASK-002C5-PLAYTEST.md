@@ -1,5 +1,12 @@
 # Task 002C.5 human playtest
 
+The latest checkpoint is **002C.5 Art Review + Starter Collection**. Start with
+`E:\Desktop\Launch-SpinningMetal-Art-Review.cmd`. Review the native color and
+grayscale matrices, before/after examples, 39-second showcase and muted gameplay
+in `C:\GPT GAME BUILDING\task-002c5-qa\art-addendum`.
+The [art identity report](TASK-002C5-ART-IDENTITY.md) contains the final family
+grades, complete visual grammar/source list and ten visual review questions.
+
 Windows checkpoint: `releases/windows/SpinningMetal.exe` or adjacent
 `Launch-SpinningMetal.cmd`. BEGIN opens the existing first-save top selection;
 confirm the choice, enter Workshop, then LAUNCH OWNED TOP. An existing collection

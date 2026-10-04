@@ -1,6 +1,8 @@
 extends RefCounted
 class_name RunPowerCatalog
 
+const IdentityArt = preload("res://scripts/power_identity.gd")
+
 ## Catalogue identity stays stable as the implemented draft pool grows.
 ## Physical Blade / Ratchet / Bit ratings remain exclusively in parts.gd.
 const IDS: Array[String] = [
@@ -201,6 +203,10 @@ static func get_owned_power(power_id: String, rank: int = 1, mutation: String = 
 	return power
 
 static func _apply_art(power: Dictionary, art_id: String) -> void:
+	var authored: Dictionary = IdentityArt.art(art_id)
+	if not authored.is_empty():
+		power.merge(authored, true)
+		return
 	var source_id: String = str(ART_ALIASES.get(art_id, art_id))
 	var escalation: bool = source_id in ESCALATION_ART_IDS
 	var roster: bool = source_id in ROSTER_ART_IDS
