@@ -26,7 +26,7 @@ const CARD_DURATIONS_MS: Array[int] = [110, 90, 75, 75, 100, 170]
 const CARD_STATIC_FRAMES: Dictionary = {"impact_wake":2, "second_wind":3, "redline":2, "iron_comet":4, "afterimage":3, "chain_impact":4}
 const CARD_COPY: Dictionary = {
 	"impact_wake": {"category":"IMPACT", "copy":"Heavy hits blast nearby tops away."},
-	"second_wind": {"category":"RECOVERY", "copy":"Once per battle, recover from near spin-out."},
+	"second_wind": {"category":"RECOVERY", "copy":"Once per launch, recover from near spin-out."},
 	"redline": {"category":"OVERDRIVE", "copy":"Burst beyond safe RPM. Hit hard. Burn spin."},
 	"iron_comet": {"category":"RICOCHET", "copy":"Hard wall rebounds charge your next hit."},
 	"dead_centre": {"category":"ANCHOR", "copy":"Hold the centre. Plant yourself. Resist heavy hits."},
@@ -35,7 +35,7 @@ const CARD_COPY: Dictionary = {
 }
 const CONDITIONS: Dictionary = {
 	"impact_wake":"Heavy contact / 1.25 s cooldown",
-	"second_wind":"Low spin or severe wobble / once per battle",
+	"second_wind":"Low spin or severe wobble / once per launch",
 	"redline":"Burst at 35%+ spin / extra spin cost",
 	"iron_comet":"Hard wall rebound / spend within 2 s",
 	"dead_centre":"Controlled centre position / aggression or extreme force breaks Anchor",
@@ -44,7 +44,7 @@ const CONDITIONS: Dictionary = {
 }
 const DEFINITIONS: Dictionary = {
 	"impact_wake": {"id":"impact_wake", "name":"Impact Wake", "description":"Heavy contacts send a pressure ring through nearby tops.", "short_label":"WAKE", "tags":["impact"], "icon":"", "active":true},
-	"second_wind": {"id":"second_wind", "name":"Second Wind", "description":"Once each battle, near spin-out triggers a dramatic recovery.", "short_label":"WIND", "tags":["recovery"], "icon":"", "active":true},
+	"second_wind": {"id":"second_wind", "name":"Second Wind", "description":"Once each launch, near spin-out triggers a dramatic recovery.", "short_label":"WIND", "tags":["recovery"], "icon":"", "active":true},
 	"redline": {"id":"redline", "name":"Redline", "description":"Burst drives beyond safe spin, then leaves you unstable.", "short_label":"RED", "tags":["burst", "risk"], "icon":"", "active":true},
 	"iron_comet": {"id":"iron_comet", "name":"Iron Comet", "description":"A hard wall rebound charges your next real hit.", "short_label":"COMET", "tags":["wall", "impact"], "icon":"", "active":true},
 	"dead_centre": {"id":"dead_centre", "name":"Dead Centre", "description":"Holding the centre builds an anchor that heavy hits can break.", "short_label":"CENTRE", "tags":["position", "defence"], "icon":"", "active":true},

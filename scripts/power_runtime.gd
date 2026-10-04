@@ -722,6 +722,7 @@ func flush_contact_powers() -> void:
 		_host().apply_power_impulse(target, request["velocity"], request["cause"])
 
 func eliminated(fighter: Dictionary, reason: String) -> void:
+	if _host().get("continuous") != null and not is_same(_host().entity(int(fighter.entity_id)), fighter): return
 	if _stopped or not _small(fighter) or _eliminated_ids.has(int(fighter["entity_id"])):
 		return
 	_eliminated_ids[int(fighter["entity_id"])] = true
@@ -775,3 +776,28 @@ func finish() -> void:
 	_next_tick_pulses.clear()
 	_eliminations.clear()
 	traces.clear()
+
+## Continuous enemy retirement never resets the player's power state or traces.
+## Forget only removed bodies and chain roots that no live effect can reference.
+func prune_retired_state() -> void:
+	var ids: Dictionary = {}
+	var roots: Dictionary = {}
+	for f: Dictionary in _fighters():
+		ids[int(f.entity_id)] = true
+		_keep_cause_root(roots, cause_for(f))
+	for id: int in _states.keys():
+		if not ids.has(id): _states.erase(id); continue
+		var state: Dictionary = _states[id]
+		_keep_cause_root(roots, state.last_primary_cause)
+		_keep_cause_root(roots, state.chain_cause)
+		for target: int in state.trace_hits.keys():
+			if not ids.has(target): state.trace_hits.erase(target)
+	for id: int in _eliminated_ids.keys():
+		if not ids.has(id): _eliminated_ids.erase(id)
+	for collection: Array in [traces, _requests, _eliminations, _next_tick_pulses]:
+		for event: Dictionary in collection: _keep_cause_root(roots, event.get("cause", {}))
+	for root: int in _chain_counts.keys():
+		if not roots.has(root): _chain_counts.erase(root)
+
+func _keep_cause_root(roots: Dictionary, cause: Dictionary) -> void:
+	if not cause.is_empty(): roots[int(cause.get("root_event_id", 0))] = true

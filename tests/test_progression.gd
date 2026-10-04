@@ -100,7 +100,7 @@ func _test_front_loaded_curve() -> void:
 	for index: int in range(1, 14):
 		var crossed: Array[int] = progression.record_event(contact(float(index) * 3.0))
 		if not crossed.is_empty(): level_times.append(float(index) * 3.0)
-	check(level_times.size() == 2 and level_times[0] >= 15.0 and level_times[0] <= 25.0, "Representative committed heavy contacts earn the first upgrade in 15–25 seconds")
+	check(level_times.size() == 2 and level_times[0] >= 15.0 and level_times[0] <= 25.0, "Representative committed heavy contacts earn the first upgrade in 15â€“25 seconds")
 	check(level_times[1] < 60.0, "The same active cadence earns a second meaningful choice within the first minute")
 	var costs: Array = Progression.TUNING.level_costs
 	check(costs[0] < costs[1] and costs[1] < costs[2] and costs[2] < costs[3] and costs[3] < costs[4], "Costs deliberately lengthen after rapid identity formation")
@@ -179,9 +179,9 @@ func _test_terminal_earned_draft() -> void:
 		var event: Dictionary = contact(float(index) * 2.0)
 		event.encounter_id = "run_slot_08"
 		run.award_xp(event)
-	check(run.commit_result("run_slot_08", true) and run.is_active(), "An ending victory preserves a draft already earned by final combat")
-	check(not run.advance(), "Final queued choice cannot launch a ninth encounter")
-	check(run.choose_power(run.pending_draft_id, run.pending_offer[0]) and run.status == "complete", "Claiming the earned final entitlement completes the Run")
+	check(run.commit_result("run_slot_08", true) and run.is_active(), "A cleared threat preserves its already-earned draft")
+	check(not run.advance(), "Queued choice holds automatic threat advancement until committed")
+	check(run.choose_power(run.pending_draft_id, run.pending_offer[0]) and run.is_active() and run.advance() and run.slot == 9, "Claiming an earned entitlement continues beyond the old limit")
 	run.start(Catalog.DEFAULT_BUILD, 82, "bastion")
 	run.choose_power(run.pending_draft_id, run.pending_offer[0])
 	for index: int in range(6): run.award_xp(contact(float(index) * 2.0))

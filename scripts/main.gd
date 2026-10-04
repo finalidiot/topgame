@@ -32,12 +32,13 @@ var _reward_focus_id: String = ""
 var _mutation_focus_id: String = ""
 var _draft_resume_origin: String = "starting"
 var _level_up_remaining: float = 0.0
+var _run_launched: bool = false
 var _practice_branch: String = ""
 
 func _process(delta: float) -> void:
 	# Only the visible acquisition beat advances. Pause and End/Restart cannot
 	# leave a delayed timer behind that could launch an unrelated encounter.
-	if not run_context.is_active() and not (screen == "acquisition" and run_context.status == "complete"): return
+	if not run_context.is_active(): return
 	if screen == "level_up":
 		_level_up_remaining -= delta
 		if _level_up_remaining <= 0.0: _show_reward()
@@ -63,6 +64,8 @@ func _ready() -> void:
 	battle.hud_updated.connect(_hud_updated)
 	battle.event_sfx.connect(_battle_sound)
 	battle.progression_events.connect(_progression_events)
+	battle.threat_cleared.connect(_threat_cleared)
+	battle.threat_started.connect(_threat_started)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
 	add_child(layer)
@@ -177,6 +180,7 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	battle._emit_hud()
 
 func _clear_run() -> void:
+	_run_launched = false
 	_practice_branch = ""
 	_acquisition_remaining = 0.0
 	_acquired_power_id = ""
@@ -198,6 +202,7 @@ func _start_run() -> void:
 	menus.show_starters()
 
 func _restart_run(starter_id: String = "") -> void:
+	_run_launched = false
 	# Entropy is sampled only here, never from menu duration or encounter timing.
 	var selected: Dictionary = build if run_context.status == "empty" else run_context.selected_build
 	var identity: String = starter_id if not starter_id.is_empty() else run_context.starter_id
@@ -217,7 +222,8 @@ func _restart_run(starter_id: String = "") -> void:
 	_show_reward()
 
 func _launch_run_encounter() -> void:
-	if not run_context.is_active(): return
+	if not run_context.is_active() or _run_launched: return
+	_run_launched = true
 	_acquisition_remaining = 0.0
 	_acquired_power_id = ""
 	_reward_focus_id = ""
@@ -229,7 +235,7 @@ func _launch_run_encounter() -> void:
 	screen = "battle"
 	battle.visible = true
 	battle.set_physics_process(true)
-	battle.begin_encounter(run_context.selected_build, encounter)
+	battle.begin_run(run_context.selected_build, encounter, run_context.run_seed)
 	_apply_settings()
 	battle._emit_hud()
 
@@ -260,10 +266,20 @@ func _show_acquisition(power_id: String) -> void:
 	if not smoke_mode: sounds.play_sound("mutation_select" if rank == 3 else ("rank_up" if rank == 2 else "acquire"))
 
 func _acquisition_prompt() -> String:
-	return "LAUNCH" if _draft_resume_origin == "starting" else ("CONTINUE" if _draft_resume_origin == "result" else "RETURN TO COMBAT")
+	return "LAUNCH" if _draft_resume_origin == "starting" else "RETURN TO COMBAT"
 
-func _advance_run() -> void:
-	if run_context.advance(): _launch_run_encounter()
+func _threat_cleared(summary: Dictionary) -> void:
+	if mode != "run" or not run_context.is_active(): return
+	var current: Dictionary = run_context.current_encounter()
+	if int(summary.get("run_seed", -1)) != run_context.run_seed or summary.get("id", "") != current.id or int(summary.get("seed", -1)) != int(current.seed): return
+	run_context.commit_result(current.id, true)
+	battle._emit_hud()
+
+func _threat_started(summary: Dictionary) -> void:
+	if mode != "run" or not run_context.is_active(): return
+	if int(summary.get("run_seed", -1)) != run_context.run_seed or int(summary.get("threat", 0)) != run_context.slot + 1: return
+	if str(summary.get("id", "")) != str(battle.encounter.id) or int(summary.get("seed", -1)) != int(battle.encounter.seed): return
+	if run_context.advance(): battle._emit_hud()
 
 func _finish_acquisition() -> void:
 	if not run_context.pending_offer.is_empty():
@@ -271,13 +287,6 @@ func _finish_acquisition() -> void:
 		_show_reward()
 	elif _draft_resume_origin == "starting":
 		_launch_run_encounter()
-	elif _draft_resume_origin == "result":
-		screen = "result"
-		last_result["next_available"] = run_context.is_active()
-		if run_context.status == "complete":
-			last_result["title"] = "RUN CLEARED"
-			last_result["subtitle"] = "Eight encounters complete. %d powers unleashed." % run_context.owned_power_ids.size()
-		menus.show_result(last_result)
 	else:
 		screen = "battle"
 		battle.set_paused(false)
@@ -306,7 +315,7 @@ func _progression_events(events: Array) -> void:
 func _hud_updated(stats: Dictionary) -> void:
 	if screen != "battle": return
 	stats = stats.duplicate()
-	stats["run_label"] = "RUN %d / 8" % run_context.slot if mode == "run" else "DUEL"
+	stats["run_label"] = "THREAT %d" % run_context.slot if mode == "run" else "DUEL"
 	stats["owned_power_ids"] = run_context.owned_power_ids if mode == "run" else []
 	stats["power_ranks"] = run_context.power_ranks if mode == "run" else {}
 	stats["power_mutations"] = run_context.power_mutations if mode == "run" else {}
@@ -328,28 +337,26 @@ func _hud_updated(stats: Dictionary) -> void:
 func _round_finished(result: Dictionary) -> void:
 	if screen != "battle": return
 	if mode == "run":
-		var encounter: Dictionary = run_context.current_encounter()
-		# Reject delayed results from an earlier slot or a discarded run.
-		if result.get("encounter_id", "") != encounter.id or int(result.get("seed", -1)) != int(encounter.seed): return
-		if not run_context.commit_result(encounter.id, bool(result.get("won", false))): return
+		# Only the live session's actual loss may end a Run. Stale ordinary
+		# victories/results cannot terminate a later threat or a restarted Run.
+		if battle.continuous == null or battle.battle_status != "finished" or result != battle.last_result: return
+		if not bool(result.get("continuous_run", false)) or bool(result.get("won", true)): return
+		if int(result.get("run_seed", -1)) != run_context.run_seed or str(battle.player_entity().outcome).is_empty(): return
+		if not run_context.fail_run(): return
 	screen = "result"
 	battle.set_paused(true)
 	last_result = result.duplicate(true)
 	if not smoke_mode: sounds.play_sound("win" if bool(result.get("won", false)) else "loss")
 	last_result["is_run"] = mode == "run"
-	last_result["next_available"] = mode == "run" and run_context.is_active() and run_context.pending_offer.is_empty()
-	last_result["run_label"] = "RUN %d / 8" % run_context.slot if mode == "run" else "DUEL"
+	last_result["next_available"] = false
 	if mode == "run":
-		if not run_context.pending_offer.is_empty():
-			_draft_resume_origin = "result"
-			_show_reward()
-			return
-		if run_context.status == "complete":
-			last_result["title"] = "RUN CLEARED"
-			last_result["subtitle"] = "Eight encounters complete. %d powers unleashed." % run_context.owned_power_ids.size()
-		elif run_context.status == "failed":
-			last_result["title"] = "RUN ENDED"
-			last_result["subtitle"] = "Restart from encounter 1 with the same assembly."
+		last_result["title"] = "RUN ENDED"
+		last_result["level"] = run_context.level
+		last_result["owned_power_ids"] = run_context.owned_power_ids
+		last_result["power_ranks"] = run_context.power_ranks
+		last_result["power_mutations"] = run_context.power_mutations
+		last_result["starter_id"] = run_context.starter_id
+		last_result["build"] = run_context.selected_build
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:
@@ -418,12 +425,10 @@ func _action(name: String, value: Variant = null) -> void:
 			if mode == "duel" and screen in ["pause", "result"]:
 				if not _practice_branch.is_empty(): _start_build_practice(_practice_branch)
 				else: _start_battle("duel", true, true)
-		"next_battle":
-			if mode == "run" and screen == "result" and bool(last_result.get("next_available", false)): _advance_run()
 		"quit": get_tree().quit()
 
 func _pause() -> void:
-	if screen != "battle" and not ((run_context.is_active() or (run_context.status == "complete" and screen == "acquisition")) and screen in ["reward", "mutation", "result", "acquisition", "level_up"]): return
+	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "mutation", "result", "acquisition", "level_up"]): return
 	if screen == "reward": _reward_focus_id = menus.focused_power_id()
 	if screen == "mutation": _mutation_focus_id = menus.focused_power_id()
 	pause_origin = screen
@@ -445,7 +450,7 @@ func _resume() -> void:
 
 func _escape() -> void:
 	if screen == "pause": _resume()
-	elif screen == "battle" or run_context.is_active() or (screen == "acquisition" and run_context.status == "complete"): _pause()
+	elif screen == "battle" or run_context.is_active(): _pause()
 	else: _title()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -531,7 +536,7 @@ func _smoke_test() -> void:
 	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed})
 	await _capture("11-starting-acquisition")
 	await get_tree().create_timer(0.6).timeout
-	for slot: int in range(1, 9):
+	for slot: int in range(1, 11):
 		assert(run_context.slot == slot and screen == "battle")
 		await _capture("run-%02d-hud" % slot)
 		# Synthetic threshold fixtures exercise UI flow, never play balance.
@@ -556,21 +561,44 @@ func _smoke_test() -> void:
 			await _capture("run-%02d-acquired" % slot)
 			await get_tree().create_timer(1.1).timeout
 			assert(screen == "battle" and run_context.slot == slot)
-		var encounter: Dictionary = run_context.current_encounter()
-		_round_finished({"won":true,"reason":"ring_out","duration":28.4,"hits":9,"player_remaining":0.43,"encounter_id":encounter.id,"seed":encounter.seed})
-		await _capture("run-%02d-result" % slot)
-		if slot < 8: _action("next_battle")
-	assert(run_context.status == "complete" and run_context.level == 9)
-	await _capture("run-complete")
+		_smoke_clear_threat()
+		await _capture("run-%02d-continuing" % slot)
+		assert(screen == "battle" and run_context.is_active() and run_context.slot == slot + 1)
+	assert(run_context.slot == 11)
+	await _capture("run-past-eight")
+	battle.player_entity().outcome = "spin_out"
+	battle._check_result()
+	battle._update_finish(3.0)
+	assert(screen == "result" and run_context.status == "failed")
 	_action("restart_run")
 	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed})
 	await get_tree().create_timer(0.6).timeout
-	var failed_encounter: Dictionary = run_context.current_encounter()
-	_round_finished({"won":false,"reason":"spin_out","duration":30.0,"encounter_id":failed_encounter.id,"seed":failed_encounter.seed})
+	battle.player_entity().outcome = "ring_out"
+	battle._check_result()
+	battle._update_finish(3.0)
 	await _capture("run-failed")
 	_action("restart_run")
 	_pause()
 	_action("end_run")
 	assert(run_context.status == "empty" and screen == "garage")
-	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" run_slots=8 investments=9 (flow fixtures)")
+	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" continuous_threats=10 one_launch_per_run (flow fixtures)")
 	get_tree().quit()
+
+func _smoke_clear_threat() -> void:
+	# Controlled outcome fixture only; real combat is measured separately.
+	battle.battle_status = "battle"
+	battle._progression_contacted.clear()
+	for f: Dictionary in battle.fighters:
+		if f.team_id != "hostile": continue
+		f.player_cause = {}
+		f.outcome = "natural_retirement" if f.combatant_type == "small_top" else "spin_out"
+	if battle.swarm.enabled:
+		for entry: Dictionary in battle.swarm.schedule:
+			if entry.state not in ["spawned", "cancelled"]:
+				entry.state = "cancelled"
+				battle.swarm.cancelled += 1
+		battle.swarm.wave = battle.swarm.total_waves
+	battle._check_result()
+	battle._collect_progression_outcomes()
+	battle.continuous.after_tick(0.0)
+	battle.continuous._spawn_next()

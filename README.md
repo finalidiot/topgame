@@ -25,7 +25,13 @@ Godot input actions. Controller support is a core Task 002A requirement.
 Editable pixel-art sources are in `assets/source-art/`. Existing prototype details
 and validation notes are retained in `README.txt` and `QA.txt`.
 
-Task 002B.1 opens a Run with three authored identities: **Breaker**
+Task 002C.1 makes a Run one continuous combat session: launch once, keep the same
+physical top, clear threats in the live arena, and continue until defeat. The HUD
+counts active survival time and threats cleared. There is no normal victory menu
+or relaunch between threats. See [TASK-002C1.md](TASK-002C1.md) and the short
+[human checkpoint](TASK-002C1-PLAYTEST.md).
+
+The Task 002B.1 opening remains: a Run opens with three authored identities: **Breaker**
 (SMASH/HIGH/FLAT), **Bastion** (GUARD/LOW/BALL), and **Vane**
 (HOOK/MID/RUBBER). Choose a power before the first launch, then earn more
 through meaningful combat. The visible Level bar leads to an immediate
@@ -37,18 +43,30 @@ two mutually exclusive behavioural mutations. Owned powers can return in
 the draft alongside new powers. The seven functional powers are Impact Wake,
 Second Wind, Redline, Iron Comet, Dead Centre, Afterimage, and Chain Impact.
 All powers are legal for every starter. The physical assembly stays locked
-through the eight encounters. There are thirteen available investments;
+through the continuous Run. There are thirteen available investments;
 seven owned powers are supported and the HUD has eight slots. The Level bar
 becomes **FULL BUILD / MAX** only when every available investment is earned.
-XP awards, early level costs and enemy schedules are preserved. Starter handling profiles make
+XP awards and early level costs are preserved. Starter handling profiles make
 aggression, centre control, and efficient mobility more pronounced in Runs.
-Custom assemblies and Quick Duel retain the original part physics.
+Quick Duel and build-practice modes retain their original single-battle physics.
+All continuous Runs use the temporary RPM expenditure scale described below.
 
-Slot 3 is **Ammunition Waves**: 24 lightweight small tops in waves of 6/8/10,
-with at most 12 active. XP drafts freeze tops, RPM, power cooldowns and wave
-scheduling, and the new ability is usable in that same wave. The other seven
-slots retain ordinary duel fixtures. Further powers, specialist AI, bosses,
-meta progression remain deferred.
+The temporary deterministic threat script repeats standard rival, hook rival,
+**Ammunition Waves**, then smash rival. A two-second live breathing period follows
+ordinary clears. The swarm still schedules 24 small tops in waves of 6/8/10, with
+at most 12 active. Each repetition allocates fresh enemy IDs and a threat-local
+schedule while the Run clock, player and power runtime continue.
+
+Drafts and mutations freeze the complete simulation and resume it exactly.
+Second Wind is once per launch, so a spent recovery stays spent across threats.
+The active power/investment pool can reach MAX; that never ends the Run.
+
+**Temporary testing economy:** `ContinuousRun.TUNING.player_rpm_loss_scale = 0.12`
+scales net player reserve expenditure per live fixed tick, before Second Wind
+recovery. It covers ordinary drain, movement/Burst/power costs and contact/wall
+loss together; positive gains are unchanged. There is no transition refill and
+ring-outs still end the Run. This intentionally generous single setting enables
+multi-minute architecture testing and must be replaced by Task 002C.3 tuning.
 
 The Garage is preserved. Select **CUSTOM ASSEMBLY RUN** below the three
 starters for an advanced custom Run. D-pad or left/right chooses a starter;
@@ -60,8 +78,8 @@ masters. Export edited art with `python tools/build_power_art.py` and
 `python tools/build_starter_art.py`; export the new escalation masters with
 `python tools/build_escalation_art.py`. Ordinary exports never overwrite artist
 edits. See [TASK-002B1.md](TASK-002B1.md) for implementation, measured pacing,
-controller results, acceptance findings and limitations. For the current
-escalation rules, source-art/audio additions, tests and outstanding human
+controller results, acceptance findings and limitations. For the preserved
+escalation rules, source-art/audio additions, tests and its historical human
 checkpoint, see [TASK-002C.md](TASK-002C.md) and
 [TASK-002C-PLAYTEST.md](TASK-002C-PLAYTEST.md). Optional targeted build practice
 uses `SpinningMetal.exe -- --practice=runaway` (also breakneck, bulwark,
@@ -74,6 +92,7 @@ Run automated suites with Godot 4.7.2:
 
 ```text
 Godot --headless --path . --editor --import
+Godot --headless --path . --script res://tests/test_continuous_run.gd
 Godot --headless --path . --script res://tests/test_flow.gd
 Godot --headless --path . --script res://tests/test_run_context.gd
 Godot --headless --path . --script res://tests/test_combat_architecture.gd
@@ -103,6 +122,7 @@ with `-- --smoke-test --capture-dir=<absolute-directory>`; victories in that smo
 loop are explicitly injected flow fixtures, not evidence of played Run balance.
 
 For measured seeded bot combat without injected victories, run
-`tests/test_ramp_playthrough.gd` with `-- --report=<absolute-json-path>`.
-It measures active combat seconds, excluding launch and choices. This is
+`tests/test_continuous_playthrough.gd` with `-- --report=<absolute-json-path>`.
+It measures active combat seconds, excluding launch, choices, pauses and hit-stop.
+The old `test_ramp_playthrough.gd` entry point delegates to this continuous diagnostic. This is
 simulation evidence, separate from human/controller feel acceptance.

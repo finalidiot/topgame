@@ -293,7 +293,7 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 	_label(_content, "SPINNING METAL", Rect2(28, 24, 565, 42), 32)
 	_label(_content, "FOUNDRY EIGHT  /  PLAYABLE PROTOTYPE", Rect2(30, 65, 570, 16), 10, ORANGE)
 	var first: Button = _button(_content, "QUICK DUEL", Rect2(30, 104, 268, 31), "quick_duel", null, true)
-	var run_button: Button = _button(_content, "EIGHT-ENCOUNTER RUN", Rect2(30, 143, 268, 31), "start_run")
+	var run_button: Button = _button(_content, "CONTINUOUS RUN", Rect2(30, 143, 268, 31), "start_run")
 	var garage_button: Button = _button(_content, "CUSTOMIZE TOP", Rect2(30, 182, 268, 31), "customize")
 	var help_button: Button = _button(_content, "HOW TO PLAY", Rect2(30, 221, 128, 31), "help")
 	var settings_button: Button = _button(_content, "SETTINGS", Rect2(168, 221, 130, 31), "settings")
@@ -331,7 +331,7 @@ func show_garage(build: Dictionary) -> void:
 	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 221)
 	var back_button: Button = _button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
 	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
-	var run_button: Button = _button(_content, "EIGHT-ENCOUNTER RUN", Rect2(342, 319, 276, 27), "start_run")
+	var run_button: Button = _button(_content, "CONTINUOUS RUN", Rect2(342, 319, 276, 27), "start_run")
 	_refresh_garage()
 	_focus_rows([_part_buttons["blade"].values(), _part_buttons["ratchet"].values(), _part_buttons["bit"].values(), [back_button, duel_button, run_button]], _part_buttons["blade"][_build.get("blade", "balance")])
 
@@ -490,7 +490,7 @@ func show_settings(settings: Dictionary) -> void:
 	var mute_button: Button = _toggle_setting("muted", "MUTE AUDIO", 163, false)
 	var shake_button: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 201, true)
 	var fullscreen_button: Button = _toggle_setting("fullscreen", "FULL SCREEN", 239, false)
-	_label(_content, "Pixel art uses nearest-neighbor scaling. 1280 × 720 recommended.", Rect2(90, 302, 460, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "Pixel art uses nearest-neighbor scaling. 1280 Ãƒâ€” 720 recommended.", Rect2(90, 302, 460, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var back_button: Button = _button(_content, "BACK TO MENU", Rect2(226, 325, 188, 26), "main_menu")
 	_focus_rows([[slider], [mute_button], [shake_button], [fullscreen_button], [back_button]])
 
@@ -683,6 +683,9 @@ func _power_labels(ids: Array, y: float) -> void:
 		_label(_content, str(power.name), area, 9, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 
 func show_result(result: Dictionary) -> void:
+	if bool(result.get("continuous_run", false)):
+		_show_run_result(result)
+		return
 	_clear("result", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(0.025, 0.045, 0.07, 0.87))
 	_panel(_content, Rect2(121, 35, 398, 290))
@@ -720,6 +723,27 @@ func show_result(result: Dictionary) -> void:
 		focus_rows.append([garage_button, menu_button])
 	_focus_rows(focus_rows)
 
+func _show_run_result(result: Dictionary) -> void:
+	_clear("result", false)
+	_rect(_content, Rect2(0, 0, 640, 360), Color(0.025, 0.045, 0.07, 0.9))
+	_panel(_content, Rect2(82, 22, 476, 316))
+	_label(_content, "RUN ENDED", Rect2(100, 35, 440, 32), 25, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var reason: String = str(result.get("reason", "spin_out")).replace("_", " ").to_upper()
+	_label(_content, Starters.display_name(str(result.get("starter_id", "custom"))) + " / " + reason, Rect2(100, 73, 440, 20), 11, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var seconds: int = floori(float(result.get("survival_time", 0.0)))
+	_label(_content, "SURVIVED  %02d:%02d" % [seconds / 60, seconds % 60], Rect2(105, 108, 430, 27), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "%d THREATS CLEARED    /    LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(100, 148, 440, 20), 12, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "%d RIVALS    /    %d SMALL ENEMIES DEFEATED" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0))], Rect2(100, 177, 440, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var names: PackedStringArray = []
+	for id: String in result.get("owned_power_ids", []):
+		names.append(str(Powers.get_owned_power(id, int(result.get("power_ranks", {}).get(id, 1)), str(result.get("power_mutations", {}).get(id, ""))).get("name", id)))
+	var collection: Label = _label(_content, " / ".join(names), Rect2(105, 205, 430, 39), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	collection.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var restart: Button = _button(_content, "RESTART RUN", Rect2(105, 257, 430, 28), "restart_run", null, true)
+	var garage: Button = _button(_content, "GARAGE", Rect2(105, 296, 210, 26), "customize")
+	var title: Button = _button(_content, "MAIN MENU", Rect2(325, 296, 210, 26), "main_menu")
+	_focus_rows([[restart], [garage, title]])
+
 func show_hud(stats: Dictionary) -> void:
 	if screen != "hud":
 		_create_hud()
@@ -738,7 +762,7 @@ func show_hud(stats: Dictionary) -> void:
 		_hud["enemy_name"].text = "AMMUNITION WAVES  %d / %d" % [int(stats.get("swarm_wave", 0)), int(stats.get("swarm_total_waves", 3))]
 		_hud["swarm_objective"].text = "%d ACTIVE" % int(stats.get("swarm_active", 0))
 		_hud["enemy_rpm"].text = "%d LEFT IN SCHEDULE" % int(stats.get("swarm_remaining", 24))
-	var seconds: int = maxi(0, ceili(float(stats.get("time_left", 90.0))))
+	var seconds: int = maxi(0, floori(float(stats.get("elapsed", 0.0)))) if bool(stats.get("continuous_run", false)) else maxi(0, ceili(float(stats.get("time_left", 90.0))))
 	_hud["time"].text = "%02d:%02d" % [seconds / 60, seconds % 60]
 	var cooldown: float = float(stats.get("burst_cooldown", 0.0))
 	var ready: bool = bool(stats.get("burst_ready", cooldown <= 0.0))
@@ -780,6 +804,14 @@ func show_hud(stats: Dictionary) -> void:
 	_hud.xp_label.add_theme_color_override("font_color", ORANGE if _xp_near else BLUE)
 	_hud.xp_detail.text = "MAX" if progression_max else ("ALMOST THERE" if _xp_near else "%d / %d XP" % [int(xp), int(threshold)])
 	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
+	if bool(stats.get("continuous_run", false)):
+		var state: Dictionary = stats.run_state
+		_hud["round"].text = "THREAT %d  /  %d CLEARED" % [int(state.threat_number), int(state.threats_cleared)]
+		if str(state.phase) == "breathing":
+			_hud["enemy_name"].text = "THREAT CLEARED"
+			_hud["enemy_bar"].visible = false
+			_hud["swarm_objective"].visible = false
+			_hud["enemy_rpm"].text = "NEXT THREAT IN %.1f s" % maxf(0.0, float(state.next_at) - float(stats.elapsed))
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(8):
 		var icon: TextureRect = _hud["power_%d" % index]

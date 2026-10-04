@@ -2,32 +2,27 @@ extends RefCounted
 class_name EncounterCatalog
 
 const Seeds = preload("res://scripts/seed_utils.gd")
-const SLOT_COUNT: int = 8
 # Power growth now comes from Run XP. Keep this descriptor seam available for
 # future authored encounter rewards without adding a second menu cadence.
 const DRAFT_SLOTS: Array[int] = []
 
-## Slot 3 is the first real swarm. Later rival/elite/arena/boss identities
-## remain ordinary duel fixtures until Task 002C.
+## Temporary continuous-run script, not a procedural director. Repeat this
+## authored cycle indefinitely; threat identity and seeds use the absolute index.
 const SLOTS: Array[Dictionary] = [
-	{"type":"standard_duel", "name":"Standard Duel", "build":{"blade":"balance", "ratchet":"mid", "bit":"ball"}},
-	{"type":"specialist_duel", "name":"Specialist / Vane", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
+	{"type":"standard_duel", "name":"Standard Rival", "build":{"blade":"balance", "ratchet":"mid", "bit":"ball"}},
+	{"type":"specialist_duel", "name":"Hook Rival", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
 	{"type":"swarm", "name":"Ammunition Waves", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}},
-	{"type":"elite_duel", "name":"Iron Comet Elite", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}},
-	{"type":"arena_event", "name":"Arena Event", "build":{"blade":"balance", "ratchet":"high", "bit":"ball"}},
-	{"type":"rival_rematch", "name":"Vane Rematch", "build":{"blade":"hook", "ratchet":"mid", "bit":"rubber"}},
-	{"type":"elite_duel", "name":"Redline Elite", "build":{"blade":"balance", "ratchet":"high", "bit":"flat"}},
-	{"type":"boss", "name":"Crown Engine", "build":{"blade":"guard", "ratchet":"high", "bit":"rubber"}}
+	{"type":"heavy_duel", "name":"Smash Rival", "build":{"blade":"smash", "ratchet":"low", "bit":"flat"}}
 ]
 
 static func has_draft(slot: int) -> bool:
 	return slot in DRAFT_SLOTS
 
 static func for_slot(slot: int, run_seed: int) -> Dictionary:
-	if slot < 1 or slot > SLOT_COUNT: return {}
-	var source: Dictionary = SLOTS[slot - 1]
+	if slot < 1: return {}
+	var source: Dictionary = SLOTS[(slot - 1) % SLOTS.size()]
 	var encounter_id: String = "run_slot_%02d" % slot
-	var is_swarm: bool = slot == 3
+	var is_swarm: bool = source.type == "swarm"
 	return {
 		"id":encounter_id, "slot_id":encounter_id, "slot":slot,
 		"type":source.type, "name":source.name,

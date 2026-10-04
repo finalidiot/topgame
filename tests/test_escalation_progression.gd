@@ -189,11 +189,11 @@ func _test_reset_and_terminal_mutation() -> void:
 		run.commit_result(run.current_encounter().id, true)
 		run.advance()
 	_fill_entitlements(run)
-	check(run.commit_result("run_slot_08", true) and run.is_active(), "Final result keeps earned investments claimable")
+	check(run.commit_result("run_slot_08", true) and run.is_active(), "Eighth threat clear keeps earned investments claimable")
 	while not run.pending_offer.is_empty():
 		var claim: String = run.pending_draft_id
 		run.choose_power(claim, run.pending_offer[0])
 		if not run.pending_mutation_power.is_empty():
-			check(run.status == "active" and not run.advance(), "Final mutation event safely holds completion")
+			check(run.status == "active" and not run.advance(), "Mutation event holds threat advancement while selection is paused")
 			run.choose_mutation(claim, run.pending_mutation_offer[0])
-	check(run.status == "complete" and run.power_mutations.size() == 3 and run.pending_draft_id.is_empty(), "Final confirmation completes with all branches retained")
+	check(run.status == "active" and run.advance() and run.slot == 9 and run.power_mutations.size() == 3 and run.pending_draft_id.is_empty(), "Final investment continues beyond threat eight with all branches retained")

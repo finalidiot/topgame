@@ -8,6 +8,8 @@ signal hud_updated(stats: Dictionary)
 signal event_sfx(kind: String)
 signal contact_accepted(first_entity_id: int, second_entity_id: int)
 signal progression_events(events: Array)
+signal threat_cleared(summary: Dictionary)
+signal threat_started(summary: Dictionary)
 
 const Catalog = preload("res://scripts/parts.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
@@ -16,6 +18,7 @@ const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 const Starters = preload("res://scripts/starters.gd")
+const ContinuousRun = preload("res://scripts/continuous_run.gd")
 const RunPowers = preload("res://scripts/run_powers.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
@@ -31,6 +34,7 @@ const BURST_COOLDOWN: float = 4.0
 const PLAYER_COLOR: Color = Color("69c7e3")
 const ENEMY_COLOR: Color = Color("f0a468")
 
+var continuous = null
 var powers = PowerRuntime.new()
 var swarm = SwarmRuntime.new()
 var _power_fx: Array[Dictionary] = []
@@ -116,6 +120,7 @@ func begin(player_build: Dictionary, enemy_build: Dictionary, level: int = 1, re
 	begin_encounter(player_build, {"opponent_build": enemy_build, "difficulty": level, "seed": requested_seed, "live_time_limit": ROUND_LIMIT})
 
 func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
+	continuous = null
 	_load_assets()
 	encounter = descriptor.duplicate(true)
 	_progression_queue.clear()
@@ -174,8 +179,51 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	_emit_hud()
 	queue_redraw()
 
-## Only ordinary full tops are active in 002A. Callers supply explicit spawn
-## data; the Run catalogue still launches one rival, not a swarm encounter.
+## One initialization per Run. Threat transitions never call begin_encounter.
+func begin_run(player_build: Dictionary, descriptor: Dictionary, run_seed: int) -> void:
+	begin_encounter(player_build, descriptor)
+	continuous = ContinuousRun.new()
+	continuous.setup(self, run_seed)
+	_emit_hud()
+
+func threat_elapsed() -> float:
+	return continuous.threat_elapsed() if continuous != null else elapsed
+
+## Replace only threat-owned state; player dictionary and semantic runtime stay live.
+func enter_threat(descriptor: Dictionary, entry_position: Vector2) -> void:
+	encounter = descriptor.duplicate(true)
+	var player: Dictionary = player_entity()
+	encounter["player_power_ids"] = player.powers.duplicate()
+	encounter["player_power_ranks"] = player.power_ranks.duplicate(true)
+	encounter["player_power_mutations"] = player.power_mutations.duplicate(true)
+	encounter["starter_id"] = player.starter_id
+	_progression_eliminated.clear()
+	_progression_contacted.clear()
+	_progression_waves.clear()
+	_pair_cooldowns.clear()
+	swarm.setup(self, descriptor)
+	if not swarm.enabled:
+		var id: int = int(descriptor.first_entity_id)
+		add_full_top(descriptor.opponent_build, id, HOSTILE_TEAM, "rival_%d" % id, entry_position)
+		var rival: Dictionary = entity(id)
+		rival.vel = -entry_position.normalized() * 64.0
+		rival.powers = descriptor.get("opponent_power_ids", []).duplicate()
+		rival.power_ranks = descriptor.get("opponent_power_ranks", {}).duplicate(true)
+		rival.power_mutations = descriptor.get("opponent_power_mutations", {}).duplicate(true)
+		_spawn_ring(project(entry_position), ENEMY_COLOR, 0.5)
+		event_sfx.emit("land")
+
+func remove_retired_enemy(id: int) -> void:
+	var retired: Dictionary = entity(id)
+	if retired.is_empty() or id == player_entity_id or _is_live(retired): return
+	for index: int in range(fighters.size() - 1, -1, -1):
+		if int(fighters[index].entity_id) == id: fighters.remove_at(index)
+	_ai_rngs.erase(id)
+	_progression_eliminated.erase(id)
+	_progression_contacted.erase(id)
+	for key: String in _pair_cooldowns.keys():
+		if str(id) in key.split(":"): _pair_cooldowns.erase(key)
+
 func add_full_top(build: Dictionary, entity_id: int, team_id: String, owner_id: String, start: Vector2, launch_velocity: Vector2 = Vector2.ZERO) -> bool:
 	if entity_id <= 0 or not entity(entity_id).is_empty():
 		return false
@@ -357,6 +405,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_hit_stop = maxf(0.0, _hit_stop - dt)
 		return
 	elapsed += dt
+	var previous_player_rpm: float = float(player_entity().rpm)
 	powers.begin_tick(dt)
 	swarm.begin_tick(dt)
 	for pair_key: String in _pair_cooldowns.keys():
@@ -417,6 +466,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 			if _is_live(fighter): _resolve_boundary(fighter)
 	powers.after_movement()
 	powers.flush_contact_powers()
+	if continuous != null: continuous.apply_testing_rpm(previous_player_rpm)
 	powers.recover()
 	swarm.account_outcomes()
 	_check_result()
@@ -428,6 +478,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		# Only publish at the fixed-tick boundary. Menu pause cannot bisect
 		# contact resolution, chain propagation, recovery or swarm scheduling.
 		progression_events.emit(earned)
+	if continuous != null: continuous.after_tick(dt)
 	if _hud_clock <= 0.0:
 		_emit_hud()
 
@@ -440,6 +491,7 @@ func _queue_progression(data: Dictionary) -> void:
 	_progression_queue.append(data)
 
 func _progression_contact(first: Dictionary, second: Dictionary, severity: float) -> void:
+	if continuous != null and (not is_same(entity(int(first.entity_id)), first) or not is_same(entity(int(second.entity_id)), second)): return
 	if int(encounter.get("slot", 0)) <= 0 or not _opposes(first, second): return
 	if int(first.entity_id) != player_entity_id and int(second.entity_id) != player_entity_id: return
 	var hostile: Dictionary = second if int(first.entity_id) == player_entity_id else first
@@ -724,6 +776,7 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		event_sfx.emit("hit")
 
 func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Dictionary) -> void:
+	if continuous != null and not is_same(entity(int(target.entity_id)), target): return
 	if not _is_live(target): return
 	# Attribution is an observer only. Full tops do not use the small-body
 	# propagation tag, but a live player-owned pressure effect still earns
@@ -859,6 +912,14 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 # Full-top objectives use team elimination. For a timeout (or simultaneous
 # elimination), the highest remaining RPM wins; ties favor the lowest stable ID.
 func _check_result() -> void:
+	if continuous != null:
+		if battle_status == "finished": return
+		for f: Dictionary in fighters:
+			if f.combatant_type == "full_top" and float(f.rpm) <= 0.045 and str(f.outcome).is_empty(): f.outcome = "spin_out"
+		continuous.observe_outcomes()
+		var player: Dictionary = player_entity()
+		if not _is_live(player): _finish(0, str(player.outcome))
+		return
 	if battle_status == "finished":
 		return
 	if swarm.enabled:
@@ -923,11 +984,12 @@ func _hud_enemy() -> Dictionary:
 	return fallback
 
 func _finish(winner_entity_id: int, reason: String) -> void:
+	if continuous != null and _is_live(player_entity()): return
 	if battle_status == "finished":
 		return
 	var winner: Dictionary = entity(winner_entity_id)
 	if winner.is_empty():
-		if swarm.enabled and winner_entity_id == 0: winner = {"team_id":HOSTILE_TEAM}
+		if (swarm.enabled or continuous != null) and winner_entity_id == 0: winner = {"team_id":HOSTILE_TEAM}
 		else: return
 	battle_status = "finished"
 	powers.finish()
@@ -952,6 +1014,9 @@ func _finish(winner_entity_id: int, reason: String) -> void:
 		"reason": reason, "player_remaining": float(player.get("rpm", 0.0)),
 		"enemy_remaining": float(enemy.get("rpm", 0.0)), "duration": elapsed,
 		"hits": hits, "seed": seed_value, "encounter_id": str(encounter.get("id", "")), "swarm":swarm.telemetry()}
+	if continuous != null:
+		last_result.merge(continuous.snapshot(), true)
+		last_result["continuous_run"] = true
 	_emit_hud()
 
 func _update_finish(dt: float) -> void:
@@ -1004,6 +1069,9 @@ func _emit_hud() -> void:
 	stats["swarm_total_waves"] = swarm.total_waves
 	stats["swarm_active"] = swarm.active_count()
 	stats["swarm_remaining"] = swarm.schedule.size()-swarm.spawned-swarm.cancelled
+	if continuous != null:
+		stats["continuous_run"] = true
+		stats["run_state"] = continuous.snapshot()
 	hud_updated.emit(stats)
 
 func snapshot() -> Dictionary:

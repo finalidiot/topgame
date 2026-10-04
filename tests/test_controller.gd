@@ -17,6 +17,7 @@ const Parts = preload("res://scripts/parts.gd")
 const Battle = preload("res://scripts/battle.gd")
 const PAD: int = 3
 const DEFAULT_BUILD: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
+const Fixtures = preload("res://tests/continuous_fixtures.gd")
 const Starters = preload("res://scripts/starters.gd")
 const NAV_BUTTONS: Array[JoyButton] = [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_DOWN]
 var checks: int = 0
@@ -306,7 +307,7 @@ func _test_title_garage_settings() -> void:
 	await _stick_tap(JOY_AXIS_LEFT_Y, 0.1)
 	check(root.gui_get_focus_owner() == initial, "Stick drift never moves menu focus")
 	await _stick_tap(JOY_AXIS_LEFT_Y, 0.9)
-	check(root.gui_get_focus_owner() == _button("EIGHT-ENCOUNTER RUN"), "Left stick navigates the title")
+	check(root.gui_get_focus_owner() == _button("CONTINUOUS RUN"), "Left stick navigates the title")
 	await _tap(JOY_BUTTON_DPAD_DOWN)
 	check(root.gui_get_focus_owner() == _button("CUSTOMIZE TOP"), "D-pad navigation coexists with stick navigation")
 	await _tap(JOY_BUTTON_A)
@@ -429,6 +430,10 @@ func _test_quick_duel() -> void:
 	check(game.screen == "title", "Controller leaves Quick Duel through pause menu")
 
 func _result(won: bool) -> void:
+	if game.mode == "run":
+		if won: Fixtures.next_threat(game)
+		else: Fixtures.defeat_player(game)
+		return
 	var result: Dictionary = {"won":won, "reason":"ring_out" if won else "spin_out", "duration":24.0, "hits":5}
 	if game.mode == "run":
 		var encounter: Dictionary = game.run_context.current_encounter()
@@ -436,7 +441,7 @@ func _result(won: bool) -> void:
 	game._round_finished(result)
 
 func _test_run() -> void:
-	await _activate("EIGHT-ENCOUNTER RUN")
+	await _activate("CONTINUOUS RUN")
 	check(game.screen == "starters", "Controller opens the authored Run identities")
 	_focus_is_visible("Starter selection")
 	check(game.menus.focused_starter_id() == "breaker", "Breaker is the focused opening identity")
@@ -473,47 +478,36 @@ func _test_run() -> void:
 	await _activate("RESTART RUN")
 	check(game.screen == "reward" and game.run_context.run_seed != old_seed, "Controller restarts a failed Run at the initial draft")
 	await _draft_and_resume(true)
-	for slot: int in range(1, 9):
-		check(game.screen == "battle" and game.run_context.slot == slot, "Controller flow reaches Run encounter %d" % slot)
+	for slot: int in range(1, 11):
+		check(game.screen == "battle" and game.run_context.slot == slot, "Controller Run reaches threat %d" % slot)
 		if slot <= 6:
 			await _fixture_level_up()
-			check(game.screen == "reward" and game.battle.paused, "Earned level pauses and immediately drafts in encounter %d" % slot)
 			await _draft_and_resume(false)
-			check(game.screen == "battle" and game.run_context.slot == slot, "Acquisition resumes the same live encounter")
-		if slot == 1 or slot == 8:
-			_joy_button(JOY_BUTTON_A, true)
-			await _settle()
+		var player: Dictionary = game.battle.player_entity()
+		_joy_button(JOY_BUTTON_A, true)
 		_result(true)
 		await _settle()
-		if slot == 1 or slot == 8:
-			var original_screen: String = game.screen
-			var original_seed: int = game.run_context.run_seed
-			_joy_button(JOY_BUTTON_A, false)
-			await _settle()
-			check(game.screen == original_screen and game.run_context.slot == slot and game.run_context.run_seed == original_seed, "Held combat face button cannot confirm newly opened result/completion")
-		if slot < 8:
-			_focus_is_visible("Run intermediate result")
-			check(game.screen == "result", "Cleared encounter opens its result without a duplicate automatic reward")
-			await _tap(JOY_BUTTON_B)
-			check(game.screen == "pause" and game.pause_origin == "result", "Back opens overlay from intermediate Run result")
-			await _tap(JOY_BUTTON_B)
-			check(game.screen == "result", "Back restores intermediate Run result")
-			await _activate("NEXT ENCOUNTER")
-			check(game.screen == "battle" and game.run_context.slot == slot + 1, "Controller result Confirm advances exactly one encounter")
-		else:
-			check(game.screen == "result" and game.run_context.status == "complete", "Controller flow completes all eight encounters")
-			_focus_is_visible("Run completion")
-			await _capture("11-controller-run-complete")
-	check(game.run_context.level == 7 and game.run_context.owned_power_ids.size() <= 7, "Completed controller Run committed six earned investments plus its starting power")
+		_joy_button(JOY_BUTTON_A, false)
+		await _settle()
+		check(game.screen == "battle" and game.run_context.slot == slot + 1 and is_same(player, game.battle.player_entity()), "Held Confirm cannot create a result or relaunch at a threat transition")
+		await _tap(JOY_BUTTON_START)
+		check(game.screen == "pause", "Continuous Run retains controller pause")
+		await _tap(JOY_BUTTON_B)
+		check(game.screen == "battle", "Controller resumes the same live Run")
+	check(game.run_context.level == 7 and game.run_context.is_active(), "Investments survive beyond threat eight")
+	_result(false)
+	await _settle()
+	check(game.screen == "result" and game.run_context.status == "failed", "Player loss still opens the controller result")
+	await _capture("11-controller-continuous-loss")
 	old_seed = game.run_context.run_seed
 	await _activate("RESTART RUN")
-	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a completed Run at its initial power offer")
+	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a continuous Run at its initial power offer")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "pause", "Back opens restarted Run draft overlay, observed "+game.screen)
 	await _activate("END RUN")
 	check(game.screen == "garage" and game.run_context.status == "empty", "Controller ends Run from draft overlay")
 	_focus_is_visible("Garage after End Run")
-	await _activate("EIGHT-ENCOUNTER RUN")
+	await _activate("CONTINUOUS RUN")
 	check(game.screen == "starters", "Garage Run button also opens authored starter selection")
 	await _activate("CUSTOM ASSEMBLY RUN")
 	check(game.screen == "reward" and game.run_context.starter_id == "custom", "Advanced custom assembly remains a secondary controller choice")

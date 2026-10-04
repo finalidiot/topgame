@@ -44,7 +44,7 @@ func setup(host: Node2D, descriptor: Dictionary) -> void:
 	total_waves = counts.size()
 	for w: int in range(counts.size()):
 		for index: int in range(int(counts[w])):
-			schedule.append({"id":schedule.size()+2,"wave":w+1,"due":float(times[w])+float(index)*0.12,"state":"waiting","port":-1,"ready":0.0})
+			schedule.append({"id":schedule.size()+int(descriptor.get("first_entity_id",2)),"wave":w+1,"due":float(times[w])+float(index)*0.12,"state":"waiting","port":-1,"ready":0.0})
 
 func active_count() -> int:
 	var count: int = 0
@@ -73,7 +73,7 @@ func begin_tick(dt: float) -> void:
 		if float(f.age) >= LIFETIME or float(f.rpm) <= 0.045:
 			retire(f, "natural_retirement")
 	if not enabled: return
-	if battle.elapsed >= cleanup_time:
+	if battle.threat_elapsed() >= cleanup_time:
 		cleanup_used = true
 		for f: Dictionary in battle._ordered_fighters():
 			if f.combatant_type == "small_top" and str(f.outcome).is_empty(): retire(f,"cleanup")
@@ -84,11 +84,11 @@ func begin_tick(dt: float) -> void:
 		wave = total_waves
 		return
 	for entry: Dictionary in schedule:
-		if entry.state in ["spawned","cancelled"] or battle.elapsed < float(entry.due): continue
+		if entry.state in ["spawned","cancelled"] or battle.threat_elapsed() < float(entry.due): continue
 		if int(entry.wave) > wave:
 			wave = int(entry.wave)
 			battle.event_sfx.emit("swarm_wave")
-		if battle.elapsed > float(entry.due) + 2.0 + TELEGRAPH:
+		if battle.threat_elapsed() > float(entry.due) + 2.0 + TELEGRAPH:
 			entry.state = "cancelled"
 			cancelled += 1
 			continue
@@ -97,9 +97,9 @@ func begin_tick(dt: float) -> void:
 			var port: int = safe_port(entry)
 			if port < 0: continue
 			entry.port = port
-			entry.ready = battle.elapsed + TELEGRAPH
+			entry.ready = battle.threat_elapsed() + TELEGRAPH
 			entry.state = "telegraph"
-		elif battle.elapsed >= float(entry.ready):
+		elif battle.threat_elapsed() >= float(entry.ready):
 			if not port_safe(int(entry.port), int(entry.id)):
 				entry.state = "waiting"
 				entry.port = -1

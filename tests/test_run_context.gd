@@ -57,17 +57,17 @@ func _test_seed_and_catalogs() -> void:
 		encounter_seeds[encounter.seed] = true
 		check(encounter == Encounters.for_slot(slot, 9012), "Encounter descriptors are deterministic")
 		check(encounter.behavior_profile == "pursuit", "Later specialist behavior remains deferred")
-		if slot == 3:
+		if encounter.fixture_type == "swarm":
 			check(not encounter.fixture and encounter.fixture_type == "swarm" and encounter.objective == "clear_schedule", "Slot 3 is a real Ammunition Waves encounter")
 			check(encounter.swarm_parameters.waves == [6, 8, 10] and encounter.swarm_parameters.wave_times == [0.0, 9.0, 18.0] and encounter.swarm_parameters.active_cap == 12, "Swarm descriptor preserves finite 24-entry schedule and cap")
 		else:
 			check(encounter.fixture and encounter.fixture_type == "duel", "Other slots retain ordinary duel fixtures")
 		check(encounter.arena_modifier == "none" and encounter.boss_parameters.is_empty() and encounter.opponent_power_ids.is_empty(), "Future hazards, enemy powers and bosses remain inactive")
-		check(encounter.live_time_limit == (32.0 if slot == 3 else 60.0), "Only swarm uses its finite cleanup ceiling")
+		check(encounter.live_time_limit == (32.0 if encounter.fixture_type == "swarm" else 60.0), "Only swarm uses its finite cleanup ceiling")
 		check(Catalog.validate_build(encounter.opponent_build) == encounter.opponent_build, "Encounter opponents are real catalogue assemblies")
 		encounter.opponent_build.blade = "invalid"
 		check(Encounters.for_slot(slot, 9012).opponent_build.blade != "invalid", "Encounter descriptors do not share mutable builds")
-	check(Encounters.for_slot(0, 9012).is_empty() and Encounters.for_slot(9, 9012).is_empty(), "Out-of-range encounters are unavailable")
+	check(Encounters.for_slot(0, 9012).is_empty() and not Encounters.for_slot(10001, 9012).is_empty(), "Only non-positive threats are unavailable; the sequence has no end")
 
 func _claim_pending(run: RefCounted) -> void:
 	while not run.pending_offer.is_empty():
@@ -124,15 +124,14 @@ func _test_complete_run() -> void:
 		result_copy.clear()
 		check(run.committed_results.has(encounter_id), "External copies cannot erase result idempotency records")
 		check(run.pending_offer.is_empty(), "Victory adds no fixed encounter draft")
-		if slot_number < 8:
-			check(run.advance(), "A resolved encounter advances toward the next launch")
-			check(not run.advance(), "Repeated advance cannot skip an unresolved encounter")
-			check(not run.commit_result(encounter_id, true), "A stale previous-encounter result is ignored")
-	check(run.status == "complete" and not run.is_active(), "Eighth victory completes the Run")
+		check(run.advance(), "A resolved threat advances without a final index")
+		check(not run.advance(), "Repeated advance cannot skip an unresolved threat")
+		check(not run.commit_result(encounter_id, true), "A stale previous-threat result is ignored")
+	check(run.status == "active" and run.slot == 9, "Eighth victory continues into threat nine")
 	var investments: int = 0
 	for rank: int in run.power_ranks.values(): investments += rank
-	check(run.owned_power_ids.size() <= 7 and run.committed_results.size() == 8 and investments == run.committed_rewards.size(), "Completion retains eight encounters and each real starting/earned investment")
-	check(not run.advance() and not run.commit_result("run_slot_08", true), "Completed Run cannot advance or recommit")
+	check(run.owned_power_ids.size() <= 7 and run.committed_results.is_empty() and investments == run.committed_rewards.size(), "Continuous ownership retains each investment while retiring old threat claims")
+	check(not run.advance() and not run.commit_result("run_slot_08", true), "Old threat cannot advance or recommit a live Run")
 	run.clear()
 	check(run.status == "empty" and run.slot == 0 and run.run_seed == 0 and run.selected_build.is_empty(), "Leaving clears Run identity and assembly")
 	check(run.owned_power_ids.is_empty() and run.pending_offer.is_empty() and run.committed_results.is_empty() and run.committed_rewards.is_empty(), "Leaving clears ownership and commitments")
@@ -182,4 +181,4 @@ func _test_draft_determinism() -> void:
 		second.commit_result(second.current_encounter().id, true)
 		first.advance()
 		second.advance()
-	check(first.owned_power_ids == second.owned_power_ids and first.status == "complete" and second.status == "complete", "Recorded seed/events/choices reproduce completion")
+	check(first.owned_power_ids == second.owned_power_ids and first.status == "active" and second.status == "active" and first.slot == 9, "Recorded seed/events/choices reproduce continuing Runs")

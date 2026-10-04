@@ -6,6 +6,7 @@ class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void:
 		pass
 
+const Fixtures = preload("res://tests/continuous_fixtures.gd")
 const SELECTED_BUILD: Dictionary = {"blade":"guard", "ratchet":"low", "bit":"needle"}
 const Starters = preload("res://scripts/starters.gd")
 var failures: int = 0
@@ -148,9 +149,8 @@ func _test_opening(game: QuietMain) -> void:
 
 func _test_midbattle_and_swarm(game: QuietMain) -> void:
 	for _slot: int in range(2):
-		game._round_finished(_result(game))
-		check(game.screen == "result" and game.run_context.pending_offer.is_empty(), "Victory alone does not add fixed slot rewards")
-		game._action("next_battle")
+		Fixtures.next_threat(game)
+		check(game.screen == "battle" and game.run_context.pending_offer.is_empty(), "Threat clear keeps combat live without fixed slot rewards")
 	check(game.run_context.slot == 3 and game.battle.swarm.enabled, "Ammunition Waves remains slot three")
 	for _step: int in range(360):
 		game.battle.test_step(1.0 / 60.0)
@@ -190,7 +190,7 @@ func _test_midbattle_and_swarm(game: QuietMain) -> void:
 
 func _test_failure_and_exit(game: QuietMain) -> void:
 	var stale_result: Dictionary = _result(game)
-	game._round_finished(_result(game, false))
+	Fixtures.defeat_player(game)
 	check(game.screen == "result" and game.run_context.status == "failed" and not game.last_result.next_available, "Loss ends Run without advancement")
 	var failed: Dictionary = _state(game)
 	game._action("next_battle")
@@ -223,37 +223,27 @@ func _test_failure_and_exit(game: QuietMain) -> void:
 
 func _test_completion(game: QuietMain) -> void:
 	_start_custom(game)
-	for slot_number: int in range(1, 9):
-		check(game.screen == "battle" and game.run_context.slot == slot_number, "Eight-encounter structure stays sequential")
+	var player: Dictionary = game.battle.player_entity()
+	var runtime_id: int = game.battle.powers.get_instance_id()
+	for threat: int in range(1, 13):
+		check(game.screen == "battle" and game.run_context.slot == threat, "Continuous sequence reaches threat %d" % threat)
 		var before: Dictionary = _state(game)
 		var result: Dictionary = _result(game)
-		var wrong: Dictionary = result.duplicate()
-		wrong.seed = int(result.seed) + 1
-		game._round_finished(wrong)
-		game._round_finished({"won":true, "reason":"ring_out"})
-		check(game.screen == "battle" and _state(game) == before, "Unbound/mismatched results cannot commit")
 		game._round_finished(result)
-		var committed: Dictionary = _state(game)
+		game._round_finished({"won":false, "reason":"spin_out"})
+		check(game.screen == "battle" and _state(game) == before, "Ordinary and unbound results cannot terminate a Run")
+		Fixtures.next_threat(game)
 		game._round_finished(result)
-		check(_state(game) == committed and game.screen == "result", "Duplicate result commits once")
-		check(game.run_context.pending_offer.is_empty(), "Completion fixture earns no passive result XP")
-		if slot_number < 8:
-			check(game.last_result.next_available, "Resolved active encounter allows Continue")
-			game._escape()
-			game._escape()
-			check(game.screen == "result" and _state(game) == committed, "Result pause does not advance")
-			game._action("next_battle")
-			var advanced: Dictionary = _state(game)
-			game._action("next_battle")
-			check(_state(game) == advanced, "Double Continue cannot skip an encounter")
-		else:
-			check(game.run_context.status == "complete" and not game.last_result.next_available, "Eighth win completes with no ninth encounter")
-			game._action("next_battle")
-			check(_state(game) == committed, "Completion cannot advance")
-	check(game.run_context.owned_power_ids.size() == 1 and game.run_context.committed_rewards.size() == 1, "XP replaces six forced post-encounter powers; no fake power growth")
-	game._action("main_menu")
-	check(game.screen == "title", "Completed Run can return to title")
-	_check_cleared(game)
+		game._action("next_battle")
+		check(game.screen == "battle" and game.run_context.slot == threat + 1, "Automatic threat entry replaces Continue")
+		check(is_same(player, game.battle.player_entity()) and runtime_id == game.battle.powers.get_instance_id(), "Same player and power runtime survive every threat")
+	check(game.run_context.is_active() and game.run_context.slot == 13, "No fixed completion after the previous eight-encounter limit")
+	Fixtures.defeat_player(game)
+	check(game.screen == "result" and game.last_result.title == "RUN ENDED", "Only player loss opens a Run result")
+	game._action("restart_run")
+	_claim(game)
+	game._pause()
+	game._action("end_run")
 
 func _test_authored_starters(game: QuietMain) -> void:
 	for identity: String in Starters.IDS:

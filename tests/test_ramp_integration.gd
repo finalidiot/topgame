@@ -116,8 +116,8 @@ func _run() -> void:
 	await save_frame("06-hud-2x")
 	root.size = Vector2i(640,360)
 	# Swarm fixture: preserve pending entry telegraph and all clocks in a draft.
-	game.run_context.slot = 3
-	game._launch_run_encounter()
+	preload("res://tests/continuous_fixtures.gd").next_threat(game)
+	preload("res://tests/continuous_fixtures.gd").next_threat(game)
 	game.battle.set_physics_process(false)
 	game.battle.battle_status = "battle"
 	game.battle.test_step(0.25)

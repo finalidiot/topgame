@@ -99,13 +99,16 @@ func commit_result(encounter_id: String, won: bool) -> bool:
 	if not is_active() or _owned_power_ids.is_empty() or encounter_id != str(current_encounter().get("id", "")): return false
 	if _committed_results.has(encounter_id): return false
 	_committed_results[encounter_id] = won
-	if not won:
-		status = "failed"
-		_pending_offer.clear()
-		_clear_pending_mutation()
-		_draft_queue.clear()
-	elif slot == Encounters.SLOT_COUNT and _draft_queue.is_empty():
-		status = "complete"
+	if not won: fail_run()
+	return true
+
+## A real player defeat can occur even in the breathing period after a clear.
+func fail_run() -> bool:
+	if not is_active(): return false
+	status = "failed"
+	_pending_offer.clear()
+	_clear_pending_mutation()
+	_draft_queue.clear()
 	return true
 
 ## The claim ID identifies a draft, rather than an encounter: multiple earned
@@ -142,8 +145,6 @@ func _finish_claim(encounter_id: String, reward_id: String) -> void:
 	_clear_pending_mutation()
 	_draft_queue.pop_front()
 	if not _draft_queue.is_empty(): _generate_offer()
-	elif slot == Encounters.SLOT_COUNT and bool(_committed_results.get(str(current_encounter().id), false)):
-		status = "complete"
 
 func _clear_pending_mutation() -> void:
 	_pending_mutation_power = ""
@@ -153,7 +154,9 @@ func advance() -> bool:
 	if not is_active() or not _draft_queue.is_empty(): return false
 	var encounter_id: String = str(current_encounter().id)
 	if not bool(_committed_results.get(encounter_id, false)): return false
-	if slot >= Encounters.SLOT_COUNT: return false
+	# Only the current threat needs a claim record; old IDs cannot match it.
+	_committed_results.clear()
+	_progression.clear_event_history()
 	slot += 1
 	return true
 

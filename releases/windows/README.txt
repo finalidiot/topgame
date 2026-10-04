@@ -1,32 +1,29 @@
-SPINNING METAL - TASK 002C - WINDOWS
+SPINNING METAL - TASK 002C.1 - CONTINUOUS RUN CHECKPOINT
 
 Double-click SpinningMetal.exe. Windows x86_64; no Godot installation required.
 Game data is embedded. Keep the license notices with distributed copies.
 
-Keyboard: WASD/arrows steer, Space bursts, Shift brakes, Escape pauses.
-Gamepad: left stick steers, bottom face bursts/confirms, shoulders/triggers
-brake, Menu/Start pauses, east face goes back, D-pad/stick navigates menus.
+Choose CONTINUOUS RUN, a starter and a starting power. Launch once and stay in
+the same arena through standard rival, hook rival, Ammunition Waves and smash
+rival. This deterministic sequence repeats without a finite Run-clear screen.
+Only player defeat ends ordinary Run play. XP/investments/power state persist.
 
-The eight-encounter Run has seven powers. Redline, Dead Centre and Afterimage
-support Rank I, Rank II and one mutually exclusive Rank III mutation each.
-Earned choices mix new powers and investments in owned powers. Seeded offers
-do not guarantee a specific power or mutation. All starters may use all powers.
+Keyboard: WASD/arrows steer, Space Burst, Shift brake, Escape pause.
+Gamepad: left stick steer, bottom face Burst/Confirm, shoulders/triggers brake,
+Menu/Start pause, east face Back, D-pad/stick menu navigation.
+Release controls after a choice to rearm combat. F2 toggles the HUD.
 
-Practice-*.bat starts an isolated comparison with seven powers already owned.
-Six launchers test individual mutations; Hybrid combines three defining paths.
-These are human checkpoint fixtures, not earned pacing evidence. Rematch keeps
-the practice preset. Combat uses ordinary physics and AI.
-F2 hides/restores the HUD during combat for the five-second visual test.
-Choices, pause and results restore visibility. Release controls after choices.
+Temporary architecture-test RPM: 12% of net player reserve expenditure per
+live fixed tick. No threat-completion refill. This is not final balance.
+Quick Duel and Practice-*.bat retain standalone single-battle behaviour.
+The existing seven powers, ranks and mutations are preserved.
 
-Source branch: task-002c-build-escalation, based on verified Task 002B.1
-bdcc24e5c3717486eaabaa4e9bac67e1dcc351b2. No branch was merged.
+Branch: task-002c1-continuous-run
+Starting branch: origin/task-002c-build-escalation
+Starting SHA: 3267ef3e89d964e7344c4c1c4d103058b8c8aed0
 Engine: Godot 4.7.2 stable, official Windows x86_64 release template.
-See PLAYTEST.md for all nine human checkpoint questions and ../../TASK-002C.md
-for exact implementation rules and evidence. Physical-controller/human feel
-acceptance remains pending. The simple bot failed twelve complete seeded Runs;
-practice setup does not prove normal-run balance or late-run reachability.
-Package smoke victories are injected flow fixtures; bot combat is separate.
+See PLAYTEST.md and ../../TASK-002C1.md for the short checklist and evidence.
+No main merge. Stop at this human checkpoint before Task 002C.2.
 
 Rebuild with matching Godot export templates installed:
 Godot --headless --path . --export-release "Windows Desktop"

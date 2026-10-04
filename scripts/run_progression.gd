@@ -42,6 +42,10 @@ func clear() -> void:
 	xp = 0
 	total_xp = 0
 	last_award = 0
+	clear_event_history()
+
+## Release retired-threat deduplication data without losing XP or levels.
+func clear_event_history() -> void:
 	_seen_events.clear()
 	_seen_eliminations.clear()
 	_seen_waves.clear()

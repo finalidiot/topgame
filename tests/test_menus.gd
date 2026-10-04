@@ -182,9 +182,9 @@ func _test_small_offers_and_acquisition() -> void:
 
 func _test_hud_cleanup() -> void:
 	var owned: Array = Powers.ACTIVE_IDS.duplicate()
-	menus.show_hud({"is_run":true, "run_label":"RUN 8 / 8", "owned_power_ids":owned, "status":"battle", "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
+	menus.show_hud({"is_run":true, "run_label":"THREAT 8", "owned_power_ids":owned, "status":"battle", "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
 	await process_frame
-	check(_find_label(menus, "RUN 8 / 8") != null, "Run HUD shows current encounter progress")
+	check(_find_label(menus, "THREAT 8") != null, "Run HUD shows current encounter progress")
 	check(_find_label(menus, "BREAKER") != null, "Combat identifies the selected starter")
 	check(menus._hud.xp_panel.visible and menus._hud.xp_bar.visible and menus._hud.xp_label.text == "LV 4  /  NEXT INVESTMENT", "Run level remains separate from RPM")
 	check(menus._xp_near and menus._hud.xp_detail.text == "ALMOST THERE", "Near level state creates visible anticipation")
@@ -194,17 +194,29 @@ func _test_hud_cleanup() -> void:
 		var icon: TextureRect = menus._hud["power_%d" % index]
 		check(icon.visible and icon.get_meta("power_id") == owned[index] and icon.texture != null, "Run HUD displays authored owned-power icon")
 		check(icon.size == Vector2(16, 16) and NATIVE_RECT.encloses(icon.get_global_rect()), "HUD power stays native, compact, and on screen")
-	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"RUN 3 / 8", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18, "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
+	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"THREAT 3", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18, "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
 	await process_frame
 	check(not menus._hud.enemy_bar.visible and menus._hud.swarm_objective.visible, "Swarm replaces rival RPM bar with objective")
 	check(_find_label(menus, "AMMUNITION WAVES  2 / 3") != null and _find_label(menus, "11 ACTIVE") != null and _find_label(menus, "18 LEFT IN SCHEDULE") != null, "Swarm HUD shows wave, active count, and remaining schedule")
 	for label: Label in _labels(menus): _check_label_fits(label)
 	await _capture("swarm-hud-six-powers")
+	menus.show_hud({"is_run":true,"continuous_run":true,"elapsed":185.9,"status":"battle","starter_id":"bastion","run_state":{"threat_number":9,"threats_cleared":8,"phase":"breathing","next_at":187.0}})
+	await process_frame
+	check(menus._hud.time.text == "03:05" and menus._hud.round.text == "THREAT 9  /  8 CLEARED", "Continuous HUD shows elapsed survival with no finite denominator")
+	check(menus._hud.enemy_name.text == "THREAT CLEARED" and not menus._hud.enemy_bar.visible, "Breathing acknowledgement keeps the arena and HUD visible")
+	await _capture("continuous-breathing")
+	menus.show_result({"continuous_run":true,"is_run":true,"reason":"spin_out","starter_id":"bastion","survival_time":475.0,"threats_cleared":13,"rivals_defeated":10,"small_enemies_defeated":44,"level":13,"owned_power_ids":owned,"power_ranks":{"redline":3,"dead_centre":3,"afterimage":3},"power_mutations":{"redline":"runaway","dead_centre":"counterweight","afterimage":"ghost_circuit"}})
+	await process_frame
+	check(_find_label(menus,"RUN ENDED") != null and _find_label(menus,"SURVIVED  07:55") != null, "Run loss has a survival result rather than a duel victory")
+	for label: Label in _labels(menus): _check_label_fits(label)
+	check(_buttons(menus).size() == 3 and root.gui_get_focus_owner().text == "RESTART RUN", "Run loss focuses Restart with Garage/Main Menu and no Continue")
+	await _capture("continuous-run-result")
+	menus.show_hud({"is_run":true,"run_label":"THREAT 8","owned_power_ids":owned,"status":"battle"})
 	var before: Node = menus._content
 	menus.show_hud({"is_run":false, "run_label":"DUEL", "owned_power_ids":[], "status":"battle"})
 	await process_frame
 	check(menus._content == before, "HUD cleanup is tested on reused controls")
-	check(_find_label(menus, "DUEL") != null and _find_label(menus, "RUN 8 / 8") == null, "Quick Duel replaces Run progress label")
+	check(_find_label(menus, "DUEL") != null and _find_label(menus, "THREAT 8") == null, "Quick Duel replaces Run progress label")
 	for index: int in range(owned.size()):
 		check(not menus._hud["power_%d" % index].visible, "Quick Duel clears stale power icons")
 	check(menus._hud.enemy_bar.visible and not menus._hud.swarm_objective.visible, "Quick Duel restores rival information")
