@@ -3,9 +3,9 @@ extends RefCounted
 const Director = preload("res://scripts/threat_director.gd")
 const Roles = preload("res://scripts/enemy_roles.gd")
 const Encounters = preload("res://scripts/encounters.gd")
-# Temporary testing economy. Scale net player reserve expenditure per fixed tick;
-# no refill/heal at transitions. Replace this one setting in Task 002C.3.
-const TUNING: Dictionary = {"player_rpm_loss_scale":0.12, "corpse_seconds":0.65}
+const SpinEconomy = preload("res://scripts/spin_economy.gd")
+const TUNING: Dictionary = {"corpse_seconds":0.65}
+var economy = SpinEconomy.new()
 const ENTRY_POINTS: Array[Vector2] = [Vector2(115,30), Vector2(-115,-30), Vector2(30,115), Vector2(-30,-115)]
 var _host: WeakRef
 var run_seed: int = 0
@@ -31,6 +31,7 @@ var last_clear: Dictionary = {}
 
 func setup(host: Node2D, seed_value: int) -> void:
 	_host = weakref(host)
+	economy.setup(host)
 	run_seed = seed_value
 	threat_number = int(host.encounter.slot)
 	director.setup(seed_value)
@@ -47,12 +48,6 @@ func host() -> Node2D:
 
 func threat_elapsed() -> float:
 	return maxf(0.0, host().elapsed - threat_started_at)
-
-func apply_testing_rpm(previous_rpm: float) -> void:
-	var player: Dictionary = host().player_entity()
-	var spent: float = maxf(0.0, previous_rpm - float(player.rpm))
-	player.rpm = float(player.rpm) + spent * (1.0 - float(TUNING.player_rpm_loss_scale))
-	player.energy = player.rpm
 
 func observe_outcomes() -> void:
 	if host().continuous != self: return

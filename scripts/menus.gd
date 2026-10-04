@@ -755,6 +755,11 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["player_name"].text = str(stats.get("player_name", "YOUR TOP"))
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
 	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 7000.0))
+	var recovery: float = float(stats.get("rpm_recovery",0.0))
+	if recovery > 0.0:
+		_hud["player_rpm"].text += "  +%d %s" % [int(recovery*9000),"SECOND WIND" if stats.get("rpm_recovery_source","") == "second_wind" else "RECLAIM"]
+	elif player_spin < 0.25: _hud["player_rpm"].text += "  LOW SPIN"
+	_hud["player_rpm"].modulate = Color("8be6aa") if recovery > 0.0 else (Color("ff7864") if player_spin < 0.25 else Color.WHITE)
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
 	var is_swarm: bool = bool(stats.get("is_swarm", false))
 	_hud["enemy_bar"].visible = not is_swarm
