@@ -212,7 +212,11 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	game._process(1.1)
 	check(game.screen == "battle" and not game.battle.paused and _body_state() == body, "Acquisition returns to the exact same live encounter")
 	game.battle.set_physics_process(false)
-	game.battle.test_step(1.0/60.0)
+	# A live impact hold survives a draft just like other exact arena state.
+	# Drain its bounded fixed ticks, then require actual combat advancement.
+	var held_ticks: int = ceili(game.battle._hit_stop / (1.0/60.0))
+	check(held_ticks <= 3, "Retained impact hold is bounded after resume")
+	for tick: int in range(held_ticks + 2): game.battle.test_step(1.0/60.0)
 	check(game.battle.elapsed > float(body.elapsed), "Combat continues with chosen mutation after resume")
 
 func _run() -> void:

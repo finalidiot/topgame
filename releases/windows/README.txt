@@ -1,15 +1,14 @@
-SPINNING METAL - TASK 002C.3 WINDOWS CHECKPOINT
+SPINNING METAL - TASK 002C.4 WINDOWS CHECKPOINT
 
 Run SpinningMetal.exe. No Godot installation is required.
-Start Run -> choose Breaker/Bastion/Vane -> choose starting power -> launch once.
-RPM is spent for real and recovered through meaningful combat. Controlled movement
-conserves spin. LOW SPIN warns of danger; +RPM RECLAIM shows earned recovery.
-Second Wind remains once per launch. Bosses/waves do not reset your top.
+Start Run -> starter -> starting power -> launch once.
+Redline, Dead Centre and Afterimage now develop distinct rank/mutation animations.
+Real RPM economy, continuous Threat Director, elites and bosses remain active.
 
-WASD/arrows: steer. Space: Burst. Shift: brake. Esc: pause.
+WASD/arrows steer. Space Burst. Shift brake. Esc pause.
 Controller: left stick, bottom face button, shoulder/trigger, Start.
 Release controls after a draft to rearm combat.
 
-See PLAYTEST.md and repository TASK-002C3.md for checks, tuning and known limits.
-Human feel and final balance acceptance are pending. No main merge.
-The executable is tracked with Git LFS; git lfs pull after cloning if needed.
+See PLAYTEST.md and repository TASK-002C4.md for validation and known limits.
+Human visual/feel acceptance is pending. No main merge.
+The executable uses Git LFS; git lfs pull after cloning if needed.

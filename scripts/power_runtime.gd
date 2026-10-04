@@ -179,6 +179,7 @@ func attack_multiplier(fighter: Dictionary) -> float:
 
 func _end_redline(fighter: Dictionary) -> void:
 	var state: Dictionary = _state(fighter)
+	var release_fx: String = "breakneck_recovery" if active_redline_mutation(fighter) == "breakneck" else "redline_release"
 	if active_redline_mutation(fighter) == "breakneck" and not bool(state["breakneck_recovered"]):
 		state["breakneck_recovered"] = true
 		fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + 0.32)
@@ -191,7 +192,7 @@ func _end_redline(fighter: Dictionary) -> void:
 	fighter["runaway_heat"] = 0.0
 	fighter["redline_active_rank"] = 0
 	fighter["redline_active_mutation"] = ""
-	_fx("redline_release", fighter["pos"], state["redline_heading"])
+	_fx(release_fx, fighter["pos"], state["redline_heading"])
 
 ## Called only after battle accepts Burst and pays its ordinary reserve cost.
 func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -> void:
@@ -630,6 +631,7 @@ func _close_circuit(owner: Dictionary) -> void:
 				trace["energized"] = true
 				if not field_assigned:
 					trace["circuit_points"] = polygon
+					trace["presentation_circuit_age"] = 0.0
 					field_assigned = true
 		for target: Dictionary in _fighters():
 			if _live(target) and _opposes(owner, target) and Geometry2D.is_point_in_polygon(target["pos"], polygon):

@@ -1,0 +1,47 @@
+{
+  "boss_port": {
+    "file": "boss_port.wav",
+    "duration_ms": 650,
+    "sample_rate": 22050,
+    "channels": 1,
+    "sample_bits": 16,
+    "loop": false,
+    "peak": 0.7342
+  },
+  "boss_payoff": {
+    "file": "boss_payoff.wav",
+    "duration_ms": 720,
+    "sample_rate": 22050,
+    "channels": 1,
+    "sample_bits": 16,
+    "loop": false,
+    "peak": 0.7796
+  },
+  "rpm_reclaim": {
+    "file": "rpm_reclaim.wav",
+    "duration_ms": 230,
+    "sample_rate": 22050,
+    "channels": 1,
+    "sample_bits": 16,
+    "loop": false,
+    "peak": 0.2839
+  },
+  "low_rpm": {
+    "file": "low_rpm.wav",
+    "duration_ms": 230,
+    "sample_rate": 22050,
+    "channels": 1,
+    "sample_bits": 16,
+    "loop": false,
+    "peak": 0.1643
+  },
+  "breakneck_recovery": {
+    "file": "breakneck_recovery.wav",
+    "duration_ms": 320,
+    "sample_rate": 22050,
+    "channels": 1,
+    "sample_bits": 16,
+    "loop": false,
+    "peak": 0.5937
+  }
+}

@@ -15,6 +15,7 @@ const Catalog = preload("res://scripts/parts.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const PowerRuntime = preload("res://scripts/power_runtime.gd")
 const SwarmRuntime = preload("res://scripts/swarm_runtime.gd")
+const SignatureVisuals = preload("res://scripts/signature_visuals.gd")
 const PowerVisuals = preload("res://scripts/power_visuals.gd")
 const Progression = preload("res://scripts/run_progression.gd")
 const Starters = preload("res://scripts/starters.gd")
@@ -68,6 +69,11 @@ var _result_emitted: bool = false
 var _hit_stop: float = 0.0
 var _pair_cooldowns: Dictionary = {}
 var _contact_fx_cooldown: float = 0.0
+var _shake_strength: float = 2.0
+var _signature_ready: float = 0.0
+var _presentation_full_contact: bool = false
+var _reclaim_ready: float = 0.0
+var _low_rpm_ready: float = 0.0
 var _shake_time: float = 0.0
 var _shake_phase: float = 0.0
 var _visual_time: float = 0.0
@@ -168,6 +174,11 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	_pair_cooldowns.clear()
 	_contact_fx_cooldown = 0.0
 	_shake_time = 0.0
+	_shake_strength = 2.0
+	_signature_ready = 0.0
+	_presentation_full_contact = false
+	_reclaim_ready = 0.0
+	_low_rpm_ready = 0.0
 	_visual_time = 0.0
 	_hud_clock = 0.0
 	_accumulator = 0.0
@@ -792,21 +803,28 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	if continuous != null:
 		if int(first.entity_id) == player_entity_id: continuous.economy.contact(second,severity,actual_b,va.dot(normal),va.length())
 		elif int(second.entity_id) == player_entity_id: continuous.economy.contact(first,severity,actual_a,-vb.dot(normal),vb.length())
+	_presentation_full_contact = true
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
+	_presentation_full_contact = false
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
 	# The authored impact hold remains gameplay timing and is independent of
 	# particle/audio throttling. Another valid pair still receives its damage.
-	if severity > 0.50:
+	if continuous == null and severity > 0.50:
 		_hit_stop = FIXED_DT * 2.0
+	elif continuous != null and _contact_fx_cooldown <= 0.0:
+		_hit_stop = maxf(_hit_stop,SignatureVisuals.impact_hold(SignatureVisuals.impact_tier(severity)))
 	if _contact_fx_cooldown > 0.0:
 		return
 	_contact_fx_cooldown = 0.24
+	var tier: String = SignatureVisuals.impact_tier(severity)
+	add_power_fx("contact_"+tier,(a+b)*0.5,normal,severity)
 	var impact: Vector2 = project((a + b) * 0.5)
 	_spawn_sparks(impact - Vector2(0.0, 13.0), normal, 6 + int(severity * 8.0), severity)
 	_spawn_ring(impact - Vector2(0.0, 12.0), Color("f3c36a"), 0.22)
 	if severity > 0.50:
 		_shake_time = 0.11
+		_shake_strength = maxf(_shake_strength,SignatureVisuals.impact_shake(tier))
 		event_sfx.emit("heavy_impact")
 	else:
 		event_sfx.emit("hit")
@@ -828,9 +846,21 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	target.vel = (Vector2(target.vel) + braced_velocity).limit_length(cap)
 	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
 
+func present_reclaim(amount: float, source: String) -> void:
+	if source == "second_wind" or amount < 0.02 or elapsed < _reclaim_ready or paused or battle_status != "battle": return
+	_reclaim_ready = elapsed+0.45
+	add_power_fx("rpm_reclaim",player_entity().pos,Vector2.ZERO,amount)
+
 func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0) -> void:
 	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38,
 		"redline_ii":0.40,"runaway":0.44,"runaway_hit":0.30,"breakneck_charge":0.36,"breakneck_impact":0.45,"anchor":0.42,"anchor_break":0.30,"bulwark_impact":0.48,"counterweight_store":0.36,"counterweight_release":0.45,"afterimage_ii":0.24,"ghost_closure":0.48,"ghost_activation":0.60,"slipstream_cross":0.42}
+	if kind in ["boss_entry","boss_defeat"]: durations[kind] = 0.75
+	if kind == "breakneck_recovery": durations[kind] = 0.48
+	if _presentation_full_contact and kind in ["breakneck_impact","bulwark_impact"] and continuous != null and battle_status == "battle" and elapsed >= _signature_ready:
+		_signature_ready = elapsed+0.35
+		_hit_stop = maxf(_hit_stop,SignatureVisuals.impact_hold("signature"))
+		_shake_strength = SignatureVisuals.impact_shake("signature")
+		_shake_time = 0.13
 	if _power_fx.size() >= 32:
 		var discard: int = 0
 		for index: int in range(_power_fx.size()):
@@ -846,7 +876,8 @@ func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO,
 				effect["phase"] = fighter.phase
 				break
 	_power_fx.append(effect)
-	event_sfx.emit(kind)
+	# Contact atlas accompanies the already throttled collision sound.
+	if not kind.begins_with("contact_"): event_sfx.emit(kind)
 
 func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	var a: Vector2 = first.pos
@@ -1162,13 +1193,22 @@ func _spawn_sparks(screen_position: Vector2, world_normal: Vector2, count: int, 
 		_particles.pop_front()
 
 func _spawn_ring(screen_position: Vector2, color: Color, duration: float) -> void:
+	if _rings.size() >= 32: _rings.pop_front()
 	_rings.append({"pos": screen_position, "life": duration, "max_life": duration, "color": color})
 
 func _update_effects(dt: float) -> void:
 	for index: int in range(_power_fx.size()-1,-1,-1):
 		_power_fx[index].age += dt
 		if float(_power_fx[index].age) >= float(_power_fx[index].duration): _power_fx.remove_at(index)
+	for trace: Dictionary in powers.traces:
+		if trace.has("presentation_circuit_age"): trace.presentation_circuit_age += dt
+	if continuous != null and battle_status == "battle" and not paused and elapsed >= _low_rpm_ready:
+		var player: Dictionary = player_entity()
+		if not player.is_empty() and str(player.outcome).is_empty() and float(player.rpm) < 0.25:
+			_low_rpm_ready = elapsed+4.0
+			event_sfx.emit("low_rpm")
 	_shake_time = maxf(0.0, _shake_time - dt)
+	if _shake_time <= 0.0: _shake_strength = 0.0
 	_shake_phase += dt * 81.0
 	for index: int in range(_particles.size() - 1, -1, -1):
 		var particle: Dictionary = _particles[index]
@@ -1187,7 +1227,7 @@ func _update_effects(dt: float) -> void:
 func _draw() -> void:
 	var shake: Vector2 = Vector2.ZERO
 	if screen_shake_enabled and _shake_time > 0.0:
-		shake = Vector2(roundf(sin(_shake_phase) * 2.0), roundf(cos(_shake_phase * 1.31)))
+		shake = Vector2(roundf(sin(_shake_phase) * _shake_strength), roundf(cos(_shake_phase * 1.31) * _shake_strength * 0.5))
 	draw_set_transform(shake)
 	for layer: String in ["backdrop", "structure", "surface", "markings", "rear_rim"]:
 		var texture: Texture2D = _textures.get("arena/" + layer)
@@ -1198,7 +1238,7 @@ func _draw() -> void:
 			PowerVisuals.draw_spawn(self, project(swarm.PORTS[int(entry.port)]), clampf(1.0-(float(entry.ready)-swarm.local_time())/swarm.TELEGRAPH,0.0,1.0))
 	if continuous != null and not continuous.pending.is_empty() and continuous.pending.kind != "swarm" and Vector2(continuous.pending.position).is_finite():
 		var at: Vector2 = project(continuous.pending.position)
-		draw_arc(at,24.0,0.0,TAU,32,Color("ff6278") if continuous.pending.kind == "boss" else ENEMY_COLOR,2.0)
+		SignatureVisuals.entry(self,at,continuous.pending.kind,float(continuous.pending.ready_at)-elapsed)
 	for trace: Dictionary in powers.traces:
 		var path: PackedVector2Array = PackedVector2Array()
 		for point: Vector2 in trace.get("points",[trace.a,trace.b]): path.append(project(point))
@@ -1207,7 +1247,7 @@ func _draw() -> void:
 		for point: Vector2 in trace.get("circuit_points", []): circuit_path.append(project(point))
 		if circuit_path.size() >= 4: PowerVisuals.draw_circuit_field(self, trace, circuit_path)
 	for fx: Dictionary in _power_fx:
-		PowerVisuals.draw_effect(self, fx, project(fx.pos))
+		if not str(fx.kind) in SignatureVisuals.FOREGROUND: PowerVisuals.draw_effect(self, fx, project(fx.pos))
 	# Every complete rig sorts by ground contact Y, with stable ID ties.
 	var order: Array[Dictionary] = _ordered_fighters()
 	for fighter: Dictionary in order:
@@ -1219,6 +1259,8 @@ func _draw() -> void:
 	for fighter: Dictionary in order:
 		if float(fighter["height"]) < 23.0 or str(fighter["outcome"]) != "ring_out":
 			_draw_fighter(fighter)
+	for fx: Dictionary in _power_fx:
+		if str(fx.kind) in SignatureVisuals.FOREGROUND: PowerVisuals.draw_effect(self,fx,project(fx.pos))
 	_draw_particles()
 	var foreground: Texture2D = _textures.get("arena/front_rim")
 	if foreground != null:
@@ -1245,6 +1287,7 @@ func _draw_shadow(fighter: Dictionary) -> void:
 		var angle: float = float(index) / 16.0 * TAU
 		selected.append((grounded + Vector2(cos(angle) * 18.0, sin(angle) * 8.0)).round())
 	draw_polyline(selected, side_color, 1.0)
+	SignatureVisuals.marker(self,fighter,grounded,_visual_time)
 	if fighter.get("enemy_kind","") in ["elite","boss"]:
 		draw_arc(grounded-Vector2(0,15),23.0 if fighter.enemy_kind == "boss" else 19.0,PI,TAU,24,side_color,2.0)
 		for index: int in range(3 if fighter.enemy_kind == "boss" else 1):
@@ -1266,6 +1309,12 @@ func _draw_fighter(fighter: Dictionary) -> void:
 	var lean: Vector2 = (velocity_screen / 78.0).limit_length(3.0)
 	var wobble: float = float(fighter["wobble"])
 	lean += Vector2(sin(_visual_time * 15.5 + float(int(fighter["entity_id"]) - 1) * 2.0), cos(_visual_time * 13.0)) * wobble * 4.5
+	# Cosmetic body-only rhythms: contact pivot and collision geometry stay fixed.
+	var identity: String = str(fighter.get("starter_id",""))
+	if identity == "breaker": lean += velocity_screen.normalized() * (1.5 if float(fighter.burst_time)>0.0 else 0.5)
+	elif identity == "bastion": lean *= 0.65
+	elif identity == "vane": lean += velocity_screen.normalized().orthogonal()*sin(_visual_time*8.0)*0.7
+	if float(fighter.rpm)<0.25: lean += Vector2(sin(_visual_time*19.0)*1.5,cos(_visual_time*11.0))
 	lean = lean.limit_length(5.0).round()
 	var build: Dictionary = fighter["build"]
 	var stance: float = {"low": 3.0, "mid": 0.0, "high": -3.0}[build["ratchet"]]

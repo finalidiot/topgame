@@ -1,6 +1,12 @@
 extends Node
 
 const SOUNDS: Dictionary = {
+	"boss_port":preload("res://assets/audio/boss_port.wav"),
+	"boss_payoff":preload("res://assets/audio/boss_payoff.wav"),
+	"rpm_reclaim":preload("res://assets/audio/rpm_reclaim.wav"),
+	"low_rpm":preload("res://assets/audio/low_rpm.wav"),
+	"breakneck_recovery":preload("res://assets/audio/breakneck_recovery.wav"),
+
 	"hit":preload("res://assets/audio/hit.wav"), "heavy":preload("res://assets/audio/heavy.wav"),
 	"wall":preload("res://assets/audio/wall.wav"), "burst":preload("res://assets/audio/burst.wav"),
 	"launch":preload("res://assets/audio/launch.wav"), "scrape":preload("res://assets/audio/scrape.wav"),
@@ -39,14 +45,14 @@ const SOUNDS: Dictionary = {
 	"slipstream_cross": preload("res://assets/audio/slipstream_cross.wav")
 }
 const MAX_CHANNELS: int = 8
-const PRIORITY: Dictionary = {"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
+const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
 	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
 	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
 	"breakneck_charge": 5, "breakneck_impact": 5,
 	"anchor": 3, "anchor_break": 3, "bulwark_impact": 5,
 	"counterweight_store": 3, "counterweight_release": 5,
 	"afterimage_ii": 1, "ghost_closure": 5, "ghost_activation": 5, "slipstream_cross": 3}
-const COOLDOWN: Dictionary = {"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
+const COOLDOWN: Dictionary = {"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
 	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
 	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
 	"breakneck_charge": 0.25, "breakneck_impact": 0.20,
@@ -84,7 +90,7 @@ func apply_settings(settings: Dictionary) -> void:
 
 func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
-	var aliases: Dictionary = {"boss_warning":"mutation_available","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
+	var aliases: Dictionary = {"boss_warning":"boss_port","boss_entry":"boss_port","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
 	var sample_key: String = "hit" if key == "small_hit" else key
 	if not SOUNDS.has(sample_key): return
@@ -146,6 +152,8 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -5.0
 	elif key in ["redline_ii", "breakneck_charge", "ghost_closure", "ghost_activation"]:
 		player.volume_db = -6.0
+	if key in ["rpm_reclaim","low_rpm"]: player.volume_db = -10.0
+	if key == "breakneck_recovery": player.volume_db = -8.0
 	if kind == "boss_warning":
 		player.pitch_scale = 0.68
 		player.volume_db = -3.0

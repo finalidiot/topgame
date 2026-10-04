@@ -2,6 +2,7 @@ extends RefCounted
 ## Presentation-only atlas renderer. All positions arrive already projected.
 ## No collision queries, random numbers, timers, or gameplay writes belong here.
 
+const Signature = preload("res://scripts/signature_visuals.gd")
 const SMALL: Texture2D = preload("res://assets/powers/small_top.png")
 const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
@@ -70,6 +71,9 @@ static func draw_small(canvas: CanvasItem, fighter: Dictionary, position: Vector
 	_cell(canvas, "small_top", SMALL, frame, position)
 
 static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector2, quality: float = 1.0) -> void:
+	if Signature.effect(canvas,effect,position):
+		if effect.kind == "counterweight_release": _draw_force_release(canvas,effect.get("direction",Vector2.RIGHT),position,float(effect.age)/float(effect.duration))
+		return
 	var kind: String = str(effect.get("kind", "impact_wake"))
 	var age: float = float(effect.get("age", 0.0))
 	var duration: float = maxf(0.01, float(effect.get("duration", 0.4)))
@@ -117,41 +121,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector
 static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2, clock: float, quality: float = 1.0) -> void:
 	if not str(fighter.get("outcome", "")).is_empty():
 		return
-	var ranks: Dictionary = fighter.get("power_ranks", {})
-	var mutations: Dictionary = fighter.get("power_mutations", {})
-	if float(fighter.get("redline_time", 0.0)) > 0.0:
-		var tint: Color = Color(1.0, 1.0, 1.0, 0.82 if quality < 0.5 else 1.0)
-		# Ownership can upgrade during a paid activation. Its physical profile
-		# and aura stay together until the next Burst starts the acquired branch.
-		var red_mutation: String = str(fighter.get("redline_active_mutation", mutations.get("redline", "")))
-		var red_rank: int = int(fighter.get("redline_active_rank", ranks.get("redline", 1)))
-		if red_mutation == "breakneck":
-			var heading: int = _heading(fighter.get("redline_heading", fighter.get("vel", Vector2.RIGHT)))
-			var first: int = int(_meta("escalation_effects").tags.breakneck_charge_headings.from)
-			_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, first + heading, position, tint)
-		elif red_mutation == "runaway":
-			var heat: float = clampf(float(fighter.get("runaway_heat", 0.0)), 0.0, 1.0)
-			_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "runaway", clock * (1.0 + heat * 1.7), true), position, tint)
-			_draw_overload_wake(canvas, fighter.get("vel", Vector2.ZERO), position, clock, heat, quality)
-		elif red_rank >= 2:
-			_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "redline_ii", clock, true), position, tint)
-		else:
-			_cell(canvas, "effects", EFFECTS, _frame("effects", "corona", clock, true), position, tint)
-	var anchor_charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
-	if anchor_charge > 0.07:
-		var anchor_tag: String = "anchor_ii" if int(ranks.get("dead_centre", 1)) >= 2 else "anchor"
-		var anchor_mutation: String = str(mutations.get("dead_centre", ""))
-		# A physical lock stays locked. Charge directly closes its jaws; contact
-		# response uses the separate animated event instead of reopening the brace.
-		var lock_stage: int = mini(4, int(roundf(anchor_charge * 4.0)))
-		var anchor_frame: int = int(_meta("escalation_effects").tags[anchor_tag].from) + lock_stage
-		if anchor_mutation == "bulwark":
-			anchor_tag = "bulwark"
-			anchor_frame = int(_meta("escalation_effects").tags[anchor_tag].from) + lock_stage
-		elif anchor_mutation == "counterweight":
-			var stored: float = clampf(float(fighter.get("stored_force", 0.0)) / 150.0, 0.0, 1.0)
-			anchor_frame = int(_meta("escalation_effects").tags.counterweight.from) + mini(5, int(ceilf(stored * 5.0)))
-		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, anchor_frame, position, Color(1.0, 1.0, 1.0, 0.25 + anchor_charge * 0.75))
+	Signature.aura(canvas,fighter,position,clock)
 	if float(fighter.get("slipstream_time", 0.0)) > 0.0:
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
 	if float(fighter.get("iron_comet_time", 0.0)) > 0.0:
@@ -196,9 +166,9 @@ static func draw_trace_path(canvas: CanvasItem, trace: Dictionary, points: Packe
 	var middle: Vector2 = points[points.size() / 2]
 	for index: int in range(points.size() - 1):
 		canvas.draw_line(points[index].round(), points[index + 1].round(), Color(0.27, 0.65, 0.76, alpha), 1.0)
-	_cell(canvas, "effects", EFFECTS, _frame("effects", "echo", age, false, maximum), middle, Color(1.0, 1.0, 1.0, 0.70))
+	Signature.cel(canvas,"afterimage","rank1_trace",middle,age,0.70)
 	if quality >= 0.5:
-		_cell(canvas, "effects", EFFECTS, _frame("effects", "echo", age + 0.08, false, maximum), points[0], Color(1.0, 1.0, 1.0, 0.38))
+		Signature.cel(canvas,"afterimage","rank1_trace",points[0],age,0.38)
 
 static func recovery_pose(fighter: Dictionary, effects: Array[Dictionary]) -> Dictionary:
 	# Compress only the recovering rig, with the Bit fixed at its contact pivot.
@@ -291,7 +261,7 @@ static func _draw_route_nodes(canvas: CanvasItem, points: PackedVector2Array, in
 			if mutation == "slipstream":
 				canvas.draw_polyline(PackedVector2Array([(node - forward * 3.0 + side * 2.0).round(), (node + forward * 2.0).round(), (node - forward * 3.0 - side * 2.0).round()]), ink, 1.0)
 			else:
-				canvas.draw_rect(Rect2(node - Vector2(2.0, 1.0), Vector2(4.0, 3.0)), ink, false, 1.0)
+				Signature.cel(canvas,"afterimage","ghost_active" if energized else "rank2_trace",node,0.2,ink.a)
 			count += 1
 			if count >= (24 if quality >= 0.5 else 12):
 				return
@@ -311,6 +281,16 @@ static func draw_circuit_field(canvas: CanvasItem, trace: Dictionary, points: Pa
 	closed.append(points[0].round())
 	canvas.draw_polyline(closed, light, 1.0)
 	_draw_circuit_field(canvas, closed, ink, light)
+	var age: float = float(trace.get("presentation_circuit_age",1.0))
+	if age < 0.55:
+		var center: Vector2 = Vector2.ZERO
+		for point: Vector2 in points: center += point
+		center /= float(points.size())
+		var contracted: PackedVector2Array = PackedVector2Array()
+		for point: Vector2 in closed: contracted.append(point.lerp(center,age*0.75).round())
+		canvas.draw_polyline(closed,Color(0.8,1.0,0.85,1.0-age),2.0)
+		canvas.draw_polyline(contracted,Color(0.32,0.8,0.67,0.65-age),1.0)
+		Signature.cel(canvas,"afterimage","ghost_closure",points[0],age)
 
 static func _draw_circuit_field(canvas: CanvasItem, points: PackedVector2Array, ink: Color, light: Color) -> void:
 	# The authored connected line remains the focus. Sparse interior pressure lines

@@ -75,6 +75,7 @@ func gain(f: Dictionary, amount: float, source: String, small: bool = false) -> 
 		pulse_until = host().elapsed+0.8
 		pulse_amount = actual
 		pulse_source = source
+	host().present_reclaim(actual,source)
 	return actual
 
 func running_costs(f: Dictionary, speed: float, input: Vector2, braking: bool, drain: float, dt: float) -> void:
