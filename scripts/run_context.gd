@@ -67,7 +67,7 @@ func start(build: Dictionary, seed_value: int, selected_starter_id: String = "cu
 	_generate_offer()
 
 func current_encounter() -> Dictionary:
-	var descriptor: Dictionary = Encounters.for_slot(slot, run_seed)
+	var descriptor: Dictionary = Encounters.for_run_event(slot, run_seed)
 	if not descriptor.is_empty():
 		descriptor["player_power_ids"] = owned_power_ids
 		descriptor["player_power_ranks"] = power_ranks
@@ -149,6 +149,13 @@ func _finish_claim(encounter_id: String, reward_id: String) -> void:
 func _clear_pending_mutation() -> void:
 	_pending_mutation_power = ""
 	_pending_mutation_offer.clear()
+
+## Director entries overlap. They do not resolve prior events or reset XP guards.
+func admit_event(number: int) -> bool:
+	if not is_active() or number != slot+1: return false
+	slot = number
+	_committed_results.clear()
+	return true
 
 func advance() -> bool:
 	if not is_active() or not _draft_queue.is_empty(): return false

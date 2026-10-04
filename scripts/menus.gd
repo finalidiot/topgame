@@ -730,10 +730,11 @@ func _show_run_result(result: Dictionary) -> void:
 	_label(_content, "RUN ENDED", Rect2(100, 35, 440, 32), 25, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	var reason: String = str(result.get("reason", "spin_out")).replace("_", " ").to_upper()
 	_label(_content, Starters.display_name(str(result.get("starter_id", "custom"))) + " / " + reason, Rect2(100, 73, 440, 20), 11, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "SEED %d" % int(result.get("run_seed",0)), Rect2(100, 94, 440, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var seconds: int = floori(float(result.get("survival_time", 0.0)))
 	_label(_content, "SURVIVED  %02d:%02d" % [seconds / 60, seconds % 60], Rect2(105, 108, 430, 27), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "%d THREATS CLEARED    /    LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(100, 148, 440, 20), 12, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "%d RIVALS    /    %d SMALL ENEMIES DEFEATED" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0))], Rect2(100, 177, 440, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "%d RIVALS / %d SMALL / %d ELITES / %d BOSSES" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0)),int(result.get("elites_defeated",0)),int(result.get("bosses_defeated",0))], Rect2(100, 177, 440, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var names: PackedStringArray = []
 	for id: String in result.get("owned_power_ids", []):
 		names.append(str(Powers.get_owned_power(id, int(result.get("power_ranks", {}).get(id, 1)), str(result.get("power_mutations", {}).get(id, ""))).get("name", id)))
@@ -812,6 +813,19 @@ func show_hud(stats: Dictionary) -> void:
 			_hud["enemy_bar"].visible = false
 			_hud["swarm_objective"].visible = false
 			_hud["enemy_rpm"].text = "NEXT THREAT IN %.1f s" % maxf(0.0, float(state.next_at) - float(stats.elapsed))
+	if bool(stats.get("continuous_run", false)) and bool(stats.run_state.get("director",false)):
+		var state: Dictionary = stats.run_state
+		var c: Dictionary = state.census
+		var live_full: int = int(c.get("active_full",c.full))
+		_hud["round"].text = "TIER %d  /  %d CLEARED  /  PRESSURE %.1f" % [int(state.limits.tier),int(state.threats_cleared),float(c.pressure)]
+		_hud["director_callout"].text = str(state.callout)
+		_hud["enemy_bar"].visible = live_full > 0
+		_hud["swarm_objective"].visible = false
+		_hud["enemy_name"].text = str(stats.enemy_name) if live_full > 0 else ("AMMUNITION WAVES" if bool(c.swarm) else "BREATHING ROOM")
+		_hud["enemy_rpm"].text = "%d RIVALS / %d SMALL" % [live_full,int(c.small)]
+		if bool(state.calm): _hud["enemy_rpm"].text += "  /  EASING"
+	else:
+		_hud["director_callout"].text = ""
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(8):
 		var icon: TextureRect = _hud["power_%d" % index]
@@ -852,6 +866,7 @@ func _create_hud() -> void:
 	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
 	pause_button.focus_mode = Control.FOCUS_NONE
 	_hud["round"] = _label(_content, "", Rect2(175, 76, 290, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["director_callout"] = _label(_content, "", Rect2(120, 96, 400, 22), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)

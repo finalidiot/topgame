@@ -25,11 +25,13 @@ Godot input actions. Controller support is a core Task 002A requirement.
 Editable pixel-art sources are in `assets/source-art/`. Existing prototype details
 and validation notes are retained in `README.txt` and `QA.txt`.
 
-Task 002C.1 makes a Run one continuous combat session: launch once, keep the same
-physical top, clear threats in the live arena, and continue until defeat. The HUD
-counts active survival time and threats cleared. There is no normal victory menu
-or relaunch between threats. See [TASK-002C1.md](TASK-002C1.md) and the short
-[human checkpoint](TASK-002C1-PLAYTEST.md).
+Task 002C.2 adds a seeded **Endless Threat Director** to the one-launch Run.
+Rivals, specialists, Ammunition Waves, elites and bosses can overlap in the same
+live arena. Pressure budgets, population caps, recent history and recovery windows
+control admissions; time unlocks possibilities rather than prescribing events.
+Only player defeat ends the Run. See [TASK-002C2.md](TASK-002C2.md) and the
+[human playtest guide](TASK-002C2-PLAYTEST.md). The accepted continuous foundation
+is documented in [TASK-002C1.md](TASK-002C1.md).
 
 The Task 002B.1 opening remains: a Run opens with three authored identities: **Breaker**
 (SMASH/HIGH/FLAT), **Bastion** (GUARD/LOW/BALL), and **Vane**
@@ -51,11 +53,18 @@ aggression, centre control, and efficient mobility more pronounced in Runs.
 Quick Duel and build-practice modes retain their original single-battle physics.
 All continuous Runs use the temporary RPM expenditure scale described below.
 
-The temporary deterministic threat script repeats standard rival, hook rival,
-**Ammunition Waves**, then smash rival. A two-second live breathing period follows
-ordinary clears. The swarm still schedules 24 small tops in waves of 6/8/10, with
-at most 12 active. Each repetition allocates fresh enemy IDs and a threat-local
-schedule while the Run clock, player and power runtime continue.
+Four roles use different movement: Hunter commits, Flanker orbits, Bulwark holds
+central space, and Harasser alternates glancing approaches and withdrawal.
+Ballast and Hotwire elites trade handling properties. The Anvil and Red Reaper
+are boss tops with heavy centre control and orbit/cut identities respectively.
+Boss warnings use a ring, name and low audio cue; killing one never ends the Run.
+
+Tiers unlock at 0/35/100/210/360 active seconds, then every 120 seconds indefinitely.
+The director reserves pressure for pending entries and complete swarm peaks.
+Hard ceilings are five full rivals (including elites/bosses), two elites, two
+late bosses, ten small tops and sixteen total active bodies including the player.
+Early tiers have stricter limits. The original 24-entry swarm schedule remains;
+standalone swarm fixtures retain their original twelve-small cap.
 
 Drafts and mutations freeze the complete simulation and resume it exactly.
 Second Wind is once per launch, so a spent recovery stays spent across threats.
@@ -92,6 +101,7 @@ Run automated suites with Godot 4.7.2:
 
 ```text
 Godot --headless --path . --editor --import
+Godot --headless --path . --script res://tests/test_threat_director.gd
 Godot --headless --path . --script res://tests/test_continuous_run.gd
 Godot --headless --path . --script res://tests/test_flow.gd
 Godot --headless --path . --script res://tests/test_run_context.gd
@@ -121,8 +131,18 @@ remain historical Task 001 evidence. For rendered integration captures, launch
 with `-- --smoke-test --capture-dir=<absolute-directory>`; victories in that smoke
 loop are explicitly injected flow fixtures, not evidence of played Run balance.
 
-For measured seeded bot combat without injected victories, run
-`tests/test_continuous_playthrough.gd` with `-- --report=<absolute-json-path>`.
-It measures active combat seconds, excluding launch, choices, pauses and hit-stop.
-The old `test_ramp_playthrough.gd` entry point delegates to this continuous diagnostic. This is
-simulation evidence, separate from human/controller feel acceptance.
+For seeded combat diagnostics, run `tests/test_director_playthrough.gd` with
+`-- --report=<absolute-json-path>`. It runs nine ordinary bot samples with a
+900-active-second ceiling, without reserve refills or forced outcomes. Separately,
+`tests/test_director_soak.gd` explicitly protects the player and installs a full
+build to exercise fifteen minutes of real enemy physics and late-tier load.
+`tests/test_threat_director.gd` also runs eight deterministic policy occupancy
+models. These scopes are separate in `tests/task002c2-director-results.json`.
+The historical playthrough entry points remain runnable, but their old recorded
+JSON files describe earlier milestones.
+
+On a normal Run defeat, `user://last_run_director.json` records the seed, build,
+investments, outcome and last 128 director decisions. The result screen shows
+the seed. Launch `SpinningMetal.exe -- --run-seed=421` to investigate a seed;
+the same decisions require the same combat inputs/outcomes as well as the seed.
+This is a diagnostic snapshot, not an input-replay or permanent statistics system.

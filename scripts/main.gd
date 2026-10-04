@@ -210,6 +210,9 @@ func _restart_run(starter_id: String = "") -> void:
 	var fresh_seed: int = rng.randi()
 	while fresh_seed == 0 or fresh_seed == _previous_run_seed:
 		fresh_seed = rng.randi()
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--run-seed=") and argument.trim_prefix("--run-seed=").is_valid_int():
+			fresh_seed = int(argument.trim_prefix("--run-seed="))
 	_previous_run_seed = fresh_seed
 	_acquisition_remaining = 0.0
 	_level_up_remaining = 0.0
@@ -269,17 +272,14 @@ func _acquisition_prompt() -> String:
 	return "LAUNCH" if _draft_resume_origin == "starting" else "RETURN TO COMBAT"
 
 func _threat_cleared(summary: Dictionary) -> void:
-	if mode != "run" or not run_context.is_active(): return
-	var current: Dictionary = run_context.current_encounter()
-	if int(summary.get("run_seed", -1)) != run_context.run_seed or summary.get("id", "") != current.id or int(summary.get("seed", -1)) != int(current.seed): return
-	run_context.commit_result(current.id, true)
+	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
+	if summary != battle.continuous.last_clear or int(summary.get("run_seed",-1)) != run_context.run_seed: return
 	battle._emit_hud()
 
 func _threat_started(summary: Dictionary) -> void:
-	if mode != "run" or not run_context.is_active(): return
-	if int(summary.get("run_seed", -1)) != run_context.run_seed or int(summary.get("threat", 0)) != run_context.slot + 1: return
-	if str(summary.get("id", "")) != str(battle.encounter.id) or int(summary.get("seed", -1)) != int(battle.encounter.seed): return
-	if run_context.advance(): battle._emit_hud()
+	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
+	if summary != battle.continuous.last_entry or int(summary.get("run_seed",-1)) != run_context.run_seed: return
+	if run_context.admit_event(int(summary.threat)): battle._emit_hud()
 
 func _finish_acquisition() -> void:
 	if not run_context.pending_offer.is_empty():
@@ -299,6 +299,7 @@ func _progression_events(events: Array) -> void:
 	var before: Dictionary = run_context.progression_snapshot()
 	for event: Dictionary in events: run_context.award_xp(event)
 	var after: Dictionary = run_context.progression_snapshot()
+	if battle.continuous != null: battle.continuous.progression_level = run_context.level
 	if not run_context.pending_offer.is_empty():
 		_draft_resume_origin = "battle"
 		_reward_focus_id = ""
@@ -357,6 +358,12 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["power_mutations"] = run_context.power_mutations
 		last_result["starter_id"] = run_context.starter_id
 		last_result["build"] = run_context.selected_build
+		last_result["director_version"] = "task002c2-v1"
+		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
+		last_result["investments"] = run_context.committed_rewards
+		if not smoke_mode:
+			var diagnostic: FileAccess = FileAccess.open("user://last_run_director.json",FileAccess.WRITE)
+			if diagnostic != null: diagnostic.store_string(JSON.stringify(last_result,"\t"))
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:

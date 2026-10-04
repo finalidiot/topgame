@@ -84,7 +84,7 @@ func apply_settings(settings: Dictionary) -> void:
 
 func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
-	var aliases: Dictionary = {"impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
+	var aliases: Dictionary = {"boss_warning":"mutation_available","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
 	var sample_key: String = "hit" if key == "small_hit" else key
 	if not SOUNDS.has(sample_key): return
@@ -146,6 +146,9 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -5.0
 	elif key in ["redline_ii", "breakneck_charge", "ghost_closure", "ghost_activation"]:
 		player.volume_db = -6.0
+	if kind == "boss_warning":
+		player.pitch_scale = 0.68
+		player.volume_db = -3.0
 	player.play()
 
 func audio_snapshot() -> Dictionary:
