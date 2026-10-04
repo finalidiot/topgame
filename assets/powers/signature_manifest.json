@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "projection": "fixed isometric 2:1; no sprite rotation",
+  "filter": "nearest",
+  "redline": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor contact and silhouette",
+      "02 mechanical structure",
+      "03 active energy",
+      "04 key flash and fragments"
+    ],
+    "tags": {
+      "rank1_active": {
+        "from": 0,
+        "to": 5
+      },
+      "rank2_active": {
+        "from": 6,
+        "to": 11
+      },
+      "runaway_low": {
+        "from": 12,
+        "to": 17
+      },
+      "runaway_high": {
+        "from": 18,
+        "to": 23
+      },
+      "breakneck_charge": {
+        "from": 24,
+        "to": 29
+      },
+      "breakneck_hit": {
+        "from": 30,
+        "to": 35
+      },
+      "breakneck_recovery": {
+        "from": 36,
+        "to": 41
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140
+    ],
+    "columns": 6,
+    "frame_count": 42,
+    "texture": "signature_redline.png",
+    "source": "assets/source-art/redline_fx_002c4.aseprite"
+  },
+  "dead_centre": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor contact and silhouette",
+      "02 mechanical structure",
+      "03 active energy",
+      "04 key flash and fragments"
+    ],
+    "tags": {
+      "anchor_build": {
+        "from": 0,
+        "to": 5
+      },
+      "anchor_full": {
+        "from": 6,
+        "to": 11
+      },
+      "bulwark_lock": {
+        "from": 12,
+        "to": 17
+      },
+      "bulwark_contact": {
+        "from": 18,
+        "to": 23
+      },
+      "counterweight_store": {
+        "from": 24,
+        "to": 29
+      },
+      "counterweight_release": {
+        "from": 30,
+        "to": 35
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140
+    ],
+    "columns": 6,
+    "frame_count": 36,
+    "texture": "signature_dead_centre.png",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite"
+  },
+  "afterimage": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor contact and silhouette",
+      "02 mechanical structure",
+      "03 active energy",
+      "04 key flash and fragments"
+    ],
+    "tags": {
+      "rank1_trace": {
+        "from": 0,
+        "to": 5
+      },
+      "rank2_trace": {
+        "from": 6,
+        "to": 11
+      },
+      "ghost_closure": {
+        "from": 12,
+        "to": 17
+      },
+      "ghost_active": {
+        "from": 18,
+        "to": 23
+      },
+      "slipstream_cross": {
+        "from": 24,
+        "to": 29
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140
+    ],
+    "columns": 6,
+    "frame_count": 30,
+    "texture": "signature_afterimage.png",
+    "source": "assets/source-art/afterimage_fx_002c4.aseprite"
+  },
+  "combat": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor contact and silhouette",
+      "02 mechanical structure",
+      "03 active energy",
+      "04 key flash and fragments"
+    ],
+    "tags": {
+      "light": {
+        "from": 0,
+        "to": 5
+      },
+      "meaningful": {
+        "from": 6,
+        "to": 11
+      },
+      "heavy": {
+        "from": 12,
+        "to": 17
+      },
+      "signature": {
+        "from": 18,
+        "to": 23
+      },
+      "elite_entry": {
+        "from": 24,
+        "to": 29
+      },
+      "boss_entry": {
+        "from": 30,
+        "to": 35
+      },
+      "boss_defeat": {
+        "from": 36,
+        "to": 41
+      },
+      "reclaim": {
+        "from": 42,
+        "to": 47
+      },
+      "second_wind": {
+        "from": 48,
+        "to": 53
+      },
+      "low_rpm": {
+        "from": 54,
+        "to": 59
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140,
+      60,
+      45,
+      55,
+      80,
+      100,
+      140
+    ],
+    "columns": 6,
+    "frame_count": 60,
+    "texture": "signature_combat.png",
+    "source": "assets/source-art/combat_fx_002c4.aseprite"
+  }
+}

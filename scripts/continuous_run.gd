@@ -58,7 +58,9 @@ func observe_outcomes() -> void:
 			if f.combatant_type == "full_top":
 				rivals_defeated += 1
 				if f.get("enemy_kind", "") == "elite": elites_defeated += 1
-				if f.get("enemy_kind", "") == "boss": bosses_defeated += 1
+				if f.get("enemy_kind", "") == "boss":
+					bosses_defeated += 1
+					host().add_power_fx("boss_defeat",f.pos,f.vel)
 			elif str(host().powers.cause_for(f).get("owner_id", "")) == "player": small_enemies_defeated += 1
 
 func census() -> Dictionary:
@@ -109,7 +111,7 @@ func after_tick(dt: float) -> void:
 		if event.kind == "boss":
 			callout = "BOSS TOPPLED"
 			callout_until = b.elapsed+2.5
-			b.event_sfx.emit("win")
+			b.event_sfx.emit("boss_payoff")
 		b.threat_cleared.emit(last_clear.duplicate(true))
 	_cleanup(dt)
 	phase = "breathing" if events.is_empty() and pending.is_empty() else "active"
@@ -181,6 +183,7 @@ func _admit(event: Dictionary, position: Vector2, fixture_descriptor: Dictionary
 	next_entity_id += count
 	phase = "active"
 	b.enter_threat(descriptor,position)
+	if event.kind in ["boss","elite"]: b.add_power_fx(str(event.kind)+"_entry",position)
 	events[int(event.serial)] = {"ids":ids,"swarm":descriptor.fixture_type == "swarm","kind":event.kind,"key":event.key,"time":b.elapsed}
 	last_entry = {"id":descriptor.id,"seed":descriptor.seed,"run_seed":run_seed,"threat":threat_number,"kind":event.kind,"key":event.key}
 	b.threat_started.emit(last_entry.duplicate(true))
