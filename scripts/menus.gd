@@ -1072,7 +1072,9 @@ func show_hud(stats: Dictionary) -> void:
 		_create_hud()
 	var player_spin: float = float(stats.get("player_rpm", 1.0))
 	var enemy_spin: float = float(stats.get("enemy_rpm", 1.0))
-	_hud["player_bar"].value = player_spin
+	_hud["player_bar"].value = clampf(player_spin, 0.0, 1.0)
+	_hud["rpm_overflow"].value = maxf(0.0, player_spin - 1.0)
+	_hud["rpm_overflow"].visible = player_spin > 1.0
 	_hud["enemy_bar"].value = enemy_spin
 	_hud["player_name"].text = str(stats.get("player_name", "YOUR TOP"))
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
@@ -1209,11 +1211,13 @@ func _create_hud() -> void:
 	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 13, 202, 17), 11, BLUE)
 	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 13, 202, 17), 11, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["player_bar"] = _bar(_content, Rect2(22, 34, 202, 8), BLUE)
-	# Keep real overcap in the same meter: 9000RPM is the normal-reserve notch,
-	# and the remaining pixels show actual reserve up to the1.24 Runaway cap.
-	_hud["player_bar"].max_value = 1.24
-	_hud["normal_rpm_tick"] = _rect(_content, Rect2(22 + roundf(202.0 / 1.24), 33, 1, 10), Color("d4dcda"))
-	_hud["player_bar"].tooltip_text = "White notch: normal 9000 RPM. Overdrive extends real spin reserve beyond it."
+	# Normal reserve fills the whole bar. Earned overdrive builds a second
+	# coloured layer over its top edge, without reserving a permanent gap.
+	_hud["player_bar"].tooltip_text = "Full normal reserve: 9000 RPM. Extra RPM builds a pulsing layer over the top."
+	_hud["rpm_overflow"] = _bar(_content, Rect2(22, 34, 202, 4), ORANGE)
+	_hud["rpm_overflow"].max_value = 0.24
+	_hud["rpm_overflow"].add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	_hud["rpm_overflow"].visible = false
 	_hud["enemy_bar"] = _bar(_content, Rect2(416, 34, 202, 8), ORANGE)
 	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
 	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
@@ -1255,6 +1259,6 @@ func _animate_rpm_meter() -> void:
 	if screen != "hud" or not _hud.has("player_bar"): return
 	var pulse: float = 0.5 + sin(_menu_clock * (8.0 + _rpm_heat * 8.0)) * 0.5
 	var color: Color = Color("ff632e").lerp(Color("ffb44b"), pulse) if _rpm_overdrive else BLUE
-	var fill: StyleBoxFlat = _hud["player_bar"].get_theme_stylebox("fill") as StyleBoxFlat
+	var fill: StyleBoxFlat = _hud["rpm_overflow"].get_theme_stylebox("fill") as StyleBoxFlat
 	fill.bg_color = color
 	if _rpm_overdrive: _hud["player_rpm"].modulate = color

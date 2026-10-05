@@ -56,17 +56,24 @@ func _test_hud() -> void:
 	var menus = Menus.new()
 	root.add_child(menus)
 	menus.show_hud({"player_rpm":1.16, "redline_active":true, "redline_heat":0.7, "is_run":true, "rerolls":3})
-	check(is_equal_approx(menus._hud.player_bar.value, 1.16) and is_equal_approx(menus._hud.player_bar.max_value, 1.24), "Meter shows actual overcap without clipping at full")
+	check(is_equal_approx(menus._hud.player_bar.value, 1.0) and is_equal_approx(menus._hud.player_bar.max_value, 1.0), "Normal reserve fills the whole base bar")
+	check(menus._hud.rpm_overflow.visible and is_equal_approx(menus._hud.rpm_overflow.value, 0.16), "Actual excess builds a separate layer over full normal RPM")
+	check(not menus._hud.has("normal_rpm_tick"), "No permanent notch implies a limiter on ordinary RPM")
 	check("10440 RPM" in menus._hud.player_rpm.text and "+16% OVERDRIVE" in menus._hud.player_rpm.text, "Label matches actual increased reserve")
 	menus._menu_clock = 0.0
 	menus._animate_rpm_meter()
-	var first_color: Color = menus._hud.player_bar.get_theme_stylebox("fill").bg_color
+	var first_color: Color = menus._hud.rpm_overflow.get_theme_stylebox("fill").bg_color
 	menus._menu_clock = 0.10
 	menus._animate_rpm_meter()
-	check(first_color != menus._hud.player_bar.get_theme_stylebox("fill").bg_color and is_equal_approx(menus._hud.player_bar.value, 1.16), "Red/orange pulse never fabricates RPM")
+	check(first_color != menus._hud.rpm_overflow.get_theme_stylebox("fill").bg_color and is_equal_approx(menus._hud.rpm_overflow.value, 0.16), "Red/orange pulse never fabricates RPM")
 	check(menus._hud.rerolls.text == "REROLLS  3", "HUD reflects current Run charges")
 	menus.show_hud({"player_rpm":0.7, "is_run":false})
 	check(menus._hud.player_rpm.text == "6300 RPM" and not menus._hud.rerolls.visible and not menus._hud.anchor.visible, "Ordinary duel clears prior Run/overdrive state")
+	check(is_equal_approx(menus._hud.player_bar.value, 0.7) and not menus._hud.rpm_overflow.visible, "Ordinary reserve uses the full width without showing empty overdrive capacity")
+	menus.show_hud({"player_rpm":1.0,"redline_active":true})
+	check(is_equal_approx(menus._hud.player_bar.value,1.0) and not menus._hud.rpm_overflow.visible,"Activation alone cannot create a fake excess layer")
+	menus.show_hud({"player_rpm":1.24,"redline_active":true})
+	check(is_equal_approx(menus._hud.rpm_overflow.value,0.24) and is_equal_approx(menus._hud.player_bar.value,1.0),"Maximum real excess fills the upper layer while retaining full normal reserve")
 	menus.show_hud({"player_rpm":0.6,"dead_centre_owned":true,"dead_centre_central_hold":true,"dead_centre_charge":0.8,"dead_centre_maturity":0.5,"dead_centre_recovery_rate":0.009})
 	check("+81 RPM/s" in menus._hud.anchor.text, "Anchor recovery indicator follows actual eligible rate")
 	menus.show_hud({"player_rpm":0.6,"dead_centre_owned":true,"dead_centre_recovery_remaining":0.0,"dead_centre_rearm_progress":0.4})
