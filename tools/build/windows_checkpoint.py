@@ -32,6 +32,14 @@ REQUIRED_CAPTURES = (
     "09c-owned-workshop.png", "10-starting-draft.png", "run-past-eight.png",
     "run-failed.png",
 )
+NATIVE_IMPORT_EXIT_CODES = (-1073741819, 3221225477)
+
+
+class ProcessValidationError(RuntimeError):
+    def __init__(self, record: dict):
+        self.record = record
+        self.attempts = [record]
+        super().__init__(f"Process failed validation (exit {record['exit_code']}); inspect {record['log']}")
 
 
 def sha256(path: Path) -> str:
@@ -123,8 +131,38 @@ def run_logged(command: list[str], log: Path, timeout: int) -> dict:
     record = {"command": command, "exit_code": result.returncode,
               "log": str(log.resolve()), "log_sha256": sha256(log)}
     if result.returncode != 0 or ERRORS.search(content):
-        raise RuntimeError(f"Process failed validation (exit {result.returncode}); inspect {log}")
+        raise ProcessValidationError(record)
     return record
+
+
+def completed_native_import_crash(record: dict) -> bool:
+    """Recognise only the observed cold-import native crash after reimport ends."""
+    if record.get("exit_code") not in NATIVE_IMPORT_EXIT_CODES:
+        return False
+    log = Path(record["log"])
+    if not log.is_file() or sha256(log) != record["log_sha256"]:
+        return False
+    content = log.read_text(encoding="utf-8", errors="replace")
+    return "[ DONE ] reimport" in content and not ERRORS.search(content)
+
+
+def import_source(command: list[str], logs: Path, timeout: int = 600) -> dict:
+    attempts = []
+    try:
+        result = run_logged(command, logs / "import.log", timeout)
+    except ProcessValidationError as first:
+        attempts.append(first.record)
+        if not completed_native_import_crash(first.record):
+            raise
+        print("RETRY_IMPORT_ONCE native 0xC0000005 after completed reimport; first log preserved", flush=True)
+        try:
+            result = run_logged(command, logs / "import-retry.log", timeout)
+        except ProcessValidationError as second:
+            second.attempts = attempts + [second.record]
+            raise
+    attempts.append(result)
+    return {**result, "attempts": attempts,
+            "retry_reason": "native_0xc0000005_after_completed_reimport" if len(attempts) == 2 else None}
 
 
 def production_profile(root: Path) -> dict:
@@ -192,6 +230,20 @@ def verify_candidate(candidate: Path) -> dict:
         content = log.read_text(encoding="utf-8", errors="replace")
         if step.get("exit_code") != 0 or ERRORS.search(content):
             raise ValueError(f"Validation evidence contains a failure: {log}")
+    attempts = manifest["import"].get("attempts", [manifest["import"]])
+    if not isinstance(attempts, list) or len(attempts) not in (1, 2):
+        raise ValueError("Import evidence permits at most two attempts.")
+    if len(attempts) == 2 and not completed_native_import_crash(attempts[0]):
+        raise ValueError("First import failure is not the bounded native cold-import exception.")
+    for index, attempt in enumerate(attempts):
+        log = Path(attempt["log"])
+        if not log.is_file() or sha256(log) != attempt["log_sha256"]:
+            raise ValueError("Import attempt evidence missing or changed.")
+        content = log.read_text(encoding="utf-8", errors="replace")
+        if ERRORS.search(content) or (index == len(attempts) - 1 and attempt.get("exit_code") != 0):
+            raise ValueError("Final import attempt must exit zero without script or engine errors.")
+    if any(attempts[-1].get(key) != manifest["import"].get(key) for key in ("log", "log_sha256", "exit_code")):
+        raise ValueError("Successful import record disagrees with final attempt.")
     if SMOKE_MARKER not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
         raise ValueError("Packaged smoke marker absent from real process log.")
     engine_log = Path(smoke["engine_log"])
@@ -293,7 +345,7 @@ def build(args: argparse.Namespace) -> dict:
         print(f"STAGE_CLEAN_CHECKPOINT {source}", flush=True)
         report["source"] = copy_clean_source(root, source)
         print(f"IMPORT {report['source']['git_sha']}", flush=True)
-        report["import"] = run_logged([engine, "--headless", "--path", str(source), "--editor", "--import"], logs / "import.log", 600)
+        report["import"] = import_source([engine, "--headless", "--path", str(source), "--editor", "--import"], logs)
         print("EXPORT_WINDOWS", flush=True)
         report["export"] = run_logged([engine, "--headless", "--path", str(source), "--export-release", "Windows Desktop", str(payload / EXE)], logs / "export.log", 600)
         if not (payload / EXE).is_file():
@@ -350,6 +402,9 @@ def build(args: argparse.Namespace) -> dict:
     except Exception as error:
         report["validation"] = "failed"
         report["error"] = str(error)
+        if isinstance(error, ProcessValidationError):
+            report["failed_process"] = error.record
+            report["failed_process_attempts"] = error.attempts
         write_json(evidence, report)
         raise
 

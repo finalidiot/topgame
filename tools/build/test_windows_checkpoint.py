@@ -145,5 +145,66 @@ class PromotionGuards(unittest.TestCase):
         self.assertFalse((self.root / "builds" / ".promotion.lock").exists())
 
 
+class ColdImportRetryGuards(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.logs = Path(self.temporary.name)
+        self.command = ["fixture-engine", "--headless", "--editor", "--import"]
+
+    def tearDown(self):
+        self.temporary.cleanup()
+
+    def record(self, name, exit_code, content):
+        log = self.logs / name
+        log.write_text(content)
+        return {"command": self.command, "exit_code": exit_code, "log": str(log), "log_sha256": pipeline.sha256(log)}
+
+    def test_observed_native_first_attempt_then_success_is_retained(self):
+        first = self.record("import.log", 3221225477, "[ DONE ] reimport\n[ DONE ] loading_editor_layout\n")
+        second = self.record("import-retry.log", 0, "import finished normally")
+        with patch.object(pipeline, "run_logged", side_effect=[pipeline.ProcessValidationError(first), second]) as runner:
+            result = pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 2)
+        self.assertEqual(result["attempts"], [first, second])
+        self.assertEqual(result["exit_code"], 0)
+
+    def test_regular_failure_is_not_retried(self):
+        first = self.record("import.log", 1, "import failed")
+        with patch.object(pipeline, "run_logged", side_effect=pipeline.ProcessValidationError(first)) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError):
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+
+    def test_script_error_with_native_exit_is_not_retried(self):
+        first = self.record("import.log", 3221225477, "[ DONE ] reimport\nSCRIPT ERROR: fixture broken")
+        with patch.object(pipeline, "run_logged", side_effect=pipeline.ProcessValidationError(first)) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError):
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+
+    def test_native_failure_before_completed_reimport_is_not_retried(self):
+        first = self.record("import.log", 3221225477, "reimport still running")
+        with patch.object(pipeline, "run_logged", side_effect=pipeline.ProcessValidationError(first)) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError):
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+
+    def test_repeated_native_failure_stops_after_two_attempts(self):
+        first = self.record("import.log", -1073741819, "[ DONE ] reimport")
+        second = self.record("import-retry.log", 3221225477, "[ DONE ] reimport")
+        with patch.object(pipeline, "run_logged", side_effect=[pipeline.ProcessValidationError(first), pipeline.ProcessValidationError(second)]) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError) as caught:
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 2)
+        self.assertEqual(caught.exception.attempts, [first, second])
+
+    def test_successful_first_attempt_is_not_retried(self):
+        first = self.record("import.log", 0, "import finished normally")
+        with patch.object(pipeline, "run_logged", return_value=first) as runner:
+            result = pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+        self.assertEqual(result["attempts"], [first])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

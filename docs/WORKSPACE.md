@@ -115,7 +115,11 @@ executable, hashes it and runs the actual packaged rendered smoke flow. Smoke
 uses an explicit isolated collection path, records real engine logs and required
 menu/gameplay captures, and checks that the real user's collection hash did not
 change. Its injected flow victories are labelled fixtures, not gameplay/balance
-acceptance. Failed exports or smoke checks never promote.
+acceptance. Failed exports or smoke checks never promote. A completed cold import
+that exits with the observed Windows native crash code `0xC0000005`, without
+script/import errors, may be retried once in the same fresh staging directory.
+Both attempt logs remain evidence; the final import must exit successfully.
+Script errors, other process failures and packaged smoke failures are not retried.
 
 Only a validated manifest whose binary/evidence hashes still match can be
 promoted. The helper stages the complete payload, preserves the previous latest
