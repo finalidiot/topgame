@@ -300,6 +300,33 @@ func update(dt: float) -> void:
 					_active.remove_at(index)
 	_observe_guard()
 
+## Read-only geometry shared by rendering and attachment diagnostics. Godot
+## flips a negative destination width inside the same positive-area footprint;
+## it does not translate the rectangle's origin by the signed width.
+func draw_geometry_for(item: Dictionary) -> Dictionary:
+	_load_assets()
+	var host: Object = _host()
+	if host == null: return {}
+	var meta: Dictionary = _metadata.get(str(item.get("beast", "")), {})
+	var owner: Dictionary = host.entity(int(item.get("owner_entity_id", 0)))
+	if meta.is_empty() or not _live_owner(owner): return {}
+	var size: Vector2 = Vector2(float(meta.cell[0]), float(meta.cell[1]))
+	var pivot: Vector2 = Vector2(float(meta.pivot[0]), float(meta.pivot[1]))
+	var height: float = float(owner.get("height", 0.0)) if bool(item.follow_owner) else 0.0
+	var world_pos: Vector2 = Vector2(owner.pos) if bool(item.follow_owner) else Vector2(item.world_pos)
+	var point: Vector2 = host.project(world_pos, height)
+	var owner_point: Vector2 = host.project(Vector2(owner.pos), float(owner.get("height", 0.0)))
+	var lift: float = 0.0
+	if str(item.phase) == "prepare": lift = 12.0 * clampf(float(item.phase_age) / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
+	elif str(item.phase) == "travel": lift = 12.0
+	var direction: Vector2 = Vector2(item.direction)
+	var mirror: bool = direction.x - direction.y < -0.001
+	var mirrored_pivot: Vector2 = Vector2(size.x - pivot.x, pivot.y) if mirror else pivot
+	var anchor: Vector2 = point - Vector2(0.0, lift)
+	var rect: Rect2 = Rect2((anchor - mirrored_pivot).round(), Vector2(-size.x if mirror else size.x, size.y))
+	return {"rect": rect, "projected_owner_point": owner_point, "projected_point": point,
+		"anchor": anchor, "lift": lift, "mirror": mirror, "pivot": pivot, "size": size}
+
 ## This pass is called before every opaque top body. Native 128 px cells use
 ## only translation/mirroring, so rank strengthens alpha rather than size/count.
 func draw(canvas: CanvasItem) -> void:
@@ -309,8 +336,8 @@ func draw(canvas: CanvasItem) -> void:
 		var texture: Texture2D = _textures.get(str(item.beast))
 		var meta: Dictionary = _metadata.get(str(item.beast), {})
 		if texture == null or meta.is_empty(): continue
-		var owner: Dictionary = _host().entity(int(item.owner_entity_id))
-		if not _live_owner(owner): continue
+		var geometry: Dictionary = draw_geometry_for(item)
+		if geometry.is_empty(): continue
 		var phase: String = str(item.phase)
 		var phase_age: float = float(item.phase_age)
 		var authored_age: float = phase_age
@@ -318,25 +345,15 @@ func draw(canvas: CanvasItem) -> void:
 		# Play the single authored committed motion once, then hold its final
 		# travel key while the real charge remains armed. Never loop attacks.
 		var frame: int = frame_for(str(item.beast), phase, authored_age)
-		var size: Vector2 = Vector2(float(meta.cell[0]), float(meta.cell[1]))
-		var pivot: Vector2 = Vector2(float(meta.pivot[0]), float(meta.pivot[1]))
+		var size: Vector2 = geometry.size
 		var columns: int = maxi(1, int(meta.columns))
 		var source: Rect2 = Rect2(Vector2(float(frame % columns) * size.x, floorf(float(frame) / float(columns)) * size.y), size)
-		var height: float = float(owner.get("height", 0.0)) if bool(item.follow_owner) else 0.0
-		var world_pos: Vector2 = Vector2(owner.pos) if bool(item.follow_owner) else Vector2(item.world_pos)
-		var position: Vector2 = _host().project(world_pos, height)
 		# Only the spectral figure rises. The real rig, contact plane and height
 		# remain exactly as simulated during Comet/Breakneck preparation.
-		var lift: float = 0.0
-		if phase == "prepare": lift = 12.0 * clampf(phase_age / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
-		elif phase == "travel": lift = 12.0
 		var alpha: float = (0.56 if bool(item.player) else 0.34) + float(int(item.rank) - 1) * 0.07 + minf(0.04, float(item.strength) * 0.015)
 		if phase == "prepare": alpha *= lerpf(0.30, 1.0, clampf(phase_age / maxf(0.001, float(item.phase_duration)), 0.0, 1.0))
 		if phase == "recovery": alpha *= clampf(1.0 - phase_age / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
-		var screen_direction: Vector2 = Vector2(Vector2(item.direction).x - Vector2(item.direction).y, (Vector2(item.direction).x + Vector2(item.direction).y) * 0.5)
-		var rect: Rect2 = Rect2((position - pivot - Vector2(0.0, lift)).round(), size)
-		if screen_direction.x < -0.001: rect.position.x += size.x; rect.size.x = -size.x
-		canvas.draw_texture_rect_region(texture, rect, source, Color(1.0, 1.0, 1.0, clampf(alpha, 0.0, 0.78)))
+		canvas.draw_texture_rect_region(texture, geometry.rect, source, Color(1.0, 1.0, 1.0, clampf(alpha, 0.0, 0.78)))
 
 ## Separate diagnostics never enter the combat snapshot or its replay contract.
 func snapshot() -> Dictionary:

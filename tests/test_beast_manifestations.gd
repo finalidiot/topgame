@@ -72,6 +72,11 @@ func actual_cases() -> void:
 			for item: Dictionary in snapshot.active:
 				check(int(item.owner_entity_id)>0 and item.beast==Beasts.beast_for_blade(str(shown.entity(int(item.owner_entity_id)).build.blade)),"Actual avatar identity follows its explicit owner's equipped blade")
 				check(float(item.age)<Beasts.MAX_INSTANCE_SECONDS and Vector2(item.world_pos).is_finite(),"Live presentation remains finite and expires within its lifetime budget")
+				var geometry: Dictionary=shown.beasts.draw_geometry_for(item)
+				var expected_point: Vector2=shown.project(Vector2(shown.entity(int(item.owner_entity_id)).pos),float(shown.entity(int(item.owner_entity_id)).height)) if bool(item.follow_owner) else shown.project(Vector2(item.world_pos))
+				check(Vector2(geometry.projected_point).distance_to(expected_point)<0.000001,"Live followers remain anchored to the actual rig and real strikes to their accepted contact point")
+				var rect: Rect2=geometry.rect
+				check(absf(rect.position.x+64.0-expected_point.x)<=0.501 and absf(rect.position.y+96.0+float(geometry.lift)-expected_point.y)<=0.501,"Actual drawn native pivot stays attached for either facing direction")
 				if int(item.owner_entity_id)!=1: continue
 				if item.phase=="guard": check(float(shown.player_entity().anchor_hold_seconds)>=6.0-0.000001 and bool(shown.player_entity().anchor_central_hold),"Guard appears only during a genuinely mature central hold")
 				observed[str(item.phase)]=true
@@ -213,11 +218,35 @@ func catalogue_and_assets() -> void:
 				if frame<durations.size(): total+=float(durations[frame])/1000.0
 			check(controller.frame_for(identity,phase,0.0)==int(tag.from) and controller.frame_for(identity,phase,total+0.001)==int(tag.to),"Frame sampling respects authored phase endpoints")
 
+func attachment_geometry_fixtures() -> void:
+	# Presentation geometry fixtures complement the separate rendered-engine
+	# pivot sentinel. They never feed fabricated avatars into review footage.
+	for s: Dictionary in Review.SCENARIOS:
+		var b: Node2D=prepare(s)
+		var before: Dictionary=b.snapshot()
+		var random_before: Dictionary=rng_state(b)
+		for phase: String in ["prepare","travel","strike","recovery","guard"]:
+			var item: Dictionary={"beast":s.identity,"owner_entity_id":1,"phase":phase,"phase_age":0.15,"phase_duration":0.30,"world_pos":Vector2(12,18),"direction":Vector2.RIGHT,"follow_owner":phase!="strike","rank":1}
+			var right: Dictionary=b.beasts.draw_geometry_for(item)
+			item.direction=Vector2.LEFT; item.rank=3
+			var left: Dictionary=b.beasts.draw_geometry_for(item)
+			var right_rect: Rect2=right.rect
+			var left_rect: Rect2=left.rect
+			check(right_rect.position==left_rect.position and right_rect.size.x==128.0 and left_rect.size.x==-128.0,"Mirroring changes facing without shifting the native frame by128pixels")
+			check(right_rect.size.abs()==Vector2(128,128) and left_rect.size.abs()==Vector2(128,128),"Both facings and ranks retain the same native footprint")
+			var expected: Vector2=b.project(Vector2(b.player_entity().pos),float(b.player_entity().height)) if bool(item.follow_owner) else b.project(Vector2(item.world_pos))
+			for geometry: Dictionary in [right,left]:
+				var rect: Rect2=geometry.rect
+				check(Vector2(geometry.projected_point).distance_to(expected)<0.000001 and absf(rect.position.x+64.0-expected.x)<=0.501 and absf(rect.position.y+96.0+float(geometry.lift)-expected.y)<=0.501,"Rendered frame pivot follows the rig or accepted contact with only authored vertical lift")
+		check(b.snapshot()==before and rng_state(b)==random_before,"Attachment geometry is read-only and does not consume randomness")
+		b.free()
+
 func run() -> void:
 	catalogue_and_assets()
 	actual_cases()
 	director_parity()
 	lifecycle_fixtures()
+	attachment_geometry_fixtures()
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):
 			var file: FileAccess=FileAccess.open(arg.trim_prefix("--report="),FileAccess.WRITE)
