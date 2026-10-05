@@ -535,6 +535,9 @@ func _round_finished(result: Dictionary) -> void:
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:
+	# Read-only packaged inspection exits immediately after boot. Starting a
+	# focus cue there leaves a native WAV playback alive at headless shutdown.
+	if qa_assets_report_requested: return
 	if not smoke_mode or review_audio: sounds.play_sound(kind)
 
 func _action(name: String, value: Variant = null) -> void:

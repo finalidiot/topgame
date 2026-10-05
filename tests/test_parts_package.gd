@@ -70,6 +70,9 @@ func _test_valid_probe() -> void:
 	var game: QuietMain = _game(path, true, output)
 	await _settle()
 	check(game.qa_catalogue_error.is_empty() and bool(game.probe_result.get("ok", false)), "Valid explicit QA boot runs the compiled probe successfully")
+	game.review_audio = true
+	game._battle_sound("ui_focus")
+	check(game.sounds.played_counts.is_empty(), "Read-only package inspection never starts native audio playback, even when review audio is enabled")
 	check(int(game.probe_result.get("textures", 0)) == 42, "The compiled probe loads all 31 static components and 11 blade spin sheets")
 	check(game.collection.owned_count() == 31 and game.collection.equipped_build() == {"blade":"smash", "ratchet":"high", "bit":"flat"}, "Probe session has the complete isolated collection and unchanged Breaker assembly")
 	check(not game.run_context.is_active() and not game.battle.visible, "The package probe inspects assets without injecting gameplay")

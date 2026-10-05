@@ -198,7 +198,7 @@
   "scope": "Compact diagnostic evidence. No win-rank/balance/human acceptance claim; exact final SHA and gated packaged results are recorded after commit in the external checkpoint manifest.",
   "post_package_probe_regression": {
     "suites": 6,
-    "checks": 9620,
+    "checks": 9621,
     "profile_unchanged": true,
     "passed_suite_names": [
       "collection_save",
