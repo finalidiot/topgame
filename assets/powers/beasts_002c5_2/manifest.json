@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "task": "002C.5.2",
+  "scope": "giant beast manifestations behind actual opaque top",
+  "filter": "nearest",
+  "runtime_top_sprite_included": false,
+  "effects": {
+    "black_arrow": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        96
+      ],
+      "layers": [
+        "01 smoke returning to rotor",
+        "02 far anatomy and silver silhouette",
+        "03 main body and near anatomy",
+        "04 muscle shell scales and edge light"
+      ],
+      "tags": {
+        "prepare": {
+          "from": 0,
+          "to": 3,
+          "duration_ms": 250,
+          "loop": false
+        },
+        "travel": {
+          "from": 4,
+          "to": 7,
+          "duration_ms": 500,
+          "loop": false
+        },
+        "strike": {
+          "from": 8,
+          "to": 11,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "recovery": {
+          "from": 12,
+          "to": 15,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "guard": {
+          "from": 16,
+          "to": 19,
+          "duration_ms": 500,
+          "loop": true
+        }
+      },
+      "durations_ms": [
+        65,
+        60,
+        60,
+        65,
+        135,
+        110,
+        115,
+        140,
+        60,
+        70,
+        80,
+        90,
+        55,
+        65,
+        80,
+        100,
+        140,
+        110,
+        110,
+        140
+      ],
+      "texture": "res://assets/powers/beasts_002c5_2/black_arrow.png",
+      "source": "assets/source-art/beasts_002c5_2/black_arrow.aseprite",
+      "columns": 4,
+      "frame_count": 20,
+      "label": "Black Arrow",
+      "description": "Compact muscular human spirit: backward shooting-star somersault, asymmetric axial corkscrew, opening to a chest-down landing. PAC / Neville movement tribute; no bird.",
+      "source_sha256": "902ee804a2a76da0062bc085ffa5f67b7bca11a0e81b3aedef89aca881c75119",
+      "texture_sha256": "33a0080a5393fc9afeb90e4fcefc8d97b4c808ea75548fcf055d39e0ba86fb2c",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 4550
+    },
+    "iron_bull": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        96
+      ],
+      "layers": [
+        "01 smoke returning to rotor",
+        "02 far anatomy and silver silhouette",
+        "03 main body and near anatomy",
+        "04 muscle shell scales and edge light"
+      ],
+      "tags": {
+        "prepare": {
+          "from": 0,
+          "to": 3,
+          "duration_ms": 250,
+          "loop": false
+        },
+        "travel": {
+          "from": 4,
+          "to": 7,
+          "duration_ms": 500,
+          "loop": false
+        },
+        "strike": {
+          "from": 8,
+          "to": 11,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "recovery": {
+          "from": 12,
+          "to": 15,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "guard": {
+          "from": 16,
+          "to": 19,
+          "duration_ms": 500,
+          "loop": true
+        }
+      },
+      "durations_ms": [
+        65,
+        60,
+        60,
+        65,
+        135,
+        110,
+        115,
+        140,
+        60,
+        70,
+        80,
+        90,
+        55,
+        65,
+        80,
+        100,
+        140,
+        110,
+        110,
+        140
+      ],
+      "texture": "res://assets/powers/beasts_002c5_2/iron_bull.png",
+      "source": "assets/source-art/beasts_002c5_2/iron_bull.aseprite",
+      "columns": 4,
+      "frame_count": 20,
+      "label": "Iron Bull",
+      "description": "Broad-horned bull spirit: shoulder-first gather, low horn-led charge, planted lunge, recoil and a wide four-hoof guard.",
+      "source_sha256": "a9e83cd93debe6a91597dd54f8cbf720fea1e1148504f79c186d21a924029728",
+      "texture_sha256": "a844b70d9a6b43fd4f89280a82b058160b77d0600db3fe9429a6152f274e7d1f",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 11017
+    },
+    "stone_tortoise": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        96
+      ],
+      "layers": [
+        "01 smoke returning to rotor",
+        "02 far anatomy and silver silhouette",
+        "03 main body and near anatomy",
+        "04 muscle shell scales and edge light"
+      ],
+      "tags": {
+        "prepare": {
+          "from": 0,
+          "to": 3,
+          "duration_ms": 250,
+          "loop": false
+        },
+        "travel": {
+          "from": 4,
+          "to": 7,
+          "duration_ms": 500,
+          "loop": false
+        },
+        "strike": {
+          "from": 8,
+          "to": 11,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "recovery": {
+          "from": 12,
+          "to": 15,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "guard": {
+          "from": 16,
+          "to": 19,
+          "duration_ms": 500,
+          "loop": true
+        }
+      },
+      "durations_ms": [
+        65,
+        60,
+        60,
+        65,
+        135,
+        110,
+        115,
+        140,
+        60,
+        70,
+        80,
+        90,
+        55,
+        65,
+        80,
+        100,
+        140,
+        110,
+        110,
+        140
+      ],
+      "texture": "res://assets/powers/beasts_002c5_2/stone_tortoise.png",
+      "source": "assets/source-art/beasts_002c5_2/stone_tortoise.aseprite",
+      "columns": 4,
+      "frame_count": 20,
+      "label": "Stone Tortoise",
+      "description": "Low broad tortoise spirit: domed stone shell, visible head and four planted feet, weight transfer and braced low guard.",
+      "source_sha256": "3a21d7aa75388fee6fef61f34db8d83faa3b20803761f9de39f3626a961f4e82",
+      "texture_sha256": "6046538bff898ae4e7b1e9e80c0fe1de010f556cd91b5be6e72830037e576ab0",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 36224
+    },
+    "coil_dragon": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        96
+      ],
+      "layers": [
+        "01 smoke returning to rotor",
+        "02 far anatomy and silver silhouette",
+        "03 main body and near anatomy",
+        "04 muscle shell scales and edge light"
+      ],
+      "tags": {
+        "prepare": {
+          "from": 0,
+          "to": 3,
+          "duration_ms": 250,
+          "loop": false
+        },
+        "travel": {
+          "from": 4,
+          "to": 7,
+          "duration_ms": 500,
+          "loop": false
+        },
+        "strike": {
+          "from": 8,
+          "to": 11,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "recovery": {
+          "from": 12,
+          "to": 15,
+          "duration_ms": 300,
+          "loop": false
+        },
+        "guard": {
+          "from": 16,
+          "to": 19,
+          "duration_ms": 500,
+          "loop": true
+        }
+      },
+      "durations_ms": [
+        65,
+        60,
+        60,
+        65,
+        135,
+        110,
+        115,
+        140,
+        60,
+        70,
+        80,
+        90,
+        55,
+        65,
+        80,
+        100,
+        140,
+        110,
+        110,
+        140
+      ],
+      "texture": "res://assets/powers/beasts_002c5_2/coil_dragon.png",
+      "source": "assets/source-art/beasts_002c5_2/coil_dragon.aseprite",
+      "columns": 4,
+      "frame_count": 20,
+      "label": "Coil Dragon",
+      "description": "Long serpentine dragon spirit: open-centre coils, horned open jaws, clawed forelimbs and an uncoiling bite that recoils into a defensive curl.",
+      "source_sha256": "e78094252bbcd3b66a89f0b2bc4a7a0ccf557a3a8e7aac01fad91530f6a379df",
+      "texture_sha256": "b987c047813ad0343fafa3b1a30585db97e9813f7bda8a011cc1cba20c504111",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 5513
+    }
+  }
+}

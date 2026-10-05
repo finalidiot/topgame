@@ -3,6 +3,7 @@ extends RefCounted
 ## the external report destination before calling; existing files are refused.
 const Catalog = preload("res://scripts/parts.gd")
 const FEEDBACK_MANIFEST: String = "res://assets/powers/feedback_002c5_2/manifest.json"
+const BEAST_MANIFEST: String = "res://assets/powers/beasts_002c5_2/manifest.json"
 
 static func inspect(output: String) -> Dictionary:
 	if output.is_empty() or FileAccess.file_exists(output) or DirAccess.dir_exists_absolute(output):
@@ -65,10 +66,21 @@ static func inspect(output: String) -> Dictionary:
 			feedback_records.append({"kind":kind,"path":path,"size":[size.x,size.y],"visible_pixels":valid,"valid":valid,
 				"rgba_sha256":fingerprint,"visible_rgba_sha256":visible_fingerprint,"transparent_rgb_normalized":true})
 			if not valid: failures.append(path)
+	var beast_json: String = FileAccess.get_file_as_string(BEAST_MANIFEST)
+	var beasts: Variant = JSON.parse_string(beast_json)
+	var beast_records: Array[Dictionary] = []
+	if not beasts is Dictionary or not beasts.get("effects", {}) is Dictionary:
+		failures.append(BEAST_MANIFEST)
+	else:
+		for kind: String in ["black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"]:
+			var record: Dictionary = _inspect_beast_sheet(kind, beasts.effects.get(kind, {}))
+			beast_records.append(record)
+			if not bool(record.valid): failures.append(str(record.path))
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
 		"textures":records, "feedback_json":feedback_json, "feedback_textures":feedback_records,
+		"beast_json":beast_json, "beast_textures":beast_records,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()
@@ -76,3 +88,28 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_beast_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var path: String = str(meta.get("texture", ""))
+	var texture: Texture2D = (load(path) as Texture2D) if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var cell: Array = meta.get("cell", [])
+	var columns: int = int(meta.get("columns", 0))
+	var frames: int = int(meta.get("frame_count", 0))
+	var valid: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	valid = valid and cell.size() == 2 and int(cell[0]) == 128 and int(cell[1]) == 128 and columns > 0 and frames >= 20
+	if valid: valid = size == Vector2i(columns * 128, ceili(float(frames) / float(columns)) * 128)
+	var fingerprint: String = ""
+	if valid:
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset + 3] == 0:
+				for channel: int in range(3): decoded[offset + channel] = 0
+		var hash: HashingContext = HashingContext.new()
+		hash.start(HashingContext.HASH_SHA256)
+		hash.update(decoded)
+		fingerprint = hash.finish().hex_encode()
+	return {"kind":kind, "path":path, "size":[size.x, size.y], "visible_pixels":valid, "valid":valid,
+		"visible_rgba_sha256":fingerprint, "transparent_rgb_normalized":true}

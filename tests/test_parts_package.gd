@@ -84,6 +84,16 @@ func _test_valid_probe() -> void:
 		check(str(report.get("catalogue_json", "")) == FileAccess.get_file_as_string(Catalog.DATA_PATH), "Report preserves the exact packaged catalogue JSON, including physical coefficients")
 		check(str(report.get("catalogue_sha256", "")) == FileAccess.get_sha256(Catalog.DATA_PATH), "Report records the catalogue content fingerprint")
 		check(report.get("failures", []) == [] and bool(report.get("read_only_asset_inspection", false)), "Asset inspection has no failures and identifies its evidence scope")
+		check(str(report.get("beast_json", "")) == FileAccess.get_file_as_string(Probe.BEAST_MANIFEST), "Report preserves the actual beast manifest")
+		var beast_rows: Array = report.get("beast_textures", [])
+		check(beast_rows.size() == 4, "Release probe includes all four beast manifestation sheets")
+		var beast_ids: Array[String] = []
+		for row: Dictionary in beast_rows:
+			beast_ids.append(str(row.get("kind", "")))
+			check(bool(row.get("valid", false)) and bool(row.get("visible_pixels", false)), "Packaged beast sheet loads actual visible pixels")
+			check(str(row.get("visible_rgba_sha256", "")).length() == 64 and bool(row.get("transparent_rgb_normalized", false)), "Beast sheet records a visible-pixel fingerprint")
+		for kind: String in ["black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"]:
+			check(beast_ids.count(kind) == 1, "Release probe covers exactly one sheet for " + kind)
 		var rows: Array = report.get("textures", [])
 		check(rows.size() == 42, "Report contains all 42 distinct runtime component textures")
 		var found: Dictionary = {}
