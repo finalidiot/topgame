@@ -143,6 +143,9 @@ def completed_native_import_crash(record: dict) -> bool:
     if not log.is_file() or sha256(log) != record["log_sha256"]:
         return False
     content = log.read_text(encoding="utf-8", errors="replace")
+    # Godot's redirected progress output may retain colour/style SGR sequences.
+    # Normalise only this comparison text; the raw log and its hash stay intact.
+    content = re.sub(r"\x1b\[[0-9;:]*m", "", content)
     return "[ DONE ] reimport" in content and not ERRORS.search(content)
 
 

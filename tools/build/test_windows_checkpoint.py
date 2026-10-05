@@ -221,6 +221,29 @@ class ColdImportRetryGuards(unittest.TestCase):
         self.assertEqual(runner.call_count, 1)
         self.assertEqual(result["attempts"], [first])
 
+    def test_ansi_completed_native_import_is_recognised_without_changing_log(self):
+        content = "[ DONE ]\x1b[39m \x1b[1mreimport\x1b[22m\n"
+        first = self.record("import.log", 3221225477, content)
+        self.assertTrue(pipeline.completed_native_import_crash(first))
+        self.assertEqual(Path(first["log"]).read_text(), content)
+        self.assertEqual(pipeline.sha256(Path(first["log"])), first["log_sha256"])
+
+    def test_ansi_inside_script_error_prevents_retry(self):
+        content = "[ DONE ]\x1b[39m \x1b[1mreimport\x1b[22m\nSCR\x1b[31mIPT ER\x1b[39mROR: fixture broken"
+        first = self.record("import.log", 3221225477, content)
+        with patch.object(pipeline, "run_logged", side_effect=pipeline.ProcessValidationError(first)) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError):
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+
+    def test_ansi_partial_import_is_not_retried(self):
+        content = "[  67% ]\x1b[39m \x1b[1mreimport\x1b[22m | still importing\n"
+        first = self.record("import.log", 3221225477, content)
+        with patch.object(pipeline, "run_logged", side_effect=pipeline.ProcessValidationError(first)) as runner:
+            with self.assertRaises(pipeline.ProcessValidationError):
+                pipeline.import_source(self.command, self.logs)
+        self.assertEqual(runner.call_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
