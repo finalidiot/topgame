@@ -1,8 +1,10 @@
 # Workspace policy
 
-Read this file before producing task output. The provisional Task 002C.5 checkpoint
-is **PENDING HOME HUMAN PLAYTEST**. Organisation and automated checks do not accept
-its mechanics, balance, art or physical controller feel. Do not merge it to main.
+Read this file before producing task output. The Task 002C.5 / 002C.5.1 / 002C.5.2
+stack received human playtest acceptance on 2026-10-05 and is approved as the next
+main milestone. After the milestone merge, branch new work from the updated main
+unless a task explicitly requires another base. Historical task reports may still
+say PENDING HOME HUMAN PLAYTEST because they record the state at their own checkpoint.
 
 ## Authoritative locations
 
@@ -133,7 +135,7 @@ candidate use `python tools/build/windows_checkpoint.py promote --candidate
 <payload-directory> --checkpoint 002C.5`.
 
 `builds/latest/README.txt` states the exact source Git SHA, task, UTC build date,
-controls and pending human acceptance. The default editor export targets
+controls and the acceptance status recorded for that checkpoint. The default editor export targets
 `builds/temp/windows/`, so manual export cannot overwrite validated latest.
 Release output is reserved for an explicitly authorised distribution. Substantial
 future tasks must finish with a validated human-playable `builds/latest` unless
