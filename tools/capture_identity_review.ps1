@@ -1,11 +1,30 @@
 param(
-    [string]$TaskRoot = 'C:\GPT GAME BUILDING\topgame-task-002c5',
-    [string]$TaskOutput = 'C:\GPT GAME BUILDING\task-002c5-qa\art-addendum\motion',
-    [string]$TaskEngine = 'E:\Desktop\Godot_v4.7.2-stable_win64_console.exe',
+    [string]$TaskRoot = (Split-Path -Parent $PSScriptRoot),
+    [string]$TaskOutput = '',
+    [string]$TaskEngine = '',
+    [string]$TaskId = '002C.5',
+    [string]$TaskQaRoot = '',
+    [string]$TaskPython = 'python',
     [string]$TaskOnly = '',
     [switch]$CorrectionV2
 )
 $ErrorActionPreference = 'Stop'
+$TaskHelperDirectory = Join-Path $TaskRoot 'tools\workspace'
+# Shared helper supplies the same task root and engine discovery as all other
+# tooling; explicit output remains available for historical capture recipes.
+if (-not $TaskOutput) {
+    $TaskHelperArguments = @((Join-Path $TaskHelperDirectory 'workspace.py'))
+    if ($TaskQaRoot) { $TaskHelperArguments += @('--qa-root', $TaskQaRoot) }
+    $TaskHelperArguments += @('create-task', $TaskId)
+    $TaskWorkspace = & $TaskPython @TaskHelperArguments
+    if ($LASTEXITCODE -ne 0) { throw 'Task QA workspace creation failed' }
+    $TaskOutput = Join-Path $TaskWorkspace 'temp\identity-motion'
+}
+if (-not $TaskEngine) {
+    $TaskBootstrap = 'import sys; sys.path.insert(0, sys.argv[1]); import workspace; print(workspace.find_tool("godot"))'
+    $TaskEngine = & $TaskPython -c $TaskBootstrap $TaskHelperDirectory
+    if ($LASTEXITCODE -ne 0) { throw 'Godot discovery failed; pass -TaskEngine or set TOPGAME_GODOT' }
+}
 New-Item -ItemType Directory -Force -Path $TaskOutput | Out-Null
 # Real proc windows found through the identical full-reserve/input-only diagnostic.
 # No state is edited to make a capture happen. Warm-up executes all real ticks.

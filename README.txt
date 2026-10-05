@@ -2,9 +2,9 @@ SPINNING METAL — TASK 002C.5 + EXISTING TASK 003A COLLECTION
 
 Open project.godot in Godot 4.7.2 (standard GDScript), allow imports to finish,
 and press F6/F5. No add-ons or external runtime dependencies are required.
-Run releases/windows/SpinningMetal.exe without the editor; game data is embedded.
+Run builds/latest/SpinningMetal.exe without the editor; game data is embedded.
 Ability report: TASK-002C5.md. Existing collection/API reference: TASK-003A.md.
-The rebuilt checkpoint combines both; Launch-SpinningMetal.cmd opens this EXE.
+The rebuilt checkpoint combines both; tools/playtest/windows/Launch-SpinningMetal.cmd opens the latest validated EXE.
 
 First machine and permanent collection
 - A new collection owns nothing. BEGIN opens Breaker / Bastion / Vane inspection.
@@ -45,7 +45,7 @@ Existing prototype preferences do not confer ownership; without a collection,
 BEGIN starts the ceremony. Damaged saves never grant the catalogue automatically.
 An unrecoverable/future-version file is preserved and blocks collection writes.
 
-For a fresh isolated review save, in PowerShell from releases/windows:
+For a fresh isolated review save, in PowerShell from builds/latest:
   .\SpinningMetal.exe -- --collection-path=user://review/003a.json
 To deliberately reset that isolated collection only:
   .\SpinningMetal.exe -- --collection-path=user://review/003a.json --reset-collection
@@ -78,7 +78,8 @@ Validation
   Godot --headless --path . --script res://tests/test_collection_flow.gd
   Godot --headless --path . --script res://tests/test_collection_ui.gd
 All accepted relevant suites are retained; see TASK-003A.md for the final run.
-The old prototype/balance harness writes artifacts: use a disposable copy for it.
+The prototype/balance harness writes isolated user://test-prototype-* artifacts.
+Pass --report and --balance-report paths under the external task QA workspace.
 
 Rendering and exports
 640x360 native canvas, nearest filtering, integer scaling, fixed isometric camera.

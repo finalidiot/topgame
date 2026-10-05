@@ -111,7 +111,7 @@ Each finished sample checks `start + gains - losses == final` to within 0.000001
 
 Full raw iteration logs/curves are outside Git at
 `C:\GPT GAME BUILDING\task-002c3-qa`. Compact final telemetry is retained in
-`tests/task002c3-rpm-results.json`. Historical C.2 telemetry remains unchanged.
+`tests/results/task002c3-rpm-results.json`. Historical C.2 telemetry remains unchanged.
 
 ## Iteration evidence
 

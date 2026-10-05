@@ -1,16 +1,16 @@
 # Task 002C.5 human playtest
 
 The latest checkpoint is **002C.5 Physical Art V2 + Starter Collection**. Start
-with `E:\Desktop\Launch-SpinningMetal-Physical-Art-V2.cmd`. Review the native
+with `builds/latest/SpinningMetal.exe`. Review the native
 color/grayscale matrices, ten-family before/after, and
 `002c5_power_art_showcase_v2.mp4` in
-`C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2`.
+`C:\GPT GAME BUILDING\GyroBrothers-QA\002C.5\images` and `video`.
 The [correction report](TASK-002C5-ART-CORRECTION-V2.md) records the historical
 choices, remaining limits and twelve human visual acceptance questions.
 The previous internal art grades are superseded by the human correction pass.
 
-Windows checkpoint: `releases/windows/SpinningMetal.exe` or adjacent
-`Launch-SpinningMetal.cmd`. BEGIN opens the existing first-save top selection;
+Windows checkpoint: `builds/latest/SpinningMetal.exe` or
+`tools/playtest/windows/Launch-SpinningMetal.cmd`. BEGIN opens the existing first-save top selection;
 confirm the choice, enter Workshop, then LAUNCH OWNED TOP. An existing collection
 opens CONTINUE TO WORKSHOP. All thirteen
 families are available to every starter. Seven family slots retain room for
@@ -21,7 +21,7 @@ left stick, bottom face button, shoulder/trigger, Start. Release controls after
 a draft. For Orbit Drive, enter with speed, hold brake and turn to carry a
 drift. Maintain the arc to build flow; sharp reversals break it.
 
-Optional `releases/windows/QA-*.cmd` presets inspect ranks and mutations
+Optional `tools/playtest/windows/QA-*.cmd` presets inspect ranks and mutations
 quickly. They install an opening build; power procs, danger and recoveries still
 require play. Ordinary Runs need no developer commands. Detailed design,
 automation and authenticity evidence is in `TASK-002C5.md`.

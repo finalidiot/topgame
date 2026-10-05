@@ -13,6 +13,17 @@ export.cfg
 /build/
 /builds/
 /exports/
+/releases/
+
+# Generated QA belongs outside this repository. These explicit escape hatches
+# prevent accidental local output from becoming game resources or commits.
+/qa-temp/
+/captures/
+/temp/
+/tests/local-output/
+/tests/user-data/
+*.log
+*.part
 
 # Operating-system metadata.
 .DS_Store
@@ -22,9 +33,5 @@ desktop.ini
 # Local Python art-export caches.
 __pycache__/
 *.pyc
-
-# QA contact sheets are review evidence, not imported game textures.
-/tests/art_identity_002c5/*.png.import
-/tests/art_correction_v2/*.png.import
 
 # Keep actual source assets, *.import settings, *.uid sidecars and export_presets.cfg.

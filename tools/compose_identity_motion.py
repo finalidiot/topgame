@@ -8,10 +8,17 @@ import io
 import json
 from pathlib import Path
 import subprocess
+import sys
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT=Path(__file__).resolve().parents[1]
-FFMPEG='C:/GPT GAME BUILDING/task-002c5-qa/runtimes/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe'
+sys.path.insert(0, str(ROOT / 'tools/workspace'))
+from workspace import find_tool
+
+FFMPEG=None
+
+def ffmpeg():
+    return find_tool('ffmpeg', FFMPEG)
 SIZE=(1280,720); FPS=60
 CARD_SECONDS=1.2
 GAME_SECONDS=1.8
@@ -33,7 +40,7 @@ FONT=ImageFont.truetype('C:/Windows/Fonts/consola.ttf',22)
 BIG=ImageFont.truetype('C:/Windows/Fonts/consolab.ttf',36)
 
 def decode(avi,start,length):
-    process=subprocess.Popen([FFMPEG,'-v','error','-ss',str(start),'-i',str(avi),'-t',str(length),
+    process=subprocess.Popen([ffmpeg(),'-v','error','-ss',str(start),'-i',str(avi),'-t',str(length),
                               '-an','-f','rawvideo','-pix_fmt','rgb24','-'],stdout=subprocess.PIPE)
     for _ in range(round(length*FPS)):
         data=process.stdout.read(SIZE[0]*SIZE[1]*3)
@@ -42,12 +49,12 @@ def decode(avi,start,length):
     process.stdout.close(); assert process.wait()==0
 
 def encoder(path):
-    return subprocess.Popen([FFMPEG,'-y','-v','error','-f','rawvideo','-pix_fmt','rgb24','-s','1280x720',
+    return subprocess.Popen([ffmpeg(),'-y','-v','error','-f','rawvideo','-pix_fmt','rgb24','-s','1280x720',
         '-r','60','-i','-','-an','-c:v','libx264','-preset','fast','-crf','18','-pix_fmt','yuv420p',
         '-movflags','+faststart',str(path)],stdin=subprocess.PIPE)
 
 def image_at(avi,at):
-    result=subprocess.check_output([FFMPEG,'-v','error','-ss',str(max(0,at)),'-i',str(avi),'-frames:v','1','-f','image2pipe','-vcodec','png','-'])
+    result=subprocess.check_output([ffmpeg(),'-v','error','-ss',str(max(0,at)),'-i',str(avi),'-frames:v','1','-f','image2pipe','-vcodec','png','-'])
     image=Image.open(io.BytesIO(result)).convert('RGB');assert image.size==SIZE
     return image
 
@@ -129,9 +136,11 @@ def compose(motion,out,meta,correction_v2=False):
         'encoding':'1280x72060fps H264 yuv420p faststart muted. Card nearest6x; gameplay native integer2x1280x720 untouched except labelled footer in showcase. Blind removes cards/names/footer.','segments':segments},indent=2))
 
 def main():
-    global GAME_SECONDS
+    global GAME_SECONDS, FFMPEG
     p=argparse.ArgumentParser();p.add_argument('--motion',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--ffmpeg',help='Override TOPGAME_FFMPEG / PATH / shared workspace runtime discovery')
     p.add_argument('--sheets-only',action='store_true');p.add_argument('--correction-v2',action='store_true');args=p.parse_args();args.out.mkdir(parents=True,exist_ok=True)
+    FFMPEG=find_tool('ffmpeg',args.ffmpeg)
     if args.correction_v2:GAME_SECONDS=2.4
     meta=json.loads((ROOT/'assets/powers/identity_manifest.json').read_text())
     if not args.sheets_only:compose(args.motion,args.out,meta,args.correction_v2)

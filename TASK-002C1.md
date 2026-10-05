@@ -164,7 +164,7 @@ entry point delegates to this continuous diagnostic. Maximum sample duration is
 Every sample launches exactly once. Five of six naturally continue beyond eight
 clears, through repeated swarms and later rivals. Longer samples reach levels
 10-13; two fill the current investment pool without terminating. Raw evidence:
-`tests/task002c1-continuous-results.json`. These are simulation observations,
+`tests/results/task002c1-continuous-results.json`. These are simulation observations,
 not human feel or final balance acceptance. No new FPS benchmark is claimed.
 
 ## Major changed files and checkpoint

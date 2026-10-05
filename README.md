@@ -11,11 +11,13 @@ Core direction:
 - Aseprite-heavy pixel-art presentation
 
 Open `project.godot` with Godot 4.7.2, let assets import, and press **F5**.
-For the ready-to-play Windows build, run
-[`releases/windows/SpinningMetal.exe`](releases/windows/SpinningMetal.exe).
+For the newest validated Windows checkpoint, run
+[`builds/latest/SpinningMetal.exe`](builds/latest/SpinningMetal.exe).
 The executable includes the game data; no Godot installation is needed.
-The executable is stored with Git LFS: after cloning, run `git lfs pull` if
-needed, or use GitHub's Download raw file button on the executable page.
+Builds are local generated outputs. After cloning, use
+`python tools/build/windows_checkpoint.py build --checkpoint 002C.5`.
+Task 002C.5 is **PENDING HOME HUMAN PLAYTEST** and has not been merged to main.
+Read [docs/WORKSPACE.md](docs/WORKSPACE.md) before creating artifacts or builds.
 WASD/arrows steer, Space bursts, Shift brakes, and Esc pauses.
 Gamepad: left stick steers, bottom face button bursts/confirms, either shoulder
 or trigger brakes, and Menu/Start pauses. D-pad or stick navigates every menu;
@@ -143,8 +145,10 @@ Godot --headless --path . --script res://tests/test_escalation_completion.gd
 Godot --headless --path . --script res://tests/test_escalation_visual_playthrough.gd
 ```
 
-Run `tests/test_prototype.gd` only in a disposable copy: the preserved baseline
-harness overwrites `QA.txt` and `tests/balance-results.json`. Those tracked files
+The historical `tests/test_prototype.gd` harness writes isolated
+`user://test-prototype-*` evidence by default. Pass
+`--report=<external-QA-log>` and `--balance-report=<external-QA-JSON>` to retain
+new measurements. Historical `QA.txt` and `tests/results/balance-results.json`
 remain historical Task 001 evidence. For rendered integration captures, launch
 with `-- --smoke-test --capture-dir=<absolute-directory>`; victories in that smoke
 loop are explicitly injected flow fixtures, not evidence of played Run balance.
@@ -155,7 +159,7 @@ For seeded combat diagnostics, run `tests/test_director_playthrough.gd` with
 `tests/test_director_soak.gd` explicitly protects the player and installs a full
 build to exercise fifteen minutes of real enemy physics and late-tier load.
 `tests/test_threat_director.gd` also runs eight deterministic policy occupancy
-models. These scopes are separate in `tests/task002c2-director-results.json`.
+models. These scopes are separate in `tests/results/task002c2-director-results.json`.
 The historical playthrough entry points remain runnable, but their old recorded
 JSON files describe earlier milestones.
 

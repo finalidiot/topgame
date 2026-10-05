@@ -5,9 +5,12 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
 import time
 
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools/workspace'))
+from workspace import find_tool
 BASE='d882923c0e2114f6d8b86aa2079dc7365bb4f71a'
 
 def source_evidence(out, baseline=BASE):
@@ -55,7 +58,7 @@ def source_evidence(out, baseline=BASE):
     (out/'source-retention.json').write_text(json.dumps(report,indent=2))
 
 def regressions(out,engine,baseline=BASE):
-    retained=json.loads((ROOT/'tests/task002c5-integration-regression-results.json').read_text())
+    retained=json.loads((ROOT/'tests/results/task002c5-integration-regression-results.json').read_text())
     suites=[s['suite'] for s in retained['suites']]+['power_identity']
     records=[]
     for suite in suites:
@@ -91,13 +94,13 @@ def summarize_existing(out):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--engine',default='E:/Desktop/Godot_v4.7.2-stable_win64_console.exe')
+    p.add_argument('--engine',help='Override TOPGAME_GODOT / PATH / shared local engine discovery')
     p.add_argument('--baseline',default=BASE,help='Git checkpoint for source-integrity proof; default preserves original art-addendum baseline')
     p.add_argument('--source-only',action='store_true')
     p.add_argument('--summarize-existing',action='store_true');args=p.parse_args()
     # Summarising existing logs is separate from running tests; never fabricate runs.
     args.out.mkdir(parents=True,exist_ok=True);source_evidence(args.out,args.baseline)
     if args.summarize_existing: summarize_existing(args.out)
-    elif not args.source_only: regressions(args.out,args.engine,args.baseline)
+    elif not args.source_only: regressions(args.out,find_tool('godot',args.engine),args.baseline)
 
 if __name__=='__main__':main()

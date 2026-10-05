@@ -1,0 +1,264 @@
+{
+  "task": "002C.5.1",
+  "branch": "task-002c5-1-workspace-audit",
+  "parent_002c5_sha": "a3fff35dc362856339fc6bfb0ded185edf48bb46",
+  "scope": "Infrastructure only. Task002C.5 is pending home human playtest. No gameplay, mechanics, balance or artistic pixels changed; no main merge.",
+  "baseline": {
+    "passed_suites": 34,
+    "failed_suites": 0,
+    "counted_checks": 42321
+  },
+  "after": {
+    "passed_suites": 34,
+    "failed_suites": 0,
+    "counted_checks": 42321
+  },
+  "suites": [
+    {
+      "suite": "collection_save",
+      "passed": true,
+      "checks": 271
+    },
+    {
+      "suite": "collection_flow",
+      "passed": true,
+      "checks": 395
+    },
+    {
+      "suite": "collection_ui",
+      "passed": true,
+      "checks": 1996
+    },
+    {
+      "suite": "spin_economy",
+      "passed": true,
+      "checks": 232
+    },
+    {
+      "suite": "threat_director",
+      "passed": true,
+      "checks": 83
+    },
+    {
+      "suite": "continuous_run",
+      "passed": true,
+      "checks": 200
+    },
+    {
+      "suite": "run_context",
+      "passed": true,
+      "checks": 362
+    },
+    {
+      "suite": "flow",
+      "passed": true,
+      "checks": 161
+    },
+    {
+      "suite": "combat_architecture",
+      "passed": true,
+      "checks": 35
+    },
+    {
+      "suite": "menus",
+      "passed": true,
+      "checks": 1506
+    },
+    {
+      "suite": "controller",
+      "passed": true,
+      "checks": 675
+    },
+    {
+      "suite": "powers",
+      "passed": true,
+      "checks": 79
+    },
+    {
+      "suite": "swarm",
+      "passed": true,
+      "checks": 33
+    },
+    {
+      "suite": "presentation",
+      "passed": true,
+      "checks": 78
+    },
+    {
+      "suite": "progression",
+      "passed": true,
+      "checks": 169
+    },
+    {
+      "suite": "starters",
+      "passed": true,
+      "checks": 17
+    },
+    {
+      "suite": "starter_physics",
+      "passed": true,
+      "checks": 37
+    },
+    {
+      "suite": "xp_observer",
+      "passed": true,
+      "checks": 30
+    },
+    {
+      "suite": "ramp_integration",
+      "passed": true,
+      "checks": 19
+    },
+    {
+      "suite": "card_assets",
+      "passed": true,
+      "checks": 132
+    },
+    {
+      "suite": "escalation_progression",
+      "passed": true,
+      "checks": 765
+    },
+    {
+      "suite": "escalation_physics",
+      "passed": true,
+      "checks": 103
+    },
+    {
+      "suite": "escalation_integration",
+      "passed": true,
+      "checks": 900
+    },
+    {
+      "suite": "escalation_completion",
+      "passed": true,
+      "checks": 42
+    },
+    {
+      "suite": "escalation_assets",
+      "passed": true,
+      "checks": 351
+    },
+    {
+      "suite": "rpm_replay",
+      "passed": true,
+      "checks": 0
+    },
+    {
+      "suite": "signature_presentation",
+      "passed": true,
+      "checks": 3362
+    },
+    {
+      "suite": "roster_draft",
+      "passed": true,
+      "checks": 21791
+    },
+    {
+      "suite": "roster_physics",
+      "passed": true,
+      "checks": 30
+    },
+    {
+      "suite": "roster_presentation",
+      "passed": true,
+      "checks": 3585
+    },
+    {
+      "suite": "ability_rebalance",
+      "passed": true,
+      "checks": 92
+    },
+    {
+      "suite": "ability_rebalance_integration",
+      "passed": true,
+      "checks": 32
+    },
+    {
+      "suite": "collection_c5_integration",
+      "passed": true,
+      "checks": 174
+    },
+    {
+      "suite": "power_identity",
+      "passed": true,
+      "checks": 4584
+    }
+  ],
+  "additional_prototype": {
+    "checks": 51,
+    "failures": 0,
+    "seeded_battles": 144,
+    "outputs_are_isolated_external_files": true
+  },
+  "current_c5_physics_differential": {
+    "field_comparisons": 127776,
+    "assemblies": 48,
+    "failures": 0,
+    "baseline": "Preserved provisional C5 battle source; historical Task001 intentionally not used as current physical balance."
+  },
+  "deterministic_equivalence": {
+    "passed": true,
+    "exact_json_equivalence": {
+      "natural-runs.json": true,
+      "test_ability_rebalance.json": true,
+      "test_ability_rebalance_integration.json": true,
+      "test_roster_draft.json": true,
+      "test_starter_physics.json": true,
+      "test_threat_director.json": true
+    },
+    "scope": "Exact pre/post organization comparison. Four genuine 120-second-or-death seeded Runs, real drafts and contacts, full RPM ledgers/curves/procs/director entries/offer and mutation logs; additional eight 900-second synthetic director seeds, 256-seed draft study, physical starter metrics and abilities. Physics differential uses preserved C5 checkpoint, not obsolete Task001 equations."
+  },
+  "production_retention": {
+    "files": 454,
+    "unchanged": true,
+    "text_comparison": "canonical CRLF checkout line endings",
+    "binary_comparison": "exact bytes"
+  },
+  "compact_results": {
+    "json_files": 63,
+    "exact_bytes_preserved": true,
+    "historical_provenance_not_rewritten": true
+  },
+  "source_art": {
+    "masters_parsed": 58,
+    "mapped_native_atlases": 53,
+    "exact_native_atlases": 51,
+    "all_39_current_identity_atlases_exact": true,
+    "historical_export_differences": [
+      {
+        "source": "assets/source-art/power_fx_002b.aseprite",
+        "runtime": "assets/powers/effects.png",
+        "source_sha256": "39f7a0ccf52f1458ada196cbb9c48d9e2f15604507d6f210b2b9d0a8ca5985dc",
+        "runtime_sha256": "9299c1afb3d39b71f2b44e1c5338b884ccdc88d4e8a2287df3e445f7fad49de3",
+        "columns": 8,
+        "native_visible_rgba_pixel_exact": false,
+        "different_visible_pixels": 1950,
+        "maximum_channel_difference": 1,
+        "source_and_runtime_byte_identical_to_c5_parent": true
+      },
+      {
+        "source": "assets/source-art/small_top_002b.aseprite",
+        "runtime": "assets/powers/small_top.png",
+        "source_sha256": "db1b3a559a075bbe35a21c842d6ea4d1b2d20a3f56d651bdb7c27abd60e2c1c3",
+        "runtime_sha256": "04deabbb511964bddf8b399fe54514d7f009e586970897d4ccb5b11b3a86a33e",
+        "columns": 8,
+        "native_visible_rgba_pixel_exact": false,
+        "different_visible_pixels": 155,
+        "maximum_channel_difference": 1,
+        "source_and_runtime_byte_identical_to_c5_parent": true
+      }
+    ],
+    "unchanged_sources_and_runtime": true
+  },
+  "tool_checks": {
+    "python_compile": true,
+    "python_cli_help": true,
+    "powershell_shared_workspace_no_capture_probe": true,
+    "ffmpeg_actual_relocated_video_read": true
+  },
+  "initial_import_note": "First after-check rejected missing003a-cache imports despite a nominal PASS; Godot editor import rebuilt C5 resources, subsequent import exited0 with no errors and all rerun suites passed. No production edits to fix cache.",
+  "evidence_root": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\002C.5.1",
+  "git_diff_check": "pass before final staging; root reruns for final commit",
+  "human_gameplay_acceptance": "PENDING HOME HUMAN PLAYTEST"
+}

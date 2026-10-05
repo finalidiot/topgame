@@ -59,7 +59,7 @@ All **33 suites pass**, with **37,604 counted checks** plus exact deterministic
 two-Run RPM replay: the retained 29 C.5 suites, three collection suites and a
 174-check owned-launch integration suite covering all thirteen seeded opening
 families, live Rank II and both High Gear mutations without permanent save changes.
-See `tests/task002c5-integration-regression-results.json`. The rebuilt embedded
+See `tests/results/task002c5-integration-regression-results.json`. The rebuilt embedded
 Windows executable also passes the native full smoke: first-top selection,
 confirmation, ownership, Workshop, opening power, ten continuing threats,
 midbattle drafts, defeat/restart and Workshop return. These controlled flow
@@ -68,7 +68,7 @@ states are outside Git under `task-002c5-qa/integration-packaged-smoke`.
 Native collection UI separately passes 2,008 checks and its rendered screens
 remain readable. Source and packaged ceremony, ownership, Workshop and current
 C.5 power-draft frames were inspected; see
-`tests/task002c5-collection-preservation-results.json`.
+`tests/results/task002c5-collection-preservation-results.json`.
 
 The corrected EXE is **110,171,560 bytes**, SHA-256
 `6aaec118df4148cc73ce74a4350499d224a3c364c1f6460ededae4b1e83ad4bb`.
@@ -312,7 +312,7 @@ elites, bosses and swarm schedules were not redesigned.
 
 ## Automated build archetypes
 
-`tests/task002c5-build-archetypes-final-results.json` records sixteen genuine
+`tests/results/task002c5-build-archetypes-final-results.json` records sixteen genuine
 full-RPM opening-build samples through the real continuous director/AI/economy,
 two seeds each, with a 220s diagnostic ceiling. Builds are controlled starting
 investments, followed only by controller input; they are not earned-draft runs.
@@ -380,13 +380,13 @@ All six catches are genuine full-top contacts. Worst ledger error is 2.04e-13.
 The observer records the live rank on every activation/catch. Repeating these
 samples reproduced the same outcomes. This establishes useful Rank I comeback
 through earned play, while Breaker's eventual spin-out demonstrates the absence
-of a free life. Compact evidence: `tests/task002c5-clutch-natural-danger-results.json`;
+of a free life. Compact evidence: `tests/results/task002c5-clutch-natural-danger-results.json`;
 complete external input/draft/event evidence: `natural-clutch-danger3.json`.
 
 
 These controllers and draft priorities intentionally differ, so survival medians are not a power tier list or a controlled comparison against accepted C.3. In particular, moving from the old 0.30 defensive input to 0.25 allows the existing Anchor condition; the natural timing differences combine controller and roster effects.
 
-Per-run builds, ranks, mutations, earned claim histories and counts: `tests/task002c5-natural-results.json`. Complete RPM curves/director histories: external `natural-final-42.json`.
+Per-run builds, ranks, mutations, earned claim histories and counts: `tests/results/task002c5-natural-results.json`. Complete RPM curves/director histories: external `natural-final-42.json`.
 
 ### Third-seed natural check
 
@@ -403,7 +403,7 @@ three seeds and all starters**: primary42 + targetedClutch3 + thirdSeed9.
 Combined outcomes: **18 ring-outs, 11 spin-outs, 25 diagnostic ceilings**.
 The separate ceilings/controllers remain explicit rather than pooling their
 survival medians. Compact third-seed evidence is
-`tests/task002c5-third-seed-results.json`; full raw data is external
+`tests/results/task002c5-third-seed-results.json`; full raw data is external
 `natural-third-seed9.json`.
 
 ### Regression and safety validation
@@ -417,7 +417,7 @@ integrity and standalone physical contracts remain tested.
 New suites: `test_ability_rebalance.gd` (92),
 `test_ability_rebalance_integration.gd` (32), `test_roster_physics.gd` (30),
 `test_roster_draft.gd` (21,791), `test_roster_presentation.gd` (3,621).
-The registry `tests/task002c5-regression-results.json` lists every suite, exact
+The registry `tests/results/task002c5-regression-results.json` lists every suite, exact
 count, pass status and external log. It covers overcap caps, AFK rejection,
 heat/control scaling, finite Runaway income, Breakneck hit/miss costs, continuous
 Clutch identity/defeat/quota safeguards, actual speed/drift/braking physics,
@@ -470,7 +470,7 @@ All clips use H.264 MP4, 1280×720, 60fps, nearest-neighbour native scaling and
 non-silent AAC gameplay audio. Large files remain outside Git. The artifact
 manifest records durations, dimensions, audio verification, file hashes,
 scenario evidence and inspected key frames.
-The completed evidence is `tests/task002c5-presentation-results.json`;
+The completed evidence is `tests/results/task002c5-presentation-results.json`;
 external `MEDIA-MANIFEST.json` and `MOBILE-REVIEW.txt` accompany the review ZIP.
 
 | File | Seconds | Authenticity and visible story |

@@ -42,8 +42,10 @@ func controls(b: Node2D, _playstyle: String, tick: int) -> Dictionary:
 	return c
 
 func _run() -> void:
-	var output: String = "C:/GPT GAME BUILDING/task-002c5-qa/natural-clutch-danger3.json"
-	var compact_output: String = "res://tests/task002c5-clutch-natural-danger-results.json"
+	# Supply --report / --compact under the shared task QA workspace for retained
+	# evidence. Defaults are isolated user-data diagnostics, never source files.
+	var output: String = "user://task002c5-natural-clutch-danger.json"
+	var compact_output: String = "user://task002c5-clutch-natural-danger-results.json"
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): output = arg.trim_prefix("--report=")
 		if arg.begins_with("--compact="): compact_output = arg.trim_prefix("--compact=")

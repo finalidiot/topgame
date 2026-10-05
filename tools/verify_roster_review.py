@@ -133,7 +133,7 @@ def main():
     source_result = native_sources(args.aseprite)
     with ThreadPoolExecutor(max_workers=3) as pool:
         clip_result = list(pool.map(lambda clip: probe_clip(clip, qa, args.ffmpeg), clips))
-    regression_path = ROOT / 'tests/task002c5-regression-results.json'
+    regression_path = ROOT / 'tests/results/task002c5-regression-results.json'
     regression = json.loads(regression_path.read_text())
     assert regression['passed_suites'] == len(regression['suites'])
     assert all(suite['passed'] for suite in regression['suites'])

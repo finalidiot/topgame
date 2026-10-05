@@ -1,1 +1,5 @@
-releases/windows/*.exe filter=lfs diff=lfs merge=lfs -text
+# Executables must normally remain ignored under builds/. This forward rule
+# protects an explicitly versioned distribution if one is ever approved.
+*.exe filter=lfs diff=lfs merge=lfs -text
+# Native art and audio are small enough for ordinary Git at this checkpoint.
+# Do not renormalize them or rewrite existing LFS history during workspace work.

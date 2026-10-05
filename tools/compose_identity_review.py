@@ -107,7 +107,11 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--captures',type=Path,required=True)
     p.add_argument('--before',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--correction-v2',action='store_true');p.add_argument('--motion',type=Path)
+    p.add_argument('--ffmpeg',help='Override shared FFmpeg discovery when cropping genuine movies')
     args=p.parse_args();args.out.mkdir(parents=True,exist_ok=True)
+    if args.ffmpeg:
+        import compose_identity_motion
+        compose_identity_motion.FFMPEG=args.ffmpeg
     meta=json.loads((ROOT/'assets/powers/identity_manifest.json').read_text())
     assert len(meta['families'])==13 and len(meta['art'])==34
     matrix(meta,args.captures,args.out,args.motion)

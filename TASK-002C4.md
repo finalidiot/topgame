@@ -155,7 +155,7 @@ No direct RPM edits, forced deaths, protected players or fabricated recovery.
 The first three use disclosed initial builds/poses; after setup only steering,
 Burst and brake. Last two fast-forward the same real Run and earned drafts from
 launch. Large videos remain outside Git. Compact provenance/results are in
-`tests/task002c4-results.json`; detailed capture manifests/logs are in the review
+`tests/results/task002c4-results.json`; detailed capture manifests/logs are in the review
 directory. `002c4_before_after.png` pairs full native captures for all three
 families. `matrix-final/` contains explicitly labelled static QA states.
 

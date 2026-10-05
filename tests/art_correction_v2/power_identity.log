@@ -1,6 +1,0 @@
-Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
-
-BANK_PAID_LOW rank=1 at=0.767 charge=4.744813 stage=1
-BANK_PAID_LOW rank=2 at=0.767 charge=6.504985 stage=1
-POSE_PAID_CLUTCH danger_at=144.600 caught_at=148.750 rpm=0.283176 earned_contacts=1
-POWER_IDENTITY_TEST_PASS checks=4584 failures=0 states=34 draw_states=34 paid_preview_draws=1

@@ -131,7 +131,7 @@ Vane movement equations.
 
 Four uninterrupted real-solver Runaway pursuits with support powers sustained
 overload for 1.88–4.77 active seconds, reaching heat 1.0 in two seeds. They
-produced two wins/two losses. Raw evidence: `tests/task002c-physics-results.json`.
+produced two wins/two losses. Raw evidence: `tests/results/task002c-physics-results.json`.
 
 The unchanged simple ramp bot's current twelve seeded Runs all eventually
 failed; three survived one minute, with three/four unique powers then.

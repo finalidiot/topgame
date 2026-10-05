@@ -8,6 +8,8 @@ var failures: Array[String] = []
 var checks := 0
 var notes: Array[String] = []
 var balance_results: Array[Dictionary] = []
+var report_path: String = "user://test-prototype-QA.txt"
+var balance_path: String = "user://test-prototype-balance-results.json"
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -19,6 +21,11 @@ func _check(condition: bool, label: String) -> void:
 		print("FAIL: " + label)
 
 func _run() -> void:
+	# Retain evidence via explicit external QA paths; default runs never overwrite
+	# the historical tracked QA.txt or compact regression evidence.
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--report="): report_path = argument.trim_prefix("--report=")
+		if argument.begins_with("--balance-report="): balance_path = argument.trim_prefix("--balance-report=")
 	catalog = load("res://scripts/parts.gd")
 	battle_script = load("res://scripts/battle.gd")
 	if catalog == null or battle_script == null:
@@ -388,10 +395,10 @@ func _finish() -> void:
 		report += note + "\n"
 	report += "\nBalance caveat: this is a standardized bot/chase stress test, not a claim about human win rates.\n"
 	report += "Central chase bouts all resolve by spin-out. Guard and Needle each win every bout in their respective groups; endurance dominates repeated central contact. Attack-driven ring-outs are verified separately at both mouths. Human play and gate-seeking strategies are still needed to assess competitive balance.\n"
-	var file = FileAccess.open("res://QA.txt", FileAccess.WRITE)
+	var file = FileAccess.open(report_path, FileAccess.WRITE)
 	if file:
 		file.store_string(report)
-	var detailed = FileAccess.open("res://tests/balance-results.json", FileAccess.WRITE)
+	var detailed = FileAccess.open(balance_path, FileAccess.WRITE)
 	if detailed:
 		detailed.store_string(JSON.stringify(balance_results, "\t"))
 	print(report)

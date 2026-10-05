@@ -138,7 +138,7 @@ checking Battle ownership/ranks/mutations after every claim and preserving the
 same player dictionary. Every one of the thirteen Rank II paths is installed in
 live Battle, including support families. The final draft suite passes
 **21,791 checks**. Compact policy evidence is
-`tests/task002c5-draft-results.json`; detailed logs are outside Git.
+`tests/results/task002c5-draft-results.json`; detailed logs are outside Git.
 
 The cap and stronger upgrade selection are deliberate build rules. They remain
 subject to the human check of whether seven slots, upgrade cadence and late MAX
@@ -181,4 +181,4 @@ RPM injection or artificial proc was used to improve that outcome.
 
 These targeted route samples supplement the main final natural matrix. They
 are bot execution evidence rather than final human comfort or readability
-acceptance. Compact provenance is in `tests/task002c5-route-results.json`.
+acceptance. Compact provenance is in `tests/results/task002c5-route-results.json`.
