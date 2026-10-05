@@ -1,0 +1,308 @@
+[
+  {
+    "selection": "impact_wake",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\impact_wake.avi",
+    "actual_time": 11.4500000000002,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "impact_wake"
+  },
+  {
+    "selection": "impact_wake",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\impact_wake.avi",
+    "actual_time": 11.6500000000002,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "impact_wake_ii"
+  },
+  {
+    "selection": "redline",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\redline.avi",
+    "actual_time": 74.59999999999701,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "redline"
+  },
+  {
+    "selection": "redline",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\redline.avi",
+    "actual_time": 74.799999999997,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "redline_ii"
+  },
+  {
+    "selection": "runaway",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\runaway.avi",
+    "actual_time": 10.700000000000099,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "runaway"
+  },
+  {
+    "selection": "breakneck",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\breakneck.avi",
+    "actual_time": 17.916666666666902,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "breakneck"
+  },
+  {
+    "selection": "iron_comet",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\iron_comet.avi",
+    "actual_time": 29.283333333332898,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "iron_comet"
+  },
+  {
+    "selection": "iron_comet",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\iron_comet.avi",
+    "actual_time": 30.1866666666663,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "iron_comet_ii"
+  },
+  {
+    "selection": "dead_centre",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\dead_centre.avi",
+    "actual_time": 0.5,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "dead_centre"
+  },
+  {
+    "selection": "dead_centre",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\dead_centre.avi",
+    "actual_time": 0.7,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "dead_centre_ii"
+  },
+  {
+    "selection": "bulwark",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\bulwark.avi",
+    "actual_time": 1.066666666666667,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "bulwark"
+  },
+  {
+    "selection": "counterweight",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\counterweight.avi",
+    "actual_time": 1.199666666666667,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "counterweight"
+  },
+  {
+    "selection": "afterimage",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\afterimage.avi",
+    "actual_time": 3.81666666666666,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "afterimage"
+  },
+  {
+    "selection": "afterimage",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\afterimage.avi",
+    "actual_time": 4.01666666666666,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "afterimage_ii"
+  },
+  {
+    "selection": "ghost_circuit",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\ghost_circuit.avi",
+    "actual_time": 3.96666666666666,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "ghost_circuit"
+  },
+  {
+    "selection": "slipstream",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\slipstream.avi",
+    "actual_time": 16.6500000000003,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "slipstream"
+  },
+  {
+    "selection": "chain_impact",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\chain_impact.avi",
+    "actual_time": 51.3833333333317,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "chain_impact"
+  },
+  {
+    "selection": "chain_impact",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\chain_impact.avi",
+    "actual_time": 51.5833333333317,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "chain_impact_ii"
+  },
+  {
+    "selection": "clutch",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\clutch.avi",
+    "actual_time": 148.650000000011,
+    "rank": 2,
+    "seed": 7341,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "clutch"
+  },
+  {
+    "selection": "clutch",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\clutch.avi",
+    "actual_time": 148.850000000011,
+    "rank": 2,
+    "seed": 7341,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "clutch_ii"
+  },
+  {
+    "selection": "high_gear",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\high_gear.avi",
+    "actual_time": 3.81666666666666,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "high_gear"
+  },
+  {
+    "selection": "high_gear",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\high_gear.avi",
+    "actual_time": 4.01666666666666,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "high_gear_ii"
+  },
+  {
+    "selection": "terminal_velocity",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\terminal_velocity.avi",
+    "actual_time": 4.21666666666666,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "terminal_velocity"
+  },
+  {
+    "selection": "flow_state",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\flow_state.avi",
+    "actual_time": 4.01666666666666,
+    "rank": 3,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "flow_state"
+  },
+  {
+    "selection": "orbit_drive",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\orbit_drive.avi",
+    "actual_time": 14.2000000000002,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "orbit_drive"
+  },
+  {
+    "selection": "orbit_drive",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\orbit_drive.avi",
+    "actual_time": 14.4000000000002,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "orbit_drive_ii"
+  },
+  {
+    "selection": "crash_guard",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crash_guard.avi",
+    "actual_time": 15.466666666667,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "crash_guard"
+  },
+  {
+    "selection": "crash_guard",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crash_guard.avi",
+    "actual_time": 15.666666666667,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "crash_guard_ii"
+  },
+  {
+    "selection": "momentum_bank",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\momentum_bank.avi",
+    "actual_time": 2.3200000000000003,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "momentum_bank"
+  },
+  {
+    "selection": "momentum_bank",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\momentum_bank.avi",
+    "actual_time": 2.81666666666666,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "momentum_bank_ii"
+  },
+  {
+    "selection": "predator_line",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\predator_line.avi",
+    "actual_time": 0.566666666666667,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "predator_line"
+  },
+  {
+    "selection": "predator_line",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\predator_line.avi",
+    "actual_time": 0.7666666666666669,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "predator_line_ii"
+  },
+  {
+    "selection": "crosscut",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crosscut.avi",
+    "actual_time": 6.36666666666665,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "crosscut"
+  },
+  {
+    "selection": "crosscut",
+    "source": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crosscut.avi",
+    "actual_time": 6.5666666666666496,
+    "rank": 2,
+    "seed": 421,
+    "pixel_operation": "Native integer2x capture restored to logical640x360 by nearest; crop192x112. No visual state edits.",
+    "card_state": "crosscut_ii"
+  }
+]

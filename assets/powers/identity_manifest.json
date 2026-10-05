@@ -1,0 +1,8135 @@
+{
+  "version": 1,
+  "filter": "nearest",
+  "scope": "artist-owned native per-family identity sources; no physics or RNG",
+  "families": {
+    "impact_wake": {
+      "family": "impact_wake",
+      "grammar": {
+        "silhouette": "Central physical impact and outward pressure teeth",
+        "motion": "Contact flash, spreading pressure fronts, staggered counter-pressure plates, fading chips",
+        "location": "At the actual heavy contact point near the floor",
+        "persistence": "Short paid contact event",
+        "palette": "Cyan pressure, pale steel, sparse amber contact teeth",
+        "feature": "Strong original ring composition; Rank II adds a second structural pressure response"
+      },
+      "design": "assets/powers/identity/impact_wake_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "industrial backplate",
+          "machine depth and chassis",
+          "authored moving bearings",
+          "pressure and trajectory",
+          "contact glints and fragments",
+          "Rank II counter-pressure teeth"
+        ],
+        "tags": {
+          "impact_wake": {
+            "from": 0,
+            "to": 11
+          },
+          "impact_wake_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          55,
+          55,
+          45,
+          45,
+          38,
+          37,
+          38,
+          37,
+          50,
+          50,
+          85,
+          85,
+          55,
+          55,
+          45,
+          45,
+          38,
+          37,
+          38,
+          37,
+          50,
+          50,
+          85,
+          85
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+        "texture": "res://assets/powers/identity/impact_wake_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "Independent small-scale silhouette",
+          "Mechanic-specific recognition teeth"
+        ],
+        "tags": {
+          "impact_wake": {
+            "from": 0,
+            "to": 0
+          },
+          "impact_wake_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          120,
+          120
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+        "texture": "res://assets/powers/identity/impact_wake_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 floor and contact shadow",
+          "02 load-bearing machine bodies",
+          "03 mechanical jaws and bearings",
+          "04 transmitted action and route",
+          "05 reaction chips and key light",
+          "06 developed structure"
+        ],
+        "tags": {
+          "wake_ii": {
+            "from": 0,
+            "to": 7
+          }
+        },
+        "durations_ms": [
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120
+        ],
+        "columns": 8,
+        "frame_count": 8,
+        "source": "assets/source-art/power_identity_002c5/impact_wake_fx.aseprite",
+        "texture": "res://assets/powers/identity/impact_wake_fx.png"
+      },
+      "event_tags": {
+        "impact_wake": "wake"
+      },
+      "active_tags": {},
+      "notes": "Rank I card preserves the original five editable layer cels and six accepted poses, each held for two half-duration keys. Rank I runtime must retain original 128px pressure tag in power_fx_002b.aseprite; no new wake tag is supplied so renderer falls through. New wake_ii is a structural counter-pressure response, not an enlarged recolour. Original source master retained intact.",
+      "art": {
+        "impact_wake": {
+          "family": "impact_wake",
+          "art_id": "impact_wake",
+          "source_tag": "impact_wake",
+          "icon": "res://assets/powers/identity/impact_wake_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            55,
+            55,
+            45,
+            45,
+            38,
+            37,
+            38,
+            37,
+            50,
+            50,
+            85,
+            85
+          ]
+        },
+        "impact_wake_ii": {
+          "family": "impact_wake",
+          "art_id": "impact_wake_ii",
+          "source_tag": "impact_wake_ii",
+          "icon": "res://assets/powers/identity/impact_wake_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            55,
+            55,
+            45,
+            45,
+            38,
+            37,
+            38,
+            37,
+            50,
+            50,
+            85,
+            85
+          ]
+        }
+      }
+    },
+    "redline": {
+      "family": "redline",
+      "grammar": {
+        "silhouette": "Off-centre metal rotor with broken hot plates and an asymmetric torn wake.",
+        "motion": "Ignition, growing splinter density and irregular heat stutter; Breakneck loads, strikes, recoils.",
+        "location": "Rotor edges and actual velocity wake; recoil near the floor.",
+        "persistence": "Only real active/overcap/heat states; discrete ignition, commitment, strike and vent events.",
+        "palette": "Oxide, hot orange, red and pale key flashes against cold steel.",
+        "feature": "Open machine centre with unequal broken fragment banks; mutations change motion, not just hue."
+      },
+      "design": "assets/powers/identity/redline_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 scene floor and direction",
+          "02 cast shadow and load-bearing chassis",
+          "03 rotor plates and bearing",
+          "04 mechanical action and recoil",
+          "05 keyed highlights and fragments"
+        ],
+        "tags": {
+          "redline": {
+            "from": 0,
+            "to": 11
+          },
+          "redline_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "runaway": {
+            "from": 24,
+            "to": 35
+          },
+          "breakneck": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          130,
+          95,
+          75,
+          60,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          100,
+          150,
+          130,
+          95,
+          75,
+          60,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          100,
+          150,
+          110,
+          85,
+          60,
+          55,
+          40,
+          40,
+          45,
+          50,
+          70,
+          80,
+          110,
+          155,
+          160,
+          120,
+          90,
+          75,
+          50,
+          35,
+          35,
+          45,
+          80,
+          105,
+          140,
+          190
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/power_identity_002c5/redline_cards.aseprite",
+        "texture": "res://assets/powers/identity/redline_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 compact mechanical silhouette",
+          "02 identifying action and negative space"
+        ],
+        "tags": {
+          "redline": {
+            "from": 0,
+            "to": 0
+          },
+          "redline_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "runaway": {
+            "from": 2,
+            "to": 2
+          },
+          "breakneck": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/power_identity_002c5/redline_icons.aseprite",
+        "texture": "res://assets/powers/identity/redline_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded scar and contact reaction",
+          "02 physical mechanism and brackets",
+          "03 moving force plates",
+          "04 keyed sparks and travel fragments"
+        ],
+        "tags": {
+          "redline_active": {
+            "from": 0,
+            "to": 7
+          },
+          "redline_active_e": {
+            "from": 8,
+            "to": 15
+          },
+          "redline_active_ne": {
+            "from": 16,
+            "to": 23
+          },
+          "redline_active_n": {
+            "from": 24,
+            "to": 31
+          },
+          "redline_active_nw": {
+            "from": 32,
+            "to": 39
+          },
+          "redline_active_w": {
+            "from": 40,
+            "to": 47
+          },
+          "redline_active_sw": {
+            "from": 48,
+            "to": 55
+          },
+          "redline_active_s": {
+            "from": 56,
+            "to": 63
+          },
+          "redline_active_se": {
+            "from": 64,
+            "to": 71
+          },
+          "redline_active_ii": {
+            "from": 72,
+            "to": 79
+          },
+          "redline_active_ii_e": {
+            "from": 80,
+            "to": 87
+          },
+          "redline_active_ii_ne": {
+            "from": 88,
+            "to": 95
+          },
+          "redline_active_ii_n": {
+            "from": 96,
+            "to": 103
+          },
+          "redline_active_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "redline_active_ii_w": {
+            "from": 112,
+            "to": 119
+          },
+          "redline_active_ii_sw": {
+            "from": 120,
+            "to": 127
+          },
+          "redline_active_ii_s": {
+            "from": 128,
+            "to": 135
+          },
+          "redline_active_ii_se": {
+            "from": 136,
+            "to": 143
+          },
+          "redline_overcap": {
+            "from": 144,
+            "to": 151
+          },
+          "redline_overcap_e": {
+            "from": 152,
+            "to": 159
+          },
+          "redline_overcap_ne": {
+            "from": 160,
+            "to": 167
+          },
+          "redline_overcap_n": {
+            "from": 168,
+            "to": 175
+          },
+          "redline_overcap_nw": {
+            "from": 176,
+            "to": 183
+          },
+          "redline_overcap_w": {
+            "from": 184,
+            "to": 191
+          },
+          "redline_overcap_sw": {
+            "from": 192,
+            "to": 199
+          },
+          "redline_overcap_s": {
+            "from": 200,
+            "to": 207
+          },
+          "redline_overcap_se": {
+            "from": 208,
+            "to": 215
+          },
+          "redline_overcap_ii": {
+            "from": 216,
+            "to": 223
+          },
+          "redline_overcap_ii_e": {
+            "from": 224,
+            "to": 231
+          },
+          "redline_overcap_ii_ne": {
+            "from": 232,
+            "to": 239
+          },
+          "redline_overcap_ii_n": {
+            "from": 240,
+            "to": 247
+          },
+          "redline_overcap_ii_nw": {
+            "from": 248,
+            "to": 255
+          },
+          "redline_overcap_ii_w": {
+            "from": 256,
+            "to": 263
+          },
+          "redline_overcap_ii_sw": {
+            "from": 264,
+            "to": 271
+          },
+          "redline_overcap_ii_s": {
+            "from": 272,
+            "to": 279
+          },
+          "redline_overcap_ii_se": {
+            "from": 280,
+            "to": 287
+          },
+          "redline_heat": {
+            "from": 288,
+            "to": 295
+          },
+          "redline_heat_e": {
+            "from": 296,
+            "to": 303
+          },
+          "redline_heat_ne": {
+            "from": 304,
+            "to": 311
+          },
+          "redline_heat_n": {
+            "from": 312,
+            "to": 319
+          },
+          "redline_heat_nw": {
+            "from": 320,
+            "to": 327
+          },
+          "redline_heat_w": {
+            "from": 328,
+            "to": 335
+          },
+          "redline_heat_sw": {
+            "from": 336,
+            "to": 343
+          },
+          "redline_heat_s": {
+            "from": 344,
+            "to": 351
+          },
+          "redline_heat_se": {
+            "from": 352,
+            "to": 359
+          },
+          "runaway": {
+            "from": 360,
+            "to": 367
+          },
+          "runaway_e": {
+            "from": 368,
+            "to": 375
+          },
+          "runaway_ne": {
+            "from": 376,
+            "to": 383
+          },
+          "runaway_n": {
+            "from": 384,
+            "to": 391
+          },
+          "runaway_nw": {
+            "from": 392,
+            "to": 399
+          },
+          "runaway_w": {
+            "from": 400,
+            "to": 407
+          },
+          "runaway_sw": {
+            "from": 408,
+            "to": 415
+          },
+          "runaway_s": {
+            "from": 416,
+            "to": 423
+          },
+          "runaway_se": {
+            "from": 424,
+            "to": 431
+          },
+          "breakneck_charge": {
+            "from": 432,
+            "to": 439
+          },
+          "breakneck_charge_e": {
+            "from": 440,
+            "to": 447
+          },
+          "breakneck_charge_ne": {
+            "from": 448,
+            "to": 455
+          },
+          "breakneck_charge_n": {
+            "from": 456,
+            "to": 463
+          },
+          "breakneck_charge_nw": {
+            "from": 464,
+            "to": 471
+          },
+          "breakneck_charge_w": {
+            "from": 472,
+            "to": 479
+          },
+          "breakneck_charge_sw": {
+            "from": 480,
+            "to": 487
+          },
+          "breakneck_charge_s": {
+            "from": 488,
+            "to": 495
+          },
+          "breakneck_charge_se": {
+            "from": 496,
+            "to": 503
+          },
+          "breakneck_strike": {
+            "from": 504,
+            "to": 511
+          },
+          "breakneck_strike_e": {
+            "from": 512,
+            "to": 519
+          },
+          "breakneck_strike_ne": {
+            "from": 520,
+            "to": 527
+          },
+          "breakneck_strike_n": {
+            "from": 528,
+            "to": 535
+          },
+          "breakneck_strike_nw": {
+            "from": 536,
+            "to": 543
+          },
+          "breakneck_strike_w": {
+            "from": 544,
+            "to": 551
+          },
+          "breakneck_strike_sw": {
+            "from": 552,
+            "to": 559
+          },
+          "breakneck_strike_s": {
+            "from": 560,
+            "to": 567
+          },
+          "breakneck_strike_se": {
+            "from": 568,
+            "to": 575
+          },
+          "breakneck_recoil": {
+            "from": 576,
+            "to": 583
+          },
+          "breakneck_recoil_e": {
+            "from": 584,
+            "to": 591
+          },
+          "breakneck_recoil_ne": {
+            "from": 592,
+            "to": 599
+          },
+          "breakneck_recoil_n": {
+            "from": 600,
+            "to": 607
+          },
+          "breakneck_recoil_nw": {
+            "from": 608,
+            "to": 615
+          },
+          "breakneck_recoil_w": {
+            "from": 616,
+            "to": 623
+          },
+          "breakneck_recoil_sw": {
+            "from": 624,
+            "to": 631
+          },
+          "breakneck_recoil_s": {
+            "from": 632,
+            "to": 639
+          },
+          "breakneck_recoil_se": {
+            "from": 640,
+            "to": 647
+          }
+        },
+        "durations_ms": [
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130
+        ],
+        "columns": 8,
+        "frame_count": 648,
+        "source": "assets/source-art/power_identity_002c5/redline_fx.aseprite",
+        "texture": "res://assets/powers/identity/redline_fx.png"
+      },
+      "event_tags": {
+        "redline": "redline_active",
+        "redline_ii": "redline_active_ii",
+        "runaway": "runaway",
+        "redline_overcap": "redline_overcap",
+        "redline_heat": "redline_heat",
+        "runaway_hit": "runaway",
+        "breakneck_charge": "breakneck_charge",
+        "breakneck_impact": "breakneck_strike",
+        "breakneck_recovery": "breakneck_recoil"
+      },
+      "active_tags": {
+        "active": "redline_active",
+        "overcap": "redline_overcap",
+        "heat": "redline_heat",
+        "runaway": "runaway",
+        "breakneck": "breakneck_charge"
+      },
+      "notes": [
+        "Successful C.4 fragmented Redline active signatures are intentionally retained by the integrated renderer. Fresh cards/icons and eight-key contact/overcap/heat/commit force-fragment states share their asymmetric hot mechanical grammar. No clean corona ring.",
+        "Runaway card frays after successive successful-contact action beats. Breakneck uses a visible small rival and loaded/strike/recoil poses."
+      ],
+      "art": {
+        "redline": {
+          "family": "redline",
+          "art_id": "redline",
+          "source_tag": "redline",
+          "icon": "res://assets/powers/identity/redline_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/redline_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            130,
+            95,
+            75,
+            60,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150
+          ]
+        },
+        "redline_ii": {
+          "family": "redline",
+          "art_id": "redline_ii",
+          "source_tag": "redline_ii",
+          "icon": "res://assets/powers/identity/redline_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/redline_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            130,
+            95,
+            75,
+            60,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150
+          ]
+        },
+        "runaway": {
+          "family": "redline",
+          "art_id": "runaway",
+          "source_tag": "runaway",
+          "icon": "res://assets/powers/identity/redline_icons.png",
+          "icon_frame": 2,
+          "card_texture": "res://assets/powers/identity/redline_cards.png",
+          "card_row": 2,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            110,
+            85,
+            60,
+            55,
+            40,
+            40,
+            45,
+            50,
+            70,
+            80,
+            110,
+            155
+          ]
+        },
+        "breakneck": {
+          "family": "redline",
+          "art_id": "breakneck",
+          "source_tag": "breakneck",
+          "icon": "res://assets/powers/identity/redline_icons.png",
+          "icon_frame": 3,
+          "card_texture": "res://assets/powers/identity/redline_cards.png",
+          "card_row": 3,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            160,
+            120,
+            90,
+            75,
+            50,
+            35,
+            35,
+            45,
+            80,
+            105,
+            140,
+            190
+          ]
+        }
+      }
+    },
+    "iron_comet": {
+      "family": "iron_comet",
+      "grammar": {
+        "silhouette": "Accepted round blade, ratchet and contact bit compressed against a physical arena wall.",
+        "motion": "Wall-side squeeze, abruptly separated flight positions, violent contact and short scrape aftermath.",
+        "location": "Wall contact, actual rebound vector, then target contact and floor scars.",
+        "persistence": "Armed wall-rebound lifetime plus bounded charge/contact/aftermath events.",
+        "palette": "Cold iron, silver, brass and small white/gold contact flashes.",
+        "feature": "The whole top survives every compression, launch, target-contact and recoil beat; never a wedge."
+      },
+      "design": "assets/powers/identity/iron_comet_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 arena floor and contact story",
+          "02 accepted native bit and ratchet",
+          "03 accepted native blade silhouette",
+          "04 mechanic-specific motion and force",
+          "05 physical contact flashes and fragments"
+        ],
+        "tags": {
+          "iron_comet": {
+            "from": 0,
+            "to": 11
+          },
+          "iron_comet_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          145,
+          110,
+          85,
+          65,
+          40,
+          35,
+          35,
+          50,
+          75,
+          100,
+          140,
+          175,
+          145,
+          110,
+          85,
+          65,
+          40,
+          35,
+          35,
+          50,
+          75,
+          100,
+          140,
+          175
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/iron_comet_cards.aseprite",
+        "texture": "res://assets/powers/identity/iron_comet_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 compact mechanical silhouette",
+          "02 identifying action and negative space"
+        ],
+        "tags": {
+          "iron_comet": {
+            "from": 0,
+            "to": 0
+          },
+          "iron_comet_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          100,
+          100
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/iron_comet_icons.aseprite",
+        "texture": "res://assets/powers/identity/iron_comet_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded scar and contact reaction",
+          "02 physical mechanism and brackets",
+          "03 moving force plates",
+          "04 keyed sparks and travel fragments"
+        ],
+        "tags": {
+          "comet_charge": {
+            "from": 0,
+            "to": 7
+          },
+          "comet_charge_e": {
+            "from": 8,
+            "to": 15
+          },
+          "comet_charge_ne": {
+            "from": 16,
+            "to": 23
+          },
+          "comet_charge_n": {
+            "from": 24,
+            "to": 31
+          },
+          "comet_charge_nw": {
+            "from": 32,
+            "to": 39
+          },
+          "comet_charge_w": {
+            "from": 40,
+            "to": 47
+          },
+          "comet_charge_sw": {
+            "from": 48,
+            "to": 55
+          },
+          "comet_charge_s": {
+            "from": 56,
+            "to": 63
+          },
+          "comet_charge_se": {
+            "from": 64,
+            "to": 71
+          },
+          "comet_charge_ii": {
+            "from": 72,
+            "to": 79
+          },
+          "comet_charge_ii_e": {
+            "from": 80,
+            "to": 87
+          },
+          "comet_charge_ii_ne": {
+            "from": 88,
+            "to": 95
+          },
+          "comet_charge_ii_n": {
+            "from": 96,
+            "to": 103
+          },
+          "comet_charge_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "comet_charge_ii_w": {
+            "from": 112,
+            "to": 119
+          },
+          "comet_charge_ii_sw": {
+            "from": 120,
+            "to": 127
+          },
+          "comet_charge_ii_s": {
+            "from": 128,
+            "to": 135
+          },
+          "comet_charge_ii_se": {
+            "from": 136,
+            "to": 143
+          },
+          "comet_flight": {
+            "from": 144,
+            "to": 151
+          },
+          "comet_flight_e": {
+            "from": 152,
+            "to": 159
+          },
+          "comet_flight_ne": {
+            "from": 160,
+            "to": 167
+          },
+          "comet_flight_n": {
+            "from": 168,
+            "to": 175
+          },
+          "comet_flight_nw": {
+            "from": 176,
+            "to": 183
+          },
+          "comet_flight_w": {
+            "from": 184,
+            "to": 191
+          },
+          "comet_flight_sw": {
+            "from": 192,
+            "to": 199
+          },
+          "comet_flight_s": {
+            "from": 200,
+            "to": 207
+          },
+          "comet_flight_se": {
+            "from": 208,
+            "to": 215
+          },
+          "comet_flight_ii": {
+            "from": 216,
+            "to": 223
+          },
+          "comet_flight_ii_e": {
+            "from": 224,
+            "to": 231
+          },
+          "comet_flight_ii_ne": {
+            "from": 232,
+            "to": 239
+          },
+          "comet_flight_ii_n": {
+            "from": 240,
+            "to": 247
+          },
+          "comet_flight_ii_nw": {
+            "from": 248,
+            "to": 255
+          },
+          "comet_flight_ii_w": {
+            "from": 256,
+            "to": 263
+          },
+          "comet_flight_ii_sw": {
+            "from": 264,
+            "to": 271
+          },
+          "comet_flight_ii_s": {
+            "from": 272,
+            "to": 279
+          },
+          "comet_flight_ii_se": {
+            "from": 280,
+            "to": 287
+          },
+          "comet_impact": {
+            "from": 288,
+            "to": 295
+          },
+          "comet_impact_e": {
+            "from": 296,
+            "to": 303
+          },
+          "comet_impact_ne": {
+            "from": 304,
+            "to": 311
+          },
+          "comet_impact_n": {
+            "from": 312,
+            "to": 319
+          },
+          "comet_impact_nw": {
+            "from": 320,
+            "to": 327
+          },
+          "comet_impact_w": {
+            "from": 328,
+            "to": 335
+          },
+          "comet_impact_sw": {
+            "from": 336,
+            "to": 343
+          },
+          "comet_impact_s": {
+            "from": 344,
+            "to": 351
+          },
+          "comet_impact_se": {
+            "from": 352,
+            "to": 359
+          },
+          "comet_impact_ii": {
+            "from": 360,
+            "to": 367
+          },
+          "comet_impact_ii_e": {
+            "from": 368,
+            "to": 375
+          },
+          "comet_impact_ii_ne": {
+            "from": 376,
+            "to": 383
+          },
+          "comet_impact_ii_n": {
+            "from": 384,
+            "to": 391
+          },
+          "comet_impact_ii_nw": {
+            "from": 392,
+            "to": 399
+          },
+          "comet_impact_ii_w": {
+            "from": 400,
+            "to": 407
+          },
+          "comet_impact_ii_sw": {
+            "from": 408,
+            "to": 415
+          },
+          "comet_impact_ii_s": {
+            "from": 416,
+            "to": 423
+          },
+          "comet_impact_ii_se": {
+            "from": 424,
+            "to": 431
+          },
+          "comet_scrape": {
+            "from": 432,
+            "to": 439
+          },
+          "comet_scrape_e": {
+            "from": 440,
+            "to": 447
+          },
+          "comet_scrape_ne": {
+            "from": 448,
+            "to": 455
+          },
+          "comet_scrape_n": {
+            "from": 456,
+            "to": 463
+          },
+          "comet_scrape_nw": {
+            "from": 464,
+            "to": 471
+          },
+          "comet_scrape_w": {
+            "from": 472,
+            "to": 479
+          },
+          "comet_scrape_sw": {
+            "from": 480,
+            "to": 487
+          },
+          "comet_scrape_s": {
+            "from": 488,
+            "to": 495
+          },
+          "comet_scrape_se": {
+            "from": 496,
+            "to": 503
+          },
+          "comet_scrape_ii": {
+            "from": 504,
+            "to": 511
+          },
+          "comet_scrape_ii_e": {
+            "from": 512,
+            "to": 519
+          },
+          "comet_scrape_ii_ne": {
+            "from": 520,
+            "to": 527
+          },
+          "comet_scrape_ii_n": {
+            "from": 528,
+            "to": 535
+          },
+          "comet_scrape_ii_nw": {
+            "from": 536,
+            "to": 543
+          },
+          "comet_scrape_ii_w": {
+            "from": 544,
+            "to": 551
+          },
+          "comet_scrape_ii_sw": {
+            "from": 552,
+            "to": 559
+          },
+          "comet_scrape_ii_s": {
+            "from": 560,
+            "to": 567
+          },
+          "comet_scrape_ii_se": {
+            "from": 568,
+            "to": 575
+          }
+        },
+        "durations_ms": [
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130
+        ],
+        "columns": 8,
+        "frame_count": 576,
+        "source": "assets/source-art/power_identity_002c5/iron_comet_fx.aseprite",
+        "texture": "res://assets/powers/identity/iron_comet_fx.png"
+      },
+      "event_tags": {
+        "comet_charge": "comet_charge",
+        "comet_release": "comet_impact"
+      },
+      "active_tags": {
+        "charged": "comet_charge",
+        "flight": "comet_flight",
+        "aftermath": "comet_scrape"
+      },
+      "notes": [
+        "Rank II adds a second wall-side compression beat and heavier path fragments, never a larger surrounding aura.",
+        "Charge cels leave the machine centre open. Card stack height visibly compresses; runtime may compress cosmetic stack only, preserving collision geometry.",
+        "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
+      ],
+      "art": {
+        "iron_comet": {
+          "family": "iron_comet",
+          "art_id": "iron_comet",
+          "source_tag": "iron_comet",
+          "icon": "res://assets/powers/identity/iron_comet_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/iron_comet_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 5,
+          "card_durations_ms": [
+            145,
+            110,
+            85,
+            65,
+            40,
+            35,
+            35,
+            50,
+            75,
+            100,
+            140,
+            175
+          ]
+        },
+        "iron_comet_ii": {
+          "family": "iron_comet",
+          "art_id": "iron_comet_ii",
+          "source_tag": "iron_comet_ii",
+          "icon": "res://assets/powers/identity/iron_comet_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/iron_comet_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            145,
+            110,
+            85,
+            65,
+            40,
+            35,
+            35,
+            50,
+            75,
+            100,
+            140,
+            175
+          ]
+        }
+      }
+    },
+    "dead_centre": {
+      "family": "dead_centre",
+      "grammar": {
+        "silhouette": "Recognizable heavy spinning top pressing its bit into fractured arena floor",
+        "motion": "Settles under load; planted contact holds, Counterweight returns the accepted strike",
+        "location": "Actual bit and floor; finite accepted-contact and counterstroke direction",
+        "persistence": "Existing anchor and stored-force stages; bounded paid impact/release",
+        "palette": "Accepted Bastion steel, sparse floor silver and restrained amber counterstroke",
+        "feature": "Floor load and real rotor survival without clamp legs, platform or spring cylinder"
+      },
+      "design": "assets/powers/identity/dead_centre_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "Arena floor and contact bed",
+          "Physical bit pressure and displacement",
+          "Accepted native top bodies",
+          "Accepted incoming rival",
+          "Floor bite and contact reaction"
+        ],
+        "tags": {
+          "dead_centre": {
+            "from": 0,
+            "to": 11
+          },
+          "dead_centre_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "bulwark": {
+            "from": 24,
+            "to": 35
+          },
+          "counterweight": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          110,
+          110,
+          80,
+          80,
+          140,
+          140,
+          55,
+          55,
+          85,
+          85,
+          130,
+          130,
+          110,
+          110,
+          80,
+          80,
+          140,
+          140,
+          55,
+          55,
+          85,
+          85,
+          130,
+          130,
+          110,
+          110,
+          80,
+          80,
+          140,
+          140,
+          55,
+          55,
+          85,
+          85,
+          130,
+          130,
+          110,
+          110,
+          80,
+          80,
+          140,
+          140,
+          55,
+          55,
+          85,
+          85,
+          130,
+          130
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+        "texture": "res://assets/powers/identity/dead_centre_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "Independent planted top silhouette",
+          "Bit contact and mutation response"
+        ],
+        "tags": {
+          "dead_centre": {
+            "from": 0,
+            "to": 0
+          },
+          "dead_centre_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "bulwark": {
+            "from": 2,
+            "to": 2
+          },
+          "counterweight": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          120,
+          120,
+          120,
+          120
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+        "texture": "res://assets/powers/identity/dead_centre_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "Arena floor and contact bed",
+          "Physical bit pressure and displacement",
+          "Accepted native top bodies",
+          "Accepted incoming rival",
+          "Floor bite and contact reaction"
+        ],
+        "tags": {
+          "ground_lock": {
+            "from": 0,
+            "to": 7
+          },
+          "ground_lock_ii": {
+            "from": 8,
+            "to": 15
+          },
+          "bulwark_lock": {
+            "from": 16,
+            "to": 23
+          },
+          "bulwark_impact": {
+            "from": 24,
+            "to": 31
+          },
+          "jaw_break": {
+            "from": 32,
+            "to": 39
+          },
+          "counterweight_store": {
+            "from": 40,
+            "to": 47
+          },
+          "counterweight_release": {
+            "from": 48,
+            "to": 55
+          },
+          "counterweight_release_e": {
+            "from": 56,
+            "to": 63
+          },
+          "counterweight_release_se": {
+            "from": 64,
+            "to": 71
+          },
+          "counterweight_release_s": {
+            "from": 72,
+            "to": 79
+          },
+          "counterweight_release_sw": {
+            "from": 80,
+            "to": 87
+          },
+          "counterweight_release_w": {
+            "from": 88,
+            "to": 95
+          },
+          "counterweight_release_nw": {
+            "from": 96,
+            "to": 103
+          },
+          "counterweight_release_n": {
+            "from": 104,
+            "to": 111
+          },
+          "counterweight_release_ne": {
+            "from": 112,
+            "to": 119
+          }
+        },
+        "durations_ms": [
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140,
+          130,
+          90,
+          70,
+          70,
+          80,
+          90,
+          110,
+          140
+        ],
+        "columns": 8,
+        "frame_count": 120,
+        "source": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+        "texture": "res://assets/powers/identity/dead_centre_fx.png"
+      },
+      "event_tags": {
+        "anchor": "ground_lock",
+        "anchor_ii": "ground_lock_ii",
+        "anchor_break": "jaw_break",
+        "bulwark_impact": "bulwark_impact",
+        "counterweight_store": "counterweight_store",
+        "counterweight_release": "counterweight_release"
+      },
+      "active_tags": {
+        "anchor": "ground_lock",
+        "anchor_ii": "ground_lock_ii",
+        "bulwark": "bulwark_lock",
+        "counterweight": "counterweight_store"
+      },
+      "notes": [
+        "All historical Centre card/icon/FX sources inspected; older four legs and spring box were not restored.",
+        "Card subject uses accepted native Bastion/Breaker blade, ratchet and bit without resampling.",
+        "Six excellent top/load/contact poses held twice; saved editable masters are export authority.",
+        "FX show uneven physical floor seams at the actual bit with charge-stage intensity; no platform.",
+        "Bulwark remains planted after incoming contact; Counterweight returns actual accepted force.",
+        "No mechanics, charge, RPM, positions, timers or target selection changed."
+      ],
+      "art": {
+        "dead_centre": {
+          "family": "dead_centre",
+          "art_id": "dead_centre",
+          "source_tag": "dead_centre",
+          "icon": "res://assets/powers/identity/dead_centre_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            110,
+            110,
+            80,
+            80,
+            140,
+            140,
+            55,
+            55,
+            85,
+            85,
+            130,
+            130
+          ]
+        },
+        "dead_centre_ii": {
+          "family": "dead_centre",
+          "art_id": "dead_centre_ii",
+          "source_tag": "dead_centre_ii",
+          "icon": "res://assets/powers/identity/dead_centre_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            110,
+            110,
+            80,
+            80,
+            140,
+            140,
+            55,
+            55,
+            85,
+            85,
+            130,
+            130
+          ]
+        },
+        "bulwark": {
+          "family": "dead_centre",
+          "art_id": "bulwark",
+          "source_tag": "bulwark",
+          "icon": "res://assets/powers/identity/dead_centre_icons.png",
+          "icon_frame": 2,
+          "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+          "card_row": 2,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            110,
+            110,
+            80,
+            80,
+            140,
+            140,
+            55,
+            55,
+            85,
+            85,
+            130,
+            130
+          ]
+        },
+        "counterweight": {
+          "family": "dead_centre",
+          "art_id": "counterweight",
+          "source_tag": "counterweight",
+          "icon": "res://assets/powers/identity/dead_centre_icons.png",
+          "icon_frame": 3,
+          "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+          "card_row": 3,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            110,
+            110,
+            80,
+            80,
+            140,
+            140,
+            55,
+            55,
+            85,
+            85,
+            130,
+            130
+          ]
+        }
+      }
+    },
+    "afterimage": {
+      "family": "afterimage",
+      "grammar": {
+        "silhouette": "A leading physical machine and environmental scars; Ghost encloses a rival in an irregular latched route",
+        "motion": "Route is drawn behind motion, aged crossing snaps locally, Ghost sockets meet and the actual path locks",
+        "location": "Recorded routes, endpoints and actual crossing points",
+        "persistence": "Bounded route history plus finite latch/crossing responses",
+        "palette": "Sparse cyan and ice scars; Ghost uses green mechanical route teeth",
+        "feature": "The route occupies the illustration and gameplay space; Ghost closure and Slipstream crossing have different spatial and timing language"
+      },
+      "design": "assets/powers/identity/afterimage_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 floor and contact shadow",
+          "02 load-bearing machine bodies",
+          "03 mechanical jaws and bearings",
+          "04 transmitted action and route",
+          "05 reaction chips and key light",
+          "06 developed structure"
+        ],
+        "tags": {
+          "afterimage": {
+            "from": 0,
+            "to": 11
+          },
+          "afterimage_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "ghost_circuit": {
+            "from": 24,
+            "to": 35
+          },
+          "slipstream": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          120,
+          90,
+          80,
+          55,
+          55,
+          65,
+          80,
+          80,
+          100,
+          110,
+          120,
+          160,
+          140,
+          100,
+          80,
+          60,
+          50,
+          70,
+          90,
+          100,
+          100,
+          100,
+          120,
+          170,
+          160,
+          110,
+          90,
+          65,
+          55,
+          100,
+          120,
+          120,
+          100,
+          90,
+          110,
+          190,
+          150,
+          100,
+          70,
+          40,
+          40,
+          45,
+          55,
+          65,
+          90,
+          120,
+          140,
+          180
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+        "texture": "res://assets/powers/identity/afterimage_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "Independent small-scale silhouette",
+          "Mechanic-specific recognition teeth"
+        ],
+        "tags": {
+          "afterimage": {
+            "from": 0,
+            "to": 0
+          },
+          "afterimage_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "ghost_circuit": {
+            "from": 2,
+            "to": 2
+          },
+          "slipstream": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          120,
+          120,
+          120,
+          120
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+        "texture": "res://assets/powers/identity/afterimage_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 floor and contact shadow",
+          "02 load-bearing machine bodies",
+          "03 mechanical jaws and bearings",
+          "04 transmitted action and route",
+          "05 reaction chips and key light",
+          "06 developed structure"
+        ],
+        "tags": {
+          "route_scar": {
+            "from": 0,
+            "to": 7
+          },
+          "route_scar_ii": {
+            "from": 8,
+            "to": 15
+          },
+          "latch_endpoint": {
+            "from": 16,
+            "to": 23
+          },
+          "ghost_latch": {
+            "from": 24,
+            "to": 31
+          },
+          "circuit_lock": {
+            "from": 32,
+            "to": 39
+          },
+          "slipstream_snap": {
+            "from": 40,
+            "to": 47
+          },
+          "slipstream_snap_e": {
+            "from": 48,
+            "to": 55
+          },
+          "slipstream_snap_se": {
+            "from": 56,
+            "to": 63
+          },
+          "slipstream_snap_s": {
+            "from": 64,
+            "to": 71
+          },
+          "slipstream_snap_sw": {
+            "from": 72,
+            "to": 79
+          },
+          "slipstream_snap_w": {
+            "from": 80,
+            "to": 87
+          },
+          "slipstream_snap_nw": {
+            "from": 88,
+            "to": 95
+          },
+          "slipstream_snap_n": {
+            "from": 96,
+            "to": 103
+          },
+          "slipstream_snap_ne": {
+            "from": 104,
+            "to": 111
+          }
+        },
+        "durations_ms": [
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120,
+          70,
+          50,
+          40,
+          45,
+          50,
+          65,
+          85,
+          120
+        ],
+        "columns": 8,
+        "frame_count": 112,
+        "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+        "texture": "res://assets/powers/identity/afterimage_fx.png"
+      },
+      "event_tags": {
+        "afterimage": "route_scar",
+        "afterimage_ii": "route_scar_ii",
+        "ghost_closure": "ghost_latch",
+        "ghost_activation": "circuit_lock",
+        "slipstream_cross": "slipstream_snap"
+      },
+      "active_tags": {
+        "ghost_preview": "latch_endpoint"
+      },
+      "notes": "Retain strong actual-route geometry and native afterimage_fx_002c4 scar/crossing logic; do not substitute a pre-drawn circle for live recorded routes. New endpoint, lock and crossing tiles are local accents. Ghost card shows an enclosed rival and a closing irregular machine path; Slipstream shows a physical top accelerating across an old route. No persistent player aura.",
+      "art": {
+        "afterimage": {
+          "family": "afterimage",
+          "art_id": "afterimage",
+          "source_tag": "afterimage",
+          "icon": "res://assets/powers/identity/afterimage_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            120,
+            90,
+            80,
+            55,
+            55,
+            65,
+            80,
+            80,
+            100,
+            110,
+            120,
+            160
+          ]
+        },
+        "afterimage_ii": {
+          "family": "afterimage",
+          "art_id": "afterimage_ii",
+          "source_tag": "afterimage_ii",
+          "icon": "res://assets/powers/identity/afterimage_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 5,
+          "card_durations_ms": [
+            140,
+            100,
+            80,
+            60,
+            50,
+            70,
+            90,
+            100,
+            100,
+            100,
+            120,
+            170
+          ]
+        },
+        "ghost_circuit": {
+          "family": "afterimage",
+          "art_id": "ghost_circuit",
+          "source_tag": "ghost_circuit",
+          "icon": "res://assets/powers/identity/afterimage_icons.png",
+          "icon_frame": 2,
+          "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+          "card_row": 2,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            160,
+            110,
+            90,
+            65,
+            55,
+            100,
+            120,
+            120,
+            100,
+            90,
+            110,
+            190
+          ]
+        },
+        "slipstream": {
+          "family": "afterimage",
+          "art_id": "slipstream",
+          "source_tag": "slipstream",
+          "icon": "res://assets/powers/identity/afterimage_icons.png",
+          "icon_frame": 3,
+          "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+          "card_row": 3,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            150,
+            100,
+            70,
+            40,
+            40,
+            45,
+            55,
+            65,
+            90,
+            120,
+            140,
+            180
+          ]
+        }
+      }
+    },
+    "chain_impact": {
+      "family": "chain_impact",
+      "grammar": {
+        "silhouette": "Three recognizable spinning tops in the restored triangular collision relay",
+        "motion": "First contact expands locally; actual receivers react sequentially",
+        "location": "Paid collision/elimination source and snapshotted real recipients",
+        "persistence": "Finite 0.38s event; at most three native cels, no persistent player aura",
+        "palette": "Accepted warm orange/gold collision clusters and steel tops",
+        "feature": "Historical triangular top story plus causal source-to-recipient contact reactions"
+      },
+      "design": "assets/powers/identity/chain_impact_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "industrial backplate",
+          "machine depth and chassis",
+          "authored moving bearings",
+          "pressure and trajectory",
+          "contact glints and fragments",
+          "Rank II second receiver follow-through"
+        ],
+        "tags": {
+          "chain_impact": {
+            "from": 0,
+            "to": 11
+          },
+          "chain_impact_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          55,
+          55,
+          45,
+          45,
+          37,
+          38,
+          37,
+          38,
+          50,
+          50,
+          85,
+          85,
+          55,
+          55,
+          45,
+          45,
+          37,
+          38,
+          37,
+          38,
+          50,
+          50,
+          85,
+          85
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+        "texture": "res://assets/powers/identity/chain_impact_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "Restored independent triangular chain silhouette",
+          "Rank II final contact pressure"
+        ],
+        "tags": {
+          "chain_impact": {
+            "from": 0,
+            "to": 0
+          },
+          "chain_impact_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          120,
+          120
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+        "texture": "res://assets/powers/identity/chain_impact_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "mechanical sectors",
+          "edge teeth",
+          "contact light",
+          "angular scars"
+        ],
+        "tags": {
+          "transmit": {
+            "from": 0,
+            "to": 7
+          },
+          "transmit_ii": {
+            "from": 8,
+            "to": 15
+          }
+        },
+        "durations_ms": [
+          22,
+          23,
+          45,
+          45,
+          45,
+          45,
+          22,
+          23,
+          22,
+          23,
+          45,
+          45,
+          45,
+          45,
+          22,
+          23
+        ],
+        "columns": 8,
+        "frame_count": 16,
+        "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+        "texture": "res://assets/powers/identity/chain_impact_fx.png"
+      },
+      "event_tags": {
+        "chain_impact": "transmit"
+      },
+      "active_tags": {},
+      "notes": "Restores bdcc24e card layers and independent icon Rank I exactly; six poses and total duration preserved through paired holds. Rank II develops the final contact without changing composition. Original native128 pressure source plus at most two real recipient contact cels retain the current three-cel draw bound. Receiver metadata and physics are untouched.",
+      "historical_fx": {
+        "cell": [
+          128,
+          128
+        ],
+        "pivot": [
+          64,
+          64
+        ],
+        "layers": [
+          "mechanical sectors",
+          "edge teeth",
+          "contact light",
+          "angular scars"
+        ],
+        "tags": {
+          "contact_arc": {
+            "from": 0,
+            "to": 5
+          },
+          "pressure": {
+            "from": 6,
+            "to": 13
+          },
+          "echo": {
+            "from": 14,
+            "to": 19
+          },
+          "corona": {
+            "from": 20,
+            "to": 27
+          },
+          "recovery": {
+            "from": 28,
+            "to": 35
+          },
+          "comet_headings": {
+            "from": 36,
+            "to": 43
+          },
+          "floor_stamp": {
+            "from": 44,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          80,
+          70,
+          70,
+          70,
+          70
+        ],
+        "texture": "res://assets/powers/effects.png",
+        "columns": 8,
+        "frame_count": 48,
+        "source": "assets/source-art/power_fx_002b.aseprite"
+      },
+      "art": {
+        "chain_impact": {
+          "family": "chain_impact",
+          "art_id": "chain_impact",
+          "source_tag": "chain_impact",
+          "icon": "res://assets/powers/identity/chain_impact_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 8,
+          "card_durations_ms": [
+            55,
+            55,
+            45,
+            45,
+            37,
+            38,
+            37,
+            38,
+            50,
+            50,
+            85,
+            85
+          ]
+        },
+        "chain_impact_ii": {
+          "family": "chain_impact",
+          "art_id": "chain_impact_ii",
+          "source_tag": "chain_impact_ii",
+          "icon": "res://assets/powers/identity/chain_impact_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 8,
+          "card_durations_ms": [
+            55,
+            55,
+            45,
+            45,
+            37,
+            38,
+            37,
+            38,
+            50,
+            50,
+            85,
+            85
+          ]
+        }
+      }
+    },
+    "clutch": {
+      "family": "clutch",
+      "grammar": {
+        "silhouette": "Accepted wobbling blade and ratchet on a visibly scraping bit, followed by a small physical floor catch.",
+        "motion": "Uneven scrape, loaded bit bite, and the same top settling back upright.",
+        "location": "One side of the low bearing and contact-floor scrape.",
+        "persistence": "Intermittent actual danger window; bounded successful-contact catch.",
+        "palette": "Dull steel/brass, small gold tooth tips, oxide strain marks and one pale catch flash.",
+        "feature": "The top itself leans and catches; one tiny floor bite replaces the detached bearing device."
+      },
+      "design": "assets/powers/identity/clutch_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 arena floor and contact story",
+          "02 accepted native bit and ratchet",
+          "03 accepted native blade silhouette",
+          "04 mechanic-specific motion and force",
+          "05 physical contact flashes and fragments"
+        ],
+        "tags": {
+          "clutch": {
+            "from": 0,
+            "to": 11
+          },
+          "clutch_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          180,
+          110,
+          145,
+          60,
+          45,
+          90,
+          40,
+          65,
+          110,
+          85,
+          140,
+          190,
+          180,
+          110,
+          145,
+          60,
+          45,
+          90,
+          40,
+          65,
+          110,
+          85,
+          140,
+          190
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+        "texture": "res://assets/powers/identity/clutch_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 compact mechanical silhouette",
+          "02 identifying action and negative space"
+        ],
+        "tags": {
+          "clutch": {
+            "from": 0,
+            "to": 0
+          },
+          "clutch_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          100,
+          100
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+        "texture": "res://assets/powers/identity/clutch_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded scar and contact reaction",
+          "02 physical mechanism and brackets",
+          "03 moving force plates",
+          "04 keyed sparks and travel fragments"
+        ],
+        "tags": {
+          "clutch_danger": {
+            "from": 0,
+            "to": 7
+          },
+          "clutch_danger_ii": {
+            "from": 8,
+            "to": 15
+          },
+          "clutch_catch": {
+            "from": 16,
+            "to": 23
+          },
+          "clutch_catch_ii": {
+            "from": 24,
+            "to": 31
+          }
+        },
+        "durations_ms": [
+          85,
+          60,
+          45,
+          35,
+          45,
+          65,
+          90,
+          130,
+          85,
+          60,
+          45,
+          35,
+          45,
+          65,
+          90,
+          130,
+          85,
+          60,
+          45,
+          35,
+          45,
+          65,
+          90,
+          130,
+          85,
+          60,
+          45,
+          35,
+          45,
+          65,
+          90,
+          130
+        ],
+        "columns": 8,
+        "frame_count": 32,
+        "source": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+        "texture": "res://assets/powers/identity/clutch_fx.png"
+      },
+      "event_tags": {
+        "clutch_activate": "clutch_danger",
+        "clutch_recover": "clutch_catch"
+      },
+      "active_tags": {
+        "danger": "clutch_danger",
+        "recover": "clutch_catch"
+      },
+      "notes": [
+        "Rank II adds a second small redirected catch fragment, never a separate supporting device.",
+        "The authored catch never resets the physical player, reserve, collision radius or position."
+      ],
+      "art": {
+        "clutch": {
+          "family": "clutch",
+          "art_id": "clutch",
+          "source_tag": "clutch",
+          "icon": "res://assets/powers/identity/clutch_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/clutch_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            180,
+            110,
+            145,
+            60,
+            45,
+            90,
+            40,
+            65,
+            110,
+            85,
+            140,
+            190
+          ]
+        },
+        "clutch_ii": {
+          "family": "clutch",
+          "art_id": "clutch_ii",
+          "source_tag": "clutch_ii",
+          "icon": "res://assets/powers/identity/clutch_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/clutch_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            180,
+            110,
+            145,
+            60,
+            45,
+            90,
+            40,
+            65,
+            110,
+            85,
+            140,
+            190
+          ]
+        }
+      }
+    },
+    "high_gear": {
+      "family": "high_gear",
+      "grammar": {
+        "silhouette": "Recognisable native top plus physically separated round rotor echoes; Flow retains an open contact path.",
+        "motion": "Sparse native rim fragments separate as thrust rises. Terminal opens longer gaps; Flow retains three disconnected bent floor groups.",
+        "location": "Sparse rear blade-rim memories along the actual velocity; the real live top stays dominant.",
+        "persistence": "Moving speed state; terminal surge is event-based.",
+        "palette": "Steel, ice and cool blue; muted mint retained rails; sparse terminal brass tips.",
+        "feature": "Terminal separated blade-tip glints versus Flow short bent floor groups remain distinct in grayscale; no opaque rack or rail."
+      },
+      "design": "assets/powers/identity/high_gear_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 arena floor and contact story",
+          "02 accepted native bit and ratchet",
+          "03 accepted native blade silhouette",
+          "04 mechanic-specific motion and force",
+          "05 physical contact flashes and fragments"
+        ],
+        "tags": {
+          "high_gear": {
+            "from": 0,
+            "to": 11
+          },
+          "high_gear_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "terminal_velocity": {
+            "from": 24,
+            "to": 35
+          },
+          "flow_state": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          120,
+          90,
+          70,
+          55,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          100,
+          150,
+          120,
+          90,
+          70,
+          55,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          100,
+          150,
+          130,
+          90,
+          60,
+          40,
+          35,
+          35,
+          40,
+          50,
+          65,
+          90,
+          115,
+          160,
+          95,
+          90,
+          85,
+          80,
+          75,
+          75,
+          75,
+          80,
+          85,
+          90,
+          100,
+          115
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+        "texture": "res://assets/powers/identity/high_gear_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 compact mechanical silhouette",
+          "02 identifying action and negative space"
+        ],
+        "tags": {
+          "high_gear": {
+            "from": 0,
+            "to": 0
+          },
+          "high_gear_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "terminal_velocity": {
+            "from": 2,
+            "to": 2
+          },
+          "flow_state": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+        "texture": "res://assets/powers/identity/high_gear_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded scar and contact reaction",
+          "02 physical mechanism and brackets",
+          "03 moving force plates",
+          "04 keyed sparks and travel fragments"
+        ],
+        "tags": {
+          "speed": {
+            "from": 0,
+            "to": 7
+          },
+          "speed_e": {
+            "from": 8,
+            "to": 15
+          },
+          "speed_ne": {
+            "from": 16,
+            "to": 23
+          },
+          "speed_n": {
+            "from": 24,
+            "to": 31
+          },
+          "speed_nw": {
+            "from": 32,
+            "to": 39
+          },
+          "speed_w": {
+            "from": 40,
+            "to": 47
+          },
+          "speed_sw": {
+            "from": 48,
+            "to": 55
+          },
+          "speed_s": {
+            "from": 56,
+            "to": 63
+          },
+          "speed_se": {
+            "from": 64,
+            "to": 71
+          },
+          "speed_ii": {
+            "from": 72,
+            "to": 79
+          },
+          "speed_ii_e": {
+            "from": 80,
+            "to": 87
+          },
+          "speed_ii_ne": {
+            "from": 88,
+            "to": 95
+          },
+          "speed_ii_n": {
+            "from": 96,
+            "to": 103
+          },
+          "speed_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "speed_ii_w": {
+            "from": 112,
+            "to": 119
+          },
+          "speed_ii_sw": {
+            "from": 120,
+            "to": 127
+          },
+          "speed_ii_s": {
+            "from": 128,
+            "to": 135
+          },
+          "speed_ii_se": {
+            "from": 136,
+            "to": 143
+          },
+          "terminal_velocity": {
+            "from": 144,
+            "to": 151
+          },
+          "terminal_velocity_e": {
+            "from": 152,
+            "to": 159
+          },
+          "terminal_velocity_ne": {
+            "from": 160,
+            "to": 167
+          },
+          "terminal_velocity_n": {
+            "from": 168,
+            "to": 175
+          },
+          "terminal_velocity_nw": {
+            "from": 176,
+            "to": 183
+          },
+          "terminal_velocity_w": {
+            "from": 184,
+            "to": 191
+          },
+          "terminal_velocity_sw": {
+            "from": 192,
+            "to": 199
+          },
+          "terminal_velocity_s": {
+            "from": 200,
+            "to": 207
+          },
+          "terminal_velocity_se": {
+            "from": 208,
+            "to": 215
+          },
+          "flow_state": {
+            "from": 216,
+            "to": 223
+          },
+          "flow_state_e": {
+            "from": 224,
+            "to": 231
+          },
+          "flow_state_ne": {
+            "from": 232,
+            "to": 239
+          },
+          "flow_state_n": {
+            "from": 240,
+            "to": 247
+          },
+          "flow_state_nw": {
+            "from": 248,
+            "to": 255
+          },
+          "flow_state_w": {
+            "from": 256,
+            "to": 263
+          },
+          "flow_state_sw": {
+            "from": 264,
+            "to": 271
+          },
+          "flow_state_s": {
+            "from": 272,
+            "to": 279
+          },
+          "flow_state_se": {
+            "from": 280,
+            "to": 287
+          }
+        },
+        "durations_ms": [
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130
+        ],
+        "columns": 8,
+        "frame_count": 288,
+        "source": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+        "texture": "res://assets/powers/identity/high_gear_fx.png"
+      },
+      "event_tags": {
+        "high_gear_surge": "terminal_velocity"
+      },
+      "active_tags": {
+        "speed": "speed",
+        "terminal_velocity": "terminal_velocity",
+        "flow_state": "flow_state"
+      },
+      "notes": [
+        "Rank II adds one further sparse blade-rim memory; no housing, filled base, shadow block or continuous speed bars.",
+        "Flow preserves a long open floor-contact bend. Orbit instead cuts a compact concave hook and ejects grit.",
+        "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
+      ],
+      "art": {
+        "high_gear": {
+          "family": "high_gear",
+          "art_id": "high_gear",
+          "source_tag": "high_gear",
+          "icon": "res://assets/powers/identity/high_gear_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 5,
+          "card_durations_ms": [
+            120,
+            90,
+            70,
+            55,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150
+          ]
+        },
+        "high_gear_ii": {
+          "family": "high_gear",
+          "art_id": "high_gear_ii",
+          "source_tag": "high_gear_ii",
+          "icon": "res://assets/powers/identity/high_gear_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 5,
+          "card_durations_ms": [
+            120,
+            90,
+            70,
+            55,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150
+          ]
+        },
+        "terminal_velocity": {
+          "family": "high_gear",
+          "art_id": "terminal_velocity",
+          "source_tag": "terminal_velocity",
+          "icon": "res://assets/powers/identity/high_gear_icons.png",
+          "icon_frame": 2,
+          "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+          "card_row": 2,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            130,
+            90,
+            60,
+            40,
+            35,
+            35,
+            40,
+            50,
+            65,
+            90,
+            115,
+            160
+          ]
+        },
+        "flow_state": {
+          "family": "high_gear",
+          "art_id": "flow_state",
+          "source_tag": "flow_state",
+          "icon": "res://assets/powers/identity/high_gear_icons.png",
+          "icon_frame": 3,
+          "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+          "card_row": 3,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            95,
+            90,
+            85,
+            80,
+            75,
+            75,
+            75,
+            80,
+            85,
+            90,
+            100,
+            115
+          ]
+        }
+      }
+    },
+    "orbit_drive": {
+      "family": "orbit_drive",
+      "grammar": {
+        "silhouette": "Accepted physical top travelling around a broad C-shaped contact-tip route.",
+        "motion": "Enter turn, cut a growing outside hook, throw grit and release the arc.",
+        "location": "Floor/contact point outside the turn, below the rotor.",
+        "persistence": "Only actual brake-turn drift/arc state; scuffs settle after the carving beat.",
+        "palette": "Worn steel floor scars, muted teal edge and brass grit.",
+        "feature": "One short concave floor cut with displaced outer grit; no rotor aura or long Flow rails."
+      },
+      "design": "assets/powers/identity/orbit_drive_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 arena floor and contact story",
+          "02 accepted native bit and ratchet",
+          "03 accepted native blade silhouette",
+          "04 mechanic-specific motion and force",
+          "05 physical contact flashes and fragments"
+        ],
+        "tags": {
+          "orbit_drive": {
+            "from": 0,
+            "to": 11
+          },
+          "orbit_drive_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          135,
+          100,
+          80,
+          60,
+          50,
+          45,
+          50,
+          60,
+          75,
+          95,
+          115,
+          155,
+          135,
+          100,
+          80,
+          60,
+          50,
+          45,
+          50,
+          60,
+          75,
+          95,
+          115,
+          155
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+        "texture": "res://assets/powers/identity/orbit_drive_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 compact mechanical silhouette",
+          "02 identifying action and negative space"
+        ],
+        "tags": {
+          "orbit_drive": {
+            "from": 0,
+            "to": 0
+          },
+          "orbit_drive_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          100,
+          100
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+        "texture": "res://assets/powers/identity/orbit_drive_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded scar and contact reaction",
+          "02 physical mechanism and brackets",
+          "03 moving force plates",
+          "04 keyed sparks and travel fragments"
+        ],
+        "tags": {
+          "orbit_drift": {
+            "from": 0,
+            "to": 7
+          },
+          "orbit_drift_e": {
+            "from": 8,
+            "to": 15
+          },
+          "orbit_drift_ne": {
+            "from": 16,
+            "to": 23
+          },
+          "orbit_drift_n": {
+            "from": 24,
+            "to": 31
+          },
+          "orbit_drift_nw": {
+            "from": 32,
+            "to": 39
+          },
+          "orbit_drift_w": {
+            "from": 40,
+            "to": 47
+          },
+          "orbit_drift_sw": {
+            "from": 48,
+            "to": 55
+          },
+          "orbit_drift_s": {
+            "from": 56,
+            "to": 63
+          },
+          "orbit_drift_se": {
+            "from": 64,
+            "to": 71
+          },
+          "orbit_drift_ii": {
+            "from": 72,
+            "to": 79
+          },
+          "orbit_drift_ii_e": {
+            "from": 80,
+            "to": 87
+          },
+          "orbit_drift_ii_ne": {
+            "from": 88,
+            "to": 95
+          },
+          "orbit_drift_ii_n": {
+            "from": 96,
+            "to": 103
+          },
+          "orbit_drift_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "orbit_drift_ii_w": {
+            "from": 112,
+            "to": 119
+          },
+          "orbit_drift_ii_sw": {
+            "from": 120,
+            "to": 127
+          },
+          "orbit_drift_ii_s": {
+            "from": 128,
+            "to": 135
+          },
+          "orbit_drift_ii_se": {
+            "from": 136,
+            "to": 143
+          }
+        },
+        "durations_ms": [
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130,
+          75,
+          55,
+          40,
+          35,
+          45,
+          65,
+          90,
+          130
+        ],
+        "columns": 8,
+        "frame_count": 144,
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite",
+        "texture": "res://assets/powers/identity/orbit_drive_fx.png"
+      },
+      "event_tags": {
+        "orbit_drift": "orbit_drift"
+      },
+      "active_tags": {
+        "drift": "orbit_drift"
+      },
+      "notes": [
+        "Rank II deepens two outside skid grooves and ejects extra grit, staying at the contact plane."
+      ],
+      "art": {
+        "orbit_drive": {
+          "family": "orbit_drive",
+          "art_id": "orbit_drive",
+          "source_tag": "orbit_drive",
+          "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 8,
+          "card_durations_ms": [
+            135,
+            100,
+            80,
+            60,
+            50,
+            45,
+            50,
+            60,
+            75,
+            95,
+            115,
+            155
+          ]
+        },
+        "orbit_drive_ii": {
+          "family": "orbit_drive",
+          "art_id": "orbit_drive_ii",
+          "source_tag": "orbit_drive_ii",
+          "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 8,
+          "card_durations_ms": [
+            135,
+            100,
+            80,
+            60,
+            50,
+            45,
+            50,
+            60,
+            75,
+            95,
+            115,
+            155
+          ]
+        }
+      }
+    },
+    "crash_guard": {
+      "family": "crash_guard",
+      "grammar": {
+        "silhouette": "round actual defender top receives an angular incoming top",
+        "motion": "contact bends at the blade, defender yields slightly, attacker redirects",
+        "location": "genuine incoming blade rim and local recoil skid",
+        "persistence": "existing contact event only",
+        "palette": "accepted blue steel defender against red attacker and short silver rim pressure",
+        "feature": "absorption and redirected displacement without piston, box or shield device"
+      },
+      "design": "assets/powers/identity/crash_guard_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 quiet floor background",
+          "02 actual floor travel and shadows",
+          "03 accepted rival native top body",
+          "04 accepted owner native top body",
+          "05 blade contact and physical follow-through"
+        ],
+        "tags": {
+          "crash_guard": {
+            "from": 0,
+            "to": 11
+          },
+          "crash_guard_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          125,
+          125,
+          65,
+          65,
+          60,
+          60,
+          90,
+          90,
+          100,
+          100,
+          140,
+          140,
+          125,
+          125,
+          65,
+          65,
+          60,
+          60,
+          90,
+          90,
+          100,
+          100,
+          140,
+          140
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+        "texture": "res://assets/powers/identity/crash_guard_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently drawn miniature top bodies",
+          "02 physical travel and contact at 16px"
+        ],
+        "tags": {
+          "crash_guard": {
+            "from": 0,
+            "to": 0
+          },
+          "crash_guard_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+        "texture": "res://assets/powers/identity/crash_guard_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded floor skid and erosion",
+          "02 real contact and compressed wake",
+          "03 directed physical follow-through",
+          "04 small attached rim glints"
+        ],
+        "tags": {
+          "damper_contact_e": {
+            "from": 0,
+            "to": 7
+          },
+          "damper_contact_se": {
+            "from": 8,
+            "to": 15
+          },
+          "damper_contact_s": {
+            "from": 16,
+            "to": 23
+          },
+          "damper_contact_sw": {
+            "from": 24,
+            "to": 31
+          },
+          "damper_contact_w": {
+            "from": 32,
+            "to": 39
+          },
+          "damper_contact_nw": {
+            "from": 40,
+            "to": 47
+          },
+          "damper_contact_n": {
+            "from": 48,
+            "to": 55
+          },
+          "damper_contact_ne": {
+            "from": 56,
+            "to": 63
+          },
+          "damper_contact_ii_e": {
+            "from": 64,
+            "to": 71
+          },
+          "damper_contact_ii_se": {
+            "from": 72,
+            "to": 79
+          },
+          "damper_contact_ii_s": {
+            "from": 80,
+            "to": 87
+          },
+          "damper_contact_ii_sw": {
+            "from": 88,
+            "to": 95
+          },
+          "damper_contact_ii_w": {
+            "from": 96,
+            "to": 103
+          },
+          "damper_contact_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "damper_contact_ii_n": {
+            "from": 112,
+            "to": 119
+          },
+          "damper_contact_ii_ne": {
+            "from": 120,
+            "to": 127
+          }
+        },
+        "durations_ms": [
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190,
+          60,
+          45,
+          55,
+          80,
+          100,
+          130,
+          160,
+          190
+        ],
+        "columns": 8,
+        "frame_count": 128,
+        "source": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+        "texture": "res://assets/powers/identity/crash_guard_fx.png"
+      },
+      "event_tags": {
+        "crash_guard": "damper_contact"
+      },
+      "active_tags": {},
+      "notes": [
+        "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+        "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+        "Rank II develops physical force and travel marks rather than adding a device.",
+        "Icons are separately authored recognizable miniature tops and travel/contact.",
+        "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+        "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+        "Historical internal tag damper_contact now means a short physical blade absorption/redirect response, with no piston or device pixels."
+      ],
+      "art": {
+        "crash_guard": {
+          "family": "crash_guard",
+          "art_id": "crash_guard",
+          "source_tag": "crash_guard",
+          "icon": "res://assets/powers/identity/crash_guard_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            125,
+            125,
+            65,
+            65,
+            60,
+            60,
+            90,
+            90,
+            100,
+            100,
+            140,
+            140
+          ]
+        },
+        "crash_guard_ii": {
+          "family": "crash_guard",
+          "art_id": "crash_guard_ii",
+          "source_tag": "crash_guard_ii",
+          "icon": "res://assets/powers/identity/crash_guard_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            125,
+            125,
+            65,
+            65,
+            60,
+            60,
+            90,
+            90,
+            100,
+            100,
+            140,
+            140
+          ]
+        }
+      }
+    },
+    "momentum_bank": {
+      "family": "momentum_bank",
+      "grammar": {
+        "silhouette": "accepted broad round top in the foreground above a folded braking skid at its own heel",
+        "motion": "braking skid folds, a compact positive-charge floor fold holds, directed launch unfolds it",
+        "location": "actual top heel and floor; release follows its real movement vector",
+        "persistence": "empty stage zero; visible earned charge stages one through seven plus existing store/release events",
+        "palette": "accepted blue Bastion steel body, restrained brass and pale floor wakes",
+        "feature": "one recognizable top and compressed physical floor travel; no detached cassette"
+      },
+      "design": "assets/powers/identity/momentum_bank_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 quiet floor background",
+          "02 actual floor travel and shadows",
+          "03 accepted rival native top body",
+          "04 accepted owner native top body",
+          "05 blade contact and physical follow-through"
+        ],
+        "tags": {
+          "momentum_bank": {
+            "from": 0,
+            "to": 11
+          },
+          "momentum_bank_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          90,
+          90,
+          95,
+          95,
+          160,
+          160,
+          40,
+          40,
+          65,
+          65,
+          140,
+          140,
+          90,
+          90,
+          95,
+          95,
+          160,
+          160,
+          40,
+          40,
+          65,
+          65,
+          140,
+          140
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+        "texture": "res://assets/powers/identity/momentum_bank_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently drawn miniature top bodies",
+          "02 physical travel and contact at 16px"
+        ],
+        "tags": {
+          "momentum_bank": {
+            "from": 0,
+            "to": 0
+          },
+          "momentum_bank_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+        "texture": "res://assets/powers/identity/momentum_bank_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded floor skid and erosion",
+          "02 real contact and compressed wake",
+          "03 directed physical follow-through",
+          "04 small attached rim glints"
+        ],
+        "tags": {
+          "bank_load_e": {
+            "from": 0,
+            "to": 7
+          },
+          "bank_load_se": {
+            "from": 8,
+            "to": 15
+          },
+          "bank_load_s": {
+            "from": 16,
+            "to": 23
+          },
+          "bank_load_sw": {
+            "from": 24,
+            "to": 31
+          },
+          "bank_load_w": {
+            "from": 32,
+            "to": 39
+          },
+          "bank_load_nw": {
+            "from": 40,
+            "to": 47
+          },
+          "bank_load_n": {
+            "from": 48,
+            "to": 55
+          },
+          "bank_load_ne": {
+            "from": 56,
+            "to": 63
+          },
+          "bank_load_ii_e": {
+            "from": 64,
+            "to": 71
+          },
+          "bank_load_ii_se": {
+            "from": 72,
+            "to": 79
+          },
+          "bank_load_ii_s": {
+            "from": 80,
+            "to": 87
+          },
+          "bank_load_ii_sw": {
+            "from": 88,
+            "to": 95
+          },
+          "bank_load_ii_w": {
+            "from": 96,
+            "to": 103
+          },
+          "bank_load_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "bank_load_ii_n": {
+            "from": 112,
+            "to": 119
+          },
+          "bank_load_ii_ne": {
+            "from": 120,
+            "to": 127
+          },
+          "bank_stored_e": {
+            "from": 128,
+            "to": 135
+          },
+          "bank_stored_se": {
+            "from": 136,
+            "to": 143
+          },
+          "bank_stored_s": {
+            "from": 144,
+            "to": 151
+          },
+          "bank_stored_sw": {
+            "from": 152,
+            "to": 159
+          },
+          "bank_stored_w": {
+            "from": 160,
+            "to": 167
+          },
+          "bank_stored_nw": {
+            "from": 168,
+            "to": 175
+          },
+          "bank_stored_n": {
+            "from": 176,
+            "to": 183
+          },
+          "bank_stored_ne": {
+            "from": 184,
+            "to": 191
+          },
+          "bank_stored_ii_e": {
+            "from": 192,
+            "to": 199
+          },
+          "bank_stored_ii_se": {
+            "from": 200,
+            "to": 207
+          },
+          "bank_stored_ii_s": {
+            "from": 208,
+            "to": 215
+          },
+          "bank_stored_ii_sw": {
+            "from": 216,
+            "to": 223
+          },
+          "bank_stored_ii_w": {
+            "from": 224,
+            "to": 231
+          },
+          "bank_stored_ii_nw": {
+            "from": 232,
+            "to": 239
+          },
+          "bank_stored_ii_n": {
+            "from": 240,
+            "to": 247
+          },
+          "bank_stored_ii_ne": {
+            "from": 248,
+            "to": 255
+          },
+          "bank_release_e": {
+            "from": 256,
+            "to": 263
+          },
+          "bank_release_se": {
+            "from": 264,
+            "to": 271
+          },
+          "bank_release_s": {
+            "from": 272,
+            "to": 279
+          },
+          "bank_release_sw": {
+            "from": 280,
+            "to": 287
+          },
+          "bank_release_w": {
+            "from": 288,
+            "to": 295
+          },
+          "bank_release_nw": {
+            "from": 296,
+            "to": 303
+          },
+          "bank_release_n": {
+            "from": 304,
+            "to": 311
+          },
+          "bank_release_ne": {
+            "from": 312,
+            "to": 319
+          },
+          "bank_release_ii_e": {
+            "from": 320,
+            "to": 327
+          },
+          "bank_release_ii_se": {
+            "from": 328,
+            "to": 335
+          },
+          "bank_release_ii_s": {
+            "from": 336,
+            "to": 343
+          },
+          "bank_release_ii_sw": {
+            "from": 344,
+            "to": 351
+          },
+          "bank_release_ii_w": {
+            "from": 352,
+            "to": 359
+          },
+          "bank_release_ii_nw": {
+            "from": 360,
+            "to": 367
+          },
+          "bank_release_ii_n": {
+            "from": 368,
+            "to": 375
+          },
+          "bank_release_ii_ne": {
+            "from": 376,
+            "to": 383
+          }
+        },
+        "durations_ms": [
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180,
+          80,
+          60,
+          55,
+          80,
+          90,
+          100,
+          140,
+          180
+        ],
+        "columns": 8,
+        "frame_count": 384,
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+        "texture": "res://assets/powers/identity/momentum_bank_fx.png"
+      },
+      "event_tags": {
+        "momentum_store": "bank_load",
+        "momentum_release": "bank_release"
+      },
+      "active_tags": {
+        "stored": "bank_stored"
+      },
+      "notes": [
+        "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+        "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+        "Rank II develops physical force and travel marks rather than adding a device.",
+        "Icons are separately authored recognizable miniature tops and travel/contact.",
+        "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+        "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+        "The accepted broad round Bastion body replaces the smaller angular Vane as the foreground braking subject, at its original native pixel scale.",
+        "Stored key zero is empty. Positive keys one through seven retain a short bright folded floor skid behind the actual heel even at low earned charge; greater charge tightens it. Rank II adds one second fold. No free-running charge animation.",
+        "Final stored folds use individually directed upright rear spans per heading and a continuous short floor seam back to the actual bit, so the live native blade cannot occlude the hold. Store and release cels are unchanged."
+      ],
+      "art": {
+        "momentum_bank": {
+          "family": "momentum_bank",
+          "art_id": "momentum_bank",
+          "source_tag": "momentum_bank",
+          "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            90,
+            90,
+            95,
+            95,
+            160,
+            160,
+            40,
+            40,
+            65,
+            65,
+            140,
+            140
+          ]
+        },
+        "momentum_bank_ii": {
+          "family": "momentum_bank",
+          "art_id": "momentum_bank_ii",
+          "source_tag": "momentum_bank_ii",
+          "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            90,
+            90,
+            95,
+            95,
+            160,
+            160,
+            40,
+            40,
+            65,
+            65,
+            140,
+            140
+          ]
+        }
+      }
+    },
+    "predator_line": {
+      "family": "predator_line",
+      "grammar": {
+        "silhouette": "two actual tops in diagonal pursuit, cropped near hunter and far rival",
+        "motion": "one quarry leads, hunter closes and makes a short rim scrape",
+        "location": "hunter floor footprint and the actual target direction",
+        "persistence": "only actual hunt stacks/target and accepted repeated contact",
+        "palette": "accepted vermilion Breaker and blue Bastion against floor shadows",
+        "feature": "pursuit is carried by two visible tops; no comb, teeth or hunter appliance"
+      },
+      "design": "assets/powers/identity/predator_line_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 quiet floor background",
+          "02 actual floor travel and shadows",
+          "03 accepted rival native top body",
+          "04 accepted owner native top body",
+          "05 blade contact and physical follow-through"
+        ],
+        "tags": {
+          "predator_line": {
+            "from": 0,
+            "to": 11
+          },
+          "predator_line_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          85,
+          85,
+          70,
+          70,
+          50,
+          50,
+          80,
+          80,
+          145,
+          145,
+          100,
+          100,
+          85,
+          85,
+          70,
+          70,
+          50,
+          50,
+          80,
+          80,
+          145,
+          145
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+        "texture": "res://assets/powers/identity/predator_line_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently drawn miniature top bodies",
+          "02 physical travel and contact at 16px"
+        ],
+        "tags": {
+          "predator_line": {
+            "from": 0,
+            "to": 0
+          },
+          "predator_line_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+        "texture": "res://assets/powers/identity/predator_line_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded floor skid and erosion",
+          "02 real contact and compressed wake",
+          "03 directed physical follow-through",
+          "04 small attached rim glints"
+        ],
+        "tags": {
+          "predator_pressure_e": {
+            "from": 0,
+            "to": 7
+          },
+          "predator_pressure_se": {
+            "from": 8,
+            "to": 15
+          },
+          "predator_pressure_s": {
+            "from": 16,
+            "to": 23
+          },
+          "predator_pressure_sw": {
+            "from": 24,
+            "to": 31
+          },
+          "predator_pressure_w": {
+            "from": 32,
+            "to": 39
+          },
+          "predator_pressure_nw": {
+            "from": 40,
+            "to": 47
+          },
+          "predator_pressure_n": {
+            "from": 48,
+            "to": 55
+          },
+          "predator_pressure_ne": {
+            "from": 56,
+            "to": 63
+          },
+          "predator_pressure_ii_e": {
+            "from": 64,
+            "to": 71
+          },
+          "predator_pressure_ii_se": {
+            "from": 72,
+            "to": 79
+          },
+          "predator_pressure_ii_s": {
+            "from": 80,
+            "to": 87
+          },
+          "predator_pressure_ii_sw": {
+            "from": 88,
+            "to": 95
+          },
+          "predator_pressure_ii_w": {
+            "from": 96,
+            "to": 103
+          },
+          "predator_pressure_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "predator_pressure_ii_n": {
+            "from": 112,
+            "to": 119
+          },
+          "predator_pressure_ii_ne": {
+            "from": 120,
+            "to": 127
+          },
+          "predator_tracking_e": {
+            "from": 128,
+            "to": 135
+          },
+          "predator_tracking_se": {
+            "from": 136,
+            "to": 143
+          },
+          "predator_tracking_s": {
+            "from": 144,
+            "to": 151
+          },
+          "predator_tracking_sw": {
+            "from": 152,
+            "to": 159
+          },
+          "predator_tracking_w": {
+            "from": 160,
+            "to": 167
+          },
+          "predator_tracking_nw": {
+            "from": 168,
+            "to": 175
+          },
+          "predator_tracking_n": {
+            "from": 176,
+            "to": 183
+          },
+          "predator_tracking_ne": {
+            "from": 184,
+            "to": 191
+          },
+          "predator_tracking_ii_e": {
+            "from": 192,
+            "to": 199
+          },
+          "predator_tracking_ii_se": {
+            "from": 200,
+            "to": 207
+          },
+          "predator_tracking_ii_s": {
+            "from": 208,
+            "to": 215
+          },
+          "predator_tracking_ii_sw": {
+            "from": 216,
+            "to": 223
+          },
+          "predator_tracking_ii_w": {
+            "from": 224,
+            "to": 231
+          },
+          "predator_tracking_ii_nw": {
+            "from": 232,
+            "to": 239
+          },
+          "predator_tracking_ii_n": {
+            "from": 240,
+            "to": 247
+          },
+          "predator_tracking_ii_ne": {
+            "from": 248,
+            "to": 255
+          }
+        },
+        "durations_ms": [
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180,
+          55,
+          50,
+          55,
+          70,
+          85,
+          110,
+          135,
+          180
+        ],
+        "columns": 8,
+        "frame_count": 256,
+        "source": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+        "texture": "res://assets/powers/identity/predator_line_fx.png"
+      },
+      "event_tags": {
+        "predator_lock": "predator_pressure"
+      },
+      "active_tags": {
+        "tracking": "predator_tracking"
+      },
+      "notes": [
+        "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+        "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+        "Rank II develops physical force and travel marks rather than adding a device.",
+        "Icons are separately authored recognizable miniature tops and travel/contact.",
+        "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+        "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+        "Tracking keys are actual-stack floor pursuit strokes. Render at the hunter floor origin facing its one real target, not the former floating 70% gap position."
+      ],
+      "art": {
+        "predator_line": {
+          "family": "predator_line",
+          "art_id": "predator_line",
+          "source_tag": "predator_line",
+          "icon": "res://assets/powers/identity/predator_line_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            100,
+            100,
+            85,
+            85,
+            70,
+            70,
+            50,
+            50,
+            80,
+            80,
+            145,
+            145
+          ]
+        },
+        "predator_line_ii": {
+          "family": "predator_line",
+          "art_id": "predator_line_ii",
+          "source_tag": "predator_line_ii",
+          "icon": "res://assets/powers/identity/predator_line_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 6,
+          "card_durations_ms": [
+            100,
+            100,
+            85,
+            85,
+            70,
+            70,
+            50,
+            50,
+            80,
+            80,
+            145,
+            145
+          ]
+        }
+      }
+    },
+    "crosscut": {
+      "family": "crosscut",
+      "grammar": {
+        "silhouette": "two real top bodies pass tangentially into unequal exit lanes",
+        "motion": "descending approach, offset glancing contact, separated floor skids",
+        "location": "actual paid lateral displacement and contact floor",
+        "persistence": "brief existing glancing event with eroding follow-through",
+        "palette": "accepted green Vane and blue Bastion with pale sea-green tangential scrape",
+        "feature": "physical tops and one offset shear; no added blade gadget or symmetric X"
+      },
+      "design": "assets/powers/identity/crosscut_design.json",
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 quiet floor background",
+          "02 actual floor travel and shadows",
+          "03 accepted rival native top body",
+          "04 accepted owner native top body",
+          "05 blade contact and physical follow-through"
+        ],
+        "tags": {
+          "crosscut": {
+            "from": 0,
+            "to": 11
+          },
+          "crosscut_ii": {
+            "from": 12,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          105,
+          105,
+          75,
+          75,
+          45,
+          45,
+          50,
+          50,
+          70,
+          70,
+          145,
+          145,
+          105,
+          105,
+          75,
+          75,
+          45,
+          45,
+          50,
+          50,
+          70,
+          70,
+          145,
+          145
+        ],
+        "columns": 12,
+        "frame_count": 24,
+        "source": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+        "texture": "res://assets/powers/identity/crosscut_cards.png"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently drawn miniature top bodies",
+          "02 physical travel and contact at 16px"
+        ],
+        "tags": {
+          "crosscut": {
+            "from": 0,
+            "to": 0
+          },
+          "crosscut_ii": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+        "texture": "res://assets/powers/identity/crosscut_icons.png"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 grounded floor skid and erosion",
+          "02 real contact and compressed wake",
+          "03 directed physical follow-through",
+          "04 small attached rim glints"
+        ],
+        "tags": {
+          "shear_slice_e": {
+            "from": 0,
+            "to": 7
+          },
+          "shear_slice_se": {
+            "from": 8,
+            "to": 15
+          },
+          "shear_slice_s": {
+            "from": 16,
+            "to": 23
+          },
+          "shear_slice_sw": {
+            "from": 24,
+            "to": 31
+          },
+          "shear_slice_w": {
+            "from": 32,
+            "to": 39
+          },
+          "shear_slice_nw": {
+            "from": 40,
+            "to": 47
+          },
+          "shear_slice_n": {
+            "from": 48,
+            "to": 55
+          },
+          "shear_slice_ne": {
+            "from": 56,
+            "to": 63
+          },
+          "shear_slice_ii_e": {
+            "from": 64,
+            "to": 71
+          },
+          "shear_slice_ii_se": {
+            "from": 72,
+            "to": 79
+          },
+          "shear_slice_ii_s": {
+            "from": 80,
+            "to": 87
+          },
+          "shear_slice_ii_sw": {
+            "from": 88,
+            "to": 95
+          },
+          "shear_slice_ii_w": {
+            "from": 96,
+            "to": 103
+          },
+          "shear_slice_ii_nw": {
+            "from": 104,
+            "to": 111
+          },
+          "shear_slice_ii_n": {
+            "from": 112,
+            "to": 119
+          },
+          "shear_slice_ii_ne": {
+            "from": 120,
+            "to": 127
+          }
+        },
+        "durations_ms": [
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200,
+          50,
+          35,
+          45,
+          60,
+          90,
+          115,
+          155,
+          200
+        ],
+        "columns": 8,
+        "frame_count": 128,
+        "source": "assets/source-art/power_identity_002c5/crosscut_fx.aseprite",
+        "texture": "res://assets/powers/identity/crosscut_fx.png"
+      },
+      "event_tags": {
+        "crosscut": "shear_slice"
+      },
+      "active_tags": {},
+      "notes": [
+        "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+        "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+        "Rank II develops physical force and travel marks rather than adding a device.",
+        "Icons are separately authored recognizable miniature tops and travel/contact.",
+        "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+        "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative."
+      ],
+      "art": {
+        "crosscut": {
+          "family": "crosscut",
+          "art_id": "crosscut",
+          "source_tag": "crosscut",
+          "icon": "res://assets/powers/identity/crosscut_icons.png",
+          "icon_frame": 0,
+          "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+          "card_row": 0,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            105,
+            105,
+            75,
+            75,
+            45,
+            45,
+            50,
+            50,
+            70,
+            70,
+            145,
+            145
+          ]
+        },
+        "crosscut_ii": {
+          "family": "crosscut",
+          "art_id": "crosscut_ii",
+          "source_tag": "crosscut_ii",
+          "icon": "res://assets/powers/identity/crosscut_icons.png",
+          "icon_frame": 1,
+          "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+          "card_row": 1,
+          "card_cell": 64,
+          "card_frames": 12,
+          "card_static_frame": 4,
+          "card_durations_ms": [
+            105,
+            105,
+            75,
+            75,
+            45,
+            45,
+            50,
+            50,
+            70,
+            70,
+            145,
+            145
+          ]
+        }
+      }
+    }
+  },
+  "art": {
+    "impact_wake": {
+      "family": "impact_wake",
+      "art_id": "impact_wake",
+      "source_tag": "impact_wake",
+      "icon": "res://assets/powers/identity/impact_wake_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        38,
+        37,
+        38,
+        37,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "impact_wake_ii": {
+      "family": "impact_wake",
+      "art_id": "impact_wake_ii",
+      "source_tag": "impact_wake_ii",
+      "icon": "res://assets/powers/identity/impact_wake_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        38,
+        37,
+        38,
+        37,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "redline": {
+      "family": "redline",
+      "art_id": "redline",
+      "source_tag": "redline",
+      "icon": "res://assets/powers/identity/redline_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/redline_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        130,
+        95,
+        75,
+        60,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "redline_ii": {
+      "family": "redline",
+      "art_id": "redline_ii",
+      "source_tag": "redline_ii",
+      "icon": "res://assets/powers/identity/redline_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/redline_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        130,
+        95,
+        75,
+        60,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "runaway": {
+      "family": "redline",
+      "art_id": "runaway",
+      "source_tag": "runaway",
+      "icon": "res://assets/powers/identity/redline_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/redline_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        110,
+        85,
+        60,
+        55,
+        40,
+        40,
+        45,
+        50,
+        70,
+        80,
+        110,
+        155
+      ]
+    },
+    "breakneck": {
+      "family": "redline",
+      "art_id": "breakneck",
+      "source_tag": "breakneck",
+      "icon": "res://assets/powers/identity/redline_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/redline_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        160,
+        120,
+        90,
+        75,
+        50,
+        35,
+        35,
+        45,
+        80,
+        105,
+        140,
+        190
+      ]
+    },
+    "iron_comet": {
+      "family": "iron_comet",
+      "art_id": "iron_comet",
+      "source_tag": "iron_comet",
+      "icon": "res://assets/powers/identity/iron_comet_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/iron_comet_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        145,
+        110,
+        85,
+        65,
+        40,
+        35,
+        35,
+        50,
+        75,
+        100,
+        140,
+        175
+      ]
+    },
+    "iron_comet_ii": {
+      "family": "iron_comet",
+      "art_id": "iron_comet_ii",
+      "source_tag": "iron_comet_ii",
+      "icon": "res://assets/powers/identity/iron_comet_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/iron_comet_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        145,
+        110,
+        85,
+        65,
+        40,
+        35,
+        35,
+        50,
+        75,
+        100,
+        140,
+        175
+      ]
+    },
+    "dead_centre": {
+      "family": "dead_centre",
+      "art_id": "dead_centre",
+      "source_tag": "dead_centre",
+      "icon": "res://assets/powers/identity/dead_centre_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        110,
+        110,
+        80,
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
+      ]
+    },
+    "dead_centre_ii": {
+      "family": "dead_centre",
+      "art_id": "dead_centre_ii",
+      "source_tag": "dead_centre_ii",
+      "icon": "res://assets/powers/identity/dead_centre_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        110,
+        110,
+        80,
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
+      ]
+    },
+    "bulwark": {
+      "family": "dead_centre",
+      "art_id": "bulwark",
+      "source_tag": "bulwark",
+      "icon": "res://assets/powers/identity/dead_centre_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        110,
+        110,
+        80,
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
+      ]
+    },
+    "counterweight": {
+      "family": "dead_centre",
+      "art_id": "counterweight",
+      "source_tag": "counterweight",
+      "icon": "res://assets/powers/identity/dead_centre_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/dead_centre_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        110,
+        110,
+        80,
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
+      ]
+    },
+    "afterimage": {
+      "family": "afterimage",
+      "art_id": "afterimage",
+      "source_tag": "afterimage",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        120,
+        90,
+        80,
+        55,
+        55,
+        65,
+        80,
+        80,
+        100,
+        110,
+        120,
+        160
+      ]
+    },
+    "afterimage_ii": {
+      "family": "afterimage",
+      "art_id": "afterimage_ii",
+      "source_tag": "afterimage_ii",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        140,
+        100,
+        80,
+        60,
+        50,
+        70,
+        90,
+        100,
+        100,
+        100,
+        120,
+        170
+      ]
+    },
+    "ghost_circuit": {
+      "family": "afterimage",
+      "art_id": "ghost_circuit",
+      "source_tag": "ghost_circuit",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        160,
+        110,
+        90,
+        65,
+        55,
+        100,
+        120,
+        120,
+        100,
+        90,
+        110,
+        190
+      ]
+    },
+    "slipstream": {
+      "family": "afterimage",
+      "art_id": "slipstream",
+      "source_tag": "slipstream",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        150,
+        100,
+        70,
+        40,
+        40,
+        45,
+        55,
+        65,
+        90,
+        120,
+        140,
+        180
+      ]
+    },
+    "chain_impact": {
+      "family": "chain_impact",
+      "art_id": "chain_impact",
+      "source_tag": "chain_impact",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        37,
+        38,
+        37,
+        38,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "chain_impact_ii": {
+      "family": "chain_impact",
+      "art_id": "chain_impact_ii",
+      "source_tag": "chain_impact_ii",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        37,
+        38,
+        37,
+        38,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "clutch": {
+      "family": "clutch",
+      "art_id": "clutch",
+      "source_tag": "clutch",
+      "icon": "res://assets/powers/identity/clutch_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/clutch_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        180,
+        110,
+        145,
+        60,
+        45,
+        90,
+        40,
+        65,
+        110,
+        85,
+        140,
+        190
+      ]
+    },
+    "clutch_ii": {
+      "family": "clutch",
+      "art_id": "clutch_ii",
+      "source_tag": "clutch_ii",
+      "icon": "res://assets/powers/identity/clutch_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/clutch_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        180,
+        110,
+        145,
+        60,
+        45,
+        90,
+        40,
+        65,
+        110,
+        85,
+        140,
+        190
+      ]
+    },
+    "high_gear": {
+      "family": "high_gear",
+      "art_id": "high_gear",
+      "source_tag": "high_gear",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        120,
+        90,
+        70,
+        55,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "high_gear_ii": {
+      "family": "high_gear",
+      "art_id": "high_gear_ii",
+      "source_tag": "high_gear_ii",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        120,
+        90,
+        70,
+        55,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "terminal_velocity": {
+      "family": "high_gear",
+      "art_id": "terminal_velocity",
+      "source_tag": "terminal_velocity",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        130,
+        90,
+        60,
+        40,
+        35,
+        35,
+        40,
+        50,
+        65,
+        90,
+        115,
+        160
+      ]
+    },
+    "flow_state": {
+      "family": "high_gear",
+      "art_id": "flow_state",
+      "source_tag": "flow_state",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        95,
+        90,
+        85,
+        80,
+        75,
+        75,
+        75,
+        80,
+        85,
+        90,
+        100,
+        115
+      ]
+    },
+    "orbit_drive": {
+      "family": "orbit_drive",
+      "art_id": "orbit_drive",
+      "source_tag": "orbit_drive",
+      "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        135,
+        100,
+        80,
+        60,
+        50,
+        45,
+        50,
+        60,
+        75,
+        95,
+        115,
+        155
+      ]
+    },
+    "orbit_drive_ii": {
+      "family": "orbit_drive",
+      "art_id": "orbit_drive_ii",
+      "source_tag": "orbit_drive_ii",
+      "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        135,
+        100,
+        80,
+        60,
+        50,
+        45,
+        50,
+        60,
+        75,
+        95,
+        115,
+        155
+      ]
+    },
+    "crash_guard": {
+      "family": "crash_guard",
+      "art_id": "crash_guard",
+      "source_tag": "crash_guard",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        125,
+        125,
+        65,
+        65,
+        60,
+        60,
+        90,
+        90,
+        100,
+        100,
+        140,
+        140
+      ]
+    },
+    "crash_guard_ii": {
+      "family": "crash_guard",
+      "art_id": "crash_guard_ii",
+      "source_tag": "crash_guard_ii",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        125,
+        125,
+        65,
+        65,
+        60,
+        60,
+        90,
+        90,
+        100,
+        100,
+        140,
+        140
+      ]
+    },
+    "momentum_bank": {
+      "family": "momentum_bank",
+      "art_id": "momentum_bank",
+      "source_tag": "momentum_bank",
+      "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        90,
+        90,
+        95,
+        95,
+        160,
+        160,
+        40,
+        40,
+        65,
+        65,
+        140,
+        140
+      ]
+    },
+    "momentum_bank_ii": {
+      "family": "momentum_bank",
+      "art_id": "momentum_bank_ii",
+      "source_tag": "momentum_bank_ii",
+      "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        90,
+        90,
+        95,
+        95,
+        160,
+        160,
+        40,
+        40,
+        65,
+        65,
+        140,
+        140
+      ]
+    },
+    "predator_line": {
+      "family": "predator_line",
+      "art_id": "predator_line",
+      "source_tag": "predator_line",
+      "icon": "res://assets/powers/identity/predator_line_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        100,
+        100,
+        85,
+        85,
+        70,
+        70,
+        50,
+        50,
+        80,
+        80,
+        145,
+        145
+      ]
+    },
+    "predator_line_ii": {
+      "family": "predator_line",
+      "art_id": "predator_line_ii",
+      "source_tag": "predator_line_ii",
+      "icon": "res://assets/powers/identity/predator_line_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        100,
+        100,
+        85,
+        85,
+        70,
+        70,
+        50,
+        50,
+        80,
+        80,
+        145,
+        145
+      ]
+    },
+    "crosscut": {
+      "family": "crosscut",
+      "art_id": "crosscut",
+      "source_tag": "crosscut",
+      "icon": "res://assets/powers/identity/crosscut_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        105,
+        105,
+        75,
+        75,
+        45,
+        45,
+        50,
+        50,
+        70,
+        70,
+        145,
+        145
+      ]
+    },
+    "crosscut_ii": {
+      "family": "crosscut",
+      "art_id": "crosscut_ii",
+      "source_tag": "crosscut_ii",
+      "icon": "res://assets/powers/identity/crosscut_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        105,
+        105,
+        75,
+        75,
+        45,
+        45,
+        50,
+        50,
+        70,
+        70,
+        145,
+        145
+      ]
+    }
+  }
+}

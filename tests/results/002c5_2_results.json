@@ -1,0 +1,213 @@
+{
+  "task": "002C.5.2",
+  "parent_sha": "3d52a55d9d9bc154b50b3b1c90255f7ff0e62148",
+  "status": "automated_content_validation_passed_human_review_pending",
+  "c5_human_acceptance": "PENDING HOME HUMAN PLAYTEST",
+  "parts_before": 11,
+  "parts_after": 31,
+  "category_counts": {
+    "blade": 11,
+    "ratchet": 9,
+    "bit": 11
+  },
+  "new_parts": {
+    "blade": [
+      "hammerfall",
+      "sawtooth",
+      "puck",
+      "outrigger",
+      "lopsider",
+      "crescent",
+      "fork"
+    ],
+    "ratchet": [
+      "ballast",
+      "flex",
+      "kickback",
+      "offset",
+      "flywheel",
+      "scrap"
+    ],
+    "bit": [
+      "skate",
+      "claw",
+      "freewheel",
+      "eccentric",
+      "chisel",
+      "tripod",
+      "groove"
+    ]
+  },
+  "rarity_distribution": {
+    "COMMON": 12,
+    "UNCOMMON": 9,
+    "RARE": 5,
+    "EPIC": 3,
+    "TRASH": 1,
+    "LEGENDARY": 1
+  },
+  "legal_assemblies": 1089,
+  "regression": {
+    "suites": 40,
+    "counted_checks": 198301,
+    "profile_unchanged": true,
+    "passed_suite_names": [
+      "collection_save",
+      "collection_flow",
+      "collection_ui",
+      "spin_economy",
+      "threat_director",
+      "continuous_run",
+      "run_context",
+      "flow",
+      "combat_architecture",
+      "menus",
+      "controller",
+      "powers",
+      "swarm",
+      "presentation",
+      "progression",
+      "starters",
+      "starter_physics",
+      "xp_observer",
+      "ramp_integration",
+      "card_assets",
+      "escalation_progression",
+      "escalation_physics",
+      "escalation_integration",
+      "escalation_completion",
+      "escalation_assets",
+      "rpm_replay",
+      "signature_presentation",
+      "roster_draft",
+      "roster_physics",
+      "roster_presentation",
+      "ability_rebalance",
+      "ability_rebalance_integration",
+      "collection_c5_integration",
+      "power_identity",
+      "prototype",
+      "parts_legacy",
+      "catalogue_legacy_run",
+      "baseline_physics",
+      "parts_catalogue",
+      "parts_collection"
+    ]
+  },
+  "study": {
+    "assemblies": 72,
+    "bouts": 144,
+    "checks": 576,
+    "failures": 0,
+    "horizon_seconds": 18.0,
+    "ranges": {
+      "mean_speed": [
+        29.4529184385893,
+        164.472786366498
+      ],
+      "peak_speed": [
+        86.4693450927734,
+        480.0
+      ],
+      "rpm_retention": [
+        0.110707565900889,
+        0.776380203781246
+      ],
+      "rpm_margin": [
+        -0.192548896773239,
+        0.315325321642829
+      ],
+      "mean_wobble": [
+        0.0,
+        0.826630880481057
+      ],
+      "centre_occupancy": [
+        0.0212962962962963,
+        0.99537037037037
+      ],
+      "wall_exposure": [
+        0.0,
+        0.440545808966862
+      ],
+      "max_wall_lock_seconds": [
+        0.0,
+        0.15
+      ]
+    },
+    "mean_step_us": 340.845299061795,
+    "worst_observed_step_us": 34083,
+    "warnings": [],
+    "ranking_limit": "Stratified samples are confounded by assembly and policy; horizon survival is not a win. Probe Pareto results test recorded dimensions only. Human feel remains required.",
+    "probe_dominance": {
+      "bit/ball": [],
+      "bit/chisel": [],
+      "bit/claw": [],
+      "bit/eccentric": [],
+      "bit/flat": [],
+      "bit/freewheel": [],
+      "bit/groove": [],
+      "bit/needle": [],
+      "bit/rubber": [],
+      "bit/skate": [],
+      "bit/tripod": [],
+      "blade/balance": [],
+      "blade/crescent": [],
+      "blade/fork": [],
+      "blade/guard": [],
+      "blade/hammerfall": [],
+      "blade/hook": [],
+      "blade/lopsider": [],
+      "blade/outrigger": [],
+      "blade/puck": [],
+      "blade/sawtooth": [],
+      "blade/smash": [],
+      "ratchet/ballast": [],
+      "ratchet/flex": [],
+      "ratchet/flywheel": [],
+      "ratchet/high": [],
+      "ratchet/kickback": [],
+      "ratchet/low": [],
+      "ratchet/mid": [],
+      "ratchet/offset": [],
+      "ratchet/scrap": []
+    }
+  },
+  "zero_input_late_pressure": {
+    "samples": 6,
+    "horizon_seconds": 300,
+    "checks": 18,
+    "all_eventually_spinout": true,
+    "survival_seconds": [
+      261.666666666757,
+      245.850000000088,
+      288.100000000067,
+      299.683333333389,
+      211.45000000006,
+      221.666666666735
+    ]
+  },
+  "art": {
+    "new_masters": 20,
+    "new_runtime_pngs": 27,
+    "spin_cels": 56,
+    "native_aseprite_parity": true,
+    "assembly_poses_checked": 8712
+  },
+  "evidence_root": "C:/GPT GAME BUILDING/GyroBrothers-QA/002C.5.2",
+  "windows_validation_record": "builds/checkpoints/002C.5.2/build-manifest.json",
+  "scope": "Compact diagnostic evidence. No win-rank/balance/human acceptance claim; exact final SHA and gated packaged results are recorded after commit in the external checkpoint manifest.",
+  "post_package_probe_regression": {
+    "suites": 6,
+    "checks": 9621,
+    "profile_unchanged": true,
+    "passed_suite_names": [
+      "collection_save",
+      "collection_ui",
+      "flow",
+      "menus",
+      "controller",
+      "parts_package"
+    ]
+  },
+  "package_probe_note": "Release templates do not support the editor --script override. Final validation uses a compiled scoped QA inspection; initial timed-out evidence is retained externally and no candidate is promoted on failure."
+}

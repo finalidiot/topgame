@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "task": "002C.5.2",
+  "scope": "human playtest runtime floor/contact accents",
+  "filter": "nearest",
+  "projection": "fixed 2:1 floor plane; no texture rotation",
+  "runtime_top_sprite_included": false,
+  "effects": {
+    "centre": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 bit load and floor contact",
+        "02 jointed steel grounding arms",
+        "03 travelling pressure fronts",
+        "04 contact flash and displaced grit"
+      ],
+      "tags": {
+        "centre_seek": {
+          "from": 0,
+          "to": 5,
+          "loop": true,
+          "causality": "anchor_charge > 0.07; floor at real bit; strength follows implemented bounded inward gravity",
+          "description": "Two staggered white/grey floor sweeps settle inward toward the physically anchored top.",
+          "duration_ms": 690
+        },
+        "centre_brace": {
+          "from": 6,
+          "to": 11,
+          "loop": false,
+          "hold_last": true,
+          "causality": "actual anchor_charge 0.35..0.70 selects deployment key",
+          "description": "Four short jointed supports emerge from the bit collar and grip floor.",
+          "duration_ms": 680
+        },
+        "centre_brace_full": {
+          "from": 12,
+          "to": 17,
+          "loop": false,
+          "hold_last": true,
+          "causality": "rank II or Bulwark and actual mature hold; deployment key 0..5",
+          "description": "Longer anchored outriggers with wider floor pads; open centre preserves rotor.",
+          "duration_ms": 680
+        },
+        "centre_recoil": {
+          "from": 18,
+          "to": 23,
+          "loop": false,
+          "hold_last": false,
+          "causality": "real anchor_hit_time; accepted collision only",
+          "description": "A short grey force front breaks outward from planted contact; no invented damage.",
+          "duration_ms": 320
+        }
+      },
+      "durations_ms": [
+        110,
+        90,
+        90,
+        110,
+        130,
+        160,
+        90,
+        100,
+        110,
+        100,
+        100,
+        180,
+        90,
+        100,
+        110,
+        100,
+        100,
+        180,
+        30,
+        35,
+        45,
+        55,
+        65,
+        90
+      ],
+      "texture": "res://assets/powers/feedback_002c5_2/centre.png",
+      "source": "assets/source-art/feedback_002c5_2/centre.aseprite",
+      "columns": 6,
+      "frame_count": 24,
+      "source_sha256": "f05765fc4df7e1081e6030582d474d188a2989b2c79f2e99547c336ff8af62b5",
+      "texture_sha256": "af0cf67292a63aeb73df03c56f67affed333d978d4c9e11b2be22741a67b16a5",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 43
+    },
+    "impact": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 bit load and floor contact",
+        "02 jointed steel grounding arms",
+        "03 travelling pressure fronts",
+        "04 contact flash and displaced grit"
+      ],
+      "tags": {
+        "impact_light": {
+          "from": 0,
+          "to": 5,
+          "loop": false,
+          "hold_last": false,
+          "causality": "accepted collision contact location and elapsed event age",
+          "description": "Small contact knuckle and a short uneven pressure ripple.",
+          "duration_ms": 320
+        },
+        "impact_heavy": {
+          "from": 6,
+          "to": 11,
+          "loop": false,
+          "hold_last": false,
+          "causality": "accepted collision strength; contact location and event age",
+          "description": "Hard white contact, paired broken floor waves and physical kicked fragments.",
+          "duration_ms": 410
+        },
+        "impact_extreme": {
+          "from": 12,
+          "to": 17,
+          "loop": false,
+          "hold_last": false,
+          "causality": "accepted high impulse during ramp-up; never timer-only spawning",
+          "description": "Broad orange/white impact front and divergent grit; central top remains exposed.",
+          "duration_ms": 510
+        }
+      },
+      "durations_ms": [
+        30,
+        35,
+        45,
+        55,
+        65,
+        90,
+        30,
+        40,
+        55,
+        70,
+        90,
+        125,
+        35,
+        45,
+        65,
+        90,
+        120,
+        155
+      ],
+      "texture": "res://assets/powers/feedback_002c5_2/impact.png",
+      "source": "assets/source-art/feedback_002c5_2/impact.aseprite",
+      "columns": 6,
+      "frame_count": 18,
+      "source_sha256": "3643745b148794ae949a5234922f9b14ca885edfee4c9bc666e72528e7f5dc9e",
+      "texture_sha256": "f37c4e2bb0f838eaf49e9c774a5ae517edad7bf0a615db9801a61201ea1250d5",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 429
+    },
+    "pickup": {
+      "cell": [
+        24,
+        16
+      ],
+      "pivot": [
+        12,
+        10
+      ],
+      "layers": [
+        "01 floor shadow and steel rim",
+        "02 flat stamped token face",
+        "03 opposed recycle arrows"
+      ],
+      "tags": {
+        "reroll_chip": {
+          "from": 0,
+          "to": 0,
+          "loop": false,
+          "hold_last": true,
+          "causality": "actual collectible floor token; driving within pickup radius consumes it",
+          "description": "Low steel disc with two opposed stamped recycle arrows; no floating UI marker.",
+          "duration_ms": 160
+        }
+      },
+      "durations_ms": [
+        160
+      ],
+      "texture": "res://assets/powers/feedback_002c5_2/pickup.png",
+      "source": "assets/source-art/feedback_002c5_2/pickup.aseprite",
+      "columns": 1,
+      "frame_count": 1,
+      "source_sha256": "05965f0e428047338d0e9902982dd3d7035aafbf4a488a770574e9c5eb710d42",
+      "texture_sha256": "8f2df2de31efd95324c50164952953d859bf0d7d2d526d8144ee6239546bc7e8",
+      "native_runtime_rgba_exact": true,
+      "python_compositor_rounding_pixels": 0
+    }
+  }
+}

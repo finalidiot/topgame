@@ -1,0 +1,40 @@
+{
+  "family": "dead_centre",
+  "correction": "Human final review extended correction to clamp-like Centre",
+  "grammar": {
+    "silhouette": "Recognizable heavy spinning top pressing its bit into fractured arena floor",
+    "motion": "Settles under load; planted contact holds, Counterweight returns the accepted strike",
+    "location": "Actual bit and floor; finite accepted-contact and counterstroke direction",
+    "persistence": "Existing anchor and stored-force stages; bounded paid impact/release",
+    "palette": "Accepted Bastion steel, sparse floor silver and restrained amber counterstroke",
+    "feature": "Floor load and real rotor survival without clamp legs, platform or spring cylinder"
+  },
+  "event_tags": {
+    "anchor": "ground_lock",
+    "anchor_ii": "ground_lock_ii",
+    "anchor_break": "jaw_break",
+    "bulwark_impact": "bulwark_impact",
+    "counterweight_store": "counterweight_store",
+    "counterweight_release": "counterweight_release"
+  },
+  "active_tags": {
+    "anchor": "ground_lock",
+    "anchor_ii": "ground_lock_ii",
+    "bulwark": "bulwark_lock",
+    "counterweight": "counterweight_store"
+  },
+  "static_frames": {
+    "dead_centre": 4,
+    "dead_centre_ii": 4,
+    "bulwark": 4,
+    "counterweight": 4
+  },
+  "notes": [
+    "All historical Centre card/icon/FX sources inspected; older four legs and spring box were not restored.",
+    "Card subject uses accepted native Bastion/Breaker blade, ratchet and bit without resampling.",
+    "Six excellent top/load/contact poses held twice; saved editable masters are export authority.",
+    "FX show uneven physical floor seams at the actual bit with charge-stage intensity; no platform.",
+    "Bulwark remains planted after incoming contact; Counterweight returns actual accepted force.",
+    "No mechanics, charge, RPM, positions, timers or target selection changed."
+  ]
+}

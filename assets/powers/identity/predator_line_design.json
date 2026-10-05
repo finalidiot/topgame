@@ -1,0 +1,31 @@
+{
+  "family": "predator_line",
+  "correction": "Human requested physical top restoration v2",
+  "grammar": {
+    "silhouette": "two actual tops in diagonal pursuit, cropped near hunter and far rival",
+    "motion": "one quarry leads, hunter closes and makes a short rim scrape",
+    "location": "hunter floor footprint and the actual target direction",
+    "persistence": "only actual hunt stacks/target and accepted repeated contact",
+    "palette": "accepted vermilion Breaker and blue Bastion against floor shadows",
+    "feature": "pursuit is carried by two visible tops; no comb, teeth or hunter appliance"
+  },
+  "static_frames": {
+    "predator_line": 6,
+    "predator_line_ii": 6
+  },
+  "event_tags": {
+    "predator_lock": "predator_pressure"
+  },
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "Tracking keys are actual-stack floor pursuit strokes. Render at the hunter floor origin facing its one real target, not the former floating 70% gap position."
+  ],
+  "active_tags": {
+    "tracking": "predator_tracking"
+  }
+}

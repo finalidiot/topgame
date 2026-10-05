@@ -1,0 +1,455 @@
+{
+  "family": "afterimage",
+  "grammar": {
+    "silhouette": "A leading physical machine and environmental scars; Ghost encloses a rival in an irregular latched route",
+    "motion": "Route is drawn behind motion, aged crossing snaps locally, Ghost sockets meet and the actual path locks",
+    "location": "Recorded routes, endpoints and actual crossing points",
+    "persistence": "Bounded route history plus finite latch/crossing responses",
+    "palette": "Sparse cyan and ice scars; Ghost uses green mechanical route teeth",
+    "feature": "The route occupies the illustration and gameplay space; Ghost closure and Slipstream crossing have different spatial and timing language"
+  },
+  "design": "assets/powers/identity/afterimage_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 floor and contact shadow",
+      "02 load-bearing machine bodies",
+      "03 mechanical jaws and bearings",
+      "04 transmitted action and route",
+      "05 reaction chips and key light",
+      "06 developed structure"
+    ],
+    "tags": {
+      "afterimage": {
+        "from": 0,
+        "to": 11
+      },
+      "afterimage_ii": {
+        "from": 12,
+        "to": 23
+      },
+      "ghost_circuit": {
+        "from": 24,
+        "to": 35
+      },
+      "slipstream": {
+        "from": 36,
+        "to": 47
+      }
+    },
+    "durations_ms": [
+      120,
+      90,
+      80,
+      55,
+      55,
+      65,
+      80,
+      80,
+      100,
+      110,
+      120,
+      160,
+      140,
+      100,
+      80,
+      60,
+      50,
+      70,
+      90,
+      100,
+      100,
+      100,
+      120,
+      170,
+      160,
+      110,
+      90,
+      65,
+      55,
+      100,
+      120,
+      120,
+      100,
+      90,
+      110,
+      190,
+      150,
+      100,
+      70,
+      40,
+      40,
+      45,
+      55,
+      65,
+      90,
+      120,
+      140,
+      180
+    ],
+    "columns": 12,
+    "frame_count": 48,
+    "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+    "texture": "res://assets/powers/identity/afterimage_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "Independent small-scale silhouette",
+      "Mechanic-specific recognition teeth"
+    ],
+    "tags": {
+      "afterimage": {
+        "from": 0,
+        "to": 0
+      },
+      "afterimage_ii": {
+        "from": 1,
+        "to": 1
+      },
+      "ghost_circuit": {
+        "from": 2,
+        "to": 2
+      },
+      "slipstream": {
+        "from": 3,
+        "to": 3
+      }
+    },
+    "durations_ms": [
+      120,
+      120,
+      120,
+      120
+    ],
+    "columns": 4,
+    "frame_count": 4,
+    "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+    "texture": "res://assets/powers/identity/afterimage_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor and contact shadow",
+      "02 load-bearing machine bodies",
+      "03 mechanical jaws and bearings",
+      "04 transmitted action and route",
+      "05 reaction chips and key light",
+      "06 developed structure"
+    ],
+    "tags": {
+      "route_scar": {
+        "from": 0,
+        "to": 7
+      },
+      "route_scar_ii": {
+        "from": 8,
+        "to": 15
+      },
+      "latch_endpoint": {
+        "from": 16,
+        "to": 23
+      },
+      "ghost_latch": {
+        "from": 24,
+        "to": 31
+      },
+      "circuit_lock": {
+        "from": 32,
+        "to": 39
+      },
+      "slipstream_snap": {
+        "from": 40,
+        "to": 47
+      },
+      "slipstream_snap_e": {
+        "from": 48,
+        "to": 55
+      },
+      "slipstream_snap_se": {
+        "from": 56,
+        "to": 63
+      },
+      "slipstream_snap_s": {
+        "from": 64,
+        "to": 71
+      },
+      "slipstream_snap_sw": {
+        "from": 72,
+        "to": 79
+      },
+      "slipstream_snap_w": {
+        "from": 80,
+        "to": 87
+      },
+      "slipstream_snap_nw": {
+        "from": 88,
+        "to": 95
+      },
+      "slipstream_snap_n": {
+        "from": 96,
+        "to": 103
+      },
+      "slipstream_snap_ne": {
+        "from": 104,
+        "to": 111
+      }
+    },
+    "durations_ms": [
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120,
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120
+    ],
+    "columns": 8,
+    "frame_count": 112,
+    "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+    "texture": "res://assets/powers/identity/afterimage_fx.png"
+  },
+  "event_tags": {
+    "afterimage": "route_scar",
+    "afterimage_ii": "route_scar_ii",
+    "ghost_closure": "ghost_latch",
+    "ghost_activation": "circuit_lock",
+    "slipstream_cross": "slipstream_snap"
+  },
+  "active_tags": {
+    "ghost_preview": "latch_endpoint"
+  },
+  "notes": "Retain strong actual-route geometry and native afterimage_fx_002c4 scar/crossing logic; do not substitute a pre-drawn circle for live recorded routes. New endpoint, lock and crossing tiles are local accents. Ghost card shows an enclosed rival and a closing irregular machine path; Slipstream shows a physical top accelerating across an old route. No persistent player aura.",
+  "art": {
+    "afterimage": {
+      "family": "afterimage",
+      "art_id": "afterimage",
+      "source_tag": "afterimage",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        120,
+        90,
+        80,
+        55,
+        55,
+        65,
+        80,
+        80,
+        100,
+        110,
+        120,
+        160
+      ]
+    },
+    "afterimage_ii": {
+      "family": "afterimage",
+      "art_id": "afterimage_ii",
+      "source_tag": "afterimage_ii",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        140,
+        100,
+        80,
+        60,
+        50,
+        70,
+        90,
+        100,
+        100,
+        100,
+        120,
+        170
+      ]
+    },
+    "ghost_circuit": {
+      "family": "afterimage",
+      "art_id": "ghost_circuit",
+      "source_tag": "ghost_circuit",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        160,
+        110,
+        90,
+        65,
+        55,
+        100,
+        120,
+        120,
+        100,
+        90,
+        110,
+        190
+      ]
+    },
+    "slipstream": {
+      "family": "afterimage",
+      "art_id": "slipstream",
+      "source_tag": "slipstream",
+      "icon": "res://assets/powers/identity/afterimage_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/afterimage_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        150,
+        100,
+        70,
+        40,
+        40,
+        45,
+        55,
+        65,
+        90,
+        120,
+        140,
+        180
+      ]
+    }
+  }
+}

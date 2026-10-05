@@ -79,7 +79,15 @@ func _find_label(parent: Node, text: String) -> Label:
 
 func _check_label_fits(label: Label) -> void:
 	var rect: Rect2 = label.get_global_rect()
-	check(NATIVE_RECT.encloses(rect), "Label stays inside native screen: %s %s" % [label.text, rect])
+	var parent: Node = label.get_parent()
+	var clipped_strip: bool = false
+	while parent != null:
+		if parent is ScrollContainer:
+			clipped_strip = true
+			check(NATIVE_RECT.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays on screen")
+			break
+		parent = parent.get_parent()
+	if not clipped_strip: check(NATIVE_RECT.encloses(rect), "Label stays inside native screen: %s %s" % [label.text, rect])
 	if label.text.is_empty(): return
 	var font: Font = label.get_theme_font("font")
 	var font_size: int = label.get_theme_font_size("font_size")
@@ -318,7 +326,7 @@ func _test_garage_assemblies() -> void:
 					stats_match = stats_match and menus._stat_numbers[stat].text == "%.1f" % float(expected[stat])
 					stats_match = stats_match and absf(menus._stat_bars[stat].value - clampf(float(expected[stat]) / 10.0, 0.0, 1.0)) <= 0.001
 				check(stats_match, "Garage refreshes all six visible stats for "+Parts.title(build))
-	check(assemblies == 48, "All 48 physical assemblies remain selectable in the garage")
+	check(assemblies == Parts.BLADE_IDS.size() * Parts.RATCHET_IDS.size() * Parts.BIT_IDS.size(), "Every physical catalogue assembly remains selectable in the garage")
 
 func _select_part(category: String, part_id: String) -> void:
 	var button: Button = menus._part_buttons[category][part_id]

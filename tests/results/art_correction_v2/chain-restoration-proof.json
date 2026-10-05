@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "historical_commit": "bdcc24e5c3717486eaabaa4e9bac67e1dcc351b2",
+  "card_rank_i_visible_native_pixels_exact": true,
+  "icon_rank_i_visible_native_pixels_exact": true,
+  "original_six_poses_preserved_as_paired_holds": true,
+  "original_each_pose_and_total_duration_preserved": true,
+  "historical_master_bytes_unchanged": [
+    {
+      "path": "assets/source-art/power_cards_002b1.aseprite",
+      "sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5"
+    },
+    {
+      "path": "assets/source-art/power_icons_002b.aseprite",
+      "sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2"
+    },
+    {
+      "path": "assets/source-art/power_fx_002b.aseprite",
+      "sha256": "39f7a0ccf52f1458ada196cbb9c48d9e2f15604507d6f210b2b9d0a8ca5985dc"
+    }
+  ],
+  "rank_ii_choice": "Same accepted triangular three-top composition, additional physical final receiver follow-through",
+  "runtime_choice": "Original native128 warm pressure burst at paid source; warm local historical contact clusters on at most two actual recipients, three-cel ceiling"
+}

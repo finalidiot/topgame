@@ -1,0 +1,199 @@
+{
+  "family": "impact_wake",
+  "grammar": {
+    "silhouette": "Central physical impact and outward pressure teeth",
+    "motion": "Contact flash, spreading pressure fronts, staggered counter-pressure plates, fading chips",
+    "location": "At the actual heavy contact point near the floor",
+    "persistence": "Short paid contact event",
+    "palette": "Cyan pressure, pale steel, sparse amber contact teeth",
+    "feature": "Strong original ring composition; Rank II adds a second structural pressure response"
+  },
+  "design": "assets/powers/identity/impact_wake_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "industrial backplate",
+      "machine depth and chassis",
+      "authored moving bearings",
+      "pressure and trajectory",
+      "contact glints and fragments",
+      "Rank II counter-pressure teeth"
+    ],
+    "tags": {
+      "impact_wake": {
+        "from": 0,
+        "to": 11
+      },
+      "impact_wake_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      55,
+      55,
+      45,
+      45,
+      38,
+      37,
+      38,
+      37,
+      50,
+      50,
+      85,
+      85,
+      55,
+      55,
+      45,
+      45,
+      38,
+      37,
+      38,
+      37,
+      50,
+      50,
+      85,
+      85
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+    "texture": "res://assets/powers/identity/impact_wake_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "Independent small-scale silhouette",
+      "Mechanic-specific recognition teeth"
+    ],
+    "tags": {
+      "impact_wake": {
+        "from": 0,
+        "to": 0
+      },
+      "impact_wake_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      120,
+      120
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+    "texture": "res://assets/powers/identity/impact_wake_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 floor and contact shadow",
+      "02 load-bearing machine bodies",
+      "03 mechanical jaws and bearings",
+      "04 transmitted action and route",
+      "05 reaction chips and key light",
+      "06 developed structure"
+    ],
+    "tags": {
+      "wake_ii": {
+        "from": 0,
+        "to": 7
+      }
+    },
+    "durations_ms": [
+      70,
+      50,
+      40,
+      45,
+      50,
+      65,
+      85,
+      120
+    ],
+    "columns": 8,
+    "frame_count": 8,
+    "source": "assets/source-art/power_identity_002c5/impact_wake_fx.aseprite",
+    "texture": "res://assets/powers/identity/impact_wake_fx.png"
+  },
+  "event_tags": {
+    "impact_wake": "wake"
+  },
+  "active_tags": {},
+  "notes": "Rank I card preserves the original five editable layer cels and six accepted poses, each held for two half-duration keys. Rank I runtime must retain original 128px pressure tag in power_fx_002b.aseprite; no new wake tag is supplied so renderer falls through. New wake_ii is a structural counter-pressure response, not an enlarged recolour. Original source master retained intact.",
+  "art": {
+    "impact_wake": {
+      "family": "impact_wake",
+      "art_id": "impact_wake",
+      "source_tag": "impact_wake",
+      "icon": "res://assets/powers/identity/impact_wake_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        38,
+        37,
+        38,
+        37,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "impact_wake_ii": {
+      "family": "impact_wake",
+      "art_id": "impact_wake_ii",
+      "source_tag": "impact_wake_ii",
+      "icon": "res://assets/powers/identity/impact_wake_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/impact_wake_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        38,
+        37,
+        38,
+        37,
+        50,
+        50,
+        85,
+        85
+      ]
+    }
+  }
+}

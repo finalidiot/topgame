@@ -1,0 +1,287 @@
+[
+  {
+    "family": "impact_wake",
+    "source_samples": [
+      {
+        "semantic": "impact_wake",
+        "tag": "wake_ii",
+        "source": "assets/source-art/power_identity_002c5/impact_wake_fx.aseprite",
+        "keys": [
+          0,
+          3,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "family": "redline",
+    "source_samples": [
+      {
+        "semantic": "redline",
+        "tag": "redline_active_ii_e",
+        "source": "assets/source-art/power_identity_002c5/redline_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      },
+      {
+        "semantic": "active",
+        "tag": "redline_active_ii_e",
+        "source": "assets/source-art/power_identity_002c5/redline_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      }
+    ]
+  },
+  {
+    "family": "iron_comet",
+    "source_samples": [
+      {
+        "semantic": "comet_charge",
+        "tag": "comet_charge_ii_e",
+        "source": "assets/source-art/power_identity_002c5/iron_comet_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      },
+      {
+        "semantic": "charged",
+        "tag": "comet_charge_ii_e",
+        "source": "assets/source-art/power_identity_002c5/iron_comet_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      }
+    ]
+  },
+  {
+    "family": "dead_centre",
+    "source_samples": [
+      {
+        "semantic": "anchor",
+        "tag": "ground_lock_ii",
+        "source": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      },
+      {
+        "semantic": "anchor",
+        "tag": "ground_lock_ii",
+        "source": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      }
+    ]
+  },
+  {
+    "family": "afterimage",
+    "source_samples": [
+      {
+        "semantic": "afterimage",
+        "tag": "route_scar_ii",
+        "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      },
+      {
+        "semantic": "ghost_preview",
+        "tag": "latch_endpoint",
+        "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+        "keys": [
+          16,
+          19,
+          22
+        ]
+      }
+    ]
+  },
+  {
+    "family": "chain_impact",
+    "source_samples": [
+      {
+        "semantic": "chain_impact",
+        "tag": "transmit_ii",
+        "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      }
+    ]
+  },
+  {
+    "family": "clutch",
+    "source_samples": [
+      {
+        "semantic": "clutch_activate",
+        "tag": "clutch_danger_ii",
+        "source": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      },
+      {
+        "semantic": "danger",
+        "tag": "clutch_danger_ii",
+        "source": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+        "keys": [
+          8,
+          11,
+          14
+        ]
+      }
+    ]
+  },
+  {
+    "family": "high_gear",
+    "source_samples": [
+      {
+        "semantic": "high_gear_surge",
+        "tag": "terminal_velocity_e",
+        "source": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+        "keys": [
+          152,
+          155,
+          158
+        ]
+      },
+      {
+        "semantic": "speed",
+        "tag": "speed_ii_e",
+        "source": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      }
+    ]
+  },
+  {
+    "family": "orbit_drive",
+    "source_samples": [
+      {
+        "semantic": "orbit_drift",
+        "tag": "orbit_drift_ii_e",
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      },
+      {
+        "semantic": "drift",
+        "tag": "orbit_drift_ii_e",
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite",
+        "keys": [
+          80,
+          83,
+          86
+        ]
+      }
+    ]
+  },
+  {
+    "family": "crash_guard",
+    "source_samples": [
+      {
+        "semantic": "crash_guard",
+        "tag": "damper_contact_ii_e",
+        "source": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+        "keys": [
+          64,
+          67,
+          70
+        ]
+      }
+    ]
+  },
+  {
+    "family": "momentum_bank",
+    "source_samples": [
+      {
+        "semantic": "momentum_store",
+        "tag": "bank_load_ii_e",
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+        "keys": [
+          64,
+          67,
+          70
+        ]
+      },
+      {
+        "semantic": "stored",
+        "tag": "bank_stored_ii_e",
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+        "keys": [
+          192,
+          195,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "family": "predator_line",
+    "source_samples": [
+      {
+        "semantic": "predator_lock",
+        "tag": "predator_pressure_ii_e",
+        "source": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+        "keys": [
+          64,
+          67,
+          70
+        ]
+      },
+      {
+        "semantic": "tracking",
+        "tag": "predator_tracking_ii_e",
+        "source": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+        "keys": [
+          192,
+          195,
+          198
+        ]
+      }
+    ]
+  },
+  {
+    "family": "crosscut",
+    "source_samples": [
+      {
+        "semantic": "crosscut",
+        "tag": "shear_slice_ii_e",
+        "source": "assets/source-art/power_identity_002c5/crosscut_fx.aseprite",
+        "keys": [
+          64,
+          67,
+          70
+        ]
+      }
+    ]
+  }
+]

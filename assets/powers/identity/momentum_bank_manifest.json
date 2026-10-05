@@ -1,0 +1,773 @@
+{
+  "family": "momentum_bank",
+  "grammar": {
+    "silhouette": "accepted broad round top in the foreground above a folded braking skid at its own heel",
+    "motion": "braking skid folds, a compact positive-charge floor fold holds, directed launch unfolds it",
+    "location": "actual top heel and floor; release follows its real movement vector",
+    "persistence": "empty stage zero; visible earned charge stages one through seven plus existing store/release events",
+    "palette": "accepted blue Bastion steel body, restrained brass and pale floor wakes",
+    "feature": "one recognizable top and compressed physical floor travel; no detached cassette"
+  },
+  "design": "assets/powers/identity/momentum_bank_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 quiet floor background",
+      "02 actual floor travel and shadows",
+      "03 accepted rival native top body",
+      "04 accepted owner native top body",
+      "05 blade contact and physical follow-through"
+    ],
+    "tags": {
+      "momentum_bank": {
+        "from": 0,
+        "to": 11
+      },
+      "momentum_bank_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      90,
+      90,
+      95,
+      95,
+      160,
+      160,
+      40,
+      40,
+      65,
+      65,
+      140,
+      140,
+      90,
+      90,
+      95,
+      95,
+      160,
+      160,
+      40,
+      40,
+      65,
+      65,
+      140,
+      140
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+    "texture": "res://assets/powers/identity/momentum_bank_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 independently drawn miniature top bodies",
+      "02 physical travel and contact at 16px"
+    ],
+    "tags": {
+      "momentum_bank": {
+        "from": 0,
+        "to": 0
+      },
+      "momentum_bank_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      160,
+      160
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+    "texture": "res://assets/powers/identity/momentum_bank_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded floor skid and erosion",
+      "02 real contact and compressed wake",
+      "03 directed physical follow-through",
+      "04 small attached rim glints"
+    ],
+    "tags": {
+      "bank_load_e": {
+        "from": 0,
+        "to": 7
+      },
+      "bank_load_se": {
+        "from": 8,
+        "to": 15
+      },
+      "bank_load_s": {
+        "from": 16,
+        "to": 23
+      },
+      "bank_load_sw": {
+        "from": 24,
+        "to": 31
+      },
+      "bank_load_w": {
+        "from": 32,
+        "to": 39
+      },
+      "bank_load_nw": {
+        "from": 40,
+        "to": 47
+      },
+      "bank_load_n": {
+        "from": 48,
+        "to": 55
+      },
+      "bank_load_ne": {
+        "from": 56,
+        "to": 63
+      },
+      "bank_load_ii_e": {
+        "from": 64,
+        "to": 71
+      },
+      "bank_load_ii_se": {
+        "from": 72,
+        "to": 79
+      },
+      "bank_load_ii_s": {
+        "from": 80,
+        "to": 87
+      },
+      "bank_load_ii_sw": {
+        "from": 88,
+        "to": 95
+      },
+      "bank_load_ii_w": {
+        "from": 96,
+        "to": 103
+      },
+      "bank_load_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "bank_load_ii_n": {
+        "from": 112,
+        "to": 119
+      },
+      "bank_load_ii_ne": {
+        "from": 120,
+        "to": 127
+      },
+      "bank_stored_e": {
+        "from": 128,
+        "to": 135
+      },
+      "bank_stored_se": {
+        "from": 136,
+        "to": 143
+      },
+      "bank_stored_s": {
+        "from": 144,
+        "to": 151
+      },
+      "bank_stored_sw": {
+        "from": 152,
+        "to": 159
+      },
+      "bank_stored_w": {
+        "from": 160,
+        "to": 167
+      },
+      "bank_stored_nw": {
+        "from": 168,
+        "to": 175
+      },
+      "bank_stored_n": {
+        "from": 176,
+        "to": 183
+      },
+      "bank_stored_ne": {
+        "from": 184,
+        "to": 191
+      },
+      "bank_stored_ii_e": {
+        "from": 192,
+        "to": 199
+      },
+      "bank_stored_ii_se": {
+        "from": 200,
+        "to": 207
+      },
+      "bank_stored_ii_s": {
+        "from": 208,
+        "to": 215
+      },
+      "bank_stored_ii_sw": {
+        "from": 216,
+        "to": 223
+      },
+      "bank_stored_ii_w": {
+        "from": 224,
+        "to": 231
+      },
+      "bank_stored_ii_nw": {
+        "from": 232,
+        "to": 239
+      },
+      "bank_stored_ii_n": {
+        "from": 240,
+        "to": 247
+      },
+      "bank_stored_ii_ne": {
+        "from": 248,
+        "to": 255
+      },
+      "bank_release_e": {
+        "from": 256,
+        "to": 263
+      },
+      "bank_release_se": {
+        "from": 264,
+        "to": 271
+      },
+      "bank_release_s": {
+        "from": 272,
+        "to": 279
+      },
+      "bank_release_sw": {
+        "from": 280,
+        "to": 287
+      },
+      "bank_release_w": {
+        "from": 288,
+        "to": 295
+      },
+      "bank_release_nw": {
+        "from": 296,
+        "to": 303
+      },
+      "bank_release_n": {
+        "from": 304,
+        "to": 311
+      },
+      "bank_release_ne": {
+        "from": 312,
+        "to": 319
+      },
+      "bank_release_ii_e": {
+        "from": 320,
+        "to": 327
+      },
+      "bank_release_ii_se": {
+        "from": 328,
+        "to": 335
+      },
+      "bank_release_ii_s": {
+        "from": 336,
+        "to": 343
+      },
+      "bank_release_ii_sw": {
+        "from": 344,
+        "to": 351
+      },
+      "bank_release_ii_w": {
+        "from": 352,
+        "to": 359
+      },
+      "bank_release_ii_nw": {
+        "from": 360,
+        "to": 367
+      },
+      "bank_release_ii_n": {
+        "from": 368,
+        "to": 375
+      },
+      "bank_release_ii_ne": {
+        "from": 376,
+        "to": 383
+      }
+    },
+    "durations_ms": [
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180,
+      80,
+      60,
+      55,
+      80,
+      90,
+      100,
+      140,
+      180
+    ],
+    "columns": 8,
+    "frame_count": 384,
+    "source": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+    "texture": "res://assets/powers/identity/momentum_bank_fx.png"
+  },
+  "event_tags": {
+    "momentum_store": "bank_load",
+    "momentum_release": "bank_release"
+  },
+  "active_tags": {
+    "stored": "bank_stored"
+  },
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "The accepted broad round Bastion body replaces the smaller angular Vane as the foreground braking subject, at its original native pixel scale.",
+    "Stored key zero is empty. Positive keys one through seven retain a short bright folded floor skid behind the actual heel even at low earned charge; greater charge tightens it. Rank II adds one second fold. No free-running charge animation.",
+    "Final stored folds use individually directed upright rear spans per heading and a continuous short floor seam back to the actual bit, so the live native blade cannot occlude the hold. Store and release cels are unchanged."
+  ],
+  "art": {
+    "momentum_bank": {
+      "family": "momentum_bank",
+      "art_id": "momentum_bank",
+      "source_tag": "momentum_bank",
+      "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        90,
+        90,
+        95,
+        95,
+        160,
+        160,
+        40,
+        40,
+        65,
+        65,
+        140,
+        140
+      ]
+    },
+    "momentum_bank_ii": {
+      "family": "momentum_bank",
+      "art_id": "momentum_bank_ii",
+      "source_tag": "momentum_bank_ii",
+      "icon": "res://assets/powers/identity/momentum_bank_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/momentum_bank_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        90,
+        90,
+        95,
+        95,
+        160,
+        160,
+        40,
+        40,
+        65,
+        65,
+        140,
+        140
+      ]
+    }
+  }
+}

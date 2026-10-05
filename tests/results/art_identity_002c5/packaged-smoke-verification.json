@@ -1,0 +1,76 @@
+{
+  "captured_utc": "2026-10-04T14:58:47.7351302Z",
+  "scope": "Read-only independent review of packaged smoke evidence",
+  "smoke_log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-packaged-smoke.log",
+  "smoke_pass": true,
+  "smoke_contract": "Flow fixtures; not naturally earned drafts or gameplay balance proof",
+  "stderr_bytes": 0,
+  "screenshot_directory": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-addendum\\packaged-smoke",
+  "visual_checks": [
+    {
+      "name": "normal title/current collection launch",
+      "pass": true,
+      "evidence": [
+        "01-title.png"
+      ],
+      "observation": "Spinning Metal title, Begin and collection introduction are visible."
+    },
+    {
+      "name": "first top selection and confirmation",
+      "pass": true,
+      "evidence": [
+        "09-starters.png",
+        "09a-confirm.png"
+      ],
+      "observation": "Three distinct starters; Breaker highlighted; Smash/High/Flat confirmation."
+    },
+    {
+      "name": "first ownership",
+      "pass": true,
+      "evidence": [
+        "09b-owned.png"
+      ],
+      "observation": "Breaker is yours; three correct owned parts; Enter Workshop."
+    },
+    {
+      "name": "owned Workshop",
+      "pass": true,
+      "evidence": [
+        "09c-owned-workshop.png"
+      ],
+      "observation": "Correct owned/equipped parts, 3/11 owned, Breaker first choice, Launch Owned Top."
+    },
+    {
+      "name": "current identity starting draft",
+      "pass": true,
+      "evidence": [
+        "10-starting-draft.png"
+      ],
+      "observation": "Distinct new Momentum Bank, High Gear and Chain Impact illustrations; legible copy and 0/7 families."
+    },
+    {
+      "name": "rank II investment/capped draft",
+      "pass": true,
+      "evidence": [
+        "run-01-midbattle-draft.png",
+        "run-07-midbattle-draft.png",
+        "run-10-midbattle-draft.png"
+      ],
+      "observation": "Current Bank II, Iron Comet II, Afterimage II, Crosscut II and Orbit Drive II illustrations; 7/7 families and upgrade-only offers at saturation."
+    }
+  ],
+  "independent_reviewer": "motion_review reviewed starter/confirmation/ownership/Workshop",
+  "minor_visual_notes": [
+    "Supplementary permanence sentence in 09b-owned.png has low contrast; prominent ownership heading and parts remain clear."
+  ],
+  "actual_save_unchanged": true,
+  "actual_save": {
+    "path": "E:\\AppData\\Roaming\\Godot\\app_userdata\\Spinning Metal — Prototype\\collection.json",
+    "before_sha256": "21A020AF0ED88331966A1C988BBE96456664E655083EE34F1B8B44123751B48C",
+    "after_sha256": "21A020AF0ED88331966A1C988BBE96456664E655083EE34F1B8B44123751B48C",
+    "contents_inspected": false,
+    "reset": false
+  },
+  "production_edits": false,
+  "overall_pass": true
+}

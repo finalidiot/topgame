@@ -1,9 +1,11 @@
 extends RefCounted
+const Identity = preload("res://scripts/power_identity.gd")
 ## Pure draw policy for native Aseprite cels. No simulation writes or RNG.
 const SHEETS: Dictionary = {
 	"redline":preload("res://assets/powers/signature_redline.png"),
 	"dead_centre":preload("res://assets/powers/signature_dead_centre.png"),
 	"afterimage":preload("res://assets/powers/signature_afterimage.png"),
+	"roster":preload("res://assets/powers/roster_effects.png"),
 	"combat":preload("res://assets/powers/signature_combat.png")}
 const EVENTS: Dictionary = {
 	"redline":["redline","rank1_active"],"redline_ii":["redline","rank2_active"],
@@ -13,10 +15,20 @@ const EVENTS: Dictionary = {
 	"counterweight_store":["dead_centre","anchor_full"],"counterweight_release":["dead_centre","counterweight_release"],
 	"ghost_closure":["afterimage","ghost_closure"],"ghost_activation":["afterimage","ghost_active"],"slipstream_cross":["afterimage","slipstream_cross"],
 	"contact_light":["combat","light"],"contact_meaningful":["combat","meaningful"],"contact_heavy":["combat","heavy"],"contact_signature":["combat","signature"],
-	"elite_entry":["combat","elite_entry"],"boss_entry":["combat","boss_entry"],"boss_defeat":["combat","boss_defeat"],"rpm_reclaim":["combat","reclaim"],"second_wind":["combat","second_wind"]}
-const FOREGROUND: Array[String] = ["breakneck_impact","breakneck_recovery","runaway_hit","counterweight_release","contact_light","contact_meaningful","contact_heavy","contact_signature","boss_defeat","rpm_reclaim","second_wind","slipstream_cross"]
+	"elite_entry":["combat","elite_entry"],"boss_entry":["combat","boss_entry"],"boss_defeat":["combat","boss_defeat"],"rpm_reclaim":["combat","reclaim"],"second_wind":["combat","second_wind"],
+	"comet_charge":["roster","comet_charge"],"comet_release":["roster","comet_impact"],
+	"redline_overcap":["roster","overcap"],"redline_heat":["roster","heat_extreme"],
+	"clutch_activate":["roster","clutch_danger"],"clutch_recover":["roster","clutch_recover"],
+	"high_gear_surge":["roster","terminal_surge"],"orbit_drift":["roster","orbit_drift"],
+	"momentum_store":["roster","momentum_store"],"momentum_release":["roster","momentum_release"],
+	"crash_guard":["roster","crash_guard"],"predator_lock":["roster","predator_lock"],"crosscut":["roster","crosscut"],"ghost_preview":["roster","ghost_preview"]}
+const FOREGROUND: Array[String] = ["breakneck_impact","breakneck_recovery","runaway_hit","counterweight_release","contact_light","contact_meaningful","contact_heavy","contact_signature","boss_defeat","rpm_reclaim","second_wind","slipstream_cross","comet_release","clutch_recover","momentum_release","crosscut","chain_impact","crash_guard"]
 static var metadata: Dictionary = {}
+static var roster_metadata: Dictionary = {}
 static func meta(family: String) -> Dictionary:
+	if family == "roster":
+		if roster_metadata.is_empty(): roster_metadata=JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/roster_manifest.json"))
+		return roster_metadata.effects
 	if metadata.is_empty(): metadata = JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/signature_manifest.json"))
 	return metadata[family]
 static func frame(family: String, tag: String, age: float, loop: bool = true) -> int:
@@ -47,6 +59,8 @@ static func aura(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> voi
 	if not str(f.get("outcome","")).is_empty(): return
 	if float(f.get("redline_time",0.0)) > 0.0:
 		var tag: String = redline_tag(f)
+		# A modern Breakneck's first overclock is setup; its next paid Burst commits.
+		if f.has("redline_commit_time") and tag=="breakneck_charge" and float(f.redline_commit_time)<=0.0: tag="rank2_active"
 		cel(c,"redline",tag,at,clock*(1.6 if tag=="runaway_high" else 1.0))
 		var direction: Vector2 = f.get("redline_heading",f.get("vel",Vector2.RIGHT))
 		var forward: Vector2 = Vector2(direction.x-direction.y,(direction.x+direction.y)*0.5).normalized()
@@ -54,8 +68,39 @@ static func aura(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> voi
 		if tag=="breakneck_charge":
 			for i: int in range(3): cel(c,"redline",tag,at-forward*float(8+i*12),clock,0.7-float(i)*0.18)
 		elif tag != "rank1_active": cel(c,"redline",tag,at-forward*17.0,clock+0.1,0.40)
+		var heat: float=clampf(float(f.get("redline_heat",f.get("runaway_heat",0.0))),0.0,1.0)
+		if float(f.get("rpm",0.0))>1.0 and Identity.family_info("redline").is_empty():
+			cel(c,"roster","overcap",at,clock*(1.1+heat),0.65+heat*0.35)
+			rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,heat,Color(1.0,0.64,0.25,0.75))
+		if heat>=0.70 and Identity.family_info("redline").is_empty(): cel(c,"roster","heat_extreme",at,clock*(1.0+heat),heat)
+	var comet: float=float(f.get("iron_comet_time",0.0))
+	if comet>0.0 and not Identity.has_active("iron_comet","charged"):
+		var span: float=2.8 if int(f.get("power_ranks",{}).get("iron_comet",1))>=2 else 2.0
+		var age: float=maxf(0.0,span-comet)
+		cel(c,"roster","comet_charge" if age<0.28 else "comet_flight",at,clock)
+		rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,0.55,Color(1.0,0.77,0.40,0.78))
+	var gear: int=int(f.get("power_ranks",{}).get("high_gear",0))
+	var velocity: Vector2=f.get("vel",Vector2.ZERO)
+	if gear>0 and velocity.length_squared()>14400.0 and not Identity.has_active("high_gear","speed"):
+		var branch: String=f.get("power_mutations",{}).get("high_gear","")
+		var gear_tag: String="terminal_surge" if branch=="terminal_velocity" else ("flow_state" if branch=="flow_state" else ("gear2" if gear>=2 else "gear1"))
+		cel(c,"roster",gear_tag,at,clock,0.70)
+		rotor_wake(c,at,velocity,clock,0.85 if gear>=2 else 0.30,Color(0.50,0.78,0.94,0.65))
+	var floor_at: Vector2=at+Vector2(0.0,float(f.get("height",0.0)))
+	if bool(f.get("drift_active",false)) and not Identity.has_active("orbit_drive","drift"):
+		cel(c,"roster","orbit_drift",floor_at,clock)
+	elif float(f.get("orbit_charge",0.0))>0.35 and not Identity.has_active("orbit_drive","drift"):
+		cel(c,"roster","flow_state",floor_at,clock,float(f.orbit_charge)*0.60)
+	if (bool(f.get("clutch_active",false)) or float(f.get("clutch_time",0.0))>0.0) and not Identity.has_active("clutch","danger"):
+		cel(c,"roster","clutch_danger",floor_at,clock,0.65)
+	if float(f.get("clutch_recovery_time",0.0))>0.0 and not Identity.has_active("clutch","recover"): cel(c,"roster","clutch_recover",floor_at,clock,0.85)
+	if float(f.get("guard_time",0.0))>0.0 and Identity.family_info("crash_guard").is_empty(): cel(c,"roster","crash_guard",at,clock,0.55)
+	var bank: float=float(f.get("momentum_charge",0.0))
+	if bank>3.0 and not Identity.has_active("momentum_bank","stored"): cel(c,"roster","momentum_store",floor_at,0.0,0.75,clampi(int(ceilf(bank/30.0)),0,5))
+	if int(f.get("hunt_stacks",0))>0 and not Identity.has_active("predator_line","tracking"): cel(c,"roster","predator_lock",at,clock,0.3+float(f.hunt_stacks)*0.2)
+	closure_preview(c,f,floor_at,clock)
 	var charge: float = float(f.get("anchor_charge",0.0))
-	if charge > 0.07:
+	if charge > 0.07 and not Identity.has_active("dead_centre","anchor"):
 		var tag: String = anchor_tag(f)
 		var stage: int = clampi(int(roundf(charge*5.0)),0,5)
 		if tag=="counterweight_store": stage=clampi(int(ceilf(float(f.get("stored_force",0.0))/30.0)),0,5)
@@ -67,7 +112,44 @@ static func effect(c: CanvasItem, e: Dictionary, at: Vector2) -> bool:
 	var spec: Array = EVENTS[kind]
 	var progress: float = clampf(float(e.age)/maxf(.01,float(e.duration)),0.0,.999)
 	cel(c,spec[0],spec[1],at,progress*.48,clampf((1.0-progress)*3.0,0.0,1.0),mini(5,int(progress*6.0)))
+	if kind=="comet_release" and progress>0.25:
+		cel(c,"roster","comet_recovery",at,0.0,1.0-progress,mini(5,int(progress*6.0)))
 	return true
+
+static func rotor_wake(c: CanvasItem, at: Vector2, velocity: Vector2, clock: float, strength: float, ink: Color) -> void:
+	if velocity.length_squared()<14400.0: return
+	var forward: Vector2=Vector2(velocity.x-velocity.y,(velocity.x+velocity.y)*0.5).normalized()
+	var side: Vector2=forward.orthogonal()
+	var center: Vector2=at-Vector2(0,14)
+	var span: float=18.0+clampf(strength,0.0,1.0)*28.0
+	var phase: float=float(int(clock*20.0)%3-1)
+	# Two short disconnected rotor wakes, never a filled directional wedge.
+	for bank: int in [-1,1]:
+		var start: Vector2=center+side*float(bank)*10.0-forward*15.0
+		var end: Vector2=center+side*(float(bank)*8.0+phase)-forward*span
+		c.draw_line(start.round(),start.lerp(end,0.55).round(),ink,2.0)
+		c.draw_line(start.lerp(end,0.72).round(),end.round(),ink,1.0)
+
+static func closure_preview(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> void:
+	var preview: Dictionary=f.get("ghost_preview",{})
+	if preview.is_empty() or not preview.has("a") or not preview.has("b"): return
+	var endpoints: PackedVector2Array = Identity.ghost_preview_points(f,at)
+	var a: Vector2 = endpoints[0]
+	var b: Vector2 = endpoints[1]
+	var strength: float=clampf(float(preview.get("strength",0.0)),0.0,1.0)
+	var alpha: float=0.62+strength*0.34
+	for dash: int in range(6):
+		var t: float=float(dash)/6.0
+		c.draw_line(a.lerp(b,t).round(),a.lerp(b,t+0.075).round(),Color(0.72,1.0,0.85,alpha),2.0)
+	if Identity.has_active("afterimage","ghost_preview"):
+		var tag: String = Identity.variant("afterimage",str(Identity.family_info("afterimage").active_tags.ghost_preview),1,Vector2(preview.b)-Vector2(preview.a))
+		# The two local sockets correspond to real paid route endpoints.
+		var stage: int = clampi(roundi(strength*7.0),0,7)
+		Identity.cel(c,"afterimage",tag,a,clock,alpha,stage)
+		Identity.cel(c,"afterimage",tag,b,clock,alpha,stage)
+	else:
+		cel(c,"roster","ghost_preview",a,clock*(1.0+strength),alpha)
+		cel(c,"roster","ghost_preview",b,clock*(1.0+strength)+0.08,alpha)
 static func entry(c: CanvasItem, at: Vector2, kind: String, remaining: float) -> void:
 	cel(c,"combat","boss_entry" if kind=="boss" else "elite_entry",at,maxf(0.0,2.2-remaining))
 static func marker(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> void:

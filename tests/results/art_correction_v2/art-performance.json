@@ -1,0 +1,27 @@
+{
+	"cap_fx": 32,
+	"draw_submission_ms": {
+		"max": 2.639,
+		"median": 1.509,
+		"p95": 1.707,
+		"samples": 419
+	},
+	"frame_wall_ms": {
+		"max": 20.892,
+		"median": 5.667,
+		"p95": 6.278,
+		"samples": 419
+	},
+	"gpu": "NVIDIA GeForce GTX 1660",
+	"max_fx": 32,
+	"processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+	"render_draw_calls": 54.0,
+	"scope": "Explicit held12-small-body/seven-family/32-FX stress fixture with synthetic visual states, never natural gameplay or survival evidence. Native640x360, VSyncdisabled. CPU draw submission excludes asynchronous GPU; wall frame includes harness.",
+	"simulation_ms": {
+		"max": 18.453,
+		"median": 3.32,
+		"p95": 3.721,
+		"samples": 419
+	},
+	"small_bodies": 12
+}

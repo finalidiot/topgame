@@ -134,21 +134,24 @@ func _test_deterministic_overflow_and_cap() -> void:
 	first.choose_power(first.pending_draft_id, first_choice)
 	second.choose_power(second.pending_draft_id, first_choice)
 	# Multiple independent eliminations can legitimately arrive in one fixed tick.
-	for entity_id: int in range(100, 368):
+	for entity_id: int in range(100, 100 + int((132 + 84 * (Powers.investment_capacity() - 5)) / 3)):
 		var event: Dictionary = elimination(10.0, entity_id)
 		first.award_xp(event)
 		for _sample: int in range(7): cosmetics.randf()
 		second.award_xp(event)
-	check(first.level == 13 and first.progression_snapshot().maxed, "A batch crossing costs preserves twelve earned entitlements and caps at thirteen investments")
+	check(first.level == Powers.run_investment_capacity() and first.progression_snapshot().maxed, "A batch crossing retains every possible machine investment entitlement")
 	check(first.pending_draft_id == "draft/level_02", "Queued overflow presents the earliest earned draft first")
 	check(not first.advance(), "Unclaimed earned drafts cannot skip the encounter")
-	for earned_level: int in range(2, 14):
+	var earned_level: int = 1
+	while not first.pending_offer.is_empty():
+		earned_level += 1
 		var draft_id: String = first.pending_draft_id
 		var offer: Array[String] = first.pending_offer
 		check(first.pending_draft_level == earned_level and first.pending_draft_kind == "level", "Overflow draft retains a stable level identity")
 		check(offer == second.pending_offer and draft_id == second.pending_draft_id, "Recorded events and choices reproduce the offer independently of cosmetic RNG")
 		var eligible: int = 0
 		for power_id: String in Powers.ACTIVE_IDS:
+			if first.owned_power_ids.size() >= Powers.FAMILY_CAP and not power_id in first.owned_power_ids: continue
 			if Powers.can_progress(power_id, int(first.power_ranks.get(power_id, 0))): eligible += 1
 		check(offer.size() == mini(3, eligible), "Exhaustion offers only real remaining investments")
 		for power_id: String in offer: check(Powers.can_progress(power_id, int(first.power_ranks.get(power_id, 0))), "Owned powers reappear only while they can progress")
@@ -162,7 +165,7 @@ func _test_deterministic_overflow_and_cap() -> void:
 			var branch: String = first.pending_mutation_offer[earned_level % 2]
 			check(first.choose_mutation(draft_id, branch) and second.choose_mutation(draft_id, branch), "Queued mutation entitlement commits a mutually exclusive branch")
 			check(not first.choose_mutation(draft_id, branch), "Stale branch claim cannot consume the next queued entitlement")
-	check(first.owned_power_ids.size() == 7 and first.pending_offer.is_empty() and first.pending_draft_id.is_empty(), "All seven powers and six vertical upgrades end drafting cleanly")
+	check(first.owned_power_ids.size() == Powers.FAMILY_CAP and first.pending_offer.is_empty() and first.pending_draft_id.is_empty() and first.committed_rewards.size() == first.available_investment_capacity(), "Seven chosen families and all their investments end drafting cleanly")
 	var max_state: Dictionary = first.progression_snapshot()
 	first.award_xp(elimination(20.0, 999))
 	check(first.level == max_state.level and first.progression_snapshot().total_xp == max_state.total_xp and first.xp == 0 and first.pending_offer.is_empty(), "MAX ignores further XP without fake duplicate ranks")

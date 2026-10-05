@@ -1,0 +1,578 @@
+{
+  "family": "predator_line",
+  "grammar": {
+    "silhouette": "two actual tops in diagonal pursuit, cropped near hunter and far rival",
+    "motion": "one quarry leads, hunter closes and makes a short rim scrape",
+    "location": "hunter floor footprint and the actual target direction",
+    "persistence": "only actual hunt stacks/target and accepted repeated contact",
+    "palette": "accepted vermilion Breaker and blue Bastion against floor shadows",
+    "feature": "pursuit is carried by two visible tops; no comb, teeth or hunter appliance"
+  },
+  "design": "assets/powers/identity/predator_line_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 quiet floor background",
+      "02 actual floor travel and shadows",
+      "03 accepted rival native top body",
+      "04 accepted owner native top body",
+      "05 blade contact and physical follow-through"
+    ],
+    "tags": {
+      "predator_line": {
+        "from": 0,
+        "to": 11
+      },
+      "predator_line_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      100,
+      100,
+      85,
+      85,
+      70,
+      70,
+      50,
+      50,
+      80,
+      80,
+      145,
+      145,
+      100,
+      100,
+      85,
+      85,
+      70,
+      70,
+      50,
+      50,
+      80,
+      80,
+      145,
+      145
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+    "texture": "res://assets/powers/identity/predator_line_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 independently drawn miniature top bodies",
+      "02 physical travel and contact at 16px"
+    ],
+    "tags": {
+      "predator_line": {
+        "from": 0,
+        "to": 0
+      },
+      "predator_line_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      160,
+      160
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+    "texture": "res://assets/powers/identity/predator_line_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded floor skid and erosion",
+      "02 real contact and compressed wake",
+      "03 directed physical follow-through",
+      "04 small attached rim glints"
+    ],
+    "tags": {
+      "predator_pressure_e": {
+        "from": 0,
+        "to": 7
+      },
+      "predator_pressure_se": {
+        "from": 8,
+        "to": 15
+      },
+      "predator_pressure_s": {
+        "from": 16,
+        "to": 23
+      },
+      "predator_pressure_sw": {
+        "from": 24,
+        "to": 31
+      },
+      "predator_pressure_w": {
+        "from": 32,
+        "to": 39
+      },
+      "predator_pressure_nw": {
+        "from": 40,
+        "to": 47
+      },
+      "predator_pressure_n": {
+        "from": 48,
+        "to": 55
+      },
+      "predator_pressure_ne": {
+        "from": 56,
+        "to": 63
+      },
+      "predator_pressure_ii_e": {
+        "from": 64,
+        "to": 71
+      },
+      "predator_pressure_ii_se": {
+        "from": 72,
+        "to": 79
+      },
+      "predator_pressure_ii_s": {
+        "from": 80,
+        "to": 87
+      },
+      "predator_pressure_ii_sw": {
+        "from": 88,
+        "to": 95
+      },
+      "predator_pressure_ii_w": {
+        "from": 96,
+        "to": 103
+      },
+      "predator_pressure_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "predator_pressure_ii_n": {
+        "from": 112,
+        "to": 119
+      },
+      "predator_pressure_ii_ne": {
+        "from": 120,
+        "to": 127
+      },
+      "predator_tracking_e": {
+        "from": 128,
+        "to": 135
+      },
+      "predator_tracking_se": {
+        "from": 136,
+        "to": 143
+      },
+      "predator_tracking_s": {
+        "from": 144,
+        "to": 151
+      },
+      "predator_tracking_sw": {
+        "from": 152,
+        "to": 159
+      },
+      "predator_tracking_w": {
+        "from": 160,
+        "to": 167
+      },
+      "predator_tracking_nw": {
+        "from": 168,
+        "to": 175
+      },
+      "predator_tracking_n": {
+        "from": 176,
+        "to": 183
+      },
+      "predator_tracking_ne": {
+        "from": 184,
+        "to": 191
+      },
+      "predator_tracking_ii_e": {
+        "from": 192,
+        "to": 199
+      },
+      "predator_tracking_ii_se": {
+        "from": 200,
+        "to": 207
+      },
+      "predator_tracking_ii_s": {
+        "from": 208,
+        "to": 215
+      },
+      "predator_tracking_ii_sw": {
+        "from": 216,
+        "to": 223
+      },
+      "predator_tracking_ii_w": {
+        "from": 224,
+        "to": 231
+      },
+      "predator_tracking_ii_nw": {
+        "from": 232,
+        "to": 239
+      },
+      "predator_tracking_ii_n": {
+        "from": 240,
+        "to": 247
+      },
+      "predator_tracking_ii_ne": {
+        "from": 248,
+        "to": 255
+      }
+    },
+    "durations_ms": [
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180,
+      55,
+      50,
+      55,
+      70,
+      85,
+      110,
+      135,
+      180
+    ],
+    "columns": 8,
+    "frame_count": 256,
+    "source": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+    "texture": "res://assets/powers/identity/predator_line_fx.png"
+  },
+  "event_tags": {
+    "predator_lock": "predator_pressure"
+  },
+  "active_tags": {
+    "tracking": "predator_tracking"
+  },
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "Tracking keys are actual-stack floor pursuit strokes. Render at the hunter floor origin facing its one real target, not the former floating 70% gap position."
+  ],
+  "art": {
+    "predator_line": {
+      "family": "predator_line",
+      "art_id": "predator_line",
+      "source_tag": "predator_line",
+      "icon": "res://assets/powers/identity/predator_line_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        100,
+        100,
+        85,
+        85,
+        70,
+        70,
+        50,
+        50,
+        80,
+        80,
+        145,
+        145
+      ]
+    },
+    "predator_line_ii": {
+      "family": "predator_line",
+      "art_id": "predator_line_ii",
+      "source_tag": "predator_line_ii",
+      "icon": "res://assets/powers/identity/predator_line_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/predator_line_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        100,
+        100,
+        85,
+        85,
+        70,
+        70,
+        50,
+        50,
+        80,
+        80,
+        145,
+        145
+      ]
+    }
+  }
+}

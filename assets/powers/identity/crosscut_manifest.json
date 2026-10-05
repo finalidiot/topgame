@@ -1,0 +1,383 @@
+{
+  "family": "crosscut",
+  "grammar": {
+    "silhouette": "two real top bodies pass tangentially into unequal exit lanes",
+    "motion": "descending approach, offset glancing contact, separated floor skids",
+    "location": "actual paid lateral displacement and contact floor",
+    "persistence": "brief existing glancing event with eroding follow-through",
+    "palette": "accepted green Vane and blue Bastion with pale sea-green tangential scrape",
+    "feature": "physical tops and one offset shear; no added blade gadget or symmetric X"
+  },
+  "design": "assets/powers/identity/crosscut_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 quiet floor background",
+      "02 actual floor travel and shadows",
+      "03 accepted rival native top body",
+      "04 accepted owner native top body",
+      "05 blade contact and physical follow-through"
+    ],
+    "tags": {
+      "crosscut": {
+        "from": 0,
+        "to": 11
+      },
+      "crosscut_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      105,
+      105,
+      75,
+      75,
+      45,
+      45,
+      50,
+      50,
+      70,
+      70,
+      145,
+      145,
+      105,
+      105,
+      75,
+      75,
+      45,
+      45,
+      50,
+      50,
+      70,
+      70,
+      145,
+      145
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+    "texture": "res://assets/powers/identity/crosscut_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 independently drawn miniature top bodies",
+      "02 physical travel and contact at 16px"
+    ],
+    "tags": {
+      "crosscut": {
+        "from": 0,
+        "to": 0
+      },
+      "crosscut_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      160,
+      160
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+    "texture": "res://assets/powers/identity/crosscut_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded floor skid and erosion",
+      "02 real contact and compressed wake",
+      "03 directed physical follow-through",
+      "04 small attached rim glints"
+    ],
+    "tags": {
+      "shear_slice_e": {
+        "from": 0,
+        "to": 7
+      },
+      "shear_slice_se": {
+        "from": 8,
+        "to": 15
+      },
+      "shear_slice_s": {
+        "from": 16,
+        "to": 23
+      },
+      "shear_slice_sw": {
+        "from": 24,
+        "to": 31
+      },
+      "shear_slice_w": {
+        "from": 32,
+        "to": 39
+      },
+      "shear_slice_nw": {
+        "from": 40,
+        "to": 47
+      },
+      "shear_slice_n": {
+        "from": 48,
+        "to": 55
+      },
+      "shear_slice_ne": {
+        "from": 56,
+        "to": 63
+      },
+      "shear_slice_ii_e": {
+        "from": 64,
+        "to": 71
+      },
+      "shear_slice_ii_se": {
+        "from": 72,
+        "to": 79
+      },
+      "shear_slice_ii_s": {
+        "from": 80,
+        "to": 87
+      },
+      "shear_slice_ii_sw": {
+        "from": 88,
+        "to": 95
+      },
+      "shear_slice_ii_w": {
+        "from": 96,
+        "to": 103
+      },
+      "shear_slice_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "shear_slice_ii_n": {
+        "from": 112,
+        "to": 119
+      },
+      "shear_slice_ii_ne": {
+        "from": 120,
+        "to": 127
+      }
+    },
+    "durations_ms": [
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200,
+      50,
+      35,
+      45,
+      60,
+      90,
+      115,
+      155,
+      200
+    ],
+    "columns": 8,
+    "frame_count": 128,
+    "source": "assets/source-art/power_identity_002c5/crosscut_fx.aseprite",
+    "texture": "res://assets/powers/identity/crosscut_fx.png"
+  },
+  "event_tags": {
+    "crosscut": "shear_slice"
+  },
+  "active_tags": {},
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative."
+  ],
+  "art": {
+    "crosscut": {
+      "family": "crosscut",
+      "art_id": "crosscut",
+      "source_tag": "crosscut",
+      "icon": "res://assets/powers/identity/crosscut_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        105,
+        105,
+        75,
+        75,
+        45,
+        45,
+        50,
+        50,
+        70,
+        70,
+        145,
+        145
+      ]
+    },
+    "crosscut_ii": {
+      "family": "crosscut",
+      "art_id": "crosscut_ii",
+      "source_tag": "crosscut_ii",
+      "icon": "res://assets/powers/identity/crosscut_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/crosscut_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        105,
+        105,
+        75,
+        75,
+        45,
+        45,
+        50,
+        50,
+        70,
+        70,
+        145,
+        145
+      ]
+    }
+  }
+}

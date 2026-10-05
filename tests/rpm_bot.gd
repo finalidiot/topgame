@@ -15,7 +15,7 @@ static func input(b: Node2D, style: String, tick: int) -> Dictionary:
 	if style == "defensive" or (style == "hybrid" and float(p.rpm) < 0.40):
 		# Small deliberate corrections around centre; receive rather than chase.
 		aim = (-Vector2(p.pos)*0.9-Vector2(p.vel)*0.35+aim*24.0).normalized()
-		intensity = 0.30
+		intensity = 0.25
 		burst = false
 	elif style == "hybrid":
 		intensity = 0.64

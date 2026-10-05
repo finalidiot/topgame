@@ -1,0 +1,718 @@
+{
+  "family": "high_gear",
+  "grammar": {
+    "silhouette": "Recognisable native top plus physically separated round rotor echoes; Flow retains an open contact path.",
+    "motion": "Sparse native rim fragments separate as thrust rises. Terminal opens longer gaps; Flow retains three disconnected bent floor groups.",
+    "location": "Sparse rear blade-rim memories along the actual velocity; the real live top stays dominant.",
+    "persistence": "Moving speed state; terminal surge is event-based.",
+    "palette": "Steel, ice and cool blue; muted mint retained rails; sparse terminal brass tips.",
+    "feature": "Terminal separated blade-tip glints versus Flow short bent floor groups remain distinct in grayscale; no opaque rack or rail."
+  },
+  "design": "assets/powers/identity/high_gear_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
+    ],
+    "tags": {
+      "high_gear": {
+        "from": 0,
+        "to": 11
+      },
+      "high_gear_ii": {
+        "from": 12,
+        "to": 23
+      },
+      "terminal_velocity": {
+        "from": 24,
+        "to": 35
+      },
+      "flow_state": {
+        "from": 36,
+        "to": 47
+      }
+    },
+    "durations_ms": [
+      120,
+      90,
+      70,
+      55,
+      45,
+      45,
+      55,
+      65,
+      75,
+      90,
+      100,
+      150,
+      120,
+      90,
+      70,
+      55,
+      45,
+      45,
+      55,
+      65,
+      75,
+      90,
+      100,
+      150,
+      130,
+      90,
+      60,
+      40,
+      35,
+      35,
+      40,
+      50,
+      65,
+      90,
+      115,
+      160,
+      95,
+      90,
+      85,
+      80,
+      75,
+      75,
+      75,
+      80,
+      85,
+      90,
+      100,
+      115
+    ],
+    "columns": 12,
+    "frame_count": 48,
+    "source": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+    "texture": "res://assets/powers/identity/high_gear_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 compact mechanical silhouette",
+      "02 identifying action and negative space"
+    ],
+    "tags": {
+      "high_gear": {
+        "from": 0,
+        "to": 0
+      },
+      "high_gear_ii": {
+        "from": 1,
+        "to": 1
+      },
+      "terminal_velocity": {
+        "from": 2,
+        "to": 2
+      },
+      "flow_state": {
+        "from": 3,
+        "to": 3
+      }
+    },
+    "durations_ms": [
+      100,
+      100,
+      100,
+      100
+    ],
+    "columns": 4,
+    "frame_count": 4,
+    "source": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+    "texture": "res://assets/powers/identity/high_gear_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded scar and contact reaction",
+      "02 physical mechanism and brackets",
+      "03 moving force plates",
+      "04 keyed sparks and travel fragments"
+    ],
+    "tags": {
+      "speed": {
+        "from": 0,
+        "to": 7
+      },
+      "speed_e": {
+        "from": 8,
+        "to": 15
+      },
+      "speed_ne": {
+        "from": 16,
+        "to": 23
+      },
+      "speed_n": {
+        "from": 24,
+        "to": 31
+      },
+      "speed_nw": {
+        "from": 32,
+        "to": 39
+      },
+      "speed_w": {
+        "from": 40,
+        "to": 47
+      },
+      "speed_sw": {
+        "from": 48,
+        "to": 55
+      },
+      "speed_s": {
+        "from": 56,
+        "to": 63
+      },
+      "speed_se": {
+        "from": 64,
+        "to": 71
+      },
+      "speed_ii": {
+        "from": 72,
+        "to": 79
+      },
+      "speed_ii_e": {
+        "from": 80,
+        "to": 87
+      },
+      "speed_ii_ne": {
+        "from": 88,
+        "to": 95
+      },
+      "speed_ii_n": {
+        "from": 96,
+        "to": 103
+      },
+      "speed_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "speed_ii_w": {
+        "from": 112,
+        "to": 119
+      },
+      "speed_ii_sw": {
+        "from": 120,
+        "to": 127
+      },
+      "speed_ii_s": {
+        "from": 128,
+        "to": 135
+      },
+      "speed_ii_se": {
+        "from": 136,
+        "to": 143
+      },
+      "terminal_velocity": {
+        "from": 144,
+        "to": 151
+      },
+      "terminal_velocity_e": {
+        "from": 152,
+        "to": 159
+      },
+      "terminal_velocity_ne": {
+        "from": 160,
+        "to": 167
+      },
+      "terminal_velocity_n": {
+        "from": 168,
+        "to": 175
+      },
+      "terminal_velocity_nw": {
+        "from": 176,
+        "to": 183
+      },
+      "terminal_velocity_w": {
+        "from": 184,
+        "to": 191
+      },
+      "terminal_velocity_sw": {
+        "from": 192,
+        "to": 199
+      },
+      "terminal_velocity_s": {
+        "from": 200,
+        "to": 207
+      },
+      "terminal_velocity_se": {
+        "from": 208,
+        "to": 215
+      },
+      "flow_state": {
+        "from": 216,
+        "to": 223
+      },
+      "flow_state_e": {
+        "from": 224,
+        "to": 231
+      },
+      "flow_state_ne": {
+        "from": 232,
+        "to": 239
+      },
+      "flow_state_n": {
+        "from": 240,
+        "to": 247
+      },
+      "flow_state_nw": {
+        "from": 248,
+        "to": 255
+      },
+      "flow_state_w": {
+        "from": 256,
+        "to": 263
+      },
+      "flow_state_sw": {
+        "from": 264,
+        "to": 271
+      },
+      "flow_state_s": {
+        "from": 272,
+        "to": 279
+      },
+      "flow_state_se": {
+        "from": 280,
+        "to": 287
+      }
+    },
+    "durations_ms": [
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130
+    ],
+    "columns": 8,
+    "frame_count": 288,
+    "source": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+    "texture": "res://assets/powers/identity/high_gear_fx.png"
+  },
+  "event_tags": {
+    "high_gear_surge": "terminal_velocity"
+  },
+  "active_tags": {
+    "speed": "speed",
+    "terminal_velocity": "terminal_velocity",
+    "flow_state": "flow_state"
+  },
+  "notes": [
+    "Rank II adds one further sparse blade-rim memory; no housing, filled base, shadow block or continuous speed bars.",
+    "Flow preserves a long open floor-contact bend. Orbit instead cuts a compact concave hook and ejects grit.",
+    "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
+  ],
+  "art": {
+    "high_gear": {
+      "family": "high_gear",
+      "art_id": "high_gear",
+      "source_tag": "high_gear",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        120,
+        90,
+        70,
+        55,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "high_gear_ii": {
+      "family": "high_gear",
+      "art_id": "high_gear_ii",
+      "source_tag": "high_gear_ii",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        120,
+        90,
+        70,
+        55,
+        45,
+        45,
+        55,
+        65,
+        75,
+        90,
+        100,
+        150
+      ]
+    },
+    "terminal_velocity": {
+      "family": "high_gear",
+      "art_id": "terminal_velocity",
+      "source_tag": "terminal_velocity",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        130,
+        90,
+        60,
+        40,
+        35,
+        35,
+        40,
+        50,
+        65,
+        90,
+        115,
+        160
+      ]
+    },
+    "flow_state": {
+      "family": "high_gear",
+      "art_id": "flow_state",
+      "source_tag": "flow_state",
+      "icon": "res://assets/powers/identity/high_gear_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/identity/high_gear_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        95,
+        90,
+        85,
+        80,
+        75,
+        75,
+        75,
+        80,
+        85,
+        90,
+        100,
+        115
+      ]
+    }
+  }
+}

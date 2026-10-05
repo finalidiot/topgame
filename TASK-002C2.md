@@ -132,7 +132,7 @@ Second Wind remains once per launch. Task 002C.3 owns the eventual replacement.
 
 ## Diagnostics and reproducibility
 
-`tests/task002c2-director-results.json` is the compact combined evidence artifact,
+`tests/results/task002c2-director-results.json` is the compact combined evidence artifact,
 with clearly separated scopes:
 
 1. Nine ordinary combat samples: three starters x seeds 421/7341/2026, varied

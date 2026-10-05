@@ -1,0 +1,124 @@
+{
+  "showcase_sha256": "398c6f541fc47789d143765aa321795684b69ac5b6a42bc84f8699ba47a4e1fa",
+  "blind_sha256": "7f7b187e05b5cad664a698bf73858360fac83e73728c9c00593362d7bc8215ce",
+  "source": "final MP4 decoding, unscaled native crops; grayscale derived only for review",
+  "samples": [
+    {
+      "selection": "impact_wake",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\impact_wake.avi",
+      "source_relative_sample_seconds": 1.2000000000000006,
+      "showcase_sample_seconds": 2.1,
+      "blind_sample_seconds": 0.9,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.4131958912037037,
+      "source_sha256": "3f27ddca15ecbace0301df5c2ae3aa03a0bc570ba66bf74774c7a468cd70d459"
+    },
+    {
+      "selection": "momentum_bank",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\momentum_bank.avi",
+      "source_relative_sample_seconds": 1.0499999999999998,
+      "showcase_sample_seconds": 5.7,
+      "blind_sample_seconds": 3.3,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.408073640046296,
+      "source_sha256": "417c5f7ea2b548c0623756603935ab204f55ab0c05c70d5c26198ece4acf204b"
+    },
+    {
+      "selection": "predator_line",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\predator_line.avi",
+      "source_relative_sample_seconds": 2.0,
+      "showcase_sample_seconds": 9.3,
+      "blind_sample_seconds": 5.7,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3831430844907409,
+      "source_sha256": "372f9319f97ced2260bdda354e713158e7d4039dac7715ab4fdbed60ff80e6d2"
+    },
+    {
+      "selection": "iron_comet",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\iron_comet.avi",
+      "source_relative_sample_seconds": 1.15,
+      "showcase_sample_seconds": 12.9,
+      "blind_sample_seconds": 8.1,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.4519198495370371,
+      "source_sha256": "914d8fa0a2c361af8b6b5b71d3a3a845afc3b011dfc6135ae9ea0a407c73f997"
+    },
+    {
+      "selection": "redline",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\redline.avi",
+      "source_relative_sample_seconds": 1.199999999999997,
+      "showcase_sample_seconds": 16.5,
+      "blind_sample_seconds": 10.5,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.5077669270833332,
+      "source_sha256": "c953a7788aa776009db4b8eece47d3b9c6e4dbe08e0155f8b48aad044a6db024"
+    },
+    {
+      "selection": "dead_centre",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\dead_centre.avi",
+      "source_relative_sample_seconds": 1.0,
+      "showcase_sample_seconds": 20.099999999999998,
+      "blind_sample_seconds": 12.9,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3634049479166668,
+      "source_sha256": "25dae69c1008da2e30134ecee26820b6032a7d7298f0dbd476f9ad1c7d6f8622"
+    },
+    {
+      "selection": "ghost_circuit",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\ghost_circuit.avi",
+      "source_relative_sample_seconds": 1.1,
+      "showcase_sample_seconds": 23.7,
+      "blind_sample_seconds": 15.299999999999999,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.4650698061342593,
+      "source_sha256": "9d65593cfb143a24f33fb19917b5d99e7289904b1a59de23d5bbc7a3f36fd3b9"
+    },
+    {
+      "selection": "chain_impact",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\chain_impact.avi",
+      "source_relative_sample_seconds": 1.0000000000000013,
+      "showcase_sample_seconds": 27.299999999999997,
+      "blind_sample_seconds": 17.7,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.4039829282407406,
+      "source_sha256": "dbe0c59f27f5fc089edefb3693a360cd73ffd22fc4ffbc2f13c53ef4993835d3"
+    },
+    {
+      "selection": "clutch",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\clutch.avi",
+      "source_relative_sample_seconds": 1.0999999999999885,
+      "showcase_sample_seconds": 30.9,
+      "blind_sample_seconds": 20.099999999999998,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.4349895109953703,
+      "source_sha256": "ae53710558fb86436a0d815b81fcde24074f1e4df13ca650814e6ae5d4ff9965"
+    },
+    {
+      "selection": "high_gear",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\high_gear.avi",
+      "source_relative_sample_seconds": 1.0,
+      "showcase_sample_seconds": 34.5,
+      "blind_sample_seconds": 22.499999999999996,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3800571469907406,
+      "source_sha256": "d71781c155b82e9ff6dd3c34e3c624cea1a26036a835edc48a106c226525a0a1"
+    },
+    {
+      "selection": "orbit_drive",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\orbit_drive.avi",
+      "source_relative_sample_seconds": 1.4,
+      "showcase_sample_seconds": 38.1,
+      "blind_sample_seconds": 24.9,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3926851851851854,
+      "source_sha256": "193e05df25767938ef51ebace95054f05b36cf29030ee56da8ced51edb050098"
+    },
+    {
+      "selection": "crash_guard",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crash_guard.avi",
+      "source_relative_sample_seconds": 1.0500000000000003,
+      "showcase_sample_seconds": 41.7,
+      "blind_sample_seconds": 27.299999999999997,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3803815827546295,
+      "source_sha256": "91433771654745aebf98c2b0bef51e7ece61b88f4ff072aa1c41188b85dfd3ee"
+    },
+    {
+      "selection": "crosscut",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crosscut.avi",
+      "source_relative_sample_seconds": 0.9999999999999997,
+      "showcase_sample_seconds": 45.300000000000004,
+      "blind_sample_seconds": 29.699999999999996,
+      "blind_vs_raw_rgb_mean_absolute_error": 1.3743760850694444,
+      "source_sha256": "8db55bad3266a22c8a69554b9fa78c8d2eb1666163d4825a434626f5cef12fee"
+    }
+  ]
+}

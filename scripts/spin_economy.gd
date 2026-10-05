@@ -7,20 +7,22 @@ const TUNING = {
 	"severity":0.32, "target_cooldown":1.4, "global_cooldown":0.35,
 	"reclaim_damage":2.8, "reclaim_severity":0.026, "contact_max":0.095,
 	"bucket_capacity":0.12, "bucket_rate":0.045,
+	"overclock_capacity":0.15, "overclock_rate":0.025,
 	"small_capacity":0.008, "small_rate":0.002, "small_elimination":0.001,
 	"redline_activation_1":0.025, "redline_activation_2":0.045, "redline_drain":0.015, "redline_heat":0.025,
 	"committed_bonus":0.040,
 	"elimination":0.045, "elite":0.075, "boss":0.12, "credit_seconds":12.0
 }
 var _host: WeakRef
-var losses: Dictionary = {"passive":0.0,"movement":0.0,"burst":0.0,"braking":0.0,"powers":0.0,"collisions":0.0,"walls":0.0,"wobble":0.0}
-var gains: Dictionary = {"combat_reclamation":0.0,"elimination":0.0,"elite":0.0,"boss":0.0,"second_wind":0.0,"runaway":0.0,"slipstream":0.0}
+var losses: Dictionary = {"passive":0.0,"movement":0.0,"burst":0.0,"braking":0.0,"powers":0.0,"collisions":0.0,"walls":0.0,"wobble":0.0,"steering":0.0}
+var gains: Dictionary = {"combat_reclamation":0.0,"elimination":0.0,"elite":0.0,"boss":0.0,"second_wind":0.0,"runaway":0.0,"slipstream":0.0,"redline_motion":0.0,"redline_contact":0.0,"clutch":0.0}
 var contacts: Dictionary = {}
 var credits: Dictionary = {}
 var paid: Dictionary = {}
 var recovery_events: Array[Dictionary] = []
 var tokens: float = TUNING.bucket_capacity
 var small_tokens: float = TUNING.small_capacity
+var overclock_tokens: float = TUNING.overclock_capacity
 var ready_at: float = 0.0
 var control: float = 0.0
 var minimum: float = 1.0
@@ -44,6 +46,7 @@ func begin_tick(dt: float, input: Vector2) -> void:
 	control = input.length()
 	tokens = minf(TUNING.bucket_capacity,tokens+dt*TUNING.bucket_rate)
 	small_tokens = minf(TUNING.small_capacity,small_tokens+dt*TUNING.small_rate)
+	overclock_tokens = minf(TUNING.overclock_capacity,overclock_tokens+dt*TUNING.overclock_rate)
 
 func spend(f: Dictionary, amount: float, source: String) -> void:
 	if not valid(f): return
@@ -56,14 +59,16 @@ func spend(f: Dictionary, amount: float, source: String) -> void:
 
 func gain(f: Dictionary, amount: float, source: String, small: bool = false) -> float:
 	if not player(f) or not str(f.outcome).is_empty() or host().battle_status != "battle" or host().paused: return 0.0
-	var actual: float = minf(maxf(0.0,amount),1.0-float(f.rpm))
+	var actual: float = minf(maxf(0.0,amount),maxf(0.0,host().powers.rpm_cap(f)-float(f.rpm)))
 	# All small-body returns, including Runaway, share one sustained budget.
 	if small: actual = minf(actual,small_tokens)
-	if source != "second_wind": actual = minf(actual,tokens)
+	if source == "redline_motion": actual = minf(actual,overclock_tokens)
+	elif source != "second_wind": actual = minf(actual,tokens)
 	if actual <= 0.000001: return 0.0
 	if small: small_tokens -= actual
-	if source != "second_wind": tokens -= actual
-	f.rpm = minf(1.0,float(f.rpm)+actual)
+	if source == "redline_motion": overclock_tokens -= actual
+	elif source != "second_wind": tokens -= actual
+	f.rpm = minf(host().powers.rpm_cap(f),float(f.rpm)+actual)
 	f.energy = f.rpm
 	gains[source] = float(gains.get(source,0.0))+actual
 	recovery_count += 1
@@ -80,7 +85,7 @@ func gain(f: Dictionary, amount: float, source: String, small: bool = false) -> 
 
 func running_costs(f: Dictionary, speed: float, input: Vector2, braking: bool, drain: float, dt: float) -> void:
 	var efficiency: float = float(f.get("handling",{}).get("spin_drain",1.0))*drain
-	spend(f,maxf(TUNING.passive_floor,TUNING.passive_base-float(f.stats.stamina)*TUNING.stamina_credit)*efficiency*dt,"passive")
+	spend(f,maxf(TUNING.passive_floor,maxf(TUNING.passive_floor,TUNING.passive_base-float(f.stats.stamina)*TUNING.stamina_credit)*efficiency)*dt,"passive")
 	spend(f,(speed/230.0*TUNING.movement+input.length_squared()*TUNING.acceleration)*efficiency*dt,"movement")
 	spend(f,(TUNING.braking if braking else 0.0)*efficiency*dt,"braking")
 	spend(f,float(f.wobble)*TUNING.wobble*efficiency*dt,"wobble")

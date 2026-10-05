@@ -1,0 +1,188 @@
+[
+  {
+    "selection": "afterimage",
+    "start": 3.01666666666666,
+    "window_counters": {
+      "afterimage": 40,
+      "afterimage_hit": 9
+    },
+    "review_at": 0.9
+  },
+  {
+    "selection": "breakneck",
+    "start": 17.3000000000003,
+    "window_counters": {
+      "breakneck_commit": 1,
+      "breakneck_impact": 1,
+      "breakneck_miss": 0,
+      "redline": 1,
+      "redline_heat": 0,
+      "redline_overcap": 1
+    },
+    "review_at": 0.5166666666666018
+  },
+  {
+    "selection": "bulwark",
+    "start": 0.516666666666667,
+    "window_counters": {
+      "anchor": 1,
+      "bulwark_impact": 5
+    },
+    "review_at": 0.08333333333333293
+  },
+  {
+    "selection": "chain_impact",
+    "start": 51.0166666666651,
+    "window_counters": {
+      "chain_burst": 0,
+      "chain_impact": 3,
+      "chain_prime": 0
+    },
+    "review_at": 0.4666666666665975
+  },
+  {
+    "selection": "clutch",
+    "start": 147.80000000001,
+    "window_counters": {
+      "clutch_activate": 0,
+      "clutch_recover": 2
+    },
+    "review_at": 0.9500000000010118
+  },
+  {
+    "selection": "counterweight",
+    "start": 0.516666666666667,
+    "window_counters": {
+      "anchor": 3,
+      "anchor_break": 2,
+      "counterweight_release": 2,
+      "counterweight_store": 7
+    },
+    "review_at": 0.08333333333333293
+  },
+  {
+    "selection": "crash_guard",
+    "start": 14.8000000000003,
+    "window_counters": {
+      "crash_guard": 1
+    },
+    "review_at": 0.7666666666667012
+  },
+  {
+    "selection": "crosscut",
+    "start": 6.01666666666665,
+    "window_counters": {
+      "crosscut": 3
+    },
+    "review_at": 0.4500000000000002
+  },
+  {
+    "selection": "dead_centre",
+    "start": 0.0,
+    "window_counters": {
+      "anchor": 1
+    },
+    "review_at": 0.6
+  },
+  {
+    "selection": "flow_state",
+    "start": 3.01666666666666,
+    "window_counters": {},
+    "review_at": 0.9
+  },
+  {
+    "selection": "ghost_circuit",
+    "start": 3.71666666666666,
+    "window_counters": {
+      "afterimage": 40,
+      "afterimage_hit": 7,
+      "ghost_activation": 2,
+      "ghost_closure": 2,
+      "ghost_preview": 2
+    },
+    "review_at": 0.1499999999999999
+  },
+  {
+    "selection": "high_gear",
+    "start": 3.01666666666666,
+    "window_counters": {},
+    "review_at": 0.9
+  },
+  {
+    "selection": "impact_wake",
+    "start": 10.8000000000001,
+    "window_counters": {
+      "impact_wake": 2
+    },
+    "review_at": 0.7500000000000995
+  },
+  {
+    "selection": "iron_comet",
+    "start": 28.8166666666663,
+    "window_counters": {
+      "comet_charge": 1,
+      "comet_release": 1
+    },
+    "review_at": 0.5666666666665989
+  },
+  {
+    "selection": "momentum_bank",
+    "start": 1.3,
+    "window_counters": {
+      "momentum_release": 1,
+      "momentum_store": 2
+    },
+    "review_at": 1.41666666666666
+  },
+  {
+    "selection": "orbit_drive",
+    "start": 13.4000000000002,
+    "window_counters": {},
+    "review_at": 0.9
+  },
+  {
+    "selection": "predator_line",
+    "start": 0.0,
+    "window_counters": {
+      "predator_lock": 5
+    },
+    "review_at": 0.666666666666667
+  },
+  {
+    "selection": "redline",
+    "start": 72.8166666666638,
+    "window_counters": {
+      "redline": 1,
+      "redline_overcap": 2
+    },
+    "review_at": 1.8833333333331979
+  },
+  {
+    "selection": "runaway",
+    "start": 10.0000000000001,
+    "window_counters": {
+      "redline": 0,
+      "redline_overcap": 2,
+      "runaway_hit": 2
+    },
+    "review_at": 0.5999999999999996
+  },
+  {
+    "selection": "slipstream",
+    "start": 15.0000000000003,
+    "window_counters": {
+      "afterimage": 26,
+      "afterimage_hit": 8,
+      "slipstream_cross": 1
+    },
+    "review_at": 1.549999999999999
+  },
+  {
+    "selection": "terminal_velocity",
+    "start": 3.61666666666666,
+    "window_counters": {
+      "high_gear_surge": 2
+    },
+    "review_at": 0.5
+  }
+]

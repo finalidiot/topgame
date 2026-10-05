@@ -1,0 +1,421 @@
+{
+  "scope": "Natural earned route builds; real director and RPM economy; ordinary inputs only. Observer samples wrap the production closure call, first validated against identical uninstrumented outcome/counters. No human acceptance claim.",
+  "samples": [
+    {
+      "starter": "vane",
+      "seed": 421,
+      "survival_time": 155.500000000016,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 967,
+        "afterimage_hit": 180,
+        "ghost_preview": 56,
+        "slipstream_cross": 2
+      },
+      "source": "route-seek108.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 45,
+          "ghost_control_samples": 199,
+          "mean_speed_while_ghost": 128.818547064373,
+          "preview_gap_min": 26.6777515411377,
+          "preview_samples": 32,
+          "trace_count_max": 28,
+          "trace_span_max": 4.05000000000322
+        },
+        "pace": 145.0,
+        "radius": 108.0
+      },
+      "critical_emissions": []
+    },
+    {
+      "starter": "vane",
+      "seed": 421,
+      "survival_time": 196.050000000048,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 2,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 1197,
+        "afterimage_hit": 270,
+        "ghost_activation": 13,
+        "ghost_closure": 11,
+        "ghost_preview": 24
+      },
+      "source": "route-seek85.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 71,
+          "ghost_control_samples": 437,
+          "mean_speed_while_ghost": 134.573453557931,
+          "preview_gap_min": 8.50680541992188,
+          "preview_samples": 25,
+          "trace_count_max": 28,
+          "trace_span_max": 5.43333333333766
+        },
+        "pace": 145.0,
+        "radius": 85.0
+      },
+      "critical_emissions": []
+    },
+    {
+      "starter": "bastion",
+      "seed": 421,
+      "survival_time": 197.733333333383,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 556,
+        "afterimage_hit": 130
+      },
+      "source": "route-seek85.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 205,
+          "ghost_control_samples": 205,
+          "mean_speed_while_ghost": 76.9190427377547,
+          "preview_gap_min": 999.0,
+          "preview_samples": 0,
+          "trace_count_max": 0,
+          "trace_span_max": 0.0
+        },
+        "pace": 145.0,
+        "radius": 85.0
+      },
+      "critical_emissions": []
+    },
+    {
+      "starter": "breaker",
+      "seed": 421,
+      "survival_time": 147.733333333343,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 884,
+        "afterimage_hit": 213,
+        "ghost_activation": 3,
+        "ghost_closure": 2,
+        "ghost_preview": 6
+      },
+      "source": "route-seek85.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 65,
+          "ghost_control_samples": 159,
+          "mean_speed_while_ghost": 115.660699174933,
+          "preview_gap_min": 36.6612892150879,
+          "preview_samples": 4,
+          "trace_count_max": 28,
+          "trace_span_max": 4.05000000000322
+        },
+        "pace": 145.0,
+        "radius": 85.0
+      },
+      "critical_emissions": []
+    },
+    {
+      "starter": "vane",
+      "seed": 421,
+      "survival_time": 155.500000000016,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 967,
+        "afterimage_hit": 180,
+        "ghost_preview": 56,
+        "slipstream_cross": 2
+      },
+      "source": "route-emission108-before.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 45,
+          "ghost_control_samples": 199,
+          "mean_speed_while_ghost": 128.818547064373,
+          "preview_gap_min": 26.6777515411377,
+          "preview_samples": 32,
+          "trace_count_max": 28,
+          "trace_span_max": 4.05000000000322
+        },
+        "pace": 145.0,
+        "radius": 108.0
+      },
+      "critical_emissions": [
+        {
+          "closed": false,
+          "count": 28,
+          "emitted": true,
+          "next_gap": 44.1120910644531,
+          "path_points": 1,
+          "previous_gap": 44.1120910644531,
+          "span": 4.04999999999977,
+          "speed": 150.172622680664,
+          "time": 121.999999999994
+        },
+        {
+          "closed": false,
+          "count": 28,
+          "emitted": true,
+          "next_gap": 45.2153396606445,
+          "path_points": 1,
+          "previous_gap": 22.422233581543,
+          "span": 4.04999999999977,
+          "speed": 148.559356689453,
+          "time": 122.149999999994
+        },
+        {
+          "closed": false,
+          "count": 28,
+          "emitted": true,
+          "next_gap": 47.2831039428711,
+          "path_points": 1,
+          "previous_gap": 24.4115428924561,
+          "span": 4.04999999999977,
+          "speed": 148.337356567383,
+          "time": 122.299999999994
+        },
+        {
+          "closed": false,
+          "count": 28,
+          "emitted": true,
+          "next_gap": 50.0258827209473,
+          "path_points": 1,
+          "previous_gap": 27.1884956359863,
+          "span": 4.04999999999977,
+          "speed": 148.001510620117,
+          "time": 122.449999999994
+        }
+      ]
+    },
+    {
+      "starter": "vane",
+      "seed": 421,
+      "survival_time": 162.233333333355,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 983,
+        "afterimage_hit": 187,
+        "ghost_activation": 10,
+        "ghost_closure": 6,
+        "ghost_preview": 6,
+        "slipstream_cross": 2
+      },
+      "source": "route-emission108-after.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 67,
+          "ghost_control_samples": 233,
+          "mean_speed_while_ghost": 126.728531114006,
+          "preview_gap_min": 32.0244102478027,
+          "preview_samples": 10,
+          "trace_count_max": 40,
+          "trace_span_max": 5.9000000000047
+        },
+        "pace": 145.0,
+        "radius": 108.0
+      },
+      "critical_emissions": [
+        {
+          "closed": false,
+          "count": 28,
+          "emitted": true,
+          "next_gap": 44.1120910644531,
+          "path_points": 1,
+          "previous_gap": 44.1120910644531,
+          "span": 4.04999999999977,
+          "speed": 150.172622680664,
+          "time": 121.999999999994
+        },
+        {
+          "closed": true,
+          "count": 29,
+          "emitted": true,
+          "next_gap": -1.0,
+          "path_points": 1,
+          "previous_gap": 22.422233581543,
+          "span": 4.19999999999976,
+          "speed": 148.559356689453,
+          "time": 122.149999999994
+        },
+        {
+          "closed": true,
+          "count": 40,
+          "emitted": true,
+          "next_gap": -1.0,
+          "path_points": 1,
+          "previous_gap": 29.6298713684082,
+          "span": 5.84999999999967,
+          "speed": 148.119812011719,
+          "time": 126.499999999994
+        },
+        {
+          "closed": true,
+          "count": 40,
+          "emitted": true,
+          "next_gap": -1.0,
+          "path_points": 1,
+          "previous_gap": 25.2115573883057,
+          "span": 5.85000000000221,
+          "speed": 147.307067871094,
+          "time": 130.999999999996
+        }
+      ]
+    },
+    {
+      "starter": "breaker",
+      "seed": 421,
+      "survival_time": 116.699999999995,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 708,
+        "afterimage_hit": 148
+      },
+      "source": "route-emission108-after.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 19,
+          "ghost_control_samples": 30,
+          "mean_speed_while_ghost": 81.5866815467676,
+          "preview_gap_min": 999.0,
+          "preview_samples": 0,
+          "trace_count_max": 14,
+          "trace_span_max": 2.71666666666651
+        },
+        "pace": 145.0,
+        "radius": 108.0
+      },
+      "critical_emissions": []
+    },
+    {
+      "starter": "bastion",
+      "seed": 421,
+      "survival_time": 228.800000000074,
+      "reason": "spin_out",
+      "powers": [
+        "afterimage",
+        "predator_line",
+        "crash_guard"
+      ],
+      "ranks": {
+        "afterimage": 3,
+        "crash_guard": 2,
+        "predator_line": 1
+      },
+      "mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "power_procs": {
+        "afterimage": 588,
+        "afterimage_hit": 141
+      },
+      "source": "route-emission108-after.json",
+      "controller": {
+        "follow_preview": true,
+        "metrics": {
+          "below_trace_speed_samples": 375,
+          "ghost_control_samples": 390,
+          "mean_speed_while_ghost": 94.3030961691187,
+          "preview_gap_min": 999.0,
+          "preview_samples": 0,
+          "trace_count_max": 19,
+          "trace_span_max": 2.70000000000215
+        },
+        "pace": 145.0,
+        "radius": 108.0
+      },
+      "critical_emissions": []
+    }
+  ]
+}

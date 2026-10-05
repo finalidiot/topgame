@@ -1,0 +1,46 @@
+{
+  "family": "redline",
+  "grammar": {
+    "silhouette": "Off-centre metal rotor with broken hot plates and an asymmetric torn wake.",
+    "motion": "Ignition, growing splinter density and irregular heat stutter; Breakneck loads, strikes, recoils.",
+    "location": "Rotor edges and actual velocity wake; recoil near the floor.",
+    "persistence": "Only real active/overcap/heat states; discrete ignition, commitment, strike and vent events.",
+    "palette": "Oxide, hot orange, red and pale key flashes against cold steel.",
+    "feature": "Open machine centre with unequal broken fragment banks; mutations change motion, not just hue."
+  },
+  "static_frames": {
+    "redline": 6,
+    "redline_ii": 6,
+    "runaway": 6,
+    "breakneck": 6
+  },
+  "event_tags": {
+    "redline": "redline_active",
+    "redline_ii": "redline_active_ii",
+    "runaway": "runaway",
+    "redline_overcap": "redline_overcap",
+    "redline_heat": "redline_heat",
+    "runaway_hit": "runaway",
+    "breakneck_charge": "breakneck_charge",
+    "breakneck_impact": "breakneck_strike",
+    "breakneck_recovery": "breakneck_recoil"
+  },
+  "active_tags": {
+    "active": "redline_active",
+    "overcap": "redline_overcap",
+    "heat": "redline_heat",
+    "runaway": "runaway",
+    "breakneck": "breakneck_charge"
+  },
+  "notes": [
+    "Successful C.4 fragmented Redline active signatures are intentionally retained by the integrated renderer. Fresh cards/icons and eight-key contact/overcap/heat/commit force-fragment states share their asymmetric hot mechanical grammar. No clean corona ring.",
+    "Runaway card frays after successive successful-contact action beats. Breakneck uses a visible small rival and loaded/strike/recoil poses."
+  ],
+  "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
+  "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
+  "review_tier": {
+    "before": "C cards; runtime mixed B/C",
+    "after": "B/A candidate pending full roster, grayscale and motion review"
+  },
+  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+}

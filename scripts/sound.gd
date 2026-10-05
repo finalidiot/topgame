@@ -1,6 +1,15 @@
 extends Node
 
 const SOUNDS: Dictionary = {
+	"redline_overcap":preload("res://assets/audio/redline_overcap.wav"),
+	"redline_heat":preload("res://assets/audio/redline_heat.wav"),
+	"clutch_activate":preload("res://assets/audio/clutch_activate.wav"),
+	"clutch_recover":preload("res://assets/audio/clutch_recover.wav"),
+	"high_gear_surge":preload("res://assets/audio/high_gear_surge.wav"),
+	"ghost_preview":preload("res://assets/audio/ghost_preview.wav"),
+	"momentum_release":preload("res://assets/audio/momentum_release.wav"),
+	"crash_guard":preload("res://assets/audio/crash_guard.wav"),
+	"crosscut":preload("res://assets/audio/crosscut.wav"),
 	"boss_port":preload("res://assets/audio/boss_port.wav"),
 	"boss_payoff":preload("res://assets/audio/boss_payoff.wav"),
 	"rpm_reclaim":preload("res://assets/audio/rpm_reclaim.wav"),
@@ -14,8 +23,8 @@ const SOUNDS: Dictionary = {
 	"ui":preload("res://assets/audio/ui.wav"), "win":preload("res://assets/audio/win.wav"), "loss":preload("res://assets/audio/loss.wav"),
 	"power_wake": preload("res://assets/audio/power_wake.wav"),
 	"redline": preload("res://assets/audio/redline.wav"),
-	"comet_charge": preload("res://assets/audio/comet_charge.wav"),
-	"comet_release": preload("res://assets/audio/comet_release.wav"),
+	"comet_charge": preload("res://assets/audio/iron_comet_charge.wav"),
+	"comet_release": preload("res://assets/audio/iron_comet_release.wav"),
 	"second_wind": preload("res://assets/audio/second_wind.wav"),
 	"chain": preload("res://assets/audio/chain.wav"),
 	"wave": preload("res://assets/audio/wave.wav"),
@@ -40,7 +49,7 @@ const SOUNDS: Dictionary = {
 	"counterweight_store": preload("res://assets/audio/counterweight_store.wav"),
 	"counterweight_release": preload("res://assets/audio/counterweight_release.wav"),
 	"afterimage_ii": preload("res://assets/audio/afterimage_ii.wav"),
-	"ghost_closure": preload("res://assets/audio/ghost_closure.wav"),
+	"ghost_closure": preload("res://assets/audio/ghost_latch.wav"),
 	"ghost_activation": preload("res://assets/audio/ghost_activation.wav"),
 	"slipstream_cross": preload("res://assets/audio/slipstream_cross.wav")
 }
@@ -51,14 +60,18 @@ const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low
 	"breakneck_charge": 5, "breakneck_impact": 5,
 	"anchor": 3, "anchor_break": 3, "bulwark_impact": 5,
 	"counterweight_store": 3, "counterweight_release": 5,
-	"afterimage_ii": 1, "ghost_closure": 5, "ghost_activation": 5, "slipstream_cross": 3}
+	"afterimage_ii": 1, "ghost_closure": 5, "ghost_activation": 5, "slipstream_cross": 3,
+	"redline_overcap":4,"redline_heat":3,"clutch_activate":4,"clutch_recover":5,
+	"high_gear_surge":3,"ghost_preview":1,"momentum_release":3,"crash_guard":3,"crosscut":3}
 const COOLDOWN: Dictionary = {"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
 	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
 	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
 	"breakneck_charge": 0.25, "breakneck_impact": 0.20,
 	"anchor": 0.45, "anchor_break": 0.25, "bulwark_impact": 0.22,
 	"counterweight_store": 0.28, "counterweight_release": 0.28,
-	"afterimage_ii": 0.22, "ghost_closure": 0.40, "ghost_activation": 0.35, "slipstream_cross": 0.30}
+	"afterimage_ii": 0.22, "ghost_closure": 0.40, "ghost_activation": 0.35, "slipstream_cross": 0.30,
+	"redline_overcap":1.0,"redline_heat":2.5,"clutch_activate":1.5,"clutch_recover":1.0,
+	"high_gear_surge":0.4,"ghost_preview":0.65,"momentum_release":0.4,"crash_guard":0.6,"crosscut":0.6}
 var channels: Array[AudioStreamPlayer] = []
 var current: int = 0
 var muted: bool = false
@@ -154,6 +167,9 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -6.0
 	if key in ["rpm_reclaim","low_rpm"]: player.volume_db = -10.0
 	if key == "breakneck_recovery": player.volume_db = -8.0
+	if key in ["redline_overcap","clutch_recover","high_gear_surge","momentum_release"]: player.volume_db=-6.0
+	if key in ["redline_heat","clutch_activate","crash_guard","crosscut"]: player.volume_db=-9.0
+	if key=="ghost_preview": player.volume_db=-15.0
 	if kind == "boss_warning":
 		player.pitch_scale = 0.68
 		player.volume_db = -3.0

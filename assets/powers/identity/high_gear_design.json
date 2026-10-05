@@ -1,0 +1,49 @@
+{
+  "family": "high_gear",
+  "grammar": {
+    "silhouette": "Recognisable native top plus physically separated round rotor echoes; Flow retains an open contact path.",
+    "motion": "Sparse native rim fragments separate as thrust rises. Terminal opens longer gaps; Flow retains three disconnected bent floor groups.",
+    "location": "Sparse rear blade-rim memories along the actual velocity; the real live top stays dominant.",
+    "persistence": "Moving speed state; terminal surge is event-based.",
+    "palette": "Steel, ice and cool blue; muted mint retained rails; sparse terminal brass tips.",
+    "feature": "Terminal separated blade-tip glints versus Flow short bent floor groups remain distinct in grayscale; no opaque rack or rail."
+  },
+  "static_frames": {
+    "high_gear": 5,
+    "high_gear_ii": 5,
+    "terminal_velocity": 6,
+    "flow_state": 6
+  },
+  "event_tags": {
+    "high_gear_surge": "terminal_velocity"
+  },
+  "active_tags": {
+    "speed": "speed",
+    "terminal_velocity": "terminal_velocity",
+    "flow_state": "flow_state"
+  },
+  "notes": [
+    "Rank II adds one further sparse blade-rim memory; no housing, filled base, shadow block or continuous speed bars.",
+    "Flow preserves a long open floor-contact bend. Orbit instead cuts a compact concave hook and ejects grit.",
+    "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
+  ],
+  "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
+  "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
+  "review_tier": {
+    "before": "Human review rejected ambiguous pseudo-machine subjects",
+    "after": "Corrected physical-top scenes; human visual acceptance pending"
+  },
+  "card_story": "Six deliberately held physical poses in twelve timed source cels: anticipation, action, reaction and recovery. No added frames for smoothness.",
+  "historical_direction": {
+    "human_rejected_checkpoint": "d0d37e5",
+    "accepted_physical_subject": "d551867 assets/source-art/starter_balance_mid_ball.aseprite",
+    "components_restored": [
+      "native blade cels",
+      "native ratchet cels",
+      "native bit cels"
+    ],
+    "motion_cues_inspected": "32bb56e roster cards/icons/FX; bdcc24e cards/icons; f72526e runtime effects",
+    "source_authority": "Native saved Aseprite masters; six deliberately held card poses in twelve timed cels",
+    "human_visual_acceptance": "pending"
+  }
+}

@@ -3,7 +3,7 @@ class_name RunProgression
 
 ## All progression tuning lives here. Costs are incremental: the opening power
 ## is free; earned levels buy acquisitions, tunes or mutations. The original
-## five costs remain intact, then plateau for this slice's 13 investments.
+## five costs remain intact, then plateau through the supplied build capacity.
 ## No clock tick awards XP; combat supplies immutable events using live time.
 const TUNING: Dictionary = {
 	"level_costs": [18, 22, 36, 56, 84],
@@ -38,6 +38,13 @@ func setup(investment_count: int = 13, tuning: Dictionary = {}) -> void:
 	_max_level = maxi(1, investment_count)
 	_tuning = TUNING.duplicate(true)
 	_tuning.merge(tuning.duplicate(true), true)
+
+## Once all family slots are committed, only those families' remaining ranks
+## are possible. Keep earned attribution/XP history; close unavailable overflow.
+func set_investment_limit(investment_count: int) -> void:
+	_max_level = maxi(1,investment_count)
+	level = mini(level,_max_level)
+	if is_maxed(): xp = 0
 
 func clear() -> void:
 	level = 1

@@ -1,0 +1,28 @@
+{
+  "family": "crash_guard",
+  "correction": "Human requested physical top restoration v2",
+  "grammar": {
+    "silhouette": "round actual defender top receives an angular incoming top",
+    "motion": "contact bends at the blade, defender yields slightly, attacker redirects",
+    "location": "genuine incoming blade rim and local recoil skid",
+    "persistence": "existing contact event only",
+    "palette": "accepted blue steel defender against red attacker and short silver rim pressure",
+    "feature": "absorption and redirected displacement without piston, box or shield device"
+  },
+  "static_frames": {
+    "crash_guard": 4,
+    "crash_guard_ii": 4
+  },
+  "event_tags": {
+    "crash_guard": "damper_contact"
+  },
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "Historical internal tag damper_contact now means a short physical blade absorption/redirect response, with no piston or device pixels."
+  ]
+}

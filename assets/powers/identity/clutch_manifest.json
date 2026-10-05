@@ -1,0 +1,239 @@
+{
+  "family": "clutch",
+  "grammar": {
+    "silhouette": "Accepted wobbling blade and ratchet on a visibly scraping bit, followed by a small physical floor catch.",
+    "motion": "Uneven scrape, loaded bit bite, and the same top settling back upright.",
+    "location": "One side of the low bearing and contact-floor scrape.",
+    "persistence": "Intermittent actual danger window; bounded successful-contact catch.",
+    "palette": "Dull steel/brass, small gold tooth tips, oxide strain marks and one pale catch flash.",
+    "feature": "The top itself leans and catches; one tiny floor bite replaces the detached bearing device."
+  },
+  "design": "assets/powers/identity/clutch_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
+    ],
+    "tags": {
+      "clutch": {
+        "from": 0,
+        "to": 11
+      },
+      "clutch_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      180,
+      110,
+      145,
+      60,
+      45,
+      90,
+      40,
+      65,
+      110,
+      85,
+      140,
+      190,
+      180,
+      110,
+      145,
+      60,
+      45,
+      90,
+      40,
+      65,
+      110,
+      85,
+      140,
+      190
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+    "texture": "res://assets/powers/identity/clutch_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 compact mechanical silhouette",
+      "02 identifying action and negative space"
+    ],
+    "tags": {
+      "clutch": {
+        "from": 0,
+        "to": 0
+      },
+      "clutch_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      100,
+      100
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+    "texture": "res://assets/powers/identity/clutch_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded scar and contact reaction",
+      "02 physical mechanism and brackets",
+      "03 moving force plates",
+      "04 keyed sparks and travel fragments"
+    ],
+    "tags": {
+      "clutch_danger": {
+        "from": 0,
+        "to": 7
+      },
+      "clutch_danger_ii": {
+        "from": 8,
+        "to": 15
+      },
+      "clutch_catch": {
+        "from": 16,
+        "to": 23
+      },
+      "clutch_catch_ii": {
+        "from": 24,
+        "to": 31
+      }
+    },
+    "durations_ms": [
+      85,
+      60,
+      45,
+      35,
+      45,
+      65,
+      90,
+      130,
+      85,
+      60,
+      45,
+      35,
+      45,
+      65,
+      90,
+      130,
+      85,
+      60,
+      45,
+      35,
+      45,
+      65,
+      90,
+      130,
+      85,
+      60,
+      45,
+      35,
+      45,
+      65,
+      90,
+      130
+    ],
+    "columns": 8,
+    "frame_count": 32,
+    "source": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+    "texture": "res://assets/powers/identity/clutch_fx.png"
+  },
+  "event_tags": {
+    "clutch_activate": "clutch_danger",
+    "clutch_recover": "clutch_catch"
+  },
+  "active_tags": {
+    "danger": "clutch_danger",
+    "recover": "clutch_catch"
+  },
+  "notes": [
+    "Rank II adds a second small redirected catch fragment, never a separate supporting device.",
+    "The authored catch never resets the physical player, reserve, collision radius or position."
+  ],
+  "art": {
+    "clutch": {
+      "family": "clutch",
+      "art_id": "clutch",
+      "source_tag": "clutch",
+      "icon": "res://assets/powers/identity/clutch_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/clutch_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        180,
+        110,
+        145,
+        60,
+        45,
+        90,
+        40,
+        65,
+        110,
+        85,
+        140,
+        190
+      ]
+    },
+    "clutch_ii": {
+      "family": "clutch",
+      "art_id": "clutch_ii",
+      "source_tag": "clutch_ii",
+      "icon": "res://assets/powers/identity/clutch_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/clutch_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 6,
+      "card_durations_ms": [
+        180,
+        110,
+        145,
+        60,
+        45,
+        90,
+        40,
+        65,
+        110,
+        85,
+        140,
+        190
+      ]
+    }
+  }
+}

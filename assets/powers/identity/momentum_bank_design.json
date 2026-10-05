@@ -1,0 +1,34 @@
+{
+  "family": "momentum_bank",
+  "correction": "Human requested physical top restoration v2",
+  "grammar": {
+    "silhouette": "accepted broad round top in the foreground above a folded braking skid at its own heel",
+    "motion": "braking skid folds, a compact positive-charge floor fold holds, directed launch unfolds it",
+    "location": "actual top heel and floor; release follows its real movement vector",
+    "persistence": "empty stage zero; visible earned charge stages one through seven plus existing store/release events",
+    "palette": "accepted blue Bastion steel body, restrained brass and pale floor wakes",
+    "feature": "one recognizable top and compressed physical floor travel; no detached cassette"
+  },
+  "static_frames": {
+    "momentum_bank": 4,
+    "momentum_bank_ii": 4
+  },
+  "event_tags": {
+    "momentum_store": "bank_load",
+    "momentum_release": "bank_release"
+  },
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "The accepted broad round Bastion body replaces the smaller angular Vane as the foreground braking subject, at its original native pixel scale.",
+    "Stored key zero is empty. Positive keys one through seven retain a short bright folded floor skid behind the actual heel even at low earned charge; greater charge tightens it. Rank II adds one second fold. No free-running charge animation.",
+    "Final stored folds use individually directed upright rear spans per heading and a continuous short floor seam back to the actual bit, so the live native blade cannot occlude the hold. Store and release cels are unchanged."
+  ],
+  "active_tags": {
+    "stored": "bank_stored"
+  }
+}

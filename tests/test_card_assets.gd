@@ -3,6 +3,7 @@ extends SceneTree
 const Powers = preload("res://scripts/run_powers.gd")
 const Visuals = preload("res://scripts/power_visuals.gd")
 const Sound = preload("res://scripts/sound.gd")
+const IdentityContract = preload("res://tests/power_identity_contract.gd")
 const Cards: Texture2D = preload("res://assets/powers/cards.png")
 const StarterSheets: Dictionary = {
 	"breaker": preload("res://assets/top/starters/breaker_spin.png"),
@@ -23,8 +24,8 @@ func check(condition: bool, label: String) -> void:
 
 func _run() -> void:
 	var meta: Dictionary = Visuals._meta("cards")
-	check(not meta.is_empty(), "New card manifest exists")
-	check(Cards.get_size() == Vector2(384, 384), "Six columns / six rows of native 64px art")
+	check(not meta.is_empty(), "Historical 002B.1 card manifest retained")
+	check(Cards.get_size() == Vector2(384, 384), "Historical six columns / six rows of native 64px art")
 	check(int(meta.cell[0]) == 64 and int(meta.cell[1]) == 64, "Native card cell size")
 	check(int(meta.pivot[0]) == 32 and int(meta.pivot[1]) == 32, "Stable contact pivot")
 	check(int(meta.get("frame_count", 0)) == 36, "Thirty-six authored card cels")
@@ -40,19 +41,21 @@ func _run() -> void:
 		var id: String = Powers.LEGACY_ART_IDS[row]
 		var power: Dictionary = Powers.get_power(id)
 		var tag: Dictionary = meta.tags.get(id, {})
-		check(int(tag.get("from", -1)) == row * 6 and int(tag.get("to", -1)) == row * 6 + 5, id + " stable source tag")
-		check(int(power.card_row) == row and int(power.card_frames) == 6, id + " card/catalog row mapping")
-		check(int(power.card_static_frame) >= 0 and int(power.card_static_frame) < 6, id + " readable non-focused authored pose")
-		check(power.card_texture == Powers.CARD_SHEET and not str(power.category).is_empty() and not str(power.card_copy).is_empty(), id + " production card data")
+		check(int(tag.get("from", -1)) == row * 6 and int(tag.get("to", -1)) == row * 6 + 5, id + " historical source tag")
+		if id == "second_wind":
+			check(int(power.card_row) == row and int(power.card_frames) == 6 and power.card_texture == Powers.CARD_SHEET, "Explicit legacy Second Wind retains its historical card")
+			check(Visuals.icon_region(id) == Rect2(row * 16, 0, 16, 16) and Visuals.icon_texture(id) == Visuals.ICONS, "Explicit legacy Second Wind retains its HUD icon")
+		else:
+			IdentityContract.catalog_art(check, id, power)
+		check(not str(power.category).is_empty() and not str(power.card_copy).is_empty(), id + " production card data")
 		check(Visuals._frame("cards", id, 0.0) == row * 6 and Visuals._frame("cards", id, 99.0) == row * 6 + 5, id + " animation bounds")
 		var different: bool = false
 		var first: PackedByteArray = art.get_region(Rect2i(0, row * 64, 64, 64)).get_data()
 		for frame: int in range(6):
-			check(int(meta.durations_ms[row * 6 + frame]) == int(power.card_durations_ms[frame]), id + " source timing " + str(frame))
+			check(int(meta.durations_ms[row * 6 + frame]) == [110, 90, 75, 75, 100, 170][frame], id + " historical source timing " + str(frame))
 			if art.get_region(Rect2i(frame * 64, row * 64, 64, 64)).get_data() != first:
 				different = true
 		check(different, id + " authored poses genuinely animate")
-		check(Visuals.icon_region(id) == Rect2(row * 16, 0, 16, 16), id + " legacy HUD icon stays compatible")
 	for cue: String in ["ui_focus", "card_select", "near_level", "level_up", "resume"]:
 		check(Sound.SOUNDS.has(cue), cue + " audio cue loaded")
 		check(Sound.SOUNDS[cue].get_length() > 0.0 and Sound.SOUNDS[cue].get_length() <= 0.50, cue + " finite short audio")

@@ -6,6 +6,12 @@ const Powers = preload("res://scripts/run_powers.gd")
 const Encounters = preload("res://scripts/encounters.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const Progression = preload("res://scripts/run_progression.gd")
+const STARTING_REROLLS: int = 1
+const MAX_REROLLS: int = 6
+
+# Soft depth preference within seven machine slots. Beyond five owned families
+# another acquisition is less common; at seven the remaining cards deepen them.
+const DRAFT_TUNING: Dictionary = {"soft_family_start":5,"new_weight_floor":0.10,"new_decay":0.55,"rank_weight":2.15,"mutation_weight":2.60,"upgrade_slot_from":3}
 
 var _selected_build: Dictionary = {}
 var _owned_power_ids: Array[String] = []
@@ -18,6 +24,11 @@ var _committed_results: Dictionary = {}
 var _committed_rewards: Dictionary = {}
 var _draft_queue: Array[Dictionary] = []
 var _progression = Progression.new()
+var reroll_charges: int = 0
+var rerolls_used: int = 0
+var rerolls_collected: int = 0
+var _draft_revision: int = 0
+var _collected_reroll_ids: Array[String] = []
 var run_seed: int = 0
 var slot: int = 0
 var status: String = "empty"
@@ -62,7 +73,8 @@ func start(build: Dictionary, seed_value: int, selected_starter_id: String = "cu
 	run_seed = seed_value
 	slot = 1
 	status = "active"
-	_progression.setup(Powers.investment_capacity())
+	reroll_charges = STARTING_REROLLS
+	_progression.setup(Powers.run_investment_capacity())
 	_draft_queue.append({"id":"draft/start", "kind":"starting", "level":1})
 	_generate_offer()
 
@@ -80,8 +92,48 @@ func current_encounter() -> Dictionary:
 func is_active() -> bool:
 	return status == "active"
 
+func reroll_snapshot() -> Dictionary:
+	return {"charges":reroll_charges, "maximum":MAX_REROLLS, "revision":_draft_revision,
+		"available":can_reroll(), "used":rerolls_used, "collected":rerolls_collected}
+
+func can_reroll() -> bool:
+	if not is_active() or reroll_charges <= 0 or _pending_offer.is_empty() or not _pending_mutation_power.is_empty(): return false
+	var eligible: int = 0
+	for id: String in Powers.ACTIVE_IDS:
+		var rank_value: int = int(_power_ranks.get(id, 0))
+		if rank_value == 0 and _owned_power_ids.size() >= Powers.FAMILY_CAP: continue
+		if Powers.can_progress(id, rank_value, str(_power_mutations.get(id, ""))): eligible += 1
+	return eligible > _pending_offer.size()
+
+func reroll_offer(draft_id: String, expected_revision: int) -> bool:
+	# A stale button cannot consume twice or reroll an unrelated later draft.
+	if draft_id != pending_draft_id or expected_revision != _draft_revision or not can_reroll(): return false
+	var previous: Array[String] = pending_offer
+	_draft_revision += 1
+	_generate_offer(previous)
+	reroll_charges -= 1
+	rerolls_used += 1
+	return true
+
+func collect_reroll_pickup(id: String) -> bool:
+	if not is_active() or id.is_empty() or reroll_charges >= MAX_REROLLS or id in _collected_reroll_ids: return false
+	_collected_reroll_ids.append(id)
+	if _collected_reroll_ids.size() > 128: _collected_reroll_ids.pop_front()
+	reroll_charges += 1
+	rerolls_collected += 1
+	return true
+
 func progression_snapshot() -> Dictionary:
-	return _progression.snapshot()
+	var snapshot: Dictionary = _progression.snapshot()
+	snapshot["family_cap"] = Powers.FAMILY_CAP
+	snapshot["families_owned"] = _owned_power_ids.size()
+	return snapshot
+
+func available_investment_capacity() -> int:
+	if _owned_power_ids.size() < Powers.FAMILY_CAP: return Powers.run_investment_capacity()
+	var capacity: int = 0
+	for id: String in _owned_power_ids: capacity += Powers.max_rank(id)
+	return capacity
 
 ## Only current, uncommitted combat can earn XP. Events use simulation seconds,
 ## so menu duration, wall-clock time and cosmetic RNG cannot change progression.
@@ -124,7 +176,13 @@ func choose_power(encounter_id: String, power_id: String) -> bool:
 		_pending_mutation_offer = Powers.mutation_choices(power_id)
 		return true
 	_power_ranks[power_id] = rank + 1
-	if rank == 0: _owned_power_ids.append(power_id)
+	if rank == 0:
+		_owned_power_ids.append(power_id)
+		if _owned_power_ids.size() == Powers.FAMILY_CAP:
+			var capacity: int = available_investment_capacity()
+			_progression.set_investment_limit(capacity)
+			for index: int in range(_draft_queue.size()-1,-1,-1):
+				if int(_draft_queue[index].level) > capacity: _draft_queue.remove_at(index)
 	_finish_claim(encounter_id, power_id)
 	return true
 
@@ -144,6 +202,7 @@ func _finish_claim(encounter_id: String, reward_id: String) -> void:
 	_pending_offer.clear()
 	_clear_pending_mutation()
 	_draft_queue.pop_front()
+	_draft_revision = 0
 	if not _draft_queue.is_empty(): _generate_offer()
 
 func _clear_pending_mutation() -> void:
@@ -178,36 +237,85 @@ func clear() -> void:
 	_committed_rewards.clear()
 	_draft_queue.clear()
 	_progression.clear()
+	reroll_charges = 0
+	rerolls_used = 0
+	rerolls_collected = 0
+	_draft_revision = 0
+	_collected_reroll_ids.clear()
 	run_seed = 0
 	slot = 0
 	status = "empty"
 	starter_id = "custom"
 
-func _generate_offer() -> void:
+func _generate_offer(previous: Array[String] = []) -> void:
 	# Created once per claim. Reopening a card screen has no RNG path. Starter
 	# identity is preserved, while every implemented power remains legal.
 	var candidates: Array[String] = []
 	var weights: Array[float] = []
 	for power_id: String in Powers.ACTIVE_IDS:
 		var rank: int = int(_power_ranks.get(power_id, 0))
+		if rank == 0 and _owned_power_ids.size() >= Powers.FAMILY_CAP: continue
 		if Powers.can_progress(power_id, rank, str(_power_mutations.get(power_id, ""))):
 			candidates.append(power_id)
-			weights.append(1.0 if rank == 0 else 1.2)
+			weights.append(draft_weight(_owned_power_ids.size(), rank))
 	var draft_rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	draft_rng.seed = Seeds.derive(run_seed, "draft/" + pending_draft_id)
+	var domain: String = "draft/" + pending_draft_id
+	if _draft_revision > 0: domain += "/reroll_%d" % _draft_revision
+	draft_rng.seed = Seeds.derive(run_seed, domain)
 	_pending_offer.clear()
-	# A small upgrade preference keeps owned powers in circulation; every
-	# candidate remains possible, with no class restrictions or forced branches.
-	for _draw: int in range(mini(3, candidates.size())):
-		var total_weight: float = 0.0
-		for weight: float in weights: total_weight += weight
-		var remaining: float = draft_rng.randf() * total_weight
-		var chosen: int = candidates.size() - 1
+	# Once a build has a few families, one card always develops an eligible owned
+	# family. Other slots still invite new combinations. No investment is forced.
+	if _owned_power_ids.size() >= int(DRAFT_TUNING.upgrade_slot_from):
+		var upgrades: Array[int] = []
+		var upgrade_weights: Array[float] = []
 		for index: int in range(candidates.size()):
-			remaining -= weights[index]
-			if remaining < 0.0:
-				chosen = index
-				break
+			if int(_power_ranks.get(candidates[index], 0)) > 0:
+				upgrades.append(index)
+				upgrade_weights.append(weights[index])
+		if not upgrades.is_empty():
+			var chosen: int = upgrades[_weighted_index(upgrade_weights, draft_rng)]
+			_pending_offer.append(candidates[chosen])
+			candidates.remove_at(chosen)
+			weights.remove_at(chosen)
+	for _draw: int in range(mini(3, candidates.size())):
+		if _pending_offer.size() >= 3: break
+		var chosen: int = _weighted_index(weights, draft_rng)
 		_pending_offer.append(candidates[chosen])
 		candidates.remove_at(chosen)
 		weights.remove_at(chosen)
+	# A paid reroll must change an actual card, rather than just its order.
+	# The guaranteed development card is first here; replace the last slot so
+	# that guarantee survives. The display shuffle happens afterwards.
+	if not previous.is_empty():
+		var same_cards: bool = _pending_offer.size() == previous.size()
+		for id: String in _pending_offer:
+			if not id in previous: same_cards = false
+		if same_cards:
+			var replacements: Array[String] = []
+			var replacement_weights: Array[float] = []
+			for index: int in range(candidates.size()):
+				if not candidates[index] in previous:
+					replacements.append(candidates[index])
+					replacement_weights.append(weights[index])
+			assert(not replacements.is_empty(), "A valid reroll needs a different eligible card")
+			_pending_offer[_pending_offer.size() - 1] = replacements[_weighted_index(replacement_weights, draft_rng)]
+	# Keep the guaranteed development card from occupying a predictable UI slot.
+	for index: int in range(_pending_offer.size() - 1, 0, -1):
+		var swap_index: int = draft_rng.randi_range(0, index)
+		var swap: String = _pending_offer[index]
+		_pending_offer[index] = _pending_offer[swap_index]
+		_pending_offer[swap_index] = swap
+
+static func draft_weight(owned_count: int, rank: int) -> float:
+	if rank > 0: return float(DRAFT_TUNING.mutation_weight if rank == 2 else DRAFT_TUNING.rank_weight)
+	var excess: int = maxi(0, owned_count - int(DRAFT_TUNING.soft_family_start) + 1)
+	return maxf(float(DRAFT_TUNING.new_weight_floor), pow(float(DRAFT_TUNING.new_decay), excess))
+
+static func _weighted_index(weights: Array[float], rng: RandomNumberGenerator) -> int:
+	var total: float = 0.0
+	for weight: float in weights: total += weight
+	var remaining: float = rng.randf() * total
+	for index: int in range(weights.size()):
+		remaining -= weights[index]
+		if remaining < 0.0: return index
+	return weights.size() - 1

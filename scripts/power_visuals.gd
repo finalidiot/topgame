@@ -3,16 +3,25 @@ extends RefCounted
 ## No collision queries, random numbers, timers, or gameplay writes belong here.
 
 const Signature = preload("res://scripts/signature_visuals.gd")
+const Identity = preload("res://scripts/power_identity.gd")
 const SMALL: Texture2D = preload("res://assets/powers/small_top.png")
 const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
 const ESCALATION_EFFECTS: Texture2D = preload("res://assets/powers/escalation_effects.png")
 const ESCALATION_ICONS: Texture2D = preload("res://assets/powers/escalation_icons.png")
+const ROSTER_ICONS: Texture2D = preload("res://assets/powers/roster_icons.png")
 const ESCALATION_KINDS: Array[String] = ["redline_ii", "runaway", "runaway_hit", "breakneck_charge", "breakneck_impact", "anchor", "anchor_ii", "anchor_break", "bulwark", "bulwark_impact", "counterweight", "counterweight_store", "counterweight_release", "afterimage_ii", "ghost_closure", "ghost_activation", "slipstream_cross", "rank_up", "mutation_select"]
 static var metadata: Dictionary = {}
 static var escalation_metadata: Dictionary = {}
+static var roster_metadata: Dictionary = {}
+static var feedback_metadata: Dictionary = {}
+static var feedback_textures: Dictionary = {}
 
 static func _meta(group: String) -> Dictionary:
+	if group.begins_with("roster_"):
+		if roster_metadata.is_empty():
+			roster_metadata=JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/roster_manifest.json"))
+		return roster_metadata.get(group.trim_prefix("roster_"),{})
 	if group.begins_with("escalation_"):
 		if escalation_metadata.is_empty():
 			var parsed_escalation: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/escalation_manifest.json"))
@@ -71,6 +80,7 @@ static func draw_small(canvas: CanvasItem, fighter: Dictionary, position: Vector
 	_cell(canvas, "small_top", SMALL, frame, position)
 
 static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector2, quality: float = 1.0) -> void:
+	if Identity.effect(canvas,effect,position): return
 	if Signature.effect(canvas,effect,position):
 		if effect.kind == "counterweight_release": _draw_force_release(canvas,effect.get("direction",Vector2.RIGHT),position,float(effect.age)/float(effect.duration))
 		return
@@ -122,16 +132,10 @@ static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2
 	if not str(fighter.get("outcome", "")).is_empty():
 		return
 	Signature.aura(canvas,fighter,position,clock)
-	if float(fighter.get("slipstream_time", 0.0)) > 0.0:
+	Identity.aura(canvas,fighter,position,clock)
+	_draw_anchor_feedback(canvas, fighter, position + Vector2(0.0, float(fighter.get("height", 0.0))), clock, quality)
+	if float(fighter.get("slipstream_time", 0.0)) > 0.0 and Identity.family_info("afterimage").is_empty():
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
-	if float(fighter.get("iron_comet_time", 0.0)) > 0.0:
-		var velocity: Vector2 = fighter.get("vel", Vector2.RIGHT)
-		if velocity.length_squared() < 1.0:
-			velocity = fighter.get("facing", Vector2.RIGHT)
-		var angle: float = Vector2(velocity.x - velocity.y, velocity.x + velocity.y).angle()
-		var heading: int = posmod(int(roundf(angle / (TAU / 8.0))), 8)
-		var first: int = int(_meta("effects")["tags"]["comet_headings"]["from"])
-		_cell(canvas, "effects", EFFECTS, first + heading, position)
 
 static func draw_trace(canvas: CanvasItem, trace: Dictionary, from_screen: Vector2, to_screen: Vector2, quality: float = 1.0) -> void:
 	draw_trace_path(canvas, trace, PackedVector2Array([from_screen, to_screen]), quality)
@@ -142,16 +146,21 @@ static func draw_trace_path(canvas: CanvasItem, trace: Dictionary, points: Packe
 	var maximum: float = maxf(0.01, float(trace.get("max_life", 0.45)))
 	var life: float = clampf(float(trace.get("life", maximum)), 0.0, maximum)
 	var age: float = maximum - life
-	var alpha: float = 0.50 * life / maximum
+	# Modern paid routes retain a clear physical lane, then release during their
+	# final second. Increasing lifetime while fading from birth made most of the
+	# retained route too faint to matter at the native battle scale.
+	var extended: bool = bool(trace.get("extended_route", false))
+	var fade: float = clampf(life / 0.90, 0.0, 1.0) if extended else life / maximum
+	var alpha: float = (0.72 if extended else 0.50) * fade
 	var rank: int = int(trace.get("rank", 1))
 	var mutation: String = str(trace.get("mutation", ""))
 	var energized: bool = bool(trace.get("energized", false))
 	if rank >= 2 or not mutation.is_empty():
-		var route_ink: Color = Color(0.25, 0.59, 0.72, 0.72 * life / maximum)
-		var route_light: Color = Color(0.64, 0.90, 0.90, 0.67 * life / maximum)
+		var route_ink: Color = Color(0.25, 0.59, 0.72, 0.72 * fade)
+		var route_light: Color = Color(0.64, 0.90, 0.90, 0.67 * fade)
 		if mutation == "ghost_circuit":
-			route_ink = Color(0.15, 0.48, 0.41, 0.70 * life / maximum)
-			route_light = Color(0.45, 0.86, 0.69, (0.95 if energized else 0.66) * life / maximum)
+			route_ink = Color(0.15, 0.48, 0.41, 0.70 * fade)
+			route_light = Color(0.45, 0.86, 0.69, (0.95 if energized else 0.66) * fade)
 		if energized:
 			route_ink.a = maxf(route_ink.a, 0.58)
 			route_light.a = maxf(route_light.a, 0.78)
@@ -165,10 +174,69 @@ static func draw_trace_path(canvas: CanvasItem, trace: Dictionary, points: Packe
 	# shadow or ownership marker, so they cannot read as another physical rig.
 	var middle: Vector2 = points[points.size() / 2]
 	for index: int in range(points.size() - 1):
-		canvas.draw_line(points[index].round(), points[index + 1].round(), Color(0.27, 0.65, 0.76, alpha), 1.0)
-	Signature.cel(canvas,"afterimage","rank1_trace",middle,age,0.70)
+		canvas.draw_line(points[index].round(), points[index + 1].round(), Color(0.27, 0.65, 0.76, alpha), 2.0 if extended else 1.0)
+		if extended: canvas.draw_line(points[index].round(), points[index + 1].round(), Color(0.65, 0.86, 0.90, alpha * 0.66), 1.0)
+	Signature.cel(canvas,"afterimage","rank1_trace",middle,age,0.70 * fade if extended else 0.70)
 	if quality >= 0.5:
-		Signature.cel(canvas,"afterimage","rank1_trace",points[0],age,0.38)
+		Signature.cel(canvas,"afterimage","rank1_trace",points[0],age,0.38 * fade if extended else 0.38)
+
+static func _feedback_cel(canvas: CanvasItem, tag: String, position: Vector2, clock: float, alpha: float, stage: int = -1) -> void:
+	var manifest: String = "res://assets/powers/feedback_002c5_2/manifest.json"
+	if feedback_metadata.is_empty() and FileAccess.file_exists(manifest):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest))
+		if parsed is Dictionary: feedback_metadata = parsed
+	var meta: Dictionary = feedback_metadata.get("effects", {}).get("centre", {})
+	if meta.is_empty() or not meta.get("tags", {}).has(tag): return
+	var texture_path: String = str(meta.texture)
+	if not feedback_textures.has(texture_path): feedback_textures[texture_path] = load(texture_path)
+	var texture: Texture2D = feedback_textures[texture_path]
+	if texture == null: return
+	var span: Dictionary = meta.tags[tag]
+	var frame: int = int(span.from)
+	if stage >= 0:
+		frame += clampi(stage, 0, int(span.to) - int(span.from))
+	else:
+		var duration: float = 0.0
+		for index: int in range(int(span.from), int(span.to) + 1): duration += float(meta.durations_ms[index]) / 1000.0
+		var age: float = fmod(maxf(0.0, clock), maxf(0.01, duration)) if bool(span.get("loop", false)) else maxf(0.0, clock)
+		frame = int(span.to)
+		for index: int in range(int(span.from), int(span.to) + 1):
+			age -= float(meta.durations_ms[index]) / 1000.0
+			if age < 0.0:
+				frame = index
+				break
+	var size: Vector2 = Vector2(float(meta.cell[0]), float(meta.cell[1]))
+	var pivot: Vector2 = Vector2(float(meta.pivot[0]), float(meta.pivot[1]))
+	var source: Rect2 = Rect2(Vector2(frame % int(meta.columns), frame / int(meta.columns)).floor() * size, size)
+	canvas.draw_texture_rect_region(texture, Rect2((position - pivot).round(), size), source, Color(1.0, 1.0, 1.0, clampf(alpha, 0.0, 1.0)))
+
+static func _draw_anchor_feedback(canvas: CanvasItem, fighter: Dictionary, floor_at: Vector2, clock: float, quality: float) -> void:
+	if not bool(fighter.get("anchor_feedback_enabled", false)) or not str(fighter.get("outcome", "")).is_empty(): return
+	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
+	if charge <= 0.07: return
+	var maturity: float = clampf(float(fighter.get("anchor_maturity", 0.0)), 0.0, 1.0)
+	_feedback_cel(canvas, "centre_seek", floor_at, clock * (0.65 + maturity * 1.2), 0.30 + charge * 0.50)
+	if charge >= 0.35:
+		var strong: bool = int(fighter.get("power_ranks", {}).get("dead_centre", 1)) >= 2 or maturity >= 0.65
+		var deploy: int = clampi(roundi((charge - 0.35) / 0.35 * 5.0), 0, 5)
+		_feedback_cel(canvas, "centre_brace_full" if strong else "centre_brace", floor_at, 0.0, 0.45 + charge * 0.55, deploy)
+	var hit: float = float(fighter.get("anchor_hit_time", 0.0))
+	if hit > 0.0: _feedback_cel(canvas, "centre_recoil", floor_at, 0.32 - hit, hit / 0.32)
+	if not bool(fighter.get("anchor_central_hold", false)): return
+	# White/grey floor arcs contract toward the actual socket. Their extent and
+	# cadence follow the live bounded pull, never a detached targeting widget.
+	var reach: float = float(fighter.get("anchor_pull_radius", 0.0))
+	var pulse: float = fmod(clock * (0.55 + maturity * 0.95), 1.0)
+	for bank: int in range(3 if quality >= 0.5 else 2):
+		var cycle: float = fmod(pulse + float(bank) / 3.0, 1.0)
+		var radius: float = lerpf(maxf(18.0, reach * 0.46), 8.0, cycle)
+		var ink: Color = Color(0.78, 0.80, 0.80, (0.15 + maturity * 0.35) * sin(cycle * PI))
+		for sector: int in range(4):
+			var arc: PackedVector2Array = PackedVector2Array()
+			for vertex: int in range(5):
+				var angle: float = float(sector) * PI * 0.5 + float(vertex) * 0.15 + clock * 0.10
+				arc.append((floor_at + Vector2(cos(angle) * radius, sin(angle) * radius * 0.50)).round())
+			canvas.draw_polyline(arc, ink, 1.0)
 
 static func recovery_pose(fighter: Dictionary, effects: Array[Dictionary]) -> Dictionary:
 	# Compress only the recovering rig, with the Bit fixed at its contact pivot.
@@ -182,6 +250,19 @@ static func recovery_pose(fighter: Dictionary, effects: Array[Dictionary]) -> Di
 			return {"phase": posmod(int(effect.get("phase", 0)) + int(age * 5.0), 8), "lean": Vector2(roundf(contraction * 4.0), 1.0), "stance": roundf(contraction * 4.0)}
 		var release: float = clampf((age - 0.32) / 0.20, 0.0, 1.0)
 		return {"phase": int(fighter.get("phase", 0)) % 8, "lean": Vector2.ZERO, "stance": roundf(-2.0 * (1.0 - release))}
+	if str(fighter.get("outcome", "")).is_empty():
+		var recovered: float = float(fighter.get("clutch_recovery_time",0.0))
+		if int(fighter.get("power_ranks",{}).get("clutch",0)) > 0 and recovered > 0.0:
+			# A real earned catch settles the blade above its unchanged Bit.
+			# This never alters RPM, wobble, phase, actor position or collision.
+			var catch_amount: float = clampf(recovered/0.80,0.0,1.0)
+			return {"phase":int(fighter.get("phase",0))%8,"lean":Vector2(roundf(catch_amount*3.0),roundf(catch_amount)),"stance":roundf(catch_amount*2.0)}
+		var comet: float = float(fighter.get("iron_comet_time",0.0))
+		if int(fighter.get("power_ranks",{}).get("iron_comet",0)) > 0 and comet > 0.0:
+			var span: float = 2.8 if int(fighter.power_ranks.iron_comet) >= 2 else 2.0
+			var armed_age: float = maxf(0.0,span-comet)
+			if armed_age < 0.28:
+				return {"phase":int(fighter.get("phase",0))%8,"lean":Vector2.ZERO,"stance":roundf(sin(armed_age/0.28*PI)*3.0)}
 	var anchor: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
 	if anchor > 0.25 and str(fighter.get("outcome", "")).is_empty():
 		# The Bit/contact never moves. The body visibly settles into its floor locks.
@@ -196,6 +277,10 @@ static func draw_spawn(canvas: CanvasItem, position: Vector2, progress: float) -
 	_cell(canvas, "effects", EFFECTS, _frame("effects", "floor_stamp", age), position, Color(1.0, 0.90, 0.65))
 
 static func icon_region(power_id: String) -> Rect2:
+	var authored: Dictionary = Identity.art(power_id)
+	if not authored.is_empty(): return Rect2(int(authored.icon_frame)*16,0,16,16)
+	var roster_tags: Dictionary=_meta("roster_icons").get("tags",{})
+	if roster_tags.has(power_id): return Rect2(float(roster_tags[power_id].from)*16.0,0.0,16.0,16.0)
 	var escalation_tags: Dictionary = _meta("escalation_icons").get("tags", {})
 	if escalation_tags.has(power_id):
 		return Rect2(float(escalation_tags[power_id].from) * 16.0, 0.0, 16.0, 16.0)
@@ -205,6 +290,9 @@ static func icon_region(power_id: String) -> Rect2:
 	return Rect2(float(frame) * 16.0, 0.0, 16.0, 16.0)
 
 static func icon_texture(power_id: String) -> Texture2D:
+	var authored: Dictionary = Identity.art(power_id)
+	if not authored.is_empty(): return Identity.texture(str(authored.icon))
+	if _meta("roster_icons").get("tags",{}).has(power_id): return ROSTER_ICONS
 	return ESCALATION_ICONS if _meta("escalation_icons").get("tags", {}).has(power_id) else ICONS
 
 static func _heading(direction: Vector2) -> int:

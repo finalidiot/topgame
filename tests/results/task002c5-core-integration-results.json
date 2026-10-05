@@ -1,0 +1,1672 @@
+{
+	"checks": 32,
+	"failures": 0,
+	"measurements": {
+		"clutch": {
+			"gains": {
+				"boss": 0.0,
+				"clutch": 0.055,
+				"combat_reclamation": 0.0,
+				"elimination": 0.0,
+				"elite": 0.0,
+				"redline_contact": 0.0,
+				"redline_motion": 0.0,
+				"runaway": 0.0,
+				"second_wind": 0.0,
+				"slipstream": 0.0
+			},
+			"rpm": 0.205,
+			"wobble": 0.76
+		},
+		"overclock_rank_1": {
+			"economy": {
+				"below_25_seconds": 0.0,
+				"below_50_seconds": 0.0,
+				"death": "",
+				"final_rpm": 1.0,
+				"gains": {
+					"boss": 0.0,
+					"clutch": 0.0,
+					"combat_reclamation": 0.0,
+					"elimination": 0.0,
+					"elite": 0.0,
+					"redline_contact": 0.0,
+					"redline_motion": 0.12675,
+					"runaway": 0.0,
+					"second_wind": 0.0,
+					"slipstream": 0.0
+				},
+				"largest_recovery": 0.00075,
+				"losses": {
+					"braking": 0.0,
+					"burst": 0.013,
+					"collisions": 0.0,
+					"movement": 0.00390546515198123,
+					"passive": 0.00265584719999999,
+					"powers": 0.107152455449755,
+					"steering": 0.0,
+					"walls": 0.0,
+					"wobble": 0.0000362321982634488
+				},
+				"minimum_rpm": 0.960430343651183,
+				"near_spinout_seconds": 0.0,
+				"recent_recoveries": [
+					{
+						"amount": 0.00075,
+						"rpm": 0.98824253950076,
+						"source": "redline_motion",
+						"time": 0.966666666666668
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.988896703584662,
+						"source": "redline_motion",
+						"time": 0.983333333333335
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.989550596938043,
+						"source": "redline_motion",
+						"time": 1.0
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.990204219561764,
+						"source": "redline_motion",
+						"time": 1.01666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.990857571457111,
+						"source": "redline_motion",
+						"time": 1.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.99151065262065,
+						"source": "redline_motion",
+						"time": 1.05
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.992163463055816,
+						"source": "redline_motion",
+						"time": 1.06666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.992816002760461,
+						"source": "redline_motion",
+						"time": 1.08333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.993468271734586,
+						"source": "redline_motion",
+						"time": 1.1
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.994120269978622,
+						"source": "redline_motion",
+						"time": 1.11666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.994771997492138,
+						"source": "redline_motion",
+						"time": 1.13333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.995423454275133,
+						"source": "redline_motion",
+						"time": 1.15
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.996074640328467,
+						"source": "redline_motion",
+						"time": 1.16666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.996725555651281,
+						"source": "redline_motion",
+						"time": 1.18333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.997376200244433,
+						"source": "redline_motion",
+						"time": 1.2
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.998026574107066,
+						"source": "redline_motion",
+						"time": 1.21666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.998676677240037,
+						"source": "redline_motion",
+						"time": 1.23333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.999326509645279,
+						"source": "redline_motion",
+						"time": 1.25
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.999976071319357,
+						"source": "redline_motion",
+						"time": 1.26666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00062536226377,
+						"source": "redline_motion",
+						"time": 1.28333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00127438157075,
+						"source": "redline_motion",
+						"time": 1.3
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00192312835943,
+						"source": "redline_motion",
+						"time": 1.31666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00257160175166,
+						"source": "redline_motion",
+						"time": 1.33333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00321980087049,
+						"source": "redline_motion",
+						"time": 1.35
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0038677248355,
+						"source": "redline_motion",
+						"time": 1.36666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00451537277392,
+						"source": "redline_motion",
+						"time": 1.38333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00516274380562,
+						"source": "redline_motion",
+						"time": 1.4
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00580983705834,
+						"source": "redline_motion",
+						"time": 1.41666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00645665165163,
+						"source": "redline_motion",
+						"time": 1.43333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00710318671269,
+						"source": "redline_motion",
+						"time": 1.45
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00774944136675,
+						"source": "redline_motion",
+						"time": 1.46666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00839541473553,
+						"source": "redline_motion",
+						"time": 1.48333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0090411059478,
+						"source": "redline_motion",
+						"time": 1.5
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00968651412775,
+						"source": "redline_motion",
+						"time": 1.51666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0103316384049,
+						"source": "redline_motion",
+						"time": 1.53333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01097647790205,
+						"source": "redline_motion",
+						"time": 1.55
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0116210317469,
+						"source": "redline_motion",
+						"time": 1.56666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01226529906946,
+						"source": "redline_motion",
+						"time": 1.58333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01290927899626,
+						"source": "redline_motion",
+						"time": 1.6
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0135529706555,
+						"source": "redline_motion",
+						"time": 1.61666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01419637317855,
+						"source": "redline_motion",
+						"time": 1.63333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01483948569094,
+						"source": "redline_motion",
+						"time": 1.65
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01548230732225,
+						"source": "redline_motion",
+						"time": 1.66666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01612483720437,
+						"source": "redline_motion",
+						"time": 1.68333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01676707446787,
+						"source": "redline_motion",
+						"time": 1.7
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0174090182411,
+						"source": "redline_motion",
+						"time": 1.71666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01805066765672,
+						"source": "redline_motion",
+						"time": 1.73333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01869202184582,
+						"source": "redline_motion",
+						"time": 1.75
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01933307994052,
+						"source": "redline_motion",
+						"time": 1.76666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01997384107185,
+						"source": "redline_motion",
+						"time": 1.78333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02061430437101,
+						"source": "redline_motion",
+						"time": 1.8
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02125446897434,
+						"source": "redline_motion",
+						"time": 1.81666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02189433401468,
+						"source": "redline_motion",
+						"time": 1.83333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02253389862445,
+						"source": "redline_motion",
+						"time": 1.85
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02317316193987,
+						"source": "redline_motion",
+						"time": 1.86666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02381212309673,
+						"source": "redline_motion",
+						"time": 1.88333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02445078122842,
+						"source": "redline_motion",
+						"time": 1.9
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02508913546766,
+						"source": "redline_motion",
+						"time": 1.91666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02572718495423,
+						"source": "redline_motion",
+						"time": 1.93333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02636492882297,
+						"source": "redline_motion",
+						"time": 1.95
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02700236621166,
+						"source": "redline_motion",
+						"time": 1.96666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02763949625553,
+						"source": "redline_motion",
+						"time": 1.98333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02827631809448,
+						"source": "redline_motion",
+						"time": 2.0
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02891283086241,
+						"source": "redline_motion",
+						"time": 2.01666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02954903370091,
+						"source": "redline_motion",
+						"time": 2.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03018492574855,
+						"source": "redline_motion",
+						"time": 2.05
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03082050614431,
+						"source": "redline_motion",
+						"time": 2.06666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03145577402977,
+						"source": "redline_motion",
+						"time": 2.08333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03209072854129,
+						"source": "redline_motion",
+						"time": 2.1
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03272536882255,
+						"source": "redline_motion",
+						"time": 2.11666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03335969401508,
+						"source": "redline_motion",
+						"time": 2.13333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03399370326016,
+						"source": "redline_motion",
+						"time": 2.15
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03462739569458,
+						"source": "redline_motion",
+						"time": 2.16666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03526077046347,
+						"source": "redline_motion",
+						"time": 2.18333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03589382671005,
+						"source": "redline_motion",
+						"time": 2.2
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03652656357708,
+						"source": "redline_motion",
+						"time": 2.21666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03715898020863,
+						"source": "redline_motion",
+						"time": 2.23333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03779107574832,
+						"source": "redline_motion",
+						"time": 2.25
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03842284934191,
+						"source": "redline_motion",
+						"time": 2.26666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03905430013411,
+						"source": "redline_motion",
+						"time": 2.28333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03968542726962,
+						"source": "redline_motion",
+						"time": 2.3
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04031622989228,
+						"source": "redline_motion",
+						"time": 2.31666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04094670714937,
+						"source": "redline_motion",
+						"time": 2.33333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04157685818711,
+						"source": "redline_motion",
+						"time": 2.35
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04220668215364,
+						"source": "redline_motion",
+						"time": 2.36666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04283617819519,
+						"source": "redline_motion",
+						"time": 2.38333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04346534546057,
+						"source": "redline_motion",
+						"time": 2.4
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0440941830956,
+						"source": "redline_motion",
+						"time": 2.41666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0447226902536,
+						"source": "redline_motion",
+						"time": 2.43333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04535086608214,
+						"source": "redline_motion",
+						"time": 2.45
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04597870973029,
+						"source": "redline_motion",
+						"time": 2.46666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04660622034819,
+						"source": "redline_motion",
+						"time": 2.48333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04723339708753,
+						"source": "redline_motion",
+						"time": 2.5
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04786023909548,
+						"source": "redline_motion",
+						"time": 2.51666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04848674552697,
+						"source": "redline_motion",
+						"time": 2.53333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04911291553436,
+						"source": "redline_motion",
+						"time": 2.55
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0497387482707,
+						"source": "redline_motion",
+						"time": 2.56666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05036424288581,
+						"source": "redline_motion",
+						"time": 2.58333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05098939853363,
+						"source": "redline_motion",
+						"time": 2.6
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05161421436747,
+						"source": "redline_motion",
+						"time": 2.61666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05223868954495,
+						"source": "redline_motion",
+						"time": 2.63333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05286282321815,
+						"source": "redline_motion",
+						"time": 2.65
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05348661454433,
+						"source": "redline_motion",
+						"time": 2.66666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0541100626769,
+						"source": "redline_motion",
+						"time": 2.68333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05473316677295,
+						"source": "redline_motion",
+						"time": 2.7
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05535592598681,
+						"source": "redline_motion",
+						"time": 2.71666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05597833947906,
+						"source": "redline_motion",
+						"time": 2.73333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05660040640648,
+						"source": "redline_motion",
+						"time": 2.75
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05722212592605,
+						"source": "redline_motion",
+						"time": 2.76666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05784349719547,
+						"source": "redline_motion",
+						"time": 2.78333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05846451937631,
+						"source": "redline_motion",
+						"time": 2.79999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05908519162761,
+						"source": "redline_motion",
+						"time": 2.81666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0597055131033,
+						"source": "redline_motion",
+						"time": 2.83333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06032548297108,
+						"source": "redline_motion",
+						"time": 2.84999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06094510038689,
+						"source": "redline_motion",
+						"time": 2.86666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06156436451358,
+						"source": "redline_motion",
+						"time": 2.88333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06218327451639,
+						"source": "redline_motion",
+						"time": 2.89999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06280182955354,
+						"source": "redline_motion",
+						"time": 2.91666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06342002878908,
+						"source": "redline_motion",
+						"time": 2.93333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06403787138625,
+						"source": "redline_motion",
+						"time": 2.94999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06465535650853,
+						"source": "redline_motion",
+						"time": 2.96666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06527248331711,
+						"source": "redline_motion",
+						"time": 2.98333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06588925098204,
+						"source": "redline_motion",
+						"time": 2.99999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06650565866651,
+						"source": "redline_motion",
+						"time": 3.01666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06712170553617,
+						"source": "redline_motion",
+						"time": 3.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06773739075517,
+						"source": "redline_motion",
+						"time": 3.04999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06835271348927,
+						"source": "redline_motion",
+						"time": 3.06666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.06896767291153,
+						"source": "redline_motion",
+						"time": 3.08333333333333
+					}
+				],
+				"recovery_count": 169,
+				"starting_rpm": 1.0,
+				"total_recovered": 0.12675
+			},
+			"power": {
+				"active_seconds": 3.08333333333333,
+				"clutch_active": false,
+				"commitments": 0,
+				"failed_commitments": 0,
+				"heat": 0.40568322079396,
+				"heat_max": 0.49809698515514,
+				"high_speed_contacts": 0,
+				"max_overcap": 0.0689676729115307,
+				"mean_overcap_active": 0.0202891795471621,
+				"motion_quota_remaining": 0.0,
+				"overcap_integral": 0.0625583036037498,
+				"overcap_seconds": 1.8,
+				"ring_outs_active": 0,
+				"rpm_gained": 0.126750000000005,
+				"rpm_spent": 0.107152455449754,
+				"spin_outs_active": 0
+			}
+		},
+		"overclock_rank_2": {
+			"economy": {
+				"below_25_seconds": 0.0,
+				"below_50_seconds": 0.0,
+				"death": "",
+				"final_rpm": 1.0,
+				"gains": {
+					"boss": 0.0,
+					"clutch": 0.0,
+					"combat_reclamation": 0.0,
+					"elimination": 0.0,
+					"elite": 0.0,
+					"redline_contact": 0.0,
+					"redline_motion": 0.129,
+					"runaway": 0.0,
+					"second_wind": 0.0,
+					"slipstream": 0.0
+				},
+				"largest_recovery": 0.00075,
+				"losses": {
+					"braking": 0.0,
+					"burst": 0.013,
+					"collisions": 0.0,
+					"movement": 0.00389884294419206,
+					"passive": 0.00263964359999999,
+					"powers": 0.109374324287496,
+					"steering": 0.0,
+					"walls": 0.0,
+					"wobble": 0.0000871891683110502
+				},
+				"minimum_rpm": 0.940689787103607,
+				"near_spinout_seconds": 0.0,
+				"recent_recoveries": [
+					{
+						"amount": 0.00075,
+						"rpm": 0.970429714720273,
+						"source": "redline_motion",
+						"time": 0.966666666666668
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.971083066613473,
+						"source": "redline_motion",
+						"time": 0.983333333333335
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.971736147778943,
+						"source": "redline_motion",
+						"time": 1.0
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.972388958211962,
+						"source": "redline_motion",
+						"time": 1.01666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.973041497917251,
+						"source": "redline_motion",
+						"time": 1.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.973693766891807,
+						"source": "redline_motion",
+						"time": 1.05
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.974345765134984,
+						"source": "redline_motion",
+						"time": 1.06666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.974997492650647,
+						"source": "redline_motion",
+						"time": 1.08333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.975648949434929,
+						"source": "redline_motion",
+						"time": 1.1
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.976300135489551,
+						"source": "redline_motion",
+						"time": 1.11666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.976951050814512,
+						"source": "redline_motion",
+						"time": 1.13333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.977601695408524,
+						"source": "redline_motion",
+						"time": 1.15
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.978252069272444,
+						"source": "redline_motion",
+						"time": 1.16666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.978902172406703,
+						"source": "redline_motion",
+						"time": 1.18333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.979552004810014,
+						"source": "redline_motion",
+						"time": 1.2
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.980201566484091,
+						"source": "redline_motion",
+						"time": 1.21666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.980850857427221,
+						"source": "redline_motion",
+						"time": 1.23333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.98149987763983,
+						"source": "redline_motion",
+						"time": 1.25
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.982148627122778,
+						"source": "redline_motion",
+						"time": 1.26666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.982797105876492,
+						"source": "redline_motion",
+						"time": 1.28333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.983445313901406,
+						"source": "redline_motion",
+						"time": 1.3
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.984093251194512,
+						"source": "redline_motion",
+						"time": 1.31666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.984740917758385,
+						"source": "redline_motion",
+						"time": 1.33333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.985388313592169,
+						"source": "redline_motion",
+						"time": 1.35
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.986035438695001,
+						"source": "redline_motion",
+						"time": 1.36666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.986682293067744,
+						"source": "redline_motion",
+						"time": 1.38333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.987328876711038,
+						"source": "redline_motion",
+						"time": 1.4
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.987975189625531,
+						"source": "redline_motion",
+						"time": 1.41666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.988621231808859,
+						"source": "redline_motion",
+						"time": 1.43333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.989267003262527,
+						"source": "redline_motion",
+						"time": 1.45
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.989912503985247,
+						"source": "redline_motion",
+						"time": 1.46666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.990557733978305,
+						"source": "redline_motion",
+						"time": 1.48333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.991202693240844,
+						"source": "redline_motion",
+						"time": 1.5
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.991847381774793,
+						"source": "redline_motion",
+						"time": 1.51666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.992491799577149,
+						"source": "redline_motion",
+						"time": 1.53333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.993135946650917,
+						"source": "redline_motion",
+						"time": 1.55
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.99377982299438,
+						"source": "redline_motion",
+						"time": 1.56666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.99442342860775,
+						"source": "redline_motion",
+						"time": 1.58333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.995066763492963,
+						"source": "redline_motion",
+						"time": 1.6
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.995709827648731,
+						"source": "redline_motion",
+						"time": 1.61666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.996352621072475,
+						"source": "redline_motion",
+						"time": 1.63333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.996995143764627,
+						"source": "redline_motion",
+						"time": 1.65
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.997637395727545,
+						"source": "redline_motion",
+						"time": 1.66666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.998279376959516,
+						"source": "redline_motion",
+						"time": 1.68333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.998921087460966,
+						"source": "redline_motion",
+						"time": 1.7
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 0.999562527232755,
+						"source": "redline_motion",
+						"time": 1.71666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00020369627596,
+						"source": "redline_motion",
+						"time": 1.73333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00084459429178,
+						"source": "redline_motion",
+						"time": 1.75
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00148522037194,
+						"source": "redline_motion",
+						"time": 1.76666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00212557364997,
+						"source": "redline_motion",
+						"time": 1.78333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00276565325847,
+						"source": "redline_motion",
+						"time": 1.8
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00340545833214,
+						"source": "redline_motion",
+						"time": 1.81666666666667
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00404498800259,
+						"source": "redline_motion",
+						"time": 1.83333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00468424140438,
+						"source": "redline_motion",
+						"time": 1.85
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00532321767288,
+						"source": "redline_motion",
+						"time": 1.86666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00596191594468,
+						"source": "redline_motion",
+						"time": 1.88333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00660033535286,
+						"source": "redline_motion",
+						"time": 1.9
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00723847503563,
+						"source": "redline_motion",
+						"time": 1.91666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00787633412897,
+						"source": "redline_motion",
+						"time": 1.93333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00851391176796,
+						"source": "redline_motion",
+						"time": 1.95
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00915120709104,
+						"source": "redline_motion",
+						"time": 1.96666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.00978821923513,
+						"source": "redline_motion",
+						"time": 1.98333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01042494733642,
+						"source": "redline_motion",
+						"time": 2.0
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01106139053493,
+						"source": "redline_motion",
+						"time": 2.01666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01169754796635,
+						"source": "redline_motion",
+						"time": 2.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01233341877122,
+						"source": "redline_motion",
+						"time": 2.05
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01296900208943,
+						"source": "redline_motion",
+						"time": 2.06666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01360429706081,
+						"source": "redline_motion",
+						"time": 2.08333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01423930282706,
+						"source": "redline_motion",
+						"time": 2.1
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01487401852321,
+						"source": "redline_motion",
+						"time": 2.11666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01550844329475,
+						"source": "redline_motion",
+						"time": 2.13333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0161425762822,
+						"source": "redline_motion",
+						"time": 2.15
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01677641662603,
+						"source": "redline_motion",
+						"time": 2.16666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0174099634701,
+						"source": "redline_motion",
+						"time": 2.18333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0180432159544,
+						"source": "redline_motion",
+						"time": 2.2
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01867617322142,
+						"source": "redline_motion",
+						"time": 2.21666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01930883441708,
+						"source": "redline_motion",
+						"time": 2.23333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.01994119868381,
+						"source": "redline_motion",
+						"time": 2.25
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02057326516681,
+						"source": "redline_motion",
+						"time": 2.26666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02120503300996,
+						"source": "redline_motion",
+						"time": 2.28333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02183650135817,
+						"source": "redline_motion",
+						"time": 2.3
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02246766935375,
+						"source": "redline_motion",
+						"time": 2.31666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02309853614306,
+						"source": "redline_motion",
+						"time": 2.33333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02372910087632,
+						"source": "redline_motion",
+						"time": 2.35
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02435936269724,
+						"source": "redline_motion",
+						"time": 2.36666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02498932075019,
+						"source": "redline_motion",
+						"time": 2.38333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0256189741857,
+						"source": "redline_motion",
+						"time": 2.4
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02624832215239,
+						"source": "redline_motion",
+						"time": 2.41666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02687736379453,
+						"source": "redline_motion",
+						"time": 2.43333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02750609826433,
+						"source": "redline_motion",
+						"time": 2.45
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02813452470924,
+						"source": "redline_motion",
+						"time": 2.46666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02876264227994,
+						"source": "redline_motion",
+						"time": 2.48333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.02939045012428,
+						"source": "redline_motion",
+						"time": 2.5
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03001794739482,
+						"source": "redline_motion",
+						"time": 2.51666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03064513323917,
+						"source": "redline_motion",
+						"time": 2.53333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03127200681051,
+						"source": "redline_motion",
+						"time": 2.55
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03189856725814,
+						"source": "redline_motion",
+						"time": 2.56666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03252481373543,
+						"source": "redline_motion",
+						"time": 2.58333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03315074539337,
+						"source": "redline_motion",
+						"time": 2.6
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03377636138531,
+						"source": "redline_motion",
+						"time": 2.61666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03440166086696,
+						"source": "redline_motion",
+						"time": 2.63333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03502664298928,
+						"source": "redline_motion",
+						"time": 2.65
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03565130690883,
+						"source": "redline_motion",
+						"time": 2.66666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03627565177484,
+						"source": "redline_motion",
+						"time": 2.68333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03689967674943,
+						"source": "redline_motion",
+						"time": 2.7
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03752338098335,
+						"source": "redline_motion",
+						"time": 2.71666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03814676363055,
+						"source": "redline_motion",
+						"time": 2.73333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03876982385229,
+						"source": "redline_motion",
+						"time": 2.75
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.03939256080081,
+						"source": "redline_motion",
+						"time": 2.76666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04001497363652,
+						"source": "redline_motion",
+						"time": 2.78333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0406370615125,
+						"source": "redline_motion",
+						"time": 2.79999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04125882358983,
+						"source": "redline_motion",
+						"time": 2.81666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04188025902762,
+						"source": "redline_motion",
+						"time": 2.83333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04250136698587,
+						"source": "redline_motion",
+						"time": 2.84999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0431221466207,
+						"source": "redline_motion",
+						"time": 2.86666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.0437425970917,
+						"source": "redline_motion",
+						"time": 2.88333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04436271756167,
+						"source": "redline_motion",
+						"time": 2.89999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04498250718935,
+						"source": "redline_motion",
+						"time": 2.91666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04560196513457,
+						"source": "redline_motion",
+						"time": 2.93333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04622109055909,
+						"source": "redline_motion",
+						"time": 2.94999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.046839882629,
+						"source": "redline_motion",
+						"time": 2.96666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04745834050588,
+						"source": "redline_motion",
+						"time": 2.98333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04807646335047,
+						"source": "redline_motion",
+						"time": 2.99999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04869425032481,
+						"source": "redline_motion",
+						"time": 3.01666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04931170059571,
+						"source": "redline_motion",
+						"time": 3.03333333333333
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.04992881332288,
+						"source": "redline_motion",
+						"time": 3.04999999999999
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05054558767551,
+						"source": "redline_motion",
+						"time": 3.06666666666666
+					},
+					{
+						"amount": 0.00075,
+						"rpm": 1.05116202281746,
+						"source": "redline_motion",
+						"time": 3.08333333333333
+					}
+				],
+				"recovery_count": 172,
+				"starting_rpm": 1.0,
+				"total_recovered": 0.129
+			},
+			"power": {
+				"active_seconds": 3.08333333333333,
+				"clutch_active": false,
+				"commitments": 0,
+				"failed_commitments": 0,
+				"heat": 0.390927154235277,
+				"heat_max": 0.483578327264378,
+				"high_speed_contacts": 0,
+				"max_overcap": 0.0511620228174583,
+				"mean_overcap_active": 0.0111650723515132,
+				"motion_quota_remaining": 0.0,
+				"overcap_integral": 0.0344256397504989,
+				"overcap_seconds": 1.35,
+				"ring_outs_active": 0,
+				"rpm_gained": 0.129000000000005,
+				"rpm_spent": 0.109374324287497,
+				"spin_outs_active": 0
+			}
+		}
+	}
+}

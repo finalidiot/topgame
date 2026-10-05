@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "authoring": "original deterministic finite mechanical component synthesis",
+  "cues": {
+    "redline_overcap": {
+      "file": "redline_overcap.wav",
+      "duration_ms": 310,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4484
+    },
+    "redline_heat": {
+      "file": "redline_heat.wav",
+      "duration_ms": 270,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3167
+    },
+    "clutch_activate": {
+      "file": "clutch_activate.wav",
+      "duration_ms": 300,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3725
+    },
+    "clutch_recover": {
+      "file": "clutch_recover.wav",
+      "duration_ms": 340,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3334
+    },
+    "high_gear_surge": {
+      "file": "high_gear_surge.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3654
+    },
+    "ghost_preview": {
+      "file": "ghost_preview.wav",
+      "duration_ms": 120,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.0979
+    },
+    "ghost_latch": {
+      "file": "ghost_latch.wav",
+      "duration_ms": 400,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4253
+    },
+    "iron_comet_charge": {
+      "file": "iron_comet_charge.wav",
+      "duration_ms": 280,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4713
+    },
+    "iron_comet_release": {
+      "file": "iron_comet_release.wav",
+      "duration_ms": 370,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.698
+    },
+    "momentum_release": {
+      "file": "momentum_release.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4739
+    },
+    "crash_guard": {
+      "file": "crash_guard.wav",
+      "duration_ms": 200,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4609
+    },
+    "crosscut": {
+      "file": "crosscut.wav",
+      "duration_ms": 220,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.333
+    }
+  }
+}

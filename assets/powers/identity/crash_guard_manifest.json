@@ -1,0 +1,384 @@
+{
+  "family": "crash_guard",
+  "grammar": {
+    "silhouette": "round actual defender top receives an angular incoming top",
+    "motion": "contact bends at the blade, defender yields slightly, attacker redirects",
+    "location": "genuine incoming blade rim and local recoil skid",
+    "persistence": "existing contact event only",
+    "palette": "accepted blue steel defender against red attacker and short silver rim pressure",
+    "feature": "absorption and redirected displacement without piston, box or shield device"
+  },
+  "design": "assets/powers/identity/crash_guard_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 quiet floor background",
+      "02 actual floor travel and shadows",
+      "03 accepted rival native top body",
+      "04 accepted owner native top body",
+      "05 blade contact and physical follow-through"
+    ],
+    "tags": {
+      "crash_guard": {
+        "from": 0,
+        "to": 11
+      },
+      "crash_guard_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      125,
+      125,
+      65,
+      65,
+      60,
+      60,
+      90,
+      90,
+      100,
+      100,
+      140,
+      140,
+      125,
+      125,
+      65,
+      65,
+      60,
+      60,
+      90,
+      90,
+      100,
+      100,
+      140,
+      140
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 independently drawn miniature top bodies",
+      "02 physical travel and contact at 16px"
+    ],
+    "tags": {
+      "crash_guard": {
+        "from": 0,
+        "to": 0
+      },
+      "crash_guard_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      160,
+      160
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded floor skid and erosion",
+      "02 real contact and compressed wake",
+      "03 directed physical follow-through",
+      "04 small attached rim glints"
+    ],
+    "tags": {
+      "damper_contact_e": {
+        "from": 0,
+        "to": 7
+      },
+      "damper_contact_se": {
+        "from": 8,
+        "to": 15
+      },
+      "damper_contact_s": {
+        "from": 16,
+        "to": 23
+      },
+      "damper_contact_sw": {
+        "from": 24,
+        "to": 31
+      },
+      "damper_contact_w": {
+        "from": 32,
+        "to": 39
+      },
+      "damper_contact_nw": {
+        "from": 40,
+        "to": 47
+      },
+      "damper_contact_n": {
+        "from": 48,
+        "to": 55
+      },
+      "damper_contact_ne": {
+        "from": 56,
+        "to": 63
+      },
+      "damper_contact_ii_e": {
+        "from": 64,
+        "to": 71
+      },
+      "damper_contact_ii_se": {
+        "from": 72,
+        "to": 79
+      },
+      "damper_contact_ii_s": {
+        "from": 80,
+        "to": 87
+      },
+      "damper_contact_ii_sw": {
+        "from": 88,
+        "to": 95
+      },
+      "damper_contact_ii_w": {
+        "from": 96,
+        "to": 103
+      },
+      "damper_contact_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "damper_contact_ii_n": {
+        "from": 112,
+        "to": 119
+      },
+      "damper_contact_ii_ne": {
+        "from": 120,
+        "to": 127
+      }
+    },
+    "durations_ms": [
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190,
+      60,
+      45,
+      55,
+      80,
+      100,
+      130,
+      160,
+      190
+    ],
+    "columns": 8,
+    "frame_count": 128,
+    "source": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+    "texture": "res://assets/powers/identity/crash_guard_fx.png"
+  },
+  "event_tags": {
+    "crash_guard": "damper_contact"
+  },
+  "active_tags": {},
+  "notes": [
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "Historical internal tag damper_contact now means a short physical blade absorption/redirect response, with no piston or device pixels."
+  ],
+  "art": {
+    "crash_guard": {
+      "family": "crash_guard",
+      "art_id": "crash_guard",
+      "source_tag": "crash_guard",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        125,
+        125,
+        65,
+        65,
+        60,
+        60,
+        90,
+        90,
+        100,
+        100,
+        140,
+        140
+      ]
+    },
+    "crash_guard_ii": {
+      "family": "crash_guard",
+      "art_id": "crash_guard_ii",
+      "source_tag": "crash_guard_ii",
+      "icon": "res://assets/powers/identity/crash_guard_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/crash_guard_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        125,
+        125,
+        65,
+        65,
+        60,
+        60,
+        90,
+        90,
+        100,
+        100,
+        140,
+        140
+      ]
+    }
+  }
+}

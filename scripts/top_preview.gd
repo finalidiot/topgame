@@ -1,5 +1,7 @@
 extends Control
 ## Pixel-perfect workshop assembly, built from the same three parts as combat.
+const StarterDefinitions = preload("res://scripts/starters.gd")
+const Parts = preload("res://scripts/parts.gd")
 
 var build: Dictionary = {"blade": "balance", "ratchet": "mid", "bit": "ball"}
 var animated: bool = true
@@ -20,6 +22,20 @@ func _ready() -> void:
 
 func set_build(value: Dictionary) -> void:
 	build = value.duplicate()
+	queue_redraw()
+
+func set_collection_build(value: Dictionary) -> void:
+	# The save's first-choice history is not a permanent rendering class. Only
+	# an exact authored assembly keeps that starter's enamel and motion rhythm.
+	set_build(value)
+	identity = ""
+	accent = Color.WHITE
+	for starter_id: String in StarterDefinitions.IDS:
+		if value == StarterDefinitions.build_for(starter_id):
+			var data: Dictionary = StarterDefinitions.get_starter(starter_id)
+			identity = starter_id
+			accent = data.accent
+			break
 	queue_redraw()
 
 func _process(delta: float) -> void:
@@ -44,7 +60,7 @@ func _draw() -> void:
 	var blade_id: String = str(build.get("blade", "balance"))
 	var ratchet_id: String = str(build.get("ratchet", "mid"))
 	var bit_id: String = str(build.get("bit", "ball"))
-	var height_offset: float = 3.0 if ratchet_id == "low" else (-3.0 if ratchet_id == "high" else 0.0)
+	var height_offset: float = Parts.visual_height(build)
 	var contact: Vector2 = origin + Vector2(24.0, 40.0) * scale_factor
 	draw_ellipse_shadow(contact, scale_factor)
 	if not identity.is_empty(): _draw_identity_motion(origin, scale_factor)

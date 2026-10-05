@@ -1,0 +1,404 @@
+{
+  "family": "orbit_drive",
+  "grammar": {
+    "silhouette": "Accepted physical top travelling around a broad C-shaped contact-tip route.",
+    "motion": "Enter turn, cut a growing outside hook, throw grit and release the arc.",
+    "location": "Floor/contact point outside the turn, below the rotor.",
+    "persistence": "Only actual brake-turn drift/arc state; scuffs settle after the carving beat.",
+    "palette": "Worn steel floor scars, muted teal edge and brass grit.",
+    "feature": "One short concave floor cut with displaced outer grit; no rotor aura or long Flow rails."
+  },
+  "design": "assets/powers/identity/orbit_drive_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
+    ],
+    "tags": {
+      "orbit_drive": {
+        "from": 0,
+        "to": 11
+      },
+      "orbit_drive_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      135,
+      100,
+      80,
+      60,
+      50,
+      45,
+      50,
+      60,
+      75,
+      95,
+      115,
+      155,
+      135,
+      100,
+      80,
+      60,
+      50,
+      45,
+      50,
+      60,
+      75,
+      95,
+      115,
+      155
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+    "texture": "res://assets/powers/identity/orbit_drive_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "01 compact mechanical silhouette",
+      "02 identifying action and negative space"
+    ],
+    "tags": {
+      "orbit_drive": {
+        "from": 0,
+        "to": 0
+      },
+      "orbit_drive_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      100,
+      100
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+    "texture": "res://assets/powers/identity/orbit_drive_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "01 grounded scar and contact reaction",
+      "02 physical mechanism and brackets",
+      "03 moving force plates",
+      "04 keyed sparks and travel fragments"
+    ],
+    "tags": {
+      "orbit_drift": {
+        "from": 0,
+        "to": 7
+      },
+      "orbit_drift_e": {
+        "from": 8,
+        "to": 15
+      },
+      "orbit_drift_ne": {
+        "from": 16,
+        "to": 23
+      },
+      "orbit_drift_n": {
+        "from": 24,
+        "to": 31
+      },
+      "orbit_drift_nw": {
+        "from": 32,
+        "to": 39
+      },
+      "orbit_drift_w": {
+        "from": 40,
+        "to": 47
+      },
+      "orbit_drift_sw": {
+        "from": 48,
+        "to": 55
+      },
+      "orbit_drift_s": {
+        "from": 56,
+        "to": 63
+      },
+      "orbit_drift_se": {
+        "from": 64,
+        "to": 71
+      },
+      "orbit_drift_ii": {
+        "from": 72,
+        "to": 79
+      },
+      "orbit_drift_ii_e": {
+        "from": 80,
+        "to": 87
+      },
+      "orbit_drift_ii_ne": {
+        "from": 88,
+        "to": 95
+      },
+      "orbit_drift_ii_n": {
+        "from": 96,
+        "to": 103
+      },
+      "orbit_drift_ii_nw": {
+        "from": 104,
+        "to": 111
+      },
+      "orbit_drift_ii_w": {
+        "from": 112,
+        "to": 119
+      },
+      "orbit_drift_ii_sw": {
+        "from": 120,
+        "to": 127
+      },
+      "orbit_drift_ii_s": {
+        "from": 128,
+        "to": 135
+      },
+      "orbit_drift_ii_se": {
+        "from": 136,
+        "to": 143
+      }
+    },
+    "durations_ms": [
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130,
+      75,
+      55,
+      40,
+      35,
+      45,
+      65,
+      90,
+      130
+    ],
+    "columns": 8,
+    "frame_count": 144,
+    "source": "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite",
+    "texture": "res://assets/powers/identity/orbit_drive_fx.png"
+  },
+  "event_tags": {
+    "orbit_drift": "orbit_drift"
+  },
+  "active_tags": {
+    "drift": "orbit_drift"
+  },
+  "notes": [
+    "Rank II deepens two outside skid grooves and ejects extra grit, staying at the contact plane."
+  ],
+  "art": {
+    "orbit_drive": {
+      "family": "orbit_drive",
+      "art_id": "orbit_drive",
+      "source_tag": "orbit_drive",
+      "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        135,
+        100,
+        80,
+        60,
+        50,
+        45,
+        50,
+        60,
+        75,
+        95,
+        115,
+        155
+      ]
+    },
+    "orbit_drive_ii": {
+      "family": "orbit_drive",
+      "art_id": "orbit_drive_ii",
+      "source_tag": "orbit_drive_ii",
+      "icon": "res://assets/powers/identity/orbit_drive_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/orbit_drive_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        135,
+        100,
+        80,
+        60,
+        50,
+        45,
+        50,
+        60,
+        75,
+        95,
+        115,
+        155
+      ]
+    }
+  }
+}

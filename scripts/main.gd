@@ -8,6 +8,9 @@ const RunContext = preload("res://scripts/run_context.gd")
 const Starters = preload("res://scripts/starters.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Encounters = preload("res://scripts/encounters.gd")
+const Collection = preload("res://scripts/collection_save.gd")
+const PackageProbe = preload("res://scripts/parts_package_probe.gd")
+const RunPickupScript = preload("res://scripts/run_pickups.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -18,8 +21,24 @@ var last_result: Dictionary = {}
 var battle: Node2D
 var menus: Control
 var sounds: Node
+var reroll_pickups: Node2D
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var smoke_mode: bool = false
+var review_audio: bool = false
+## Tests/review captures override the path before entering the scene tree.
+var collection_path: String = ""
+var collection: RefCounted
+var reset_collection_requested: bool = false
+var _collection_reset_failed: bool = false
+## Full catalogue access is only enabled for an explicitly isolated QA save.
+var qa_catalogue_requested: bool = false
+var qa_catalogue_error: String = ""
+var qa_assets_report: String = ""
+var qa_assets_report_requested: bool = false
+var preferences_path: String = "user://prototype.cfg"
+var _ownership_remaining: float = 0.0
+var _first_starter_focus: String = "breaker"
+var _collection_retry: String = ""
 var capture_dir: String = ""
 var audit_actions: Array = []
 var opponent_build: Dictionary = {}
@@ -36,6 +55,10 @@ var _run_launched: bool = false
 var _practice_branch: String = ""
 
 func _process(delta: float) -> void:
+	if screen == "starter_owned":
+		_ownership_remaining -= delta
+		if _ownership_remaining <= 0.0: _garage()
+		return
 	# Only the visible acquisition beat advances. Pause and End/Restart cannot
 	# leave a delayed timer behind that could launch an unrelated encounter.
 	if not run_context.is_active(): return
@@ -48,14 +71,41 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	DisplayServer.window_set_title("Spinning Metal — 002C.5.2 Parts Catalogue")
 	rng.randomize()
 	var practice_request: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument == "--smoke-test": smoke_mode = true
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
 		if argument.begins_with("--practice="): practice_request = argument.trim_prefix("--practice=")
+		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
+		if argument == "--reset-collection": reset_collection_requested = true
+		if argument == "--qa-catalogue": qa_catalogue_requested = true
+		if argument.begins_with("--qa-assets-report="):
+			qa_assets_report_requested = true
+			qa_assets_report = argument.trim_prefix("--qa-assets-report=")
+	qa_assets_report_requested = qa_assets_report_requested or not qa_assets_report.is_empty()
 	if smoke_mode: rng.seed = 7341
-	if not smoke_mode: _load_preferences()
+	if qa_catalogue_requested and not _is_isolated_catalogue_path(collection_path):
+		qa_catalogue_error = "Catalogue QA requires an absolute --collection-path inside the configured GyroBrothers-QA/002C.5.2/temp folder. No parts were granted and your player save was not opened."
+		collection_path = "user://test_collection/refused_qa_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+		reset_collection_requested = false
+	if qa_assets_report_requested and (not qa_catalogue_requested or not qa_catalogue_error.is_empty() or not _is_isolated_assets_report(qa_assets_report)):
+		qa_catalogue_error = "Package asset QA requires --qa-catalogue, an isolated QA collection, and a new absolute JSON report inside GyroBrothers-QA/002C.5.2/manifests. No player save was opened and no existing report was replaced."
+		collection_path = "user://test_collection/refused_probe_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+		reset_collection_requested = false
+	if collection_path.is_empty():
+		collection_path = "user://test_collection/main_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()] if smoke_mode else "user://collection.json"
+	if ProjectSettings.globalize_path(collection_path).replace("\\", "/").simplify_path().to_lower() != ProjectSettings.globalize_path(Collection.DEFAULT_PATH).replace("\\", "/").simplify_path().to_lower():
+		preferences_path = collection_path + ".preferences.cfg"
+	if not smoke_mode and qa_catalogue_error.is_empty(): _load_preferences()
+	collection = Collection.new(collection_path)
+	collection.load_save()
+	if not qa_catalogue_error.is_empty(): collection.read_only = true
+	if reset_collection_requested:
+		_collection_reset_failed = not bool(collection.reset_collection(true).ok)
+	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
+	if collection.can_launch(): build = collection.equipped_build()
 	battle = BattleScript.new()
 	add_child(battle)
 	battle.visible = false
@@ -66,6 +116,9 @@ func _ready() -> void:
 	battle.progression_events.connect(_progression_events)
 	battle.threat_cleared.connect(_threat_cleared)
 	battle.threat_started.connect(_threat_started)
+	reroll_pickups = RunPickupScript.new()
+	battle.add_child(reroll_pickups)
+	reroll_pickups.reroll_collected.connect(_reroll_collected)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
 	add_child(layer)
@@ -77,28 +130,89 @@ func _ready() -> void:
 	add_child(sounds)
 	_apply_settings()
 	_title()
-	if smoke_mode: call_deferred("_smoke_test")
+	if _collection_reset_failed:
+		_collection_error("The explicitly requested collection reset could not finish. Close other game instances and check the save folder before retrying.")
+	if not qa_catalogue_error.is_empty(): _collection_error(qa_catalogue_error)
+	if qa_assets_report_requested:
+		if qa_catalogue_error.is_empty(): call_deferred("_run_qa_assets_probe")
+		else: call_deferred("_finish_qa_assets_probe", {"ok":false, "error":qa_catalogue_error})
+	elif smoke_mode: call_deferred("_smoke_test")
+	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
+
+func _is_isolated_catalogue_path(path: String) -> bool:
+	return _is_isolated_qa_path(path, "temp")
+
+func _is_isolated_assets_report(path: String) -> bool:
+	return _is_isolated_qa_path(path, "manifests") and not FileAccess.file_exists(path) and not DirAccess.dir_exists_absolute(path)
+
+func _is_isolated_qa_path(path: String, folder: String) -> bool:
+	# Require the designated external QA tree, never res://, user:// or a player
+	# profile renamed in-place. Explicit TOPGAME_QA_ROOT remains supported.
+	var normalized: String = path.replace("\\", "/").simplify_path()
+	if not normalized.is_absolute_path() or path.begins_with("user://") or path.begins_with("res://"): return false
+	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
+	var project_folder: String = ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/")
+	var qa_root: String = configured if not configured.is_empty() else project_folder.get_base_dir().path_join("GyroBrothers-QA")
+	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.5.2/" + folder).to_lower() + "/"
+	var repository: String = ProjectSettings.globalize_path("res://").replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
+	var userdata: String = OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
+	var candidate: String = normalized.to_lower()
+	return candidate.begins_with(allowed) and not candidate.begins_with(repository) and not candidate.begins_with(userdata) and candidate.get_extension() == "json"
+
+func _run_qa_assets_probe() -> void:
+	# Exported release templates omit the editor's --script entry point. This
+	# compiled probe is reachable only through the scoped QA boot flags above.
+	if not qa_catalogue_requested or not qa_catalogue_error.is_empty() or not _is_isolated_assets_report(qa_assets_report):
+		_finish_qa_assets_probe({"ok":false, "error":"Package asset QA report path is no longer safe or already exists."})
+		return
+	_finish_qa_assets_probe(PackageProbe.inspect(qa_assets_report))
+
+func _finish_qa_assets_probe(result: Dictionary) -> void:
+	if bool(result.get("ok", false)):
+		print("PACKAGED_PART_ASSETS_PASS textures=", int(result.get("textures", 0)))
+	else:
+		push_error(str(result.get("error", "Packaged part assets failed validation.")))
+	get_tree().quit(0 if bool(result.get("ok", false)) else 1)
+
+func _prepare_qa_catalogue() -> void:
+	if collection.read_only:
+		qa_catalogue_error = "The isolated catalogue QA collection could not be read safely. Its files have been preserved. Choose a new QA filename."
+		return
+	if not collection.is_initialized():
+		if not bool(collection.initialize_starter("breaker").ok):
+			qa_catalogue_error = "Could not create the isolated catalogue QA collection. Your player save has not been opened."
+			return
+	for category: String in Collection.CATEGORIES:
+		for id: String in Catalog.PARTS[category]:
+			if not bool(collection.grant_part(category + ":" + id).ok):
+				qa_catalogue_error = "Could not finish the isolated catalogue QA collection. Close other QA windows and choose a new QA filename."
+				return
+	DisplayServer.window_set_title("Spinning Metal — 002C.5.2 ISOLATED CATALOGUE QA")
 
 ## Optional isolated human checkpoint. Ordinary seeded Run offers are untouched.
 ## No progression, power procs, damage or victories are injected while playing.
 func _start_build_practice(branch_id: String) -> void:
-	if not Powers.MUTATIONS.has(branch_id) and branch_id != "hybrid": return
+	var requested_power: String = branch_id.trim_suffix("_ii")
+	if not Powers.MUTATIONS.has(branch_id) and branch_id != "hybrid" and requested_power not in Powers.ACTIVE_IDS: return
 	_clear_run()
 	_practice_branch = branch_id
-	var power_id: String = str(Powers.get_mutation(branch_id).get("power_id", "dead_centre"))
-	var starter: String = {"redline":"breaker", "dead_centre":"bastion", "afterimage":"vane"}.get(power_id, "bastion")
+	var power_id: String = str(Powers.get_mutation(branch_id).get("power_id", requested_power))
+	var starter: String = {"redline":"breaker", "dead_centre":"bastion", "afterimage":"vane","high_gear":"vane","orbit_drive":"vane"}.get(power_id, "bastion")
 	var descriptor: Dictionary = Encounters.for_slot(3 if power_id == "afterimage" else 5, 421)
-	descriptor.player_power_ids = Powers.ACTIVE_IDS.duplicate()
+	descriptor.player_power_ids = ["impact_wake","clutch","redline","iron_comet","dead_centre","afterimage","chain_impact"] if Powers.MUTATIONS.has(branch_id) or branch_id == "hybrid" else [power_id]
+	if power_id in Powers.ACTIVE_IDS and power_id not in descriptor.player_power_ids: descriptor.player_power_ids.append(power_id)
+	descriptor.ability_rebalance = true
 	descriptor.player_power_ranks = {}
 	descriptor.player_power_mutations = {}
-	for id: String in Powers.ACTIVE_IDS: descriptor.player_power_ranks[id] = 1
+	for id: String in descriptor.player_power_ids: descriptor.player_power_ranks[id] = 1
 	if branch_id == "hybrid":
 		for id: String in ["redline", "dead_centre", "afterimage"]: descriptor.player_power_ranks[id] = 3
 		descriptor.player_power_mutations = {"redline":"runaway", "dead_centre":"counterweight", "afterimage":"slipstream"}
-	else:
+	elif Powers.MUTATIONS.has(branch_id):
 		descriptor.player_power_ranks[power_id] = 3
 		descriptor.player_power_mutations[power_id] = branch_id
+	else: descriptor.player_power_ranks[power_id] = 2 if branch_id.ends_with("_ii") else 1
 	descriptor.starter_id = starter
 	mode = "duel"
 	screen = "battle"
@@ -111,7 +225,7 @@ func _start_build_practice(branch_id: String) -> void:
 
 func _load_preferences() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
-	if cfg.load("user://prototype.cfg") != OK: return
+	if cfg.load(preferences_path) != OK: return
 	for key: String in build:
 		var value: String = str(cfg.get_value("build", key, build[key]))
 		var legal: Array = Catalog.BLADE_IDS if key == "blade" else Catalog.RATCHET_IDS if key == "ratchet" else Catalog.BIT_IDS
@@ -121,11 +235,11 @@ func _load_preferences() -> void:
 	settings.volume = clampf(float(settings.volume), 0.0, 1.0)
 
 func _save_preferences() -> void:
-	if smoke_mode: return
+	if smoke_mode or not qa_catalogue_error.is_empty(): return
 	var cfg: ConfigFile = ConfigFile.new()
 	for key: String in build: cfg.set_value("build", key, build[key])
 	for key: String in settings: cfg.set_value("settings", key, settings[key])
-	cfg.save("user://prototype.cfg")
+	cfg.save(preferences_path)
 
 func _apply_settings() -> void:
 	sounds.apply_settings(settings)
@@ -143,14 +257,69 @@ func _title() -> void:
 	_clear_run()
 	_hide_battle()
 	screen = "title"
-	menus.show_title(build, settings)
+	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
 
 func _garage() -> void:
 	if run_context.is_active(): return
+	if not collection.is_initialized():
+		_begin_collection()
+		return
 	_clear_run()
 	_hide_battle()
 	screen = "garage"
-	menus.show_garage(build)
+	if collection.can_launch(): build = collection.equipped_build()
+	var snapshot: Dictionary = collection.snapshot()
+	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
+	snapshot["isolated_catalogue_qa"] = qa_catalogue_requested
+	menus.show_collection_workshop(collection.equipped_build(), snapshot)
+
+func _practice_garage() -> void:
+	if run_context.is_active(): return
+	_clear_run()
+	_hide_battle()
+	screen = "practice_garage"
+	menus.show_garage(build, true)
+
+func _collection_error(message: String, retry: String = "") -> void:
+	_collection_retry = retry
+	screen = "collection_error"
+	menus.show_collection_error(message, "main_menu", not retry.is_empty())
+
+func _begin_collection() -> void:
+	if run_context.is_active(): return
+	if collection.read_only:
+		_collection_error("Collection could not be safely loaded. Your save has been preserved. See the checkpoint reset instructions.")
+		return
+	if collection.is_initialized():
+		_garage()
+		return
+	_clear_run()
+	_hide_battle()
+	screen = "starter_ceremony"
+	menus.show_starter_ceremony(_first_starter_focus)
+
+func _confirm_first_starter(starter_id: String) -> void:
+	if screen != "starter_confirm" or starter_id != _first_starter_focus: return
+	var result: Dictionary = collection.initialize_starter(starter_id)
+	if not bool(result.ok):
+		_collection_error("Could not save your first machine. Nothing was granted. Please retry.", "starter")
+		return
+	build = collection.equipped_build()
+	screen = "starter_owned"
+	_ownership_remaining = 1.4
+	menus.show_starter_owned(starter_id)
+	_battle_sound("acquire")
+
+func _equip_collection_part(value: Dictionary) -> void:
+	if screen != "garage": return
+	var selected: Dictionary = collection.equipped_build()
+	selected[str(value.get("category", ""))] = str(value.get("id", ""))
+	var result: Dictionary = collection.equip_build(selected)
+	if bool(result.ok):
+		_garage()
+		menus.focus_collection_part(str(value.get("category", "")), str(value.get("id", "")))
+	elif str(result.status) in ["write_failed", "stale_save", "read_only"]:
+		_collection_error("Could not save the assembly. The collection has been preserved. Retry reloads the latest saved machine.", "workshop")
 
 func _opponent() -> Dictionary:
 	var rivals: Array = [
@@ -180,6 +349,7 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	battle._emit_hud()
 
 func _clear_run() -> void:
+	if is_instance_valid(reroll_pickups): reroll_pickups.clear()
 	_run_launched = false
 	_practice_branch = ""
 	_acquisition_remaining = 0.0
@@ -195,18 +365,20 @@ func _clear_run() -> void:
 
 func _start_run() -> void:
 	if run_context.is_active(): return
-	_clear_run()
-	_hide_battle()
-	mode = "run"
-	screen = "starters"
-	menus.show_starters()
+	if not collection.is_initialized():
+		_begin_collection()
+		return
+	if not collection.can_launch():
+		_collection_error("This collection has no complete owned assembly. Your known parts are preserved. See the checkpoint recovery instructions.")
+		return
+	_restart_run()
 
-func _restart_run(starter_id: String = "") -> void:
+func _restart_run() -> void:
+	if not collection.can_launch(): return
 	_run_launched = false
 	# Entropy is sampled only here, never from menu duration or encounter timing.
-	var selected: Dictionary = build if run_context.status == "empty" else run_context.selected_build
-	var identity: String = starter_id if not starter_id.is_empty() else run_context.starter_id
-	if identity in Starters.IDS: selected = Starters.build_for(identity)
+	var selected: Dictionary = collection.equipped_build()
+	var identity: String = Starters.identity_for_build(selected)
 	var fresh_seed: int = rng.randi()
 	while fresh_seed == 0 or fresh_seed == _previous_run_seed:
 		fresh_seed = rng.randi()
@@ -220,6 +392,7 @@ func _restart_run(starter_id: String = "") -> void:
 	_reward_focus_id = ""
 	_draft_resume_origin = "starting"
 	run_context.start(selected, fresh_seed, identity)
+	reroll_pickups.clear()
 	mode = "run"
 	_hide_battle()
 	_show_reward()
@@ -239,6 +412,7 @@ func _launch_run_encounter() -> void:
 	battle.visible = true
 	battle.set_physics_process(true)
 	battle.begin_run(run_context.selected_build, encounter, run_context.run_seed)
+	reroll_pickups.setup(battle, run_context)
 	_apply_settings()
 	battle._emit_hud()
 
@@ -249,7 +423,8 @@ func _show_reward() -> void:
 	var starting: bool = run_context.pending_draft_kind == "starting"
 	var context: Dictionary = {"title":"CHOOSE YOUR FIRST POWER" if starting else "LEVEL %d / CHOOSE A POWER" % run_context.pending_draft_level,
 		"subtitle":"Enter the arena already dangerous." if starting else "Battle paused. Add a power or invest in one you own.",
-		"resume_label":_acquisition_prompt(), "power_ranks":run_context.power_ranks, "power_mutations":run_context.power_mutations}
+		"resume_label":_acquisition_prompt(), "power_ranks":run_context.power_ranks, "power_mutations":run_context.power_mutations,
+		"rerolls":run_context.reroll_snapshot()}
 	menus.show_reward(run_context.pending_offer, run_context.owned_power_ids, run_context.slot, run_context.pending_draft_id, run_context.run_seed, _reward_focus_id, context)
 
 func _show_mutation(announce: bool = true) -> void:
@@ -274,7 +449,11 @@ func _acquisition_prompt() -> String:
 func _threat_cleared(summary: Dictionary) -> void:
 	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
 	if summary != battle.continuous.last_clear or int(summary.get("run_seed",-1)) != run_context.run_seed: return
+	reroll_pickups.notify_clear(summary)
 	battle._emit_hud()
+
+func _reroll_collected(_id: String) -> void:
+	if screen == "battle" and mode == "run" and run_context.is_active(): battle._emit_hud()
 
 func _threat_started(summary: Dictionary) -> void:
 	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
@@ -321,6 +500,7 @@ func _hud_updated(stats: Dictionary) -> void:
 	stats["power_ranks"] = run_context.power_ranks if mode == "run" else {}
 	stats["power_mutations"] = run_context.power_mutations if mode == "run" else {}
 	stats["is_run"] = mode == "run"
+	stats["rerolls"] = run_context.reroll_charges if mode == "run" else 0
 	if not _practice_branch.is_empty():
 		stats["run_label"] = "BUILD PRACTICE / " + _practice_branch.replace("_", " ").to_upper()
 		stats["owned_power_ids"] = battle.player_entity().get("powers", [])
@@ -362,25 +542,57 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["rpm_economy"] = battle.continuous.economy.snapshot()
 		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
 		last_result["investments"] = run_context.committed_rewards
+		last_result["rerolls"] = run_context.reroll_snapshot()
 		if not smoke_mode:
-			var diagnostic: FileAccess = FileAccess.open("user://last_run_director.json",FileAccess.WRITE)
+			var diagnostic_path: String = "user://last_run_director.json" if preferences_path == "user://prototype.cfg" else collection_path + ".last_run_director.json"
+			var diagnostic: FileAccess = FileAccess.open(diagnostic_path,FileAccess.WRITE)
 			if diagnostic != null: diagnostic.store_string(JSON.stringify(last_result,"\t"))
 	menus.show_result(last_result)
 
 func _battle_sound(kind: String) -> void:
-	if not smoke_mode: sounds.play_sound(kind)
+	# Read-only packaged inspection exits immediately after boot. Starting a
+	# focus cue there leaves a native WAV playback alive at headless shutdown.
+	if qa_assets_report_requested: return
+	if not smoke_mode or review_audio: sounds.play_sound(kind)
 
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
 	# All build/menu routes respect the lock, including stale UI signals.
-	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch"]: return
-	if not smoke_mode: sounds.play_sound("ui")
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership"]: return
+	_battle_sound("ui")
 	match name:
+		"begin_collection": _begin_collection()
+		"open_workshop": _garage()
+		"practice_garage": _practice_garage()
+		"select_first_starter":
+			if screen == "starter_ceremony" and str(value) in Starters.IDS and not collection.is_initialized():
+				_first_starter_focus = str(value)
+				screen = "starter_confirm"
+				menus.show_starter_confirmation(_first_starter_focus)
+		"back_to_starters":
+			if screen == "starter_confirm": _begin_collection()
+		"confirm_first_starter": _confirm_first_starter(str(value))
+		"finish_ownership":
+			if screen == "starter_owned" and _ownership_remaining <= 0.6: _garage()
+		"equip_part":
+			if value is Dictionary: _equip_collection_part(value)
+		"inspect_locked_part":
+			# A locked catalogue card is informational, never an equip/grant.
+			if screen == "garage" and value is Dictionary:
+				menus.inspect_locked_part(str(value.get("category", "")), str(value.get("id", "")))
+		"launch_owned_run":
+			if screen == "garage": _start_run()
+		"retry_collection":
+			if screen == "collection_error":
+				collection.load_save()
+				if _collection_retry == "starter":
+					if collection.is_initialized(): _garage()
+					elif collection.read_only: _begin_collection()
+					else:
+						screen = "starter_confirm"
+						_confirm_first_starter(_first_starter_focus)
+				elif _collection_retry == "workshop": _garage()
 		"start_run": _start_run()
-		"choose_starter":
-			if screen == "starters" and str(value) in Starters.IDS: _restart_run(str(value))
-		"custom_run":
-			if screen == "starters": _restart_run("custom")
 		"restart_run":
 			if mode == "run" and screen in ["pause", "result"]: _restart_run()
 		"end_run":
@@ -391,6 +603,7 @@ func _action(name: String, value: Variant = null) -> void:
 		"choose_power":
 			if mode == "run" and screen == "reward" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if int(value.get("offer_revision", 0)) != int(run_context.reroll_snapshot().revision): return
 				if run_context.choose_power(str(value.get("encounter_id", "")), str(value.get("power_id", ""))):
 					if not run_context.pending_mutation_power.is_empty():
 						_mutation_focus_id = ""
@@ -399,6 +612,12 @@ func _action(name: String, value: Variant = null) -> void:
 						if _draft_resume_origin == "battle": battle.acquire_run_power(str(value.power_id), int(run_context.power_ranks.get(str(value.power_id), 1)))
 						if not smoke_mode: sounds.play_sound("card_select")
 						_show_acquisition(str(value.power_id))
+		"reroll_power":
+			if mode == "run" and screen == "reward" and value is Dictionary:
+				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if run_context.reroll_offer(str(value.get("encounter_id", "")), int(value.get("offer_revision", -1))):
+					_reward_focus_id = ""
+					_show_reward()
 		"choose_mutation":
 			if mode == "run" and screen == "mutation" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
@@ -419,7 +638,7 @@ func _action(name: String, value: Variant = null) -> void:
 			menus.show_settings(settings)
 		"main_menu": _title()
 		"build_changed":
-			if screen == "garage" and value is Dictionary:
+			if screen == "practice_garage" and value is Dictionary:
 				build = Catalog.validate_build(value)
 				_save_preferences()
 		"settings_changed":
@@ -459,6 +678,9 @@ func _resume() -> void:
 func _escape() -> void:
 	if screen == "pause": _resume()
 	elif screen == "battle" or run_context.is_active(): _pause()
+	elif screen == "starter_confirm": _begin_collection()
+	elif screen == "starter_owned":
+		if _ownership_remaining <= 0.6: _garage()
 	else: _title()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -495,9 +717,7 @@ func _smoke_test() -> void:
 	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
 	await get_tree().create_timer(0.3).timeout
 	await _capture("01-title")
-	var button: Button = _find_button(menus, "custom")
-	if button != null: button.pressed.emit()
-	else: _action("customize")
+	_action("practice_garage")
 	await get_tree().create_timer(0.15).timeout
 	await _capture("02-garage")
 	for part_name: String in ["HOOK", "HIGH", "RUBBER"]:
@@ -539,9 +759,21 @@ func _smoke_test() -> void:
 	_action("main_menu")
 	_action("start_run")
 	await _capture("09-starters")
-	_action("choose_starter", "breaker")
+	_action("select_first_starter", "breaker")
+	await _capture("09a-confirm")
+	_action("confirm_first_starter", "breaker")
+	await _capture("09b-owned")
+	await get_tree().create_timer(1.6).timeout
+	assert(screen == "garage" and collection.owned_count() == 3)
+	await _capture("09c-owned-workshop")
+	_action("launch_owned_run")
 	await _capture("10-starting-draft")
-	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed})
+	var reroll_button: Button = menus._content.get_node("RerollPower")
+	assert(not reroll_button.disabled and run_context.reroll_charges == 1)
+	reroll_button.pressed.emit()
+	assert(screen == "reward" and run_context.reroll_charges == 0 and int(run_context.reroll_snapshot().revision) == 1)
+	await _capture("10a-rerolled-draft")
+	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed,"offer_revision":run_context.reroll_snapshot().revision})
 	await _capture("11-starting-acquisition")
 	await get_tree().create_timer(0.6).timeout
 	for slot: int in range(1, 11):

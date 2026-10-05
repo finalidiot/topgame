@@ -1,0 +1,322 @@
+{
+  "baseline": "d0d37e5",
+  "engine": "E:/Desktop/Godot_v4.7.2-stable_win64_console.exe",
+  "suites": [
+    {
+      "suite": "collection_save",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.219,
+      "checks": 271,
+      "summary": "COLLECTION_SAVE_PASS checks=271 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\collection_save.log"
+    },
+    {
+      "suite": "collection_flow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.752,
+      "checks": 395,
+      "summary": "COLLECTION_FLOW_TEST_PASS checks=395 failures=0 all_starters=3 isolated_saves=true",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\collection_flow.log"
+    },
+    {
+      "suite": "collection_ui",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.213,
+      "checks": 1996,
+      "summary": "COLLECTION_UI_TEST_PASS checks=1996 failures=0 synthetic_device=3 all_starters=3",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\collection_ui.log"
+    },
+    {
+      "suite": "spin_economy",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.678,
+      "checks": 232,
+      "summary": "SPIN_ECONOMY_PASS checks=232 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\spin_economy.log"
+    },
+    {
+      "suite": "threat_director",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.254,
+      "checks": 83,
+      "summary": "THREAT_DIRECTOR_PASS checks=83 failures=0 samples=8",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\threat_director.log"
+    },
+    {
+      "suite": "continuous_run",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.696,
+      "checks": 200,
+      "summary": "CONTINUOUS_RUN_PASS checks=200 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\continuous_run.log"
+    },
+    {
+      "suite": "run_context",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.531,
+      "checks": 362,
+      "summary": "RUN_CONTEXT_TEST_PASS checks=362 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\run_context.log"
+    },
+    {
+      "suite": "flow",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.485,
+      "checks": 161,
+      "summary": "FLOW_TEST_PASS checks=161 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\flow.log"
+    },
+    {
+      "suite": "combat_architecture",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.176,
+      "checks": 35,
+      "summary": "Combat architecture: 35 checks, 0 failures",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\combat_architecture.log"
+    },
+    {
+      "suite": "menus",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.469,
+      "checks": 1506,
+      "summary": "MENU_TEST_PASS checks=1506 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\menus.log"
+    },
+    {
+      "suite": "controller",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 23.469,
+      "checks": 675,
+      "summary": "CONTROLLER_TEST_PASS checks=675 failures=0 synthetic_device=3 physical_hardware=NOT_TESTED",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\controller.log"
+    },
+    {
+      "suite": "powers",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.161,
+      "checks": 79,
+      "summary": "Power runtime: 79 checks, 0 failures",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\powers.log"
+    },
+    {
+      "suite": "swarm",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 9.785,
+      "checks": 33,
+      "summary": "SWARM_TEST_PASS checks=33 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\swarm.log"
+    },
+    {
+      "suite": "presentation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.274,
+      "checks": 78,
+      "summary": "PRESENTATION_TEST_PASS checks=78 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\presentation.log"
+    },
+    {
+      "suite": "progression",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.5,
+      "checks": 169,
+      "summary": "PROGRESSION_TEST_PASS checks=169 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\progression.log"
+    },
+    {
+      "suite": "starters",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.314,
+      "checks": 17,
+      "summary": "STARTER_TEST_PASS checks=17 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\starters.log"
+    },
+    {
+      "suite": "starter_physics",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 4.045,
+      "checks": 37,
+      "summary": "STARTER_PHYSICS_TEST_PASS checks=37 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\starter_physics.log"
+    },
+    {
+      "suite": "xp_observer",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.358,
+      "checks": 30,
+      "summary": "XP_OBSERVER_TEST_PASS checks=30 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\xp_observer.log"
+    },
+    {
+      "suite": "ramp_integration",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.916,
+      "checks": 19,
+      "summary": "RAMP_INTEGRATION_PASS checks=19 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\ramp_integration.log"
+    },
+    {
+      "suite": "card_assets",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.102,
+      "checks": 132,
+      "summary": "CARD_ASSETS_TEST_PASS checks=132 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\card_assets.log"
+    },
+    {
+      "suite": "escalation_progression",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 0.968,
+      "checks": 765,
+      "summary": "ESCALATION_PROGRESSION_TEST_PASS checks=765 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\escalation_progression.log"
+    },
+    {
+      "suite": "escalation_physics",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.763,
+      "checks": 103,
+      "summary": "Escalation physics: 103 checks, 0 failures",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\escalation_physics.log"
+    },
+    {
+      "suite": "escalation_integration",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.885,
+      "checks": 900,
+      "summary": "ESCALATION_INTEGRATION_PASS checks=900 failures=0 synthetic_gamepad=3 physical_hardware=NOT_TESTED",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\escalation_integration.log"
+    },
+    {
+      "suite": "escalation_completion",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.842,
+      "checks": 42,
+      "summary": "ESCALATION_COMPLETION_PASS checks=42 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\escalation_completion.log"
+    },
+    {
+      "suite": "escalation_assets",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.331,
+      "checks": 351,
+      "summary": "ESCALATION_ASSETS_TEST_PASS checks=351 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\escalation_assets.log"
+    },
+    {
+      "suite": "rpm_replay",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 79.059,
+      "checks": 0,
+      "summary": "RPM_REPLAY_PASS two natural seeded Runs, exact curves/events/accounting/progression",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\rpm_replay.log"
+    },
+    {
+      "suite": "signature_presentation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 5.136,
+      "checks": 3362,
+      "summary": "SIGNATURE_PRESENTATION checks=3362 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\signature_presentation.log"
+    },
+    {
+      "suite": "roster_draft",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 47.138,
+      "checks": 21791,
+      "summary": "ROSTER_DRAFT_PASS checks=21791 failures=0 models=[{\"families_max\":12,\"families_min\":6,\"investments\":12,\"mean_families\":8.046875,\"mean_mutations\":0.40625,\"offered_mutation\":294,\"offered_new\":6324,\"offered_rank\":2598,\"picked_mutation\":104,\"picked_new\":2060,\"picked_rank\":908,\"policy\":\"enlarged_old_weights\",\"preference\":\"random\",\"runs\":256},{\"families_max\":8,\"families_min\":5,\"investments\":12,\"mean_families\":6.33203125,\"mean_mutations\":1.08984375,\"offered_mutation\":288,\"offered_new\":7452,\"offered_rank\":1476,\"picked_mutation\":279,\"picked_new\":1621,\"picked_rank\":1172,\"policy\":\"enlarged_old_weights\",\"preference\":\"deepen\",\"runs\":256},{\"families_max\":8,\"families_min\":5,\"investments\":12,\"mean_families\":6.58203125,\"mean_mutations\":0.78125,\"offered_mutation\":645,\"offered_new\":4983,\"offered_rank\":3588,\"",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\roster_draft.log"
+    },
+    {
+      "suite": "roster_physics",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 3.046,
+      "checks": 30,
+      "summary": "ROSTER_PHYSICS_PASS checks=30 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\roster_physics.log"
+    },
+    {
+      "suite": "roster_presentation",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.179,
+      "checks": 3585,
+      "summary": "ROSTER_PRESENTATION checks=3585 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\roster_presentation.log"
+    },
+    {
+      "suite": "ability_rebalance",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 1.735,
+      "checks": 92,
+      "summary": "ABILITY_REBALANCE_PASS checks=92 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\ability_rebalance.log"
+    },
+    {
+      "suite": "ability_rebalance_integration",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.468,
+      "checks": 32,
+      "summary": "ABILITY_REBALANCE_INTEGRATION_PASS checks=32 failures=0",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\ability_rebalance_integration.log"
+    },
+    {
+      "suite": "collection_c5_integration",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 2.758,
+      "checks": 174,
+      "summary": "COLLECTION_C5_INTEGRATION_PASS checks=174 failures=0 families=13 mutations=2 isolated_save=true",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\collection_c5_integration.log"
+    },
+    {
+      "suite": "power_identity",
+      "passed": true,
+      "exit_code": 0,
+      "seconds": 10.604,
+      "checks": 4584,
+      "summary": "POWER_IDENTITY_TEST_PASS checks=4584 failures=0 states=34 draw_states=34 paid_preview_draws=1",
+      "log": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\power_identity.log"
+    }
+  ],
+  "passed_suites": 34,
+  "failed_suites": 0,
+  "counted_checks": 42321,
+  "final_pixel_refresh": {
+    "suite": "power_identity",
+    "reason": "Final Bank stored-only wake cels moved outside actual native body footprint in all eight headings; empty/store/release behavior and all mechanics unchanged. Other 33 full-suite results, including exact two-seed RPM replay, retained from completed final run.",
+    "prior_full_suite_report": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\iterations\\full34-before-final-bank-pixels\\regression-results.json",
+    "bank_native_composite_proof": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\bank-held-refinement\\bank-final-held-native-occlusion-proof.json",
+    "fresh_import": "Final Bank resource import completed after last exported PNG timestamp; this identity row is the actual subsequent test run."
+  }
+}

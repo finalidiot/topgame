@@ -1,0 +1,10 @@
+{
+  "launcher": "E:\\Desktop\\Launch-SpinningMetal-Physical-Art-V2.cmd",
+  "note": "start is asynchronous; exact executable full integration smoke is verified separately.",
+  "cmd_exit": 0,
+  "exe": "C:\\GPT GAME BUILDING\\task-002c5-qa\\Task002C5-Physical-Art-V2\\SpinningMetal-002C5-Physical-Art-V2.exe",
+  "forwarded_headless_quit_and_log_file": true,
+  "engine_errors": false,
+  "passed": true,
+  "isolated_collection_path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\desktop-launcher-collection.json"
+}

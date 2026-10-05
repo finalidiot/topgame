@@ -1,0 +1,156 @@
+{
+  "showcase_seconds": 46.8,
+  "blind_seconds": 31.2,
+  "encoding": "1280x72060fps H264 yuv420p faststart muted. Card nearest6x; gameplay native integer2x1280x720 untouched except labelled footer in showcase. Blind removes cards/names/footer.",
+  "segments": [
+    {
+      "selection": "impact_wake",
+      "art_id": "impact_wake_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\impact_wake.avi",
+      "actual_gameplay_start": 11.100000000000101,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "impact_wake": 2
+      }
+    },
+    {
+      "selection": "momentum_bank",
+      "art_id": "momentum_bank_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\momentum_bank.avi",
+      "actual_gameplay_start": 1.45,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "momentum_release": 1,
+        "momentum_store": 2
+      }
+    },
+    {
+      "selection": "predator_line",
+      "art_id": "predator_line_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\predator_line.avi",
+      "actual_gameplay_start": 1.1,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "predator_lock": 5
+      }
+    },
+    {
+      "selection": "iron_comet",
+      "art_id": "iron_comet_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\iron_comet.avi",
+      "actual_gameplay_start": 29.0666666666663,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "comet_charge": 1,
+        "comet_release": 1
+      }
+    },
+    {
+      "selection": "redline",
+      "art_id": "redline_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\redline.avi",
+      "actual_gameplay_start": 73.1166666666638,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "redline": 1,
+        "redline_overcap": 2
+      }
+    },
+    {
+      "selection": "dead_centre",
+      "art_id": "dead_centre_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\dead_centre.avi",
+      "actual_gameplay_start": 0.1,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "anchor": 1
+      }
+    },
+    {
+      "selection": "ghost_circuit",
+      "art_id": "ghost_circuit",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\ghost_circuit.avi",
+      "actual_gameplay_start": 3.9166666666666603,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "afterimage": 40,
+        "afterimage_hit": 7,
+        "ghost_activation": 2,
+        "ghost_closure": 2,
+        "ghost_preview": 2
+      }
+    },
+    {
+      "selection": "chain_impact",
+      "art_id": "chain_impact_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\chain_impact.avi",
+      "actual_gameplay_start": 51.116666666665104,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "chain_burst": 0,
+        "chain_impact": 3,
+        "chain_prime": 0
+      }
+    },
+    {
+      "selection": "clutch",
+      "art_id": "clutch_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\clutch.avi",
+      "actual_gameplay_start": 148.00000000000998,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "clutch_activate": 0,
+        "clutch_recover": 2
+      }
+    },
+    {
+      "selection": "high_gear",
+      "art_id": "high_gear_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\high_gear.avi",
+      "actual_gameplay_start": 3.11666666666666,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {}
+    },
+    {
+      "selection": "orbit_drive",
+      "art_id": "orbit_drive_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\orbit_drive.avi",
+      "actual_gameplay_start": 13.9000000000002,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {}
+    },
+    {
+      "selection": "crash_guard",
+      "art_id": "crash_guard_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crash_guard.avi",
+      "actual_gameplay_start": 14.9500000000003,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "crash_guard": 1
+      }
+    },
+    {
+      "selection": "crosscut",
+      "art_id": "crosscut_ii",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\crosscut.avi",
+      "actual_gameplay_start": 6.116666666666649,
+      "gameplay_seconds": 2.4,
+      "card_seconds": 1.2,
+      "recorded_window_procs": {
+        "crosscut": 3
+      }
+    }
+  ]
+}

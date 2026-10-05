@@ -1,0 +1,1227 @@
+{
+  "scope": "Native authoring/export verification and final encoded phone-review media. Static matrix and held stress fixture are labelled separately from genuine gameplay.",
+  "native_art": {
+    "effects": {
+      "source": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\source-art\\roster_fx_002c5.aseprite",
+      "texture": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\powers\\roster_effects.png",
+      "source_sha256": "a1904628a27414e37a8a64d3cb1551c16e513ba5ee6dedbe4876b70162321c09",
+      "texture_sha256": "75b2355870e2886e065b9036b94383d4bf6a97d38a60c5441e350b05fc2082f2",
+      "frames": 120,
+      "tags": 20,
+      "layers": [
+        "01 floor contact and silhouette",
+        "02 mechanical structure",
+        "03 active energy",
+        "04 key flash and fragments"
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "sheet_size": [
+        576,
+        1600
+      ],
+      "native_export_pixel_exact": true
+    },
+    "cards": {
+      "source": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\source-art\\roster_cards_002c5.aseprite",
+      "texture": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\powers\\roster_cards.png",
+      "source_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+      "texture_sha256": "1ff817381ac52d7d7e180ae8e5b384dc83d176db9014c31cc10890b51f75ba8a",
+      "frames": 108,
+      "tags": 18,
+      "layers": [
+        "01 industrial backplate",
+        "02 ground braces and machine depth",
+        "03 editable rotor and mechanism",
+        "04 route force and stress",
+        "05 confirmation glints and fragments"
+      ],
+      "pivot": [
+        32,
+        32
+      ],
+      "sheet_size": [
+        384,
+        1152
+      ],
+      "native_export_pixel_exact": true
+    },
+    "icons": {
+      "source": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\source-art\\roster_icons_002c5.aseprite",
+      "texture": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\assets\\powers\\roster_icons.png",
+      "source_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+      "texture_sha256": "dd4fbb3acb5e4ea1933e441eb8ae616c092d691e43309fe42a56d25bcf360a30",
+      "frames": 18,
+      "tags": 18,
+      "layers": [
+        "01 steel mechanism",
+        "02 state and motion"
+      ],
+      "pivot": [
+        8,
+        8
+      ],
+      "sheet_size": [
+        288,
+        16
+      ],
+      "native_export_pixel_exact": true
+    }
+  },
+  "clips": [
+    {
+      "name": "redline_overcap",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_redline_overcap.mp4",
+      "size_bytes": 3076097,
+      "sha256": "75a065d28b41867703610c095d9790e31b298a17fd15114eca88635443b49902",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\redline-overcap-capture.json",
+      "duration_seconds": 18.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -29.2,
+      "gameplay_audio_peak_db": -4.7,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "REDLINE II / OVERCAP + HEAT",
+            "mutations": {},
+            "policy": "pursuit",
+            "ranks": {
+              "impact_wake": 1,
+              "predator_line": 1,
+              "redline": 2
+            },
+            "seconds": 18.0,
+            "starter": "bastion"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            17.6333333333336
+          ],
+          "rpm_range_in_window": [
+            0.941954383599044,
+            1.14105872987853
+          ],
+          "procs": {
+            "impact_wake": 5,
+            "redline": 5,
+            "redline_heat": 3,
+            "redline_overcap": 7
+          },
+          "events_in_window": [],
+          "simulation_ms": {
+            "max": 1.861,
+            "median": 0.601,
+            "p95": 0.985,
+            "samples": 1080
+          },
+          "draw_submission_ms": {
+            "max": 0.718,
+            "median": 0.315,
+            "p95": 0.53,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 0.7,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_overcap-0.70.png"
+        },
+        {
+          "movie_time": 13.9,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_overcap-13.90.png"
+        },
+        {
+          "movie_time": 16.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_overcap-16.50.png"
+        }
+      ]
+    },
+    {
+      "name": "redline_mutation",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_redline_mutation.mp4",
+      "size_bytes": 2505302,
+      "sha256": "5797d689cb92eade0952f75e5428b7a867539a78f66dbaa9c1f0b55923f766a0",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\redline-mutation-capture.json",
+      "duration_seconds": 18.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -31.4,
+      "gameplay_audio_peak_db": -5.0,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "RUNAWAY / CONTACT -> SUSTAIN -> ESCALATE",
+            "mutations": {
+              "redline": "runaway"
+            },
+            "policy": "pursuit",
+            "ranks": {
+              "impact_wake": 2,
+              "redline": 3
+            },
+            "seconds": 18.0,
+            "starter": "bastion"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            17.7500000000003
+          ],
+          "rpm_range_in_window": [
+            0.894270530743236,
+            1.15724809313761
+          ],
+          "procs": {
+            "impact_wake": 2,
+            "redline": 3,
+            "redline_overcap": 3,
+            "runaway_hit": 5
+          },
+          "events_in_window": [
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 2,
+              "time": 0.516666666666667
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 2,
+              "time": 3.49999999999999
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 3,
+              "time": 14.3833333333336
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 3,
+              "time": 16.1833333333337
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 3,
+              "time": 17.2500000000003
+            }
+          ],
+          "simulation_ms": {
+            "max": 2.866,
+            "median": 0.579,
+            "p95": 1.056,
+            "samples": 1080
+          },
+          "draw_submission_ms": {
+            "max": 2.482,
+            "median": 0.28,
+            "p95": 0.599,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 0.7,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_mutation-0.70.png"
+        },
+        {
+          "movie_time": 14.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_mutation-14.50.png"
+        },
+        {
+          "movie_time": 16.4,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_mutation-16.40.png"
+        }
+      ]
+    },
+    {
+      "name": "speed_build",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_speed_build.mp4",
+      "size_bytes": 1596755,
+      "sha256": "9e9636c8ee5d59daa0846e5ee2c8f5a6f37dbc66b94fc5b3ee85d8ffdc18d711",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\speed-build-capture.json",
+      "duration_seconds": 18.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -41.6,
+      "gameplay_audio_peak_db": -15.8,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "BASELINE / SAME VANE + CONTROLLER",
+            "mutations": {},
+            "policy": "orbit",
+            "ranks": {},
+            "seconds": 8.0,
+            "starter": "vane"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            7.99999999999998
+          ],
+          "rpm_range_in_window": [
+            0.946923127454343,
+            0.986947400170306
+          ],
+          "procs": {},
+          "events_in_window": [],
+          "simulation_ms": {
+            "max": 1.049,
+            "median": 0.518,
+            "p95": 0.802,
+            "samples": 480
+          },
+          "draw_submission_ms": {
+            "max": 0.499,
+            "median": 0.209,
+            "p95": 0.353,
+            "samples": 480
+          }
+        },
+        {
+          "preset": {
+            "label": "HIGH GEAR II + FLOW STATE / SAME CONTROLLER",
+            "mutations": {
+              "high_gear": "flow_state"
+            },
+            "policy": "orbit",
+            "ranks": {
+              "high_gear": 3
+            },
+            "seconds": 10.0,
+            "starter": "vane"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            10.0000000000001
+          ],
+          "rpm_range_in_window": [
+            0.902519989012402,
+            0.986947113345912
+          ],
+          "procs": {},
+          "events_in_window": [],
+          "simulation_ms": {
+            "max": 1.26,
+            "median": 0.524,
+            "p95": 0.788,
+            "samples": 600
+          },
+          "draw_submission_ms": {
+            "max": 1.305,
+            "median": 0.234,
+            "p95": 0.35,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 3.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\speed_build-3.50.png"
+        },
+        {
+          "movie_time": 11.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\speed_build-11.50.png"
+        }
+      ]
+    },
+    {
+      "name": "ghost_circuit",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_ghost_circuit.mp4",
+      "size_bytes": 2416873,
+      "sha256": "36bbc8d6992ec6af45c0decc1098f77f7c9fa750a040fe0ac8d850a2f8b98ee1",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\ghost-capture.json",
+      "duration_seconds": 18.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -37.4,
+      "gameplay_audio_peak_db": -13.2,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "GHOST CIRCUIT / DRAW -> PREVIEW -> SNAP",
+            "mutations": {
+              "afterimage": "ghost_circuit"
+            },
+            "policy": "orbit",
+            "ranks": {
+              "afterimage": 3,
+              "high_gear": 1
+            },
+            "seconds": 18.0,
+            "starter": "vane"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            18.0000000000003
+          ],
+          "rpm_range_in_window": [
+            0.818347298281246,
+            0.999953542159567
+          ],
+          "procs": {
+            "afterimage": 118,
+            "afterimage_hit": 18,
+            "ghost_activation": 3,
+            "ghost_closure": 4,
+            "ghost_preview": 4
+          },
+          "events_in_window": [
+            {
+              "generation": 0,
+              "kind": "ghost_preview",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 4.06666666666666
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_closure",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 4.39999999999999
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_preview",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 8.14999999999998
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_activation",
+              "owner": 1,
+              "root": 0,
+              "target": 2,
+              "time": 8.45
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_closure",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 8.45
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_preview",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 12.2000000000002
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_activation",
+              "owner": 1,
+              "root": 0,
+              "target": 2,
+              "time": 12.5000000000002
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_closure",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 12.5000000000002
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_preview",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 16.2500000000004
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_activation",
+              "owner": 1,
+              "root": 0,
+              "target": 2,
+              "time": 16.5500000000003
+            },
+            {
+              "generation": 0,
+              "kind": "ghost_closure",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 16.5500000000003
+            }
+          ],
+          "simulation_ms": {
+            "max": 4.636,
+            "median": 1.041,
+            "p95": 1.676,
+            "samples": 1080
+          },
+          "draw_submission_ms": {
+            "max": 2.81,
+            "median": 1.454,
+            "p95": 2.019,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 4.25,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-4.25.png"
+        },
+        {
+          "movie_time": 4.55,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-4.55.png"
+        },
+        {
+          "movie_time": 8.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-8.50.png"
+        },
+        {
+          "movie_time": 12.6,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-12.60.png"
+        }
+      ]
+    },
+    {
+      "name": "iron_comet",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_iron_comet.mp4",
+      "size_bytes": 1486507,
+      "sha256": "f06d79c5c872057fd8ca747babea583b8f9903b2f74e1c86c92ac34d0898d658",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\iron-comet-capture.json",
+      "duration_seconds": 18.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -34.0,
+      "gameplay_audio_peak_db": -3.7,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "IRON COMET II / BANK -> ROTOR CHARGE -> CONTACT",
+            "mutations": {},
+            "policy": "wall",
+            "ranks": {
+              "high_gear": 1,
+              "impact_wake": 1,
+              "iron_comet": 2
+            },
+            "seconds": 18.0,
+            "starter": "bastion"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            17.9333333333336
+          ],
+          "rpm_range_in_window": [
+            0.772802490937499,
+            0.986958889552556
+          ],
+          "procs": {
+            "comet_charge": 2,
+            "comet_release": 1,
+            "impact_wake": 1
+          },
+          "events_in_window": [
+            {
+              "generation": 0,
+              "kind": "comet_charge",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 0.850000000000001
+            },
+            {
+              "generation": 0,
+              "kind": "comet_charge",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 4.68333333333332
+            },
+            {
+              "generation": 0,
+              "kind": "comet_release",
+              "owner": 1,
+              "root": 3,
+              "target": 2,
+              "time": 4.76666666666666
+            }
+          ],
+          "simulation_ms": {
+            "max": 2.691,
+            "median": 0.543,
+            "p95": 0.893,
+            "samples": 1080
+          },
+          "draw_submission_ms": {
+            "max": 0.563,
+            "median": 0.242,
+            "p95": 0.414,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 0.95,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-0.95.png"
+        },
+        {
+          "movie_time": 2.0,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-2.00.png"
+        },
+        {
+          "movie_time": 4.8,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-4.80.png"
+        },
+        {
+          "movie_time": 5.1,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-5.10.png"
+        }
+      ]
+    },
+    {
+      "name": "comeback",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_comeback.mp4",
+      "size_bytes": 3415988,
+      "sha256": "986e730e00759e6af3b22b7032913c4d10fefaa339482a8467c9d97b4cc6d1c0",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\comeback-capture.json",
+      "duration_seconds": 24.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -32.3,
+      "gameplay_audio_peak_db": -6.5,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "CLUTCH II / REAL DANGER -> EARNED CATCH",
+            "mutations": {},
+            "policy": "exhaust_then_hunt",
+            "ranks": {
+              "clutch": 2
+            },
+            "seconds": 24.0,
+            "starter": "bastion"
+          },
+          "seed": 7341,
+          "active_window": [
+            140,
+            163.816666666689
+          ],
+          "rpm_range_in_window": [
+            0.221797538880243,
+            0.371028793824975
+          ],
+          "procs": {
+            "clutch_activate": 1,
+            "clutch_recover": 2
+          },
+          "events_in_window": [
+            {
+              "generation": 0,
+              "kind": "clutch_activate",
+              "owner": 1,
+              "root": 0,
+              "target": 0,
+              "time": 144.600000000007
+            },
+            {
+              "generation": 0,
+              "kind": "clutch_recover",
+              "owner": 1,
+              "root": 0,
+              "target": 30,
+              "time": 148.750000000011
+            },
+            {
+              "generation": 0,
+              "kind": "clutch_recover",
+              "owner": 1,
+              "root": 0,
+              "target": 30,
+              "time": 150.216666666678
+            }
+          ],
+          "simulation_ms": {
+            "max": 1.928,
+            "median": 0.639,
+            "p95": 1.014,
+            "samples": 1440
+          },
+          "draw_submission_ms": {
+            "max": 2.879,
+            "median": 0.334,
+            "p95": 0.602,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 5.2,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-5.20.png"
+        },
+        {
+          "movie_time": 8.9,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-8.90.png"
+        },
+        {
+          "movie_time": 10.4,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-10.40.png"
+        },
+        {
+          "movie_time": 15.8,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-15.80.png"
+        }
+      ]
+    },
+    {
+      "name": "late_build",
+      "required": true,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_late_build.mp4",
+      "size_bytes": 4595370,
+      "sha256": "32192a4be40edf6ea1160bef55559a75b9e3fa00559899390a42c9cf261b14ec",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\late-build-capture.json",
+      "duration_seconds": 22.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -30.1,
+      "gameplay_audio_peak_db": -4.9,
+      "authenticity": "Natural Main Run from full normal launch, real seeded offers/ranks/mutations, ordinary enemy AI and Threat Director. Same sampled controller and preference selector as diagnose_roster_runs. Every fast-forward tick executed; no direct RPM/enemy/proc edits, no protected outcome.",
+      "runs": [
+        {
+          "preset": null,
+          "seed": 421,
+          "active_window": [
+            250,
+            271.766666666748
+          ],
+          "rpm_range_in_window": [
+            0.871766436047422,
+            1.11350601609584
+          ],
+          "procs": {
+            "chain_burst": 5,
+            "chain_impact": 15,
+            "chain_prime": 17,
+            "impact_wake": 40,
+            "redline": 40,
+            "redline_heat": 2,
+            "redline_overcap": 35,
+            "runaway_hit": 56
+          },
+          "events_in_window": [
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 61,
+              "time": 250.300000000091
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 64,
+              "time": 251.416666666759
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 64,
+              "time": 262.783333333423
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 65,
+              "time": 266.983333333419
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 64,
+              "time": 269.233333333417
+            },
+            {
+              "generation": 0,
+              "kind": "runaway_hit",
+              "owner": 1,
+              "root": 0,
+              "target": 64,
+              "time": 271.066666666749
+            }
+          ],
+          "simulation_ms": {
+            "max": 36.861,
+            "median": 1.169,
+            "p95": 2.309,
+            "samples": 1320
+          },
+          "draw_submission_ms": {}
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 0.5,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\late_build-0.50.png"
+        },
+        {
+          "movie_time": 5.0,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\late_build-5.00.png"
+        },
+        {
+          "movie_time": 12.0,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\late_build-12.00.png"
+        }
+      ]
+    },
+    {
+      "name": "drift",
+      "required": false,
+      "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_drift.mp4",
+      "size_bytes": 1574700,
+      "sha256": "3dc66fe3a21d050291dc3924256bca8c8c7bc616352dbc580b9384111430df28",
+      "capture_manifest": "C:\\GPT GAME BUILDING\\task-002c5-qa\\drift-capture.json",
+      "duration_seconds": 16.0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "fps": 60,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "gameplay_audio_mean_db": -41.1,
+      "gameplay_audio_peak_db": -12.1,
+      "authenticity": "Explicit opening build (and central-orbit pose for movement comparisons), full launch reserve; only steering/Burst/brake after setup. Real continuous Threat Director, rivals, RPM costs/rewards. Fast-forward executes the same ticks. No reserve edits, forced procs or protected outcomes. Static QA excluded.",
+      "runs": [
+        {
+          "preset": {
+            "label": "FLOW STATE + ORBIT DRIVE / BRAKE -> CARVE -> RELEASE",
+            "mutations": {
+              "high_gear": "flow_state"
+            },
+            "policy": "orbit",
+            "ranks": {
+              "high_gear": 3,
+              "momentum_bank": 2,
+              "orbit_drive": 2
+            },
+            "seconds": 16.0,
+            "starter": "vane"
+          },
+          "seed": 421,
+          "active_window": [
+            0,
+            16.0000000000004
+          ],
+          "rpm_range_in_window": [
+            0.862105706842752,
+            0.986947113345912
+          ],
+          "procs": {},
+          "events_in_window": [],
+          "simulation_ms": {
+            "max": 1.425,
+            "median": 0.531,
+            "p95": 0.827,
+            "samples": 960
+          },
+          "draw_submission_ms": {
+            "max": 0.685,
+            "median": 0.242,
+            "p95": 0.393,
+            "samples": 600
+          }
+        }
+      ],
+      "extracted_encoded_frames": [
+        {
+          "movie_time": 2.65,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-2.65.png"
+        },
+        {
+          "movie_time": 5.65,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-5.65.png"
+        },
+        {
+          "movie_time": 8.65,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-8.65.png"
+        },
+        {
+          "movie_time": 11.65,
+          "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-11.65.png"
+        }
+      ],
+      "actual_drift_samples": [
+        {
+          "time": 2.51666666666666,
+          "speed": 216.445861816406,
+          "rpm": 0.975585923858618,
+          "orbit_charge": 1.0
+        },
+        {
+          "time": 2.76666666666666,
+          "speed": 207.038650512695,
+          "rpm": 0.974723270991897,
+          "orbit_charge": 1.0
+        },
+        {
+          "time": 5.51666666666665,
+          "speed": 198.803161621094,
+          "rpm": 0.950646720528595,
+          "orbit_charge": 0.341
+        },
+        {
+          "time": 5.76666666666665,
+          "speed": 192.495712280273,
+          "rpm": 0.9494302745599,
+          "orbit_charge": 0.521
+        },
+        {
+          "time": 8.5,
+          "speed": 218.255767822266,
+          "rpm": 0.939278395058802,
+          "orbit_charge": 1.0
+        },
+        {
+          "time": 8.75000000000001,
+          "speed": 186.961471557617,
+          "rpm": 0.91508170433714,
+          "orbit_charge": 0.048
+        },
+        {
+          "time": 11.5000000000002,
+          "speed": 209.709457397461,
+          "rpm": 0.906073281105607,
+          "orbit_charge": 1.0
+        },
+        {
+          "time": 11.7500000000002,
+          "speed": 211.389541625977,
+          "rpm": 0.905106894628051,
+          "orbit_charge": 1.0
+        }
+      ],
+      "maximum_actual_orbit_charge": 1.0
+    }
+  ],
+  "finite_audio_cues": {
+    "redline_overcap": {
+      "file": "redline_overcap.wav",
+      "duration_ms": 310,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4484,
+      "sha256": "178279b3362df9258a62ce3d536bc204b9b0941155056876cf1a2a947711785a"
+    },
+    "redline_heat": {
+      "file": "redline_heat.wav",
+      "duration_ms": 270,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3167,
+      "sha256": "390c19974d8580914c14f6956a07522f1526aaee2c79a1c23e7b0c6a65f18da3"
+    },
+    "clutch_activate": {
+      "file": "clutch_activate.wav",
+      "duration_ms": 300,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3725,
+      "sha256": "1dfbe3fa024578d8c39fe953d6988a263df33119938730f83d8c17e176f72b2c"
+    },
+    "clutch_recover": {
+      "file": "clutch_recover.wav",
+      "duration_ms": 340,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3334,
+      "sha256": "4a9a42e6ecbc71abddcc519855d6ea5d9e3b73dc6d7837d6f8a5304ed0fd3e7b"
+    },
+    "high_gear_surge": {
+      "file": "high_gear_surge.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.3654,
+      "sha256": "f938d3082ee63b25a9d53ebb7b2ced8b71b1161d54bf0d0813ac83a63da92c65"
+    },
+    "ghost_preview": {
+      "file": "ghost_preview.wav",
+      "duration_ms": 120,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.0979,
+      "sha256": "e2edacc7a8c135f6db5db9b4c0f3919107013f565d85ebd60ff727889ad1d5c3"
+    },
+    "ghost_latch": {
+      "file": "ghost_latch.wav",
+      "duration_ms": 400,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4253,
+      "sha256": "4560f6175df10dc58acc09097cde0d435519923ec847ca8957f06168aa04a8f1"
+    },
+    "iron_comet_charge": {
+      "file": "iron_comet_charge.wav",
+      "duration_ms": 280,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4713,
+      "sha256": "f4ae62f31fbd441d246e047fdcad4cd65ae20c1f0b3fcd695d9759e27eaa504b"
+    },
+    "iron_comet_release": {
+      "file": "iron_comet_release.wav",
+      "duration_ms": 370,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.698,
+      "sha256": "aabf80a6b4bcecdea523512f8f748ec89c2f1826267e74a6b784cb15c54cfa60"
+    },
+    "momentum_release": {
+      "file": "momentum_release.wav",
+      "duration_ms": 240,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4739,
+      "sha256": "3e5dc9854a8b164cb46d8bbd35e1d425d14e1ed64e6c1254c2f1d62aa8be5b62"
+    },
+    "crash_guard": {
+      "file": "crash_guard.wav",
+      "duration_ms": 200,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.4609,
+      "sha256": "dc71c464aa9f4ec45e0648ce4cccd95437125672cfae23ec54dfc203c6edf436"
+    },
+    "crosscut": {
+      "file": "crosscut.wav",
+      "duration_ms": 220,
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_bits": 16,
+      "loop": false,
+      "peak": 0.333,
+      "sha256": "29c251064919885482d0d2406ff7c4c70de6c1e597c42a183b4b9943671f09df"
+    }
+  },
+  "runtime_source_sha256": {
+    "scripts/battle.gd": "102c19993aebaeb4608f3d3b08dbccaf70e20bc806b8039c27c2762fac652c6b",
+    "scripts/power_runtime.gd": "a5b12cae5b85508a1b9cb1652f8b9778b0b20fd8b546acfc4b6e7e09b35d9827",
+    "scripts/roster_runtime.gd": "b68b292428ab325074ac57e63bce5a1916d8376f5ad77318746e4ed0d227bad0",
+    "scripts/power_visuals.gd": "e1df36fb8bef0c37aba85a948cd007e355a5e40d030047ccc01aea706e4c297d",
+    "scripts/signature_visuals.gd": "561f46f1e13834b10c07209b6b91db50ed28e4c332c403da12f881160d338e4f",
+    "scripts/sound.gd": "aad89a582425007fc58600f47bc5a1c92f7065e3669bf09bc2d64fd6df925d11"
+  },
+  "static_matrix": {
+    "scope": "Eighteen labelled static native 640\u00d7360 QA states; never gameplay evidence.",
+    "directory": "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final",
+    "frames": [
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\bank_guard_hunt.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\breakneck_commitment.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\clutch_danger.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\clutch_recover.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\comet_aftermath.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\comet_charge.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\comet_flight.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\comet_impact.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\flow_state.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\gear_I.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\gear_II.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\ghost_payoff.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\ghost_preview.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\orbit_drift.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\redline_extreme_heat.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\redline_overcap.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\runaway_overcap.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\matrix-final\\terminal_velocity.png"
+    ]
+  },
+  "held_stress_performance": {
+    "cap_fx": 32,
+    "draw_submission_ms": {
+      "max": 1.427,
+      "median": 0.742,
+      "p95": 0.965,
+      "samples": 419
+    },
+    "frame_wall_ms": {
+      "max": 8.451,
+      "median": 4.808,
+      "p95": 5.649,
+      "samples": 419
+    },
+    "gpu": "NVIDIA GeForce GTX 1660",
+    "max_fx": 32,
+    "processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+    "render_draw_calls": 47.0,
+    "scope": "Explicit held12-small-body/seven-family/32-FX stress fixture with synthetic visual states, never natural gameplay or survival evidence. Native640x360, VSyncdisabled. CPU draw submission excludes asynchronous GPU; wall frame includes harness.",
+    "simulation_ms": {
+      "max": 6.329,
+      "median": 3.316,
+      "p95": 3.851,
+      "samples": 419
+    },
+    "small_bodies": 12
+  },
+  "automated_regression": {
+    "latest_source_suites": 29,
+    "checks": 34759,
+    "roster_presentation_checks": 3621,
+    "source": "C:\\GPT GAME BUILDING\\topgame-task-002c5\\tests\\task002c5-regression-results.json"
+  },
+  "agent_frame_review": {
+    "status": "complete",
+    "scope": "Agent inspection of representative frames extracted from the final encoded MP4s; no physical phone test or human acceptance claimed.",
+    "reviewed_frames": [
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_overcap-0.70.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_overcap-13.90.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\redline_mutation-16.40.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\speed_build-3.50.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\speed_build-11.50.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-4.25.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\ghost_circuit-8.50.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-0.95.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-2.00.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-4.80.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\iron_comet-5.10.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-5.20.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-8.90.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\comeback-10.40.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\late_build-5.00.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\late_build-12.00.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-5.65.png",
+      "C:\\GPT GAME BUILDING\\task-002c5-qa\\encoded-frames\\drift-8.65.png"
+    ],
+    "findings": [
+      "Overcap rotor layers and fractured extreme-heat cues remain distinct with the Top visible.",
+      "Runaway contact escalation is real; five paid hits recorded.",
+      "Baseline and Flow State passes use the same Vane and orbit controller; developed movement is visibly faster.",
+      "Ghost shows two clamp endpoints and a dashed bridge before closure; three actual enclosed-target activations follow.",
+      "Iron Comet charge, rotor flight, contact sparks and scrape aftermath keep the machine silhouette visible. Caption is in the empty footer and wholly inside the frame. No filled wedge.",
+      "Clutch shows genuine 22% low reserve and two successful earned catches on the same Top, with no relaunch or revive.",
+      "The natural late Run retains its actual HUD, six earned families and a real Rank II draft.",
+      "Bonus drift shows actual drift_active and orbit_charge, curved scrape wakes and release; collisions can interrupt the arc."
+    ]
+  },
+  "limits": [
+    "No physical phone inspection or human acceptance claimed.",
+    "CPU draw submission excludes asynchronous GPU; held stress wall measurements include harness overhead.",
+    "Opening builds are labelled controlled; only late_build shows a naturally drafted build. Comeback starts at normal reserve, fast-forwards real inputs and retains the same player."
+  ],
+  "mobile_review_bundle": {
+    "path": "C:\\GPT GAME BUILDING\\task-002c5-qa\\002c5_mobile_review.zip",
+    "size_bytes": 20713481,
+    "sha256": "2e79c7405c750b5369476b25f99a0ae226094777dbe4a848bb3818c233bb7b41",
+    "files": 10,
+    "includes": "Seven requested MP4s, one bonus drift MP4, provenance text and manifest; no large AVI sources."
+  }
+}

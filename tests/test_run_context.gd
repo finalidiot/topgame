@@ -34,13 +34,13 @@ func _test_seed_and_catalogs() -> void:
 		check(not seed_value in streams, "Independent RNG domains have distinct derived seeds")
 		check(seed_value == Seeds.derive(7341, domain), "Derivation does not consume mutable RNG state")
 		streams.append(seed_value)
-	check(Powers.IDS.size() == 12, "Twelve approved power IDs exist")
+	check(Powers.IDS.size() == 18, "Stable historic identities plus the expanded implemented roster exist")
 	var ids: Dictionary = {}
 	for power_id: String in Powers.IDS:
 		var definition: Dictionary = Powers.get_power(power_id)
 		check(not ids.has(power_id) and definition.id == power_id, "Power identities are unique and explicit")
 		ids[power_id] = true
-		check(bool(definition.active) == (power_id in Powers.ACTIVE_IDS), "Only seven implemented powers are active")
+		check(bool(definition.active) == (power_id in Powers.ACTIVE_IDS), "Only current implemented families enter normal drafts")
 		if definition.active:
 			check(not str(definition.condition).is_empty() and definition.icon_frame >= 0, "Active power has a condition and signature icon")
 		check(not str(definition.name).is_empty() and not str(definition.description).is_empty() and definition.has("icon"), "Each power has card and future icon data")
@@ -130,7 +130,7 @@ func _test_complete_run() -> void:
 	check(run.status == "active" and run.slot == 9, "Eighth victory continues into threat nine")
 	var investments: int = 0
 	for rank: int in run.power_ranks.values(): investments += rank
-	check(run.owned_power_ids.size() <= 7 and run.committed_results.is_empty() and investments == run.committed_rewards.size(), "Continuous ownership retains each investment while retiring old threat claims")
+	check(run.owned_power_ids.size() <= Powers.ACTIVE_IDS.size() and run.committed_results.is_empty() and investments == run.committed_rewards.size(), "Continuous ownership retains each investment while retiring old threat claims")
 	check(not run.advance() and not run.commit_result("run_slot_08", true), "Old threat cannot advance or recommit a live Run")
 	run.clear()
 	check(run.status == "empty" and run.slot == 0 and run.run_seed == 0 and run.selected_build.is_empty(), "Leaving clears Run identity and assembly")

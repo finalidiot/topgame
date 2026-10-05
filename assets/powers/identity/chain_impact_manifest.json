@@ -1,0 +1,309 @@
+{
+  "family": "chain_impact",
+  "grammar": {
+    "silhouette": "Three recognizable spinning tops in the restored triangular collision relay",
+    "motion": "First contact expands locally; actual receivers react sequentially",
+    "location": "Paid collision/elimination source and snapshotted real recipients",
+    "persistence": "Finite 0.38s event; at most three native cels, no persistent player aura",
+    "palette": "Accepted warm orange/gold collision clusters and steel tops",
+    "feature": "Historical triangular top story plus causal source-to-recipient contact reactions"
+  },
+  "design": "assets/powers/identity/chain_impact_design.json",
+  "cards": {
+    "cell": [
+      64,
+      64
+    ],
+    "pivot": [
+      32,
+      32
+    ],
+    "layers": [
+      "industrial backplate",
+      "machine depth and chassis",
+      "authored moving bearings",
+      "pressure and trajectory",
+      "contact glints and fragments",
+      "Rank II second receiver follow-through"
+    ],
+    "tags": {
+      "chain_impact": {
+        "from": 0,
+        "to": 11
+      },
+      "chain_impact_ii": {
+        "from": 12,
+        "to": 23
+      }
+    },
+    "durations_ms": [
+      55,
+      55,
+      45,
+      45,
+      37,
+      38,
+      37,
+      38,
+      50,
+      50,
+      85,
+      85,
+      55,
+      55,
+      45,
+      45,
+      37,
+      38,
+      37,
+      38,
+      50,
+      50,
+      85,
+      85
+    ],
+    "columns": 12,
+    "frame_count": 24,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_cards.png"
+  },
+  "icons": {
+    "cell": [
+      16,
+      16
+    ],
+    "pivot": [
+      8,
+      8
+    ],
+    "layers": [
+      "Restored independent triangular chain silhouette",
+      "Rank II final contact pressure"
+    ],
+    "tags": {
+      "chain_impact": {
+        "from": 0,
+        "to": 0
+      },
+      "chain_impact_ii": {
+        "from": 1,
+        "to": 1
+      }
+    },
+    "durations_ms": [
+      120,
+      120
+    ],
+    "columns": 2,
+    "frame_count": 2,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_icons.png"
+  },
+  "fx": {
+    "cell": [
+      96,
+      80
+    ],
+    "pivot": [
+      48,
+      48
+    ],
+    "layers": [
+      "mechanical sectors",
+      "edge teeth",
+      "contact light",
+      "angular scars"
+    ],
+    "tags": {
+      "transmit": {
+        "from": 0,
+        "to": 7
+      },
+      "transmit_ii": {
+        "from": 8,
+        "to": 15
+      }
+    },
+    "durations_ms": [
+      22,
+      23,
+      45,
+      45,
+      45,
+      45,
+      22,
+      23,
+      22,
+      23,
+      45,
+      45,
+      45,
+      45,
+      22,
+      23
+    ],
+    "columns": 8,
+    "frame_count": 16,
+    "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+    "texture": "res://assets/powers/identity/chain_impact_fx.png"
+  },
+  "event_tags": {
+    "chain_impact": "transmit"
+  },
+  "active_tags": {},
+  "notes": "Restores bdcc24e card layers and independent icon Rank I exactly; six poses and total duration preserved through paired holds. Rank II develops the final contact without changing composition. Original native128 pressure source plus at most two real recipient contact cels retain the current three-cel draw bound. Receiver metadata and physics are untouched.",
+  "historical_fx": {
+    "cell": [
+      128,
+      128
+    ],
+    "pivot": [
+      64,
+      64
+    ],
+    "layers": [
+      "mechanical sectors",
+      "edge teeth",
+      "contact light",
+      "angular scars"
+    ],
+    "tags": {
+      "contact_arc": {
+        "from": 0,
+        "to": 5
+      },
+      "pressure": {
+        "from": 6,
+        "to": 13
+      },
+      "echo": {
+        "from": 14,
+        "to": 19
+      },
+      "corona": {
+        "from": 20,
+        "to": 27
+      },
+      "recovery": {
+        "from": 28,
+        "to": 35
+      },
+      "comet_headings": {
+        "from": 36,
+        "to": 43
+      },
+      "floor_stamp": {
+        "from": 44,
+        "to": 47
+      }
+    },
+    "durations_ms": [
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      65,
+      65,
+      65,
+      65,
+      65,
+      65,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      70,
+      70,
+      70,
+      70
+    ],
+    "texture": "res://assets/powers/effects.png",
+    "columns": 8,
+    "frame_count": 48,
+    "source": "assets/source-art/power_fx_002b.aseprite"
+  },
+  "art": {
+    "chain_impact": {
+      "family": "chain_impact",
+      "art_id": "chain_impact",
+      "source_tag": "chain_impact",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        37,
+        38,
+        37,
+        38,
+        50,
+        50,
+        85,
+        85
+      ]
+    },
+    "chain_impact_ii": {
+      "family": "chain_impact",
+      "art_id": "chain_impact_ii",
+      "source_tag": "chain_impact_ii",
+      "icon": "res://assets/powers/identity/chain_impact_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/identity/chain_impact_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 8,
+      "card_durations_ms": [
+        55,
+        55,
+        45,
+        45,
+        37,
+        38,
+        37,
+        38,
+        50,
+        50,
+        85,
+        85
+      ]
+    }
+  }
+}

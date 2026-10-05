@@ -1,0 +1,47 @@
+{
+  "visual_checks": [
+    {
+      "observation": "Breaker, Bastion and Vane actual first-top choices",
+      "name": "fresh starter selection",
+      "path": "09-starters.png"
+    },
+    {
+      "observation": "Breaker Smash/High/Flat confirmation",
+      "name": "starter confirmation",
+      "path": "09a-confirm.png"
+    },
+    {
+      "observation": "Breaker ownership and the three starter parts",
+      "name": "first ownership",
+      "path": "09b-owned.png"
+    },
+    {
+      "observation": "3/11 owned parts, equipped starter and Launch Owned Top",
+      "name": "owned Workshop",
+      "path": "09c-owned-workshop.png"
+    },
+    {
+      "observation": "Current physical power cards and 0/7 installed families",
+      "name": "current power draft",
+      "path": "10-starting-draft.png"
+    }
+  ],
+  "exit_code": 0,
+  "human_visual_acceptance_pending": true,
+  "smoke_marker": "INTEGRATION_SMOKE_PASS",
+  "stderr_bytes": 0,
+  "actual_save": {
+    "after_sha256": "21A020AF0ED88331966A1C988BBE96456664E655083EE34F1B8B44123751B48C",
+    "contents_inspected": false,
+    "unchanged": true,
+    "reset": false,
+    "path": "E:\\AppData\\Roaming\\Godot\\app_userdata\\Spinning Metal — Prototype\\collection.json",
+    "before_sha256": "21A020AF0ED88331966A1C988BBE96456664E655083EE34F1B8B44123751B48C"
+  },
+  "main_merged": false,
+  "continuous_threats": 10,
+  "overall_pass": true,
+  "binary_bytes": 110919880,
+  "binary_sha256": "156E27539D7A527B49F94D7C42E634499F7EBF7D24E1FC1F84397138E6C55A6F",
+  "scope": "Exact final Windows executable, isolated collection flow fixtures; not naturally earned drafting or art acceptance"
+}
