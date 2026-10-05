@@ -22,69 +22,14 @@ import workspace
 sys.path.insert(0, str(ROOT / "tools" / "build"))
 import windows_checkpoint as pipeline
 
-ASSET_PROBE = '''extends SceneTree
-## Separate read-only package inspection; no Main, battle or save is opened.
-func _initialize() -> void:
-    call_deferred("_run")
-
-func _run() -> void:
-    var output: String = ""
-    for arg: String in OS.get_cmdline_user_args():
-        if arg.begins_with("--asset-report="): output = arg.trim_prefix("--asset-report=")
-    if output.is_empty():
-        push_error("An external asset report path is required")
-        quit(2)
-        return
-    var data_path: String = "res://assets/data/parts_catalogue.json"
-    var catalogue_json: String = FileAccess.get_file_as_string(data_path)
-    var data: Variant = JSON.parse_string(catalogue_json)
-    if not data is Dictionary or int(data.get("schema_version", 0)) != 1:
-        push_error("The package does not contain the expected part catalogue JSON")
-        quit(2)
-        return
-    var records: Array[Dictionary] = []
-    var failures: Array[String] = []
-    for category: String in ["blade", "ratchet", "bit"]:
-        for id: String in data.categories[category]:
-            var part: Dictionary = data.categories[category][id]
-            var paths: Array[String] = [str(part.visual.sprite)]
-            if category == "blade": paths.append(str(part.visual.spin))
-            for path: String in paths:
-                var texture: Texture2D = (load(path) as Texture2D) if ResourceLoader.exists(path) else null
-                var spin: bool = path == str(part.visual.get("spin", ""))
-                var expected: Vector2i = Vector2i(384 if spin else 48, 48)
-                var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
-                var visible: bool = false
-                if texture != null:
-                    var pixels: Image = texture.get_image()
-                    visible = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
-                var valid: bool = texture != null and size == expected and visible
-                records.append({"part_id":category + ":" + id, "path":path,
-                    "size":[size.x, size.y], "visible_pixels":visible, "valid":valid})
-                if not valid: failures.append(path)
-    var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
-    if file == null:
-        push_error("Cannot write the external package asset report")
-        quit(2)
-        return
-    file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(data_path), "catalogue_json":catalogue_json,
-        "textures":records, "failures":failures, "read_only_asset_inspection":true}, "\\t"))
-    file.close()
-    if not failures.is_empty():
-        push_error("Packaged catalogue textures failed validation: " + str(failures))
-        quit(1)
-        return
-    print("PACKAGED_PART_ASSETS_PASS textures=", records.size())
-    quit(0)
-'''
-
-
 def check_engine_log(path: Path) -> dict:
     if not path.is_file():
         raise RuntimeError(f"Actual engine log was not produced: {path}")
     content = path.read_text(encoding="utf-8", errors="replace")
     if pipeline.ERRORS.search(content):
         raise RuntimeError(f"Engine errors in actual package log: {path}")
+    if "PACKAGED_PART_ASSETS_PASS textures=42" not in content:
+        raise RuntimeError(f"The actual compiled package probe did not complete: {path}")
     return {"path": str(path), "sha256": workspace.sha256(path)}
 
 
@@ -126,10 +71,9 @@ def main() -> None:
     run_id = uuid.uuid4().hex
     stem = "002c5_2_packaged_catalogue_" + run_id
     collection = task / "temp" / (stem + "_collection.json")
-    script = task / "temp" / (stem + "_asset_probe.gd")
     asset_report = task / "manifests" / (stem + "_assets.json")
     manifest = task / "manifests" / (stem + ".json")
-    if any(path.exists() for path in (collection, script, asset_report, manifest)):
+    if any(path.exists() for path in (collection, asset_report, manifest)):
         raise RuntimeError("Unique QA fixture unexpectedly already exists; no files were overwritten")
     source = ROOT / "assets/data/parts_catalogue.json"
     source_data = json.loads(source.read_text(encoding="utf-8"))
@@ -143,7 +87,7 @@ def main() -> None:
               "started_utc": datetime.now(timezone.utc).isoformat(), "exe": str(exe),
               "exe_sha256": workspace.sha256(exe), "source_catalogue_sha256": workspace.sha256(source),
               "profile_before": before, "child_environment": {"TOPGAME_QA_ROOT": str(qa_root)},
-              "evidence_scope": "Actual packaged isolated ownership plus a separate read-only asset probe; no gameplay outcomes injected"}
+              "evidence_scope": "Actual packaged isolated ownership and compiled read-only catalogue/texture probe; no gameplay outcomes injected"}
     prior_qa_root = os.environ.get("TOPGAME_QA_ROOT")
     try:
         # run_logged launches hidden Windows children. Its inherited environment
@@ -151,24 +95,22 @@ def main() -> None:
         os.environ["TOPGAME_QA_ROOT"] = str(qa_root)
         engine_log = task / "logs" / (stem + "_engine.log")
         command = [str(exe), "--headless", "--quit-after", "120", "--log-file", str(engine_log),
-                   "--", "--qa-catalogue", "--collection-path=" + str(collection)]
+                   "--", "--qa-catalogue", "--collection-path=" + str(collection),
+                   "--qa-assets-report=" + str(asset_report)]
         report["collection_process"] = pipeline.run_logged(command, task / "logs" / (stem + "_process.log"), 180)
         report["collection_engine_log"] = check_engine_log(engine_log)
         report["collection"] = verify_collection(collection, expected)
-        script.write_text(ASSET_PROBE, encoding="utf-8")
-        asset_engine_log = task / "logs" / (stem + "_asset_engine.log")
-        asset_command = [str(exe), "--headless", "--script", str(script), "--log-file", str(asset_engine_log),
-                         "--", "--asset-report=" + str(asset_report)]
-        report["asset_process"] = pipeline.run_logged(asset_command, task / "logs" / (stem + "_asset_process.log"), 180)
-        report["asset_engine_log"] = check_engine_log(asset_engine_log)
         assets = json.loads(asset_report.read_text(encoding="utf-8"))
         rows = assets.get("textures", [])
         # Git's clean snapshot may normalise text newlines. Compare decoded
         # catalogue content, while retaining both raw file hashes as evidence.
         if (json.loads(assets.get("catalogue_json", "null")) != source_data
-                or assets.get("failures") != [] or len(rows) != len(expected_textures)
+                or assets.get("failures") != [] or assets.get("read_only_asset_inspection") is not True
+                or len(rows) != len(expected_textures)
                 or {row["path"] for row in rows} != expected_textures
-                or not all(row.get("valid") is True for row in rows)):
+                or not all(row.get("valid") is True and row.get("visible_pixels") is True
+                           and row.get("size") == ([384, 48] if row["path"].endswith("_spin.png") else [48, 48])
+                           for row in rows)):
             raise RuntimeError("Actual package JSON or all 42 visible component textures differ from current source")
         report["assets"] = {"path": str(asset_report), "sha256": workspace.sha256(asset_report),
                             "textures_verified": len(rows), "catalogue_matches_source": True,

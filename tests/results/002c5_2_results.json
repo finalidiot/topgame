@@ -195,5 +195,19 @@
   },
   "evidence_root": "C:/GPT GAME BUILDING/GyroBrothers-QA/002C.5.2",
   "windows_validation_record": "builds/checkpoints/002C.5.2/build-manifest.json",
-  "scope": "Compact diagnostic evidence. No win-rank/balance/human acceptance claim; exact final SHA and gated packaged results are recorded after commit in the external checkpoint manifest."
+  "scope": "Compact diagnostic evidence. No win-rank/balance/human acceptance claim; exact final SHA and gated packaged results are recorded after commit in the external checkpoint manifest.",
+  "post_package_probe_regression": {
+    "suites": 6,
+    "checks": 9620,
+    "profile_unchanged": true,
+    "passed_suite_names": [
+      "collection_save",
+      "collection_ui",
+      "flow",
+      "menus",
+      "controller",
+      "parts_package"
+    ]
+  },
+  "package_probe_note": "Release templates do not support the editor --script override. Final validation uses a compiled scoped QA inspection; initial timed-out evidence is retained externally and no candidate is promoted on failure."
 }

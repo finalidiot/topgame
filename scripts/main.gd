@@ -9,6 +9,7 @@ const Starters = preload("res://scripts/starters.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Encounters = preload("res://scripts/encounters.gd")
 const Collection = preload("res://scripts/collection_save.gd")
+const PackageProbe = preload("res://scripts/parts_package_probe.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -30,6 +31,8 @@ var _collection_reset_failed: bool = false
 ## Full catalogue access is only enabled for an explicitly isolated QA save.
 var qa_catalogue_requested: bool = false
 var qa_catalogue_error: String = ""
+var qa_assets_report: String = ""
+var qa_assets_report_requested: bool = false
 var preferences_path: String = "user://prototype.cfg"
 var _ownership_remaining: float = 0.0
 var _first_starter_focus: String = "breaker"
@@ -76,10 +79,18 @@ func _ready() -> void:
 		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
 		if argument == "--reset-collection": reset_collection_requested = true
 		if argument == "--qa-catalogue": qa_catalogue_requested = true
+		if argument.begins_with("--qa-assets-report="):
+			qa_assets_report_requested = true
+			qa_assets_report = argument.trim_prefix("--qa-assets-report=")
+	qa_assets_report_requested = qa_assets_report_requested or not qa_assets_report.is_empty()
 	if smoke_mode: rng.seed = 7341
 	if qa_catalogue_requested and not _is_isolated_catalogue_path(collection_path):
 		qa_catalogue_error = "Catalogue QA requires an absolute --collection-path inside the configured GyroBrothers-QA/002C.5.2/temp folder. No parts were granted and your player save was not opened."
 		collection_path = "user://test_collection/refused_qa_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+		reset_collection_requested = false
+	if qa_assets_report_requested and (not qa_catalogue_requested or not qa_catalogue_error.is_empty() or not _is_isolated_assets_report(qa_assets_report)):
+		qa_catalogue_error = "Package asset QA requires --qa-catalogue, an isolated QA collection, and a new absolute JSON report inside GyroBrothers-QA/002C.5.2/manifests. No player save was opened and no existing report was replaced."
+		collection_path = "user://test_collection/refused_probe_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
 		reset_collection_requested = false
 	if collection_path.is_empty():
 		collection_path = "user://test_collection/main_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()] if smoke_mode else "user://collection.json"
@@ -117,11 +128,20 @@ func _ready() -> void:
 	if _collection_reset_failed:
 		_collection_error("The explicitly requested collection reset could not finish. Close other game instances and check the save folder before retrying.")
 	if not qa_catalogue_error.is_empty(): _collection_error(qa_catalogue_error)
-	if smoke_mode: call_deferred("_smoke_test")
+	if qa_assets_report_requested:
+		if qa_catalogue_error.is_empty(): call_deferred("_run_qa_assets_probe")
+		else: call_deferred("_finish_qa_assets_probe", {"ok":false, "error":qa_catalogue_error})
+	elif smoke_mode: call_deferred("_smoke_test")
 	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 
 func _is_isolated_catalogue_path(path: String) -> bool:
+	return _is_isolated_qa_path(path, "temp")
+
+func _is_isolated_assets_report(path: String) -> bool:
+	return _is_isolated_qa_path(path, "manifests") and not FileAccess.file_exists(path) and not DirAccess.dir_exists_absolute(path)
+
+func _is_isolated_qa_path(path: String, folder: String) -> bool:
 	# Require the designated external QA tree, never res://, user:// or a player
 	# profile renamed in-place. Explicit TOPGAME_QA_ROOT remains supported.
 	var normalized: String = path.replace("\\", "/").simplify_path()
@@ -129,11 +149,26 @@ func _is_isolated_catalogue_path(path: String) -> bool:
 	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
 	var project_folder: String = ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/")
 	var qa_root: String = configured if not configured.is_empty() else project_folder.get_base_dir().path_join("GyroBrothers-QA")
-	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.5.2/temp").to_lower() + "/"
+	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.5.2/" + folder).to_lower() + "/"
 	var repository: String = ProjectSettings.globalize_path("res://").replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
 	var userdata: String = OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
 	var candidate: String = normalized.to_lower()
 	return candidate.begins_with(allowed) and not candidate.begins_with(repository) and not candidate.begins_with(userdata) and candidate.get_extension() == "json"
+
+func _run_qa_assets_probe() -> void:
+	# Exported release templates omit the editor's --script entry point. This
+	# compiled probe is reachable only through the scoped QA boot flags above.
+	if not qa_catalogue_requested or not qa_catalogue_error.is_empty() or not _is_isolated_assets_report(qa_assets_report):
+		_finish_qa_assets_probe({"ok":false, "error":"Package asset QA report path is no longer safe or already exists."})
+		return
+	_finish_qa_assets_probe(PackageProbe.inspect(qa_assets_report))
+
+func _finish_qa_assets_probe(result: Dictionary) -> void:
+	if bool(result.get("ok", false)):
+		print("PACKAGED_PART_ASSETS_PASS textures=", int(result.get("textures", 0)))
+	else:
+		push_error(str(result.get("error", "Packaged part assets failed validation.")))
+	get_tree().quit(0 if bool(result.get("ok", false)) else 1)
 
 func _prepare_qa_catalogue() -> void:
 	if collection.read_only:
