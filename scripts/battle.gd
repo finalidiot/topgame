@@ -12,6 +12,7 @@ signal threat_cleared(summary: Dictionary)
 signal threat_started(summary: Dictionary)
 
 const Catalog = preload("res://scripts/parts.gd")
+const PartPhysics = preload("res://scripts/part_physics.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
 const PowerRuntime = preload("res://scripts/power_runtime.gd")
 const RosterRuntime = preload("res://scripts/roster_runtime.gd")
@@ -254,9 +255,11 @@ func add_full_top(build: Dictionary, entity_id: int, team_id: String, owner_id: 
 func _make_fighter(build: Dictionary, entity_id: int, team_id: String, owner_id: String, start: Vector2, launch_velocity: Vector2, ai_rng: RandomNumberGenerator) -> Dictionary:
 	var clean: Dictionary = Catalog.validate_build(build)
 	var stats: Dictionary = Catalog.derive(clean)
-	var radius: float = {"balance": 12.2, "smash": 13.1, "guard": 13.5, "hook": 12.5}[clean["blade"]]
+	var physical: Dictionary = Catalog.derive_physics(clean)
+	var radius: float = float(physical.radius)
 	return {
 		"build": clean, "stats": stats, "pos": start,
+		"part_physics":physical, "spin_angle":0.0, "part_clock":0.0, "part_contacts":{},
 		"entity_id": entity_id, "team_id": team_id, "owner_id": owner_id,
 		"combatant_type": "full_top", "launch_velocity": launch_velocity, "powers": [], "impulse_time": 0.0,
 		"power_ranks": {}, "power_mutations": {}, "anchor_charge": 0.0, "stored_force": 0.0,
@@ -264,7 +267,7 @@ func _make_fighter(build: Dictionary, entity_id: int, team_id: String, owner_id:
 		"ai_clock": 0.0, "ai_direction": Vector2.ZERO,
 		"ai_burst_delay": 2.5 + ai_rng.randf_range(0.0, 1.1),
 		"vel": Vector2.ZERO, "rpm": 1.0, "energy": 1.0, "wobble": 0.0,
-		"mass": 3.8 + float(stats["mass"]) * 0.56, "radius": radius,
+		"mass": (3.8 + float(stats["mass"]) * 0.56) * float(physical.mass), "radius": radius,
 		"cooldown": 0.0, "burst_time": 0.0, "height": 0.0,
 		"height_vel": 0.0, "phase": _cosmetic_rng.randf_range(0.0, 8.0),
 		"impact_time": 0.0, "impact_strength": 0.0, "outcome": "",
@@ -410,6 +413,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_launch_time += dt
 		for fighter: Dictionary in fighters:
 			fighter["phase"] = fmod(float(fighter["phase"]) + dt * 19.0, 8.0)
+			if PartPhysics.active(fighter): fighter.spin_angle = fposmod(float(fighter.spin_angle)+dt*19.0*TAU/8.0,TAU)
 			fighter["height"] = maxf(0.0, 20.0 * (1.0 - _launch_time / 0.45))
 		if _launch_time >= 0.45:
 			battle_status = "battle"
@@ -459,6 +463,9 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 				fighter["ai_burst_delay"] = ai_rng.randf_range(2.0, 3.8)
 	var starts: Dictionary = {}
 	var has_small: bool = swarm.active_count() > 0
+	var sliced_motion: bool = has_small
+	for fighter: Dictionary in ordered:
+		if _is_live(fighter) and PartPhysics.active(fighter): sliced_motion = true
 	for fighter: Dictionary in ordered:
 		if not _is_live(fighter): continue
 		starts[int(fighter.entity_id)] = fighter.pos
@@ -467,9 +474,9 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		else:
 			var controlled: bool = str(fighter["owner_id"]) == PLAYER_OWNER
 			_update_fighter(fighter, player_world_direction if controlled else Vector2(fighter["ai_direction"]), brake if controlled else _ai_should_brake(fighter), dt)
-	if has_small:
-		# Four bounded motion slices: even opposing 400-unit/s bodies move less
-		# than their combined radius per slice. Full-top no-swarm path is unchanged.
+	if sliced_motion:
+		# Four bounded slices also protect compact/offset component contacts at
+		# the 520-unit ceiling. The legacy no-swarm path retains its parent step.
 		for fighter: Dictionary in ordered:
 			if starts.has(int(fighter.entity_id)): fighter.pos = starts[int(fighter.entity_id)]
 		for slice: int in range(4):
@@ -647,6 +654,15 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	modifiers = roster.movement(fighter,modifiers,dt)
 	direction = modifiers["direction"]
 	braking = bool(modifiers["braking"])
+	var component_motion: bool = PartPhysics.active(fighter)
+	var physical: Dictionary = PartPhysics.coefficients(fighter)
+	var surface_grip: float = 1.0
+	if component_motion:
+		fighter.part_clock = float(fighter.part_clock)+dt
+		surface_grip = PartPhysics.grip(fighter,float(fighter.part_clock))
+		modifiers.drain = float(modifiers.drain)*float(physical.rpm_drain)
+		var bend: float = float(physical.curve)*clampf(Vector2(fighter.vel).length()/220.0,0.0,1.0)
+		direction = direction.rotated(bend)
 	var stats: Dictionary = fighter["stats"]
 	var position_world: Vector2 = fighter["pos"]
 	var velocity_world: Vector2 = fighter["vel"]
@@ -662,6 +678,9 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	top_speed *= float(handling.get("speed", 1.0))
 	acceleration *= float(modifiers["acceleration"])
 	top_speed *= float(modifiers["speed"])
+	if component_motion:
+		acceleration *= float(physical.acceleration)*float(physical.control)*surface_grip/sqrt(float(physical.inertia))
+		top_speed *= float(physical.speed)
 	var burst_time: float = maxf(0.0, float(fighter["burst_time"]) - dt)
 	if burst_time > 0.0 or powers.redline_active(fighter):
 		acceleration *= 1.65
@@ -674,21 +693,29 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var radial_distance: float = position_world.length()
 	if radial_distance > 2.0:
 		var bank: float = maxf(0.0, radial_distance - 105.0) * 0.83
-		acceleration_world -= position_world.normalized() * (9.0 + bank) * float(handling.get("bank", 1.0))
+		acceleration_world -= position_world.normalized() * (9.0 + bank) * float(handling.get("bank", 1.0)) * (float(physical.bank) if component_motion else 1.0)
 		var tangent: Vector2 = Vector2(-position_world.y, position_world.x).normalized()
-		acceleration_world += tangent * (6.0 + rpm * 8.0) * float(handling.get("orbit", 1.0))
+		acceleration_world += tangent * (6.0 + rpm * 8.0) * float(handling.get("orbit", 1.0)) * (float(physical.orbit) if component_motion else 1.0)
+		if component_motion:
+			acceleration_world -= position_world.normalized()*float(physical.centre_hold)*minf(1.0,radial_distance/35.0)
+	if component_motion and float(physical.sway) > 0.0:
+		acceleration_world += Vector2.from_angle(float(fighter.spin_angle))*float(physical.sway)*(0.35+velocity_world.length()/180.0)
 	velocity_world += acceleration_world.limit_length(float(modifiers["acceleration_limit"])) * dt
 	var drag: float = 0.54 + grip * 0.030
+	if component_motion: drag *= float(physical.drag)*surface_grip
 	drag += float(modifiers["drag"])
 	if braking:
-		drag += (3.8 + grip * 0.20)*float(modifiers.get("brake_drag_scale",1.0))*float(modifiers.get("braking_efficiency",1.0))
+		drag += (3.8 + grip * 0.20)*float(modifiers.get("brake_drag_scale",1.0))*float(modifiers.get("braking_efficiency",1.0)) * (float(physical.brake)*surface_grip if component_motion else 1.0)
 	velocity_world *= exp(-drag * dt)
+	if component_motion and direction.length_squared() > 0.001 and float(physical.lateral_drag) > 0.0:
+		var lateral: Vector2 = direction.normalized().orthogonal()
+		velocity_world -= lateral*velocity_world.dot(lateral)*(1.0-exp(-float(physical.lateral_drag)*dt))
 	if float(fighter.get("impulse_time",0.0)) > 0.0:
 		top_speed = maxf(top_speed, 340.0)
 		fighter["impulse_time"] = maxf(0.0, float(fighter.impulse_time)-dt)
 	velocity_world = roster.velocity(fighter,Vector2(fighter.vel),velocity_world.limit_length(top_speed),dt)
 	# Expanded movement combinations and overclock share a finite safety ceiling.
-	if continuous != null or ability_rebalance: velocity_world = velocity_world.limit_length(RosterRuntime.SPEED_CLAMP)
+	if continuous != null or ability_rebalance or component_motion: velocity_world = velocity_world.limit_length(RosterRuntime.SPEED_CLAMP)
 	position_world += velocity_world * dt
 	# Low spin loses both control and stability. Braking buys position at a
 	# measurable spin cost; attack bits naturally spend more reserve.
@@ -696,14 +723,22 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var moving_loss: float = velocity_world.length() / 230.0 * 0.0014
 	var brake_loss: float = 0.0055 if braking else 0.0
 	var wobble_loss: float = float(fighter["wobble"]) * 0.0048
+	var turning_loss: float = 0.0
+	if component_motion and direction.length_squared() > 0.001 and velocity_world.length() > 1.0:
+		turning_loss = float(physical.turn_cost)*(1.0-clampf(direction.normalized().dot(velocity_world.normalized()),-1.0,1.0))*velocity_world.length()/230.0
 	if continuous != null and int(fighter.entity_id) == player_entity_id:
 		continuous.economy.running_costs(fighter,velocity_world.length(),direction,braking,float(modifiers.drain),dt)
+		if turning_loss > 0.0: spend_rpm(fighter,turning_loss*dt,"steering")
 		rpm = fighter.rpm
 	else:
-		rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]))
+		rpm = maxf(0.0, rpm - (natural_loss + moving_loss + brake_loss + wobble_loss) * dt * float(handling.get("spin_drain", 1.0)) * float(modifiers["drain"]) - turning_loss*dt)
 	var low_spin_wobble: float = clampf((0.32 - rpm) * 2.5, 0.0, 0.80)
 	var current_wobble: float = float(fighter["wobble"])
-	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0))*float(modifiers.get("recovery",1.0)))
+	if component_motion:
+		current_wobble += float(physical.imbalance)*(0.65+velocity_world.length()/140.0)*dt
+		if float(physical.grip_threshold) > 0.0:
+			current_wobble += float(physical.high_speed_wobble)*clampf((velocity_world.length()-float(physical.grip_threshold))/50.0,0.0,1.0)*dt
+	current_wobble = maxf(low_spin_wobble, current_wobble - (0.040 + stability * 0.007) * dt * float(handling.get("recovery", 1.0))*float(modifiers.get("recovery",1.0)) * (float(physical.wobble_recovery)*sqrt(float(physical.inertia)) if component_motion else 1.0))
 	fighter["pos"] = position_world
 	fighter["vel"] = velocity_world
 	fighter["rpm"] = rpm
@@ -713,6 +748,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	fighter["burst_time"] = burst_time
 	fighter["impact_time"] = maxf(0.0, float(fighter["impact_time"]) - dt)
 	fighter["phase"] = fmod(float(fighter["phase"]) + dt * (3.2 + powers.effective_rpm(fighter) * 13.5), 8.0)
+	if component_motion: fighter.spin_angle = fposmod(float(fighter.spin_angle)+dt*(3.2+powers.effective_rpm(fighter)*13.5)*TAU/8.0,TAU)
 	fighter["height_vel"] = float(fighter["height_vel"]) - 140.0 * dt
 	fighter["height"] = maxf(0.0, float(fighter["height"]) + float(fighter["height_vel"]) * dt)
 	if float(fighter["height"]) <= 0.0:
@@ -755,7 +791,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var b: Vector2 = second["pos"]
 	var difference: Vector2 = b - a
 	var distance: float = difference.length()
-	var min_distance: float = float(first["radius"]) + float(second["radius"])
+	var facing: Vector2 = difference/distance if distance > 0.001 else Vector2.RIGHT
+	var min_distance: float = PartPhysics.contact_radius(first,facing) + PartPhysics.contact_radius(second,-facing)
 	if distance >= min_distance:
 		return
 	var normal: Vector2 = difference / distance if distance > 0.001 else Vector2.RIGHT
@@ -772,6 +809,9 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		return
 	var a_stats: Dictionary = first["stats"]
 	var b_stats: Dictionary = second["stats"]
+	var a_contact: Dictionary = PartPhysics.contact_profile(first,normal,va-vb,elapsed,int(second.entity_id))
+	var b_contact: Dictionary = PartPhysics.contact_profile(second,-normal,vb-va,elapsed,int(first.entity_id))
+	var component_contact: bool = PartPhysics.active(first) or PartPhysics.active(second)
 	var a_burst: float = 1.43 if float(first["burst_time"]) > 0.0 else 1.0
 	var b_burst: float = 1.43 if float(second["burst_time"]) > 0.0 else 1.0
 	var a_attack: float = (0.66 + float(a_stats["power"]) * 0.073) * a_burst * (0.45 + powers.effective_rpm(first) * 0.55)
@@ -782,28 +822,31 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	b_attack *= powers.attack_multiplier(second)
 	a_attack *= roster.attack_multiplier(first,second)
 	b_attack *= roster.attack_multiplier(second,first)
+	a_attack *= float(a_contact.attack)
+	b_attack *= float(b_contact.attack)
 	var impulse: float = (1.70 * closing + 19.0) / inv_sum
+	if component_contact: impulse *= clampf(sqrt(float(a_contact.attack)*float(b_contact.attack)),0.70,1.30)
 	var attack_bias: float = clampf((a_attack - b_attack) * 0.19, -0.25, 0.25)
-	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias)
-	second["vel"] = vb + normal * impulse * inv_b * (1.0 + attack_bias)
-	# The glancing edge on Hook redirects a little impulse across the face.
+	first["vel"] = va - normal * impulse * inv_a * (1.0 - attack_bias) * float(a_contact.recoil)
+	second["vel"] = vb + normal * impulse * inv_b * (1.0 + attack_bias) * float(b_contact.recoil)
+	# Tangential face transfer includes the legacy Hook's exact 0.12 response.
 	var tangent: Vector2 = Vector2(-normal.y, normal.x)
-	if str(first["build"]["blade"]) == "hook":
-		second["vel"] = Vector2(second["vel"]) + tangent * closing * 0.12
-	if str(second["build"]["blade"]) == "hook":
-		first["vel"] = Vector2(first["vel"]) - tangent * closing * 0.12
-	if continuous != null or ability_rebalance:
+	if float(a_contact.tangent) != 0.0:
+		second["vel"] = Vector2(second["vel"]) + tangent * closing * float(a_contact.tangent)
+	if float(b_contact.tangent) != 0.0:
+		first["vel"] = Vector2(first["vel"]) - tangent * closing * float(b_contact.tangent)
+	if continuous != null or ability_rebalance or component_contact:
 		first.vel = Vector2(first.vel).limit_length(RosterRuntime.SPEED_CLAMP)
 		second.vel = Vector2(second.vel).limit_length(RosterRuntime.SPEED_CLAMP)
 	if float(_pair_cooldowns.get(pair_key, 0.0)) > 0.0:
 		return
-	_pair_cooldowns[pair_key] = 0.24
+	_pair_cooldowns[pair_key] = minf(float(a_contact.interval),float(b_contact.interval))
 	hits += 1
 	var severity: float = clampf(closing / 220.0, 0.08, 1.30)
 	var a_defense: float = 0.76 + float(a_stats["stability"]) * 0.055 + float(a_stats["mass"]) * 0.016
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
-	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first)
-	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second)
+	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first) * float(a_contact.shock) + float(a_contact.own_cost)
+	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second) * float(b_contact.shock) + float(b_contact.own_cost)
 	var actual_a: float = minf(float(first.rpm),loss_a)
 	var actual_b: float = minf(float(second.rpm),loss_b)
 	spend_rpm(first,loss_a,"collisions")
@@ -812,6 +855,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	second["energy"] = second["rpm"]
 	first["wobble"] = minf(1.0, float(first["wobble"]) + loss_a * 3.1)
 	second["wobble"] = minf(1.0, float(second["wobble"]) + loss_b * 3.1)
+	PartPhysics.remember_contact(first,int(second.entity_id),elapsed)
+	PartPhysics.remember_contact(second,int(first.entity_id),elapsed)
 	for fighter: Dictionary in [first, second]:
 		fighter["impact_time"] = 0.30 if severity > 0.5 else 0.18
 		fighter["impact_strength"] = severity
@@ -932,7 +977,8 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	var b: Vector2 = second.pos
 	var difference: Vector2 = b-a
 	var distance: float = difference.length()
-	var reach: float = float(first.radius)+float(second.radius)
+	var facing: Vector2 = difference/distance if distance > 0.001 else Vector2.RIGHT
+	var reach: float = PartPhysics.contact_radius(first,facing)+PartPhysics.contact_radius(second,-facing)
 	if distance >= reach: return
 	var normal: Vector2 = difference/distance if distance > 0.001 else Vector2.RIGHT
 	var inv_a: float = powers.inverse_mass(first)
@@ -944,14 +990,19 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 	var vb: Vector2 = second.vel
 	var closing: float = (va-vb).dot(normal)
 	if closing <= 0.0: return
+	var a_component: Dictionary = PartPhysics.contact_profile(first,normal,va-vb,elapsed,int(second.entity_id))
+	var b_component: Dictionary = PartPhysics.contact_profile(second,-normal,vb-va,elapsed,int(first.entity_id))
 	var impulse: float = (1.65*closing+7.0)/inv_sum
-	first.vel = (va-normal*impulse*inv_a).limit_length(400.0)
-	second.vel = (vb+normal*impulse*inv_b).limit_length(400.0)
+	first.vel = (va-normal*impulse*inv_a*float(a_component.recoil)).limit_length(400.0)
+	second.vel = (vb+normal*impulse*inv_b*float(b_component.recoil)).limit_length(400.0)
+	var contact_tangent: Vector2 = normal.orthogonal()
+	if PartPhysics.active(first): second.vel = (Vector2(second.vel)+contact_tangent*closing*float(a_component.tangent)).limit_length(400.0)
+	if PartPhysics.active(second): first.vel = (Vector2(first.vel)-contact_tangent*closing*float(b_component.tangent)).limit_length(400.0)
 	for f: Dictionary in [first,second]:
 		if f.combatant_type == "small_top": f.impulse_time = 0.4
 	var key: String = "%d:%d" % [int(first.entity_id),int(second.entity_id)]
 	if float(_pair_cooldowns.get(key,0.0)) > 0.0: return
-	_pair_cooldowns[key] = 0.24
+	_pair_cooldowns[key] = minf(float(a_component.interval),float(b_component.interval))
 	var severity: float = clampf(closing/220.0,0.08,1.3)
 	var attack_outputs: Dictionary = {
 		int(first.entity_id): powers.attack_multiplier(first) * (1.43 if float(first.get("burst_time", 0.0)) > 0.0 else 1.0),
@@ -971,14 +1022,20 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 			var attack: float = (0.66+float(source.stats.power)*0.073)*(0.45+float(rpm_outputs[int(source.entity_id)])*0.55)
 			attack *= float(source.get("handling", {}).get("impact", 1.0))
 			attack *= float(attack_outputs[int(source.entity_id)])
+			attack *= float((a_component if int(source.entity_id) == int(first.entity_id) else b_component).attack)
 			loss = (0.045+severity*0.12)*attack
 		elif not powers.cause_for(source).is_empty():
 			loss = 0.01+severity*0.075
 		else: loss = severity*0.004
+		if PartPhysics.active(target):
+			var response: Dictionary = a_component if int(target.entity_id) == int(first.entity_id) else b_component
+			loss = loss*float(response.shock)+float(response.own_cost)*0.25
 		spend_rpm(target,loss,"collisions")
 		target.energy = target.rpm
 		target.impact_time = 0.12
 		target.impact_strength = severity
+	PartPhysics.remember_contact(first,int(second.entity_id),elapsed)
+	PartPhysics.remember_contact(second,int(first.entity_id),elapsed)
 	hits += 1
 	contact_accepted.emit(int(first.entity_id),int(second.entity_id))
 	# Swarm contacts never freeze the simulation; only important player contacts sound.
@@ -994,6 +1051,8 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 		fighter["outcome"] = "ring_out"
 		return
 	var velocity_world: Vector2 = fighter["vel"]
+	var component_boundary: bool = PartPhysics.active(fighter)
+	var physical: Dictionary = PartPhysics.coefficients(fighter)
 	var radius: float = float(fighter["radius"]) * 0.64
 	var axis_limit: float = WALL_AXIS - radius
 	var normals: Array[Vector2] = [Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN, Vector2.UP, Vector2(1.0, 1.0).normalized(), Vector2(-1.0, -1.0).normalized()]
@@ -1011,10 +1070,11 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 		position_world -= normal * overshoot
 		var outward: float = velocity_world.dot(normal)
 		if outward > 0.0:
-			velocity_world -= normal * outward * 1.66
-			velocity_world *= 0.91
-			spend_rpm(fighter,minf(0.019, outward * 0.000055),"walls")
-			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + minf(0.16, outward * 0.00055))
+			velocity_world -= normal * outward * (1.0+0.66*float(physical.wall_restitution) if component_boundary else 1.66)
+			velocity_world *= 0.91 * (float(physical.wall_retention) if component_boundary else 1.0)
+			if component_boundary: velocity_world += normal.orthogonal()*outward*float(physical.wall_tangent)
+			spend_rpm(fighter,minf(0.019, outward * 0.000055) * (float(physical.wall_cost) if component_boundary else 1.0),"walls")
+			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + minf(0.16, outward * 0.00055) * (float(physical.shock) if component_boundary else 1.0))
 			fighter["impact_time"] = 0.12
 			fighter["impact_strength"] = 0.3
 			powers.wall_rebound(fighter, outward, normal, position_world)
@@ -1022,7 +1082,7 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 				_spawn_sparks(project(position_world), -normal, 4, 0.6)
 				event_sfx.emit("wall")
 	fighter["pos"] = position_world
-	fighter["vel"] = velocity_world
+	fighter["vel"] = velocity_world.limit_length(RosterRuntime.SPEED_CLAMP) if component_boundary else velocity_world
 	fighter["energy"] = fighter["rpm"]
 
 # Full-top objectives use team elimination. For a timeout (or simultaneous
@@ -1368,8 +1428,9 @@ func _draw_fighter(fighter: Dictionary) -> void:
 	if float(fighter.rpm)<0.25: lean += Vector2(sin(_visual_time*19.0)*1.5,cos(_visual_time*11.0))
 	lean = lean.limit_length(5.0).round()
 	var build: Dictionary = fighter["build"]
-	var stance: float = {"low": 3.0, "mid": 0.0, "high": -3.0}[build["ratchet"]]
-	var phase: int = int(fighter["phase"]) % 8
+	var stance: float = Catalog.visual_height(build)
+	# Pixel art's planar x axis projects 45 degrees from world u.
+	var phase: int = (int(float(fighter.get("spin_angle",0.0))/TAU*8.0)+1)%8 if PartPhysics.active(fighter) else int(fighter["phase"])%8
 	var pose: Dictionary = PowerVisuals.recovery_pose(fighter, _power_fx)
 	if not pose.is_empty():
 		phase = int(pose.phase)

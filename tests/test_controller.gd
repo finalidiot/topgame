@@ -318,6 +318,8 @@ func _test_title_garage_settings() -> void:
 			var part: Control = game.menus._part_buttons[category][id]
 			if await _navigate(part): await _tap(JOY_BUTTON_A)
 			check(game.build[category] == id, "Gamepad selects %s part %s" % [category, id])
+			_focus_is_visible("Catalogue %s %s" % [category, id])
+			check(game.menus._part_scrolls[category].get_global_rect().encloses(part.get_global_rect()), "Controller focus scrolls the entire catalogue card into view")
 	await _capture("02-controller-garage")
 	var lost: Control = root.gui_get_focus_owner()
 	lost.release_focus()

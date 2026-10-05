@@ -1,0 +1,1207 @@
+{
+  "schema_version": 1,
+  "rarities": [
+    "TRASH",
+    "COMMON",
+    "UNCOMMON",
+    "RARE",
+    "EPIC",
+    "LEGENDARY"
+  ],
+  "categories": {
+    "blade": {
+      "balance": {
+        "name": "BALANCE",
+        "description": "A steady all-rounder. Enough punch to attack; enough reserve to recover.",
+        "stats": {
+          "mass": 6.0,
+          "power": 6.0,
+          "stamina": 6.0,
+          "grip": 5.0,
+          "speed": 6.0,
+          "stability": 6.0
+        },
+        "id": "balance",
+        "category": "blade",
+        "sort_order": 0,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "A steady all-rounder. Enough punch to attack; enough reserve to recover.",
+        "tradeoff": "A steady all-rounder. Enough punch to attack; enough reserve to recover.",
+        "physics": {
+          "radius": 12.2
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/balance.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/balance_spin.png"
+        }
+      },
+      "smash": {
+        "name": "SMASH",
+        "description": "Heavy impact lobes turn clean approaches into strong knockback. Spend your spin wisely.",
+        "stats": {
+          "mass": 8.0,
+          "power": 9.0,
+          "stamina": 4.0,
+          "grip": 4.0,
+          "speed": 6.0,
+          "stability": 4.0
+        },
+        "id": "smash",
+        "category": "blade",
+        "sort_order": 1,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "Heavy impact lobes turn clean approaches into strong knockback. Spend your spin wisely.",
+        "tradeoff": "Heavy impact lobes turn clean approaches into strong knockback. Spend your spin wisely.",
+        "physics": {
+          "radius": 13.1
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/smash.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/smash_spin.png"
+        }
+      },
+      "guard": {
+        "name": "GUARD",
+        "description": "A heavy closed ring that resists impact and preserves spin. Slower to chase a fleeing rival.",
+        "stats": {
+          "mass": 9.0,
+          "power": 4.0,
+          "stamina": 8.0,
+          "grip": 5.0,
+          "speed": 3.0,
+          "stability": 8.0
+        },
+        "id": "guard",
+        "category": "blade",
+        "sort_order": 2,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "A heavy closed ring that resists impact and preserves spin. Slower to chase a fleeing rival.",
+        "tradeoff": "A heavy closed ring that resists impact and preserves spin. Slower to chase a fleeing rival.",
+        "physics": {
+          "radius": 13.5
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/guard.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/guard_spin.png"
+        }
+      },
+      "hook": {
+        "name": "HOOK",
+        "description": "Fast, asymmetric contact edges reward glancing attacks. Keep moving to protect your balance.",
+        "stats": {
+          "mass": 5.0,
+          "power": 8.0,
+          "stamina": 5.0,
+          "grip": 5.0,
+          "speed": 7.0,
+          "stability": 5.0
+        },
+        "id": "hook",
+        "category": "blade",
+        "sort_order": 3,
+        "legacy": true,
+        "rarity": "UNCOMMON",
+        "mechanical_identity": "Fast, asymmetric contact edges reward glancing attacks. Keep moving to protect your balance.",
+        "tradeoff": "Fast, asymmetric contact edges reward glancing attacks. Keep moving to protect your balance.",
+        "physics": {
+          "radius": 12.5,
+          "tangent_transfer": 0.12
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/hook.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/hook_spin.png"
+        }
+      },
+      "hammerfall": {
+        "name": "HAMMERFALL",
+        "rarity": "UNCOMMON",
+        "description": "Two heavy striking lobes hammer aligned hits. Thin shoulders kick back on glancing contact.",
+        "mechanical_identity": "Two-lobe aligned striker",
+        "tradeoff": "Strong aligned impulse; weak glancing hits and high self recoil",
+        "stats": {
+          "mass": 8,
+          "power": 8,
+          "stamina": 4,
+          "grip": 4,
+          "speed": 5,
+          "stability": 4
+        },
+        "physics": {
+          "radius": 13.8,
+          "lobes": 2,
+          "radial_depth": 0.14,
+          "aligned_impact": 0.52,
+          "glancing_impact": 0.55,
+          "glancing_recoil": 0.48,
+          "recoil": 1.08
+        },
+        "id": "hammerfall",
+        "category": "blade",
+        "sort_order": 4,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/hammerfall.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/hammerfall_spin.png"
+        }
+      },
+      "sawtooth": {
+        "name": "SAWTOOTH",
+        "rarity": "UNCOMMON",
+        "description": "Twelve short teeth build pressure through repeated contact. Close brawling spends its own RPM faster.",
+        "mechanical_identity": "Repeated-contact grinder",
+        "tradeoff": "Pressure ramps only while staying in contact; each paid tooth also drains spin",
+        "stats": {
+          "mass": 6,
+          "power": 6,
+          "stamina": 5,
+          "grip": 5,
+          "speed": 6,
+          "stability": 6
+        },
+        "physics": {
+          "radius": 13.0,
+          "lobes": 12,
+          "profile_angle": 0.15,
+          "radial_depth": 0.045,
+          "impact": 0.86,
+          "repeat_pressure": 0.65,
+          "contact_drain": 0.004,
+          "contact_interval": 0.12
+        },
+        "id": "sawtooth",
+        "category": "blade",
+        "sort_order": 5,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/sawtooth.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/sawtooth_spin.png"
+        }
+      },
+      "puck": {
+        "name": "PUCK",
+        "rarity": "COMMON",
+        "description": "A compact solid disc shrugs off sideways kicks. Its short edge struggles to reach or lever larger blades.",
+        "mechanical_identity": "Compact dense defensive disc",
+        "tradeoff": "Narrow reach and low attack leverage; dense mass resists knockback",
+        "stats": {
+          "mass": 8,
+          "power": 4,
+          "stamina": 7,
+          "grip": 5,
+          "speed": 4,
+          "stability": 8
+        },
+        "physics": {
+          "radius": 10.0,
+          "mass": 1.2,
+          "recoil": 0.75,
+          "impact": 0.79,
+          "wobble_recovery": 1.18
+        },
+        "id": "puck",
+        "category": "blade",
+        "sort_order": 6,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/puck.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/puck_spin.png"
+        }
+      },
+      "outrigger": {
+        "name": "OUTRIGGER",
+        "rarity": "RARE",
+        "description": "Three broad wings catch rivals across an orbit. The wide rim catches walls and throws you out of line.",
+        "mechanical_identity": "Wide orbit catcher",
+        "tradeoff": "Large reach and lateral pressure; wall exposure and expensive rim strikes",
+        "stats": {
+          "mass": 6,
+          "power": 6,
+          "stamina": 5,
+          "grip": 4,
+          "speed": 7,
+          "stability": 5
+        },
+        "physics": {
+          "radius": 15.5,
+          "lobes": 3,
+          "radial_depth": 0.1,
+          "tangent_transfer": 0.19,
+          "orbit": 1.35,
+          "wall_cost": 1.35,
+          "recoil": 1.08
+        },
+        "id": "outrigger",
+        "category": "blade",
+        "sort_order": 7,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/outrigger.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/outrigger_spin.png"
+        }
+      },
+      "lopsider": {
+        "name": "LOPSIDER",
+        "rarity": "EPIC",
+        "description": "One thick counter-lobe lands fierce uneven blows. The off-centre mass keeps pulling the machine off balance.",
+        "mechanical_identity": "Eccentric heavy attacker",
+        "tradeoff": "High peak attack; persistent sway and wobble demand correction",
+        "stats": {
+          "mass": 9,
+          "power": 8,
+          "stamina": 4,
+          "grip": 4,
+          "speed": 4,
+          "stability": 3
+        },
+        "physics": {
+          "radius": 13.6,
+          "lobes": 1,
+          "profile_angle": 3.141592653589793,
+          "radius_lobes": 2,
+          "radius_angle": 0.0,
+          "radial_depth": 0.16,
+          "aligned_impact": 0.48,
+          "impact": 1.15,
+          "imbalance": 0.052,
+          "sway": 14.0,
+          "wobble_recovery": 0.72
+        },
+        "id": "lopsider",
+        "category": "blade",
+        "sort_order": 8,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/lopsider.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/lopsider_spin.png"
+        }
+      },
+      "crescent": {
+        "name": "CRESCENT",
+        "rarity": "RARE",
+        "description": "A curved scoop turns glancing contact into a sideways shove. Direct head-on strikes lose much of that leverage.",
+        "mechanical_identity": "Tangential scoop",
+        "tradeoff": "Strong sideways transfer on glancing hits; modest direct damage",
+        "stats": {
+          "mass": 6,
+          "power": 6,
+          "stamina": 6,
+          "grip": 5,
+          "speed": 6,
+          "stability": 5
+        },
+        "physics": {
+          "radius": 15.5,
+          "lobes": 1,
+          "profile_angle": 3.141592653589793,
+          "radius_gap_angle": 0.0,
+          "radius_gap_width": 0.6981317007977318,
+          "radius_gap_depth": 0.67,
+          "tangent_transfer": 0.38,
+          "tangent_glance": 0.8,
+          "impact": 0.83,
+          "recoil": 1.07
+        },
+        "id": "crescent",
+        "category": "blade",
+        "sort_order": 9,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/crescent.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/crescent_spin.png"
+        }
+      },
+      "fork": {
+        "name": "FORK",
+        "rarity": "UNCOMMON",
+        "description": "Two opposed forks carry four striking tines. Precise approaches bite hard; deep recesses between the tines land softly.",
+        "mechanical_identity": "Recessed four-tine striker",
+        "tradeoff": "Narrow contact windows reward alignment; deep recesses give away reach",
+        "stats": {
+          "mass": 6,
+          "power": 7,
+          "stamina": 5,
+          "grip": 5,
+          "speed": 7,
+          "stability": 5
+        },
+        "physics": {
+          "radius": 16.0,
+          "contact_points": [
+            0.5404195002705842,
+            -0.5404195002705842,
+            2.601173153319209,
+            3.682012153860377
+          ],
+          "point_width": 0.42,
+          "radial_depth": 0.68,
+          "aligned_impact": 0.38,
+          "glancing_impact": 0.72,
+          "tangent_transfer": 0.06,
+          "recoil": 1.12
+        },
+        "id": "fork",
+        "category": "blade",
+        "sort_order": 10,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/blades/fork.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true,
+          "spin": "res://assets/top/parts/blades/fork_spin.png"
+        }
+      }
+    },
+    "ratchet": {
+      "low": {
+        "name": "LOW",
+        "description": "A planted stance. Extra stability and reserve, with slightly less pace.",
+        "stats": {
+          "mass": 0.2,
+          "power": 0.0,
+          "stamina": 0.4,
+          "grip": 0.2,
+          "speed": -0.3,
+          "stability": 1.2
+        },
+        "id": "low",
+        "category": "ratchet",
+        "sort_order": 0,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "A planted stance. Extra stability and reserve, with slightly less pace.",
+        "tradeoff": "A planted stance. Extra stability and reserve, with slightly less pace.",
+        "physics": {
+          "visual_height": 3
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/low.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "mid": {
+        "name": "MID",
+        "description": "The shared starter stance. Predictable contact height and balanced handling.",
+        "stats": {
+          "mass": 0.0,
+          "power": 0.0,
+          "stamina": 0.0,
+          "grip": 0.0,
+          "speed": 0.0,
+          "stability": 0.0
+        },
+        "id": "mid",
+        "category": "ratchet",
+        "sort_order": 1,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "The shared starter stance. Predictable contact height and balanced handling.",
+        "tradeoff": "The shared starter stance. Predictable contact height and balanced handling.",
+        "physics": {
+          "visual_height": 0
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/mid.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "high": {
+        "name": "HIGH",
+        "description": "Raises the blade for stronger contact. Extra reach trades away wobble resistance.",
+        "stats": {
+          "mass": 0.5,
+          "power": 1.0,
+          "stamina": -0.4,
+          "grip": 0.0,
+          "speed": 0.3,
+          "stability": -1.2
+        },
+        "id": "high",
+        "category": "ratchet",
+        "sort_order": 2,
+        "legacy": true,
+        "rarity": "UNCOMMON",
+        "mechanical_identity": "Raises the blade for stronger contact. Extra reach trades away wobble resistance.",
+        "tradeoff": "Raises the blade for stronger contact. Extra reach trades away wobble resistance.",
+        "physics": {
+          "visual_height": -3
+        },
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/high.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "ballast": {
+        "name": "BALLAST",
+        "rarity": "COMMON",
+        "description": "A dense low core makes the machine difficult to shove. Extra weight slows every chase and steering correction.",
+        "mechanical_identity": "Low heavy core",
+        "tradeoff": "High displacement resistance; slow acceleration and correction",
+        "stats": {
+          "mass": 0.9,
+          "power": 0,
+          "stamina": 0.2,
+          "grip": 0,
+          "speed": -0.7,
+          "stability": 0.9
+        },
+        "physics": {
+          "mass": 1.38,
+          "acceleration": 0.83,
+          "control": 0.86,
+          "wobble_recovery": 1.2,
+          "visual_height": 3,
+          "contact_height": -0.3
+        },
+        "id": "ballast",
+        "category": "ratchet",
+        "sort_order": 3,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/ballast.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "flex": {
+        "name": "FLEX",
+        "rarity": "UNCOMMON",
+        "description": "A sprung collar softens impact shock and wobble. The same flex muffles the blade's outgoing punch.",
+        "mechanical_identity": "Compliant shock collar",
+        "tradeoff": "Lower received collision drain and wobble; softer attack transfer",
+        "stats": {
+          "mass": 0.1,
+          "power": -0.5,
+          "stamina": 0.1,
+          "grip": 0,
+          "speed": 0,
+          "stability": 0.6
+        },
+        "physics": {
+          "shock": 0.62,
+          "impact": 0.79,
+          "recoil": 0.93,
+          "wobble_recovery": 1.28,
+          "visual_height": 0
+        },
+        "id": "flex",
+        "category": "ratchet",
+        "sort_order": 4,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/flex.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "kickback": {
+        "name": "KICKBACK",
+        "rarity": "RARE",
+        "description": "A tall spring seat turns impact into big rebounds. Use the displacement to escape; mistimed hits throw you toward gates.",
+        "mechanical_identity": "Recoil and wall rebound converter",
+        "tradeoff": "Large escape displacement and wall carry; increased collision and gate risk",
+        "stats": {
+          "mass": 0.2,
+          "power": 0.3,
+          "stamina": -0.2,
+          "grip": 0,
+          "speed": 0.4,
+          "stability": -0.6
+        },
+        "physics": {
+          "recoil": 1.38,
+          "wall_restitution": 1.16,
+          "wall_retention": 1.055,
+          "shock": 1.12,
+          "wobble_recovery": 0.86,
+          "visual_height": -2,
+          "contact_height": 0.22
+        },
+        "id": "kickback",
+        "category": "ratchet",
+        "sort_order": 5,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/kickback.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "offset": {
+        "name": "OFFSET",
+        "rarity": "EPIC",
+        "description": "An offset axle adds leverage to uneven hits. The weight circles the axis, making straight travel and recovery difficult.",
+        "mechanical_identity": "Offset mass and leverage",
+        "tradeoff": "Additional contact leverage; rhythmic sway and sustained instability",
+        "stats": {
+          "mass": 0.4,
+          "power": 0.6,
+          "stamina": -0.2,
+          "grip": 0,
+          "speed": 0,
+          "stability": -0.6
+        },
+        "physics": {
+          "impact": 1.18,
+          "imbalance": 0.045,
+          "sway": 19.0,
+          "control": 0.9,
+          "wobble_recovery": 0.78,
+          "visual_height": -1,
+          "contact_height": 0.16
+        },
+        "id": "offset",
+        "category": "ratchet",
+        "sort_order": 6,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/offset.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "flywheel": {
+        "name": "FLYWHEEL",
+        "rarity": "RARE",
+        "description": "A broad inertia ring carries spin through a brawl. It takes time to accelerate, turn or stop that rotating weight.",
+        "mechanical_identity": "High rotational inertia",
+        "tradeoff": "Collision spin efficiency and recovery; sluggish acceleration, turning and braking",
+        "stats": {
+          "mass": 0.5,
+          "power": -0.2,
+          "stamina": 0.3,
+          "grip": 0,
+          "speed": -0.4,
+          "stability": 0.4
+        },
+        "physics": {
+          "inertia": 1.65,
+          "acceleration": 0.9,
+          "control": 0.8,
+          "brake": 0.74,
+          "rpm_drain": 0.95,
+          "mass": 1.08,
+          "visual_height": 1
+        },
+        "id": "flywheel",
+        "category": "ratchet",
+        "sort_order": 7,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/flywheel.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "scrap": {
+        "name": "SCRAP",
+        "rarity": "TRASH",
+        "description": "A crooked salvaged collar rattles and kicks sideways off walls. Awkward to steer, but the light frame carries surprising drift.",
+        "mechanical_identity": "Warped salvage wall kicker",
+        "tradeoff": "Poor stability and authority; light, low-drag frame creates odd escape angles",
+        "stats": {
+          "mass": -0.4,
+          "power": 0,
+          "stamina": -0.2,
+          "grip": 0,
+          "speed": 0.2,
+          "stability": -0.8
+        },
+        "physics": {
+          "mass": 0.87,
+          "drag": 0.8,
+          "control": 0.84,
+          "imbalance": 0.066,
+          "sway": 9.0,
+          "wall_tangent": 0.32,
+          "recoil": 1.1,
+          "visual_height": 2,
+          "contact_height": -0.17
+        },
+        "id": "scrap",
+        "category": "ratchet",
+        "sort_order": 8,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/ratchets/scrap.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      }
+    },
+    "bit": {
+      "needle": {
+        "name": "NEEDLE",
+        "description": "Efficient point contact keeps spin alive. Gentle steering, loose grip and a narrow recovery margin.",
+        "stats": {
+          "mass": -0.3,
+          "power": -0.4,
+          "stamina": 1.6,
+          "grip": -2.3,
+          "speed": -1.0,
+          "stability": -0.7
+        },
+        "id": "needle",
+        "category": "bit",
+        "sort_order": 0,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "Efficient point contact keeps spin alive. Gentle steering, loose grip and a narrow recovery margin.",
+        "tradeoff": "Efficient point contact keeps spin alive. Gentle steering, loose grip and a narrow recovery margin.",
+        "physics": {},
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/needle.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "ball": {
+        "name": "BALL",
+        "description": "Rounded contact rolls smoothly through the dish. Forgiving handling and a little extra reserve.",
+        "stats": {
+          "mass": 0.0,
+          "power": 0.0,
+          "stamina": 0.3,
+          "grip": 0.0,
+          "speed": 0.0,
+          "stability": 0.5
+        },
+        "id": "ball",
+        "category": "bit",
+        "sort_order": 1,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "Rounded contact rolls smoothly through the dish. Forgiving handling and a little extra reserve.",
+        "tradeoff": "Rounded contact rolls smoothly through the dish. Forgiving handling and a little extra reserve.",
+        "physics": {},
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/ball.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "flat": {
+        "name": "FLAT",
+        "description": "Broad contact runs fast and hits hard. Burns reserve quickly during a long chase.",
+        "stats": {
+          "mass": 0.2,
+          "power": 0.6,
+          "stamina": -1.5,
+          "grip": 0.8,
+          "speed": 2.0,
+          "stability": -0.4
+        },
+        "id": "flat",
+        "category": "bit",
+        "sort_order": 2,
+        "legacy": true,
+        "rarity": "COMMON",
+        "mechanical_identity": "Broad contact runs fast and hits hard. Burns reserve quickly during a long chase.",
+        "tradeoff": "Broad contact runs fast and hits hard. Burns reserve quickly during a long chase.",
+        "physics": {},
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/flat.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "rubber": {
+        "name": "RUBBER",
+        "description": "Strong grip delivers responsive turns and controlled braking. The price is higher spin loss.",
+        "stats": {
+          "mass": 0.3,
+          "power": 0.4,
+          "stamina": -1.2,
+          "grip": 2.0,
+          "speed": 0.8,
+          "stability": 1.0
+        },
+        "id": "rubber",
+        "category": "bit",
+        "sort_order": 3,
+        "legacy": true,
+        "rarity": "UNCOMMON",
+        "mechanical_identity": "Strong grip delivers responsive turns and controlled braking. The price is higher spin loss.",
+        "tradeoff": "Strong grip delivers responsive turns and controlled braking. The price is higher spin loss.",
+        "physics": {},
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/rubber.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "skate": {
+        "name": "SKATE",
+        "rarity": "UNCOMMON",
+        "description": "A polished shoe holds long drifting arcs. Speed carries through release, but late steering barely changes the line.",
+        "mechanical_identity": "Low-grip momentum skate",
+        "tradeoff": "Very long lateral retention; weak steering and braking",
+        "stats": {
+          "mass": 0,
+          "power": -0.2,
+          "stamina": 0.6,
+          "grip": -1.0,
+          "speed": 1.3,
+          "stability": -0.2
+        },
+        "physics": {
+          "control": 0.49,
+          "acceleration": 0.89,
+          "speed": 1.18,
+          "drag": 0.25,
+          "brake": 0.45,
+          "rpm_drain": 0.86
+        },
+        "id": "skate",
+        "category": "bit",
+        "sort_order": 4,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/skate.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "claw": {
+        "name": "CLAW",
+        "rarity": "RARE",
+        "description": "Flexible feet bite at low speed, then fold into a skid above 140 speed. Fast launches demand an early recovery turn.",
+        "mechanical_identity": "Speed-threshold grip collapse",
+        "tradeoff": "Strong low-speed authority; sudden high-speed slip and wobble",
+        "stats": {
+          "mass": 0.2,
+          "power": 0.3,
+          "stamina": -0.6,
+          "grip": 1.0,
+          "speed": 0.8,
+          "stability": 0.0
+        },
+        "physics": {
+          "acceleration": 1.12,
+          "speed": 1.13,
+          "drag": 0.9,
+          "brake": 1.3,
+          "grip_threshold": 140.0,
+          "grip_low": 1.28,
+          "grip_high": 0.31,
+          "high_speed_wobble": 0.15,
+          "rpm_drain": 1.15
+        },
+        "id": "claw",
+        "category": "bit",
+        "sort_order": 5,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/claw.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "freewheel": {
+        "name": "FREEWHEEL",
+        "rarity": "COMMON",
+        "description": "A freely rolling collar wastes little spin in motion. It resists commands as willingly as it resists slowing down.",
+        "mechanical_identity": "Efficient free-rolling foot",
+        "tradeoff": "Efficient movement and retained speed; low control and braking authority",
+        "stats": {
+          "mass": 0,
+          "power": -0.2,
+          "stamina": 0.8,
+          "grip": -0.5,
+          "speed": 0.2,
+          "stability": 0.2
+        },
+        "physics": {
+          "control": 0.55,
+          "acceleration": 0.88,
+          "drag": 0.45,
+          "brake": 0.55,
+          "rpm_drain": 0.69
+        },
+        "id": "freewheel",
+        "category": "bit",
+        "sort_order": 6,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/freewheel.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "eccentric": {
+        "name": "ECCENTRIC",
+        "rarity": "LEGENDARY",
+        "description": "An eccentric heel grips and releases in a repeating beat. Time corrections to the bite; a missed beat sends the top skating.",
+        "mechanical_identity": "Rhythmic grip and release",
+        "tradeoff": "Alternating strong authority and long slide windows; costly correction and inconsistent braking",
+        "stats": {
+          "mass": 0,
+          "power": 0.2,
+          "stamina": -0.1,
+          "grip": 0.3,
+          "speed": 0.5,
+          "stability": -0.4
+        },
+        "physics": {
+          "grip_wave": 0.7,
+          "grip_frequency": 1.6,
+          "control": 0.94,
+          "drag": 0.64,
+          "turn_cost": 0.0035,
+          "sway": 5.0,
+          "imbalance": 0.014
+        },
+        "id": "eccentric",
+        "category": "bit",
+        "sort_order": 7,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/eccentric.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "chisel": {
+        "name": "CHISEL",
+        "rarity": "UNCOMMON",
+        "description": "A rectangular flat digs into your chosen heading and scrubs sideways motion. Tight corrections are sharp but spend spin.",
+        "mechanical_identity": "Directional side-scrubbing foot",
+        "tradeoff": "Strong heading authority and little sideslip; expensive sharp turns and limited pace",
+        "stats": {
+          "mass": 0.1,
+          "power": 0.3,
+          "stamina": -0.3,
+          "grip": 0.8,
+          "speed": -0.3,
+          "stability": 0.4
+        },
+        "physics": {
+          "control": 1.2,
+          "acceleration": 1.02,
+          "speed": 0.92,
+          "lateral_drag": 2.65,
+          "drag": 0.87,
+          "turn_cost": 0.0055,
+          "brake": 1.16
+        },
+        "id": "chisel",
+        "category": "bit",
+        "sort_order": 8,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/chisel.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "tripod": {
+        "name": "TRIPOD",
+        "rarity": "COMMON",
+        "description": "Three tiny feet settle toward the centre and stop hard under braking. The planted stance is poor at chasing or escaping.",
+        "mechanical_identity": "Centre-seeking brake foot",
+        "tradeoff": "Strong centre occupancy, recovery and braking; slow pursuit and weak escape",
+        "stats": {
+          "mass": 0.2,
+          "power": -0.3,
+          "stamina": 0.5,
+          "grip": 0.4,
+          "speed": -0.8,
+          "stability": 0.8
+        },
+        "physics": {
+          "centre_hold": 35.0,
+          "speed": 0.66,
+          "acceleration": 0.72,
+          "brake": 2.15,
+          "drag": 1.15,
+          "wobble_recovery": 1.28,
+          "bank": 1.25
+        },
+        "id": "tripod",
+        "category": "bit",
+        "sort_order": 9,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/tripod.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      },
+      "groove": {
+        "name": "GROOVE",
+        "rarity": "EPIC",
+        "description": "A curved running groove steers broad orbits and keeps speed in arcs. Straight pursuit needs constant correction near the bank.",
+        "mechanical_identity": "Curved orbit-running foot",
+        "tradeoff": "Strong orbit momentum; curved tracking and wide bank exposure",
+        "stats": {
+          "mass": 0,
+          "power": 0.1,
+          "stamina": 0,
+          "grip": -0.2,
+          "speed": 0.7,
+          "stability": -0.1
+        },
+        "physics": {
+          "orbit": 2.6,
+          "curve": 0.24,
+          "control": 0.84,
+          "speed": 1.12,
+          "drag": 0.73,
+          "brake": 0.79,
+          "rpm_drain": 1.02
+        },
+        "id": "groove",
+        "category": "bit",
+        "sort_order": 10,
+        "legacy": false,
+        "visual": {
+          "sprite": "res://assets/top/parts/bits/groove.png",
+          "pivot": [
+            24,
+            40
+          ],
+          "cell": [
+            48,
+            48
+          ],
+          "nearest": true
+        }
+      }
+    }
+  }
+}

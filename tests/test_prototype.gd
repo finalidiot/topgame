@@ -10,6 +10,9 @@ var notes: Array[String] = []
 var balance_results: Array[Dictionary] = []
 var report_path: String = "user://test-prototype-QA.txt"
 var balance_path: String = "user://test-prototype-balance-results.json"
+const LEGACY_BLADES = ["balance", "smash", "guard", "hook"]
+const LEGACY_RATCHETS = ["low", "mid", "high"]
+const LEGACY_BITS = ["needle", "ball", "flat", "rubber"]
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -62,9 +65,9 @@ func _battle(player: Dictionary, enemy: Dictionary, random_seed := 421) -> Node2
 	return instance
 
 func _test_catalog() -> void:
-	_check(catalog.BLADE_IDS.size() == 4, "Four Blade silhouettes")
-	_check(catalog.RATCHET_IDS.size() == 3, "Three Ratchet stances")
-	_check(catalog.BIT_IDS.size() == 4, "Four Bit contact styles")
+	_check(catalog.BLADE_IDS.size() >= 4, "Original Blade IDs retained in the expanded catalogue")
+	_check(catalog.RATCHET_IDS.size() >= 3, "Original Ratchet IDs retained in the expanded catalogue")
+	_check(catalog.BIT_IDS.size() >= 4, "Original Bit IDs retained in the expanded catalogue")
 	var unique_visuals := {}
 	var valid_stats := true
 	var valid_visuals := true
@@ -89,11 +92,12 @@ func _test_catalog() -> void:
 					valid_visuals = valid_visuals and ResourceLoader.exists(path)
 				unique_visuals["|".join(PackedStringArray(visual_paths))] = true
 				count += 1
-	_check(count == 48, "All 48 assemblies enumerated")
-	_check(valid_builds, "All 48 assemblies validate without replacing parts")
+	var expected: int = catalog.BLADE_IDS.size() * catalog.RATCHET_IDS.size() * catalog.BIT_IDS.size()
+	_check(count == expected, "All legal catalogue assemblies enumerated")
+	_check(valid_builds, "Every catalogue assembly validates without replacing parts")
 	_check(valid_stats, "All assembly stats are finite and within 1–10")
 	_check(valid_visuals, "All modular visual resources exist")
-	_check(unique_visuals.size() == 48, "Every assembly has a distinct modular visual tuple")
+	_check(unique_visuals.size() == expected, "Every assembly has a distinct modular visual tuple")
 	var needle = catalog.derive(_build("balance", "mid", "needle"))
 	var rubber = catalog.derive(_build("balance", "mid", "rubber"))
 	var flat = catalog.derive(_build("balance", "mid", "flat"))
@@ -329,9 +333,11 @@ func _test_balance() -> void:
 	var all_resolved := true
 	var all_finite := true
 	var duration_values: Array[float] = []
-	for blade in catalog.BLADE_IDS:
-		for ratchet in catalog.RATCHET_IDS:
-			for bit in catalog.BIT_IDS:
+	# Retain the historical 144-bout comparison. The expanded roster receives
+	# a stratified study rather than multiplying this legacy endurance soak.
+	for blade in LEGACY_BLADES:
+		for ratchet in LEGACY_RATCHETS:
+			for bit in LEGACY_BITS:
 				var candidate = _build(blade, ratchet, bit)
 				for seed_value in [101, 211, 307]:
 					var b = _battle(candidate, _build(), seed_value)
@@ -388,7 +394,7 @@ func _test_balance() -> void:
 func _finish() -> void:
 	var report := "SPINNING METAL PROTOTYPE — QA\n\n"
 	report += "Automated checks: %d; failed: %d.\n" % [checks, failures.size()]
-	report += "Tests: all 48 modular visual tuples and finite build stats; intended and physical part tradeoffs; pause; braking; burst cost/cooldown and hit-stop buffering; both gate exits and attack-driven ring-outs; solid walls and side guards; exact-overlap collision; spin-out and one-shot result signal; 20/60 Hz fixed-step consistency; deterministic replay; 144 seeded battles.\n\n"
+	report += "Tests: full catalogue modular visual tuples and finite build stats; original physical part tradeoffs; pause; braking; burst cost/cooldown and hit-stop buffering; both gate exits and attack-driven ring-outs; solid walls and side guards; exact-overlap collision; spin-out and one-shot result signal; 20/60 Hz fixed-step consistency; deterministic replay; original 48 assemblies / 144 seeded battles. Expanded parts receive a separate stratified assembly study.\n\n"
 	for failure in failures:
 		report += "FAIL: " + failure + "\n"
 	for note in notes:

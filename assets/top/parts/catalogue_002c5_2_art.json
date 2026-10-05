@@ -1,0 +1,777 @@
+{
+  "version": 1,
+  "task": "002C.5.2",
+  "native_pixels": true,
+  "filter": "nearest",
+  "cell": [
+    48,
+    48
+  ],
+  "contact_pivot": [
+    24,
+    40
+  ],
+  "blade_hub": [
+    24,
+    25
+  ],
+  "projection": "fixed 2:1 ground plane; independently authored top-plane spin phases",
+  "parts": {
+    "hammerfall": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/hammerfall.aseprite",
+      "source_sha256": "ab6389121eb1d35259ddf1b2b779ac493a6d0ea7590b081283195316d1cf741d",
+      "runtime": [
+        "assets/top/parts/blades/hammerfall.png",
+        "assets/top/parts/blades/hammerfall_spin.png"
+      ],
+      "runtime_sha256": [
+        "69afc3b6f6583a74e99cf979f5037ea0f2c5dced4383d43bc711ce3e887a1517",
+        "ec343004c6a1ffcb46786ef38c82f79e3cc8e3d628408d7667510c4241cee2b0"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "sawtooth": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/sawtooth.aseprite",
+      "source_sha256": "7fca68c9c6b854ca5cb47e21e940929f23c16262ba328d024bd6ab47080e6bb3",
+      "runtime": [
+        "assets/top/parts/blades/sawtooth.png",
+        "assets/top/parts/blades/sawtooth_spin.png"
+      ],
+      "runtime_sha256": [
+        "59f22c563403e6224413f7cb6a6f66946d3237c2c84592e72b87ccac99654765",
+        "56a3027bb16d7f248318d95a9719639ec20db36875955c2e37e5271537f20d87"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "puck": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/puck.aseprite",
+      "source_sha256": "420d7ee7a656742613eb7eb120992010378fc22755b1d1d4faea4b15e1e83f63",
+      "runtime": [
+        "assets/top/parts/blades/puck.png",
+        "assets/top/parts/blades/puck_spin.png"
+      ],
+      "runtime_sha256": [
+        "f81ceb65bcf761cf33f4933cec5796c9d928bdbeb153aee070a2820c844331a3",
+        "c47817fb94b945541f3b0821a4ff6235b4b6e1b9e0fcb3bd8366f17038460d4d"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "outrigger": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/outrigger.aseprite",
+      "source_sha256": "6028903718851d58a3086230cec7b9ef5043dbe3845c89a63a2322fc2afd613a",
+      "runtime": [
+        "assets/top/parts/blades/outrigger.png",
+        "assets/top/parts/blades/outrigger_spin.png"
+      ],
+      "runtime_sha256": [
+        "e1c6881881233c730b3896410f26c07247fbeac2f8b233dc12c249f59c652f00",
+        "7dec7a1a8c5c5bfdc42534b5220515d43cfe1667a5d13f803c7ab7bbf2f6468e"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "lopsider": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/lopsider.aseprite",
+      "source_sha256": "447ce0c08669e213d72e9d2794ebc17616e0989b081b8b8e2e999b4537bc166e",
+      "runtime": [
+        "assets/top/parts/blades/lopsider.png",
+        "assets/top/parts/blades/lopsider_spin.png"
+      ],
+      "runtime_sha256": [
+        "723917ee76b455c41c44779548a34bb191eadf961d64291cd1e736fe3eb36614",
+        "9de4facac9297ba1fe697754cff65847b6145faf8781d7c8e20cecae2b0bb10f"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "crescent": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/crescent.aseprite",
+      "source_sha256": "48d986612fa474a8fe5b79c667d4ce6604c7f9e66b6b17331d0a018bc155a62b",
+      "runtime": [
+        "assets/top/parts/blades/crescent.png",
+        "assets/top/parts/blades/crescent_spin.png"
+      ],
+      "runtime_sha256": [
+        "0606bc0e0f68a2ecc3e64899ec77d421cae8e740e798e5ddbc9c6ee2226160b5",
+        "c801ece4828dc6a962271440893d18aad70bced8c8980145e23b01b6445855a4"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "fork": {
+      "category": "blade",
+      "source": "assets/source-art/parts_002c5_2/fork.aseprite",
+      "source_sha256": "19bdb094c615ea06cd7bf8280a38d3b4aab124f8df3a752a881c5ebae65bcd72",
+      "runtime": [
+        "assets/top/parts/blades/fork.png",
+        "assets/top/parts/blades/fork_spin.png"
+      ],
+      "runtime_sha256": [
+        "c447067f4ad279508f58d349df80377e6d3f34cf551a6c602ded4ffb9a6f7360",
+        "f96c9ce9f6bb27ec23135463a1b8edbf3ba48700dedf3497a5a130139d5367b5"
+      ],
+      "frame_count": 8,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "cast underside and vertical rim",
+        "cast steel contact plate",
+        "material inserts and strike faces",
+        "central locking hub"
+      ],
+      "tags": {
+        "spin": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "ballast": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/ballast.aseprite",
+      "source_sha256": "b7aab76ec5b5f5b5aed4cc8ac8c4e0cc1e6f7236bdbed6e66778679424a0fb7b",
+      "runtime": [
+        "assets/top/parts/ratchets/ballast.png"
+      ],
+      "runtime_sha256": [
+        "17fade5537bd1ed25989fa85dd0bbaf51742e6b5e3be46df7bc22a0737a042e4"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "flex": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/flex.aseprite",
+      "source_sha256": "cbe28419e7ff6390ee06c002cb626ff1beab70e0fcd66f68a6978f8e6b5fb61f",
+      "runtime": [
+        "assets/top/parts/ratchets/flex.png"
+      ],
+      "runtime_sha256": [
+        "53b671f4343e1da6c66b76c81bc53af7a603aec9eb4d44418ab9a43ce9ecfa48"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "kickback": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/kickback.aseprite",
+      "source_sha256": "c98e928de8104b497cc87f3b9ea4ec1df82a43ab88de42090ee0957a4364a496",
+      "runtime": [
+        "assets/top/parts/ratchets/kickback.png"
+      ],
+      "runtime_sha256": [
+        "769f3aa31c8834556f59b1b612282eeb3e126bafa4045ec1d8287c18844495a2"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "offset": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/offset.aseprite",
+      "source_sha256": "d0745f0025084a483f477b84350222d5a2f18ed1a0a0f12902c6fd83aa7fd97a",
+      "runtime": [
+        "assets/top/parts/ratchets/offset.png"
+      ],
+      "runtime_sha256": [
+        "6aa88ff19dfbf75bd762a68b4c8e21e40b87265b6e14aabc56a9f9666c4591ca"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "flywheel": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/flywheel.aseprite",
+      "source_sha256": "30c2b56210680499cadaadc6a3f767e2d884e1208b7a60aa5252abe267cebb5a",
+      "runtime": [
+        "assets/top/parts/ratchets/flywheel.png"
+      ],
+      "runtime_sha256": [
+        "0269bb28a1a59bae87855595c68a4c7f2f920a159666b7969b7dc591d1de6476"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "scrap": {
+      "category": "ratchet",
+      "source": "assets/source-art/parts_002c5_2/scrap.aseprite",
+      "source_sha256": "14d2e2aef24ea7e8eff283fc29aa1297fc0670b37bf0899eb3efd0f59d6ef3ec",
+      "runtime": [
+        "assets/top/parts/ratchets/scrap.png"
+      ],
+      "runtime_sha256": [
+        "d4c04e458e404b2d91a7e65d7134e9395bb2d581ae08139e5c0a8d3c552e1c35"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "lower bit socket",
+        "structural core and sidewall",
+        "functional mass or flex ring",
+        "blade collar and fastening"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "skate": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/skate.aseprite",
+      "source_sha256": "0951268584c3c85c9bef5e77a8f7ca300e806b85681c3b0c2f3e8ea8d0d21311",
+      "runtime": [
+        "assets/top/parts/bits/skate.png"
+      ],
+      "runtime_sha256": [
+        "0282bdbf1cfd37cc7db30a30d4e8beada9627b40b701f60dcb883de4ce6b0e7e"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "claw": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/claw.aseprite",
+      "source_sha256": "b71160cc324df54165394c6378e8f14bf01ce4f37f8bf8b87e244f762a4a519b",
+      "runtime": [
+        "assets/top/parts/bits/claw.png"
+      ],
+      "runtime_sha256": [
+        "57b39fd4ac34b34ddb17017fcd45604101371b6691649b83d64618e1caaeeeba"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "freewheel": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/freewheel.aseprite",
+      "source_sha256": "6e77437ea7fa0d1238933d1c9e8fc69775a667b256ea000f66b4a802b6cbb369",
+      "runtime": [
+        "assets/top/parts/bits/freewheel.png"
+      ],
+      "runtime_sha256": [
+        "7dedf7a654c623612a3715f84dfdb2f42e8287a33b87fedb2085862344b135e5"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "eccentric": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/eccentric.aseprite",
+      "source_sha256": "6118a99d43ae6bd1b940bc2dd33561dbb73f68b332eaf789edebdba4bbca6588",
+      "runtime": [
+        "assets/top/parts/bits/eccentric.png"
+      ],
+      "runtime_sha256": [
+        "071d704b58fc3b49ec4f9f13c354e4898c551b6a16cd41046710e3c21f4140ad"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "chisel": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/chisel.aseprite",
+      "source_sha256": "3ca04c296b092ed80ffe3565f290e3e7307ebb30c5a717fc28633a4ae6873fe5",
+      "runtime": [
+        "assets/top/parts/bits/chisel.png"
+      ],
+      "runtime_sha256": [
+        "e865ddc56114421948739ff7968e4063d06400258ba23fd2c4f50b439bb5a652"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "tripod": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/tripod.aseprite",
+      "source_sha256": "974a9055d6fe3b708d9a09185a9e972c8233e4e09a8a1a6dfb3eeaa8bcffcd53",
+      "runtime": [
+        "assets/top/parts/bits/tripod.png"
+      ],
+      "runtime_sha256": [
+        "68768d255dca8537cb6c72bbfc99c88af1ed96612097fe34e1e37ebd67a04a52"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    },
+    "groove": {
+      "category": "bit",
+      "source": "assets/source-art/parts_002c5_2/groove.aseprite",
+      "source_sha256": "346d456aaac3cabffdeea2c10e487adfdafc649b3e007c9012afa4e1aa6aae6c",
+      "runtime": [
+        "assets/top/parts/bits/groove.png"
+      ],
+      "runtime_sha256": [
+        "3948dd070f7116647e57e8f7ac4a3d8530e60a0b6bf88c16bf432716a89d55fa"
+      ],
+      "frame_count": 1,
+      "cell": [
+        48,
+        48
+      ],
+      "pivot": [
+        24,
+        40
+      ],
+      "layers": [
+        "locking stem",
+        "contact body and material",
+        "floor contact surface"
+      ],
+      "tags": {
+        "assembly": {
+          "from": 0,
+          "to": 0
+        }
+      },
+      "durations_ms": [
+        200
+      ]
+    }
+  }
+}

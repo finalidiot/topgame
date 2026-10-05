@@ -57,11 +57,12 @@ func _labels() -> Array[Label]:
 
 func _check_layout(context: String) -> void:
 	for node: Node in _descendants(game.menus):
-		if node is Button:
+		if node is Button and _scroll_ancestor(node) == null:
 			check(NATIVE_RECT.encloses(node.get_global_rect()), context+" button remains on the native screen: "+node.text)
 	for label: Label in _labels():
 		if not label.is_visible_in_tree(): continue
-		check(NATIVE_RECT.encloses(label.get_global_rect()), context+" label remains on screen: "+label.text)
+		if _scroll_ancestor(label) == null:
+			check(NATIVE_RECT.encloses(label.get_global_rect()), context+" label remains on screen: "+label.text)
 		if label.text.is_empty(): continue
 		var font: Font = label.get_theme_font("font")
 		var size: int = label.get_theme_font_size("font_size")
@@ -77,6 +78,13 @@ func _check_layout(context: String) -> void:
 		if label.get_parent() is Button:
 			check(label.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Card text permits pointer activation")
 			check(label.get_parent().get_global_rect().encloses(label.get_global_rect()), "Starter card text remains inside its focus target")
+
+func _scroll_ancestor(node: Node) -> ScrollContainer:
+	var parent: Node = node.get_parent()
+	while parent != null:
+		if parent is ScrollContainer: return parent
+		parent = parent.get_parent()
+	return null
 
 func _focus(context: String) -> void:
 	var focused: Control = root.gui_get_focus_owner()
@@ -132,6 +140,10 @@ func _stick(axis: JoyAxis, amount: float) -> void:
 func _click(button: Button) -> void:
 	check(button != null, "Requested pointer target exists")
 	if button == null: return
+	var scroll: ScrollContainer = _scroll_ancestor(button)
+	if scroll != null:
+		scroll.ensure_control_visible(button)
+		await _settle()
 	var center: Vector2 = button.get_global_rect().get_center()
 	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
 	motion.position = center
@@ -233,7 +245,8 @@ func _check_workshop(starter: String) -> void:
 			else:
 				locked_count += 1
 				check(button.text.contains("NOT OWNED") or button.tooltip_text.contains("NOT OWNED") or bool(button.get_meta("locked", false)), "Unowned state is explicit: "+category+":"+id)
-	check(owned_count == 3 and locked_count == 8, "Workshop distinguishes three owned and eight future catalogue parts")
+	var catalogue_count: int = Parts.BLADE_IDS.size() + Parts.RATCHET_IDS.size() + Parts.BIT_IDS.size()
+	check(owned_count == 3 and locked_count == catalogue_count - 3, "Workshop distinguishes exactly three owned parts from the expanded locked catalogue")
 	_check_layout("Collection Workshop")
 	_focus("Collection Workshop")
 

@@ -83,7 +83,7 @@ func _test_ids_and_fresh() -> void:
 			var id: String = Collection.part_id(category, local_id)
 			check(Collection.is_valid_part_id(id), "Every catalogue key has a stable globally qualified identity")
 			check(Collection.split_part_id(id) == {"category":category, "id":local_id}, "Qualified identity round trips without label/index")
-	check(catalog_count == 11, "All eleven catalogue parts remain valid content")
+	check(catalog_count == Catalog.BLADE_IDS.size() + Catalog.RATCHET_IDS.size() + Catalog.BIT_IDS.size(), "All expanded catalogue parts remain valid content")
 	for invalid: String in ["smash", "BLADE:SMASH", "blade:SMASH", "blade:missing", "blade:smash:extra", "run_power:redline", "blade", "", ":blade:smash"]:
 		check(not Collection.is_valid_part_id(invalid), "Ambiguous, unknown and nonpart identities are rejected: " + invalid)
 	var path: String = _path("fresh")

@@ -32,6 +32,9 @@ var _settings: Dictionary = {}
 var _preview: Preview
 var _part_buttons: Dictionary = {}
 var _part_descriptions: Dictionary = {}
+var _part_scrolls: Dictionary = {}
+var _catalogue_metadata: Label
+var _catalogue_description: Label
 var _stat_bars: Dictionary = {}
 var _stat_numbers: Dictionary = {}
 var _assembly_name: Label
@@ -171,6 +174,9 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_hud.clear()
 	_part_buttons.clear()
 	_part_descriptions.clear()
+	_part_scrolls.clear()
+	_catalogue_metadata = null
+	_catalogue_description = null
 	_stat_bars.clear()
 	_stat_numbers.clear()
 	_content = Control.new()
@@ -310,7 +316,9 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 	_label(_content, "YOUR LOADOUT", Rect2(339, 114, 255, 16), 10, BLUE)
 	_new_preview(Rect2(358, 127, 218, 148), 3.0)
 	_label(_content, PartCatalog.title(_build), Rect2(334, 264, 266, 23), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "11 PARTS  /  48 ASSEMBLIES", Rect2(334, 287, 266, 15), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var total_parts: int = PartCatalog.BLADE_IDS.size() + PartCatalog.RATCHET_IDS.size() + PartCatalog.BIT_IDS.size()
+	var total_assemblies: int = PartCatalog.BLADE_IDS.size() * PartCatalog.RATCHET_IDS.size() * PartCatalog.BIT_IDS.size()
+	_label(_content, "%d PARTS  /  %d ASSEMBLIES" % [total_parts, total_assemblies], Rect2(334, 287, 266, 15), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Steer. Time your burst. Stay in the dish.", Rect2(30, 303, 285, 28), 11, MUTED)
 	_label(_content, "KEYBOARD + GAMEPAD    /    STEER   BURST   BRAKE   PAUSE    /    CONTROLS IN HOW TO PLAY", Rect2(30, 333, 582, 16), 9, MUTED)
 	_focus_rows([[first], [run_button], [garage_button], [help_button, settings_button], [quit_button]])
@@ -433,7 +441,7 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	_build = build.duplicate()
 	_collection_snapshot = snapshot.duplicate(true)
 	_clear("collection_workshop")
-	_header("TOP WORKSHOP", "Your collection is permanent. Powers, XP and RPM belong to each Run.")
+	_header("TOP WORKSHOP", "ISOLATED CATALOGUE QA / Player collection is separate." if bool(snapshot.get("isolated_catalogue_qa", false)) else "Your collection is permanent. Powers, XP and RPM belong to each Run.")
 	_panel(_content, Rect2(22, 62, 207, 244))
 	_label(_content, "YOUR EQUIPPED MACHINE", Rect2(34, 73, 184, 18), 11, BLUE)
 	var can_launch: bool = _owned_build_is_complete()
@@ -451,12 +459,13 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	_label(_content, "%d / %d PARTS OWNED" % [total_owned, total_catalogue], Rect2(34, 234, 184, 23), 13, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 	var historical: String = str(snapshot.get("starter_selected", snapshot.get("starter_id", "")))
 	_label(_content, "FIRST CHOICE: " + Starters.display_name(historical), Rect2(34, 260, 184, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	var future: Label = _label(_content, "New parts will open up\nnew ways to build.", Rect2(34, 279, 184, 24), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var future: Label = _label(_content, "Isolated QA collection.\nAll catalogue parts available." if bool(snapshot.get("isolated_catalogue_qa", false)) else "New parts will open up\nnew ways to build.", Rect2(34, 279, 184, 24), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	future.add_theme_constant_override("line_spacing", -1)
 	_panel(_content, Rect2(244, 62, 374, 244))
+	_create_catalogue_inspector()
 	_collection_part_row("blade", "BLADE", PartCatalog.BLADE_IDS, 73)
-	_collection_part_row("ratchet", "RATCHET", PartCatalog.RATCHET_IDS, 147)
-	_collection_part_row("bit", "BIT", PartCatalog.BIT_IDS, 221)
+	_collection_part_row("ratchet", "RATCHET", PartCatalog.RATCHET_IDS, 132)
+	_collection_part_row("bit", "BIT", PartCatalog.BIT_IDS, 191)
 	var back: Button = _button(_content, "TITLE", Rect2(22, 319, 98, 29), "main_menu")
 	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(131, 319, 232, 29), "quick_duel")
 	practice.add_theme_font_size_override("font_size", 11)
@@ -467,34 +476,85 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 
 func _collection_part_row(category: String, title: String, ids: Array, y: float) -> void:
 	var owned: Array = _collection_owned(category)
-	_label(_content, title, Rect2(256, y, 264, 17), 11, ORANGE)
+	_label(_content, title, Rect2(256, y, 211, 17), 11, ORANGE)
 	_label(_content, "%d / %d OWNED" % [owned.size(), ids.size()], Rect2(527, y, 77, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	_part_buttons[category] = {}
-	var width: float = (348.0 - 6.0 * (ids.size() - 1)) / ids.size()
+	var strip: HBoxContainer = _catalogue_strip(category, y + 19)
 	for index: int in range(ids.size()):
 		var id: String = str(ids[index])
 		var data: Dictionary = PartCatalog.PARTS[category][id]
 		var is_owned: bool = id in owned
 		var selected: bool = is_owned and str(_build.get(category, "")) == id
-		var button: Button = _button(_content, "", Rect2(256 + index * (width + 6), y + 19, width, 36), "equip_part" if is_owned else "inspect_locked_part", {"category":category,"id":id})
+		var button: Button = _button(strip, "", Rect2(0, 0, 122, 36), "equip_part" if is_owned else "inspect_locked_part", {"category":category,"id":id})
+		button.custom_minimum_size = Vector2(122, 36)
 		button.set_meta("part_category", category)
 		button.set_meta("part_id", id)
 		button.set_meta("owned", is_owned)
-		button.tooltip_text = str(data.description) if is_owned else "NOT OWNED / " + str(data.name)
+		button.set_meta("locked", not is_owned)
+		button.tooltip_text = "%s / %s / %s\n%s\n%s" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON")), str(data.description), "OWNED" if is_owned else "NOT OWNED"]
 		button.add_theme_stylebox_override("normal", _box(Color("9b5a37") if selected else (Color("203548") if is_owned else Color("13212e")), ORANGE if selected else BORDER, 1))
-		_label(button, str(data.name), Rect2(3, 2, width - 6, 17), 11, TEXT if is_owned else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-		_label(button, "EQUIPPED" if selected else ("OWNED" if is_owned else "NOT OWNED"), Rect2(3, 20, width - 6, 13), 9, ORANGE if selected else (BLUE if is_owned else MUTED), HORIZONTAL_ALIGNMENT_CENTER)
-		button.focus_entered.connect(func() -> void: _describe_collection_part(category, id))
+		_label(button, str(data.name), Rect2(3, 2, 116, 17), 11, TEXT if is_owned else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(button, "EQUIPPED" if selected else ("OWNED" if is_owned else "NOT OWNED"), Rect2(3, 20, 116, 13), 9, ORANGE if selected else (BLUE if is_owned else MUTED), HORIZONTAL_ALIGNMENT_CENTER)
+		button.focus_entered.connect(func() -> void:
+			_reveal_catalogue_part(category, button)
+			_describe_collection_part(category, id))
 		button.mouse_entered.connect(func() -> void: _describe_collection_part(category, id))
 		_part_buttons[category][id] = button
-	var description: Label = _label(_content, "", Rect2(256, y + 58, 348, 14), 9, MUTED)
-	_part_descriptions[category] = description
-	_describe_collection_part(category, str(_build.get(category, str(ids[0]))))
+	_part_descriptions[category] = _catalogue_description
+	var selected_button: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
+	if selected_button != null: _reveal_catalogue_part.call_deferred(category, selected_button)
+	if category == "blade": _describe_collection_part(category, str(_build.get(category, str(ids[0]))))
+
+func _create_catalogue_inspector() -> void:
+	_catalogue_metadata = _label(_content, "", Rect2(256, 249, 348, 16), 9, BLUE)
+	_catalogue_description = _label(_content, "", Rect2(256, 266, 348, 37), 9, MUTED)
+	_catalogue_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_catalogue_description.add_theme_constant_override("line_spacing", -1)
+	_catalogue_description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+
+func _catalogue_strip(category: String, y: float) -> HBoxContainer:
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.position = Vector2(256, y)
+	scroll.size = Vector2(348, 38)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	scroll.focus_mode = Control.FOCUS_NONE
+	_content.add_child(scroll)
+	_part_scrolls[category] = scroll
+	for step: int in [-1, 1]:
+		var arrow: Button = _button(_content, "<" if step < 0 else ">", Rect2(476 if step < 0 else 502, y - 19, 22, 17))
+		arrow.add_theme_font_size_override("font_size", 10)
+		arrow.focus_mode = Control.FOCUS_NONE
+		arrow.tooltip_text = "Browse " + category + "s. Keyboard and controller use Left / Right."
+		var style: StyleBoxFlat = _box(Color("203548"), BORDER, 1)
+		style.content_margin_left = 2
+		style.content_margin_right = 2
+		arrow.add_theme_stylebox_override("normal", style)
+		arrow.add_theme_stylebox_override("hover", style)
+		arrow.add_theme_stylebox_override("pressed", style)
+		arrow.pressed.connect(func() -> void: scroll.scroll_horizontal += step * 128)
+	var strip: HBoxContainer = HBoxContainer.new()
+	strip.add_theme_constant_override("separation", 6)
+	strip.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	scroll.add_child(strip)
+	return strip
+
+func _reveal_catalogue_part(category: String, button: Button) -> void:
+	if not is_instance_valid(button) or not _part_scrolls.has(category): return
+	var scroll: ScrollContainer = _part_scrolls[category]
+	# Equip can replace the screen before a pending layout callback runs.
+	if not scroll.is_ancestor_of(button): return
+	scroll.ensure_control_visible(button)
 
 func _describe_collection_part(category: String, id: String) -> void:
 	if not _part_descriptions.has(category): return
+	if not PartCatalog.PARTS[category].has(id): return
 	var owned: bool = id in _collection_owned(category)
-	_part_descriptions[category].text = "OWNED / EQUIPPED" if owned and str(_build.get(category, "")) == id else ("OWNED / READY TO EQUIP" if owned else "NOT OWNED / MORE PARTS TO COLLECT")
+	var data: Dictionary = PartCatalog.PARTS[category][id]
+	var ownership: String = "EQUIPPED" if owned and str(_build.get(category, "")) == id else ("OWNED" if owned else "NOT OWNED")
+	_catalogue_metadata.text = "%s / %s / %s / %s" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON")), ownership]
+	_part_descriptions[category].text = str(data.description)
 	_part_descriptions[category].add_theme_color_override("font_color", BLUE if owned else MUTED)
 
 func inspect_locked_part(category: String, id: String) -> void:
@@ -558,9 +618,10 @@ func show_garage(build: Dictionary, practice: bool = false) -> void:
 		_stat_numbers[stat_ids[index]] = _label(_content, "", Rect2(x + 64, y, 17, 11), 8, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 		_stat_bars[stat_ids[index]] = _bar(_content, Rect2(x, y + 13, 81, 4), ORANGE if index == 0 else BLUE)
 	_panel(_content, Rect2(244, 62, 374, 244))
+	_create_catalogue_inspector()
 	_part_row("blade", "01   BLADE", PartCatalog.BLADE_IDS, 73)
-	_part_row("ratchet", "02   RATCHET", PartCatalog.RATCHET_IDS, 147)
-	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 221)
+	_part_row("ratchet", "02   RATCHET", PartCatalog.RATCHET_IDS, 132)
+	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 191)
 	var back_button: Button = _button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
 	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
 	var run_button: Button = _button(_content, "OWNED WORKSHOP" if practice else "CONTINUOUS RUN", Rect2(342, 319, 276, 27), "open_workshop" if practice else "start_run")
@@ -624,27 +685,39 @@ func _animate_cards() -> void:
 		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else Color("385266"), 1))
 
 func _part_row(category: String, title: String, ids: Array, y: float) -> void:
-	_label(_content, title, Rect2(256, y, 345, 15), 10, ORANGE)
+	_label(_content, title, Rect2(256, y, 211, 15), 10, ORANGE)
+	_label(_content, "%d PARTS" % ids.size(), Rect2(529, y, 75, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	_part_buttons[category] = {}
-	var width: float = (348.0 - 6.0 * (ids.size() - 1)) / ids.size()
+	var strip: HBoxContainer = _catalogue_strip(category, y + 19)
 	for index in range(ids.size()):
 		var id: String = str(ids[index])
 		var data: Dictionary = PartCatalog.PARTS[category][id]
-		var button: Button = _button(_content, str(data.get("name", id.capitalize())), Rect2(256 + index * (width + 6), y + 19, width, 27))
+		var button: Button = _button(strip, str(data.get("name", id.capitalize())), Rect2(0, 0, 122, 36))
+		button.custom_minimum_size = Vector2(122, 36)
 		button.add_theme_font_size_override("font_size", 11)
+		button.set_meta("part_category", category)
+		button.set_meta("part_id", id)
 		button.tooltip_text = str(data.get("description", ""))
 		button.pressed.connect(func() -> void: _choose_part(category, id))
+		button.focus_entered.connect(func() -> void:
+			_reveal_catalogue_part(category, button)
+			_describe_practice_part(category, id))
+		button.mouse_entered.connect(func() -> void: _describe_practice_part(category, id))
 		_part_buttons[category][id] = button
-	var description: Label = _label(_content, "", Rect2(256, y + 48, 348, 25), 9, MUTED)
-	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	description.add_theme_constant_override("line_spacing", -1)
-	description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	description.clip_text = true
-	_part_descriptions[category] = description
+	_part_descriptions[category] = _catalogue_description
+	var selected_button: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
+	if selected_button != null: _reveal_catalogue_part.call_deferred(category, selected_button)
+
+func _describe_practice_part(category: String, id: String) -> void:
+	if not is_instance_valid(_catalogue_description): return
+	var data: Dictionary = PartCatalog.PARTS[category][id]
+	_catalogue_metadata.text = "%s / %s / %s / PRACTICE" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON"))]
+	_catalogue_description.text = str(data.description)
 
 func _choose_part(category: String, id: String) -> void:
 	_build[category] = id
 	_refresh_garage()
+	_describe_practice_part(category, id)
 	action.emit("build_changed", _build.duplicate())
 
 func _refresh_garage() -> void:
@@ -656,7 +729,7 @@ func _refresh_garage() -> void:
 			var selected: bool = str(_build.get(category, "")) == str(id)
 			button.add_theme_stylebox_override("normal", _box(Color("9b5a37") if selected else Color("203548"), ORANGE if selected else BORDER, 1))
 			button.add_theme_color_override("font_color", Color.WHITE if selected else TEXT)
-		_part_descriptions[category].text = str(PartCatalog.PARTS[category][_build[category]].get("description", ""))
+	_describe_practice_part("blade", str(_build.blade))
 	var stats: Dictionary = PartCatalog.derive(_build)
 	for stat in _stat_bars:
 		var amount: float = float(stats.get(stat, 5.0))

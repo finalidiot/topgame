@@ -109,6 +109,22 @@ class PromotionGuards(unittest.TestCase):
         self.save_manifest()
         self.reject()
 
+    def test_stacked_c5_content_cannot_approve_parent_gameplay(self):
+        self.manifest["checkpoint"] = "002C.5.2"
+        self.manifest["qa_task"] = "002C.5.2"
+        self.manifest["human_acceptance"] = "accepted"
+        self.save_manifest()
+        with self.assertRaises(ValueError):
+            pipeline.promote_candidate(self.candidate, self.root, self.qa, "002C.5.2")
+        self.assert_latest_preserved()
+
+    def test_stacked_c5_validated_build_can_retain_pending_acceptance(self):
+        self.manifest["checkpoint"] = "002C.5.2"
+        self.manifest["qa_task"] = "002C.5.2"
+        self.save_manifest()
+        result = pipeline.promote_candidate(self.candidate, self.root, self.qa, "002C.5.2")
+        self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/002C.5.2" / pipeline.EXE))
+
     def test_build_directory_redirect_is_rejected(self):
         with patch.object(pipeline, "is_reparse", lambda path: Path(path) == self.root / "builds"):
             self.reject()

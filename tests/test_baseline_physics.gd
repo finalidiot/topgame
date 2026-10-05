@@ -5,6 +5,9 @@ extends SceneTree
 ## Controls both bodies directly to isolate equations from intentionally changed AI RNG.
 const NewBattle = preload("res://scripts/battle.gd")
 const Parts = preload("res://scripts/parts.gd")
+const LEGACY_BLADES = ["balance", "smash", "guard", "hook"]
+const LEGACY_RATCHETS = ["low", "mid", "high"]
+const LEGACY_BITS = ["needle", "ball", "flat", "rubber"]
 const FIELDS = ["pos", "vel", "rpm", "energy", "wobble", "cooldown", "burst_time", "height", "height_vel", "impact_time", "impact_strength"]
 var checks = 0
 var failures = 0
@@ -24,9 +27,11 @@ func _run():
 	if old_script.reload() != OK:
 		quit(2)
 		return
-	for blade in Parts.BLADE_IDS:
-		for ratchet in Parts.RATCHET_IDS:
-			for bit in Parts.BIT_IDS:
+	# This differential compares Task 001 equations for its original 48 builds.
+	# Expanded parts have their own catalogue study and physics tests.
+	for blade in LEGACY_BLADES:
+		for ratchet in LEGACY_RATCHETS:
+			for bit in LEGACY_BITS:
 				var build = {"blade": blade, "ratchet": ratchet, "bit": bit}
 				var opponent = {"blade": "hook", "ratchet": "low", "bit": "rubber"}
 				var old = old_script.new()

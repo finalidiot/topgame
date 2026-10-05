@@ -27,6 +27,10 @@ var collection_path: String = ""
 var collection: RefCounted
 var reset_collection_requested: bool = false
 var _collection_reset_failed: bool = false
+## Full catalogue access is only enabled for an explicitly isolated QA save.
+var qa_catalogue_requested: bool = false
+var qa_catalogue_error: String = ""
+var preferences_path: String = "user://prototype.cfg"
 var _ownership_remaining: float = 0.0
 var _first_starter_focus: String = "breaker"
 var _collection_retry: String = ""
@@ -62,7 +66,7 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	DisplayServer.window_set_title("Spinning Metal — 002C.5 Physical Art V2 + Starter Collection")
+	DisplayServer.window_set_title("Spinning Metal — 002C.5.2 Parts Catalogue")
 	rng.randomize()
 	var practice_request: String = ""
 	for argument: String in OS.get_cmdline_user_args():
@@ -71,14 +75,23 @@ func _ready() -> void:
 		if argument.begins_with("--practice="): practice_request = argument.trim_prefix("--practice=")
 		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
 		if argument == "--reset-collection": reset_collection_requested = true
+		if argument == "--qa-catalogue": qa_catalogue_requested = true
 	if smoke_mode: rng.seed = 7341
-	if not smoke_mode: _load_preferences()
+	if qa_catalogue_requested and not _is_isolated_catalogue_path(collection_path):
+		qa_catalogue_error = "Catalogue QA requires an absolute --collection-path inside the configured GyroBrothers-QA/002C.5.2/temp folder. No parts were granted and your player save was not opened."
+		collection_path = "user://test_collection/refused_qa_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+		reset_collection_requested = false
 	if collection_path.is_empty():
 		collection_path = "user://test_collection/main_%d_%d.json" % [OS.get_process_id(), Time.get_ticks_usec()] if smoke_mode else "user://collection.json"
+	if ProjectSettings.globalize_path(collection_path).replace("\\", "/").simplify_path().to_lower() != ProjectSettings.globalize_path(Collection.DEFAULT_PATH).replace("\\", "/").simplify_path().to_lower():
+		preferences_path = collection_path + ".preferences.cfg"
+	if not smoke_mode and qa_catalogue_error.is_empty(): _load_preferences()
 	collection = Collection.new(collection_path)
 	collection.load_save()
+	if not qa_catalogue_error.is_empty(): collection.read_only = true
 	if reset_collection_requested:
 		_collection_reset_failed = not bool(collection.reset_collection(true).ok)
+	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
 	battle = BattleScript.new()
 	add_child(battle)
@@ -103,8 +116,39 @@ func _ready() -> void:
 	_title()
 	if _collection_reset_failed:
 		_collection_error("The explicitly requested collection reset could not finish. Close other game instances and check the save folder before retrying.")
+	if not qa_catalogue_error.is_empty(): _collection_error(qa_catalogue_error)
 	if smoke_mode: call_deferred("_smoke_test")
+	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
+
+func _is_isolated_catalogue_path(path: String) -> bool:
+	# Require the designated external QA tree, never res://, user:// or a player
+	# profile renamed in-place. Explicit TOPGAME_QA_ROOT remains supported.
+	var normalized: String = path.replace("\\", "/").simplify_path()
+	if not normalized.is_absolute_path() or path.begins_with("user://") or path.begins_with("res://"): return false
+	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
+	var project_folder: String = ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/")
+	var qa_root: String = configured if not configured.is_empty() else project_folder.get_base_dir().path_join("GyroBrothers-QA")
+	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.5.2/temp").to_lower() + "/"
+	var repository: String = ProjectSettings.globalize_path("res://").replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
+	var userdata: String = OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
+	var candidate: String = normalized.to_lower()
+	return candidate.begins_with(allowed) and not candidate.begins_with(repository) and not candidate.begins_with(userdata) and candidate.get_extension() == "json"
+
+func _prepare_qa_catalogue() -> void:
+	if collection.read_only:
+		qa_catalogue_error = "The isolated catalogue QA collection could not be read safely. Its files have been preserved. Choose a new QA filename."
+		return
+	if not collection.is_initialized():
+		if not bool(collection.initialize_starter("breaker").ok):
+			qa_catalogue_error = "Could not create the isolated catalogue QA collection. Your player save has not been opened."
+			return
+	for category: String in Collection.CATEGORIES:
+		for id: String in Catalog.PARTS[category]:
+			if not bool(collection.grant_part(category + ":" + id).ok):
+				qa_catalogue_error = "Could not finish the isolated catalogue QA collection. Close other QA windows and choose a new QA filename."
+				return
+	DisplayServer.window_set_title("Spinning Metal — 002C.5.2 ISOLATED CATALOGUE QA")
 
 ## Optional isolated human checkpoint. Ordinary seeded Run offers are untouched.
 ## No progression, power procs, damage or victories are injected while playing.
@@ -141,7 +185,7 @@ func _start_build_practice(branch_id: String) -> void:
 
 func _load_preferences() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
-	if cfg.load("user://prototype.cfg") != OK: return
+	if cfg.load(preferences_path) != OK: return
 	for key: String in build:
 		var value: String = str(cfg.get_value("build", key, build[key]))
 		var legal: Array = Catalog.BLADE_IDS if key == "blade" else Catalog.RATCHET_IDS if key == "ratchet" else Catalog.BIT_IDS
@@ -151,11 +195,11 @@ func _load_preferences() -> void:
 	settings.volume = clampf(float(settings.volume), 0.0, 1.0)
 
 func _save_preferences() -> void:
-	if smoke_mode: return
+	if smoke_mode or not qa_catalogue_error.is_empty(): return
 	var cfg: ConfigFile = ConfigFile.new()
 	for key: String in build: cfg.set_value("build", key, build[key])
 	for key: String in settings: cfg.set_value("settings", key, settings[key])
-	cfg.save("user://prototype.cfg")
+	cfg.save(preferences_path)
 
 func _apply_settings() -> void:
 	sounds.apply_settings(settings)
@@ -186,6 +230,7 @@ func _garage() -> void:
 	if collection.can_launch(): build = collection.equipped_build()
 	var snapshot: Dictionary = collection.snapshot()
 	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
+	snapshot["isolated_catalogue_qa"] = qa_catalogue_requested
 	menus.show_collection_workshop(collection.equipped_build(), snapshot)
 
 func _practice_garage() -> void:
@@ -449,7 +494,8 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
 		last_result["investments"] = run_context.committed_rewards
 		if not smoke_mode:
-			var diagnostic: FileAccess = FileAccess.open("user://last_run_director.json",FileAccess.WRITE)
+			var diagnostic_path: String = "user://last_run_director.json" if preferences_path == "user://prototype.cfg" else collection_path + ".last_run_director.json"
+			var diagnostic: FileAccess = FileAccess.open(diagnostic_path,FileAccess.WRITE)
 			if diagnostic != null: diagnostic.store_string(JSON.stringify(last_result,"\t"))
 	menus.show_result(last_result)
 
