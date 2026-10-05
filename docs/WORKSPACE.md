@@ -10,6 +10,9 @@ its mechanics, balance, art or physical controller feel. Do not merge it to main
 | --- | --- |
 | GitHub repository | https://github.com/finalidiot/topgame |
 | Working game repository | `C:\GPT GAME BUILDING\GyroBrothers` |
+| Active Git metadata and object store | `C:\GPT GAME BUILDING\GyroBrothers\.git` |
+| Active LFS objects | `C:\GPT GAME BUILDING\GyroBrothers\.git\lfs\objects` |
+| Registered historical checkouts with preserved local work | `C:\GPT GAME BUILDING\GyroBrothers-Worktrees` |
 | Large QA and human review | `C:\GPT GAME BUILDING\GyroBrothers-QA` |
 | Newest validated playable Windows executable | `builds/latest/SpinningMetal.exe` |
 | Milestone checkpoint | `builds/checkpoints/<TASK>/SpinningMetal.exe` |
@@ -57,8 +60,7 @@ GyroBrothers-QA/
     archive/       coherent historical task trees retained during migration
   archive/
     builds/        historical packaged checkpoints
-    repositories/  historical main worktree AND shared Git/LFS storage
-    worktrees/     preserved historical linked checkouts, including local edits
+    inactive-backups/  verified historical Git/LFS backups; no active backend
     tools/         externally supplied capture runtimes
   temp/
 ```
@@ -145,7 +147,8 @@ for large untracked files, unexpected root folders, QA media inside the repo,
 stray EXEs, hash duplicates and stale absolute task defaults. Review findings;
 the auditor never removes anything.
 
-`python tools/workspace/workspace.py clean-temp --task 002C.5.1` is a dry-run.
+`python tools/workspace/workspace.py clean-temp --task 002C.5.1 --dry-run` is a dry-run
+(also the default when neither action flag is supplied).
 It prints each exact known `.tmp`, `.part` or `.raw` intermediate under that
 task's `temp/`. Add `--apply` only after checking the list. It does not delete
 directory trees, final media, source art, JSON, build staging, logs or unknown
@@ -159,10 +162,25 @@ provenance; Git/LFS storage; any historical checkout with unique work; unrelated
 projects. `C:\GPT GAME BUILDING` is shared with unrelated projects. Their files
 and folders are outside this task's management boundary.
 
-The canonical checkout is a linked worktree. Shared Git/LFS storage is preserved
-under `GyroBrothers-QA/archive/repositories/topgame-task-002a/.git`; this is active
-repository infrastructure, **not disposable QA cache**. Use `git worktree list`
-and supported worktree operations. Historical checkouts moved under `archive/`
-retain local changes; never delete or prune them because their branch is old.
-Do not delete the QA archive or move its protected repository storage without
-repairing and validating every linked worktree.
+The canonical project is now a normal self-contained Git working repository.
+Its active metadata, refs, objects, reflogs and LFS store are inside
+`C:\GPT GAME BUILDING\GyroBrothers\.git`. Copying/backing up the whole canonical
+folder preserves the repository without depending on QA. The four registered
+historical checkouts live under `C:\GPT GAME BUILDING\GyroBrothers-Worktrees`.
+That separate root contains preserved unique local work and is essential source
+history, not generated output. Use `git worktree list` and supported worktree
+operations; never reset, clean, prune or delete those checkouts automatically.
+
+QA is non-authoritative for Git, LFS, live checkouts and production source. It may
+be relocated or regenerated without disabling normal Git operations. Preserve
+human-review artifacts, provenance, unknown historical material and deliberate
+backups rather than treating every QA file as disposable. Generated caches and
+intermediates may be reviewed for cleanup using the conservative rules above.
+
+The pre-hotfix Git/LFS snapshot at
+`GyroBrothers-QA/archive/inactive-backups/git-storage-909c225/git-metadata.inactive-backup`
+is an **inactive verified backup**, not a repository backend. No registered
+checkout points there. Its old paths and reflogs are recovery evidence only;
+do not repair that snapshot into the active topology. All evidence about the
+conversion is in `002C.5.1/manifests/git-storage-hotfix/`. The historical 002B
+copied Git pointer remains inactive documentation, never a registered worktree.

@@ -122,7 +122,7 @@ def audit(root=None, duplicate_min_bytes=65536) -> dict:
             for number, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
                 if re.search(r"[A-Za-z]:[/\\].*(?:task-00[23].*-qa|topgame-task-)", line, re.I):
                     stale.append({"path": row["path"], "line": number, "text": line.strip()})
-    expected = {".godot", "assets", "scripts", "tests", "tools", "docs", "builds"}
+    expected = {".git", ".godot", "assets", "scripts", "tests", "tools", "docs", "builds"}
     return {
         "repository": str(project), "qa_root": str(qa_root(root)),
         "large_untracked": [row for row in rows if not row["tracked"] and not row["ignored"] and row["bytes"] >= 1024 * 1024],
@@ -177,7 +177,9 @@ def main():
     review.add_argument("--out", type=Path)
     cleanup = commands.add_parser("clean-temp")
     cleanup.add_argument("--task")
-    cleanup.add_argument("--apply", action="store_true")
+    cleanup_mode = cleanup.add_mutually_exclusive_group()
+    cleanup_mode.add_argument("--dry-run", action="store_true", help="Print known intermediates without removing them (default)")
+    cleanup_mode.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     if args.command == "create-task":
         print(create_task_workspace(args.task, args.qa_root))
