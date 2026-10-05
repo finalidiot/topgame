@@ -1,0 +1,42 @@
+{
+  "task": "002C.5.2 playtest feedback",
+  "parent_sha": "a0e16ef9bc5711d21601314304db02c1ca1ad33d",
+  "branch": "task-002c5-2-parts-catalogue",
+  "scope": "Explicit human-requested drift, held-input, overdrive HUD, paid-route lifetime, Dead Centre and Run rerolls",
+  "current_regression": {
+    "suites": 45,
+    "counted_checks": 76836,
+    "unresolved_current_failures": [],
+    "report": "002C.5.2/manifests/002c5_2_feedback_acceptance_v2.json"
+  },
+  "historical_trajectory_equivalence": false,
+  "historical_comparisons": "Preserved failed exact trajectory comparisons: parts_legacy 0/48 and baseline_physics 23040/127776 differences. Archived whole-Run equality superseded, not run. Current retention proves144 old stats/contact/wall sections unchanged.",
+  "real_review": {
+    "video": "002C.5.2/video/002c5_2_feedback_showcase.mp4",
+    "seconds": 50.02,
+    "sha256": "114d5b2ec438eb5a9fa80c878091637a584d5b05e51432542ea2bf607a142176",
+    "actual_mechanics_gate": true,
+    "source_fingerprints_match": true,
+    "native_view": [
+      640,
+      360
+    ]
+  },
+  "source_art": {
+    "new_masters": 3,
+    "runtime_sheets": 3,
+    "authored_keys": 43,
+    "native_export_rgba_parity": true,
+    "report": "002C.5.2/manifests/002c5_2_feedback_effect_art.json"
+  },
+  "parts": {
+    "count": 31,
+    "legal_assemblies": 1089,
+    "catalogue_changed": false
+  },
+  "profile_unchanged": true,
+  "run_upgrade_budget": "planned Run-only; current temporary reroll charges implemented, no permanent upgrade purchase",
+  "build_result_record": "002C.5.2/manifests/002c5_2_feedback_checkpoint.json (exact final SHA/export/smoke/package/promotion evidence)",
+  "human_acceptance": "PENDING HOME HUMAN PLAYTEST",
+  "balance_concern": "Finite Dead Centre recovery prevents perpetual positional refill; some seeds still sustain strong stationary defence via existing kill/boss rewards."
+}

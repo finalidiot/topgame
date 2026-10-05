@@ -195,7 +195,7 @@ func _test_actions_and_combat() -> void:
 	battle.set_paused(true)
 	battle.set_paused(false)
 	var gated: Dictionary = _sample(battle)
-	check(Vector2(gated.direction).is_zero_approx() and not gated.burst and not gated.brake, "Held menu stick, Confirm and brake all require neutral after combat resume")
+	check(Vector2(gated.direction).x > 0.5 and not gated.burst and not gated.brake, "Held steering resumes immediately while Confirm and brake still require release")
 	_axis(JOY_AXIS_LEFT_X, 0.0)
 	_joy_button(JOY_BUTTON_A, false)
 	_joy_button(JOY_BUTTON_RIGHT_SHOULDER, false)

@@ -58,6 +58,8 @@ var _collection_snapshot: Dictionary = {}
 var _ownership_elapsed: float = 0.0
 var _ownership_flash: ColorRect
 var _ownership_note: Label
+var _rpm_overdrive: bool = false
+var _rpm_heat: float = 0.0
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -70,6 +72,7 @@ func _process(_delta: float) -> void:
 	_menu_clock += _delta
 	_animate_cards()
 	_animate_power_art(_delta)
+	if screen == "hud": _animate_rpm_meter()
 	if screen == "starter_owned":
 		_ownership_elapsed += _delta
 		if is_instance_valid(_ownership_flash): _ownership_flash.color.a = maxf(0.0, 0.14 - _ownership_elapsed * 0.3)
@@ -836,7 +839,9 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		var id: String = str(offer[index])
 		var power: Dictionary = Powers.get_offer(id, int(context.get("power_ranks", {}).get(id, 0)), str(context.get("power_mutations", {}).get(id, "")))
 		if power.is_empty(): power = Powers.get_power(id)
-		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed})
+		var payload: Dictionary = {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed}
+		if context.has("rerolls"): payload["offer_revision"] = int(context.rerolls.revision)
+		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", payload)
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
 		card.tooltip_text = str(power.name) + ": " + str(power.description)
@@ -854,8 +859,19 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		if id == focus_id: selected = card
 	_label(_content, "POWER FAMILIES  %d / %d  /  FILL SLOTS, THEN DEVELOP YOUR POWERS" % [owned.size(),Powers.FAMILY_CAP], Rect2(24, 281, 592, 15), 9, MUTED)
 	_power_labels(owned, 302)
-	_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
-	if not cards.is_empty(): _focus_rows([cards], selected)
+	var rows: Array = [cards]
+	if context.has("rerolls"):
+		var rerolls: Dictionary = context.rerolls
+		var reroll: Button = _button(_content, "REROLL  /  %d LEFT" % int(rerolls.charges), Rect2(437, 324, 179, 25), "reroll_power", {"encounter_id":encounter_id, "run_seed":run_seed, "offer_revision":int(rerolls.revision)})
+		reroll.name = "RerollPower"
+		reroll.add_theme_font_size_override("font_size", 10)
+		reroll.disabled = not bool(rerolls.available)
+		reroll.tooltip_text = "Spend one Run charge for a different offer. Drive through floor chips to collect more."
+		if not reroll.disabled: rows.append([reroll])
+		_label(_content, "CHOOSE / CONFIRM   DOWN: REROLL   PAUSE: RUN MENU", Rect2(24, 334, 402, 16), 8, MUTED)
+	else:
+		_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
+	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func _power_accent(power_id: String) -> Color:
 	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "dead_centre":Color("e9c67b"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
@@ -1060,13 +1076,36 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["enemy_bar"].value = enemy_spin
 	_hud["player_name"].text = str(stats.get("player_name", "YOUR TOP"))
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
-	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 7000.0))
+	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 9000.0))
+	_rpm_overdrive = bool(stats.get("redline_active", false)) or player_spin > 1.0
+	_rpm_heat = clampf(float(stats.get("redline_heat", 0.0)), 0.0, 1.0)
 	var recovery: float = float(stats.get("rpm_recovery",0.0))
-	if recovery > 0.0:
+	if player_spin > 1.0:
+		_hud["player_rpm"].text += "  +%d%% OVERDRIVE" % roundi((player_spin - 1.0) * 100.0)
+	elif _rpm_overdrive:
+		_hud["player_rpm"].text += "  OVERDRIVE"
+	elif recovery > 0.0:
 		_hud["player_rpm"].text += "  +%d %s" % [int(recovery*9000),"SECOND WIND" if stats.get("rpm_recovery_source","") == "second_wind" else "RECLAIM"]
-	elif player_spin > 1.0: _hud["player_rpm"].text += "  OVERCLOCK"
 	elif player_spin < 0.25: _hud["player_rpm"].text += "  LOW SPIN"
 	_hud["player_rpm"].modulate = Color("8be6aa") if recovery > 0.0 else (Color("ffb56b") if player_spin > 1.0 else (Color("ff7864") if player_spin < 0.25 else Color.WHITE))
+	_animate_rpm_meter()
+	_hud["rerolls"].visible = bool(stats.get("is_run", false))
+	_hud["rerolls"].text = "REROLLS  %d" % int(stats.get("rerolls", 0))
+	_hud["anchor"].visible = bool(stats.get("dead_centre_owned", false))
+	if _hud["anchor"].visible:
+		var charge: float = float(stats.get("dead_centre_charge", 0.0))
+		var maturity: float = float(stats.get("dead_centre_maturity", 0.0))
+		var recovering: float = float(stats.get("dead_centre_recovery_rate", 0.0))
+		if float(stats.get("dead_centre_recovery_remaining", 1.0)) <= 0.0:
+			_hud["anchor"].text = "MOVE OUT / REARM  %d%%" % roundi(float(stats.get("dead_centre_rearm_progress", 0.0)) * 100.0)
+		elif not bool(stats.get("dead_centre_central_hold", false)):
+			_hud["anchor"].text = "SEEK CENTRE / HOLD"
+		elif maturity <= 0.0:
+			_hud["anchor"].text = "ATTACHING  %d%%" % roundi(charge * 100.0)
+		elif recovering > 0.0:
+			_hud["anchor"].text = "ANCHORED  +%d RPM/s" % roundi(recovering * 9000.0)
+		else:
+			_hud["anchor"].text = "ANCHORED  %d%%" % roundi(maturity * 100.0)
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
 	var is_swarm: bool = bool(stats.get("is_swarm", false))
 	_hud["enemy_bar"].visible = not is_swarm
@@ -1170,9 +1209,16 @@ func _create_hud() -> void:
 	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 13, 202, 17), 11, BLUE)
 	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 13, 202, 17), 11, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["player_bar"] = _bar(_content, Rect2(22, 34, 202, 8), BLUE)
+	# Keep real overcap in the same meter: 9000RPM is the normal-reserve notch,
+	# and the remaining pixels show actual reserve up to the1.24 Runaway cap.
+	_hud["player_bar"].max_value = 1.24
+	_hud["normal_rpm_tick"] = _rect(_content, Rect2(22 + roundf(202.0 / 1.24), 33, 1, 10), Color("d4dcda"))
+	_hud["player_bar"].tooltip_text = "White notch: normal 9000 RPM. Overdrive extends real spin reserve beyond it."
 	_hud["enemy_bar"] = _bar(_content, Rect2(416, 34, 202, 8), ORANGE)
 	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
 	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["anchor"] = _label(_content, "", Rect2(22, 65, 202, 13), 8, Color("dde3df"))
+	_hud["rerolls"] = _label(_content, "", Rect2(22, 304, 128, 13), 9, BLUE)
 	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 30, 202, 14), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
@@ -1204,3 +1250,11 @@ func _create_hud() -> void:
 	var focus: Control = get_viewport().gui_get_focus_owner()
 	if focus != null:
 		focus.release_focus()
+
+func _animate_rpm_meter() -> void:
+	if screen != "hud" or not _hud.has("player_bar"): return
+	var pulse: float = 0.5 + sin(_menu_clock * (8.0 + _rpm_heat * 8.0)) * 0.5
+	var color: Color = Color("ff632e").lerp(Color("ffb44b"), pulse) if _rpm_overdrive else BLUE
+	var fill: StyleBoxFlat = _hud["player_bar"].get_theme_stylebox("fill") as StyleBoxFlat
+	fill.bg_color = color
+	if _rpm_overdrive: _hud["player_rpm"].modulate = color

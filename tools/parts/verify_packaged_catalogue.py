@@ -8,12 +8,14 @@ promotion, player-save reset, gameplay injection or existing-file overwrite.
 from __future__ import annotations
 
 import argparse
+import hashlib
 from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
 import sys
 import uuid
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK = "002C.5.2"
@@ -115,6 +117,29 @@ def main() -> None:
         report["assets"] = {"path": str(asset_report), "sha256": workspace.sha256(asset_report),
                             "textures_verified": len(rows), "catalogue_matches_source": True,
                             "packaged_catalogue_sha256": assets["catalogue_sha256"]}
+        # New runtime feedback sheets must survive the clean release export with
+        # exact alpha and visible RGB; Godot fills RGB behind alpha-zero borders.
+        feedback_source = ROOT / "assets/powers/feedback_002c5_2/manifest.json"
+        expected_feedback = json.loads(feedback_source.read_text(encoding="utf-8"))
+        if json.loads(assets.get("feedback_json", "null")) != expected_feedback:
+            raise RuntimeError("Packaged feedback manifest differs from current source")
+        feedback_rows = assets.get("feedback_textures", [])
+        if len(feedback_rows) != 3 or {r.get("kind") for r in feedback_rows} != {"centre", "impact", "pickup"}:
+            raise RuntimeError("Actual package did not inspect all three feedback sheets")
+        for row in feedback_rows:
+            path = ROOT / row["path"].removeprefix("res://")
+            with Image.open(path) as image:
+                size = list(image.size)
+                data = bytearray(image.convert("RGBA").tobytes())
+                for offset in range(0, len(data), 4):
+                    if data[offset + 3] == 0:
+                        data[offset:offset + 3] = b"\0\0\0"
+                rgba = hashlib.sha256(data).hexdigest()
+            if (not row.get("valid") or not row.get("visible_pixels") or row.get("size") != size
+                    or row.get("transparent_rgb_normalized") is not True or row.get("visible_rgba_sha256") != rgba):
+                raise RuntimeError("Packaged feedback sheet pixels differ: " + row["path"])
+        report["assets"]["feedback_textures_verified"] = 3
+        report["assets"]["feedback_manifest_matches_source"] = True
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

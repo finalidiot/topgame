@@ -10,6 +10,7 @@ const Powers = preload("res://scripts/run_powers.gd")
 const Encounters = preload("res://scripts/encounters.gd")
 const Collection = preload("res://scripts/collection_save.gd")
 const PackageProbe = preload("res://scripts/parts_package_probe.gd")
+const RunPickupScript = preload("res://scripts/run_pickups.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -20,6 +21,7 @@ var last_result: Dictionary = {}
 var battle: Node2D
 var menus: Control
 var sounds: Node
+var reroll_pickups: Node2D
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var smoke_mode: bool = false
 var review_audio: bool = false
@@ -114,6 +116,9 @@ func _ready() -> void:
 	battle.progression_events.connect(_progression_events)
 	battle.threat_cleared.connect(_threat_cleared)
 	battle.threat_started.connect(_threat_started)
+	reroll_pickups = RunPickupScript.new()
+	battle.add_child(reroll_pickups)
+	reroll_pickups.reroll_collected.connect(_reroll_collected)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
 	add_child(layer)
@@ -344,6 +349,7 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	battle._emit_hud()
 
 func _clear_run() -> void:
+	if is_instance_valid(reroll_pickups): reroll_pickups.clear()
 	_run_launched = false
 	_practice_branch = ""
 	_acquisition_remaining = 0.0
@@ -386,6 +392,7 @@ func _restart_run() -> void:
 	_reward_focus_id = ""
 	_draft_resume_origin = "starting"
 	run_context.start(selected, fresh_seed, identity)
+	reroll_pickups.clear()
 	mode = "run"
 	_hide_battle()
 	_show_reward()
@@ -405,6 +412,7 @@ func _launch_run_encounter() -> void:
 	battle.visible = true
 	battle.set_physics_process(true)
 	battle.begin_run(run_context.selected_build, encounter, run_context.run_seed)
+	reroll_pickups.setup(battle, run_context)
 	_apply_settings()
 	battle._emit_hud()
 
@@ -415,7 +423,8 @@ func _show_reward() -> void:
 	var starting: bool = run_context.pending_draft_kind == "starting"
 	var context: Dictionary = {"title":"CHOOSE YOUR FIRST POWER" if starting else "LEVEL %d / CHOOSE A POWER" % run_context.pending_draft_level,
 		"subtitle":"Enter the arena already dangerous." if starting else "Battle paused. Add a power or invest in one you own.",
-		"resume_label":_acquisition_prompt(), "power_ranks":run_context.power_ranks, "power_mutations":run_context.power_mutations}
+		"resume_label":_acquisition_prompt(), "power_ranks":run_context.power_ranks, "power_mutations":run_context.power_mutations,
+		"rerolls":run_context.reroll_snapshot()}
 	menus.show_reward(run_context.pending_offer, run_context.owned_power_ids, run_context.slot, run_context.pending_draft_id, run_context.run_seed, _reward_focus_id, context)
 
 func _show_mutation(announce: bool = true) -> void:
@@ -440,7 +449,11 @@ func _acquisition_prompt() -> String:
 func _threat_cleared(summary: Dictionary) -> void:
 	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
 	if summary != battle.continuous.last_clear or int(summary.get("run_seed",-1)) != run_context.run_seed: return
+	reroll_pickups.notify_clear(summary)
 	battle._emit_hud()
+
+func _reroll_collected(_id: String) -> void:
+	if screen == "battle" and mode == "run" and run_context.is_active(): battle._emit_hud()
 
 func _threat_started(summary: Dictionary) -> void:
 	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
@@ -487,6 +500,7 @@ func _hud_updated(stats: Dictionary) -> void:
 	stats["power_ranks"] = run_context.power_ranks if mode == "run" else {}
 	stats["power_mutations"] = run_context.power_mutations if mode == "run" else {}
 	stats["is_run"] = mode == "run"
+	stats["rerolls"] = run_context.reroll_charges if mode == "run" else 0
 	if not _practice_branch.is_empty():
 		stats["run_label"] = "BUILD PRACTICE / " + _practice_branch.replace("_", " ").to_upper()
 		stats["owned_power_ids"] = battle.player_entity().get("powers", [])
@@ -528,6 +542,7 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["rpm_economy"] = battle.continuous.economy.snapshot()
 		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
 		last_result["investments"] = run_context.committed_rewards
+		last_result["rerolls"] = run_context.reroll_snapshot()
 		if not smoke_mode:
 			var diagnostic_path: String = "user://last_run_director.json" if preferences_path == "user://prototype.cfg" else collection_path + ".last_run_director.json"
 			var diagnostic: FileAccess = FileAccess.open(diagnostic_path,FileAccess.WRITE)
@@ -588,6 +603,7 @@ func _action(name: String, value: Variant = null) -> void:
 		"choose_power":
 			if mode == "run" and screen == "reward" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if int(value.get("offer_revision", 0)) != int(run_context.reroll_snapshot().revision): return
 				if run_context.choose_power(str(value.get("encounter_id", "")), str(value.get("power_id", ""))):
 					if not run_context.pending_mutation_power.is_empty():
 						_mutation_focus_id = ""
@@ -596,6 +612,12 @@ func _action(name: String, value: Variant = null) -> void:
 						if _draft_resume_origin == "battle": battle.acquire_run_power(str(value.power_id), int(run_context.power_ranks.get(str(value.power_id), 1)))
 						if not smoke_mode: sounds.play_sound("card_select")
 						_show_acquisition(str(value.power_id))
+		"reroll_power":
+			if mode == "run" and screen == "reward" and value is Dictionary:
+				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if run_context.reroll_offer(str(value.get("encounter_id", "")), int(value.get("offer_revision", -1))):
+					_reward_focus_id = ""
+					_show_reward()
 		"choose_mutation":
 			if mode == "run" and screen == "mutation" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
@@ -746,7 +768,12 @@ func _smoke_test() -> void:
 	await _capture("09c-owned-workshop")
 	_action("launch_owned_run")
 	await _capture("10-starting-draft")
-	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed})
+	var reroll_button: Button = menus._content.get_node("RerollPower")
+	assert(not reroll_button.disabled and run_context.reroll_charges == 1)
+	reroll_button.pressed.emit()
+	assert(screen == "reward" and run_context.reroll_charges == 0 and int(run_context.reroll_snapshot().revision) == 1)
+	await _capture("10a-rerolled-draft")
+	_action("choose_power", {"encounter_id":run_context.pending_draft_id,"power_id":run_context.pending_offer[0],"run_seed":run_context.run_seed,"offer_revision":run_context.reroll_snapshot().revision})
 	await _capture("11-starting-acquisition")
 	await get_tree().create_timer(0.6).timeout
 	for slot: int in range(1, 11):

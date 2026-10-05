@@ -33,8 +33,13 @@ var _stopped: bool = false
 # Task 002C.5 migrates the continuous player; standalone accepted fixtures keep
 # their prior contract. Practice/semantic hosts opt in through ability_rebalance.
 const REDLINE_MOTION_QUOTA: float = 0.14
-const MODERN_TRACE_LIMIT: int = 10
+const MODERN_TRACE_LIMIT: int = 26
 const MODERN_GHOST_TRACE_LIMIT: int = 40
+const MODERN_DEEP_TRACE_LIMIT: int = 36
+const ANCHOR_MATURITY_SECONDS: float = 6.0
+const ANCHOR_RECOVERY_RADIUS: float = 58.0
+const ANCHOR_REARM_RADIUS: float = 82.0
+const ANCHOR_REARM_SECONDS: float = 1.25
 const CIRCUIT_POINT_LIMIT: int = 224
 const CIRCUIT_TARGET_LIMIT: int = 8
 
@@ -60,6 +65,16 @@ func setup(battle: Object) -> void:
 		fighter["second_wind_used"] = false
 		fighter["player_cause"] = {}
 		fighter["anchor_charge"] = 0.0
+		fighter["anchor_hold_seconds"] = 0.0
+		fighter["anchor_maturity"] = 0.0
+		fighter["anchor_recovery_rate"] = 0.0
+		fighter["anchor_central_hold"] = false
+		fighter["anchor_pull_strength"] = 0.0
+		fighter["anchor_pull_radius"] = 0.0
+		fighter["anchor_feedback_enabled"] = false
+		fighter["anchor_recovery_remaining"] = 0.20
+		fighter["anchor_rearm_progress"] = 0.0
+		fighter["anchor_hit_time"] = 0.0
 		fighter["stored_force"] = 0.0
 		fighter["runaway_heat"] = 0.0
 		fighter["slipstream_time"] = 0.0
@@ -93,6 +108,8 @@ func _state(fighter: Dictionary) -> Dictionary:
 			"trace_origin": Vector2(fighter["pos"]), "trace_path": [Vector2(fighter["pos"])], "trace_hits": {},
 			"runaway_ready": 0.0, "breakneck_recovered": false,
 			"anchor_announced": false, "anchor_fx_ready": 0.0, "anchor_lockout": 0.0,
+			"anchor_gain_ready": 0.0, "anchor_gain_pending": 0.0,
+			"anchor_gain_left": 0.20, "anchor_gain_capacity": 0.20, "anchor_rearm_seconds": 0.0,
 			"slip_until": 0.0, "slip_ready": 0.0, "slip_inside": false,
 			"circuit_ready": 0.0, "circuit_after": -1.0,
 			"last_primary_cause": {},
@@ -157,6 +174,7 @@ func begin_tick(dt: float) -> void:
 	time += dt
 	for fighter: Dictionary in _fighters():
 		var state: Dictionary = _state(fighter)
+		fighter["anchor_hit_time"] = maxf(0.0, float(fighter.get("anchor_hit_time", 0.0)) - dt)
 		var was_redline: bool = float(fighter.get("redline_time", 0.0)) > 0.0
 		fighter["redline_time"] = maxf(0.0, float(state["redline_until"]) - time)
 		fighter["iron_comet_time"] = maxf(0.0, float(state["comet_until"]) - time)
@@ -328,6 +346,8 @@ func movement_control(fighter: Dictionary, direction: Vector2, braking: bool, dt
 		if mutation(fighter, "dead_centre") == "bulwark": modifiers["drag"] = charge * 16.0
 		if charge > 0.0:
 			fighter["wobble"] = maxf(0.0, float(fighter["wobble"]) - charge * dt * (0.10 if rank(fighter, "dead_centre") == 1 else 0.23))
+		if _modern(fighter):
+			_modern_anchor_movement(fighter, controlled, dt, modifiers)
 	if _modern(fighter):
 		_modern_movement(fighter, direction, braking, dt, modifiers)
 	elif redline_active(fighter) and active_redline_rank(fighter) >= 2:
@@ -361,7 +381,101 @@ func inverse_mass(fighter: Dictionary) -> float:
 	var charge: float = float(fighter.get("anchor_charge", 0.0)) if _has(fighter, "dead_centre") else 0.0
 	var multiplier: float = 1.0 + charge * charge * (3.0 if rank(fighter, "dead_centre") <= 1 else 8.0)
 	if mutation(fighter, "dead_centre") == "bulwark": multiplier = 1.0 + pow(charge, 4.0) * 80.0
+	elif _modern(fighter) and charge > 0.0:
+		multiplier = 1.0 + charge * charge * ((5.0 if rank(fighter, "dead_centre") <= 1 else 12.0) + float(fighter.get("anchor_maturity", 0.0)) * 3.0)
 	return 1.0 / (mass * multiplier)
+
+## The brace dissipates collision shock into its physical floor connection.
+## Canonical solvers apply this to both full and small body RPM/wobble loss.
+## It never removes contact damage, changes outgoing power or grants immunity.
+func incoming_rpm_scale(fighter: Dictionary) -> float:
+	if not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre"): return 1.0
+	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
+	var maturity: float = clampf(float(fighter.get("anchor_maturity", 0.0)), 0.0, 1.0)
+	var defence: float = (0.26 if rank(fighter, "dead_centre") <= 1 else 0.36) + maturity * 0.10
+	if mutation(fighter, "dead_centre") == "bulwark": defence = 0.45 + maturity * 0.10
+	return clampf(1.0 - charge * charge * defence, 0.45, 1.0)
+
+func _modern_anchor_movement(fighter: Dictionary, controlled: bool, dt: float, modifiers: Dictionary) -> void:
+	var state: Dictionary = _state(fighter)
+	fighter["anchor_feedback_enabled"] = true
+	var level: int = rank(fighter, "dead_centre")
+	var capacity: float = 0.20 if level <= 1 else 0.28
+	# A genuine rank investment adds only its additional recovery capacity.
+	# Dropping charge, taking a hit or bursting cannot mint another quota.
+	if capacity > float(state.anchor_gain_capacity):
+		state.anchor_gain_left = minf(capacity, float(state.anchor_gain_left) + capacity - float(state.anchor_gain_capacity))
+		state.anchor_gain_capacity = capacity
+	var deliberate_rotation: bool = _live(fighter) and Vector2(fighter.pos).length() >= ANCHOR_REARM_RADIUS and float(state.motion_input) >= 0.35 and float(state.motion_speed) >= 35.0 and not bool(state.motion_braking)
+	state.anchor_rearm_seconds = minf(ANCHOR_REARM_SECONDS, float(state.anchor_rearm_seconds) + dt) if deliberate_rotation and float(state.anchor_gain_left) < capacity - 0.000001 else 0.0
+	if float(state.anchor_rearm_seconds) >= ANCHOR_REARM_SECONDS - 0.000001:
+		state.anchor_gain_left = capacity
+		state.anchor_rearm_seconds = 0.0
+		_record("anchor_rearm", int(fighter.entity_id))
+	fighter["anchor_recovery_remaining"] = maxf(0.0, float(state.anchor_gain_left))
+	fighter["anchor_rearm_progress"] = float(state.anchor_rearm_seconds) / ANCHOR_REARM_SECONDS
+	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
+	var full_hold: bool = _live(fighter) and float(fighter.rpm) > 0.045 and controlled and time >= float(state.anchor_lockout) and charge >= 0.70
+	var hold: float = float(fighter.get("anchor_hold_seconds", 0.0))
+	hold = minf(ANCHOR_MATURITY_SECONDS, hold + dt) if full_hold else maxf(0.0, hold - dt * 3.0)
+	fighter["anchor_hold_seconds"] = hold
+	fighter["anchor_maturity"] = hold / ANCHOR_MATURITY_SECONDS
+	fighter["anchor_recovery_rate"] = 0.0
+	var maturity: float = float(fighter.anchor_maturity)
+	modifiers.drag = float(modifiers.drag) + charge * (2.0 + maturity * 4.0)
+	modifiers.recovery = float(modifiers.recovery) * (1.0 + charge * (0.30 + maturity * 0.70))
+	if charge > 0.0: fighter.wobble = maxf(0.0, float(fighter.wobble) - charge * maturity * dt * 0.16)
+	# Centre sustain is earned by maintaining the central floor socket, not by
+	# simply owning the power or parking near a wall. The below-full ceiling
+	# leaves every rank damageable and never creates overclock reserve.
+	var central: bool = Vector2(fighter.pos).length() <= ANCHOR_RECOVERY_RADIUS and Vector2(fighter.vel).length() <= 55.0
+	fighter["anchor_central_hold"] = full_hold and central
+	fighter["anchor_pull_strength"] = 0.0
+	fighter["anchor_pull_radius"] = 0.0
+	if full_hold and central: _anchor_pull(fighter, maturity, level, dt)
+	var ceiling: float = 0.78 if level <= 1 else 0.86
+	if mutation(fighter, "dead_centre") == "bulwark": ceiling = 0.90
+	if not full_hold or not central or float(fighter.rpm) >= ceiling or float(state.anchor_gain_left) <= 0.000001:
+		state.anchor_gain_pending = 0.0
+		return
+	var rate: float = lerpf(0.003 if level <= 1 else 0.004, 0.009 if level <= 1 else 0.012, maturity)
+	fighter.anchor_recovery_rate = rate
+	state.anchor_gain_pending = minf(0.012, float(state.anchor_gain_pending) + rate * dt)
+	if time < float(state.anchor_gain_ready): return
+	state.anchor_gain_ready = time + 0.50
+	var gained: float = _gain(fighter, minf(float(state.anchor_gain_pending), minf(ceiling - float(fighter.rpm), float(state.anchor_gain_left))), "dead_centre")
+	state.anchor_gain_pending = 0.0
+	if gained > 0.0:
+		state.anchor_gain_left = maxf(0.0, float(state.anchor_gain_left) - gained)
+		fighter.anchor_recovery_remaining = state.anchor_gain_left
+		fighter.energy = fighter.rpm
+		_record("anchor_recover", int(fighter.entity_id))
+
+## Sustained central lock bends nearby approaches toward the real floor socket.
+## A dt-scaled velocity offer, finite radius, target budget and inward-speed
+## ceiling prevent stacking into unlimited speed or freezing an attacking boss.
+func _anchor_pull(owner: Dictionary, maturity: float, level: int, dt: float) -> void:
+	var strength: float = lerpf(4.0, 32.0 if level <= 1 else 46.0, maturity)
+	var radius: float = lerpf(44.0, 104.0 if level <= 1 else 124.0, maturity)
+	owner["anchor_pull_strength"] = strength
+	owner["anchor_pull_radius"] = radius
+	var count: int = 0
+	for target: Dictionary in _fighters():
+		if count >= 16: break
+		if not _live(target) or not _opposes(owner, target): continue
+		var offset: Vector2 = Vector2(owner.pos) - Vector2(target.pos)
+		var distance: float = offset.length()
+		var socket: float = float(owner.get("radius", 12.0)) + float(target.get("radius", 12.0)) + 2.0
+		if distance <= socket or distance >= radius: continue
+		var inward: Vector2 = offset / distance
+		var inward_speed: float = Vector2(target.vel).dot(inward)
+		if inward_speed >= 120.0: continue
+		var resistance: float = clampf(8.0 / maxf(1.0, float(target.get("mass", 8.0))), 0.35, 1.0)
+		if str(target.get("enemy_kind", "")) == "boss": resistance *= 0.45
+		var falloff: float = clampf((radius - distance) / maxf(1.0, radius - socket), 0.0, 1.0)
+		var velocity: float = minf(maxf(0.0, 120.0 - inward_speed), strength * resistance * falloff * minf(dt, 0.10))
+		_request(target, inward * velocity, _owned_effect_cause(owner, "dead_centre_pull"))
+		count += 1
 
 func _break_anchor(fighter: Dictionary) -> void:
 	var state: Dictionary = _state(fighter)
@@ -369,6 +483,15 @@ func _break_anchor(fighter: Dictionary) -> void:
 		_record("anchor_break", int(fighter["entity_id"]))
 		_fx("anchor_break", fighter["pos"], Vector2(fighter["vel"]).normalized())
 	fighter["anchor_charge"] = 0.0
+	fighter["anchor_hold_seconds"] = 0.0
+	fighter["anchor_maturity"] = 0.0
+	fighter["anchor_recovery_rate"] = 0.0
+	fighter["anchor_central_hold"] = false
+	fighter["anchor_pull_strength"] = 0.0
+	fighter["anchor_pull_radius"] = 0.0
+	state["anchor_gain_pending"] = 0.0
+	state["anchor_rearm_seconds"] = 0.0
+	fighter["anchor_rearm_progress"] = 0.0
 	state["anchor_announced"] = false
 	state["anchor_lockout"] = time + 0.35
 
@@ -377,6 +500,8 @@ func _anchor_contact(owner: Dictionary, target: Dictionary, severity: float, nor
 	if not _has(owner, "dead_centre") or charge < 0.25: return
 	var state: Dictionary = _state(owner)
 	var branch: String = mutation(owner, "dead_centre")
+	if _modern(owner) and severity >= 0.22:
+		owner["anchor_hit_time"] = 0.32
 	if branch == "counterweight":
 		var before: float = float(owner.get("stored_force", 0.0))
 		owner["stored_force"] = minf(150.0, before + incoming_force * charge * 0.42)
@@ -393,6 +518,7 @@ func _anchor_contact(owner: Dictionary, target: Dictionary, severity: float, nor
 		_record("bulwark_impact", int(owner["entity_id"]), int(target["entity_id"]))
 		_fx("bulwark_impact", position, normal, severity)
 	var threshold: float = 120.0 if rank(owner, "dead_centre") == 1 else (480.0 if branch == "bulwark" else 200.0)
+	if _modern(owner): threshold = 220.0 if rank(owner, "dead_centre") == 1 else (600.0 if branch == "bulwark" else 330.0)
 	if incoming_force > threshold:
 		_break_anchor(owner)
 	else:
@@ -539,10 +665,10 @@ func after_movement() -> void:
 			owner["energy"] = owner["rpm"]
 			var start: Vector2 = path.front()
 			var direction: Vector2 = _outward(start, position, Vector2(owner["vel"]).normalized())
-			var lifetime: float = (1.5 if level == 1 else (6.0 if branch == "ghost_circuit" else 2.6)) if _modern(owner) else (TRACE_SECONDS if level == 1 else (5.0 if branch == "ghost_circuit" else 2.3))
+			var lifetime: float = (3.4 if level == 1 else (6.0 if branch == "ghost_circuit" else 4.6)) if _modern(owner) else (TRACE_SECONDS if level == 1 else (5.0 if branch == "ghost_circuit" else 2.3))
 			var trace: Dictionary = {"a": start, "b": position, "points": path.duplicate(), "direction": direction,
 				"owner_entity_id": int(owner["entity_id"]), "owner_id": str(owner["owner_id"]), "team_id": str(owner["team_id"]),
-				"rank": level, "mutation": branch, "energized": false,
+				"rank": level, "mutation": branch, "energized": false, "extended_route": _modern(owner),
 				"created_at": time, "expires_at": time + lifetime, "life": lifetime, "max_life": lifetime,
 				"cause": _owned_effect_cause(owner, "afterimage")}
 			traces.append(trace)
@@ -553,7 +679,7 @@ func after_movement() -> void:
 			for active: Dictionary in traces:
 				if int(active["owner_entity_id"]) == int(owner["entity_id"]):
 					owned_count += 1
-			var trace_limit: int = (MODERN_TRACE_LIMIT if _modern(owner) else MAX_TRACES) if level == 1 else (MODERN_GHOST_TRACE_LIMIT if _modern(owner) and branch == "ghost_circuit" else MAX_ESCALATED_TRACES)
+			var trace_limit: int = (MODERN_TRACE_LIMIT if _modern(owner) else MAX_TRACES) if level == 1 else ((MODERN_GHOST_TRACE_LIMIT if branch == "ghost_circuit" else MODERN_DEEP_TRACE_LIMIT) if _modern(owner) else MAX_ESCALATED_TRACES)
 			if owned_count > trace_limit:
 				for index: int in range(traces.size()):
 					if int(traces[index]["owner_entity_id"]) == int(owner["entity_id"]):

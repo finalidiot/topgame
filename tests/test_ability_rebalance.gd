@@ -255,7 +255,7 @@ func _test_rank_routes() -> void:
 		h.runtime.flush_contact_powers()
 		check(h.runtime.traces.size() == 1 and h.entity(2).vel.y > 0.0 and h.entity(2).wobble > 0.0, "Rank %d route immediately disrupts a hostile at ordinary movement speed" % level)
 		strengths.append(h.entity(2).vel.y)
-		h.runtime.begin_tick(1.6)
+		h.runtime.begin_tick(3.5)
 		check(h.runtime.traces.is_empty() if level == 1 else not h.runtime.traces.is_empty(), "Rank II meaningfully extends route persistence")
 	check(strengths[1] > strengths[0] * 1.5, "Rank II physical route pressure is a deeper useful investment")
 
