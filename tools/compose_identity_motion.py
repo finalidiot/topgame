@@ -13,6 +13,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 ROOT=Path(__file__).resolve().parents[1]
 FFMPEG='C:/GPT GAME BUILDING/task-002c5-qa/runtimes/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe'
 SIZE=(1280,720); FPS=60
+CARD_SECONDS=1.2
+GAME_SECONDS=1.8
 NAMES={'impact_wake':'Impact Wake II','redline':'Redline II','iron_comet':'Iron Comet II',
        'dead_centre':'Dead Centre II','afterimage':'Afterimage II','chain_impact':'Chain Impact II',
        'clutch':'Clutch II','high_gear':'High Gear II','orbit_drive':'Orbit Drive II',
@@ -92,11 +94,12 @@ def contact_sheets(motion,out):
         summaries.append({'selection':selection,'start':run['actual_start'],'window_counters':run['window_counters'],'review_at':at})
     (out/'motion-review-index.json').write_text(json.dumps(summaries,indent=2))
 
-def compose(motion,out,meta):
-    showcase=encoder(out/'002c5_power_art_showcase.mp4')
-    blind=encoder(out/'002c5_power_blind_review.mp4')
+def compose(motion,out,meta,correction_v2=False):
+    showcase=encoder(out/('002c5_power_art_showcase_v2.mp4' if correction_v2 else '002c5_power_art_showcase.mp4'))
+    blind=encoder(out/('002c5_power_blind_review_v2.mp4' if correction_v2 else '002c5_power_blind_review.mp4'))
     segments=[]
     for selection,art_id,start in SHOW:
+        if correction_v2 and selection=='orbit_drive':start=.5
         report=json.loads((motion/(selection+'.json')).read_text());run=report['runs'][0]
         assert run['capture_frames']==360 and report['blind'] and not report['diagnostic']
         art=meta['art'][art_id];icon=source_image(art['icon']).crop((art['icon_frame']*16,0,(art['icon_frame']+1)*16,16))
@@ -111,25 +114,27 @@ def compose(motion,out,meta):
             d.text((52,655),'Controlled single-family opening builds; full launch reserve, inputs only.',font=FONT,fill='#bbc8cf')
             showcase.stdin.write(canvas.tobytes())
         count=0
-        for frame in decode(motion/(selection+'.avi'),start,1.8):
+        for frame in decode(motion/(selection+'.avi'),start,GAME_SECONDS):
             blind.stdin.write(frame.tobytes())
             d=ImageDraw.Draw(frame);d.rectangle((0,672,1279,719),fill='#111b24')
             d.text((24,683),NAMES[selection]+' / REAL COMBAT / steering, Burst, brake',font=FONT,fill='#e4ebd6')
             showcase.stdin.write(frame.tobytes());count+=1
-        assert count==108,(selection,count)
+        assert count==round(GAME_SECONDS*FPS),(selection,count)
         segments.append({'selection':selection,'art_id':art_id,'source_avi':str(motion/(selection+'.avi')),
-                         'actual_gameplay_start':run['actual_start']+start,'gameplay_seconds':1.8,'card_seconds':1.2,
+                         'actual_gameplay_start':run['actual_start']+start,'gameplay_seconds':GAME_SECONDS,'card_seconds':CARD_SECONDS,
                          'recorded_window_procs':run['window_counters']})
         print(selection+' editorial segment composed',flush=True)
     for process in [showcase,blind]: process.stdin.close();assert process.wait()==0
-    (out/'showcase-provenance.json').write_text(json.dumps({'showcase_seconds':39,'blind_seconds':23.4,
+    (out/'showcase-provenance.json').write_text(json.dumps({'showcase_seconds':len(SHOW)*(CARD_SECONDS+GAME_SECONDS),'blind_seconds':len(SHOW)*GAME_SECONDS,
         'encoding':'1280x72060fps H264 yuv420p faststart muted. Card nearest6x; gameplay native integer2x1280x720 untouched except labelled footer in showcase. Blind removes cards/names/footer.','segments':segments},indent=2))
 
 def main():
+    global GAME_SECONDS
     p=argparse.ArgumentParser();p.add_argument('--motion',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--sheets-only',action='store_true');args=p.parse_args();args.out.mkdir(parents=True,exist_ok=True)
+    p.add_argument('--sheets-only',action='store_true');p.add_argument('--correction-v2',action='store_true');args=p.parse_args();args.out.mkdir(parents=True,exist_ok=True)
+    if args.correction_v2:GAME_SECONDS=2.4
     meta=json.loads((ROOT/'assets/powers/identity_manifest.json').read_text())
-    if not args.sheets_only:compose(args.motion,args.out,meta)
+    if not args.sheets_only:compose(args.motion,args.out,meta,args.correction_v2)
     contact_sheets(args.motion,args.out)
 
 if __name__=='__main__':main()

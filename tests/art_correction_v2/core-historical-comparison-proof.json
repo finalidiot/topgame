@@ -1,0 +1,60 @@
+{
+  "baseline_revision": "d0d37e5",
+  "method": "Opened actual tagged native historical card/icon/FX cels and exact accepted native top-body cels, compared their visible compositions; verified every chosen reference remains byte-identical to Git d0d37e5.",
+  "historical_comparison_color": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical-core-comparison.png",
+  "historical_comparison_grayscale": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical-core-comparison-gray.png",
+  "accepted_top_pixels": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\accepted-actual-top-pixels.png",
+  "rejected_snapshot": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\before\\core-snapshot.json",
+  "references": [
+    {
+      "path": "assets/source-art/roster_cards_002c5.aseprite",
+      "d0d37e5_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/source-art/roster_icons_002c5.aseprite",
+      "d0d37e5_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/source-art/roster_fx_002c5.aseprite",
+      "d0d37e5_sha256": "a1904628a27414e37a8a64d3cb1551c16e513ba5ee6dedbe4876b70162321c09",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/source-art/starter_blade_accents_002b1.aseprite",
+      "d0d37e5_sha256": "b30e1f2ee67673d4811126f503d8058273ef9437f1232fd81ba6e5d2bcaefe7f",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/top/parts/ratchets/mid.png",
+      "d0d37e5_sha256": "92fae78eef07a0ed837bc494e1c37ccf10df91f8f71b5480e2765d7edfe57fd0",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/top/parts/bits/flat.png",
+      "d0d37e5_sha256": "b56c289894f89cc3049f44c716acecd39cfdd052dd068aed81a317fbebd6b7b1",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/top/parts/bits/needle.png",
+      "d0d37e5_sha256": "6a9dbdcc261baf007704ecf986b9970e71c69c9de4da98d7a344812617f3c079",
+      "unchanged_reference_bytes": true
+    },
+    {
+      "path": "assets/top/parts/bits/rubber.png",
+      "d0d37e5_sha256": "5f481346cef552d4590f59d6299588e1d2f02317fb3e824a792cb4c59d73a88f",
+      "unchanged_reference_bytes": true
+    }
+  ],
+  "correction_summary": {
+    "momentum_bank": "Detached cassette removed; actual top and folded heel/floor braking wake -> directed launch.",
+    "predator_line": "Comb and added jaws removed; two actual tops pursue one actual rival with floor strokes and genuine rim contact.",
+    "crash_guard": "Piston/box removed; actual collision, absorbed local displacement and redirected rival exit.",
+    "crosscut": "Artificial Rank II blade extension removed; actual top bodies, offset contact and unequal floor exits."
+  },
+  "source_parity_proof": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\core-review\\core-native-source-parity.json",
+  "card_pose_contract": "Six strong poses per rank with explicit two-key holds into twelve frames.",
+  "mechanics_or_shared_renderer_changes_by_this_agent": false,
+  "grading": "Human review supersedes prior A/B claims; no final artistic grade asserted."
+}

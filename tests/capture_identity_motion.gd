@@ -118,6 +118,19 @@ func controls(b: Node2D, sc: Dictionary) -> Dictionary:
 			c.direction = screen(curve(b,190.0 if sc.policy == "speed" else 150.0,110.0))
 			c.burst = float(p.cooldown) <= 0.0 and pos.length() < 140.0
 			c.brake = sc.policy == "drift" and fmod(b.elapsed,3.0) > 1.65 and fmod(b.elapsed,3.0) < 2.50
+		"long_drift":
+			# Labelled capture-only driver: build real speed, then hold brake
+			# with lateral steering. Every slide/contact is ordinary physics.
+			# No actor, position, velocity, reserve, cooldown or proc writes.
+			var phase: float = fmod(b.elapsed,10.0)
+			if phase < 2.0:
+				c.direction = screen(curve(b,175.0,80.0)); c.brake = false
+				c.burst = float(p.cooldown) <= 0.0 and pos.length() < 145.0
+			elif phase < 6.5:
+				c.direction = screen(vel.normalized().rotated(0.45)); c.brake = true
+				c.burst = float(p.cooldown) <= 0.0 and vel.length() < 130.0
+			else:
+				c.direction = screen(curve(b,175.0,80.0)); c.brake = false; c.burst = false
 		"bank":
 			var phase: float = fmod(b.elapsed,5.0)
 			if phase < 1.7:

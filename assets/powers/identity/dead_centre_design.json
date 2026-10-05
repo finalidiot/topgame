@@ -1,12 +1,13 @@
 {
   "family": "dead_centre",
+  "correction": "Human final review extended correction to clamp-like Centre",
   "grammar": {
-    "silhouette": "Heavy compact machine borne by inward floor jaws",
-    "motion": "Jaws approach, machine settles, grounded teeth take a strike; Counterweight compresses then sends force outward",
-    "location": "Floor contact point and low weight-bearing braces",
-    "persistence": "Charge-stage floor lock, with short impact/release reactions",
-    "palette": "Pale steel and slate ground, restrained cyan teeth, amber stored force",
-    "feature": "Visible mass supported by closing ground jaws; Bulwark redirects incoming contact and Counterweight stores a mechanical load"
+    "silhouette": "Recognizable heavy spinning top pressing its bit into fractured arena floor",
+    "motion": "Settles under load; planted contact holds, Counterweight returns the accepted strike",
+    "location": "Actual bit and floor; finite accepted-contact and counterstroke direction",
+    "persistence": "Existing anchor and stored-force stages; bounded paid impact/release",
+    "palette": "Accepted Bastion steel, sparse floor silver and restrained amber counterstroke",
+    "feature": "Floor load and real rotor survival without clamp legs, platform or spring cylinder"
   },
   "event_tags": {
     "anchor": "ground_lock",
@@ -23,10 +24,17 @@
     "counterweight": "counterweight_store"
   },
   "static_frames": {
-    "dead_centre": 6,
-    "dead_centre_ii": 6,
-    "bulwark": 5,
-    "counterweight": 7
+    "dead_centre": 4,
+    "dead_centre_ii": 4,
+    "bulwark": 4,
+    "counterweight": 4
   },
-  "notes": "Retain accepted exact anchor charge/grounding state, signature posture and actual directional Counterweight force composition. New native jaw cels carry more weight at the same fixed floor pivot. Bulwark card shows a planted rig meeting an attack; Counterweight card gives the loaded side cylinder a different composition. No long trails, aura growth or new mechanics."
+  "notes": [
+    "All historical Centre card/icon/FX sources inspected; older four legs and spring box were not restored.",
+    "Card subject uses accepted native Bastion/Breaker blade, ratchet and bit without resampling.",
+    "Six excellent top/load/contact poses held twice; saved editable masters are export authority.",
+    "FX show uneven physical floor seams at the actual bit with charge-stage intensity; no platform.",
+    "Bulwark remains planted after incoming contact; Counterweight returns actual accepted force.",
+    "No mechanics, charge, RPM, positions, timers or target selection changed."
+  ]
 }

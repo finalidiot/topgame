@@ -87,6 +87,38 @@ static func cel(canvas: CanvasItem, family: String, tag: String, at: Vector2, ag
 	canvas.draw_texture_rect_region(texture(str(m.texture)),Rect2((at-pivot).round(),size),source,Color(1,1,1,clampf(alpha,0.0,1.0)))
 	return true
 
+static func chain_visual_plan(effect_data: Dictionary) -> Array[Dictionary]:
+	# Presentation follows existing paid provenance. The first historical burst
+	# and at most two real receiver reactions retain the three-cel ceiling.
+	var age: float = maxf(0.0, float(effect_data.get("age", 0.0)))
+	var duration: float = maxf(0.001, float(effect_data.get("duration", 0.38)))
+	var result: Array[Dictionary] = [{"historical":true,"position":Vector2(effect_data.pos),"progress":clampf(age/duration,0.0,1.0)}]
+	var index: int = 0
+	for receiver: Vector2 in effect_data.get("receivers", []):
+		if index >= 2: break
+		var delay: float = 0.055 + float(index)*0.05
+		if age >= delay:
+			result.append({"historical":false,"position":receiver,"progress":clampf((age-delay)/maxf(0.001,duration-delay),0.0,1.0)})
+		index += 1
+	return result
+
+static func historical_chain_cel(canvas: CanvasItem, at: Vector2, progress: float) -> bool:
+	var m: Dictionary = family_info("chain_impact").get("historical_fx", {})
+	if m.is_empty(): return false
+	var span: Dictionary = m.tags.pressure
+	var total: float = 0.0
+	for index: int in range(int(span.from), int(span.to)+1): total += float(m.durations_ms[index])
+	var remaining: float = progress*total
+	var key: int = int(span.to)
+	for index: int in range(int(span.from), int(span.to)+1):
+		remaining -= float(m.durations_ms[index])
+		if remaining < 0.0: key = index; break
+	var size: Vector2 = Vector2(m.cell[0], m.cell[1])
+	var pivot: Vector2 = Vector2(m.pivot[0], m.pivot[1])
+	var source: Rect2 = Rect2(Vector2(key%int(m.columns)*size.x, floori(float(key)/float(m.columns))*size.y),size)
+	canvas.draw_texture_rect_region(texture(str(m.texture)), Rect2((at-pivot).round(),size),source,Color(3.2,1.25,0.60))
+	return true
+
 static func effect(canvas: CanvasItem, effect_data: Dictionary, at: Vector2) -> bool:
 	var kind: String = str(effect_data.kind)
 	var family: String = event_family(kind)
@@ -99,6 +131,16 @@ static func effect(canvas: CanvasItem, effect_data: Dictionary, at: Vector2) -> 
 	var authored_duration: float = 0.0
 	for index: int in range(int(span.from), int(span.to)+1): authored_duration += float(info.fx.durations_ms[index])*0.001
 	var progress: float = clampf(float(effect_data.age)/maxf(0.001,float(effect_data.duration)),0.0,1.0)
+	if family == "chain_impact" and info.has("historical_fx"):
+		var origin: Vector2 = effect_data.pos
+		for item: Dictionary in chain_visual_plan(effect_data):
+			var offset: Vector2 = Vector2(item.position)-origin
+			var point: Vector2 = at+Vector2(offset.x-offset.y,(offset.x+offset.y)*0.5)
+			if item.historical:
+				historical_chain_cel(canvas,point,float(item.progress))
+			else:
+				cel(canvas,family,tag,point,float(item.progress)*authored_duration,0.95)
+		return true
 	if family == "chain_impact" and not effect_data.get("receivers",[]).is_empty():
 		var origin: Vector2 = effect_data.pos
 		var receiver_index: int = 0
@@ -128,6 +170,15 @@ static func active(canvas: CanvasItem, family: String, semantic: String, fighter
 		elif not branch.is_empty() and not variant(family,branch,1,fighter.get("vel",Vector2.RIGHT)).is_empty(): base = branch
 	var tag: String = variant(family,base,int(fighter.get("power_ranks",{}).get(family,1)),fighter.get("vel",Vector2.RIGHT))
 	return cel(canvas,family,tag,at,age,alpha,stage,stage < 0)
+
+static func bank_stored_stage(fighter: Dictionary) -> int:
+	# This is a read-only choice among existing native charge cels. An earned
+	# positive amount must not truncate to the intentionally empty key zero.
+	var rank: int = int(fighter.get("power_ranks",{}).get("momentum_bank",0))
+	var bank: float = float(fighter.get("momentum_charge",0.0))
+	if rank <= 0 or bank <= 3.0 or not str(fighter.get("outcome","")).is_empty(): return -1
+	var cap: float = 150.0 if rank >= 2 else 95.0
+	return clampi(int(ceilf(bank/cap*7.0)),1,7)
 
 static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: float) -> void:
 	if not str(fighter.get("outcome", "")).is_empty(): return
@@ -163,10 +214,9 @@ static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: fl
 		active(canvas,"clutch","recover",fighter,floor_at,clock)
 	if float(fighter.get("guard_time",0.0)) > 0.0:
 		active(canvas,"crash_guard","guarded",fighter,at,clock,0.58)
-	var bank: float = float(fighter.get("momentum_charge",0.0))
-	if bank > 3.0:
-		var cap: float = 150.0 if int(ranks.get("momentum_bank",0)) >= 2 else 95.0
-		active(canvas,"momentum_bank","stored",fighter,floor_at,0.0,0.84,clampi(int(bank/cap*7.0),0,7))
+	var bank_stage: int = bank_stored_stage(fighter)
+	if bank_stage >= 0:
+		active(canvas,"momentum_bank","stored",fighter,floor_at,0.0,0.84,bank_stage)
 
 static func draw_links(canvas: CanvasItem, fighters: Array[Dictionary], clock: float) -> void:
 	if not has_active("predator_line","tracking"): return
@@ -181,9 +231,8 @@ static func draw_links(canvas: CanvasItem, fighters: Array[Dictionary], clock: f
 		var direction: Vector2 = Vector2(target.pos)-origin
 		if direction.length_squared() > 25600.0: continue
 		var from_screen: Vector2 = canvas.call("project",origin)
-		var to_screen: Vector2 = canvas.call("project",target.pos)
 		var info: Dictionary = family_info("predator_line")
 		var tag: String = variant("predator_line",str(info.active_tags.tracking),int(fighter.get("power_ranks",{}).get("predator_line",1)),direction)
-		# One short authored tooth group lies on the actual pursued rival's route.
-		# Its staged response exposes existing stacks, never a fabricated reticle.
-		cel(canvas,"predator_line",tag,from_screen.lerp(to_screen,0.70),clock,0.55+float(stacks)*0.10,stacks*2)
+		# Pursuit scuffs start at the hunter's actual floor contact and point
+		# toward its one live rival. No detached midpoint hardware or reticle.
+		cel(canvas,"predator_line",tag,from_screen,clock,0.55+float(stacks)*0.10,stacks*2)

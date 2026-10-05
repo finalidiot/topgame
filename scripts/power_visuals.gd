@@ -183,6 +183,19 @@ static func recovery_pose(fighter: Dictionary, effects: Array[Dictionary]) -> Di
 			return {"phase": posmod(int(effect.get("phase", 0)) + int(age * 5.0), 8), "lean": Vector2(roundf(contraction * 4.0), 1.0), "stance": roundf(contraction * 4.0)}
 		var release: float = clampf((age - 0.32) / 0.20, 0.0, 1.0)
 		return {"phase": int(fighter.get("phase", 0)) % 8, "lean": Vector2.ZERO, "stance": roundf(-2.0 * (1.0 - release))}
+	if str(fighter.get("outcome", "")).is_empty():
+		var recovered: float = float(fighter.get("clutch_recovery_time",0.0))
+		if int(fighter.get("power_ranks",{}).get("clutch",0)) > 0 and recovered > 0.0:
+			# A real earned catch settles the blade above its unchanged Bit.
+			# This never alters RPM, wobble, phase, actor position or collision.
+			var catch_amount: float = clampf(recovered/0.80,0.0,1.0)
+			return {"phase":int(fighter.get("phase",0))%8,"lean":Vector2(roundf(catch_amount*3.0),roundf(catch_amount)),"stance":roundf(catch_amount*2.0)}
+		var comet: float = float(fighter.get("iron_comet_time",0.0))
+		if int(fighter.get("power_ranks",{}).get("iron_comet",0)) > 0 and comet > 0.0:
+			var span: float = 2.8 if int(fighter.power_ranks.iron_comet) >= 2 else 2.0
+			var armed_age: float = maxf(0.0,span-comet)
+			if armed_age < 0.28:
+				return {"phase":int(fighter.get("phase",0))%8,"lean":Vector2.ZERO,"stance":roundf(sin(armed_age/0.28*PI)*3.0)}
 	var anchor: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
 	if anchor > 0.25 and str(fighter.get("outcome", "")).is_empty():
 		# The Bit/contact never moves. The body visibly settles into its floor locks.

@@ -63,6 +63,8 @@ def export_family(family, aseprite):
     result['event_tags'] = design.get('event_tags', {})
     result['active_tags'] = design.get('active_tags', {})
     result['notes'] = design.get('notes', '')
+    if 'historical_fx' in design:
+        result['historical_fx'] = design['historical_fx']
     result['art'] = {}
     for art_id, span in result['cards']['tags'].items():
         assert art_id in result['icons']['tags'], (family, art_id, 'independent HUD icon required')

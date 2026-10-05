@@ -1,0 +1,1251 @@
+[
+  {
+    "family": "impact_wake",
+    "comparisons": [
+      {
+        "revision": "bdcc24e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "bdcc24e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "impact_wake",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+          "tag": "impact_wake",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+          "tag": "impact_wake",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+          "tag": "impact_wake_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+          "tag": "impact_wake_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "redline",
+    "comparisons": [
+      {
+        "revision": "bdcc24e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "redline",
+          "key": 14,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "redline",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "bdcc24e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "redline",
+          "key": 14,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "redline",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "redline",
+          "key": 14,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "redline",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "redline_ii",
+          "key": 9,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "redline_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "redline",
+          "key": 14,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "redline",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "redline_ii",
+          "key": 9,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "redline_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/redline_cards.aseprite",
+          "tag": "redline",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/redline_icons.aseprite",
+          "tag": "redline",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/redline_cards.aseprite",
+          "tag": "redline_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/redline_icons.aseprite",
+          "tag": "redline_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "iron_comet",
+    "comparisons": [
+      {
+        "revision": "bdcc24e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "iron_comet",
+          "key": 22,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "iron_comet",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "bdcc24e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "iron_comet",
+          "key": 22,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "iron_comet",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "iron_comet",
+          "key": 22,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "iron_comet",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "iron_comet",
+          "key": 22,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "iron_comet",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "iron_comet",
+          "key": 22,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "iron_comet",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "iron_comet_ii",
+          "key": 105,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "iron_comet_ii",
+          "key": 17,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/iron_comet_cards.aseprite",
+          "tag": "iron_comet",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/iron_comet_icons.aseprite",
+          "tag": "iron_comet",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/iron_comet_cards.aseprite",
+          "tag": "iron_comet_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/iron_comet_icons.aseprite",
+          "tag": "iron_comet_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "dead_centre",
+    "comparisons": [
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "dead_centre",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "dead_centre",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 15,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "dead_centre",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "dead_centre",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 15,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+          "tag": "dead_centre",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+          "tag": "dead_centre",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+          "tag": "dead_centre_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "afterimage",
+    "comparisons": [
+      {
+        "revision": "bdcc24e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "afterimage",
+          "key": 27,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "afterimage",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "bdcc24e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "afterimage",
+          "key": 27,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "afterimage",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "afterimage",
+          "key": 27,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "afterimage",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "afterimage_ii",
+          "key": 21,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "afterimage_ii",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "afterimage",
+          "key": 27,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "afterimage",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/escalation_cards_002c.aseprite",
+          "tag": "afterimage_ii",
+          "key": 21,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_cards_002c.png"
+        },
+        "icon": {
+          "source": "assets/source-art/escalation_icons_002c.aseprite",
+          "tag": "afterimage_ii",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_icons_002c.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+          "tag": "afterimage",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+          "tag": "afterimage",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+          "tag": "afterimage_ii",
+          "key": 17,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+          "tag": "afterimage_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "chain_impact",
+    "comparisons": [
+      {
+        "revision": "bdcc24e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "bdcc24e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "3267ef3",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_cards_002b1.aseprite",
+          "tag": "chain_impact",
+          "key": 34,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_icons_002b.aseprite",
+          "tag": "chain_impact",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+          "tag": "chain_impact",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+          "tag": "chain_impact",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+          "tag": "chain_impact_ii",
+          "key": 20,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+          "tag": "chain_impact_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "clutch",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "clutch",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "clutch",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "clutch_ii",
+          "key": 45,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "clutch_ii",
+          "key": 7,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+          "tag": "clutch",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+          "tag": "clutch",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+          "tag": "clutch_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+          "tag": "clutch_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "high_gear",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "high_gear",
+          "key": 9,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "high_gear",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "high_gear_ii",
+          "key": 51,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "high_gear_ii",
+          "key": 8,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+          "tag": "high_gear",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+          "tag": "high_gear",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+          "tag": "high_gear_ii",
+          "key": 17,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+          "tag": "high_gear_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "orbit_drive",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "orbit_drive",
+          "key": 15,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "orbit_drive",
+          "key": 2,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "orbit_drive_ii",
+          "key": 57,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "orbit_drive_ii",
+          "key": 9,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+          "tag": "orbit_drive",
+          "key": 7,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+          "tag": "orbit_drive",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+          "tag": "orbit_drive_ii",
+          "key": 19,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+          "tag": "orbit_drive_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "crash_guard",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "crash_guard",
+          "key": 21,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "crash_guard",
+          "key": 3,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "crash_guard_ii",
+          "key": 63,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "crash_guard_ii",
+          "key": 10,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+          "tag": "crash_guard",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+          "tag": "crash_guard",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+          "tag": "crash_guard_ii",
+          "key": 17,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+          "tag": "crash_guard_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "momentum_bank",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "momentum_bank",
+          "key": 27,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "momentum_bank",
+          "key": 4,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "momentum_bank_ii",
+          "key": 69,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "momentum_bank_ii",
+          "key": 11,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+          "tag": "momentum_bank",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+          "tag": "momentum_bank",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+          "tag": "momentum_bank_ii",
+          "key": 17,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+          "tag": "momentum_bank_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "predator_line",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "predator_line",
+          "key": 33,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "predator_line",
+          "key": 5,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "predator_line_ii",
+          "key": 75,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "predator_line_ii",
+          "key": 12,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+          "tag": "predator_line",
+          "key": 7,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+          "tag": "predator_line",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+          "tag": "predator_line_ii",
+          "key": 19,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+          "tag": "predator_line_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_icons.png"
+        }
+      }
+    ]
+  },
+  {
+    "family": "crosscut",
+    "comparisons": [
+      {
+        "revision": "32bb56e",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "crosscut",
+          "key": 39,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "crosscut",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "32bb56e",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/roster_cards_002c5.aseprite",
+          "tag": "crosscut_ii",
+          "key": 81,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png"
+        },
+        "icon": {
+          "source": "assets/source-art/roster_icons_002c5.aseprite",
+          "tag": "crosscut_ii",
+          "key": 13,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 1,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+          "tag": "crosscut",
+          "key": 6,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+          "tag": "crosscut",
+          "key": 0,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_icons.png"
+        }
+      },
+      {
+        "revision": "d0d37e5",
+        "rank": 2,
+        "card": {
+          "source": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+          "tag": "crosscut_ii",
+          "key": 18,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_cards.png"
+        },
+        "icon": {
+          "source": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+          "tag": "crosscut_ii",
+          "key": 1,
+          "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_icons.png"
+        }
+      }
+    ]
+  }
+]

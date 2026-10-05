@@ -1,31 +1,32 @@
 {
   "family": "momentum_bank",
-  "initial_tier": "C",
-  "target_tier": "A or B after runtime motion review",
+  "correction": "Human requested physical top restoration v2",
   "grammar": {
-    "silhouette": "rear open spring cassette and broad brake shoe, forward moving top",
-    "motion": "gradual compression, held load, abrupt extension and sparse directed release",
-    "location": "rear braking side/contact plane; release follows actual movement vector",
-    "persistence": "real charge stages while stored; compression/release are events",
-    "palette": "brass, graphite, warm ivory with steel mount",
-    "feature": "visible helical coil pitch shrinks as real stored force rises"
+    "silhouette": "accepted broad round top in the foreground above a folded braking skid at its own heel",
+    "motion": "braking skid folds, a compact positive-charge floor fold holds, directed launch unfolds it",
+    "location": "actual top heel and floor; release follows its real movement vector",
+    "persistence": "empty stage zero; visible earned charge stages one through seven plus existing store/release events",
+    "palette": "accepted blue Bastion steel body, restrained brass and pale floor wakes",
+    "feature": "one recognizable top and compressed physical floor travel; no detached cassette"
   },
   "static_frames": {
-    "momentum_bank": 5,
-    "momentum_bank_ii": 5
+    "momentum_bank": 4,
+    "momentum_bank_ii": 4
   },
   "event_tags": {
     "momentum_store": "bank_load",
     "momentum_release": "bank_release"
   },
   "notes": [
-    "New individually directed native master; old source retained for before/after.",
-    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
-    "Rank II adds physical structure rather than palette substitution.",
-    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
-    "Icon is a separately drawn small-scale silhouette.",
-    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall.",
-    "bank_stored is eight charge stages: select by actual momentum_charge/cap, do not auto-play the charge filling. bank_load is only the contact/compression event."
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "The accepted broad round Bastion body replaces the smaller angular Vane as the foreground braking subject, at its original native pixel scale.",
+    "Stored key zero is empty. Positive keys one through seven retain a short bright folded floor skid behind the actual heel even at low earned charge; greater charge tightens it. Rank II adds one second fold. No free-running charge animation.",
+    "Final stored folds use individually directed upright rear spans per heading and a continuous short floor seam back to the actual bit, so the live native blade cannot occlude the hold. Store and release cels are unchanged."
   ],
   "active_tags": {
     "stored": "bank_stored"

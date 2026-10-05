@@ -1,12 +1,12 @@
 {
   "family": "dead_centre",
   "grammar": {
-    "silhouette": "Heavy compact machine borne by inward floor jaws",
-    "motion": "Jaws approach, machine settles, grounded teeth take a strike; Counterweight compresses then sends force outward",
-    "location": "Floor contact point and low weight-bearing braces",
-    "persistence": "Charge-stage floor lock, with short impact/release reactions",
-    "palette": "Pale steel and slate ground, restrained cyan teeth, amber stored force",
-    "feature": "Visible mass supported by closing ground jaws; Bulwark redirects incoming contact and Counterweight stores a mechanical load"
+    "silhouette": "Recognizable heavy spinning top pressing its bit into fractured arena floor",
+    "motion": "Settles under load; planted contact holds, Counterweight returns the accepted strike",
+    "location": "Actual bit and floor; finite accepted-contact and counterstroke direction",
+    "persistence": "Existing anchor and stored-force stages; bounded paid impact/release",
+    "palette": "Accepted Bastion steel, sparse floor silver and restrained amber counterstroke",
+    "feature": "Floor load and real rotor survival without clamp legs, platform or spring cylinder"
   },
   "design": "assets/powers/identity/dead_centre_design.json",
   "cards": {
@@ -19,12 +19,11 @@
       32
     ],
     "layers": [
-      "01 floor and contact shadow",
-      "02 load-bearing machine bodies",
-      "03 mechanical jaws and bearings",
-      "04 transmitted action and route",
-      "05 reaction chips and key light",
-      "06 developed structure"
+      "Arena floor and contact bed",
+      "Physical bit pressure and displacement",
+      "Accepted native top bodies",
+      "Accepted incoming rival",
+      "Floor bite and contact reaction"
     ],
     "tags": {
       "dead_centre": {
@@ -45,54 +44,54 @@
       }
     },
     "durations_ms": [
-      160,
-      100,
-      90,
+      110,
+      110,
       80,
-      65,
-      65,
-      110,
-      110,
-      90,
-      90,
-      110,
-      180,
-      140,
-      90,
       80,
-      75,
-      60,
-      65,
-      120,
-      120,
-      95,
-      80,
-      110,
-      170,
-      160,
-      100,
-      70,
-      45,
-      50,
-      65,
-      130,
       140,
-      100,
-      100,
-      120,
-      190,
-      140,
-      100,
-      90,
-      85,
-      100,
-      100,
-      130,
       140,
       55,
-      45,
-      75,
-      170
+      55,
+      85,
+      85,
+      130,
+      130,
+      110,
+      110,
+      80,
+      80,
+      140,
+      140,
+      55,
+      55,
+      85,
+      85,
+      130,
+      130,
+      110,
+      110,
+      80,
+      80,
+      140,
+      140,
+      55,
+      55,
+      85,
+      85,
+      130,
+      130,
+      110,
+      110,
+      80,
+      80,
+      140,
+      140,
+      55,
+      55,
+      85,
+      85,
+      130,
+      130
     ],
     "columns": 12,
     "frame_count": 48,
@@ -109,8 +108,8 @@
       8
     ],
     "layers": [
-      "Independent small-scale silhouette",
-      "Mechanic-specific recognition teeth"
+      "Independent planted top silhouette",
+      "Bit contact and mutation response"
     ],
     "tags": {
       "dead_centre": {
@@ -151,12 +150,11 @@
       48
     ],
     "layers": [
-      "01 floor and contact shadow",
-      "02 load-bearing machine bodies",
-      "03 mechanical jaws and bearings",
-      "04 transmitted action and route",
-      "05 reaction chips and key light",
-      "06 developed structure"
+      "Arena floor and contact bed",
+      "Physical bit pressure and displacement",
+      "Accepted native top bodies",
+      "Accepted incoming rival",
+      "Floor bite and contact reaction"
     ],
     "tags": {
       "ground_lock": {
@@ -361,7 +359,14 @@
     "bulwark": "bulwark_lock",
     "counterweight": "counterweight_store"
   },
-  "notes": "Retain accepted exact anchor charge/grounding state, signature posture and actual directional Counterweight force composition. New native jaw cels carry more weight at the same fixed floor pivot. Bulwark card shows a planted rig meeting an attack; Counterweight card gives the loaded side cylinder a different composition. No long trails, aura growth or new mechanics.",
+  "notes": [
+    "All historical Centre card/icon/FX sources inspected; older four legs and spring box were not restored.",
+    "Card subject uses accepted native Bastion/Breaker blade, ratchet and bit without resampling.",
+    "Six excellent top/load/contact poses held twice; saved editable masters are export authority.",
+    "FX show uneven physical floor seams at the actual bit with charge-stage intensity; no platform.",
+    "Bulwark remains planted after incoming contact; Counterweight returns actual accepted force.",
+    "No mechanics, charge, RPM, positions, timers or target selection changed."
+  ],
   "art": {
     "dead_centre": {
       "family": "dead_centre",
@@ -373,20 +378,20 @@
       "card_row": 0,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 6,
+      "card_static_frame": 4,
       "card_durations_ms": [
-        160,
-        100,
-        90,
+        110,
+        110,
         80,
-        65,
-        65,
-        110,
-        110,
-        90,
-        90,
-        110,
-        180
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
       ]
     },
     "dead_centre_ii": {
@@ -399,20 +404,20 @@
       "card_row": 1,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 6,
+      "card_static_frame": 4,
       "card_durations_ms": [
-        140,
-        90,
-        80,
-        75,
-        60,
-        65,
-        120,
-        120,
-        95,
-        80,
         110,
-        170
+        110,
+        80,
+        80,
+        140,
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
       ]
     },
     "bulwark": {
@@ -425,20 +430,20 @@
       "card_row": 2,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 5,
+      "card_static_frame": 4,
       "card_durations_ms": [
-        160,
-        100,
-        70,
-        45,
-        50,
-        65,
-        130,
+        110,
+        110,
+        80,
+        80,
         140,
-        100,
-        100,
-        120,
-        190
+        140,
+        55,
+        55,
+        85,
+        85,
+        130,
+        130
       ]
     },
     "counterweight": {
@@ -451,20 +456,20 @@
       "card_row": 3,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 7,
+      "card_static_frame": 4,
       "card_durations_ms": [
+        110,
+        110,
+        80,
+        80,
         140,
-        100,
-        90,
-        85,
-        100,
-        100,
-        130,
         140,
         55,
-        45,
-        75,
-        170
+        55,
+        85,
+        85,
+        130,
+        130
       ]
     }
   }

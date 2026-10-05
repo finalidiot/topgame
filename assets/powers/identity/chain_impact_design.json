@@ -1,20 +1,120 @@
 {
   "family": "chain_impact",
   "grammar": {
-    "silhouette": "Unequal physical receivers joined by diagonal contact transmission",
-    "motion": "One machine hits, a tooth lights, then the next receiver reacts; alternating compressed contact accents",
-    "location": "Real elimination/contact origin and actual eligible receiver links",
-    "persistence": "Discrete transmitted events, no persistent player aura",
-    "palette": "Dark steel receivers, copper stress, short pale amber contact keys",
-    "feature": "Sequential local contact teeth and sparse physical receiver links instead of a radial blast"
+    "silhouette": "Three recognizable spinning tops in the restored triangular collision relay",
+    "motion": "First contact expands locally; actual receivers react sequentially",
+    "location": "Paid collision/elimination source and snapshotted real recipients",
+    "persistence": "Finite 0.38s event; at most three native cels, no persistent player aura",
+    "palette": "Accepted warm orange/gold collision clusters and steel tops",
+    "feature": "Historical triangular top story plus causal source-to-recipient contact reactions"
   },
   "event_tags": {
     "chain_impact": "transmit"
   },
   "active_tags": {},
+  "historical_fx": {
+    "cell": [
+      128,
+      128
+    ],
+    "pivot": [
+      64,
+      64
+    ],
+    "layers": [
+      "mechanical sectors",
+      "edge teeth",
+      "contact light",
+      "angular scars"
+    ],
+    "tags": {
+      "contact_arc": {
+        "from": 0,
+        "to": 5
+      },
+      "pressure": {
+        "from": 6,
+        "to": 13
+      },
+      "echo": {
+        "from": 14,
+        "to": 19
+      },
+      "corona": {
+        "from": 20,
+        "to": 27
+      },
+      "recovery": {
+        "from": 28,
+        "to": 35
+      },
+      "comet_headings": {
+        "from": 36,
+        "to": 43
+      },
+      "floor_stamp": {
+        "from": 44,
+        "to": 47
+      }
+    },
+    "durations_ms": [
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      50,
+      65,
+      65,
+      65,
+      65,
+      65,
+      65,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      80,
+      70,
+      70,
+      70,
+      70
+    ],
+    "texture": "res://assets/powers/effects.png",
+    "columns": 8,
+    "frame_count": 48,
+    "source": "assets/source-art/power_fx_002b.aseprite"
+  },
   "static_frames": {
-    "chain_impact": 6,
+    "chain_impact": 8,
     "chain_impact_ii": 8
   },
-  "notes": "Cards deliberately show unequal machines in a diagonal relay; Rank II extends the relay rather than growing the source pulse. FX are local contact teeth only. Runtime must place accents and short links along actual eligible target positions captured in presentation metadata, not use the legacy fixed RIGHT or fake illustrated runtime tops. Cascade mechanics unchanged."
+  "notes": "Restores bdcc24e card layers and independent icon Rank I exactly; six poses and total duration preserved through paired holds. Rank II develops the final contact without changing composition. Original native128 pressure source plus at most two real recipient contact cels retain the current three-cel draw bound. Receiver metadata and physics are untouched."
 }

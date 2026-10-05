@@ -1,7 +1,7 @@
 {
   "family": "orbit_drive",
   "grammar": {
-    "silhouette": "Large sideways machine over a broad hooked contact-floor skid.",
+    "silhouette": "Accepted physical top travelling around a broad C-shaped contact-tip route.",
     "motion": "Enter turn, cut a growing outside hook, throw grit and release the arc.",
     "location": "Floor/contact point outside the turn, below the rotor.",
     "persistence": "Only actual brake-turn drift/arc state; scuffs settle after the carving beat.",
@@ -19,11 +19,11 @@
       32
     ],
     "layers": [
-      "01 scene floor and direction",
-      "02 cast shadow and load-bearing chassis",
-      "03 rotor plates and bearing",
-      "04 mechanical action and recoil",
-      "05 keyed highlights and fragments"
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
     ],
     "tags": {
       "orbit_drive": {
@@ -345,7 +345,7 @@
     "drift": "orbit_drift"
   },
   "notes": [
-    "Rank II adds a second outside skid groove and extra displaced grit, staying at the contact plane."
+    "Rank II deepens two outside skid grooves and ejects extra grit, staying at the contact plane."
   ],
   "art": {
     "orbit_drive": {
@@ -358,7 +358,7 @@
       "card_row": 0,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 7,
+      "card_static_frame": 8,
       "card_durations_ms": [
         135,
         100,
@@ -384,7 +384,7 @@
       "card_row": 1,
       "card_cell": 64,
       "card_frames": 12,
-      "card_static_frame": 7,
+      "card_static_frame": 8,
       "card_durations_ms": [
         135,
         100,

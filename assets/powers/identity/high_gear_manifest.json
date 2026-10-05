@@ -1,12 +1,12 @@
 {
   "family": "high_gear",
   "grammar": {
-    "silhouette": "Forward-cropped low rotor and widely spaced narrow wake lanes; Flow has two long open guide rails.",
-    "motion": "Intervals stretch as thrust rises. Terminal uses sparse long discontinuities; Flow retains a smooth bend.",
-    "location": "Behind the moving rotor along the actual velocity.",
+    "silhouette": "Recognisable native top plus physically separated round rotor echoes; Flow retains an open contact path.",
+    "motion": "Sparse native rim fragments separate as thrust rises. Terminal opens longer gaps; Flow retains three disconnected bent floor groups.",
+    "location": "Sparse rear blade-rim memories along the actual velocity; the real live top stays dominant.",
     "persistence": "Moving speed state; terminal surge is event-based.",
     "palette": "Steel, ice and cool blue; muted mint retained rails; sparse terminal brass tips.",
-    "feature": "Terminal discontinuous spacing versus Flow continuous parallel retention remains distinct in grayscale."
+    "feature": "Terminal separated blade-tip glints versus Flow short bent floor groups remain distinct in grayscale; no opaque rack or rail."
   },
   "design": "assets/powers/identity/high_gear_design.json",
   "cards": {
@@ -19,11 +19,11 @@
       32
     ],
     "layers": [
-      "01 scene floor and direction",
-      "02 cast shadow and load-bearing chassis",
-      "03 rotor plates and bearing",
-      "04 mechanical action and recoil",
-      "05 keyed highlights and fragments"
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
     ],
     "tags": {
       "high_gear": {
@@ -605,8 +605,9 @@
     "flow_state": "flow_state"
   },
   "notes": [
-    "Rank II adds a second low transmission shoe and a third interrupted wake lane.",
-    "Flow rails are open rotor-height guides. Orbit instead cuts a compact concave floor crescent and ejects grit."
+    "Rank II adds one further sparse blade-rim memory; no housing, filled base, shadow block or continuous speed bars.",
+    "Flow preserves a long open floor-contact bend. Orbit instead cuts a compact concave hook and ejects grit.",
+    "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
   ],
   "art": {
     "high_gear": {

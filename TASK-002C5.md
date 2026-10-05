@@ -1,5 +1,19 @@
 # Task 002C.5 — ability rebalance and roster expansion
 
+## Latest checkpoint — physical art correction V2
+
+The human review rejected several V1 pseudo-mechanical illustrations. The
+targeted correction restores the accepted 002B.1 Chain card/icon and source
+burst, and replaces devices/vehicles with actual spinning-top event scenes.
+Ten families were corrected, including Crosscut's artificial blade extension
+and Dead Centre's clamp/platform. The three retained families were inspected
+against actual historical assets and genuine combat motion.
+See `TASK-002C5-ART-CORRECTION-V2.md` for the historical audit, native-scale
+before/after, full matrix, grayscale, genuine gameplay and remaining limits.
+The current window title identifies **002C.5 Physical Art V2 + Starter Collection**.
+Mechanics and persistent collection remain intact. Human visual acceptance is
+pending, and this checkpoint is not merged to main.
+
 ## Latest checkpoint — full power art identity review
 
 The visual addendum replaces the nine generic/prototype family presentations

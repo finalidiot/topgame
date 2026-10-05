@@ -1,11 +1,13 @@
 # Task 002C.5 human playtest
 
-The latest checkpoint is **002C.5 Art Review + Starter Collection**. Start with
-`E:\Desktop\Launch-SpinningMetal-Art-Review.cmd`. Review the native color and
-grayscale matrices, before/after examples, 39-second showcase and muted gameplay
-in `C:\GPT GAME BUILDING\task-002c5-qa\art-addendum`.
-The [art identity report](TASK-002C5-ART-IDENTITY.md) contains the final family
-grades, complete visual grammar/source list and ten visual review questions.
+The latest checkpoint is **002C.5 Physical Art V2 + Starter Collection**. Start
+with `E:\Desktop\Launch-SpinningMetal-Physical-Art-V2.cmd`. Review the native
+color/grayscale matrices, ten-family before/after, and
+`002c5_power_art_showcase_v2.mp4` in
+`C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2`.
+The [correction report](TASK-002C5-ART-CORRECTION-V2.md) records the historical
+choices, remaining limits and twelve human visual acceptance questions.
+The previous internal art grades are superseded by the human correction pass.
 
 Windows checkpoint: `releases/windows/SpinningMetal.exe` or adjacent
 `Launch-SpinningMetal.cmd`. BEGIN opens the existing first-save top selection;

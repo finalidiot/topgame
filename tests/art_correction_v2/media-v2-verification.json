@@ -1,0 +1,123 @@
+{
+  "videos": [
+    {
+      "file": "002c5_power_art_showcase_v2.mp4",
+      "decoded_frames": 2808,
+      "seconds": 46.8,
+      "size_bytes": 4273236,
+      "sha256": "398c6f541fc47789d143765aa321795684b69ac5b6a42bc84f8699ba47a4e1fa",
+      "encoding": "H264 yuv420p 1280x720 60fps muted",
+      "full_decode_exit": 0,
+      "decode_errors": 0,
+      "faststart": true,
+      "atoms": [
+        {
+          "name": "ftyp",
+          "offset": 0,
+          "length": 32
+        },
+        {
+          "name": "moov",
+          "offset": 32,
+          "length": 33053
+        },
+        {
+          "name": "free",
+          "offset": 33085,
+          "length": 8
+        },
+        {
+          "name": "mdat",
+          "offset": 33093,
+          "length": 4240143
+        }
+      ]
+    },
+    {
+      "file": "002c5_power_blind_review_v2.mp4",
+      "decoded_frames": 1872,
+      "seconds": 31.2,
+      "size_bytes": 3400690,
+      "sha256": "7f7b187e05b5cad664a698bf73858360fac83e73728c9c00593362d7bc8215ce",
+      "encoding": "H264 yuv420p 1280x720 60fps muted",
+      "full_decode_exit": 0,
+      "decode_errors": 0,
+      "faststart": true,
+      "atoms": [
+        {
+          "name": "ftyp",
+          "offset": 0,
+          "length": 32
+        },
+        {
+          "name": "moov",
+          "offset": 32,
+          "length": 21893
+        },
+        {
+          "name": "free",
+          "offset": 21925,
+          "length": 8
+        },
+        {
+          "name": "mdat",
+          "offset": 21933,
+          "length": 3378757
+        }
+      ]
+    }
+  ],
+  "verification": "Full final MP4 decode, exact video frame counts, codec/pixel format/resolution/rate, and moov before mdat.",
+  "encoded_visual_review": {
+    "full_frame_images": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\validation\\encoded-review",
+    "sampled_actual_events": [
+      {
+        "label": "Bank genuine low-charge hold",
+        "showcase_seconds": 5.67
+      },
+      {
+        "label": "Bank actual release",
+        "showcase_seconds": 6.067
+      },
+      {
+        "label": "Comet wall compression",
+        "showcase_seconds": 12.33
+      },
+      {
+        "label": "Comet real target strike",
+        "showcase_seconds": 13.12
+      },
+      {
+        "label": "Chain first earned relay",
+        "showcase_seconds": 26.85
+      },
+      {
+        "label": "Chain real recipient reaction",
+        "showcase_seconds": 27.1
+      },
+      {
+        "label": "Clutch earned contact catch",
+        "showcase_seconds": 30.8
+      },
+      {
+        "label": "Clutch actual body settlement",
+        "showcase_seconds": 31.3
+      },
+      {
+        "label": "Orbit actual curve entry",
+        "showcase_seconds": 37.22
+      },
+      {
+        "label": "Orbit actual curve middle",
+        "showcase_seconds": 38.3
+      },
+      {
+        "label": "Orbit actual curve exit",
+        "showcase_seconds": 39.48
+      }
+    ],
+    "cards_sampled": 13,
+    "visual_scope": "Full encoded frame PNGs retained; overview sheets are diagnostic reductions. Real input-only captures, earned procs and no actor-state injection.",
+    "self_inspected": "All 13 encoded cards and full encoded event PNGs inspected after final Bank import/capture; Bank hold and release, Comet wall/target contact, Chain target reactions, Clutch earned catch/settlement, and Orbit continuous curve subjects visible uncropped. Final grayscale contact sequences inspected. Human visual acceptance pending."
+  }
+}

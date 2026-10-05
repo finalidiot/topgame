@@ -1,28 +1,27 @@
 {
   "family": "crosscut",
-  "initial_tier": "C",
-  "target_tier": "A or B after runtime motion review",
+  "correction": "Human requested physical top restoration v2",
   "grammar": {
-    "silhouette": "offset glancing bodies, oblique stepped shear ribbon and forked skid",
-    "motion": "fast approach, narrow lateral contact, unequal divergent exits",
-    "location": "glancing contact and actual lateral displacement vector",
-    "persistence": "brief paid glancing event, sparse follow-through scar",
-    "palette": "sea green, bone and desaturated steel",
-    "feature": "one asymmetric slash and split skid, no symmetric X or ring"
+    "silhouette": "two real top bodies pass tangentially into unequal exit lanes",
+    "motion": "descending approach, offset glancing contact, separated floor skids",
+    "location": "actual paid lateral displacement and contact floor",
+    "persistence": "brief existing glancing event with eroding follow-through",
+    "palette": "accepted green Vane and blue Bastion with pale sea-green tangential scrape",
+    "feature": "physical tops and one offset shear; no added blade gadget or symmetric X"
   },
   "static_frames": {
-    "crosscut": 6,
-    "crosscut_ii": 6
+    "crosscut": 4,
+    "crosscut_ii": 4
   },
   "event_tags": {
     "crosscut": "shear_slice"
   },
   "notes": [
-    "New individually directed native master; old source retained for before/after.",
-    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
-    "Rank II adds physical structure rather than palette substitution.",
-    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
-    "Icon is a separately drawn small-scale silhouette.",
-    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative."
   ]
 }

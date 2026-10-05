@@ -1,0 +1,5412 @@
+[
+  {
+    "revision": "bdcc24e",
+    "source": "assets/source-art/power_fx_002b.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_fx_002b.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        64
+      ],
+      "layers": [
+        "mechanical sectors",
+        "edge teeth",
+        "contact light",
+        "angular scars"
+      ],
+      "tags": {
+        "contact_arc": {
+          "from": 0,
+          "to": 5
+        },
+        "pressure": {
+          "from": 6,
+          "to": 13
+        },
+        "echo": {
+          "from": 14,
+          "to": 19
+        },
+        "corona": {
+          "from": 20,
+          "to": 27
+        },
+        "recovery": {
+          "from": 28,
+          "to": 35
+        },
+        "comet_headings": {
+          "from": 36,
+          "to": 43
+        },
+        "floor_stamp": {
+          "from": 44,
+          "to": 47
+        }
+      },
+      "durations_ms": [
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        65,
+        65,
+        65,
+        65,
+        65,
+        65,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        80,
+        70,
+        70,
+        70,
+        70
+      ]
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_fx_002c.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        64
+      ],
+      "layers": [
+        "projected floor locks and chassis",
+        "stress trajectory and force plates",
+        "energised mechanical surfaces",
+        "contact flashes and fragments"
+      ],
+      "tags": {
+        "redline_ii": {
+          "from": 0,
+          "to": 5
+        },
+        "runaway": {
+          "from": 6,
+          "to": 11
+        },
+        "runaway_hit": {
+          "from": 12,
+          "to": 17
+        },
+        "breakneck_charge_headings": {
+          "from": 18,
+          "to": 25
+        },
+        "breakneck_impact": {
+          "from": 26,
+          "to": 31
+        },
+        "anchor": {
+          "from": 32,
+          "to": 37
+        },
+        "anchor_ii": {
+          "from": 38,
+          "to": 43
+        },
+        "anchor_break": {
+          "from": 44,
+          "to": 49
+        },
+        "bulwark": {
+          "from": 50,
+          "to": 55
+        },
+        "bulwark_impact": {
+          "from": 56,
+          "to": 61
+        },
+        "counterweight": {
+          "from": 62,
+          "to": 67
+        },
+        "counterweight_store": {
+          "from": 68,
+          "to": 73
+        },
+        "counterweight_release": {
+          "from": 74,
+          "to": 79
+        },
+        "afterimage_ii": {
+          "from": 80,
+          "to": 85
+        },
+        "ghost_closure": {
+          "from": 86,
+          "to": 91
+        },
+        "ghost_activation": {
+          "from": 92,
+          "to": 97
+        },
+        "slipstream_cross": {
+          "from": 98,
+          "to": 103
+        },
+        "rank_up": {
+          "from": 104,
+          "to": 109
+        },
+        "mutation_select": {
+          "from": 110,
+          "to": 115
+        }
+      },
+      "durations_ms": [
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        35,
+        40,
+        30,
+        35,
+        30,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        70,
+        70,
+        70,
+        70,
+        70,
+        70,
+        70,
+        70,
+        35,
+        45,
+        55,
+        70,
+        90,
+        110,
+        95,
+        95,
+        95,
+        95,
+        95,
+        95,
+        85,
+        85,
+        85,
+        85,
+        85,
+        85,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        35,
+        45,
+        55,
+        65,
+        85,
+        110,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        35,
+        45,
+        55,
+        65,
+        85,
+        110,
+        70,
+        70,
+        70,
+        70,
+        70,
+        70,
+        60,
+        55,
+        45,
+        50,
+        90,
+        120,
+        65,
+        65,
+        65,
+        65,
+        65,
+        65,
+        55,
+        55,
+        55,
+        55,
+        55,
+        55,
+        50,
+        55,
+        65,
+        75,
+        95,
+        120,
+        45,
+        55,
+        75,
+        95,
+        110,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/redline_fx_002c4.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\redline_fx_002c4.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor contact and silhouette",
+        "02 mechanical structure",
+        "03 active energy",
+        "04 key flash and fragments"
+      ],
+      "tags": {
+        "rank1_active": {
+          "from": 0,
+          "to": 5
+        },
+        "rank2_active": {
+          "from": 6,
+          "to": 11
+        },
+        "runaway_low": {
+          "from": 12,
+          "to": 17
+        },
+        "runaway_high": {
+          "from": 18,
+          "to": 23
+        },
+        "breakneck_charge": {
+          "from": 24,
+          "to": 29
+        },
+        "breakneck_hit": {
+          "from": 30,
+          "to": 35
+        },
+        "breakneck_recovery": {
+          "from": 36,
+          "to": 41
+        }
+      },
+      "durations_ms": [
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\dead_centre_fx_002c4.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor contact and silhouette",
+        "02 mechanical structure",
+        "03 active energy",
+        "04 key flash and fragments"
+      ],
+      "tags": {
+        "anchor_build": {
+          "from": 0,
+          "to": 5
+        },
+        "anchor_full": {
+          "from": 6,
+          "to": 11
+        },
+        "bulwark_lock": {
+          "from": 12,
+          "to": 17
+        },
+        "bulwark_contact": {
+          "from": 18,
+          "to": 23
+        },
+        "counterweight_store": {
+          "from": 24,
+          "to": 29
+        },
+        "counterweight_release": {
+          "from": 30,
+          "to": 35
+        }
+      },
+      "durations_ms": [
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/afterimage_fx_002c4.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\afterimage_fx_002c4.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor contact and silhouette",
+        "02 mechanical structure",
+        "03 active energy",
+        "04 key flash and fragments"
+      ],
+      "tags": {
+        "rank1_trace": {
+          "from": 0,
+          "to": 5
+        },
+        "rank2_trace": {
+          "from": 6,
+          "to": 11
+        },
+        "ghost_closure": {
+          "from": 12,
+          "to": 17
+        },
+        "ghost_active": {
+          "from": 18,
+          "to": 23
+        },
+        "slipstream_cross": {
+          "from": 24,
+          "to": 29
+        }
+      },
+      "durations_ms": [
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "32bb56e",
+    "source": "assets/source-art/roster_fx_002c5.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_fx_002c5.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor contact and silhouette",
+        "02 mechanical structure",
+        "03 active energy",
+        "04 key flash and fragments"
+      ],
+      "tags": {
+        "comet_charge": {
+          "from": 0,
+          "to": 5
+        },
+        "comet_flight": {
+          "from": 6,
+          "to": 11
+        },
+        "comet_impact": {
+          "from": 12,
+          "to": 17
+        },
+        "comet_recovery": {
+          "from": 18,
+          "to": 23
+        },
+        "overcap": {
+          "from": 24,
+          "to": 29
+        },
+        "heat_extreme": {
+          "from": 30,
+          "to": 35
+        },
+        "clutch_danger": {
+          "from": 36,
+          "to": 41
+        },
+        "clutch_recover": {
+          "from": 42,
+          "to": 47
+        },
+        "gear1": {
+          "from": 48,
+          "to": 53
+        },
+        "gear2": {
+          "from": 54,
+          "to": 59
+        },
+        "terminal_surge": {
+          "from": 60,
+          "to": 65
+        },
+        "flow_state": {
+          "from": 66,
+          "to": 71
+        },
+        "orbit_drift": {
+          "from": 72,
+          "to": 77
+        },
+        "crash_guard": {
+          "from": 78,
+          "to": 83
+        },
+        "momentum_store": {
+          "from": 84,
+          "to": 89
+        },
+        "momentum_release": {
+          "from": 90,
+          "to": 95
+        },
+        "predator_lock": {
+          "from": 96,
+          "to": 101
+        },
+        "crosscut": {
+          "from": 102,
+          "to": 107
+        },
+        "ghost_preview": {
+          "from": 108,
+          "to": 113
+        },
+        "ghost_latch": {
+          "from": 114,
+          "to": 119
+        }
+      },
+      "durations_ms": [
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140,
+        60,
+        45,
+        55,
+        80,
+        100,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/afterimage_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "tags": {
+        "route_scar": {
+          "from": 0,
+          "to": 7
+        },
+        "route_scar_ii": {
+          "from": 8,
+          "to": 15
+        },
+        "latch_endpoint": {
+          "from": 16,
+          "to": 23
+        },
+        "ghost_latch": {
+          "from": 24,
+          "to": 31
+        },
+        "circuit_lock": {
+          "from": 32,
+          "to": 39
+        },
+        "slipstream_snap": {
+          "from": 40,
+          "to": 47
+        },
+        "slipstream_snap_e": {
+          "from": 48,
+          "to": 55
+        },
+        "slipstream_snap_se": {
+          "from": 56,
+          "to": 63
+        },
+        "slipstream_snap_s": {
+          "from": 64,
+          "to": 71
+        },
+        "slipstream_snap_sw": {
+          "from": 72,
+          "to": 79
+        },
+        "slipstream_snap_w": {
+          "from": 80,
+          "to": 87
+        },
+        "slipstream_snap_nw": {
+          "from": 88,
+          "to": 95
+        },
+        "slipstream_snap_n": {
+          "from": 96,
+          "to": 103
+        },
+        "slipstream_snap_ne": {
+          "from": 104,
+          "to": 111
+        }
+      },
+      "durations_ms": [
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "tags": {
+        "transmit": {
+          "from": 0,
+          "to": 7
+        },
+        "transmit_ii": {
+          "from": 8,
+          "to": 15
+        }
+      },
+      "durations_ms": [
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120,
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 grounded scar and contact reaction",
+        "02 physical mechanism and brackets",
+        "03 moving force plates",
+        "04 keyed sparks and travel fragments"
+      ],
+      "tags": {
+        "clutch_danger": {
+          "from": 0,
+          "to": 7
+        },
+        "clutch_danger_ii": {
+          "from": 8,
+          "to": 15
+        },
+        "clutch_catch": {
+          "from": 16,
+          "to": 23
+        },
+        "clutch_catch_ii": {
+          "from": 24,
+          "to": 31
+        }
+      },
+      "durations_ms": [
+        85,
+        60,
+        45,
+        35,
+        45,
+        65,
+        90,
+        130,
+        85,
+        60,
+        45,
+        35,
+        45,
+        65,
+        90,
+        130,
+        85,
+        60,
+        45,
+        35,
+        45,
+        65,
+        90,
+        130,
+        85,
+        60,
+        45,
+        35,
+        45,
+        65,
+        90,
+        130
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 contact scar and ground depth",
+        "02 incoming contact and telescoping rods",
+        "03 mechanical force direction",
+        "04 contact accents and fragments"
+      ],
+      "tags": {
+        "damper_contact_e": {
+          "from": 0,
+          "to": 7
+        },
+        "damper_contact_se": {
+          "from": 8,
+          "to": 15
+        },
+        "damper_contact_s": {
+          "from": 16,
+          "to": 23
+        },
+        "damper_contact_sw": {
+          "from": 24,
+          "to": 31
+        },
+        "damper_contact_w": {
+          "from": 32,
+          "to": 39
+        },
+        "damper_contact_nw": {
+          "from": 40,
+          "to": 47
+        },
+        "damper_contact_n": {
+          "from": 48,
+          "to": 55
+        },
+        "damper_contact_ne": {
+          "from": 56,
+          "to": 63
+        },
+        "damper_contact_ii_e": {
+          "from": 64,
+          "to": 71
+        },
+        "damper_contact_ii_se": {
+          "from": 72,
+          "to": 79
+        },
+        "damper_contact_ii_s": {
+          "from": 80,
+          "to": 87
+        },
+        "damper_contact_ii_sw": {
+          "from": 88,
+          "to": 95
+        },
+        "damper_contact_ii_w": {
+          "from": 96,
+          "to": 103
+        },
+        "damper_contact_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "damper_contact_ii_n": {
+          "from": 112,
+          "to": 119
+        },
+        "damper_contact_ii_ne": {
+          "from": 120,
+          "to": 127
+        }
+      },
+      "durations_ms": [
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180,
+        75,
+        45,
+        40,
+        65,
+        80,
+        100,
+        130,
+        180
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/crosscut_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 contact scar and ground depth",
+        "02 glancing bodies and divergent exits",
+        "03 mechanical force direction",
+        "04 contact accents and fragments"
+      ],
+      "tags": {
+        "shear_slice_e": {
+          "from": 0,
+          "to": 7
+        },
+        "shear_slice_se": {
+          "from": 8,
+          "to": 15
+        },
+        "shear_slice_s": {
+          "from": 16,
+          "to": 23
+        },
+        "shear_slice_sw": {
+          "from": 24,
+          "to": 31
+        },
+        "shear_slice_w": {
+          "from": 32,
+          "to": 39
+        },
+        "shear_slice_nw": {
+          "from": 40,
+          "to": 47
+        },
+        "shear_slice_n": {
+          "from": 48,
+          "to": 55
+        },
+        "shear_slice_ne": {
+          "from": 56,
+          "to": 63
+        },
+        "shear_slice_ii_e": {
+          "from": 64,
+          "to": 71
+        },
+        "shear_slice_ii_se": {
+          "from": 72,
+          "to": 79
+        },
+        "shear_slice_ii_s": {
+          "from": 80,
+          "to": 87
+        },
+        "shear_slice_ii_sw": {
+          "from": 88,
+          "to": 95
+        },
+        "shear_slice_ii_w": {
+          "from": 96,
+          "to": 103
+        },
+        "shear_slice_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "shear_slice_ii_n": {
+          "from": 112,
+          "to": 119
+        },
+        "shear_slice_ii_ne": {
+          "from": 120,
+          "to": 127
+        }
+      },
+      "durations_ms": [
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180,
+        60,
+        35,
+        40,
+        45,
+        65,
+        90,
+        140,
+        180
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "tags": {
+        "ground_lock": {
+          "from": 0,
+          "to": 7
+        },
+        "ground_lock_ii": {
+          "from": 8,
+          "to": 15
+        },
+        "bulwark_lock": {
+          "from": 16,
+          "to": 23
+        },
+        "bulwark_impact": {
+          "from": 24,
+          "to": 31
+        },
+        "jaw_break": {
+          "from": 32,
+          "to": 39
+        },
+        "counterweight_store": {
+          "from": 40,
+          "to": 47
+        },
+        "counterweight_release": {
+          "from": 48,
+          "to": 55
+        },
+        "counterweight_release_e": {
+          "from": 56,
+          "to": 63
+        },
+        "counterweight_release_se": {
+          "from": 64,
+          "to": 71
+        },
+        "counterweight_release_s": {
+          "from": 72,
+          "to": 79
+        },
+        "counterweight_release_sw": {
+          "from": 80,
+          "to": 87
+        },
+        "counterweight_release_w": {
+          "from": 88,
+          "to": 95
+        },
+        "counterweight_release_nw": {
+          "from": 96,
+          "to": 103
+        },
+        "counterweight_release_n": {
+          "from": 104,
+          "to": 111
+        },
+        "counterweight_release_ne": {
+          "from": 112,
+          "to": 119
+        }
+      },
+      "durations_ms": [
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140,
+        130,
+        90,
+        70,
+        70,
+        80,
+        90,
+        110,
+        140
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 grounded scar and contact reaction",
+        "02 physical mechanism and brackets",
+        "03 moving force plates",
+        "04 keyed sparks and travel fragments"
+      ],
+      "tags": {
+        "speed": {
+          "from": 0,
+          "to": 7
+        },
+        "speed_e": {
+          "from": 8,
+          "to": 15
+        },
+        "speed_ne": {
+          "from": 16,
+          "to": 23
+        },
+        "speed_n": {
+          "from": 24,
+          "to": 31
+        },
+        "speed_nw": {
+          "from": 32,
+          "to": 39
+        },
+        "speed_w": {
+          "from": 40,
+          "to": 47
+        },
+        "speed_sw": {
+          "from": 48,
+          "to": 55
+        },
+        "speed_s": {
+          "from": 56,
+          "to": 63
+        },
+        "speed_se": {
+          "from": 64,
+          "to": 71
+        },
+        "speed_ii": {
+          "from": 72,
+          "to": 79
+        },
+        "speed_ii_e": {
+          "from": 80,
+          "to": 87
+        },
+        "speed_ii_ne": {
+          "from": 88,
+          "to": 95
+        },
+        "speed_ii_n": {
+          "from": 96,
+          "to": 103
+        },
+        "speed_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "speed_ii_w": {
+          "from": 112,
+          "to": 119
+        },
+        "speed_ii_sw": {
+          "from": 120,
+          "to": 127
+        },
+        "speed_ii_s": {
+          "from": 128,
+          "to": 135
+        },
+        "speed_ii_se": {
+          "from": 136,
+          "to": 143
+        },
+        "terminal_velocity": {
+          "from": 144,
+          "to": 151
+        },
+        "terminal_velocity_e": {
+          "from": 152,
+          "to": 159
+        },
+        "terminal_velocity_ne": {
+          "from": 160,
+          "to": 167
+        },
+        "terminal_velocity_n": {
+          "from": 168,
+          "to": 175
+        },
+        "terminal_velocity_nw": {
+          "from": 176,
+          "to": 183
+        },
+        "terminal_velocity_w": {
+          "from": 184,
+          "to": 191
+        },
+        "terminal_velocity_sw": {
+          "from": 192,
+          "to": 199
+        },
+        "terminal_velocity_s": {
+          "from": 200,
+          "to": 207
+        },
+        "terminal_velocity_se": {
+          "from": 208,
+          "to": 215
+        },
+        "flow_state": {
+          "from": 216,
+          "to": 223
+        },
+        "flow_state_e": {
+          "from": 224,
+          "to": 231
+        },
+        "flow_state_ne": {
+          "from": 232,
+          "to": 239
+        },
+        "flow_state_n": {
+          "from": 240,
+          "to": 247
+        },
+        "flow_state_nw": {
+          "from": 248,
+          "to": 255
+        },
+        "flow_state_w": {
+          "from": 256,
+          "to": 263
+        },
+        "flow_state_sw": {
+          "from": 264,
+          "to": 271
+        },
+        "flow_state_s": {
+          "from": 272,
+          "to": 279
+        },
+        "flow_state_se": {
+          "from": 280,
+          "to": 287
+        }
+      },
+      "durations_ms": [
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/impact_wake_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 floor and contact shadow",
+        "02 load-bearing machine bodies",
+        "03 mechanical jaws and bearings",
+        "04 transmitted action and route",
+        "05 reaction chips and key light",
+        "06 developed structure"
+      ],
+      "tags": {
+        "wake_ii": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        70,
+        50,
+        40,
+        45,
+        50,
+        65,
+        85,
+        120
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/iron_comet_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 grounded scar and contact reaction",
+        "02 physical mechanism and brackets",
+        "03 moving force plates",
+        "04 keyed sparks and travel fragments"
+      ],
+      "tags": {
+        "comet_charge": {
+          "from": 0,
+          "to": 7
+        },
+        "comet_charge_e": {
+          "from": 8,
+          "to": 15
+        },
+        "comet_charge_ne": {
+          "from": 16,
+          "to": 23
+        },
+        "comet_charge_n": {
+          "from": 24,
+          "to": 31
+        },
+        "comet_charge_nw": {
+          "from": 32,
+          "to": 39
+        },
+        "comet_charge_w": {
+          "from": 40,
+          "to": 47
+        },
+        "comet_charge_sw": {
+          "from": 48,
+          "to": 55
+        },
+        "comet_charge_s": {
+          "from": 56,
+          "to": 63
+        },
+        "comet_charge_se": {
+          "from": 64,
+          "to": 71
+        },
+        "comet_charge_ii": {
+          "from": 72,
+          "to": 79
+        },
+        "comet_charge_ii_e": {
+          "from": 80,
+          "to": 87
+        },
+        "comet_charge_ii_ne": {
+          "from": 88,
+          "to": 95
+        },
+        "comet_charge_ii_n": {
+          "from": 96,
+          "to": 103
+        },
+        "comet_charge_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "comet_charge_ii_w": {
+          "from": 112,
+          "to": 119
+        },
+        "comet_charge_ii_sw": {
+          "from": 120,
+          "to": 127
+        },
+        "comet_charge_ii_s": {
+          "from": 128,
+          "to": 135
+        },
+        "comet_charge_ii_se": {
+          "from": 136,
+          "to": 143
+        },
+        "comet_flight": {
+          "from": 144,
+          "to": 151
+        },
+        "comet_flight_e": {
+          "from": 152,
+          "to": 159
+        },
+        "comet_flight_ne": {
+          "from": 160,
+          "to": 167
+        },
+        "comet_flight_n": {
+          "from": 168,
+          "to": 175
+        },
+        "comet_flight_nw": {
+          "from": 176,
+          "to": 183
+        },
+        "comet_flight_w": {
+          "from": 184,
+          "to": 191
+        },
+        "comet_flight_sw": {
+          "from": 192,
+          "to": 199
+        },
+        "comet_flight_s": {
+          "from": 200,
+          "to": 207
+        },
+        "comet_flight_se": {
+          "from": 208,
+          "to": 215
+        },
+        "comet_flight_ii": {
+          "from": 216,
+          "to": 223
+        },
+        "comet_flight_ii_e": {
+          "from": 224,
+          "to": 231
+        },
+        "comet_flight_ii_ne": {
+          "from": 232,
+          "to": 239
+        },
+        "comet_flight_ii_n": {
+          "from": 240,
+          "to": 247
+        },
+        "comet_flight_ii_nw": {
+          "from": 248,
+          "to": 255
+        },
+        "comet_flight_ii_w": {
+          "from": 256,
+          "to": 263
+        },
+        "comet_flight_ii_sw": {
+          "from": 264,
+          "to": 271
+        },
+        "comet_flight_ii_s": {
+          "from": 272,
+          "to": 279
+        },
+        "comet_flight_ii_se": {
+          "from": 280,
+          "to": 287
+        },
+        "comet_impact": {
+          "from": 288,
+          "to": 295
+        },
+        "comet_impact_e": {
+          "from": 296,
+          "to": 303
+        },
+        "comet_impact_ne": {
+          "from": 304,
+          "to": 311
+        },
+        "comet_impact_n": {
+          "from": 312,
+          "to": 319
+        },
+        "comet_impact_nw": {
+          "from": 320,
+          "to": 327
+        },
+        "comet_impact_w": {
+          "from": 328,
+          "to": 335
+        },
+        "comet_impact_sw": {
+          "from": 336,
+          "to": 343
+        },
+        "comet_impact_s": {
+          "from": 344,
+          "to": 351
+        },
+        "comet_impact_se": {
+          "from": 352,
+          "to": 359
+        },
+        "comet_impact_ii": {
+          "from": 360,
+          "to": 367
+        },
+        "comet_impact_ii_e": {
+          "from": 368,
+          "to": 375
+        },
+        "comet_impact_ii_ne": {
+          "from": 376,
+          "to": 383
+        },
+        "comet_impact_ii_n": {
+          "from": 384,
+          "to": 391
+        },
+        "comet_impact_ii_nw": {
+          "from": 392,
+          "to": 399
+        },
+        "comet_impact_ii_w": {
+          "from": 400,
+          "to": 407
+        },
+        "comet_impact_ii_sw": {
+          "from": 408,
+          "to": 415
+        },
+        "comet_impact_ii_s": {
+          "from": 416,
+          "to": 423
+        },
+        "comet_impact_ii_se": {
+          "from": 424,
+          "to": 431
+        },
+        "comet_scrape": {
+          "from": 432,
+          "to": 439
+        },
+        "comet_scrape_e": {
+          "from": 440,
+          "to": 447
+        },
+        "comet_scrape_ne": {
+          "from": 448,
+          "to": 455
+        },
+        "comet_scrape_n": {
+          "from": 456,
+          "to": 463
+        },
+        "comet_scrape_nw": {
+          "from": 464,
+          "to": 471
+        },
+        "comet_scrape_w": {
+          "from": 472,
+          "to": 479
+        },
+        "comet_scrape_sw": {
+          "from": 480,
+          "to": 487
+        },
+        "comet_scrape_s": {
+          "from": 488,
+          "to": 495
+        },
+        "comet_scrape_se": {
+          "from": 496,
+          "to": 503
+        },
+        "comet_scrape_ii": {
+          "from": 504,
+          "to": 511
+        },
+        "comet_scrape_ii_e": {
+          "from": 512,
+          "to": 519
+        },
+        "comet_scrape_ii_ne": {
+          "from": 520,
+          "to": 527
+        },
+        "comet_scrape_ii_n": {
+          "from": 528,
+          "to": 535
+        },
+        "comet_scrape_ii_nw": {
+          "from": 536,
+          "to": 543
+        },
+        "comet_scrape_ii_w": {
+          "from": 544,
+          "to": 551
+        },
+        "comet_scrape_ii_sw": {
+          "from": 552,
+          "to": 559
+        },
+        "comet_scrape_ii_s": {
+          "from": 560,
+          "to": 567
+        },
+        "comet_scrape_ii_se": {
+          "from": 568,
+          "to": 575
+        }
+      },
+      "durations_ms": [
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 contact scar and ground depth",
+        "02 rear brake and open spring cassette",
+        "03 mechanical force direction",
+        "04 contact accents and fragments"
+      ],
+      "tags": {
+        "bank_load_e": {
+          "from": 0,
+          "to": 7
+        },
+        "bank_load_se": {
+          "from": 8,
+          "to": 15
+        },
+        "bank_load_s": {
+          "from": 16,
+          "to": 23
+        },
+        "bank_load_sw": {
+          "from": 24,
+          "to": 31
+        },
+        "bank_load_w": {
+          "from": 32,
+          "to": 39
+        },
+        "bank_load_nw": {
+          "from": 40,
+          "to": 47
+        },
+        "bank_load_n": {
+          "from": 48,
+          "to": 55
+        },
+        "bank_load_ne": {
+          "from": 56,
+          "to": 63
+        },
+        "bank_load_ii_e": {
+          "from": 64,
+          "to": 71
+        },
+        "bank_load_ii_se": {
+          "from": 72,
+          "to": 79
+        },
+        "bank_load_ii_s": {
+          "from": 80,
+          "to": 87
+        },
+        "bank_load_ii_sw": {
+          "from": 88,
+          "to": 95
+        },
+        "bank_load_ii_w": {
+          "from": 96,
+          "to": 103
+        },
+        "bank_load_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "bank_load_ii_n": {
+          "from": 112,
+          "to": 119
+        },
+        "bank_load_ii_ne": {
+          "from": 120,
+          "to": 127
+        },
+        "bank_stored_e": {
+          "from": 128,
+          "to": 135
+        },
+        "bank_stored_se": {
+          "from": 136,
+          "to": 143
+        },
+        "bank_stored_s": {
+          "from": 144,
+          "to": 151
+        },
+        "bank_stored_sw": {
+          "from": 152,
+          "to": 159
+        },
+        "bank_stored_w": {
+          "from": 160,
+          "to": 167
+        },
+        "bank_stored_nw": {
+          "from": 168,
+          "to": 175
+        },
+        "bank_stored_n": {
+          "from": 176,
+          "to": 183
+        },
+        "bank_stored_ne": {
+          "from": 184,
+          "to": 191
+        },
+        "bank_stored_ii_e": {
+          "from": 192,
+          "to": 199
+        },
+        "bank_stored_ii_se": {
+          "from": 200,
+          "to": 207
+        },
+        "bank_stored_ii_s": {
+          "from": 208,
+          "to": 215
+        },
+        "bank_stored_ii_sw": {
+          "from": 216,
+          "to": 223
+        },
+        "bank_stored_ii_w": {
+          "from": 224,
+          "to": 231
+        },
+        "bank_stored_ii_nw": {
+          "from": 232,
+          "to": 239
+        },
+        "bank_stored_ii_n": {
+          "from": 240,
+          "to": 247
+        },
+        "bank_stored_ii_ne": {
+          "from": 248,
+          "to": 255
+        },
+        "bank_release_e": {
+          "from": 256,
+          "to": 263
+        },
+        "bank_release_se": {
+          "from": 264,
+          "to": 271
+        },
+        "bank_release_s": {
+          "from": 272,
+          "to": 279
+        },
+        "bank_release_sw": {
+          "from": 280,
+          "to": 287
+        },
+        "bank_release_w": {
+          "from": 288,
+          "to": 295
+        },
+        "bank_release_nw": {
+          "from": 296,
+          "to": 303
+        },
+        "bank_release_n": {
+          "from": 304,
+          "to": 311
+        },
+        "bank_release_ne": {
+          "from": 312,
+          "to": 319
+        },
+        "bank_release_ii_e": {
+          "from": 320,
+          "to": 327
+        },
+        "bank_release_ii_se": {
+          "from": 328,
+          "to": 335
+        },
+        "bank_release_ii_s": {
+          "from": 336,
+          "to": 343
+        },
+        "bank_release_ii_sw": {
+          "from": 344,
+          "to": 351
+        },
+        "bank_release_ii_w": {
+          "from": 352,
+          "to": 359
+        },
+        "bank_release_ii_nw": {
+          "from": 360,
+          "to": 367
+        },
+        "bank_release_ii_n": {
+          "from": 368,
+          "to": 375
+        },
+        "bank_release_ii_ne": {
+          "from": 376,
+          "to": 383
+        }
+      },
+      "durations_ms": [
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180,
+        75,
+        55,
+        45,
+        70,
+        95,
+        90,
+        140,
+        180
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 grounded scar and contact reaction",
+        "02 physical mechanism and brackets",
+        "03 moving force plates",
+        "04 keyed sparks and travel fragments"
+      ],
+      "tags": {
+        "orbit_drift": {
+          "from": 0,
+          "to": 7
+        },
+        "orbit_drift_e": {
+          "from": 8,
+          "to": 15
+        },
+        "orbit_drift_ne": {
+          "from": 16,
+          "to": 23
+        },
+        "orbit_drift_n": {
+          "from": 24,
+          "to": 31
+        },
+        "orbit_drift_nw": {
+          "from": 32,
+          "to": 39
+        },
+        "orbit_drift_w": {
+          "from": 40,
+          "to": 47
+        },
+        "orbit_drift_sw": {
+          "from": 48,
+          "to": 55
+        },
+        "orbit_drift_s": {
+          "from": 56,
+          "to": 63
+        },
+        "orbit_drift_se": {
+          "from": 64,
+          "to": 71
+        },
+        "orbit_drift_ii": {
+          "from": 72,
+          "to": 79
+        },
+        "orbit_drift_ii_e": {
+          "from": 80,
+          "to": 87
+        },
+        "orbit_drift_ii_ne": {
+          "from": 88,
+          "to": 95
+        },
+        "orbit_drift_ii_n": {
+          "from": 96,
+          "to": 103
+        },
+        "orbit_drift_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "orbit_drift_ii_w": {
+          "from": 112,
+          "to": 119
+        },
+        "orbit_drift_ii_sw": {
+          "from": 120,
+          "to": 127
+        },
+        "orbit_drift_ii_s": {
+          "from": 128,
+          "to": 135
+        },
+        "orbit_drift_ii_se": {
+          "from": 136,
+          "to": 143
+        }
+      },
+      "durations_ms": [
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 contact scar and ground depth",
+        "02 quarry and pursuing hunter",
+        "03 mechanical force direction",
+        "04 contact accents and fragments"
+      ],
+      "tags": {
+        "predator_pressure_e": {
+          "from": 0,
+          "to": 7
+        },
+        "predator_pressure_se": {
+          "from": 8,
+          "to": 15
+        },
+        "predator_pressure_s": {
+          "from": 16,
+          "to": 23
+        },
+        "predator_pressure_sw": {
+          "from": 24,
+          "to": 31
+        },
+        "predator_pressure_w": {
+          "from": 32,
+          "to": 39
+        },
+        "predator_pressure_nw": {
+          "from": 40,
+          "to": 47
+        },
+        "predator_pressure_n": {
+          "from": 48,
+          "to": 55
+        },
+        "predator_pressure_ne": {
+          "from": 56,
+          "to": 63
+        },
+        "predator_pressure_ii_e": {
+          "from": 64,
+          "to": 71
+        },
+        "predator_pressure_ii_se": {
+          "from": 72,
+          "to": 79
+        },
+        "predator_pressure_ii_s": {
+          "from": 80,
+          "to": 87
+        },
+        "predator_pressure_ii_sw": {
+          "from": 88,
+          "to": 95
+        },
+        "predator_pressure_ii_w": {
+          "from": 96,
+          "to": 103
+        },
+        "predator_pressure_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "predator_pressure_ii_n": {
+          "from": 112,
+          "to": 119
+        },
+        "predator_pressure_ii_ne": {
+          "from": 120,
+          "to": 127
+        },
+        "predator_tracking_e": {
+          "from": 128,
+          "to": 135
+        },
+        "predator_tracking_se": {
+          "from": 136,
+          "to": 143
+        },
+        "predator_tracking_s": {
+          "from": 144,
+          "to": 151
+        },
+        "predator_tracking_sw": {
+          "from": 152,
+          "to": 159
+        },
+        "predator_tracking_w": {
+          "from": 160,
+          "to": 167
+        },
+        "predator_tracking_nw": {
+          "from": 168,
+          "to": 175
+        },
+        "predator_tracking_n": {
+          "from": 176,
+          "to": 183
+        },
+        "predator_tracking_ne": {
+          "from": 184,
+          "to": 191
+        },
+        "predator_tracking_ii_e": {
+          "from": 192,
+          "to": 199
+        },
+        "predator_tracking_ii_se": {
+          "from": 200,
+          "to": 207
+        },
+        "predator_tracking_ii_s": {
+          "from": 208,
+          "to": 215
+        },
+        "predator_tracking_ii_sw": {
+          "from": 216,
+          "to": 223
+        },
+        "predator_tracking_ii_w": {
+          "from": 224,
+          "to": 231
+        },
+        "predator_tracking_ii_nw": {
+          "from": 232,
+          "to": 239
+        },
+        "predator_tracking_ii_n": {
+          "from": 240,
+          "to": 247
+        },
+        "predator_tracking_ii_ne": {
+          "from": 248,
+          "to": 255
+        }
+      },
+      "durations_ms": [
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155,
+        65,
+        55,
+        60,
+        85,
+        75,
+        85,
+        105,
+        155
+      ]
+    }
+  },
+  {
+    "revision": "d0d37e5",
+    "source": "assets/source-art/power_identity_002c5/redline_fx.aseprite",
+    "sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_fx.png",
+    "columns": 8,
+    "metadata": {
+      "cell": [
+        96,
+        80
+      ],
+      "pivot": [
+        48,
+        48
+      ],
+      "layers": [
+        "01 grounded scar and contact reaction",
+        "02 physical mechanism and brackets",
+        "03 moving force plates",
+        "04 keyed sparks and travel fragments"
+      ],
+      "tags": {
+        "redline_active": {
+          "from": 0,
+          "to": 7
+        },
+        "redline_active_e": {
+          "from": 8,
+          "to": 15
+        },
+        "redline_active_ne": {
+          "from": 16,
+          "to": 23
+        },
+        "redline_active_n": {
+          "from": 24,
+          "to": 31
+        },
+        "redline_active_nw": {
+          "from": 32,
+          "to": 39
+        },
+        "redline_active_w": {
+          "from": 40,
+          "to": 47
+        },
+        "redline_active_sw": {
+          "from": 48,
+          "to": 55
+        },
+        "redline_active_s": {
+          "from": 56,
+          "to": 63
+        },
+        "redline_active_se": {
+          "from": 64,
+          "to": 71
+        },
+        "redline_active_ii": {
+          "from": 72,
+          "to": 79
+        },
+        "redline_active_ii_e": {
+          "from": 80,
+          "to": 87
+        },
+        "redline_active_ii_ne": {
+          "from": 88,
+          "to": 95
+        },
+        "redline_active_ii_n": {
+          "from": 96,
+          "to": 103
+        },
+        "redline_active_ii_nw": {
+          "from": 104,
+          "to": 111
+        },
+        "redline_active_ii_w": {
+          "from": 112,
+          "to": 119
+        },
+        "redline_active_ii_sw": {
+          "from": 120,
+          "to": 127
+        },
+        "redline_active_ii_s": {
+          "from": 128,
+          "to": 135
+        },
+        "redline_active_ii_se": {
+          "from": 136,
+          "to": 143
+        },
+        "redline_overcap": {
+          "from": 144,
+          "to": 151
+        },
+        "redline_overcap_e": {
+          "from": 152,
+          "to": 159
+        },
+        "redline_overcap_ne": {
+          "from": 160,
+          "to": 167
+        },
+        "redline_overcap_n": {
+          "from": 168,
+          "to": 175
+        },
+        "redline_overcap_nw": {
+          "from": 176,
+          "to": 183
+        },
+        "redline_overcap_w": {
+          "from": 184,
+          "to": 191
+        },
+        "redline_overcap_sw": {
+          "from": 192,
+          "to": 199
+        },
+        "redline_overcap_s": {
+          "from": 200,
+          "to": 207
+        },
+        "redline_overcap_se": {
+          "from": 208,
+          "to": 215
+        },
+        "redline_overcap_ii": {
+          "from": 216,
+          "to": 223
+        },
+        "redline_overcap_ii_e": {
+          "from": 224,
+          "to": 231
+        },
+        "redline_overcap_ii_ne": {
+          "from": 232,
+          "to": 239
+        },
+        "redline_overcap_ii_n": {
+          "from": 240,
+          "to": 247
+        },
+        "redline_overcap_ii_nw": {
+          "from": 248,
+          "to": 255
+        },
+        "redline_overcap_ii_w": {
+          "from": 256,
+          "to": 263
+        },
+        "redline_overcap_ii_sw": {
+          "from": 264,
+          "to": 271
+        },
+        "redline_overcap_ii_s": {
+          "from": 272,
+          "to": 279
+        },
+        "redline_overcap_ii_se": {
+          "from": 280,
+          "to": 287
+        },
+        "redline_heat": {
+          "from": 288,
+          "to": 295
+        },
+        "redline_heat_e": {
+          "from": 296,
+          "to": 303
+        },
+        "redline_heat_ne": {
+          "from": 304,
+          "to": 311
+        },
+        "redline_heat_n": {
+          "from": 312,
+          "to": 319
+        },
+        "redline_heat_nw": {
+          "from": 320,
+          "to": 327
+        },
+        "redline_heat_w": {
+          "from": 328,
+          "to": 335
+        },
+        "redline_heat_sw": {
+          "from": 336,
+          "to": 343
+        },
+        "redline_heat_s": {
+          "from": 344,
+          "to": 351
+        },
+        "redline_heat_se": {
+          "from": 352,
+          "to": 359
+        },
+        "runaway": {
+          "from": 360,
+          "to": 367
+        },
+        "runaway_e": {
+          "from": 368,
+          "to": 375
+        },
+        "runaway_ne": {
+          "from": 376,
+          "to": 383
+        },
+        "runaway_n": {
+          "from": 384,
+          "to": 391
+        },
+        "runaway_nw": {
+          "from": 392,
+          "to": 399
+        },
+        "runaway_w": {
+          "from": 400,
+          "to": 407
+        },
+        "runaway_sw": {
+          "from": 408,
+          "to": 415
+        },
+        "runaway_s": {
+          "from": 416,
+          "to": 423
+        },
+        "runaway_se": {
+          "from": 424,
+          "to": 431
+        },
+        "breakneck_charge": {
+          "from": 432,
+          "to": 439
+        },
+        "breakneck_charge_e": {
+          "from": 440,
+          "to": 447
+        },
+        "breakneck_charge_ne": {
+          "from": 448,
+          "to": 455
+        },
+        "breakneck_charge_n": {
+          "from": 456,
+          "to": 463
+        },
+        "breakneck_charge_nw": {
+          "from": 464,
+          "to": 471
+        },
+        "breakneck_charge_w": {
+          "from": 472,
+          "to": 479
+        },
+        "breakneck_charge_sw": {
+          "from": 480,
+          "to": 487
+        },
+        "breakneck_charge_s": {
+          "from": 488,
+          "to": 495
+        },
+        "breakneck_charge_se": {
+          "from": 496,
+          "to": 503
+        },
+        "breakneck_strike": {
+          "from": 504,
+          "to": 511
+        },
+        "breakneck_strike_e": {
+          "from": 512,
+          "to": 519
+        },
+        "breakneck_strike_ne": {
+          "from": 520,
+          "to": 527
+        },
+        "breakneck_strike_n": {
+          "from": 528,
+          "to": 535
+        },
+        "breakneck_strike_nw": {
+          "from": 536,
+          "to": 543
+        },
+        "breakneck_strike_w": {
+          "from": 544,
+          "to": 551
+        },
+        "breakneck_strike_sw": {
+          "from": 552,
+          "to": 559
+        },
+        "breakneck_strike_s": {
+          "from": 560,
+          "to": 567
+        },
+        "breakneck_strike_se": {
+          "from": 568,
+          "to": 575
+        },
+        "breakneck_recoil": {
+          "from": 576,
+          "to": 583
+        },
+        "breakneck_recoil_e": {
+          "from": 584,
+          "to": 591
+        },
+        "breakneck_recoil_ne": {
+          "from": 592,
+          "to": 599
+        },
+        "breakneck_recoil_n": {
+          "from": 600,
+          "to": 607
+        },
+        "breakneck_recoil_nw": {
+          "from": 608,
+          "to": 615
+        },
+        "breakneck_recoil_w": {
+          "from": 616,
+          "to": 623
+        },
+        "breakneck_recoil_sw": {
+          "from": 624,
+          "to": 631
+        },
+        "breakneck_recoil_s": {
+          "from": 632,
+          "to": 639
+        },
+        "breakneck_recoil_se": {
+          "from": 640,
+          "to": 647
+        }
+      },
+      "durations_ms": [
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130,
+        75,
+        55,
+        40,
+        35,
+        45,
+        65,
+        90,
+        130
+      ]
+    }
+  }
+]

@@ -23,4 +23,8 @@ desktop.ini
 __pycache__/
 *.pyc
 
+# QA contact sheets are review evidence, not imported game textures.
+/tests/art_identity_002c5/*.png.import
+/tests/art_correction_v2/*.png.import
+
 # Keep actual source assets, *.import settings, *.uid sidecars and export_presets.cfg.

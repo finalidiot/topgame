@@ -1,12 +1,12 @@
 {
   "family": "clutch",
   "grammar": {
-    "silhouette": "Off-axis strained machine with a single large stepped pawl catching its bearing.",
-    "motion": "Uneven slips/misses, decisive pawl contact, a short stutter catch and restrained settlement.",
+    "silhouette": "Accepted wobbling blade and ratchet on a visibly scraping bit, followed by a small physical floor catch.",
+    "motion": "Uneven scrape, loaded bit bite, and the same top settling back upright.",
     "location": "One side of the low bearing and contact-floor scrape.",
     "persistence": "Intermittent actual danger window; bounded successful-contact catch.",
     "palette": "Dull steel/brass, small gold tooth tips, oxide strain marks and one pale catch flash.",
-    "feature": "Asymmetric toothed L-shaped pawl and leaning bit; no recovery-ring expansion or relaunch."
+    "feature": "The top itself leans and catches; one tiny floor bite replaces the detached bearing device."
   },
   "static_frames": {
     "clutch": 6,
@@ -21,14 +21,26 @@
     "recover": "clutch_catch"
   },
   "notes": [
-    "Rank II adds a second small staggered bearing stop, not a surrounding symmetric clamp.",
+    "Rank II adds a second small redirected catch fragment, never a separate supporting device.",
     "The authored catch never resets the physical player, reserve, collision radius or position."
   ],
   "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
   "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
   "review_tier": {
-    "before": "C cards; runtime mixed B/C",
-    "after": "B/A candidate pending full roster, grayscale and motion review"
+    "before": "Human review rejected ambiguous pseudo-machine subjects",
+    "after": "Corrected physical-top scenes; human visual acceptance pending"
   },
-  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+  "card_story": "Six deliberately held physical poses in twelve timed source cels: anticipation, action, reaction and recovery. No added frames for smoothness.",
+  "historical_direction": {
+    "human_rejected_checkpoint": "d0d37e5",
+    "accepted_physical_subject": "d551867 assets/source-art/starter_balance_mid_ball.aseprite",
+    "components_restored": [
+      "native blade cels",
+      "native ratchet cels",
+      "native bit cels"
+    ],
+    "motion_cues_inspected": "32bb56e roster cards/icons/FX; bdcc24e cards/icons; f72526e runtime effects",
+    "source_authority": "Native saved Aseprite masters; six deliberately held card poses in twelve timed cels",
+    "human_visual_acceptance": "pending"
+  }
 }

@@ -1,0 +1,110 @@
+[
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "anchor",
+    "keys": {
+      "from": 32,
+      "to": 37
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "anchor_ii",
+    "keys": {
+      "from": 38,
+      "to": 43
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "bulwark",
+    "keys": {
+      "from": 50,
+      "to": 55
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "bulwark_impact",
+    "keys": {
+      "from": 56,
+      "to": 61
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "counterweight_store",
+    "keys": {
+      "from": 68,
+      "to": 73
+    }
+  },
+  {
+    "revision": "3267ef3",
+    "source": "assets/source-art/escalation_fx_002c.aseprite",
+    "tag": "counterweight_release",
+    "keys": {
+      "from": 74,
+      "to": 79
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "anchor_build",
+    "keys": {
+      "from": 0,
+      "to": 5
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "anchor_full",
+    "keys": {
+      "from": 6,
+      "to": 11
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "bulwark_lock",
+    "keys": {
+      "from": 12,
+      "to": 17
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "bulwark_contact",
+    "keys": {
+      "from": 18,
+      "to": 23
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "counterweight_store",
+    "keys": {
+      "from": 24,
+      "to": 29
+    }
+  },
+  {
+    "revision": "0c6225f",
+    "source": "assets/source-art/dead_centre_fx_002c4.aseprite",
+    "tag": "counterweight_release",
+    "keys": {
+      "from": 30,
+      "to": 35
+    }
+  }
+]

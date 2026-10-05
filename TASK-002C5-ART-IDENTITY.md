@@ -1,5 +1,10 @@
 # Task 002C.5 — Power art identity addendum
 
+**Historical V1 checkpoint, superseded by the human correction pass.** The human
+review rejected several presentations and the internal A2/B11/C0 grades were
+overgenerous. See `TASK-002C5-ART-CORRECTION-V2.md` for the current checkpoint.
+This report and its videos remain evidence of the rejected V1 direction.
+
 This addendum continues the existing `task-002c5-ability-roster` branch. It preserves the completed power mechanics, thirteen-family roster, draft progression, collection, and normal launch flow. It stops at a human-review checkpoint; do not merge to `main`.
 
 ## Audit and review outcome

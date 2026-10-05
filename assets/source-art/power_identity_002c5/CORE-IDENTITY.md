@@ -1,89 +1,101 @@
-# Bank, Predator, Crosscut and Guard: native identity handoff
+# Bank, Predator, Guard and Crosscut: physical-top correction v2
 
-These four families were Tier C before this addendum. Their old roster cards
-shared a centered small rotor, and their FX used bars, sockets, an X or a
-segmented rim. The replacement sources tell four separate physical stories.
-Old masters remain intact for before/after review. Final A/B classification
-requires the whole-roster runtime motion review; source quality alone does not
-establish muted-gameplay recognition.
+The human review rejected the d0d37e5 Bank cassette, Predator comb/hunter machine
+and Guard piston/box. Those grades supersede the earlier internal A/B claims.
+These corrected sources replace those devices. Crosscut was also corrected:
+its artificial Rank II blade extension is removed.
 
-| Family | Card composition and motion | Rank II physical development |
+## Historical comparison and reference choice
+
+The actual earlier `roster_cards_002c5.aseprite`, `roster_icons_002c5.aseprite`
+and `roster_fx_002c5.aseprite` were opened and their tagged frames inspected.
+Their cards at least read as tops: Bank used a centered steel body and short
+floor strokes; Predator used a large/small pursuit pair; Guard a steel body
+with a contact rim; Crosscut a body with crossed strokes. Their small bars,
+segmented rim and symmetric X were not strong enough to restore wholesale.
+
+The accepted `starter_blade_accents_002b1.aseprite` supplied much clearer real
+Breaker, Bastion and Vane blade/body silhouettes. The corrected cards copy
+those original 48px native cels at their existing pixel scale and colours,
+then assemble the accepted ratchet and bit textures in Battle's normal order.
+They contain no resized or recoloured body and no new fictional attachment.
+The different powers are distinguished by their physical scene and motion.
+
+| Family | Corrected physical story | Rank II development |
 |---|---|---|
-| Momentum Bank | Large foreground open spring cassette and cast rear brake shoes; separate forward top. Coils compress, hold a load, then extend as the top releases forward. | Second exposed spring chamber and a wider cast mount. |
-| Predator Line | Cropped 34px foreground hunter pursues a smaller high-right quarry. Mechanical pressure teeth appear sequentially in the actual pursuit gap. | Paired heavy leading jaws on the hunter and a second pressure lane. |
-| Crosscut | Large upper-left subject descends into a glancing contact, then shears sideways past a medium rival. One bright offset shear and unequal exit scars replace the old symmetric X. | Extended physical outer blade, parallel shear edge and developed skid structure. |
-| Crash Guard | A 40px foreground machine receives a cropped incoming top. Exposed guide rods shorten behind a broad stop plate, then rebound. | A substantial second lower shock cylinder, rather than a bigger aura. |
+| Momentum Bank | One actual round Bastion top fills the foreground and brakes over its own floor track. Two skids fold at its bit footprint, hold briefly, then straighten into a directed launch. | More tightly folded floor force and a stronger launch, without a detached cassette. |
+| Predator Line | A real angular Breaker pursues one round Bastion on an upward diagonal. The hunter closes the gap and makes a short genuine rim scrape. | Tighter arrival and stronger pursuit/contact marks, with the same real bodies. |
+| Crash Guard | A round actual Bastion receives the incoming Breaker, yields slightly at contact, then redirects the attacker's exit. | Less defender displacement and a stronger diverted exit; no piston, box or persistent shield. |
+| Crosscut | An actual Vane descends into a tangential contact with Bastion, and the two tops leave on unequal lanes. | Greater separation and developed floor shear, without an added blade or symmetric X. |
 
-The first card pass was reviewed at native scale and in grayscale, then revised
-when Bank/Predator still underfilled their 64px space. Crosscut's original
-rising diagonal was also revised because it was too close to Predator's chase.
-The final Crosscut approach descends; Predator climbs. Colors reinforce those
-differences rather than supplying them.
+## Editable sources
 
-The art uses individually directed native pixel clusters through Python's
-technical drawing primitives and the existing Aseprite file writer. It is not
-a claim of manual mouse painting. It does not clone or recolor earlier masters.
-The saved Aseprite cels are the authority for subsequent artist editing.
+Each family has `_cards.aseprite`, `_icons.aseprite` and `_fx.aseprite` here.
+Cards are 64×64 with five named normal layers and pivot (32,32). Each rank has
+six deliberately directed poses held twice as twelve pipeline keys. These
+are explicit holds: anticipation, approach/compression, contact, reaction,
+follow-through and recovery. They do not claim twelve independently different
+poses merely to satisfy a frame count.
 
-## Native masters and playback
+Icons are independently drawn at 16×16 with two named layers and pivot (8,8).
+Their small blade rims, front shells and bits depict tops; separate floor or
+contact strokes distinguish the power. They are not reduced cards or devices.
 
-Each family owns `<family>_cards.aseprite`, `<family>_icons.aseprite` and
-`<family>_fx.aseprite` in this folder. There are twelve masters total.
+FX remain 96×80, pivot (48,48), with four named normal layers and eight native
+keys per tag. All eight projected headings `e,se,s,sw,w,nw,n,ne` exist at both
+ranks. FX contain no replacement body, gadget or procedural particle field.
+The real gameplay top stays visible while short floor skids and attached rim
+pressure show the existing event. Every directional placement is authored
+upright; no sprite rotation or image resampling is used.
 
-- Cards: 64×64, pivot (32,32), five named normal RGBA layers, two actual family
-  ID tags with twelve deliberately keyed cels each. Card timings differ by
-  family and preserve anticipation, action, reaction and follow-through.
-- Icons: 16×16, pivot (8,8), two named normal layers and one independently drawn
-  cel per rank. Icons are not reduced cards or shrunk runtime FX.
-- FX: 96×80, pivot (48,48), four named normal layers, eight cels per tag. Every
-  force/charge tag has all eight projected heading suffixes
-  `e,se,s,sw,w,nw,n,ne`, at both ranks. Machinery remains upright in the fixed
-  projection. Directional strokes and tooth placements use native integer
-  coordinates; no runtime or authoring image rotation/resampling is used.
+Internal tags retain compatibility: Bank uses `bank_load`, `bank_stored` and
+`bank_release`; Predator uses `predator_pressure` and `predator_tracking`;
+Guard retains the old internal name `damper_contact`, now a physical blade
+absorption/redirect response with no damper hardware; Crosscut uses
+`shear_slice`. Rank and heading suffixes select the appropriate native cels.
 
-FX contain no replacement rotor. Bank lives behind the actual contact plane;
-Guard lives on the actual incoming side; Crosscut lives on the paid lateral
-contact; Predator uses the real pursued rival's link. Runtime sources remain
-the existing mechanic events and live fields; rendering does not create a
-charge, rival, collision or outcome.
+`bank_stored` selects the eight existing real charge stages, never an automatic
+filling animation. The empty key is completely transparent. Every positive key
+has a compact two-pixel gold/pale fold just outside the actual rear heel; higher
+charge tightens the same short skid, and Rank II has one additional floor fold.
+The earlier correction's near-empty low-charge key disappeared beneath the body
+and team ring in real motion. The first bright replacement also failed its real
+south-facing hold because the live blade occluded it. The final fold therefore
+has an upright, individually placed rear span per heading and a continuous short
+steel floor seam back to the actual bit. In 8,064 native starter/phase/lean/stage
+composites, at least 19 bright pixels remain exposed outside the real body; that
+is an occlusion check rather than a gameplay or artistic grade. The failed real
+frame and intermediate master remain in the external iteration evidence. The renderer
+owner selects positive stages with a ceiling/minimum-one mapping only while the
+real stored amount exceeds its existing visibility threshold; zero charge draws
+no wake. Store contraction, held fold and directed release remain separate cels.
+The card's formerly small angular Vane body was also replaced with the stronger
+accepted round Bastion foreground subject at its original native pixel scale.
+`predator_tracking` selects existing hunt-stack stages and
+must sit at the actual hunter's floor footprint facing its one real target.
+The old 70% gap position belonged to the rejected comb and is inappropriate
+for a pursuit floor stroke. The shared renderer owner handles that read-only
+placement correction. Guard remains contact-only.
 
-Bank FX: `bank_load`, `bank_stored`, `bank_release` plus rank/heading suffixes.
-`bank_stored` is **eight real charge stages**, never an automatic filling loop.
-Predator FX: `predator_pressure`, `predator_tracking`; tracking stages expose
-actual hunt stacks and must stay on the real hunter-target relationship.
-Crosscut FX: `shear_slice`. Guard FX: `damper_contact`, contact event only;
-there is no persistent floor fortress or automatically orbiting shield.
+## Authoring, export and proof
 
-Plain-base FX duplicates are omitted because every actual heading has a
-variant. Bank's largest eight-column sheet remains 768×3840, below a 4096px
-height, and the new identities keep existing finite event/state drawing rules.
+`tools/author_identity_core.py` is the explicit authoring recipe. Its default
+refuses artist overwrite; `--revise` was used only for this human-authorized
+correction. Native pixel copying of accepted bodies and independently directed
+technical drawing of their physical travel are documented honestly. Saved
+Aseprite masters remain the source authority after artist editing.
 
-## Runtime paths and editing
+Normal export uses the existing `tools/export_power_identity.py`, which opens
+saved masters in native Aseprite and checks visible RGBA parity. The root
+agent centrally exports the frozen family sources and updates shared metadata;
+this authoring pass does not edit shared export, renderer, gameplay or tests.
 
-For each family, runtime sheets are
-`assets/powers/identity/<family>_cards.png`, `_icons.png` and `_fx.png`.
-`<family>_design.json` records grammar, representative frames, semantic tags
-and state-stage notes. `<family>_manifest.json` records native layers, tags,
-durations, pivots and runtime paths.
+The d0d37e5 rejected sources, actual historical comparison, accepted top-body
+reference, native/color/grayscale six-pose and icon reviews, and twelve native
+Aseprite parity results are under:
+`C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2\`.
 
-Normal editing: open/save the relevant `.aseprite` source, retaining its
-canvas, named layers, tags and pivot. Export using:
-
-```powershell
-python tools/export_power_identity.py --family momentum_bank --family predator_line --family crosscut --family crash_guard --aseprite 'F:\SteamLibrary\steamapps\common\Aseprite\Aseprite.exe'
-```
-
-This export opens each master in native Aseprite and verifies every visible
-RGBA pixel against the layered native-source readback. Nearest-neighbour
-filtering and original timing are preserved. It never authors source cels.
-
-`tools/author_identity_core.py` is initial authoring/revision history. Its
-default refuses artist overwrite. Do not run `--revise` after an artist edits
-the masters. During this pass `--cards-only` revised compositions while keeping
-HUD icons and arena FX unchanged; `--fx-only` added all eight force headings
-while preserving the reviewed cards/icons.
-
-Native-scale color/grayscale sheets and 8× nearest single-frame inspections
-live outside Git in `C:\GPT GAME BUILDING\task-002c5-qa\art-core`. They are art
-inspection aids, not natural gameplay evidence. Root supplies the whole-roster
-matrix, before/after comparison and actual motion showcase.
+`core-review/core-native-source-parity.json` confirms each corrected master
+matches its real native Aseprite export. That proves source integrity, not an
+artistic grade. Runtime recordings must still verify placement, visibility and
+readability. Final quality remains the human review gate.

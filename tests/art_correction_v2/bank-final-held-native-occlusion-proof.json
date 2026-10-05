@@ -1,0 +1,27 @@
+{
+  "purpose": "Source composite occlusion proof: actual unchanged starter blade/ratchet/bit pixels over authored Bank FX at real floor/body pivots. This is not a gameplay recording.",
+  "tested": 8064,
+  "minimum_exposed_bright_pixels": 19,
+  "failures": [],
+  "store_release_cels_unchanged": true,
+  "stage0_empty": true,
+  "visible_per_heading": {
+    "1:e": 34,
+    "1:se": 34,
+    "1:s": 26,
+    "1:sw": 19,
+    "1:w": 30,
+    "1:nw": 34,
+    "1:n": 37,
+    "1:ne": 36,
+    "2:e": 54,
+    "2:se": 61,
+    "2:s": 40,
+    "2:sw": 34,
+    "2:w": 41,
+    "2:nw": 61,
+    "2:n": 61,
+    "2:ne": 66
+  },
+  "master_sha256": "279467e8cf75465b2af818f6ed3d55383455def1523f40f0e0a7be7bedc75a57"
+}

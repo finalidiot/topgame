@@ -504,6 +504,14 @@ def write_family(family,replace=False):
     SOURCE.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True)
     paths=[SOURCE/f"{family}_{kind}.aseprite" for kind in ["cards","icons","fx"]]
     if any(p.exists() for p in paths) and not replace: raise FileExistsError("Existing artist masters preserved; use --replace-authored only for deliberate recipe revision.")
+    if family=="chain_impact":
+        from restore_chain_art_002c5 import restore_chain
+        restore_chain()
+        return
+    if family=="dead_centre":
+        from author_identity_centre import author
+        author()
+        return
     states=[family,family+"_ii"]+({"dead_centre":["bulwark","counterweight"],"afterimage":["ghost_circuit","slipstream"]}.get(family,[]))
     if family=="impact_wake": frames,names,tags,timings=wake_cards()
     else:

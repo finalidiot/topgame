@@ -1,12 +1,12 @@
 {
   "family": "clutch",
   "grammar": {
-    "silhouette": "Off-axis strained machine with a single large stepped pawl catching its bearing.",
-    "motion": "Uneven slips/misses, decisive pawl contact, a short stutter catch and restrained settlement.",
+    "silhouette": "Accepted wobbling blade and ratchet on a visibly scraping bit, followed by a small physical floor catch.",
+    "motion": "Uneven scrape, loaded bit bite, and the same top settling back upright.",
     "location": "One side of the low bearing and contact-floor scrape.",
     "persistence": "Intermittent actual danger window; bounded successful-contact catch.",
     "palette": "Dull steel/brass, small gold tooth tips, oxide strain marks and one pale catch flash.",
-    "feature": "Asymmetric toothed L-shaped pawl and leaning bit; no recovery-ring expansion or relaunch."
+    "feature": "The top itself leans and catches; one tiny floor bite replaces the detached bearing device."
   },
   "design": "assets/powers/identity/clutch_design.json",
   "cards": {
@@ -19,11 +19,11 @@
       32
     ],
     "layers": [
-      "01 scene floor and direction",
-      "02 cast shadow and load-bearing chassis",
-      "03 rotor plates and bearing",
-      "04 mechanical action and recoil",
-      "05 keyed highlights and fragments"
+      "01 arena floor and contact story",
+      "02 accepted native bit and ratchet",
+      "03 accepted native blade silhouette",
+      "04 mechanic-specific motion and force",
+      "05 physical contact flashes and fragments"
     ],
     "tags": {
       "clutch": {
@@ -179,7 +179,7 @@
     "recover": "clutch_catch"
   },
   "notes": [
-    "Rank II adds a second small staggered bearing stop, not a surrounding symmetric clamp.",
+    "Rank II adds a second small redirected catch fragment, never a separate supporting device.",
     "The authored catch never resets the physical player, reserve, collision radius or position."
   ],
   "art": {

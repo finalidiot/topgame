@@ -1,0 +1,374 @@
+{
+  "captured_utc": "2026-10-05T03:56:26.291130+00:00",
+  "base_commit": "d0d37e505f6d6582486f7e039b87643d084457c1",
+  "method": "actual git diff path set plus before/current SHA256",
+  "counts": {
+    "native_masters": 29,
+    "png_exports": 29
+  },
+  "modified": {
+    "native_masters": [
+      {
+        "path": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+        "before_sha256": "7091b61aeeacad2350894b77fbb116a4f820f55f8b54d40db743976f906e9f8e",
+        "after_sha256": "4a8d2fd04e8abcb580701a9991b2adef21b932c4dff0b657751fd9e4d4828dc8",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/chain_impact_fx.aseprite",
+        "before_sha256": "974bf480a85873e21ab259a3a1c2844a0fc9bc3ed4fd8e8934be8c839d9d90f7",
+        "after_sha256": "8eceedfb9eda7e7cfeba733152d82b45387adef0fdf65a7a348542838d3e331b",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+        "before_sha256": "56cdd5f832677437fd75cad8b569d3069b6aeda907eca2d5c9b5fde0d9183112",
+        "after_sha256": "5ac66775a5cde42c690cf441585e8597f29313fde45ca231e9b9bd8f28808675",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+        "before_sha256": "3e35d7f3030d0460d48d0a9dc45a72414c0ac470cd963989ac86cfdeb33a2e0d",
+        "after_sha256": "fcf9a66a0e74f48911cb39cb8e982af6adae5c3326f5403b6519aa5fc51ca363",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/clutch_fx.aseprite",
+        "before_sha256": "5350685f384dbcb7a117c3b7c4e6a4ef79811457d158ec2b5073992fd7346a49",
+        "after_sha256": "6b7764a78de8e533cf724119d2192ca90cb309494b611fd2765b14877662eb1f",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+        "before_sha256": "6e6156fab5e88858456bd6d6bdfc49cc27151d926eacae3119acfefd70de73d4",
+        "after_sha256": "4e7502b2d2a08a61a5a68dd618a29ac948d05b6d03bc4d3b2a30e73d607a6bd9",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+        "before_sha256": "eb1c8d8047966c2601cdfc026f0d6534beea708ec64de495ab2a3f8128bfab3b",
+        "after_sha256": "f36045e3c957b4693fc5fb9e2bc0397dcfee304a314eb4bfe7b931a6e6021311",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crash_guard_fx.aseprite",
+        "before_sha256": "e794e2988fce412a310d7b7891fc1940c1d204d0aae8e9effbaac6e8a097bcdc",
+        "after_sha256": "4e68f5532743f2b2539d2744ab8a57db722aea1c40f24830d91886165bb0031a",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+        "before_sha256": "dcf7fea40c121e6c7ac7479246a5054a55c6b361a018e401108a8fe481158acd",
+        "after_sha256": "a5e2a95e6ecae1827c744d89be12da9d52da9c9d5a282e2492ef2f97e9a42650",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+        "before_sha256": "736cc83939c4a7d40d82017917a42b65f7d73d4ddf21f2d777c063e9784f813e",
+        "after_sha256": "617726f4d52d3598cc9068dd80d0d7b2202e4919d9ce7e4a48ccdc9c636a25b8",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crosscut_fx.aseprite",
+        "before_sha256": "2d715886f8220efd2c778068b0ae8785a9b81030bae3afdaf8afe4c0f8727a2a",
+        "after_sha256": "11a1d4e1757153115652256a14ecdfafbfa305bd3aca7d0605d0ddcf91c1d120",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+        "before_sha256": "0ff8d97c56093e3521165b2ef2bc4f6a03bb6627f29d2c9a998e61082db6d558",
+        "after_sha256": "1cd1eeb2465d118d2b638358d0be69ecc47836686d2ce6ef26a398bd09a9b087",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+        "before_sha256": "ccf4fde0b6f716ad1f48e23f253b5ee428dfee9c0a521ccf257af73897bb78f0",
+        "after_sha256": "99600a1c0f53e3e5b4cbca9bbc678f1eb16f9e32f31b680a977d52584b779da4",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/dead_centre_fx.aseprite",
+        "before_sha256": "a953e553464515096aa284601dd4c78be6fde731b4a7814c5e70901a21010a41",
+        "after_sha256": "fc9889ebf9fed9ac4eb361bda63326a3a4412a8f6fa754b126227b1416ec83ba",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+        "before_sha256": "04da85d3711bbfcc7a36c74455cd8692764265746ed83aaf74666cca39875ae3",
+        "after_sha256": "b4f4c5091e613ac142a3e5ac856bf0edec04b430aa2d954e3866c9d66728e41b",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+        "before_sha256": "46ad11e512483ac93cee5d745c9abe7842e878cde4be64fd88c92c4bfc54fbfb",
+        "after_sha256": "7e60f635f9f70af1eb70d002044ca83058188d97d1937c4f8201bbb5de36fc6f",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/high_gear_fx.aseprite",
+        "before_sha256": "21ca65f1e870fb6927e56c20287101d85719397897864498b26c09d2fe3ac223",
+        "after_sha256": "a3846fb030b8458910eb727088a67dc4b7d834e3bc99a827702d00b3b29bcb4c",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+        "before_sha256": "5c46c7dca189487d3a45c327829068c860220589f6ad9eda8ea12eaee18e7867",
+        "after_sha256": "03c7eabdb39ca9fe12589ec07599ecc934208557a3f7da783d0ed524512b47e7",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/iron_comet_cards.aseprite",
+        "before_sha256": "95139a56c3260d4221c1ce8e75e77e233eb19c3221a6b77b8653310bc590b431",
+        "after_sha256": "966892d177e69c2ec513f1e9253469179de15637165f9eb1d621f5764ba7f4d8",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/iron_comet_fx.aseprite",
+        "before_sha256": "39d96d98d770cdf77789e65893b3805cea50ecdb284c727ebe02d0956dc314b3",
+        "after_sha256": "e2e477d28a2786cc9b3525203c9d7272b04eac26c4bf52cf8fa580f7a15b59c4",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/iron_comet_icons.aseprite",
+        "before_sha256": "99c9ca2dc368d29d14e81863c3475ab8bb8e3ec8f7fddb3cbff53331f9a6826b",
+        "after_sha256": "ffaa0bfb212c383acff0cbb9ddbe8c89d5b6871b87ab78ed170a59da9e3d1db4",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+        "before_sha256": "9893984c2d0d3dea55ac56d05b86b85effa2fe78d9e81f0f71e62b2ba36d8f5e",
+        "after_sha256": "e33d1e88ea9c2754e6c04a934094f817a8eab3df8a67e697ee67bfdef60e8453",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/momentum_bank_fx.aseprite",
+        "before_sha256": "92f468d4bad9328efe5dd914d6ffa0642ed547c7312e3f4436fe8cdb190b0b76",
+        "after_sha256": "279467e8cf75465b2af818f6ed3d55383455def1523f40f0e0a7be7bedc75a57",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+        "before_sha256": "0d81a4cd49b33dab00ae90cd00e7c43612a1313db6b355f158c5c6c34f01d96a",
+        "after_sha256": "a46effff432c1c31eec928715ef5303f3595bf4cd4e32a9ac166609a8edef87e",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+        "before_sha256": "04518293259ff22acca23d151a122c4ffbb0a3ea3cf074968dd3cbd1f04adb53",
+        "after_sha256": "22a5e441af9c7a2be3cb82340e0e8001c8338b0c4504066b7bc4e48ac15e0e35",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+        "before_sha256": "1959418ba9664085a08081f60d6ec22d4351b953ff83e7a6a93a71f4dab0015d",
+        "after_sha256": "4b01a55e35c2e7dabe83f3b7e02ccb6a4c42d3030a62d40e3297d18a2a679243",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+        "before_sha256": "2dbde7e7676b8029d4eab9834574ab2fe64da60fb40a56dfa82fb888397fb255",
+        "after_sha256": "42a385cab1baf7940907af71c386061f0c61275f0805f7d6726c623a370c4892",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/predator_line_fx.aseprite",
+        "before_sha256": "2560ed0737ac39d56822205328a01206af6e57831c582689bf5e1159bc32dbf4",
+        "after_sha256": "c5504a27f6dd64292c92d720ac05341ebd21aaef6e45535a0f02d5e499e31b1a",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+        "before_sha256": "2d3e4c04ce02b1f59d444ee638b020babd8f38e1c1440d2f4dc874ca373118df",
+        "after_sha256": "b48493358e58cbaefae90f8b70dcad9a36c0cafc9fcf6373a5c25a76c2596ef7",
+        "bytes_changed": true
+      }
+    ],
+    "png_exports": [
+      {
+        "path": "assets/powers/identity/chain_impact_cards.png",
+        "before_sha256": "6f3c37f47d0e46c131133e8c813e0621bae47f5fec4772aad276c0dfc61c6242",
+        "after_sha256": "530d62874f4ded905e9e91f1d4fcb8b380cff010a5353b9fbe43f063b067a277",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/chain_impact_fx.png",
+        "before_sha256": "293f4a09b5aa7dc227270c8f51d392d8599e65cdd651b6b53bd3ee189cb685f2",
+        "after_sha256": "cfb838874e841421e485774da39f2693642007a014ef59db2df9ec868170a940",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/chain_impact_icons.png",
+        "before_sha256": "367e22c6d2b7218d39c10cafe7ee71e76b5c04bcbfa9a71293edd370942c8658",
+        "after_sha256": "e3704c18cc10b4369c726420764b52cfea764ac39c7bcc1144bcc992e2989927",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/clutch_cards.png",
+        "before_sha256": "7b3a052ffd3ad658d76f4edb3675662a94c05251b158d76178f0b17ce4a18250",
+        "after_sha256": "365e029cc2657d9366d3d9d17f3fdf4a5e77b43d0be14891de64859637057daf",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/clutch_fx.png",
+        "before_sha256": "d1fcbca181edbc2e7cd18442a546af073732e5cd691b9051a55badd3e35119a1",
+        "after_sha256": "fbec369fbb3e672562af4d59bbab37f68f1babc58b9c1251c776896bda83d605",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/clutch_icons.png",
+        "before_sha256": "c06a6ffedebe23baaf0dc230e5090b2528d7aa26a6121bbc8d1b3ca6fefe8424",
+        "after_sha256": "5059f99d06551de08149bcd3a29d3bc2103dca45a7397f51bf71cbb732a49eb5",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crash_guard_cards.png",
+        "before_sha256": "e36a51ae653bc592e4b40a732b6839d9d0f04ea8318332cbaf8003d5c2874e0d",
+        "after_sha256": "98cfe3cd6ed4951e32e979b67968c7df3e1c0bd7f2463cde5f2ee2e3afed1935",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crash_guard_fx.png",
+        "before_sha256": "6b7ea5c184be50b39d00a356e99be294fa028938e851c821c6233637d0584e9e",
+        "after_sha256": "7ce61f290c5a01238bfa0994ecec2a20911f327b1ed5f41aa2fc55b156da0d04",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crash_guard_icons.png",
+        "before_sha256": "97edc7fab8f03e11115559ce9df4215c30aa5e8791ca578ccc48d8dc49bc8f63",
+        "after_sha256": "0fc3bec3c50249f5f2440c9774d8d2d5c22c400b33f102c84efb91d5581117f2",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crosscut_cards.png",
+        "before_sha256": "b1851cc5029d7cc450e6bd46b9f1b12eea7055fe220c847a13174c7979914e2e",
+        "after_sha256": "11ca1bb924109e27ff1ea23955084ca68f936040965d55da20241e21ce413b32",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crosscut_fx.png",
+        "before_sha256": "f18aab33e79b23b0c7ca1330e5b6fc8e7e5d727e0181c3ed2da756af28147aba",
+        "after_sha256": "9c7282faae28e11e70373cfbca3fe64b0b90d7ae836dd2134355e4474f8c2aaf",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/crosscut_icons.png",
+        "before_sha256": "92d5d6586fd5830693a8c569f9f360290fd9a0ae8c62d45e1f9b849137d4274c",
+        "after_sha256": "efe9d89b8880afe609767e562d7ab3a97619020163a4e3b39f6b1be1c299d226",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/dead_centre_cards.png",
+        "before_sha256": "4e75571c083ecfa9e01d9e65827254b8cc0c9a199e88ae0cbf4b646e0ed71bdf",
+        "after_sha256": "faa6c0fe0d8305255da7084b08fa25d227f7b0ab406bcf26b2b1ba1f61151bf9",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/dead_centre_fx.png",
+        "before_sha256": "f7ae91af847639ec59086607f60a827af75cf62dad25d26422b9f34e0fa72d6f",
+        "after_sha256": "a2ba4640d5565694da40f63761a33c9d0ec0b5b5e79d9ac8c352f1fd9e9d5478",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/dead_centre_icons.png",
+        "before_sha256": "92fc893e66194bdaa309cba415fe4de090a3089577160fbb3d59806d44e0e162",
+        "after_sha256": "0791ce17510f3d58cda6d351d4eec5cc99b8e802f2cb9d48d831335e17126774",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/high_gear_cards.png",
+        "before_sha256": "3ec19f4e40c8fb6acf46c62c47346b60c582b76e36948d996276fc4f96ec2923",
+        "after_sha256": "d54584cbe2359e7801c1e61461547b9441112bdaccaad8d0b5472b715cf8734c",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/high_gear_fx.png",
+        "before_sha256": "646f24df8169d37f881d1d429fde3bd2e8aa669bb74a68fb917f6ac3e1f44ae3",
+        "after_sha256": "d3047a4ae94604037a9ed44b9165f6ba2edc9dbc4261a706b39318e3ad4f5dab",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/high_gear_icons.png",
+        "before_sha256": "644645c7438ffc9f00ada6508ea01523a0d16c505f9bf52c92cbfac8397b5bc4",
+        "after_sha256": "aaaa4dcd6dcfd9af54d67156951a263fd76d7a34d34b7c21561e83c4f3f45529",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/iron_comet_cards.png",
+        "before_sha256": "360e34fa04fbe349c649e7e9c1977a293db93621636d85a8e716faa88e0ed54a",
+        "after_sha256": "a4495341ee768b41bc5647df1cf2b0bb5eb5314cea2aa3fba2df068843e5d9f3",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/iron_comet_fx.png",
+        "before_sha256": "fe33ace7ef7e894cf1e8602722ae90658032547704d23c2deacda6caf5a7520f",
+        "after_sha256": "52f9559bdea4440d224d4daef9ece6afe020ed2540a55f44abb2c5249946b07d",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/iron_comet_icons.png",
+        "before_sha256": "6e424953e91f544766762eba160ad2a4080b77eb89b63db996189d3dacd9cb42",
+        "after_sha256": "3e9bb8a5a8d56a33bb4350aa6351f7b1df84a6c6b02837a2770c3d44648f691f",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/momentum_bank_cards.png",
+        "before_sha256": "1afb15e54d6ddedc6837b7db41041930f3145b7dfb6e58df35fec55b5f169c97",
+        "after_sha256": "c5a86775ced59120a87ed8342bd98337a2cc454efaf22638704d595ff86770d1",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/momentum_bank_fx.png",
+        "before_sha256": "76f7428d6dffce46f4f9239a193b526cef26be5035440cf9ad5d51aad0cca072",
+        "after_sha256": "be4925f0005b6fd1e3921ed18a4ba182a4dc698754a52a221d8ee5cbd47c7907",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/momentum_bank_icons.png",
+        "before_sha256": "85df1b4909862420a75e76d0f55c112232a9a8b958ee12295a6afbc38f328710",
+        "after_sha256": "5fda300fdf9c433954c5eafd9b599ca1dd0c67918dc8ac20fe92ba75c978846a",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/orbit_drive_cards.png",
+        "before_sha256": "b7e8eb19fef8646923d045d6164e809b93f6400b6ea5aba18ed9a8809e69850b",
+        "after_sha256": "ac63fc6e6c1d4326bd8df6fbdd5632e3ac8089432fc2d035f19c8ad8964cdbaf",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/orbit_drive_icons.png",
+        "before_sha256": "c2cad5e7e5dd5a1c42f272023839be84a8a7416e63e06d5ab8a9f2cf170ee962",
+        "after_sha256": "cc5c4b7ba84d51fa0af9143c7f49e2401df89266329f1ce077a11d2955465c37",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/predator_line_cards.png",
+        "before_sha256": "e58bab650895d1ee2d9a6b39a1f8965c0923187265f3aeae99840d567bf11fdc",
+        "after_sha256": "2b9ff877ef9d7571bd173ef6b62716d66d22f7673247ac482277365f42fcb97c",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/predator_line_fx.png",
+        "before_sha256": "52842c8d845edbe692cf93baea80b92d97e20021341f52a5a5c0533c0a9dcbe1",
+        "after_sha256": "da489ca5f2e6b730a2458b4bfbaa11d5f8725ea45f87809e8ae82cd1514d3cd3",
+        "bytes_changed": true
+      },
+      {
+        "path": "assets/powers/identity/predator_line_icons.png",
+        "before_sha256": "b3431092ff18a8b1a0b0074cfbf7eedbf6302b9b006bcdfa3359e7911974041b",
+        "after_sha256": "deec637e00987555b3bc0d7c27af26c9b9c52d537f5d24cfe4690db94cf54534",
+        "bytes_changed": true
+      }
+    ]
+  },
+  "retained_orbit_fx": {
+    "assets/source-art/power_identity_002c5/orbit_drive_fx.aseprite": {
+      "unchanged": true,
+      "sha256": "984ef55b42ab240d329c04522680e06b26eac96f929faf7f032f7d97c0ebd48a"
+    },
+    "assets/powers/identity/orbit_drive_fx.png": {
+      "unchanged": true,
+      "sha256": "5cd3aa2d91ccfc624ba398d640902d1b554fea2c2851b5e9f03c4c9f51054e69"
+    }
+  },
+  "acceptance": "source inventory only; not artistic acceptance"
+}

@@ -62,7 +62,7 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	DisplayServer.window_set_title("Spinning Metal — 002C.5 Art Review + Starter Collection")
+	DisplayServer.window_set_title("Spinning Metal — 002C.5 Physical Art V2 + Starter Collection")
 	rng.randomize()
 	var practice_request: String = ""
 	for argument: String in OS.get_cmdline_user_args():

@@ -2,7 +2,8 @@ param(
     [string]$TaskRoot = 'C:\GPT GAME BUILDING\topgame-task-002c5',
     [string]$TaskOutput = 'C:\GPT GAME BUILDING\task-002c5-qa\art-addendum\motion',
     [string]$TaskEngine = 'E:\Desktop\Godot_v4.7.2-stable_win64_console.exe',
-    [string]$TaskOnly = ''
+    [string]$TaskOnly = '',
+    [switch]$CorrectionV2
 )
 $ErrorActionPreference = 'Stop'
 New-Item -ItemType Directory -Force -Path $TaskOutput | Out-Null
@@ -15,6 +16,7 @@ $TaskWindows = [ordered]@{
     crosscut=6.0; runaway=10.0; breakneck=17.3; bulwark=0.5;
     counterweight=0.5; ghost_circuit=3.7; slipstream=15.0; terminal_velocity=3.6; flow_state=3.0
 }
+if ($CorrectionV2) { $TaskWindows.orbit_drive = 13.4 }
 foreach ($TaskFamily in $TaskWindows.Keys) {
     if ($TaskOnly -and $TaskFamily -notin $TaskOnly.Split(',')) { continue }
     $TaskAvi = Join-Path $TaskOutput "$TaskFamily.avi"
@@ -26,6 +28,7 @@ foreach ($TaskFamily in $TaskWindows.Keys) {
         '--write-movie', ('"{0}"' -f $TaskAvi), '--fixed-fps', '60', '--disable-vsync', '--', '--blind',
         "--family=$TaskFamily", "--start=$($TaskWindows[$TaskFamily])", '--length=6',
         ('"--manifest={0}"' -f $TaskManifest), ('"--frames={0}"' -f $TaskFrames))
+    if ($CorrectionV2 -and $TaskFamily -eq 'orbit_drive') { $TaskArguments += '--policy=long_drift' }
     $TaskProcess = Start-Process -FilePath $TaskEngine -ArgumentList $TaskArguments -WindowStyle Hidden -PassThru -Wait -RedirectStandardOutput $TaskStdout -RedirectStandardError $TaskStderr
     $TaskErrors = Get-Content -LiteralPath $TaskStderr -Raw
     if ($TaskProcess.ExitCode -ne 0 -or $TaskErrors -match 'SCRIPT ERROR|ERROR:') { throw "$TaskFamily capture failed: $TaskErrors" }

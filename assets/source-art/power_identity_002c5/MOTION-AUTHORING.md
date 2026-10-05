@@ -1,122 +1,160 @@
-# Motion-family art handoff
+# Motion-family final art correction handoff
 
-This addendum replaces the weak C5 card/icon treatment for Redline, Iron Comet,
-High Gear, Orbit Drive and Clutch. Their new native masters are the editing
-authority. The successful C4 fragmented Redline active signatures are
-intentionally retained by the integrated renderer; the fresh card/icon and
-contact/overcap/heat/commit FX grammar corresponds to those hot asymmetrical
-fragment banks. Other superseded card/icon sources remain historical references.
+This is the final correction pass on the existing Task002C.5 branch. Human
+review rejected the `d0d37e5` Clutch, High Gear, Orbit Drive and Iron Comet
+subjects as ambiguous machinery. Those illustrations and their detached
+mechanical accents have been replaced with physical top scenes. Redline's
+accepted asymmetric hot fragments and existing four card/icon states are
+preserved; this correction does not reconstruct its masters.
 
-The work is scripted pixel-cluster authorship with separate family compositions
-and deliberate poses, saved as normal editable RGBA Aseprite layers. It is not
-manual mouse painting and it is not a palette-only clone of an old master.
-`tools/author_identity_motion.py` is a one-time construction/revision tool;
-ordinary exports must not run it over artist edits. It refuses an existing
-master unless construction revision is explicitly requested with `--revise`.
+The four corrected families use the actual accepted starter's native blade,
+ratchet and bit pixels as their literal subject. They do not scale that body,
+turn a small icon into an illustration, or invent housings, weapons, spacecraft
+or external bearing devices. The original component cels remain separate
+editable layers inside the new card masters. New scene/action clusters are
+scripted pixel authorship, saved as normal native Aseprite cels. This is not
+a claim of manual mouse painting.
 
-## Source and runtime correspondence
+## Historical comparison inspected
 
-For each of `redline`, `iron_comet`, `high_gear`, `orbit_drive`, and `clutch`:
+The actual native masters were extracted from Git, composited and inspected at
+native size, together with their real exported card/icon/runtime PNGs. The
+review evidence is in
+`C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2\motion-history`.
 
-- Native masters: `<family>_cards.aseprite`, `<family>_icons.aseprite`,
-  `<family>_fx.aseprite` in this directory.
-- Runtime atlases: `assets/powers/identity/<family>_{cards,icons,fx}.png`.
-- Design grammar: `assets/powers/identity/<family>_design.json`.
-- Source-derived tags, pivots, durations and paths:
-  `assets/powers/identity/<family>_manifest.json`.
-- Aggregate read-only runtime index: `assets/powers/identity_manifest.json`.
+| Family | Best prior physical cue examined | Human-rejected d0d37e5 version | Chosen correction |
+| --- | --- | --- | --- |
+| Clutch | `bdcc24e` Second Wind card shows broken races closing into a bearing; `32bb56e` Clutch is a tiny rotor plus surrounding marks. | Large abstract bearing/pawl device; the top no longer reads as the subject. | Keep the native `d551867` top wobble/normal blade, ratchet and bit poses. Show scrape, bite and upright settlement. Do not restore the obsolete Second Wind revival-ring promise. |
+| High Gear, Terminal, Flow | `32bb56e` speed spacing, Terminal's long interrupted marks and Flow's open retained curve. | Forward projecting housing reads like a vehicle; blade and transmission parts become ambiguous. | Restore those prior motion cues around the real round top. I has one compact prior rotor; II adds another spaced echo/lane; Terminal opens long gaps; Flow retains an open bent contact route. |
+| Orbit Drive | `32bb56e` curved movement cue, despite the generic central rotor/ring composition. | Large sideways object with a very small floor hook. | Literal top moves around a wide C-shaped contact-tip path. II deepens the outside grooves and displaced grit, rather than adding a badge. |
+| Iron Comet | `bdcc24e` wall scene is stronger causal context but its knife-like mass and `f72526e` giant wedge runtime are not physical tops; `32bb56e` retains the wall but tiny generic rotor. | Wall, pseudo-rotor and separated plates look unrelated to a committed physical attack. | Retain the wall, actual native player top and native hostile target. Six poses show wall compression, alignment, launch, impact, target recoil and exit/scar. No wedge restored. |
 
-The five families provide 15 masters, 14 card/icon states, 168 card keys,
-14 separately drawn icons, and 1,688 FX keys in 211 tags. Heading tags repeat a
-mechanical event at distinct authored screen-direction placements; they do not
-rotate a physical isometric sprite at runtime.
+Actual historical files inspected:
 
-| Family | Card/icon states | Card keys | FX keys / tags |
-| --- | --- | ---: | ---: |
-| Redline | `redline`, `redline_ii`, `runaway`, `breakneck` | 48 | 648 / 81 |
-| Iron Comet | `iron_comet`, `iron_comet_ii` | 24 | 576 / 72 |
-| High Gear | `high_gear`, `high_gear_ii`, `terminal_velocity`, `flow_state` | 48 | 288 / 36 |
-| Orbit Drive | `orbit_drive`, `orbit_drive_ii` | 24 | 144 / 18 |
-| Clutch | `clutch`, `clutch_ii` | 24 | 32 / 4 |
+- `bdcc24e`: `assets/source-art/power_cards_002b1.aseprite`,
+  `power_icons_002b.aseprite`; `assets/powers/cards.png`, `icons.png`.
+- `f72526e`: `assets/source-art/power_fx_002b.aseprite`;
+  `assets/powers/effects.png`, including `comet_headings`.
+- `32bb56e`: `assets/source-art/roster_cards_002c5.aseprite`,
+  `roster_icons_002c5.aseprite`, `roster_fx_002c5.aseprite`;
+  `assets/powers/roster_cards.png`, `roster_icons.png`, `roster_effects.png`.
+- `d0d37e5`: current identity card/icon/FX masters and their real PNGs for all
+  four families, including the High Gear mutations.
+- Accepted physical subject from `d551867`, unchanged since the baseline:
+  `assets/source-art/starter_balance_mid_ball.aseprite` normal/high RPM and
+  heavy wobble poses. The hostile target is the existing native
+  `assets/source-art/small_top_002b.aseprite`. Neither historical original was
+  overwritten; their original component cels are copied into editable layers.
 
-Cards are 64×64 with a (32,32) pivot and 12 unequal-duration keys per state.
-Icons are independent 16×16 drawings with an (8,8) pivot and one cel per state.
-FX are 96×80 with a (48,48) contact pivot, eight keys per tag, and a 535ms
-authored sequence; Clutch's stutter sequence is 555ms. Runtime finite events
-map their actual lifetime onto this sequence. Active state selection comes
-from real power fields; possession alone must not activate the marks.
+Older does not automatically mean better either: the recovery ring, Comet
+wedge and generic rotor decorations are recorded as rejected historical
+alternatives. The accepted native physical top and stronger historical causal
+motion cues are restored without changing their style into a new machine.
 
-Cards have five named editable scene, chassis, rotor, action and highlight
-layers. FX have four floor/contact, mechanism, moving-force and fragment
-layers. Icons have two compact silhouette/action layers. Tags use actual
-catalogue IDs or meaningful mechanical stages. Every native export was checked
-against the composited source visible RGBA pixels by the native Aseprite CLI.
-Nearest filtering is required.
+## Corrected source/runtime correspondence
 
-Normal export, without reconstructing source:
+For each of `iron_comet`, `high_gear`, `orbit_drive`, and `clutch`, modified:
+
+- `<family>_cards.aseprite`, `<family>_icons.aseprite`, `<family>_fx.aseprite`
+  in this directory: **12 editable masters**.
+- `assets/powers/identity/<family>_{cards,icons,fx}.png`: **12 runtime atlases**.
+- `<family>_design.json`, `<family>_manifest.json` in that runtime directory;
+  the aggregate `assets/powers/identity_manifest.json`.
+- One-time construction recipe `tools/author_identity_motion.py`. Normal
+  source export reads the saved masters and never reauthors them.
+
+Cards retain 64x64 cells, pivot(32,32), catalogue tags and 12 timed cels per
+state, but use **six deliberately held key poses**, not more interpolation.
+Icons are separately drawn 16x16 silhouettes with pivot(8,8), not card crops.
+Runtime FX retain 96x80 cells, pivot(48,48), eight timed cels per meaningful
+tag and authored upright headings. The corrected families total ten card/icon
+states, 120 card cels, ten icons and 1,040 FX cels in 130 tags. Native CLI exports
+match all visible source RGBA pixels exactly. Nearest filtering is mandatory.
+
+| Family | Where runtime art appears | How it moves and persists | Physical distinction |
+| --- | --- | --- | --- |
+| Clutch | Directly under the actual struggling bit, then at its earned contact. | Uneven floor scrapes during the actual danger window; one local bite and short settled scrape during real recovery. | Floor grip loss/catch; no external pawl, reticle, ring or floating revival object. |
+| High Gear | Behind the actual moving top, aligned to real velocity. | Sparse faded native blade-rim clusters separate along actual velocity while the real speed state is active. | I/II count and spacing develop; Terminal has long separated intervals; Flow keeps three disconnected bent contact-floor groups. |
+| Orbit Drive | At the contact floor behind/outside the actual drifting top. | Short growing hooked scars and thrown grit exist only during actual brake-turn drift. | Curved floor carving, rather than Gear's spaced rotor echoes or Flow's long open retention path. |
+| Iron Comet | Wall-facing blade edge, actual rebound wake, real target contact and floor exit. | Small squeeze ticks touch the blade; sparse blade-rim memories leave behind the true velocity; a local impact flash becomes scrape fragments. | Wall compression into the same physical top's charged contact; no projectile shape. |
+
+The runtime never invents an impact, recovery, target reaction or proc. Source
+FX pose strips are labelled authoring evidence. Final acceptance uses the real
+mechanic-driven clips produced by the integration capture harness.
+
+## Review evidence and remaining limits
+
+Native state and grayscale authoring views:
+
+- `C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2\motion-work\motion_v2_native_states.png`
+- Same path ending `_gray.png`.
+- `motion_v2_preview.png` / `_gray.png`: all twelve card keys at native scale.
+- `motion_v2_fx.png` / `_gray.png`: representative eight-key runtime source
+  strips, not synthetic gameplay.
+- `motion_v2_before_after_native.png` / `_gray.png`: d0d37e5 versus correction
+  at actual 64px card scale.
+- `motion_v2_source_proof.json`: selected source keys and native-master hashes.
+
+The internal comparison finds distinct physical scene silhouettes in grayscale:
+Clutch's tight scrape/catch; Gear's stretched direction; Orbit's broad turn;
+Comet's wall-to-rival collision. The source-level review is not human acceptance.
+The real gameplay matrix/showcase and twelve acceptance questions remain the
+human review gate. Tiny Clutch floor bites are deliberately brief; visibility
+during crowded combat must be assessed in the actual clip, alongside the
+body's true low-RPM wobble and earned settling. No family is intentionally
+left as placeholder art.
+
+Normal export, without reconstructing sources:
 
 ```powershell
-python tools/export_power_identity.py --family redline --family iron_comet --family high_gear --family orbit_drive --family clutch --aseprite 'F:\SteamLibrary\steamapps\common\Aseprite\Aseprite.exe'
+python tools/export_power_identity.py --family iron_comet --family high_gear --family orbit_drive --family clutch --aseprite 'F:\SteamLibrary\steamapps\common\Aseprite\Aseprite.exe'
 ```
 
-## Mechanical grammar and authored key stories
+## Sustained Orbit motion proof
 
-| Family | Card sequence | Icon and runtime correspondence | Rank/mutation development |
-| --- | --- | --- | --- |
-| Redline | Keys 0–2 ignite, 3–6 stretch/splinter, 7–9 shed heat, 10–11 settle. No clean corona. | A dense cut metal plate and broken hot banks; runtime fragments live at rotor edges and the velocity wake. Overcap tears away an extra vent plate. | II adds a side vent. Runaway has irregular off-axis displacement and frayed contact beats. Breakneck 0–3 compresses, 4–7 commits into a rival, 8–11 scrapes and recoils. |
-| Iron Comet | 0–3 visibly compresses at a wall bank, 4–6 separates into flight, 7–10 strikes and scars, 11 resets the illustration. | The icon combines wall, suspended mass and disconnected wake chips. Runtime wall-side brackets, separated heavy plates and violent local contact retain that story. | II adds a second wall brace and a third heavy separated wake. No giant triangle or wedge. |
-| High Gear | 0–2 enters a velocity corridor, 3–7 stretches intervals and advances the mass, 8–11 lets the wake settle. | The icon is a forward-cropped plate with spaced wake bars; runtime intervals stretch behind actual velocity. | II adds a low transmission shoe and third lane. Terminal is sparse, long and discontinuous. Flow retains two open bent rails with a narrow guide travelling into the bend. |
-| Orbit Drive | 0–2 enters a turn, 3–6 carves, 7–9 holds the contact hook, 10–11 releases toward the next entry. | The icon's concave hook maps to a compact floor scar and displaced grit. The card scar follows its actual authored contact-tip route below the body. | II adds one outside groove and more grit. Heading variants put the short floor hook behind actual movement. It is not a rotor aura or Flow's long guide rails. |
-| Clutch | 0–5 slips with an irregular 10px upper-mass shift and strongly canted bit; 6–7 catches; 8–11 partially recentres but remains strained. | A single toothed L-pawl catches a leaning bearing. Runtime danger enters unevenly; a real successful catch gives a short pale tooth flash. The card contact bit stays planted throughout. | II adds a smaller staggered bearing stop. There is no expanding recovery ring, reserve reset or airborne relaunch. |
+The earlier input policy exposed only about83ms of real drift in its chosen
+window. The new explicitly labelled capture-only `--policy=long_drift` builds
+real speed for two seconds, holds ordinary brake plus velocity-relative lateral
+steering for4.5seconds, then releases. It edits only the controller input
+dictionary; existing policies are unchanged, and no actor, position, velocity,
+RPM, cooldown, rival or proc is assigned.
 
-The common steel material belongs to the same physical spinning-top world.
-The scene/action silhouette is family-specific. There is no shared diagonal
-floor-plinth background: Comet uses its wall/scar evidence, Gear a sparse
-velocity corridor, Redline heat damage, Orbit its actual compact contact
-route, and Clutch a small strained bearing/contact patch.
+Pure OrbitII / Vane / seed421 produces a continuous actual `drift_active`
+interval13.7167–16.3167seconds, verified twice, with a clean input-driven arc:
+(142,29)→(83,68)→(8,75)→(-63,46)→(-112,-14)→(-123,-89). Actual speed remains
+134–156, and RPM is paid from0.9166 to0.9073 over the sampled interval. A six
+second clip beginning13.4 records exactly360frames; a2.4second excerpt from
+clip offset0.5 remains inside the continuous drift.
 
-## Review status
+Proof: `C:\GPT GAME BUILDING\task-002c5-qa\art-correction-v2\orbit-policy\seed421.json`
+and `window13_4.json`, with clean diagnostic logs. This is active-state trigger
+evidence: the earlier real curve already built Orbit charge, so this window
+does not increment the optional finite `orbit_drift` counter. The sustained
+visual is driven by actual brake/lateral steering and its true active field.
+Do not relabel it as a fabricated discrete impact proc. Human acceptance
+continues to depend on the rendered gameplay clip.
 
-The author reviewed all 14 cards at native 64px, all icons at native 16px,
-nearest zooms, the 12-key sequences, representative eight-key FX sequences,
-and desaturated side-by-side views. The earlier cards were Tier C. The revised
-families are provisionally Tier B or better under the agent's art audit;
-Iron Comet's wall/compression/strike sequence is a flagship candidate. The
-complete roster and actual muted HUD-free gameplay review remain the final
-integration gate, and human acceptance is not claimed here.
+## Dense-motion refinement: Gear and Comet rear memory
 
-Internal native/gray/keyframe review images are outside Git at
-`C:\GPT GAME BUILDING\task-002c5-qa\identity-motion-review`.
-They are an authoring check, not the final roster matrix or a natural gameplay
-efficacy demonstration. No art in these five families is intentionally a
-temporary placeholder. Event sizes and bounded effect limits did not change.
+The first literal-top FX pass still failed the runtime quality gate: overlapping
+opaque old bodies and their dark support/shadow pixels formed a rack/vehicle
+block behind High Gear during actual motion. Literal provenance alone did not
+make that presentation readable. The intermediate media is preserved under
+`art-correction-v2/iterations/before-final-runtime-refinement`, rather than
+presented as accepted final footage.
 
-## Actual motion capture
+Final GearI/II, Terminal and Comet flight FX remove the entire old bit, ratchet,
+base, cast shadow and filled body. Only49–73 actual accepted blade-tip/rim
+pixels form each rear memory, separated into small authored clusters with hard
+steel palette fading. The real live top is the only solid subject. Continuous
+cyan speed bars are removed. Flow retains three short disconnected bent
+floor groups. Cards/icons remain frozen because their physical scenes passed
+the independent native/grayscale review. No new animation frames were added.
 
-`tests/capture_identity_motion.gd` starts an explicitly controlled single-family
-Rank II investment at a genuine full-reserve launch. It uses only steering,
-Burst and brake after that setup, including during warm-up. It does not assign
-positions, velocities, enemy states, RPM, cooldowns or proc fields. The real
-continuous director, AI, contacts and RPM accounting run on every combat tick.
-It records timestamps for both power-runtime and roster-runtime counters plus
-active-state transitions. A controlled opening build is never labelled as an
-earned draft run.
-
-Selections are actual family IDs, `all`, the eight actual mutation IDs, or
-`mutations`. Mutations remain pure-family Rank III opening investments. Clutch
-defaults to seed7341 and the proven sampled weak-brake-then-hunt policy;
-explicit `--seed` overrides that. Bank uses a real five-second acceleration,
-brake/load and directed release cycle. Crosscut uses target-relative lateral
-steering, Predator uses normal pursuit, and Guard/Chain rely on real contacts.
-
-Useful options: `--family=momentum_bank`, `--families=all`, `--rank=1`,
-`--family=ghost_circuit`, `--start=...`, `--length=...`, `--seed=...`,
-`--manifest=<absolute external JSON>`, `--frames=<absolute external folder>`.
-`--diagnostic` simulates without rendering or sound. `--blind` omits all power
-and build captions for the muted HUD-free recognition review. The battle view
-does not attach the game's power HUD. The harness itself does not encode video.
-
-The first clean pure Bank II diagnostic produced seven actual stores and seven
-releases over 35 captured seconds, with a 76.53 peak charge. Representative
-windows for the final review should be selected from the emitted proc moments,
-not from an assumed demonstration outcome.
+Only `high_gear_fx.aseprite` and `iron_comet_fx.aseprite` plus their corresponding
+FX atlases/design/manifest exports changed during this runtime refinement.
+Source/CLI exact visible-pixel parity passed again. The native live-top composite
+is explicitly labelled authoring evidence in
+`motion-work/sparse_motion_fx_live_top.png` and its grayscale companion.
+Actual refreshed speed/rebound footage must verify that the sparse memory
+stays visible in battle without becoming a solid attachment.

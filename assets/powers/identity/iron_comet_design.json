@@ -1,12 +1,12 @@
 {
   "family": "iron_comet",
   "grammar": {
-    "silhouette": "Thick compressed physical rotor braced against a visible wall bank.",
+    "silhouette": "Accepted round blade, ratchet and contact bit compressed against a physical arena wall.",
     "motion": "Wall-side squeeze, abruptly separated flight positions, violent contact and short scrape aftermath.",
     "location": "Wall contact, actual rebound vector, then target contact and floor scars.",
     "persistence": "Armed wall-rebound lifetime plus bounded charge/contact/aftermath events.",
     "palette": "Cold iron, silver, brass and small white/gold contact flashes.",
-    "feature": "The wall and the whole spinning machine tell the slingshot story; disconnected heavy plates replace any wedge."
+    "feature": "The whole top survives every compression, launch, target-contact and recoil beat; never a wedge."
   },
   "static_frames": {
     "iron_comet": 5,
@@ -22,14 +22,27 @@
     "aftermath": "comet_scrape"
   },
   "notes": [
-    "Rank II adds a second wall-side brace and denser separated metal wakes, not a larger surrounding aura.",
-    "Charge cels leave the machine centre open. Card stack height visibly compresses; runtime may compress cosmetic stack only, preserving collision geometry."
+    "Rank II adds a second wall-side compression beat and heavier path fragments, never a larger surrounding aura.",
+    "Charge cels leave the machine centre open. Card stack height visibly compresses; runtime may compress cosmetic stack only, preserving collision geometry.",
+    "Final dense-motion correction removes opaque whole-top ghost bodies, dark supports/shadows and continuous speed bars. Runtime keeps only sparse faded true native blade-rim clusters; live top remains dominant."
   ],
   "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
   "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
   "review_tier": {
-    "before": "C cards; runtime mixed B/C",
-    "after": "B/A candidate pending full roster, grayscale and motion review"
+    "before": "Human review rejected ambiguous pseudo-machine subjects",
+    "after": "Corrected physical-top scenes; human visual acceptance pending"
   },
-  "card_story": "Twelve unequal-duration keys: anticipation, action, mechanical reaction, follow-through and intentional reset. Not six arbitrary cycling decorations."
+  "card_story": "Six deliberately held physical poses in twelve timed source cels: anticipation, action, reaction and recovery. No added frames for smoothness.",
+  "historical_direction": {
+    "human_rejected_checkpoint": "d0d37e5",
+    "accepted_physical_subject": "d551867 assets/source-art/starter_balance_mid_ball.aseprite",
+    "components_restored": [
+      "native blade cels",
+      "native ratchet cels",
+      "native bit cels"
+    ],
+    "motion_cues_inspected": "32bb56e roster cards/icons/FX; bdcc24e cards/icons; f72526e runtime effects",
+    "source_authority": "Native saved Aseprite masters; six deliberately held card poses in twelve timed cels",
+    "human_visual_acceptance": "pending"
+  }
 }

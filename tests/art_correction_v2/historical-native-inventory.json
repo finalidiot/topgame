@@ -1,0 +1,4281 @@
+[
+  {
+    "commit": "8fa737bacf798d4b2c80e030aeb5103843452fb6",
+    "tree_powers": "5d8e551e4a89f2c96324092f7bfaede1939fecad",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "5162d69c380ce9deed87403ac79cc15542224a72ea2e64a1b6ca32bdf13f0a60",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\8fa737b\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "signature glyphs"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "bdcc24e5c3717486eaabaa4e9bac67e1dcc351b2",
+    "tree_powers": "9d568ab888e8b4af8afbad8849ff11d2809ea616",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\bdcc24e\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "3267ef3e89d964e7344c4c1c4d103058b8c8aed0",
+    "tree_powers": "caea6b1bedd86fe3076058dcdfd0541a3f8196b2",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_cards_002c.aseprite",
+        "source_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_cards_002c.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "ground braces and machine depth",
+            "editable rotor and mechanism",
+            "route force and stress",
+            "confirmation glints and fragments"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 5
+            },
+            "redline_ii": {
+              "from": 6,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 17
+            },
+            "afterimage_ii": {
+              "from": 18,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 29
+            },
+            "breakneck": {
+              "from": 30,
+              "to": 35
+            },
+            "bulwark": {
+              "from": 36,
+              "to": 41
+            },
+            "counterweight": {
+              "from": 42,
+              "to": 47
+            },
+            "ghost_circuit": {
+              "from": 48,
+              "to": 53
+            },
+            "slipstream": {
+              "from": 54,
+              "to": 59
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_icons_002c.aseprite",
+        "source_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\3267ef3\\native\\escalation_icons_002c.png",
+        "columns": 10,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "independent compact mechanism glyphs"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "dead_centre_ii": {
+              "from": 2,
+              "to": 2
+            },
+            "afterimage_ii": {
+              "from": 3,
+              "to": 3
+            },
+            "runaway": {
+              "from": 4,
+              "to": 4
+            },
+            "breakneck": {
+              "from": 5,
+              "to": 5
+            },
+            "bulwark": {
+              "from": 6,
+              "to": 6
+            },
+            "counterweight": {
+              "from": 7,
+              "to": 7
+            },
+            "ghost_circuit": {
+              "from": 8,
+              "to": 8
+            },
+            "slipstream": {
+              "from": 9,
+              "to": 9
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "0c6225f5428e874621f14837e37df47bad505fa7",
+    "tree_powers": "9a7b4e9ca19a51048ed3e9d0a7975f912919efa1",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_cards_002c.aseprite",
+        "source_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\escalation_cards_002c.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "ground braces and machine depth",
+            "editable rotor and mechanism",
+            "route force and stress",
+            "confirmation glints and fragments"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 5
+            },
+            "redline_ii": {
+              "from": 6,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 17
+            },
+            "afterimage_ii": {
+              "from": 18,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 29
+            },
+            "breakneck": {
+              "from": 30,
+              "to": 35
+            },
+            "bulwark": {
+              "from": 36,
+              "to": 41
+            },
+            "counterweight": {
+              "from": 42,
+              "to": 47
+            },
+            "ghost_circuit": {
+              "from": 48,
+              "to": 53
+            },
+            "slipstream": {
+              "from": 54,
+              "to": 59
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_icons_002c.aseprite",
+        "source_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\0c6225f\\native\\escalation_icons_002c.png",
+        "columns": 10,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "independent compact mechanism glyphs"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "dead_centre_ii": {
+              "from": 2,
+              "to": 2
+            },
+            "afterimage_ii": {
+              "from": 3,
+              "to": 3
+            },
+            "runaway": {
+              "from": 4,
+              "to": 4
+            },
+            "breakneck": {
+              "from": 5,
+              "to": 5
+            },
+            "bulwark": {
+              "from": 6,
+              "to": 6
+            },
+            "counterweight": {
+              "from": 7,
+              "to": 7
+            },
+            "ghost_circuit": {
+              "from": 8,
+              "to": 8
+            },
+            "slipstream": {
+              "from": 9,
+              "to": 9
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "32bb56e4737c755a857e7d613ed418b2308e2a9c",
+    "tree_powers": "aa5dddd7f921122e82abb469c6c8c0f8c0623f34",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_cards_002c.aseprite",
+        "source_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_cards_002c.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "ground braces and machine depth",
+            "editable rotor and mechanism",
+            "route force and stress",
+            "confirmation glints and fragments"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 5
+            },
+            "redline_ii": {
+              "from": 6,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 17
+            },
+            "afterimage_ii": {
+              "from": 18,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 29
+            },
+            "breakneck": {
+              "from": 30,
+              "to": 35
+            },
+            "bulwark": {
+              "from": 36,
+              "to": 41
+            },
+            "counterweight": {
+              "from": 42,
+              "to": 47
+            },
+            "ghost_circuit": {
+              "from": 48,
+              "to": 53
+            },
+            "slipstream": {
+              "from": 54,
+              "to": 59
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_icons_002c.aseprite",
+        "source_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\escalation_icons_002c.png",
+        "columns": 10,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "independent compact mechanism glyphs"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "dead_centre_ii": {
+              "from": 2,
+              "to": 2
+            },
+            "afterimage_ii": {
+              "from": 3,
+              "to": 3
+            },
+            "runaway": {
+              "from": 4,
+              "to": 4
+            },
+            "breakneck": {
+              "from": 5,
+              "to": 5
+            },
+            "bulwark": {
+              "from": 6,
+              "to": 6
+            },
+            "counterweight": {
+              "from": 7,
+              "to": 7
+            },
+            "ghost_circuit": {
+              "from": 8,
+              "to": 8
+            },
+            "slipstream": {
+              "from": 9,
+              "to": 9
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_cards_002c5.aseprite",
+        "source_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_cards_002c5.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 industrial backplate",
+            "02 ground braces and machine depth",
+            "03 editable rotor and mechanism",
+            "04 route force and stress",
+            "05 confirmation glints and fragments"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 5
+            },
+            "high_gear": {
+              "from": 6,
+              "to": 11
+            },
+            "orbit_drive": {
+              "from": 12,
+              "to": 17
+            },
+            "crash_guard": {
+              "from": 18,
+              "to": 23
+            },
+            "momentum_bank": {
+              "from": 24,
+              "to": 29
+            },
+            "predator_line": {
+              "from": 30,
+              "to": 35
+            },
+            "crosscut": {
+              "from": 36,
+              "to": 41
+            },
+            "clutch_ii": {
+              "from": 42,
+              "to": 47
+            },
+            "high_gear_ii": {
+              "from": 48,
+              "to": 53
+            },
+            "orbit_drive_ii": {
+              "from": 54,
+              "to": 59
+            },
+            "crash_guard_ii": {
+              "from": 60,
+              "to": 65
+            },
+            "momentum_bank_ii": {
+              "from": 66,
+              "to": 71
+            },
+            "predator_line_ii": {
+              "from": 72,
+              "to": 77
+            },
+            "crosscut_ii": {
+              "from": 78,
+              "to": 83
+            },
+            "terminal_velocity": {
+              "from": 84,
+              "to": 89
+            },
+            "flow_state": {
+              "from": 90,
+              "to": 95
+            },
+            "iron_comet": {
+              "from": 96,
+              "to": 101
+            },
+            "iron_comet_ii": {
+              "from": 102,
+              "to": 107
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_icons_002c5.aseprite",
+        "source_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\32bb56e\\native\\roster_icons_002c5.png",
+        "columns": 18,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 steel mechanism",
+            "02 state and motion"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 0
+            },
+            "high_gear": {
+              "from": 1,
+              "to": 1
+            },
+            "orbit_drive": {
+              "from": 2,
+              "to": 2
+            },
+            "crash_guard": {
+              "from": 3,
+              "to": 3
+            },
+            "momentum_bank": {
+              "from": 4,
+              "to": 4
+            },
+            "predator_line": {
+              "from": 5,
+              "to": 5
+            },
+            "crosscut": {
+              "from": 6,
+              "to": 6
+            },
+            "clutch_ii": {
+              "from": 7,
+              "to": 7
+            },
+            "high_gear_ii": {
+              "from": 8,
+              "to": 8
+            },
+            "orbit_drive_ii": {
+              "from": 9,
+              "to": 9
+            },
+            "crash_guard_ii": {
+              "from": 10,
+              "to": 10
+            },
+            "momentum_bank_ii": {
+              "from": 11,
+              "to": 11
+            },
+            "predator_line_ii": {
+              "from": 12,
+              "to": 12
+            },
+            "crosscut_ii": {
+              "from": 13,
+              "to": 13
+            },
+            "terminal_velocity": {
+              "from": 14,
+              "to": 14
+            },
+            "flow_state": {
+              "from": 15,
+              "to": 15
+            },
+            "iron_comet": {
+              "from": 16,
+              "to": 16
+            },
+            "iron_comet_ii": {
+              "from": 17,
+              "to": 17
+            }
+          },
+          "durations_ms": [
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "d882923c0e2114f6d8b86aa2079dc7365bb4f71a",
+    "tree_powers": "aa5dddd7f921122e82abb469c6c8c0f8c0623f34",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_cards_002c.aseprite",
+        "source_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\escalation_cards_002c.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "ground braces and machine depth",
+            "editable rotor and mechanism",
+            "route force and stress",
+            "confirmation glints and fragments"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 5
+            },
+            "redline_ii": {
+              "from": 6,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 17
+            },
+            "afterimage_ii": {
+              "from": 18,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 29
+            },
+            "breakneck": {
+              "from": 30,
+              "to": 35
+            },
+            "bulwark": {
+              "from": 36,
+              "to": 41
+            },
+            "counterweight": {
+              "from": 42,
+              "to": 47
+            },
+            "ghost_circuit": {
+              "from": 48,
+              "to": 53
+            },
+            "slipstream": {
+              "from": 54,
+              "to": 59
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_icons_002c.aseprite",
+        "source_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\escalation_icons_002c.png",
+        "columns": 10,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "independent compact mechanism glyphs"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "dead_centre_ii": {
+              "from": 2,
+              "to": 2
+            },
+            "afterimage_ii": {
+              "from": 3,
+              "to": 3
+            },
+            "runaway": {
+              "from": 4,
+              "to": 4
+            },
+            "breakneck": {
+              "from": 5,
+              "to": 5
+            },
+            "bulwark": {
+              "from": 6,
+              "to": 6
+            },
+            "counterweight": {
+              "from": 7,
+              "to": 7
+            },
+            "ghost_circuit": {
+              "from": 8,
+              "to": 8
+            },
+            "slipstream": {
+              "from": 9,
+              "to": 9
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_cards_002c5.aseprite",
+        "source_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\roster_cards_002c5.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 industrial backplate",
+            "02 ground braces and machine depth",
+            "03 editable rotor and mechanism",
+            "04 route force and stress",
+            "05 confirmation glints and fragments"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 5
+            },
+            "high_gear": {
+              "from": 6,
+              "to": 11
+            },
+            "orbit_drive": {
+              "from": 12,
+              "to": 17
+            },
+            "crash_guard": {
+              "from": 18,
+              "to": 23
+            },
+            "momentum_bank": {
+              "from": 24,
+              "to": 29
+            },
+            "predator_line": {
+              "from": 30,
+              "to": 35
+            },
+            "crosscut": {
+              "from": 36,
+              "to": 41
+            },
+            "clutch_ii": {
+              "from": 42,
+              "to": 47
+            },
+            "high_gear_ii": {
+              "from": 48,
+              "to": 53
+            },
+            "orbit_drive_ii": {
+              "from": 54,
+              "to": 59
+            },
+            "crash_guard_ii": {
+              "from": 60,
+              "to": 65
+            },
+            "momentum_bank_ii": {
+              "from": 66,
+              "to": 71
+            },
+            "predator_line_ii": {
+              "from": 72,
+              "to": 77
+            },
+            "crosscut_ii": {
+              "from": 78,
+              "to": 83
+            },
+            "terminal_velocity": {
+              "from": 84,
+              "to": 89
+            },
+            "flow_state": {
+              "from": 90,
+              "to": 95
+            },
+            "iron_comet": {
+              "from": 96,
+              "to": 101
+            },
+            "iron_comet_ii": {
+              "from": 102,
+              "to": 107
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_icons_002c5.aseprite",
+        "source_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d882923\\native\\roster_icons_002c5.png",
+        "columns": 18,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 steel mechanism",
+            "02 state and motion"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 0
+            },
+            "high_gear": {
+              "from": 1,
+              "to": 1
+            },
+            "orbit_drive": {
+              "from": 2,
+              "to": 2
+            },
+            "crash_guard": {
+              "from": 3,
+              "to": 3
+            },
+            "momentum_bank": {
+              "from": 4,
+              "to": 4
+            },
+            "predator_line": {
+              "from": 5,
+              "to": 5
+            },
+            "crosscut": {
+              "from": 6,
+              "to": 6
+            },
+            "clutch_ii": {
+              "from": 7,
+              "to": 7
+            },
+            "high_gear_ii": {
+              "from": 8,
+              "to": 8
+            },
+            "orbit_drive_ii": {
+              "from": 9,
+              "to": 9
+            },
+            "crash_guard_ii": {
+              "from": 10,
+              "to": 10
+            },
+            "momentum_bank_ii": {
+              "from": 11,
+              "to": 11
+            },
+            "predator_line_ii": {
+              "from": 12,
+              "to": 12
+            },
+            "crosscut_ii": {
+              "from": 13,
+              "to": 13
+            },
+            "terminal_velocity": {
+              "from": 14,
+              "to": 14
+            },
+            "flow_state": {
+              "from": 15,
+              "to": 15
+            },
+            "iron_comet": {
+              "from": 16,
+              "to": 16
+            },
+            "iron_comet_ii": {
+              "from": 17,
+              "to": 17
+            }
+          },
+          "durations_ms": [
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "commit": "d0d37e505f6d6582486f7e039b87643d084457c1",
+    "tree_powers": "47ea5dc4a688576c51c128a7af4ab7ba45ccfca0",
+    "native_exports": [
+      {
+        "source": "assets/source-art/power_cards_002b1.aseprite",
+        "source_sha256": "026422626e56ba045f04b3b708cf4ecc312a9828210993ca005f4136c46bcdc5",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_cards_002b1.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 5
+            },
+            "second_wind": {
+              "from": 6,
+              "to": 11
+            },
+            "redline": {
+              "from": 12,
+              "to": 17
+            },
+            "iron_comet": {
+              "from": 18,
+              "to": 23
+            },
+            "afterimage": {
+              "from": 24,
+              "to": 29
+            },
+            "chain_impact": {
+              "from": 30,
+              "to": 35
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_icons_002b.aseprite",
+        "source_sha256": "c7867797c054af0f8c55844d745b1aa013ea9042b22b01fdfd1c1cbec37f99a2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_icons_002b.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "compact mechanical silhouettes"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "second_wind": {
+              "from": 1,
+              "to": 1
+            },
+            "redline": {
+              "from": 2,
+              "to": 2
+            },
+            "iron_comet": {
+              "from": 3,
+              "to": 3
+            },
+            "afterimage": {
+              "from": 4,
+              "to": 4
+            },
+            "chain_impact": {
+              "from": 5,
+              "to": 5
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_cards_002c.aseprite",
+        "source_sha256": "712be315ae2e1c0c717fd648f8fdbe6077c41eada59384ef5efe2242212ff76c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\escalation_cards_002c.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "ground braces and machine depth",
+            "editable rotor and mechanism",
+            "route force and stress",
+            "confirmation glints and fragments"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 5
+            },
+            "redline_ii": {
+              "from": 6,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 17
+            },
+            "afterimage_ii": {
+              "from": 18,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 29
+            },
+            "breakneck": {
+              "from": 30,
+              "to": 35
+            },
+            "bulwark": {
+              "from": 36,
+              "to": 41
+            },
+            "counterweight": {
+              "from": 42,
+              "to": 47
+            },
+            "ghost_circuit": {
+              "from": 48,
+              "to": 53
+            },
+            "slipstream": {
+              "from": 54,
+              "to": 59
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/escalation_icons_002c.aseprite",
+        "source_sha256": "8e2ca70bc969e4f1ca8eccbd92234ba9033eb4cac597f50d7be910e3fd9acc96",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\escalation_icons_002c.png",
+        "columns": 10,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "independent compact mechanism glyphs"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "dead_centre_ii": {
+              "from": 2,
+              "to": 2
+            },
+            "afterimage_ii": {
+              "from": 3,
+              "to": 3
+            },
+            "runaway": {
+              "from": 4,
+              "to": 4
+            },
+            "breakneck": {
+              "from": 5,
+              "to": 5
+            },
+            "bulwark": {
+              "from": 6,
+              "to": 6
+            },
+            "counterweight": {
+              "from": 7,
+              "to": 7
+            },
+            "ghost_circuit": {
+              "from": 8,
+              "to": 8
+            },
+            "slipstream": {
+              "from": 9,
+              "to": 9
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_cards_002c5.aseprite",
+        "source_sha256": "e7b726ac79b91cf8870a5c1afa3bd6c5723d459d955d0ecdadffd909fdfc701a",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\roster_cards_002c5.png",
+        "columns": 6,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 industrial backplate",
+            "02 ground braces and machine depth",
+            "03 editable rotor and mechanism",
+            "04 route force and stress",
+            "05 confirmation glints and fragments"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 5
+            },
+            "high_gear": {
+              "from": 6,
+              "to": 11
+            },
+            "orbit_drive": {
+              "from": 12,
+              "to": 17
+            },
+            "crash_guard": {
+              "from": 18,
+              "to": 23
+            },
+            "momentum_bank": {
+              "from": 24,
+              "to": 29
+            },
+            "predator_line": {
+              "from": 30,
+              "to": 35
+            },
+            "crosscut": {
+              "from": 36,
+              "to": 41
+            },
+            "clutch_ii": {
+              "from": 42,
+              "to": 47
+            },
+            "high_gear_ii": {
+              "from": 48,
+              "to": 53
+            },
+            "orbit_drive_ii": {
+              "from": 54,
+              "to": 59
+            },
+            "crash_guard_ii": {
+              "from": 60,
+              "to": 65
+            },
+            "momentum_bank_ii": {
+              "from": 66,
+              "to": 71
+            },
+            "predator_line_ii": {
+              "from": 72,
+              "to": 77
+            },
+            "crosscut_ii": {
+              "from": 78,
+              "to": 83
+            },
+            "terminal_velocity": {
+              "from": 84,
+              "to": 89
+            },
+            "flow_state": {
+              "from": 90,
+              "to": 95
+            },
+            "iron_comet": {
+              "from": 96,
+              "to": 101
+            },
+            "iron_comet_ii": {
+              "from": 102,
+              "to": 107
+            }
+          },
+          "durations_ms": [
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170,
+            110,
+            90,
+            75,
+            75,
+            100,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/roster_icons_002c5.aseprite",
+        "source_sha256": "207f0052fcebed275d5e71a67ecb0c8c2f1419d609f64bb7e74d633d7017f297",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\roster_icons_002c5.png",
+        "columns": 18,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 steel mechanism",
+            "02 state and motion"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 0
+            },
+            "high_gear": {
+              "from": 1,
+              "to": 1
+            },
+            "orbit_drive": {
+              "from": 2,
+              "to": 2
+            },
+            "crash_guard": {
+              "from": 3,
+              "to": 3
+            },
+            "momentum_bank": {
+              "from": 4,
+              "to": 4
+            },
+            "predator_line": {
+              "from": 5,
+              "to": 5
+            },
+            "crosscut": {
+              "from": 6,
+              "to": 6
+            },
+            "clutch_ii": {
+              "from": 7,
+              "to": 7
+            },
+            "high_gear_ii": {
+              "from": 8,
+              "to": 8
+            },
+            "orbit_drive_ii": {
+              "from": 9,
+              "to": 9
+            },
+            "crash_guard_ii": {
+              "from": 10,
+              "to": 10
+            },
+            "momentum_bank_ii": {
+              "from": 11,
+              "to": 11
+            },
+            "predator_line_ii": {
+              "from": 12,
+              "to": 12
+            },
+            "crosscut_ii": {
+              "from": 13,
+              "to": 13
+            },
+            "terminal_velocity": {
+              "from": 14,
+              "to": 14
+            },
+            "flow_state": {
+              "from": 15,
+              "to": 15
+            },
+            "iron_comet": {
+              "from": 16,
+              "to": 16
+            },
+            "iron_comet_ii": {
+              "from": 17,
+              "to": 17
+            }
+          },
+          "durations_ms": [
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120,
+            120
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/afterimage_cards.aseprite",
+        "source_sha256": "3881988f04e158875920430f8520a00687479e5deda2b3c6f223720da1b4a72c",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 floor and contact shadow",
+            "02 load-bearing machine bodies",
+            "03 mechanical jaws and bearings",
+            "04 transmitted action and route",
+            "05 reaction chips and key light",
+            "06 developed structure"
+          ],
+          "tags": {
+            "afterimage": {
+              "from": 0,
+              "to": 11
+            },
+            "afterimage_ii": {
+              "from": 12,
+              "to": 23
+            },
+            "ghost_circuit": {
+              "from": 24,
+              "to": 35
+            },
+            "slipstream": {
+              "from": 36,
+              "to": 47
+            }
+          },
+          "durations_ms": [
+            120,
+            90,
+            80,
+            55,
+            55,
+            65,
+            80,
+            80,
+            100,
+            110,
+            120,
+            160,
+            140,
+            100,
+            80,
+            60,
+            50,
+            70,
+            90,
+            100,
+            100,
+            100,
+            120,
+            170,
+            160,
+            110,
+            90,
+            65,
+            55,
+            100,
+            120,
+            120,
+            100,
+            90,
+            110,
+            190,
+            150,
+            100,
+            70,
+            40,
+            40,
+            45,
+            55,
+            65,
+            90,
+            120,
+            140,
+            180
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/afterimage_icons.aseprite",
+        "source_sha256": "f230227536ef8d57e2b49af092f07ab048b843271c78b34350d416af9c96de6a",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\afterimage_icons.png",
+        "columns": 4,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "Independent small-scale silhouette",
+            "Mechanic-specific recognition teeth"
+          ],
+          "tags": {
+            "afterimage": {
+              "from": 0,
+              "to": 0
+            },
+            "afterimage_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "ghost_circuit": {
+              "from": 2,
+              "to": 2
+            },
+            "slipstream": {
+              "from": 3,
+              "to": 3
+            }
+          },
+          "durations_ms": [
+            120,
+            120,
+            120,
+            120
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/chain_impact_cards.aseprite",
+        "source_sha256": "7091b61aeeacad2350894b77fbb116a4f820f55f8b54d40db743976f906e9f8e",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 floor and contact shadow",
+            "02 load-bearing machine bodies",
+            "03 mechanical jaws and bearings",
+            "04 transmitted action and route",
+            "05 reaction chips and key light",
+            "06 developed structure"
+          ],
+          "tags": {
+            "chain_impact": {
+              "from": 0,
+              "to": 11
+            },
+            "chain_impact_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            150,
+            100,
+            90,
+            45,
+            45,
+            80,
+            45,
+            55,
+            85,
+            100,
+            130,
+            190,
+            160,
+            100,
+            85,
+            40,
+            45,
+            90,
+            45,
+            60,
+            100,
+            110,
+            150,
+            200
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/chain_impact_icons.aseprite",
+        "source_sha256": "56cdd5f832677437fd75cad8b569d3069b6aeda907eca2d5c9b5fde0d9183112",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\chain_impact_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "Independent small-scale silhouette",
+            "Mechanic-specific recognition teeth"
+          ],
+          "tags": {
+            "chain_impact": {
+              "from": 0,
+              "to": 0
+            },
+            "chain_impact_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            120,
+            120
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/clutch_cards.aseprite",
+        "source_sha256": "3e35d7f3030d0460d48d0a9dc45a72414c0ac470cd963989ac86cfdeb33a2e0d",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 scene floor and direction",
+            "02 cast shadow and load-bearing chassis",
+            "03 rotor plates and bearing",
+            "04 mechanical action and recoil",
+            "05 keyed highlights and fragments"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 11
+            },
+            "clutch_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            180,
+            110,
+            145,
+            60,
+            45,
+            90,
+            40,
+            65,
+            110,
+            85,
+            140,
+            190,
+            180,
+            110,
+            145,
+            60,
+            45,
+            90,
+            40,
+            65,
+            110,
+            85,
+            140,
+            190
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/clutch_icons.aseprite",
+        "source_sha256": "6e6156fab5e88858456bd6d6bdfc49cc27151d926eacae3119acfefd70de73d4",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\clutch_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 compact mechanical silhouette",
+            "02 identifying action and negative space"
+          ],
+          "tags": {
+            "clutch": {
+              "from": 0,
+              "to": 0
+            },
+            "clutch_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/crash_guard_cards.aseprite",
+        "source_sha256": "eb1c8d8047966c2601cdfc026f0d6534beea708ec64de495ab2a3f8128bfab3b",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 quiet chamfered card",
+            "02 floor depth and scars",
+            "03 incoming contact and telescoping rods",
+            "04 physical top illustration",
+            "05 force response and key highlights"
+          ],
+          "tags": {
+            "crash_guard": {
+              "from": 0,
+              "to": 11
+            },
+            "crash_guard_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            180,
+            110,
+            85,
+            65,
+            50,
+            75,
+            65,
+            85,
+            105,
+            130,
+            160,
+            200,
+            180,
+            110,
+            85,
+            65,
+            50,
+            75,
+            65,
+            85,
+            105,
+            130,
+            160,
+            200
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/crash_guard_icons.aseprite",
+        "source_sha256": "dcf7fea40c121e6c7ac7479246a5054a55c6b361a018e401108a8fe481158acd",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crash_guard_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 purpose-designed mechanism silhouette",
+            "02 identifying force and rank structure"
+          ],
+          "tags": {
+            "crash_guard": {
+              "from": 0,
+              "to": 0
+            },
+            "crash_guard_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            150,
+            150
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/crosscut_cards.aseprite",
+        "source_sha256": "736cc83939c4a7d40d82017917a42b65f7d73d4ddf21f2d777c063e9784f813e",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 quiet chamfered card",
+            "02 floor depth and scars",
+            "03 glancing bodies and divergent exits",
+            "04 physical top illustration",
+            "05 force response and key highlights"
+          ],
+          "tags": {
+            "crosscut": {
+              "from": 0,
+              "to": 11
+            },
+            "crosscut_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            170,
+            110,
+            85,
+            70,
+            55,
+            40,
+            45,
+            55,
+            70,
+            95,
+            160,
+            200,
+            170,
+            110,
+            85,
+            70,
+            55,
+            40,
+            45,
+            55,
+            70,
+            95,
+            160,
+            200
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/crosscut_icons.aseprite",
+        "source_sha256": "0ff8d97c56093e3521165b2ef2bc4f6a03bb6627f29d2c9a998e61082db6d558",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\crosscut_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 purpose-designed mechanism silhouette",
+            "02 identifying force and rank structure"
+          ],
+          "tags": {
+            "crosscut": {
+              "from": 0,
+              "to": 0
+            },
+            "crosscut_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            150,
+            150
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/dead_centre_cards.aseprite",
+        "source_sha256": "ccf4fde0b6f716ad1f48e23f253b5ee428dfee9c0a521ccf257af73897bb78f0",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 floor and contact shadow",
+            "02 load-bearing machine bodies",
+            "03 mechanical jaws and bearings",
+            "04 transmitted action and route",
+            "05 reaction chips and key light",
+            "06 developed structure"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 11
+            },
+            "dead_centre_ii": {
+              "from": 12,
+              "to": 23
+            },
+            "bulwark": {
+              "from": 24,
+              "to": 35
+            },
+            "counterweight": {
+              "from": 36,
+              "to": 47
+            }
+          },
+          "durations_ms": [
+            160,
+            100,
+            90,
+            80,
+            65,
+            65,
+            110,
+            110,
+            90,
+            90,
+            110,
+            180,
+            140,
+            90,
+            80,
+            75,
+            60,
+            65,
+            120,
+            120,
+            95,
+            80,
+            110,
+            170,
+            160,
+            100,
+            70,
+            45,
+            50,
+            65,
+            130,
+            140,
+            100,
+            100,
+            120,
+            190,
+            140,
+            100,
+            90,
+            85,
+            100,
+            100,
+            130,
+            140,
+            55,
+            45,
+            75,
+            170
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/dead_centre_icons.aseprite",
+        "source_sha256": "04da85d3711bbfcc7a36c74455cd8692764265746ed83aaf74666cca39875ae3",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\dead_centre_icons.png",
+        "columns": 4,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "Independent small-scale silhouette",
+            "Mechanic-specific recognition teeth"
+          ],
+          "tags": {
+            "dead_centre": {
+              "from": 0,
+              "to": 0
+            },
+            "dead_centre_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "bulwark": {
+              "from": 2,
+              "to": 2
+            },
+            "counterweight": {
+              "from": 3,
+              "to": 3
+            }
+          },
+          "durations_ms": [
+            120,
+            120,
+            120,
+            120
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/high_gear_cards.aseprite",
+        "source_sha256": "46ad11e512483ac93cee5d745c9abe7842e878cde4be64fd88c92c4bfc54fbfb",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 scene floor and direction",
+            "02 cast shadow and load-bearing chassis",
+            "03 rotor plates and bearing",
+            "04 mechanical action and recoil",
+            "05 keyed highlights and fragments"
+          ],
+          "tags": {
+            "high_gear": {
+              "from": 0,
+              "to": 11
+            },
+            "high_gear_ii": {
+              "from": 12,
+              "to": 23
+            },
+            "terminal_velocity": {
+              "from": 24,
+              "to": 35
+            },
+            "flow_state": {
+              "from": 36,
+              "to": 47
+            }
+          },
+          "durations_ms": [
+            120,
+            90,
+            70,
+            55,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150,
+            120,
+            90,
+            70,
+            55,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150,
+            130,
+            90,
+            60,
+            40,
+            35,
+            35,
+            40,
+            50,
+            65,
+            90,
+            115,
+            160,
+            95,
+            90,
+            85,
+            80,
+            75,
+            75,
+            75,
+            80,
+            85,
+            90,
+            100,
+            115
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/high_gear_icons.aseprite",
+        "source_sha256": "5c46c7dca189487d3a45c327829068c860220589f6ad9eda8ea12eaee18e7867",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\high_gear_icons.png",
+        "columns": 4,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 compact mechanical silhouette",
+            "02 identifying action and negative space"
+          ],
+          "tags": {
+            "high_gear": {
+              "from": 0,
+              "to": 0
+            },
+            "high_gear_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "terminal_velocity": {
+              "from": 2,
+              "to": 2
+            },
+            "flow_state": {
+              "from": 3,
+              "to": 3
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/impact_wake_cards.aseprite",
+        "source_sha256": "1e1115a2384e0c89c9b7146b06fd87cea5f53a1c406f5866a7a5adc96774e0f2",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "industrial backplate",
+            "machine depth and chassis",
+            "authored moving bearings",
+            "pressure and trajectory",
+            "contact glints and fragments",
+            "Rank II counter-pressure teeth"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 11
+            },
+            "impact_wake_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            55,
+            55,
+            45,
+            45,
+            38,
+            37,
+            38,
+            37,
+            50,
+            50,
+            85,
+            85,
+            55,
+            55,
+            45,
+            45,
+            38,
+            37,
+            38,
+            37,
+            50,
+            50,
+            85,
+            85
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/impact_wake_icons.aseprite",
+        "source_sha256": "8beffa8758dd00b49420de9dfc5edd718e605a353727b08b65ad9b72b167dc09",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\impact_wake_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "Independent small-scale silhouette",
+            "Mechanic-specific recognition teeth"
+          ],
+          "tags": {
+            "impact_wake": {
+              "from": 0,
+              "to": 0
+            },
+            "impact_wake_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            120,
+            120
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/iron_comet_cards.aseprite",
+        "source_sha256": "95139a56c3260d4221c1ce8e75e77e233eb19c3221a6b77b8653310bc590b431",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 scene floor and direction",
+            "02 cast shadow and load-bearing chassis",
+            "03 rotor plates and bearing",
+            "04 mechanical action and recoil",
+            "05 keyed highlights and fragments"
+          ],
+          "tags": {
+            "iron_comet": {
+              "from": 0,
+              "to": 11
+            },
+            "iron_comet_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            145,
+            110,
+            85,
+            65,
+            40,
+            35,
+            35,
+            50,
+            75,
+            100,
+            140,
+            175,
+            145,
+            110,
+            85,
+            65,
+            40,
+            35,
+            35,
+            50,
+            75,
+            100,
+            140,
+            175
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/iron_comet_icons.aseprite",
+        "source_sha256": "99c9ca2dc368d29d14e81863c3475ab8bb8e3ec8f7fddb3cbff53331f9a6826b",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\iron_comet_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 compact mechanical silhouette",
+            "02 identifying action and negative space"
+          ],
+          "tags": {
+            "iron_comet": {
+              "from": 0,
+              "to": 0
+            },
+            "iron_comet_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_cards.aseprite",
+        "source_sha256": "9893984c2d0d3dea55ac56d05b86b85effa2fe78d9e81f0f71e62b2ba36d8f5e",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 quiet chamfered card",
+            "02 floor depth and scars",
+            "03 rear brake and open spring cassette",
+            "04 physical top illustration",
+            "05 force response and key highlights"
+          ],
+          "tags": {
+            "momentum_bank": {
+              "from": 0,
+              "to": 11
+            },
+            "momentum_bank_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            160,
+            100,
+            95,
+            100,
+            140,
+            180,
+            45,
+            40,
+            55,
+            100,
+            180,
+            190,
+            160,
+            100,
+            95,
+            100,
+            140,
+            180,
+            45,
+            40,
+            55,
+            100,
+            180,
+            190
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/momentum_bank_icons.aseprite",
+        "source_sha256": "0d81a4cd49b33dab00ae90cd00e7c43612a1313db6b355f158c5c6c34f01d96a",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\momentum_bank_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 purpose-designed mechanism silhouette",
+            "02 identifying force and rank structure"
+          ],
+          "tags": {
+            "momentum_bank": {
+              "from": 0,
+              "to": 0
+            },
+            "momentum_bank_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            150,
+            150
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_cards.aseprite",
+        "source_sha256": "04518293259ff22acca23d151a122c4ffbb0a3ea3cf074968dd3cbd1f04adb53",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 scene floor and direction",
+            "02 cast shadow and load-bearing chassis",
+            "03 rotor plates and bearing",
+            "04 mechanical action and recoil",
+            "05 keyed highlights and fragments"
+          ],
+          "tags": {
+            "orbit_drive": {
+              "from": 0,
+              "to": 11
+            },
+            "orbit_drive_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            135,
+            100,
+            80,
+            60,
+            50,
+            45,
+            50,
+            60,
+            75,
+            95,
+            115,
+            155,
+            135,
+            100,
+            80,
+            60,
+            50,
+            45,
+            50,
+            60,
+            75,
+            95,
+            115,
+            155
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/orbit_drive_icons.aseprite",
+        "source_sha256": "1959418ba9664085a08081f60d6ec22d4351b953ff83e7a6a93a71f4dab0015d",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\orbit_drive_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 compact mechanical silhouette",
+            "02 identifying action and negative space"
+          ],
+          "tags": {
+            "orbit_drive": {
+              "from": 0,
+              "to": 0
+            },
+            "orbit_drive_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/predator_line_cards.aseprite",
+        "source_sha256": "2dbde7e7676b8029d4eab9834574ab2fe64da60fb40a56dfa82fb888397fb255",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 quiet chamfered card",
+            "02 floor depth and scars",
+            "03 quarry and pursuing hunter",
+            "04 physical top illustration",
+            "05 force response and key highlights"
+          ],
+          "tags": {
+            "predator_line": {
+              "from": 0,
+              "to": 11
+            },
+            "predator_line_ii": {
+              "from": 12,
+              "to": 23
+            }
+          },
+          "durations_ms": [
+            150,
+            100,
+            100,
+            85,
+            85,
+            75,
+            70,
+            65,
+            85,
+            105,
+            150,
+            190,
+            150,
+            100,
+            100,
+            85,
+            85,
+            75,
+            70,
+            65,
+            85,
+            105,
+            150,
+            190
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/predator_line_icons.aseprite",
+        "source_sha256": "2d3e4c04ce02b1f59d444ee638b020babd8f38e1c1440d2f4dc874ca373118df",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\predator_line_icons.png",
+        "columns": 2,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 purpose-designed mechanism silhouette",
+            "02 identifying force and rank structure"
+          ],
+          "tags": {
+            "predator_line": {
+              "from": 0,
+              "to": 0
+            },
+            "predator_line_ii": {
+              "from": 1,
+              "to": 1
+            }
+          },
+          "durations_ms": [
+            150,
+            150
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/redline_cards.aseprite",
+        "source_sha256": "1181ddac0d72ac151350998734760fd56237a468d1db6346331ccd392c7eb5ec",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_cards.png",
+        "columns": 12,
+        "metadata": {
+          "cell": [
+            64,
+            64
+          ],
+          "pivot": [
+            32,
+            32
+          ],
+          "layers": [
+            "01 scene floor and direction",
+            "02 cast shadow and load-bearing chassis",
+            "03 rotor plates and bearing",
+            "04 mechanical action and recoil",
+            "05 keyed highlights and fragments"
+          ],
+          "tags": {
+            "redline": {
+              "from": 0,
+              "to": 11
+            },
+            "redline_ii": {
+              "from": 12,
+              "to": 23
+            },
+            "runaway": {
+              "from": 24,
+              "to": 35
+            },
+            "breakneck": {
+              "from": 36,
+              "to": 47
+            }
+          },
+          "durations_ms": [
+            130,
+            95,
+            75,
+            60,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150,
+            130,
+            95,
+            75,
+            60,
+            45,
+            45,
+            55,
+            65,
+            75,
+            90,
+            100,
+            150,
+            110,
+            85,
+            60,
+            55,
+            40,
+            40,
+            45,
+            50,
+            70,
+            80,
+            110,
+            155,
+            160,
+            120,
+            90,
+            75,
+            50,
+            35,
+            35,
+            45,
+            80,
+            105,
+            140,
+            190
+          ]
+        }
+      },
+      {
+        "source": "assets/source-art/power_identity_002c5/redline_icons.aseprite",
+        "source_sha256": "fa730378b7b818eb2612bb1893c070acf5069715beebac302045fbf28bd9f2b0",
+        "native_sheet": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\historical\\d0d37e5\\native\\power_identity_002c5\\redline_icons.png",
+        "columns": 4,
+        "metadata": {
+          "cell": [
+            16,
+            16
+          ],
+          "pivot": [
+            8,
+            8
+          ],
+          "layers": [
+            "01 compact mechanical silhouette",
+            "02 identifying action and negative space"
+          ],
+          "tags": {
+            "redline": {
+              "from": 0,
+              "to": 0
+            },
+            "redline_ii": {
+              "from": 1,
+              "to": 1
+            },
+            "runaway": {
+              "from": 2,
+              "to": 2
+            },
+            "breakneck": {
+              "from": 3,
+              "to": 3
+            }
+          },
+          "durations_ms": [
+            100,
+            100,
+            100,
+            100
+          ]
+        }
+      }
+    ]
+  }
+]

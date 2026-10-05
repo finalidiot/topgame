@@ -10,6 +10,7 @@ const S = preload("res://scripts/starters.gd")
 const P = preload("res://scripts/power_visuals.gd")
 const Route = preload("res://tests/roster_route_bot.gd")
 const Runtime = preload("res://scripts/power_runtime.gd")
+const PoseBot = preload("res://tests/rpm_bot.gd")
 const FAMILIES: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut"]
 const HEADINGS: Array[String] = ["e", "se", "s", "sw", "w", "nw", "n", "ne"]
 const DIRECTIONAL: Dictionary = {
@@ -357,6 +358,19 @@ func test_chain_provenance() -> void:
 	pulse._power_fx.clear(); pulse.add_power_fx("chain_impact", Vector2.ZERO)
 	check(last_chain_fx(pulse).get("receivers", []).is_empty(), "Legacy four-argument FX calls never fabricate nearby Chain recipients")
 	pulse.free()
+	var presentation: Dictionary = {"pos":Vector2(19,-7),"duration":0.38,"age":0.0,"receivers":[Vector2(41,8),Vector2(-4,20),Vector2(10,-30)]}
+	var plan: Array[Dictionary] = I.chain_visual_plan(presentation)
+	check(plan.size()==1 and plan[0].historical and plan[0].position==presentation.pos, "Restored Chain begins with its historical burst at the actual paid source")
+	presentation.age=0.06
+	plan=I.chain_visual_plan(presentation)
+	check(plan.size()==2 and plan[1].position==presentation.receivers[0], "First restored contact reaction follows the real first recipient after the source")
+	presentation.age=0.15
+	var before_plan: Dictionary = presentation.duplicate(true)
+	plan=I.chain_visual_plan(presentation)
+	check(plan.size()==3 and plan[2].position==presentation.receivers[1], "Restored source plus real receiver contacts retain the three-cel ceiling")
+	check(presentation==before_plan, "Restored Chain visual planning changes no paid metadata, positions or age")
+	presentation.receivers=[]
+	check(I.chain_visual_plan(presentation).size()==1, "Unlabelled historical Chain artwork cannot invent target reactions")
 
 func test_guard_contact_direction() -> void:
 	for index: int in range(8):
@@ -385,6 +399,147 @@ func test_guard_contact_direction() -> void:
 			check(before == sim_state(b), "Contact art direction and native tag selection never mutate gameplay")
 		b.free()
 
+func pose_battle(family: String, rank: int, seed_value: int) -> Node2D:
+	var b = B.new(); root.add_child(b); b.set_physics_process(false); b.set_process(false)
+	var descriptor: Dictionary = E.for_run_event(1, seed_value)
+	descriptor.starter_id = "bastion"
+	descriptor.player_power_ids = [family]; descriptor.player_power_ranks = {family: rank}
+	descriptor.ability_rebalance = true
+	b.begin_run(S.build_for("bastion"), descriptor, seed_value); b.battle_status = "battle"
+	check(float(b.player_entity().rpm) == 1.0, family + " body-pose proof starts at genuine full launch reserve")
+	return b
+
+func pose_screen(world: Vector2) -> Vector2:
+	return Vector2(world.x-world.y,(world.x+world.y)*0.5).normalized()*minf(1.0,world.length()) if world.length_squared()>0.000001 else Vector2.ZERO
+
+func test_earned_bank_hold() -> void:
+	# Native empty/positive keys and their actual paid-charge selection both
+	# matter: an existing manifest tag alone cannot prove the hold is visible.
+	var info: Dictionary = I.family_info("momentum_bank")
+	var atlas: Image = I.texture(str(info.fx.texture)).get_image()
+	for rank: int in [1,2]:
+		for direction: String in HEADINGS:
+			var tag: String = "bank_stored"+("_ii" if rank==2 else "")+"_"+direction
+			var start: int = int(info.fx.tags[tag].from)
+			for stage: int in range(8):
+				var index: int = start+stage
+				var cel: Image = atlas.get_region(Rect2i(index%int(info.fx.columns)*96,floori(float(index)/float(info.fx.columns))*80,96,80))
+				check(cel.is_invisible() if stage==0 else not cel.is_invisible(), "Native Bank "+tag+" has an empty zero / visible earned hold key "+str(stage))
+		var b = pose_battle("momentum_bank",rank,421)
+		var player: Dictionary = b.player_entity()
+		check(I.bank_stored_stage(player)==-1, "Full-launch Bank ownership cannot fabricate stored movement at rank "+str(rank))
+		var low_seen: bool = false
+		for tick: int in range(180):
+			var braking: bool = tick>=45
+			b.test_step(B.FIXED_DT,pose_screen(Vector2.RIGHT*(0.12 if braking else 0.95)),false,braking)
+			var charge: float = float(player.momentum_charge)
+			var cap: float = 150.0 if rank>=2 else 95.0
+			if not low_seen and charge>3.0 and charge<cap/7.0:
+				low_seen=true
+				var before: Dictionary = sim_state(b)
+				check(I.bank_stored_stage(player)==1, "Ordinary braking earns low positive Bank charge and selects visible key one at rank "+str(rank))
+				check(before==sim_state(b), "Low positive hold selection changes no fighter, power state, timer, ledger or RNG")
+				var retired: Dictionary = player.duplicate(true); retired.outcome="ring_out"
+				var unowned: Dictionary = player.duplicate(true); unowned.power_ranks={}
+				check(I.bank_stored_stage(retired)==-1 and I.bank_stored_stage(unowned)==-1, "Unowned or retired copies cannot borrow an earned Bank hold")
+				print("BANK_PAID_LOW rank=%d at=%.3f charge=%.6f stage=%d" % [rank,b.elapsed,charge,I.bank_stored_stage(player)])
+			if low_seen and charge>=15.0: break
+			if b.battle_status=="finished": break
+		check(low_seen and float(player.momentum_charge)>=15.0, "Input-only braking earns visible low charge and enough actual stored movement for release at rank "+str(rank))
+		if low_seen and float(player.momentum_charge)>=15.0:
+			b.test_step(B.FIXED_DT,pose_screen(Vector2.RIGHT),true,false)
+			var released: bool = false
+			for event: Dictionary in b._power_fx:
+				if str(event.kind)=="momentum_release": released=true; break
+			var before: Dictionary = sim_state(b)
+			check(released and float(player.momentum_charge)==0.0 and I.bank_stored_stage(player)==-1, "An ordinary Burst spends the real Bank reserve and removes its held wake at rank "+str(rank))
+			check(before==sim_state(b), "Released Bank query remains read only and cannot replenish stored movement")
+		b.free()
+
+func test_earned_body_poses() -> void:
+	# The same input-only braking -> danger -> pursuit policy as the real clip.
+	# No RPM, positions, velocity, recovery flag or outcome is injected.
+	var clutch = pose_battle("clutch", 2, 7341)
+	var player: Dictionary = clutch.player_entity()
+	check(P.recovery_pose(player,clutch._power_fx).is_empty(), "Clutch ownership at full spin cannot fabricate a body catch")
+	var sampled: Dictionary = {"direction":Vector2.ZERO,"burst":false,"brake":false}
+	var danger_at: float = -1.0
+	var active_without_catch: bool = false
+	var caught: bool = false
+	for tick: int in range(180*60):
+		if tick%6==0:
+			var pos: Vector2 = player.pos
+			var vel: Vector2 = player.vel
+			if float(player.rpm)<=0.28 and danger_at<0.0: danger_at=clutch.elapsed
+			sampled=PoseBot.input(clutch,"aggressive",tick)
+			if danger_at<0.0:
+				sampled.direction=pose_screen((-pos-vel*0.4).normalized()*0.06)
+				sampled.brake=true; sampled.burst=false
+			if pos.length()>145.0:
+				sampled.direction=pose_screen(-pos.normalized()*0.8); sampled.brake=true
+		else: sampled.burst=false
+		clutch.test_step(B.FIXED_DT,sampled.direction,sampled.burst,sampled.brake)
+		if int(clutch.powers.counters.get("clutch_recover",0))>0:
+			caught=true; break
+		if not active_without_catch and bool(player.clutch_active):
+			check(P.recovery_pose(player,clutch._power_fx).is_empty(), "Genuine danger activation alone cannot show an unearned Clutch catch")
+			active_without_catch=true
+		if clutch.battle_status=="finished": break
+	check(caught and active_without_catch and danger_at>0.0, "Ordinary full-reserve controls earn a real paid Clutch contact before its body pose")
+	if caught:
+		check(float(player.clutch_recovery_time)>0.79 and float(player.clutch_recovery_time)<=0.8, "Production earned catch starts the actual 800ms body-settle timer")
+		var before: Dictionary = sim_state(clutch)
+		var initial: Dictionary = P.recovery_pose(player,clutch._power_fx)
+		check(not initial.is_empty() and int(initial.phase)==int(player.phase)%8 and initial.lean==Vector2(3,1) and float(initial.stance)==2.0, "Earned Clutch leans only the real blade while preserving its current native phase")
+		check(before==sim_state(clutch), "Earned body-pose query changes no fighter, RPM, phase, timer, collision, ledger or RNG")
+		var retired: Dictionary = player.duplicate(true); retired.outcome="spin_out"
+		var unowned: Dictionary = player.duplicate(true); unowned.power_ranks={}
+		check(P.recovery_pose(retired,[]).is_empty() and P.recovery_pose(unowned,[]).is_empty(), "A retired or unowned copy cannot borrow a paid Clutch body catch")
+		# Advance the real power timer without inventing another contact.
+		clutch.powers.begin_tick(0.4)
+		before=sim_state(clutch)
+		var middle: Dictionary = P.recovery_pose(player,clutch._power_fx)
+		check(not middle.is_empty() and Vector2(middle.lean).length()<Vector2(initial.lean).length() and float(middle.stance)<float(initial.stance) and int(middle.phase)==int(player.phase)%8, "Actual elapsed recovery settles the lean and stance without changing phase")
+		check(before==sim_state(clutch), "Settling pose remains entirely read only")
+		clutch.powers.begin_tick(0.401)
+		before=sim_state(clutch)
+		check(float(player.clutch_recovery_time)==0.0 and P.recovery_pose(player,clutch._power_fx).is_empty(), "Body catch clears after the real 800ms recovery window")
+		check(before==sim_state(clutch), "Expired catch cannot alter reserve or revive the actor")
+		print("POSE_PAID_CLUTCH danger_at=%.3f caught_at=%.3f rpm=%.6f earned_contacts=%d" % [danger_at,clutch.elapsed,player.rpm,clutch.powers.counters.clutch_recover])
+	clutch.free()
+	for rank: int in [1,2]:
+		var comet = pose_battle("iron_comet",rank,421)
+		var owner: Dictionary = comet.player_entity()
+		check(P.recovery_pose(owner,[]).is_empty(), "Comet ownership alone cannot compress an unarmed body at rank "+str(rank))
+		var armed: bool = false
+		for tick: int in range(45*60):
+			if tick%6==0:
+				sampled=PoseBot.input(comet,"aggressive",tick)
+				if float(owner.iron_comet_time)<=0.0 and fmod(comet.elapsed,9.0)<3.0:
+					sampled.direction=pose_screen((Vector2(-182,-60)-Vector2(owner.pos)).normalized()*0.95)
+					sampled.brake=false; sampled.burst=float(owner.cooldown)<=0.0
+			else: sampled.burst=false
+			comet.test_step(B.FIXED_DT,sampled.direction,sampled.burst,sampled.brake)
+			if int(comet.powers.counters.get("comet_charge",0))>0: armed=true; break
+			if comet.battle_status=="finished": break
+		check(armed, "Ordinary steering/Burst produces a genuine paid Comet wall arm at rank "+str(rank))
+		if armed:
+			comet.powers.begin_tick(0.14)
+			var before: Dictionary = sim_state(comet)
+			var compressed: Dictionary = P.recovery_pose(owner,comet._power_fx)
+			check(not compressed.is_empty() and float(compressed.stance)==3.0 and compressed.lean==Vector2.ZERO and int(compressed.phase)==int(owner.phase)%8, "Genuine Comet arm compresses its actual top halfway through the first 280ms at rank "+str(rank))
+			check(before==sim_state(comet), "Comet body compression changes no physics, reserve, arm timer or RNG")
+			var unowned: Dictionary = owner.duplicate(true); unowned.power_ranks={}
+			var retired: Dictionary = owner.duplicate(true); retired.outcome="ring_out"
+			check(P.recovery_pose(unowned,[]).is_empty() and P.recovery_pose(retired,[]).is_empty(), "Unowned/retired actors cannot copy an armed Comet compression")
+			comet.powers.begin_tick(0.139)
+			check(not P.recovery_pose(owner,comet._power_fx).is_empty(), "Actual Comet arm remains a body pose just before 280ms")
+			comet.powers.begin_tick(0.002)
+			before=sim_state(comet)
+			check(float(owner.iron_comet_time)>0.0 and P.recovery_pose(owner,comet._power_fx).is_empty(), "An armed flight after 280ms cannot keep the body compressed")
+			check(before==sim_state(comet), "Comet flight clears only the visual pose without touching its real arm")
+		comet.free()
+
 func run() -> void:
 	check(I.meta().families.size() == 13 and I.meta().art.size() == 34, "All thirteen families and thirty-four developed states have active identity assets")
 	var retained: Dictionary = native_meta("assets/source-art/power_fx_002b.aseprite")
@@ -410,6 +565,8 @@ func run() -> void:
 	await test_paid_preview()
 	test_chain_provenance()
 	test_guard_contact_direction()
+	test_earned_bank_hold()
+	test_earned_body_poses()
 	# Each state is drawn with the real battle renderer and native imports.
 	for family: String in FAMILIES:
 		await test_draw(family, 1); await test_draw(family, 2)

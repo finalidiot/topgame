@@ -1,493 +1,328 @@
-"""Individually directed Task002C.5 Bank/Predator/Crosscut/Guard pixel cels.
+"""Human correction v2: actual top bodies and physical floor/contact stories.
 
-Initial native authoring history, not the normal export command. The four
-compositions, key poses, silhouettes and timings below are intentionally
-separate. Existing pre-addendum sources are never edited. Saved named-layer
-Aseprite masters are authoritative after authoring; --revise explicitly
-replaces only these four new masters during this art pass.
+This is an explicit authoring recipe, not the normal exporter. It reuses the
+accepted native starter blade cels without resampling/recolouring and assembles
+the same native bit/ratchet parts as Battle. Saved Aseprite masters are editable.
+No gameplay, RNG, capture or shared rendering code is changed by this recipe.
 """
-import argparse
-import json
-import math
+import argparse, json, math, hashlib
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageOps
 from build_power_art import write_ase, read_ase
+ROOT=Path(__file__).resolve().parents[1]
+SOURCE=ROOT/'assets/source-art/power_identity_002c5'
+DESIGNS=ROOT/'assets/powers/identity'
+P={'ink':'#111b24','floor':'#1b2d39','dark':'#253944','steel':'#617880','silver':'#afc4c5','paper':'#e7e5ca','white':'#fff3d1','brass':'#b88e50','gold':'#f0c572','red':'#bd5b3c','hot':'#f29558','sea':'#2f6969','mint':'#80b7a5','ice':'#c5e7d6','blue':'#37627b'}
+FAMILIES=['momentum_bank','predator_line','crash_guard','crosscut']
+HEADINGS={'e':(1,0),'se':(.707,.707),'s':(0,1),'sw':(-.707,.707),'w':(-1,0),'nw':(-.707,-.707),'n':(0,-1),'ne':(.707,-.707)}
+BLADE_SOURCE=ROOT/'assets/source-art/starter_blade_accents_002b1.aseprite'
+BLADES,BLADE_META=read_ase(BLADE_SOURCE)
+PARTS={name:Image.open(ROOT/path).convert('RGBA') for name,path in {
+ 'ratchet':'assets/top/parts/ratchets/mid.png','flat':'assets/top/parts/bits/flat.png',
+ 'needle':'assets/top/parts/bits/needle.png','rubber':'assets/top/parts/bits/rubber.png'}.items()}
 
-ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "assets/source-art/power_identity_002c5"
-DESIGNS = ROOT / "assets/powers/identity"
-PALETTE = {
-    "ink":"#111b24", "shadow":"#1b2d39", "iron":"#354954",
-    "steel":"#617880", "silver":"#afc4c5", "paper":"#e7e5ca",
-    "white":"#fff3d1", "brass":"#b88e50", "gold":"#f0c572",
-    "rust":"#804537", "red":"#bd5b3c", "hot":"#f29558",
-    "sea":"#2f6969", "mint":"#80b7a5", "ice":"#c5e7d6",
-    "blue":"#37627b", "pale":"#94b4cb",
-}
-def rgba(c, a=255):
-    return (*bytes.fromhex(PALETTE.get(c,c).lstrip("#")),a)
-def layer(size): return Image.new("RGBA",size)
-def poly(im, points, c):
-    ImageDraw.Draw(im).polygon([(round(x),round(y)) for x,y in points],fill=rgba(c))
-def line(im, points, c, w=1):
-    ImageDraw.Draw(im).line([(round(x),round(y)) for x,y in points],fill=rgba(c),width=w)
-def box(im, xy, c): ImageDraw.Draw(im).rectangle(tuple(round(v) for v in xy),fill=rgba(c))
-def oval(im, xy, c): ImageDraw.Draw(im).ellipse(tuple(round(v) for v in xy),fill=rgba(c))
-def pixel(im,x,y,c): ImageDraw.Draw(im).point((round(x),round(y)),fill=rgba(c))
+def rgba(c):return (*bytes.fromhex(P.get(c,c).lstrip('#')),255)
+def blank(size):return Image.new('RGBA',size)
+def line(im,p,c,w=1):ImageDraw.Draw(im).line([(round(x),round(y)) for x,y in p],fill=rgba(c),width=w)
+def poly(im,p,c):ImageDraw.Draw(im).polygon([(round(x),round(y)) for x,y in p],fill=rgba(c))
+def oval(im,xy,c):ImageDraw.Draw(im).ellipse(tuple(round(v) for v in xy),fill=rgba(c))
+def dot(im,x,y,c):ImageDraw.Draw(im).point((round(x),round(y)),fill=rgba(c))
+def card_layers():
+ im=[blank((64,64)) for _ in range(5)]
+ # Quiet card edge and real floor scratches; no box, machine or pedestal.
+ poly(im[0],[(2,2),(61,2),(61,61),(2,61)],'ink')
+ line(im[0],[(4,15),(4,5),(16,5)],'dark')
+ line(im[0],[(48,59),(59,59),(59,48)],'dark')
+ return im
 
-def panel(im):
-    # Common material, not a common composition: a quiet chamfered card face.
-    poly(im,[(7,3),(56,3),(61,8),(61,56),(56,61),(7,61),(3,57),(3,7)],"ink")
-    poly(im,[(8,5),(55,5),(59,9),(59,55),(55,59),(8,59),(5,56),(5,8)],"shadow")
-    line(im,[(9,6),(54,6)],"iron")
-    line(im,[(6,10),(6,54)],"iron")
-    for x,y in [(9,9),(55,9),(9,55),(55,55)]: pixel(im,x,y,"steel")
+def top(im,kind,cx,cy,pose=0):
+ # Exact accepted native geometry and colours: no resized/recoloured rotor.
+ offset=(round(cx-24),round(cy-26))
+ bit={'vane':'rubber','breaker':'flat','bastion':'needle'}[kind]
+ im.alpha_composite(PARTS[bit],offset)
+ im.alpha_composite(PARTS['ratchet'],offset)
+ index=BLADE_META['tags'][kind]['from']+pose%8
+ im.alpha_composite(BLADES[index],offset)
 
-def rotor(im,x,y,r,pose=0,accent="brass",blade="smash"):
-    # A physical illustrated top, used only in cards; runtime keeps real tops.
-    a=[k*math.tau/12 for k in range(12)]
-    edge=[(x+math.cos(t)*r,y+math.sin(t)*r*.54) for t in a]
-    poly(im,[(xx,yy+5) for xx,yy in edge],"ink")
-    poly(im,[(xx,yy+3) for xx,yy in edge],"iron")
-    line(im,[(x-r+2,y+3),(x-r//2,y+r*.54+3),(x+r//2,y+r*.54+3),(x+r-2,y+3)],"steel",2)
-    poly(im,edge,"ink")
-    for k in range(6):
-        t=k*math.tau/6+pose*.19
-        outer=[(x+math.cos(z)*r,y+math.sin(z)*r*.54) for z in [t,t+.35,t+.75]]
-        inner=[(x+math.cos(z)*(r-5),y+math.sin(z)*(r-5)*.54) for z in [t+.75,t+.35,t]]
-        poly(im,outer+inner,"silver" if k in [0,3] else "steel")
-        line(im,outer[:2],"paper")
-        if blade=="hook":
-            tip=(x+math.cos(t+.7)*(r+2),y+math.sin(t+.7)*(r+2)*.54)
-            poly(im,[outer[1],outer[2],tip],accent)
-        else:
-            line(im,[outer[1],outer[2]],accent,2)
-    oval(im,(x-r+5,y-r*.54+3,x+r-5,y+r*.54-3),"iron")
-    poly(im,[(x-5,y-2),(x,y-4),(x+5,y-2),(x+4,y+2),(x,y+4),(x-4,y+2)],accent)
-    line(im,[(x-3,y-2),(x,y-3),(x+2,y-2)],"white")
-    box(im,(x-1,y-1,x+1,y+1),"ink");pixel(im,x,y-1,"paper")
-    poly(im,[(x-3,y+r*.54+4),(x+3,y+r*.54+4),(x,y+r*.54+11)],"ink")
-    line(im,[(x,y+r*.54+4),(x,y+r*.54+9)],"silver")
+def shadow(im,cx,cy,r=13):
+ oval(im,(cx-r,cy+13,cx+r,cy+17),'floor')
+ line(im,[(cx-r+3,cy+16),(cx+6,cy+17)],'dark')
 
-def spring(im,x1,x2,y,coils=5,deep=False):
-    # Flat projected coil: alternating stepped lobes around a real guide rod.
-    line(im,[(x1,y+2),(x2,y+2)],"ink",4)
-    line(im,[(x1,y),(x2,y)],"steel")
-    pitch=(x2-x1)/coils
-    for k in range(coils):
-        x=x1+k*pitch
-        q=[(x,y),(x+pitch*.25,y-3),(x+pitch*.55,y-3),(x+pitch*.85,y+3),(x+pitch,y)]
-        line(im,[(a,b+1) for a,b in q],"rust",2)
-        line(im,q,"gold" if deep else "brass",2)
-        pixel(im,x+pitch*.4,y-3,"white")
-    box(im,(x1-2,y-5,x1,y+5),"steel")
-    line(im,[(x1-2,y-5),(x1-2,y+4)],"silver")
-    box(im,(x2,y-5,x2+2,y+5),"brass")
+def bank_card(p,ii):
+ im=card_layers()
+ x,y=[(41,25),(35,31),(33,33),(40,27),(44,23),(42,25)][p]
+ if ii and p in [2,3]:x+=1;y-=1
+ # A real top brakes across its own floor track and folds its wake underneath.
+ line(im[1],[(7,53),(17,47),(24,41),(29,38)],'dark',2)
+ if p in [1,2]:
+  folds=[[(9,48),(15,47),(23,45),(31,45),(36,42)],[(14,53),(23,53),(31,50),(36,46)]]
+  for q in folds:line(im[1],q,'brass' if p==1 else 'gold',2)
+  line(im[4],[(30,45),(33,43),(36,42)],'paper',2)
+  if ii:
+   line(im[1],[(7,56),(18,56),(29,53),(33,48)],'silver')
+   line(im[4],[(25,48),(30,48),(34,45)],'gold')
+ elif p==3:
+  line(im[1],[(9,52),(20,46),(31,39),(37,34)],'gold',2)
+  line(im[1],[(8,58),(19,52),(29,46),(36,39)],'brass',2)
+  line(im[4],[(28,36),(33,32)],'paper',2)
+  if ii:line(im[1],[(4,50),(13,45),(22,38),(29,33)],'silver')
+ elif p==4:
+  line(im[1],[(11,48),(23,41),(33,33)],'steel',2)
+  line(im[1],[(14,55),(23,50),(30,45)],'brass')
+  line(im[4],[(34,30),(38,27)],'gold',2)
+ elif p==5:
+  line(im[1],[(16,47),(24,42)],'dark')
+  line(im[1],[(24,43),(31,39)],'steel')
+ else:line(im[1],[(9,50),(19,44),(28,38)],'steel')
+ shadow(im[1],x,y)
+ # The accepted broad round body is the foreground subject. Its intact native
+ # blade, front shell and bit read as a top more clearly than the small Vane
+ # fin in the first correction. No scaled body or invented hardware is added.
+ top(im[3],'bastion',x,y,[0,2,3,5,6,7][p])
+ # Small rim flick, attached to the turning blade rather than a separate coil.
+ if p==2:line(im[4],[(x-12,y+4),(x-10,y+6)],'gold',2)
+ return im
 
-def bank_card(f,deep):
-    im=[layer((64,64)) for _ in range(5)];panel(im[0])
-    # Foreground open cassette is the illustration's primary mechanical mass.
-    # Coil lobes are new native pixels at this scale, not an enlarged old glyph.
-    x=[45,45,44,44,43,43,45,49,51,51,48,45][f]
-    y=[18,18,19,20,21,22,20,17,15,15,17,18][f]
-    stop=[40,39,37,35,32,30,34,40,44,43,41,40][f]
-    oval(im[1],(11,51,49,59),"ink")
-    # Deep cast brake shoes, with broad pad faces and fastener recesses.
-    poly(im[1],[(5,38),(12,34),(18,38),(18,53),(12,58),(5,53)],"ink")
-    poly(im[1],[(6,40),(12,37),(15,40),(15,51),(11,54),(6,51)],"iron")
-    line(im[1],[(7,41),(11,39),(13,41)],"silver",2)
-    line(im[1],[(7,50),(11,52),(14,50)],"brass",3)
-    box(im[1],(9,43,12,46),"ink");pixel(im[1],10,43,"paper")
-    poly(im[2],[(10,30),(38,24),(47,29),(47,49),(39,56),(10,50)],"ink")
-    poly(im[2],[(11,31),(38,27),(44,30),(14,35)],"steel")
-    line(im[2],[(13,31),(37,28),(43,30)],"silver",2)
-    poly(im[2],[(11,47),(39,52),(44,48),(44,52),(39,56),(11,50)],"iron")
-    line(im[2],[(12,48),(38,53),(43,50)],"brass",2)
-    # Exposed helix with wide negative gaps and a clear translating end-stop.
-    cy=40 if not deep else 36
-    line(im[2],[(14,cy+1),(stop,cy+1)],"steel",3)
-    pitch=(stop-14)/4
-    for k in range(4):
-        xx=14+k*pitch
-        q=[(xx,cy),(xx+pitch*.25,cy-6),(xx+pitch*.55,cy-6),(xx+pitch*.86,cy+6),(xx+pitch,cy)]
-        line(im[2],[(a,b+1) for a,b in q],"rust",3)
-        line(im[2],q,"gold",2)
-        line(im[2],q[1:3],"white",2)
-    box(im[2],(stop,cy-8,stop+3,cy+8),"brass")
-    line(im[2],[(stop+1,cy-7),(stop+1,cy+6)],"paper",2)
-    box(im[2],(11,cy-8,14,cy+8),"steel")
-    if deep:
-        spring(im[2],14,stop,48,4,True)
-        box(im[2],(7,31,10,50),"silver")
-        line(im[2],[(14,52),(34,55)],"gold",2)
-    line(im[2],[(stop+2,cy-2),(46,30),(48,26)],"steel",3)
-    rotor(im[3],x,y,12,f,"brass")
-    # Braking rails compress behind the shoe, release runs forward into space.
-    if f in [1,2,3,4,5]:
-        for k in range(3):
-            xx=5+k*4
-            line(im[4],[(xx,56-k),(xx+3,54-k)],"gold" if f>=4 else "steel",2)
-    if f in [6,7,8,9]:
-        for k in range(2+(1 if deep else 0)):
-            line(im[4],[(x-20-k*4,y+10+k*3),(x-10-k*2,y+5+k*3)],"gold" if k==0 else "brass",2 if k==0 else 1)
-        if f==7:poly(im[4],[(38,29),(42,27),(45,29),(41,31)],"white")
-    return im
+def predator_card(p,ii):
+ im=card_layers()
+ hunter=[(17,41),(21,38),(26,34),(32,29),(35,27),(24,36)][p]
+ quarry=[(47,19),(48,18),(48,18),(49,17),(50,17),(49,19)][p]
+ if ii and p in [2,3,4]:hunter=(hunter[0]+2,hunter[1]-1)
+ # One continuous physical pursuit direction; the two real tops are the story.
+ line(im[1],[(4,59),(12,54),(20,48),(29,41),(38,33)],'dark',2)
+ if p>=1:
+  line(im[1],[(6,56),(12,52),(18,48)],'red',2)
+  line(im[1],[(23,45),(28,40),(33,37)],'brass')
+ if ii:
+  line(im[1],[(3,61),(11,58),(18,53)],'steel')
+  line(im[1],[(23,49),(29,45),(33,42)],'red')
+ shadow(im[1],*quarry,11);top(im[2],'bastion',*quarry,[2,3,4,5,6,7][p])
+ shadow(im[1],*hunter,13);top(im[3],'breaker',*hunter,[0,1,3,4,6,7][p])
+ if p in [3,4]:
+  # Small physical blade contact. No teeth, rails, bracket or HUD-like marker.
+  contact=(40,25)
+  line(im[4],[(contact[0]-3,contact[1]+2),contact,(contact[0]+3,contact[1]-1)],'gold',2)
+  dot(im[4],40,24,'white');dot(im[4],42,26,'paper')
+  if ii:line(im[4],[(38,29),(41,27)],'hot',2)
+ return im
 
-def pressure_tooth(im,x,y,bright=False,size=5):
-    # A bent mechanical plate with a broad trailing face and one forward tooth.
-    poly(im,[(x-size,y+3),(x-2,y-1),(x+3,y-2),(x+4,y),(x,y+1),(x-size+2,y+5)],"ink")
-    poly(im,[(x-size+1,y+2),(x-2,y),(x+2,y-1),(x+3,y),(x,y+2),(x-size+2,y+4)],"hot" if bright else "red")
-    line(im,[(x-size+1,y+2),(x-2,y)],"paper" if bright else "brass")
+def guard_card(p,ii):
+ im=card_layers()
+ own=[(25,34),(25,34),(23,35),(21,37),(23,36),(25,35)][p]
+ rival=[(53,18),(49,21),(44,25),(46,22),(52,16),(54,15)][p]
+ if ii and p in [2,3]:own=(own[0]+2,own[1]-1)
+ if ii and p in [3,4]:rival=(rival[0]+1,rival[1]-2)
+ # The defender accepts a small displacement while the incoming top deflects.
+ line(im[1],[(47,45),(41,42),(36,39)],'dark')
+ if p>=2:
+  line(im[1],[(15,51),(18,52),(23,51),(27,49)],'steel',2)
+  line(im[1],[(17,56),(24,54),(30,51)],'dark',2)
+  if ii:line(im[1],[(12,53),(17,55),(23,54)],'silver')
+ if p>=3:
+  line(im[1],[(41,38),(48,33),(55,27)],'red')
+ shadow(im[1],*rival,10);top(im[2],'breaker',*rival,[0,2,3,4,6,7][p])
+ shadow(im[1],*own,15);top(im[3],'bastion',*own,[0,1,2,3,5,7][p])
+ if p in [1,2,3]:
+  # The pressure hugs the genuine curved blade edge, not a detached device.
+  q=[(35,28),(37,30),(37,33),(35,35)] if p==2 else [(38,27),(40,29),(40,31)]
+  line(im[4],q,'paper' if p==2 else 'silver',2)
+  if p==2:
+   line(im[4],[(37,29),(40,26)],'gold',2)
+   dot(im[4],38,32,'white')
+  if ii:line(im[4],[(32,32),(34,35),(33,37)],'steel',2)
+ return im
 
-def predator_card(f,deep):
-    im=[layer((64,64)) for _ in range(5)];panel(im[0])
-    # A quarry high/right and a large low/left hunter create a chase, not a HUD.
-    hunter=[(17,43),(17,43),(18,42),(19,41),(20,40),(22,39),(26,37),(28,36),(28,36),(25,38),(21,41),(17,43)][f]
-    quarry=[(47,19),(48,18),(49,18),(49,17),(48,17),(48,18),(47,18),(47,19),(48,18),(49,17),(48,18),(47,19)][f]
-    line(im[1],[(10,53),(21,46),(34,34),(51,24)],"ink",5)
-    line(im[1],[(10,52),(22,44),(34,33),(51,23)],"iron")
-    oval(im[1],(hunter[0]-17,hunter[1]+12,hunter[0]+18,hunter[1]+19),"ink")
-    oval(im[1],(quarry[0]-8,quarry[1]+9,quarry[0]+9,quarry[1]+12),"ink")
-    rotor(im[2],*quarry,9,f,"blue","hook")
-    rotor(im[3],*hunter,17,f,"red","smash")
-    if deep:
-        # Heavy paired leading jaws visibly change the hunter's machine shape.
-        for xx,yy in [(hunter[0]+11,hunter[1]-6),(hunter[0]+15,hunter[1])]:
-            poly(im[3],[(xx-3,yy+2),(xx+5,yy-4),(xx+9,yy-3),(xx+6,yy+1),(xx,yy+5)],"ink")
-            poly(im[3],[(xx-1,yy+2),(xx+5,yy-2),(xx+7,yy-2),(xx+4,yy+1),(xx,yy+3)],"hot")
-            line(im[3],[(xx,yy+1),(xx+5,yy-2)],"paper",2)
-    steps=[(31,32),(39,27),(45,23)]
-    for k,(xx,yy) in enumerate(steps):
-        pressure_tooth(im[4],xx,yy,2+k<=f<=8,5)
-        if deep:
-            pressure_tooth(im[4],xx-4,yy-6,4+k<=f<=9,4)
-    if f in [6,7,8]:
-        line(im[4],[(hunter[0]-11,hunter[1]+7),(hunter[0]-5,hunter[1]+4)],"hot",2)
-        pixel(im[4],41,23,"white")
-    # Quarry-facing bite marks stop short of its body, never bracket a reticle.
-    if f in [7,8]: line(im[4],[(39,24),(43,21)],"white",2)
-    return im
+def crosscut_card(p,ii):
+ im=card_layers()
+ own=[(18,19),(22,23),(29,28),(36,34),(45,40),(47,42)][p]
+ rival=[(47,37),(46,36),(44,34),(45,28),(49,22),(50,21)][p]
+ if ii and p in [3,4]:
+  own=(own[0]+1,own[1]+1);rival=(rival[0]+1,rival[1]-2)
+ # Tangential contact peels the physical bodies into two unequal exits.
+ line(im[1],[(6,19),(14,24),(22,31)],'dark',2)
+ if p>=2:
+  line(im[1],[(27,38),(35,43),(44,48)],'sea',2)
+  line(im[1],[(33,38),(40,33),(49,29)],'steel')
+  if ii:line(im[1],[(27,43),(35,48),(41,51)],'mint')
+ shadow(im[1],*rival,12);top(im[2],'bastion',*rival,[0,2,3,4,6,7][p])
+ shadow(im[1],*own,13);top(im[3],'vane',*own,[0,1,3,4,6,7][p])
+ if p in [2,3]:
+  line(im[4],[(31,29),(35,32),(38,34)],'ice',2)
+  line(im[4],[(34,34),(39,38),(44,40)],'mint',2)
+  if ii:line(im[4],[(32,36),(37,40),(41,42)],'silver')
+  dot(im[4],35,31,'white')
+ return im
 
-def crosscut_card(f,deep):
-    im=[layer((64,64)) for _ in range(5)];panel(im[0])
-    # Contact occurs off center; both bodies peel into unequal exit lanes.
-    own=[(17,21),(18,22),(20,24),(23,26),(27,29),(31,32),(35,35),(38,38),(42,40),(46,43),(33,34),(21,24)][f]
-    rival=[(47,38),(47,38),(47,37),(46,36),(45,35),(43,34),(45,29),(48,25),(50,23),(51,22),(49,30),(48,37)][f]
-    line(im[1],[(8,24),(19,32),(31,37)],"iron",2)
-    if f>=5:
-        line(im[1],[(30,36),(49,49)],"sea",2)
-        line(im[1],[(34,35),(51,27)],"iron",2)
-    oval(im[1],(own[0]-10,own[1]+11,own[0]+9,own[1]+14),"ink")
-    oval(im[1],(rival[0]-9,rival[1]+11,rival[0]+10,rival[1]+14),"ink")
-    rotor(im[2],*rival,13,f,"steel","smash")
-    rotor(im[3],*own,17,f,"sea","hook")
-    if deep:
-        poly(im[3],[(own[0]+8,own[1]+4),(own[0]+19,own[1]+7),(own[0]+22,own[1]+5),(own[0]+16,own[1]+1),(own[0]+9,own[1]+1)],"ink")
-        line(im[3],[(own[0]+10,own[1]+3),(own[0]+18,own[1]+5),(own[0]+20,own[1]+4)],"silver",2)
-    if 3<=f<=9:
-        advance=[0,0,0,0,3,8,14,19,23,25,0,0][f]
-        # One broad offset shear, deliberately no symmetric X or radial blast.
-        poly(im[4],[(27,28),(32,30),(35+advance//2,36+advance//3),(30+advance//2,35+advance//3)],"sea")
-        line(im[4],[(29,28),(34,32),(37+advance//2,37+advance//3)],"ice",2)
-        if deep:
-            line(im[4],[(25,30),(31,35),(39+advance//2,40+advance//3)],"mint")
-        if f in [5,6]:
-            poly(im[4],[(34,33),(36,32),(38,34),(36,36)],"white")
-        if f>=6:
-            for k in range(3): line(im[4],[(36+k*5,30-k*2),(39+k*5,29-k*2)],"silver" if k==0 else "steel")
-    return im
+CARD={'momentum_bank':bank_card,'predator_line':predator_card,'crash_guard':guard_card,'crosscut':crosscut_card}
+# Six deliberate key poses. Each is a true two-key hold, not twelve weak poses.
+POSE_MS={'momentum_bank':[180,190,320,80,130,280],'predator_line':[200,170,140,100,160,290],'crash_guard':[250,130,120,180,200,280],'crosscut':[210,150,90,100,140,290]}
+STATIC={'momentum_bank':4,'predator_line':6,'crash_guard':4,'crosscut':4}
 
-def damper(im,x,y,length,deep=False):
-    # Exposed guide rods and a broad end-stop, not a floor shield/ring.
-    poly(im,[(x-2,y-6),(x+5,y-8),(x+6,y+8),(x,y+10),(x-3,y+5)],"ink")
-    poly(im,[(x-1,y-5),(x+3,y-6),(x+4,y+6),(x,y+7)],"steel")
-    line(im,[(x,y-4),(x+2,y-5)],"paper")
-    for yy in [y-3,y+3]:
-        line(im,[(x+3,yy+1),(x+length,yy+1)],"ink",3)
-        line(im,[(x+3,yy),(x+length,yy)],"silver",2)
-        line(im,[(x+3,yy),(x+5,yy)],"brass",2)
-    poly(im,[(x+length,y-6),(x+length+4,y-8),(x+length+4,y+5),(x+length,y+7)],"ink")
-    line(im,[(x+length+1,y-5),(x+length+1,y+5)],"mint",3)
-    line(im,[(x+length+3,y-6),(x+length+3,y+4)],"paper")
-    if deep:
-        box(im,(x+1,y+9,x+8,y+12),"iron")
-        line(im,[(x+1,y+9),(x+7,y+9)],"silver")
-        box(im,(x+3,y+10,x+6,y+11),"sea")
+def tiny_top(im,cx,cy,r=4,accent='steel'):
+ # Individually authored at 16px: stepped blade, front shell, visible bit.
+ poly(im,[(cx-r,cy-1),(cx-r+1,cy-2),(cx-1,cy-2),(cx+1,cy-3),(cx+r-1,cy-2),(cx+r,cy),(cx+r-1,cy+1),(cx+1,cy+2),(cx-r+1,cy+1)],'steel')
+ oval(im,(cx-2,cy-1,cx+2,cy+1),'ink')
+ line(im,[(cx-r+1,cy-1),(cx-r+2,cy-2),(cx-1,cy-2)],'silver')
+ dot(im,cx+r-1,cy-1,'paper');dot(im,cx-r,cy,accent)
+ line(im,[(cx-r+1,cy+1),(cx-1,cy+2),(cx+1,cy+2),(cx+r-1,cy+1)],accent)
+ dot(im,cx,cy,'paper');line(im,[(cx,cy+3),(cx,cy+4)],'steel')
 
-def guard_card(f,deep):
-    im=[layer((64,64)) for _ in range(5)];panel(im[0])
-    ownx=[23,23,23,22,21,20,21,22,23,23,23,23][f]
-    hitx=[67,65,63,60,57,55,55,58,61,64,66,67][f]
-    length=[14,14,13,11,8,5,6,9,11,13,14,14][f]
-    oval(im[1],(7,47,39,56),"ink")
-    line(im[1],[(8,52),(18,51),(24,53)],"iron")
-    # Incoming machine is cropped; the local absorber is the clear subject.
-    rotor(im[2],hitx,24,14,f,"brass","smash")
-    rotor(im[3],ownx,31,20,f,"mint","hook")
-    # Larger exposed contact mechanism: two rods, chunky face, physical seals.
-    gx=ownx+14;gy=34
-    poly(im[4],[(gx-3,gy-8),(gx+3,gy-10),(gx+5,gy+8),(gx,gy+11),(gx-3,gy+7)],"ink")
-    poly(im[4],[(gx-1,gy-7),(gx+2,gy-8),(gx+3,gy+7),(gx,gy+8)],"steel")
-    for yy in [gy-5,gy+5]:
-        line(im[4],[(gx+3,yy+2),(gx+length,yy+2)],"ink",4)
-        line(im[4],[(gx+3,yy),(gx+length,yy)],"silver",3)
-        line(im[4],[(gx+3,yy),(gx+6,yy)],"brass",3)
-    poly(im[4],[(gx+length,gy-9),(gx+length+5,gy-12),(gx+length+6,gy+8),(gx+length+1,gy+11)],"ink")
-    poly(im[4],[(gx+length+2,gy-7),(gx+length+4,gy-8),(gx+length+4,gy+7),(gx+length+2,gy+8)],"mint")
-    line(im[4],[(gx+length+5,gy-9),(gx+length+5,gy+7)],"paper",2)
-    if deep:
-        poly(im[4],[(gx-2,gy+11),(gx+9,gy+9),(gx+12,gy+12),(gx+4,gy+16),(gx-2,gy+15)],"ink")
-        line(im[4],[(gx,gy+11),(gx+8,gy+11),(gx+10,gy+12)],"silver",3)
-        box(im[4],(gx+3,gy+12,gx+7,gy+14),"sea")
-    if f in [4,5,6]:
-        line(im[4],[(ownx+length+14,26),(ownx+length+17,24)],"white",2)
-        pixel(im[4],ownx+length+14,39,"gold")
-    if f in [5,6]:
-        line(im[1],[(8,52),(5,54)],"steel",2)
-    return im
+def icon(family,ii):
+ im=[blank((16,16)) for _ in range(2)]
+ if family=='momentum_bank':
+  tiny_top(im[0],10,5,4,'blue')
+  line(im[1],[(1,12),(4,13),(8,12),(10,10)],'gold')
+  line(im[1],[(3,9),(5,10),(8,10)],'brass')
+  if ii:line(im[1],[(2,15),(6,15),(9,13)],'silver')
+ elif family=='predator_line':
+  tiny_top(im[0],12,3,3,'blue');tiny_top(im[0],4,10,4,'red')
+  line(im[1],[(5,7),(7,6),(9,4)],'hot')
+  if ii:line(im[1],[(7,10),(9,8),(11,7)],'brass')
+ elif family=='crash_guard':
+  tiny_top(im[0],12,4,3,'red');tiny_top(im[0],5,8,4,'blue')
+  line(im[1],[(9,5),(9,7)],'paper');dot(im[1],10,6,'gold')
+  line(im[1],[(2,14),(5,14),(7,12)],'steel')
+  if ii:line(im[1],[(1,12),(3,13)],'silver')
+ else:
+  tiny_top(im[0],4,3,3,'mint');tiny_top(im[0],12,9,3,'blue')
+  line(im[1],[(4,7),(7,9),(10,13),(13,14)],'ice')
+  if ii:line(im[1],[(3,10),(6,12),(8,14)],'steel')
+ return im
 
-CARD_PAINT={"momentum_bank":bank_card,"predator_line":predator_card,"crosscut":crosscut_card,"crash_guard":guard_card}
-CARD_TIMES={
-    "momentum_bank":[160,100,95,100,140,180,45,40,55,100,180,190],
-    "predator_line":[150,100,100,85,85,75,70,65,85,105,150,190],
-    "crosscut":[170,110,85,70,55,40,45,55,70,95,160,200],
-    "crash_guard":[180,110,85,65,50,75,65,85,105,130,160,200],
-}
+FX_TAGS={'momentum_bank':['bank_load','bank_stored','bank_release'],'predator_line':['predator_pressure','predator_tracking'],'crash_guard':['damper_contact'],'crosscut':['shear_slice']}
+FX_MS={'momentum_bank':[80,60,55,80,90,100,140,180],'predator_line':[55,50,55,70,85,110,135,180],'crash_guard':[60,45,55,80,100,130,160,190],'crosscut':[50,35,45,60,90,115,155,200]}
 
-def icon(family,deep):
-    im=[layer((16,16)) for _ in range(2)]
-    if family=="momentum_bank":
-        box(im[0],(1,3,3,13),"iron");line(im[0],[(1,3),(1,12)],"silver")
-        line(im[0],[(3,8),(13,8)],"steel")
-        line(im[1],[(3,8),(5,4),(7,11),(9,4),(11,11),(12,8)],"gold",2)
-        box(im[0],(12,3,14,12),"steel");line(im[0],[(14,3),(14,11)],"paper")
-        if deep:line(im[1],[(4,14),(11,14)],"brass")
-    elif family=="predator_line":
-        poly(im[0],[(1,10),(5,8),(8,10),(8,13),(4,15),(1,13)],"iron")
-        line(im[0],[(1,10),(5,9),(7,10)],"silver",2)
-        poly(im[1],[(8,4),(11,1),(15,2),(15,5),(11,7)],"steel")
-        line(im[1],[(9,4),(12,2),(14,3)],"paper")
-        line(im[1],[(6,8),(8,7),(8,5)],"hot",2)
-        if deep:line(im[1],[(9,10),(11,9),(11,7)],"brass")
-    elif family=="crosscut":
-        poly(im[0],[(1,4),(4,2),(7,4),(5,7),(2,7)],"steel")
-        poly(im[0],[(10,8),(13,7),(15,10),(13,12),(10,11)],"iron")
-        poly(im[1],[(3,2),(8,7),(14,13),(9,11),(5,7)],"mint")
-        line(im[1],[(4,3),(8,7),(13,12)],"paper")
-        if deep:line(im[1],[(8,4),(11,3),(14,4)],"steel")
-    else:
-        box(im[0],(2,3,5,12),"iron");line(im[0],[(2,3),(2,11)],"silver")
-        line(im[0],[(5,5),(11,5)],"paper",2)
-        line(im[0],[(5,10),(11,10)],"steel",2)
-        box(im[1],(11,2,14,13),"sea");line(im[1],[(14,2),(14,12)],"ice")
-        if deep:box(im[1],(4,13,9,14),"mint")
-    return im
+def fx(family,f,ii,kind,heading):
+ im=[blank((96,80)) for _ in range(4)]
+ vx,vy=HEADINGS[heading];sx,sy=-vy,vx
+ def q(forward,side=0,up=0):return (48+vx*forward+sx*side,48+vy*forward+sy*side+up)
+ def stroke(which,points,c,w=1,up=0):line(im[which],[q(a,b,up) for a,b in points],c,w)
+ if family=='momentum_bank':
+  if kind=='bank_stored':
+   # Stage zero is empty. Every positive earned stage has a visible compact
+   # floor fold outside the rear heel, rather than a nearly transparent cel
+   # beneath the actor/team ring. Higher charge tightens the same physical
+   # skid; it never grows into a permanent aura or detached spring/widget.
+   if f>0:
+    # Upright native bodies rise above the floor pivot. A screen-south rear
+    # skid therefore needs a longer seam than a screen-north one; otherwise
+    # the real blade hides every bright pixel. These per-heading placements
+    # were checked under the intact actual starter bodies in all eight poses.
+    rear={'e':24,'se':26,'s':30,'sw':26,'w':27,'nw':24,'n':23,'ne':24}[heading]
+    reach=rear-min(f-1,5)*0.5
+    stroke(0,[(-2,1),(-9,4),(-reach+4,6),(-reach-3,7)],'steel')
+    stroke(1,[(-reach-3,7),(-reach,10),(-reach+7,10),(-reach+10,7)],'gold',2)
+    stroke(2,[(-reach,10),(-reach+3,11)],'paper',2)
+    stroke(1,[(-reach+7,10),(-reach+10,7)],'brass')
+    if ii:
+     stroke(2,[(-reach-3,13),(-reach+1,14),(-reach+7,13),(-reach+10,10)],'silver',2)
+    elif f>=4:
+     stroke(2,[(-reach+1,13),(-reach+5,13)],'brass')
+  elif kind=='bank_load':
+   if f<=5:
+    reach=[27,24,21,18,15,13,12,10][f]
+    stroke(0,[(-reach,-6),(-reach+9,-4),(-4,-2)],'dark')
+    stroke(1,[(-reach,6),(-reach+5,8),(-9,6),(-3,2)],'gold' if f in [2,3] else 'brass',2 if f in [2,3] else 1)
+    if ii:stroke(2,[(-reach-2,1),(-reach+4,3),(-6,2)],'steel')
+   else:stroke(0,[(-15,7),(-8,5)],'dark')
+  else:
+   # Tight heel fold straightens into the actual launch vector and erodes.
+   length=[12,16,22,29,34,38,40,43][f]
+   if f<6:
+    stroke(1,[(-length,6),(-length+8,5),(-8,2),(4,0)],'paper' if f<3 else 'brass',2 if f<4 else 1)
+    stroke(2,[(-length+4,-5),(-11,-3),(2,-1)],'gold' if f<4 else 'steel')
+    if ii:stroke(0,[(-length-2,10),(-length+7,8),(-14,5)],'silver' if f<3 else 'dark')
+   else:
+    stroke(0,[(-length+4,6),(-length+10,5)],'dark')
+    stroke(0,[(-19,3),(-13,2)],'steel' if f==6 else 'dark')
+ elif family=='predator_line':
+  if kind=='predator_tracking':
+   # Three stack stages are genuine floor pursuit strokes behind the hunter.
+   reach=9+f
+   stroke(0,[(-reach,3),(-6,1),(-2,0)],'dark')
+   stroke(1,[(-reach,5),(-reach+4,4),(-5,2)],'red')
+   if f>=3:stroke(2,[(-reach-5,-2),(-reach,-1),(-8,0)],'brass')
+   if ii and f>=5:stroke(1,[(-reach-3,8),(-reach+1,7)],'steel')
+  else:
+   # A local rim scrape at accepted repeated contact, not a comb or target box.
+   if f<6:
+    reach=[9,12,15,17,19,21,22,23][f]
+    stroke(1,[(reach-7,-3),(reach-3,-2),(reach,0)],'hot' if f<4 else 'red',2 if f<3 else 1,up=-12)
+    if f in [1,2,3]:stroke(3,[(reach-2,1),(reach+2,2)],'paper',up=-12)
+    if ii:stroke(2,[(reach-9,4),(reach-4,4)],'brass',up=-10)
+   stroke(0,[(7,5),(13,4)],'dark')
+ elif family=='crash_guard':
+  # Pressure enters the real blade rim, yields inward, and clears on rebound.
+  r=[16,14,12,13,16,19,22,24][f]
+  if f<=5:
+   stroke(1,[(r-3,-5),(r,-3),(r+1,0),(r,3),(r-3,5)],'silver' if f<3 else 'steel',2 if f in [1,2] else 1,up=-13)
+   if f in [1,2,3]:stroke(3,[(r+1,0),(r+4,1)],'paper',up=-13)
+   if ii and f<=3:stroke(2,[(r-7,-3),(r-6,0),(r-7,3)],'blue',2,up=-11)
+  if f>=2:
+   stroke(0,[(-8,3),(-12,4),(-15,4)],'steel' if f<5 else 'dark')
+   if ii:stroke(0,[(-7,7),(-11,8)],'dark')
+ else:
+  reach=[5,9,13,19,25,30,35,39][f]
+  if f<6:
+   stroke(2,[(-3,2),(4,1),(reach,-2),(reach+4,-4)],'ice' if f<3 else 'mint',2 if f<3 else 1)
+   stroke(0,[(0,6),(reach-6,5),(reach+1,2)],'sea')
+   if ii:stroke(1,[(2,9),(reach-5,8),(reach,5)],'silver')
+  if f>=2:stroke(0,[(8,8),(13,9),(17,8)],'steel' if f<5 else 'dark')
+ return im
 
-def bank_fx(f,deep,kind):
-    im=[layer((96,80)) for _ in range(4)]
-    if kind=="bank_stored":
-        # Eight physically meaningful charge poses, selected from real charge.
-        end=32-f
-        spring(im[1],14,end,47,4,deep)
-        poly(im[1],[(10,43),(14,41),(14,52),(10,54)],"steel")
-        line(im[0],[(9,55),(24,53)],"iron")
-        if deep:spring(im[1],13,end-1,55,4,True)
-        line(im[2],[(end+2,43),(end+4,41)],"gold")
-    elif kind=="bank_load":
-        end=[33,30,26,23,22,25,29,32][f]
-        spring(im[1],13,end,47,4,deep)
-        line(im[0],[(10,56),(25,53)],"steel",2)
-        if deep:spring(im[1],12,end-1,54,4,True)
-        if f<5:
-            for k in range(2):line(im[2],[(8+k*5,49-f//2),(11+k*5,47-f//2)],"gold")
-    else:
-        extension=[1,3,8,14,20,24,28,32][f]
-        if f<4:spring(im[1],14,28+f*3,47,4,deep)
-        if f>=1:
-            # A sparse released rear line, not an energy ring or large wedge.
-            line(im[2],[(14-extension//2,44),(33,37)],"brass",2)
-            line(im[2],[(12-extension//2,48),(29,42)],"gold")
-            if deep:line(im[2],[(9-extension//3,52),(26,46)],"paper")
-        if f in [2,3]:poly(im[3],[(30,40),(34,38),(36,39),(32,42)],"white")
-        if f>=4:
-            for k in range(2):line(im[0],[(20-f-k*6,48+k*3),(25-f-k*6,46+k*3)],"steel")
-    return im
+GRAMMAR={
+'momentum_bank':{'silhouette':'accepted broad round top in the foreground above a folded braking skid at its own heel','motion':'braking skid folds, a compact positive-charge floor fold holds, directed launch unfolds it','location':'actual top heel and floor; release follows its real movement vector','persistence':'empty stage zero; visible earned charge stages one through seven plus existing store/release events','palette':'accepted blue Bastion steel body, restrained brass and pale floor wakes','feature':'one recognizable top and compressed physical floor travel; no detached cassette'},
+'predator_line':{'silhouette':'two actual tops in diagonal pursuit, cropped near hunter and far rival','motion':'one quarry leads, hunter closes and makes a short rim scrape','location':'hunter floor footprint and the actual target direction','persistence':'only actual hunt stacks/target and accepted repeated contact','palette':'accepted vermilion Breaker and blue Bastion against floor shadows','feature':'pursuit is carried by two visible tops; no comb, teeth or hunter appliance'},
+'crash_guard':{'silhouette':'round actual defender top receives an angular incoming top','motion':'contact bends at the blade, defender yields slightly, attacker redirects','location':'genuine incoming blade rim and local recoil skid','persistence':'existing contact event only','palette':'accepted blue steel defender against red attacker and short silver rim pressure','feature':'absorption and redirected displacement without piston, box or shield device'},
+'crosscut':{'silhouette':'two real top bodies pass tangentially into unequal exit lanes','motion':'descending approach, offset glancing contact, separated floor skids','location':'actual paid lateral displacement and contact floor','persistence':'brief existing glancing event with eroding follow-through','palette':'accepted green Vane and blue Bastion with pale sea-green tangential scrape','feature':'physical tops and one offset shear; no added blade gadget or symmetric X'}}
+EVENTS={'momentum_bank':{'momentum_store':'bank_load','momentum_release':'bank_release'},'predator_line':{'predator_lock':'predator_pressure'},'crash_guard':{'crash_guard':'damper_contact'},'crosscut':{'crosscut':'shear_slice'}}
 
-def predator_fx(f,deep,kind):
-    im=[layer((96,80)) for _ in range(4)]
-    # Root places these physical plate marks on the actual hunter-target axis.
-    if kind=="predator_tracking":
-        count=min(3,1+f//3)
-        for k in range(count):pressure_tooth(im[1],68+k*5,31-k*3,True,4)
-        if deep:line(im[2],[(64,36),(72,31)],"brass")
-    else:
-        travel=[-5,-3,0,3,5,7,9,11][f]
-        for k in range(3 if deep else 2):
-            if f>=k and f<6+k:
-                pressure_tooth(im[1],66+travel+k*5,34-k*3,f in [2+k,3+k],4)
-                if f<=3+k:line(im[2],[(60+travel+k*5,38-k*3),(64+travel+k*5,36-k*3)],"rust")
-        if f in [3,4]:pixel(im[3],79,25,"white")
-    return im
+def preview(family,review):
+ if not review:return
+ review.mkdir(parents=True,exist_ok=True)
+ for group,cols in [('cards',12),('icons',2),('fx',8)]:
+  flat,meta=read_ase(SOURCE/f'{family}_{group}.aseprite');w,h=meta['cell']
+  im=Image.new('RGBA',(cols*w,math.ceil(len(flat)/cols)*h),rgba('ink'))
+  for i,cel in enumerate(flat):im.alpha_composite(cel,(i%cols*w,i//cols*h))
+  im.save(review/f'{family}_{group}.png');ImageOps.grayscale(im).save(review/f'{family}_{group}_gray.png')
+  if group=='cards':
+   for ii in [False,True]:
+    cel=flat[(12 if ii else 0)+STATIC[family]]
+    cel.save(review/f'{family}{"_ii" if ii else ""}_64.png')
+    cel.resize((512,512),Image.Resampling.NEAREST).save(review/f'{family}{"_ii" if ii else ""}_nearest.png')
 
-def crosscut_fx(f,deep,_kind):
-    im=[layer((96,80)) for _ in range(4)]
-    reach=[3,7,14,22,29,34,39,43][f]
-    # The contact pivot is the scrape origin. There is no repeated crossed X.
-    if f<6:
-        poly(im[2],[(46,50),(50,45),(50+reach,45-reach*.42),(48+reach,49-reach*.42)],"sea")
-        line(im[2],[(48,47),(53+reach,44-reach*.42)],"ice",2 if f<4 else 1)
-        if deep:line(im[1],[(45,54),(52+reach,49-reach*.42)],"mint")
-    if f>=2:
-        for k in range(3):
-            xx=50+k*8+f*2;yy=51+k*3
-            line(im[0],[(xx,yy),(xx+5,yy+1)],"steel" if k==0 else "iron")
-    if f in [1,2]:poly(im[3],[(47,47),(49,44),(53,46),(51,49)],"white")
-    return im
-
-def guard_fx(f,deep,_kind):
-    im=[layer((96,80)) for _ in range(4)]
-    length=[15,13,9,5,4,7,11,15][f]
-    # Empty center preserves the actual top. Absorber lives on incoming side.
-    damper(im[1],65,36,length,deep)
-    if f in [2,3]:
-        line(im[3],[(66+length,26),(70+length,24)],"paper",2)
-        line(im[2],[(69+length,43),(73+length,45)],"brass")
-    if f>=3:line(im[0],[(62,54),(68,56),(72,55)],"iron")
-    return im
-
-HEADINGS={"e":(1,0),"se":(.7071,.7071),"s":(0,1),"sw":(-.7071,.7071),"w":(-1,0),"nw":(-.7071,-.7071),"n":(0,-1),"ne":(.7071,-.7071)}
-
-def shift_cels(cells,dx,dy):
-    # Integer translation retains upright authored machinery; no image rotation
-    # or resampling is used to synthesize projected heading variants.
-    out=[layer((96,80)) for _ in cells]
-    for dest,src in zip(out,cells):dest.alpha_composite(src,(round(dx),round(dy)))
-    return out
-
-def directed_tooth(im,x,y,v,bright,size=5):
-    vx,vy=v;px,py=-vy,vx
-    def p(forward,side):return(x+vx*forward+px*side,y+vy*forward+py*side)
-    poly(im,[p(-size,3),p(-size,-3),p(1,-3),p(5,0),p(0,2)],"ink")
-    poly(im,[p(-size+1,2),p(-size+1,-2),p(1,-2),p(4,0),p(0,1)],"hot" if bright else "red")
-    line(im,[p(-size+1,-2),p(1,-2)],"paper" if bright else "brass")
-
-def headed_fx(family,f,deep,kind,heading):
-    vx,vy=HEADINGS[heading];perp=(-vy,vx)
-    if family=="momentum_bank":
-        cells=bank_fx(f,deep,kind)
-        # Behind the contact plane. Vertical reach is bounded to the 80px cel.
-        cells=shift_cels(cells,48-vx*25-23,48-vy*17-47)
-        if kind=="bank_release":
-            cells[2]=layer((96,80));cells[3]=layer((96,80))
-            for k in range(3 if deep else 2):
-                lateral=(k-1)*4
-                start=(48-vx*(15+f*2)+perp[0]*lateral,42-vy*(15+f*2)+perp[1]*lateral)
-                end=(48-vx*11+perp[0]*lateral,42-vy*11+perp[1]*lateral)
-                if 1<=f<=5:line(cells[2],[start,end],"gold" if k==0 else "brass",2 if k==0 else 1)
-            if f in [2,3,4]:
-                line(cells[3],[(48+vx*18,42+vy*18),(48+vx*(22+f),42+vy*(22+f))],"paper",2)
-        return cells
-    if family=="predator_line":
-        cells=[layer((96,80)) for _ in range(4)]
-        tracking=kind=="predator_tracking"
-        count=min(3,1+f//3) if tracking else (3 if deep else 2)
-        for k in range(count):
-            if not tracking and (f<k or f>=6+k):continue
-            distance=(k-1)*7 if tracking else 18+k*6+min(f,4)*2
-            x=48+vx*distance;y=(48 if tracking else 34)+vy*distance
-            directed_tooth(cells[1],x,y,(vx,vy),tracking or f in [2+k,3+k],4)
-            if deep and tracking:
-                line(cells[2],[(x-vx*3+perp[0]*4,y-vy*3+perp[1]*4),(x+vx*3+perp[0]*4,y+vy*3+perp[1]*4)],"brass")
-        return cells
-    if family=="crosscut":
-        cells=[layer((96,80)) for _ in range(4)]
-        reach=[3,6,10,15,19,23,25,28][f]
-        def p(forward,side):return(48+vx*forward+perp[0]*side,48+vy*forward+perp[1]*side)
-        if f<6:
-            poly(cells[2],[p(-3,2),p(1,-3),p(reach,-2),p(reach-3,2)],"sea")
-            line(cells[2],[p(0,-1),p(reach+2,-2)],"ice",2 if f<4 else 1)
-            if deep:line(cells[1],[p(-3,5),p(reach,4)],"mint")
-        if f>=2:
-            for k in range(3):line(cells[0],[p(5+k*5,5+k*2),p(9+k*5,6+k*2)],"steel" if k==0 else "iron")
-        if f in [1,2]:poly(cells[3],[p(-1,-3),p(2,-4),p(5,-1),p(2,1)],"white")
-        return cells
-    cells=guard_fx(f,deep,kind)
-    cells=shift_cels(cells,48+vx*26-73,34+vy*20-36)
-    cells[2]=layer((96,80));cells[3]=layer((96,80))
-    if f in [2,3,4]:
-        x=48+vx*32;y=34+vy*25
-        line(cells[3],[(x+vx*3,y+vy*3),(x+vx*6,y+vy*6)],"paper",2)
-        line(cells[2],[(x-vx*1+perp[0]*5,y-vy*1+perp[1]*5),(x+vx*3+perp[0]*5,y+vy*3+perp[1]*5)],"brass")
-    return cells
-
-FX_PAINT={"momentum_bank":bank_fx,"predator_line":predator_fx,"crosscut":crosscut_fx,"crash_guard":guard_fx}
-FX_TAGS={"momentum_bank":["bank_load","bank_stored","bank_release"],"predator_line":["predator_pressure","predator_tracking"],"crosscut":["shear_slice"],"crash_guard":["damper_contact"]}
-FX_TIMES={"momentum_bank":[75,55,45,70,95,90,140,180],"predator_line":[65,55,60,85,75,85,105,155],"crosscut":[60,35,40,45,65,90,140,180],"crash_guard":[75,45,40,65,80,100,130,180]}
-
-GRAMMARS={
-"momentum_bank":{"silhouette":"rear open spring cassette and broad brake shoe, forward moving top","motion":"gradual compression, held load, abrupt extension and sparse directed release","location":"rear braking side/contact plane; release follows actual movement vector","persistence":"real charge stages while stored; compression/release are events","palette":"brass, graphite, warm ivory with steel mount","feature":"visible helical coil pitch shrinks as real stored force rises"},
-"predator_line":{"silhouette":"unequal two-top rising chase and short serrated pressure comb","motion":"quarry leads, hunter closes; sequential teeth bite one chase line","location":"actual hunter-to-rival axis, never a radial HUD reticle","persistence":"target-related while actual hunt is live, plus brief accepted-contact pressure","palette":"oxidized iron and vermilion hunter against cool steel quarry","feature":"directional pressure teeth repeat toward exactly one physical rival"},
-"crosscut":{"silhouette":"offset glancing bodies, oblique stepped shear ribbon and forked skid","motion":"fast approach, narrow lateral contact, unequal divergent exits","location":"glancing contact and actual lateral displacement vector","persistence":"brief paid glancing event, sparse follow-through scar","palette":"sea green, bone and desaturated steel","feature":"one asymmetric slash and split skid, no symmetric X or ring"},
-"crash_guard":{"silhouette":"contact-side telescoping twin rods and broad end-stop","motion":"incoming compression, mechanical shortening, damped rebound","location":"incoming contact side of real top, no floor fortress","persistence":"contact event only; no automatically orbiting shield","palette":"cool gray steel, pale mint faceplate and restrained brass seals","feature":"an exposed piston physically changes length rather than expanding an aura"},
-}
-EVENTS={"momentum_bank":{"momentum_store":"bank_load","momentum_release":"bank_release"},"predator_line":{"predator_lock":"predator_pressure"},"crosscut":{"crosscut":"shear_slice"},"crash_guard":{"crash_guard":"damper_contact"}}
-
-def preview_sources(paths,review):
-    if not review:return
-    review.mkdir(parents=True,exist_ok=True)
-    for p in paths:
-        flat,meta=read_ase(p)
-        columns=12 if p.stem.endswith("_cards") else 2 if p.stem.endswith("_icons") else 8
-        w,h=meta["cell"];sheet=Image.new("RGBA",(w*columns,h*math.ceil(len(flat)/columns)),rgba("ink"))
-        for i,img in enumerate(flat):sheet.alpha_composite(img,(i%columns*w,i//columns*h))
-        sheet.save(review/(p.stem+".png"));ImageOps.grayscale(sheet).save(review/(p.stem+"_gray.png"))
-        if p.stem.endswith("_cards"):
-            index={"momentum_bank":5,"predator_line":7,"crosscut":6,"crash_guard":5}[p.stem[:-6]]
-            flat[index].save(review/(p.stem+"_single.png"))
-            flat[index].resize((512,512),Image.Resampling.NEAREST).save(review/(p.stem+"_single_nearest.png"))
-
-def make(family,revise,review,cards_only=False,fx_only=False):
-    SOURCE.mkdir(parents=True,exist_ok=True);DESIGNS.mkdir(parents=True,exist_ok=True)
-    paths=[SOURCE/f"{family}_{group}.aseprite" for group in ["cards","icons","fx"]]
-    if not revise and any(p.exists() for p in paths):raise RuntimeError(f"Refusing native artist overwrite for {family}; use --revise only during this owned art pass")
-    cards=[];icons=[];tags=[];times=[]
-    for deep in [False,True]:
-        tag=family+("_ii" if deep else "");start=len(cards)
-        for f in range(12):cards.append(CARD_PAINT[family](f,deep))
-        tags.append((tag,start,len(cards)-1));times.extend(CARD_TIMES[family])
-        icons.append(icon(family,deep))
-    named={"momentum_bank":"rear brake and open spring cassette","predator_line":"quarry and pursuing hunter","crosscut":"glancing bodies and divergent exits","crash_guard":"incoming contact and telescoping rods"}[family]
-    if not fx_only:write_ase(paths[0],cards,["01 quiet chamfered card","02 floor depth and scars",f"03 {named}","04 physical top illustration","05 force response and key highlights"],tags,times,(32,32),note=f"Task002C.5 bespoke {family}; individually keyed 12-pose physical story; fixed projected integer pixels; native layers editable",palette=PALETTE)
-    if cards_only:
-        preview_sources([paths[0]],review)
-        print(f"{family}: card-only composition revision; separate icons and bounded FX retained")
-        return
-    itags=[(family,0,0),(family+"_ii",1,1)]
-    if not fx_only:write_ase(paths[1],icons,["01 purpose-designed mechanism silhouette","02 identifying force and rank structure"],itags,[150,150],(8,8),note=f"Dedicated 16px {family} recognition; not a reduced card or full FX",palette=PALETTE)
-    fx=[];ftags=[];ftimes=[]
-    for base in FX_TAGS[family]:
-        for deep in [False,True]:
-            for heading in HEADINGS:
-                tag=base+("_ii" if deep else "")+"_"+heading;start=len(fx)
-                for f in range(8):
-                    fx.append(headed_fx(family,f,deep,base,heading))
-                ftags.append((tag,start,len(fx)-1));ftimes.extend(FX_TIMES[family])
-    write_ase(paths[2],fx,["01 contact scar and ground depth",f"02 {named}","03 mechanical force direction","04 contact accents and fragments"],ftags,ftimes,(48,48),note=f"Task002C.5 {family}; eight authored event/stage poses across all eight projected headings; upright fixed-isometric mechanisms; no rotation/resampling; actual runtime top stays visible",palette=PALETTE)
-    static={"momentum_bank":5,"predator_line":7,"crosscut":6,"crash_guard":5}[family]
-    design={"family":family,"initial_tier":"C","target_tier":"A or B after runtime motion review","grammar":GRAMMARS[family],"static_frames":{family:static,family+"_ii":static},"event_tags":EVENTS[family],"notes":["New individually directed native master; old source retained for before/after.","Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.","Rank II adds physical structure rather than palette substitution.","Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.","Icon is a separately drawn small-scale silhouette.","All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."]}
-    if family=="momentum_bank":
-        design["active_tags"]={"stored":"bank_stored"}
-        design["notes"].append("bank_stored is eight charge stages: select by actual momentum_charge/cap, do not auto-play the charge filling. bank_load is only the contact/compression event.")
-    if family=="predator_line":
-        design["active_tags"]={"tracking":"predator_tracking"}
-        design["notes"].append("Tracking frame stages map actual hunt_stacks 1/2/3 to 0/3/6; place marks on the real hunter-target segment, never draw a target reticle.")
-    (DESIGNS/f"{family}_design.json").write_text(json.dumps(design,indent=2)+"\n",encoding="utf-8")
-    preview_sources(paths,review)
-    print(f"{family}: 24 card poses, 2 designed icons, {len(fx)} directional FX poses; native masters authored")
+def make(family,revise,review):
+ paths=[SOURCE/f'{family}_{group}.aseprite' for group in ['cards','icons','fx']]
+ if not revise and any(x.exists() for x in paths):raise RuntimeError('Refusing artist overwrite; --revise is only for this explicit correction pass')
+ cards=[];tags=[];times=[];icons=[]
+ for ii in [False,True]:
+  start=len(cards)
+  for p in range(6):
+   cel=CARD[family](p,ii)
+   cards.extend([[x.copy() for x in cel],[x.copy() for x in cel]])
+   duration=POSE_MS[family][p];times.extend([duration//2,duration-duration//2])
+  tags.append((family+('_ii' if ii else ''),start,len(cards)-1));icons.append(icon(family,ii))
+ write_ase(paths[0],cards,['01 quiet floor background','02 actual floor travel and shadows','03 accepted rival native top body','04 accepted owner native top body','05 blade contact and physical follow-through'],tags,times,(32,32),note=f'Human correction v2 {family}: six strong physical top poses with double holds; exact accepted native body pixels; no gadgets, image resampling or recolouring',palette=P)
+ write_ase(paths[1],icons,['01 independently drawn miniature top bodies','02 physical travel and contact at 16px'],[(family,0,0),(family+'_ii',1,1)],[160,160],(8,8),note=f'{family} dedicated 16px tops/contact icon, separately drawn; no resized card or hardware symbol',palette=P)
+ frames=[];ftags=[];durations=[]
+ for kind in FX_TAGS[family]:
+  for ii in [False,True]:
+   for heading in HEADINGS:
+    start=len(frames)
+    frames.extend(fx(family,f,ii,kind,heading) for f in range(8))
+    ftags.append((kind+('_ii' if ii else '')+'_'+heading,start,len(frames)-1));durations.extend(FX_MS[family])
+ write_ase(paths[2],frames,['01 grounded floor skid and erosion','02 real contact and compressed wake','03 directed physical follow-through','04 small attached rim glints'],ftags,durations,(48,48),note=f'Human correction v2 {family}: no replacement top or detached gadget; bounded physical skid/contact cels, eight native headings, original event routing',palette=P)
+ design={'family':family,'correction':'Human requested physical top restoration v2','grammar':GRAMMAR[family],'static_frames':{family:STATIC[family],family+'_ii':STATIC[family]},'event_tags':EVENTS[family],'notes':['Six strong card poses occupy twelve keyed frames through explicit two-key holds.','Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.','Rank II develops physical force and travel marks rather than adding a device.','Icons are separately authored recognizable miniature tops and travel/contact.','FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.','All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.']}
+ if family=='momentum_bank':
+  design['active_tags']={'stored':'bank_stored'}
+  design['notes'].extend(['The accepted broad round Bastion body replaces the smaller angular Vane as the foreground braking subject, at its original native pixel scale.','Stored key zero is empty. Positive keys one through seven retain a short bright folded floor skid behind the actual heel even at low earned charge; greater charge tightens it. Rank II adds one second fold. No free-running charge animation.'])
+ if family=='predator_line':design['active_tags']={'tracking':'predator_tracking'};design['notes'].append('Tracking keys are actual-stack floor pursuit strokes. Render at the hunter floor origin facing its one real target, not the former floating 70% gap position.')
+ if family=='crash_guard':design['notes'].append('Historical internal tag damper_contact now means a short physical blade absorption/redirect response, with no piston or device pixels.')
+ (DESIGNS/f'{family}_design.json').write_text(json.dumps(design,indent=2)+'\n')
+ preview(family,review)
+ print(f'{family}: 6 strong poses/rank held as 12 keys; exact accepted native top geometry; 2 independent icons; {len(frames)} bounded directional FX keys')
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument("--family",choices=list(CARD_PAINT));parser.add_argument("--revise",action="store_true");parser.add_argument("--review",type=Path);parser.add_argument("--cards-only",action="store_true");parser.add_argument("--fx-only",action="store_true")
-    args=parser.parse_args()
-    assert not(args.cards_only and args.fx_only)
-    for family in [args.family] if args.family else CARD_PAINT:make(family,args.revise,args.review,args.cards_only,args.fx_only)
-if __name__=="__main__":main()
+ p=argparse.ArgumentParser();p.add_argument('--family',choices=FAMILIES,action='append');p.add_argument('--revise',action='store_true');p.add_argument('--review',type=Path);args=p.parse_args()
+ for family in args.family or FAMILIES:make(family,args.revise,args.review)
+if __name__=='__main__':main()

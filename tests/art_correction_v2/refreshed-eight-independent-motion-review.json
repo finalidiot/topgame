@@ -1,0 +1,3434 @@
+{
+  "inspection": "actual chronological native and grayscale; visual findings recorded in report; no artistic pass implied",
+  "runs": [
+    {
+      "selection": "high_gear",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\high_gear.avi",
+      "avi_sha256": "d71781c155b82e9ff6dd3c34e3c624cea1a26036a835edc48a106c226525a0a1",
+      "actual_start": 3.01666666666666,
+      "capture_frames": 360,
+      "window_counters": {},
+      "proc_moments": [],
+      "samples": [
+        {
+          "relative_time": 0.55,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -94.61181640625,
+              -40.7335166931152
+            ],
+            "rpm": 0.974483274190249,
+            "speed": 209.423645019531,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.65,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -62.8683166503906,
+              -81.5895919799805
+            ],
+            "rpm": 0.973572518819411,
+            "speed": 208.913925170898,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.75,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -62.8683166503906,
+              -81.5895919799805
+            ],
+            "rpm": 0.973572518819411,
+            "speed": 208.913925170898,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -62.8683166503906,
+              -81.5895919799805
+            ],
+            "rpm": 0.973572518819411,
+            "speed": 208.913925170898,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.9500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -15.2376689910889,
+              -101.87158203125
+            ],
+            "rpm": 0.972661617750819,
+            "speed": 209.416656494141,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.05,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -15.2376689910889,
+              -101.87158203125
+            ],
+            "rpm": 0.972661617750819,
+            "speed": 209.416656494141,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.1500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              39.0966186523438,
+              -83.1463088989258
+            ],
+            "rpm": 0.958768588075293,
+            "speed": 238.611236572266,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.25,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              39.0966186523438,
+              -83.1463088989258
+            ],
+            "rpm": 0.958768588075293,
+            "speed": 238.611236572266,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.35,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              39.0966186523438,
+              -83.1463088989258
+            ],
+            "rpm": 0.958768588075293,
+            "speed": 238.611236572266,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.4500000000000002,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              81.5666885375977,
+              -50.8076629638672
+            ],
+            "rpm": 0.958002754301309,
+            "speed": 206.022277832031,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.55,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              81.5666885375977,
+              -50.8076629638672
+            ],
+            "rpm": 0.958002754301309,
+            "speed": 206.022277832031,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.6500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              102.979751586914,
+              -6.48926162719727
+            ],
+            "rpm": 0.957137541742047,
+            "speed": 196.064498901367,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.76666666666666,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "terminal_velocity",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\terminal_velocity.avi",
+      "avi_sha256": "8462f10ec8ee74de6b07fdeb8c854aa957115a837ac60655a86668a089877a65",
+      "actual_start": 3.61666666666666,
+      "capture_frames": 360,
+      "window_counters": {
+        "high_gear_surge": 2
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "high_gear_surge",
+          "live_entities": 2,
+          "position": [
+            -59.700870513916,
+            17.5532855987549
+          ],
+          "rpm": 0.986947147835262,
+          "speed": 96.4527282714844,
+          "time": 0.0166666666666667
+        },
+        {
+          "count": 2,
+          "kind": "high_gear_surge",
+          "live_entities": 2,
+          "position": [
+            60.003734588623,
+            -76.5464782714844
+          ],
+          "rpm": 0.948633901211766,
+          "speed": 248.078887939453,
+          "time": 4.11666666666666
+        },
+        {
+          "count": 3,
+          "kind": "high_gear_surge",
+          "live_entities": 2,
+          "position": [
+            -16.9904098510742,
+            95.7567596435547
+          ],
+          "rpm": 0.909084125324207,
+          "speed": 248.104568481445,
+          "time": 8.21666666666665
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 0.3,
+          "row": {
+            "counters": {
+              "high_gear_surge": 1
+            },
+            "fx": 0,
+            "position": [
+              42.5666160583496,
+              -89.0429153442383
+            ],
+            "rpm": 0.962255001228143,
+            "speed": 212.463821411133,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.4,
+          "row": {
+            "counters": {
+              "high_gear_surge": 1
+            },
+            "fx": 0,
+            "position": [
+              42.5666160583496,
+              -89.0429153442383
+            ],
+            "rpm": 0.962255001228143,
+            "speed": 212.463821411133,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.5,
+          "row": {
+            "counters": {
+              "high_gear_surge": 1
+            },
+            "fx": 0,
+            "position": [
+              42.5666160583496,
+              -89.0429153442383
+            ],
+            "rpm": 0.962255001228143,
+            "speed": 212.463821411133,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.6000000000000001,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 1,
+            "position": [
+              77.1499557495117,
+              -42.8512802124023
+            ],
+            "rpm": 0.947364303783342,
+            "speed": 234.530822753906,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.7,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 1,
+            "position": [
+              77.1499557495117,
+              -42.8512802124023
+            ],
+            "rpm": 0.947364303783342,
+            "speed": 234.530822753906,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 1,
+            "position": [
+              92.8595581054688,
+              7.4527587890625
+            ],
+            "rpm": 0.945603168456729,
+            "speed": 208.703552246094,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.9000000000000001,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 1,
+            "position": [
+              92.8595581054688,
+              7.4527587890625
+            ],
+            "rpm": 0.945603168456729,
+            "speed": 208.703552246094,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.0,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 1,
+            "position": [
+              92.8595581054688,
+              7.4527587890625
+            ],
+            "rpm": 0.945603168456729,
+            "speed": 208.703552246094,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.1,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 0,
+            "position": [
+              80.7160720825195,
+              56.3651428222656
+            ],
+            "rpm": 0.943999584991184,
+            "speed": 206.077651977539,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.2,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 0,
+            "position": [
+              80.7160720825195,
+              56.3651428222656
+            ],
+            "rpm": 0.943999584991184,
+            "speed": 206.077651977539,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.3,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 0,
+            "position": [
+              41.1714935302734,
+              90.0450134277344
+            ],
+            "rpm": 0.942405435642885,
+            "speed": 212.758804321289,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 5.01666666666665,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.4000000000000001,
+          "row": {
+            "counters": {
+              "high_gear_surge": 2
+            },
+            "fx": 0,
+            "position": [
+              41.1714935302734,
+              90.0450134277344
+            ],
+            "rpm": 0.942405435642885,
+            "speed": 212.758804321289,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 5.01666666666665,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "flow_state",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\flow_state.avi",
+      "avi_sha256": "a24df8b4e35a53d1de2e2b60b320278bdf6b879bb6d0852f3bd5181e9bbbd517",
+      "actual_start": 3.01666666666666,
+      "capture_frames": 360,
+      "window_counters": {},
+      "proc_moments": [],
+      "samples": [
+        {
+          "relative_time": 0.55,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -32.351203918457,
+              87.0685729980469
+            ],
+            "rpm": 0.967073702000077,
+            "speed": 221.172149658203,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.65,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -82.613525390625,
+              61.9236526489258
+            ],
+            "rpm": 0.966504373967757,
+            "speed": 228.718215942383,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.75,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -82.613525390625,
+              61.9236526489258
+            ],
+            "rpm": 0.966504373967757,
+            "speed": 228.718215942383,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -82.613525390625,
+              61.9236526489258
+            ],
+            "rpm": 0.966504373967757,
+            "speed": 228.718215942383,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.9500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -122.453811645508,
+              21.6210460662842
+            ],
+            "rpm": 0.96592785585289,
+            "speed": 225.304824829102,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.05,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -122.453811645508,
+              21.6210460662842
+            ],
+            "rpm": 0.96592785585289,
+            "speed": 225.304824829102,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.1500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -128.03450012207,
+              -31.8568420410156
+            ],
+            "rpm": 0.952339501009711,
+            "speed": 241.922210693359,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.25,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -128.03450012207,
+              -31.8568420410156
+            ],
+            "rpm": 0.952339501009711,
+            "speed": 241.922210693359,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.35,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -128.03450012207,
+              -31.8568420410156
+            ],
+            "rpm": 0.952339501009711,
+            "speed": 241.922210693359,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.4500000000000002,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -95.5442810058594,
+              -86.6843338012695
+            ],
+            "rpm": 0.951732299058118,
+            "speed": 266.143035888672,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.55,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -95.5442810058594,
+              -86.6843338012695
+            ],
+            "rpm": 0.951732299058118,
+            "speed": 266.143035888672,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.6500000000000001,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -43.8232154846191,
+              -126.493278503418
+            ],
+            "rpm": 0.951131996560509,
+            "speed": 257.778381347656,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 4.76666666666666,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "iron_comet",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\iron_comet.avi",
+      "avi_sha256": "914d8fa0a2c361af8b6b5b71d3a3a845afc3b011dfc6135ae9ea0a407c73f997",
+      "actual_start": 28.8166666666663,
+      "capture_frames": 360,
+      "window_counters": {
+        "comet_charge": 1,
+        "comet_release": 1
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "comet_charge",
+          "live_entities": 2,
+          "position": [
+            -157.360000610352,
+            -66.2654876708984
+          ],
+          "rpm": 0.783096327670322,
+          "speed": 101.581977844238,
+          "time": 29.3833333333329
+        },
+        {
+          "count": 1,
+          "kind": "comet_release",
+          "live_entities": 2,
+          "position": [
+            -128.356826782227,
+            -73.3999099731445
+          ],
+          "rpm": 0.777578400902993,
+          "speed": 7.36573553085327,
+          "time": 30.0833333333329
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 1.067,
+          "row": {
+            "counters": {
+              "comet_charge": 1
+            },
+            "fx": 0,
+            "position": [
+              -138.004318237305,
+              -75.9824523925781
+            ],
+            "rpm": 0.781507377543532,
+            "speed": 34.8628730773926,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": true,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 29.7666666666663,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.167,
+          "row": {
+            "counters": {
+              "comet_charge": 1
+            },
+            "fx": 0,
+            "position": [
+              -130.679580688477,
+              -74.3400650024414
+            ],
+            "rpm": 0.780532843561296,
+            "speed": 34.7772636413574,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": true,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.0166666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.267,
+          "row": {
+            "counters": {
+              "comet_charge": 1
+            },
+            "fx": 0,
+            "position": [
+              -130.679580688477,
+              -74.3400650024414
+            ],
+            "rpm": 0.780532843561296,
+            "speed": 34.7772636413574,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": true,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.0166666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.367,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 2,
+            "position": [
+              -124.51237487793,
+              -71.00244140625
+            ],
+            "rpm": 0.777213761487827,
+            "speed": 38.5054206848145,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.2666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.467,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 2,
+            "position": [
+              -124.51237487793,
+              -71.00244140625
+            ],
+            "rpm": 0.777213761487827,
+            "speed": 38.5054206848145,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.2666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.567,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 2,
+            "position": [
+              -124.51237487793,
+              -71.00244140625
+            ],
+            "rpm": 0.777213761487827,
+            "speed": 38.5054206848145,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.2666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.667,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 0,
+            "position": [
+              -112.000144958496,
+              -63.973388671875
+            ],
+            "rpm": 0.776692445601555,
+            "speed": 71.2323684692383,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.5166666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.767,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 0,
+            "position": [
+              -112.000144958496,
+              -63.973388671875
+            ],
+            "rpm": 0.776692445601555,
+            "speed": 71.2323684692383,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.5166666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.867,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 1,
+            "position": [
+              -100.043632507324,
+              -55.1379547119141
+            ],
+            "rpm": 0.770317963998031,
+            "speed": 46.1121444702148,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.7666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.967,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 1,
+            "position": [
+              -100.043632507324,
+              -55.1379547119141
+            ],
+            "rpm": 0.770317963998031,
+            "speed": 46.1121444702148,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.7666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 2.067,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 1,
+            "position": [
+              -100.043632507324,
+              -55.1379547119141
+            ],
+            "rpm": 0.770317963998031,
+            "speed": 46.1121444702148,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 30.7666666666662,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 2.167,
+          "row": {
+            "counters": {
+              "comet_charge": 1,
+              "comet_release": 1
+            },
+            "fx": 1,
+            "position": [
+              -92.492301940918,
+              -47.9177856445313
+            ],
+            "rpm": 0.769811535078637,
+            "speed": 43.4536247253418,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 31.0166666666662,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "dead_centre",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\dead_centre.avi",
+      "avi_sha256": "25dae69c1008da2e30134ecee26820b6032a7d7298f0dbd476f9ad1c7d6f8622",
+      "actual_start": 0.0,
+      "capture_frames": 360,
+      "window_counters": {
+        "anchor": 1
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "anchor",
+          "live_entities": 2,
+          "position": [
+            -54.4162979125977,
+            17.210521697998
+          ],
+          "rpm": 0.999253887736323,
+          "speed": 9.63444042205811,
+          "time": 0.6
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 0.39999999999999997,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -55.1913795471191,
+              17.5031509399414
+            ],
+            "rpm": 0.999358195510722,
+            "speed": 10.348258972168,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.516666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.5,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -55.1913795471191,
+              17.5031509399414
+            ],
+            "rpm": 0.999358195510722,
+            "speed": 10.348258972168,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.516666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.6,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              -55.1913795471191,
+              17.5031509399414
+            ],
+            "rpm": 0.999358195510722,
+            "speed": 10.348258972168,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.516666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.7,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -53.187442779541,
+              16.7558631896973
+            ],
+            "rpm": 0.999066983665828,
+            "speed": 7.99487781524658,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.750000000000001,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -53.187442779541,
+              16.7558631896973
+            ],
+            "rpm": 0.999066983665828,
+            "speed": 7.99487781524658,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.750000000000001,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8999999999999999,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.0,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.1,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.2,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.9763069152832,
+              15.9520578384399
+            ],
+            "rpm": 0.989035466781758,
+            "speed": 2.07078790664673,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.3,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.9763069152832,
+              15.9520578384399
+            ],
+            "rpm": 0.989035466781758,
+            "speed": 2.07078790664673,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.4,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 0,
+            "position": [
+              -50.9229164123535,
+              15.5507478713989
+            ],
+            "rpm": 0.988708828468144,
+            "speed": 5.23682928085327,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.5,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 0,
+            "position": [
+              -50.9229164123535,
+              15.5507478713989
+            ],
+            "rpm": 0.988708828468144,
+            "speed": 5.23682928085327,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "bulwark",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\bulwark.avi",
+      "avi_sha256": "97c2c72e4cc44e697d990806e13e783206991147683cefd81d6441f083bd1b5a",
+      "actual_start": 0.516666666666667,
+      "capture_frames": 360,
+      "window_counters": {
+        "anchor": 1,
+        "bulwark_impact": 5
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "anchor",
+          "live_entities": 2,
+          "position": [
+            -55.9317436218262,
+            17.7994918823242
+          ],
+          "rpm": 0.99926152239963,
+          "speed": 4.28507614135742,
+          "time": 0.6
+        },
+        {
+          "count": 1,
+          "kind": "bulwark_impact",
+          "live_entities": 2,
+          "position": [
+            -54.6439971923828,
+            17.3371429443359
+          ],
+          "rpm": 0.989352645047626,
+          "speed": 0.559098780155182,
+          "time": 1.06666666666667
+        },
+        {
+          "count": 2,
+          "kind": "bulwark_impact",
+          "live_entities": 2,
+          "position": [
+            -51.4252815246582,
+            16.2825622558594
+          ],
+          "rpm": 0.979605152342397,
+          "speed": 1.09258806705475,
+          "time": 2.5
+        },
+        {
+          "count": 3,
+          "kind": "bulwark_impact",
+          "live_entities": 2,
+          "position": [
+            -48.9014129638672,
+            15.6415319442749
+          ],
+          "rpm": 0.963477846799502,
+          "speed": 1.42872583866119,
+          "time": 3.61666666666666
+        },
+        {
+          "count": 4,
+          "kind": "bulwark_impact",
+          "live_entities": 2,
+          "position": [
+            -46.0903472900391,
+            14.9535150527954
+          ],
+          "rpm": 0.954616738821616,
+          "speed": 1.3726179599762,
+          "time": 4.86666666666665
+        },
+        {
+          "count": 5,
+          "kind": "bulwark_impact",
+          "live_entities": 2,
+          "position": [
+            -43.4640884399414,
+            14.3768558502197
+          ],
+          "rpm": 0.946358424020775,
+          "speed": 1.50685226917267,
+          "time": 6.01666666666665
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 0.35000000000000003,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -55.4231109619141,
+              17.6124706268311
+            ],
+            "rpm": 0.999078226210781,
+            "speed": 3.15858840942383,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 0.750000000000001,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.45000000000000007,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -54.7980155944824,
+              17.3892250061035
+            ],
+            "rpm": 0.998773856865682,
+            "speed": 2.46532940864563,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.55,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -54.7980155944824,
+              17.3892250061035
+            ],
+            "rpm": 0.998773856865682,
+            "speed": 2.46532940864563,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.6500000000000001,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 2,
+            "position": [
+              -54.3209838867188,
+              17.2088012695313
+            ],
+            "rpm": 0.989130090380141,
+            "speed": 2.34923267364502,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.75,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 2,
+            "position": [
+              -54.3209838867188,
+              17.2088012695313
+            ],
+            "rpm": 0.989130090380141,
+            "speed": 2.34923267364502,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8500000000000001,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 2,
+            "position": [
+              -54.3209838867188,
+              17.2088012695313
+            ],
+            "rpm": 0.989130090380141,
+            "speed": 2.34923267364502,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.9500000000000002,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -53.7083778381348,
+              16.9999217987061
+            ],
+            "rpm": 0.988805715211556,
+            "speed": 2.44492149353027,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.05,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -53.7083778381348,
+              16.9999217987061
+            ],
+            "rpm": 0.988805715211556,
+            "speed": 2.44492149353027,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.1500000000000001,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -53.1296653747559,
+              16.8026218414307
+            ],
+            "rpm": 0.98850159170893,
+            "speed": 2.44528126716614,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.25,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -53.1296653747559,
+              16.8026218414307
+            ],
+            "rpm": 0.98850159170893,
+            "speed": 2.44528126716614,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.35,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -53.1296653747559,
+              16.8026218414307
+            ],
+            "rpm": 0.98850159170893,
+            "speed": 2.44528126716614,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.4500000000000002,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "bulwark_impact": 1
+            },
+            "fx": 0,
+            "position": [
+              -52.5495643615723,
+              16.6110343933105
+            ],
+            "rpm": 0.988197470488299,
+            "speed": 2.44191575050354,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.01666666666666,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "counterweight",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\counterweight.avi",
+      "avi_sha256": "bee0475e54e325551b2a77fdc01f777f16753fad28f011df74bc5a34b975f6e2",
+      "actual_start": 0.516666666666667,
+      "capture_frames": 360,
+      "window_counters": {
+        "anchor": 3,
+        "anchor_break": 2,
+        "counterweight_release": 2,
+        "counterweight_store": 7
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "anchor",
+          "live_entities": 2,
+          "position": [
+            -54.4162979125977,
+            17.210521697998
+          ],
+          "rpm": 0.999253887736323,
+          "speed": 9.63444042205811,
+          "time": 0.6
+        },
+        {
+          "count": 1,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            -51.3696327209473,
+            16.0983943939209
+          ],
+          "rpm": 0.989283158045079,
+          "speed": 12.1087350845337,
+          "time": 1.05
+        },
+        {
+          "count": 1,
+          "kind": "anchor_break",
+          "live_entities": 2,
+          "position": [
+            -49.3650894165039,
+            15.5999898910522
+          ],
+          "rpm": 0.976207554905405,
+          "speed": 141.785171508789,
+          "time": 1.1
+        },
+        {
+          "count": 1,
+          "kind": "counterweight_release",
+          "live_entities": 2,
+          "position": [
+            -49.3650894165039,
+            15.5999898910522
+          ],
+          "rpm": 0.976207554905405,
+          "speed": 141.785171508789,
+          "time": 1.1
+        },
+        {
+          "count": 2,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            -0.858827948570251,
+            4.23544979095459
+          ],
+          "rpm": 0.969519400634139,
+          "speed": 15.2023591995239,
+          "time": 1.81666666666667
+        },
+        {
+          "count": 2,
+          "kind": "anchor",
+          "live_entities": 2,
+          "position": [
+            2.26524829864502,
+            1.63158762454987
+          ],
+          "rpm": 0.969097021211828,
+          "speed": 8.5036039352417,
+          "time": 2.15
+        },
+        {
+          "count": 3,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            3.21919560432434,
+            0.880781650543213
+          ],
+          "rpm": 0.964005851733974,
+          "speed": 2.71621465682983,
+          "time": 2.35
+        },
+        {
+          "count": 4,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            3.62355136871338,
+            0.30713227391243
+          ],
+          "rpm": 0.958824597022758,
+          "speed": 3.17234897613525,
+          "time": 2.78333333333333
+        },
+        {
+          "count": 5,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            3.853022813797,
+            -0.0733206048607826
+          ],
+          "rpm": 0.953798855436746,
+          "speed": 3.05629205703735,
+          "time": 3.18333333333333
+        },
+        {
+          "count": 6,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            3.86327838897705,
+            -0.372058242559433
+          ],
+          "rpm": 0.942853070097088,
+          "speed": 12.2370500564575,
+          "time": 3.51666666666666
+        },
+        {
+          "count": 7,
+          "kind": "counterweight_store",
+          "live_entities": 2,
+          "position": [
+            3.0474317073822,
+            -0.282901793718338
+          ],
+          "rpm": 0.934770011524033,
+          "speed": 6.74462413787842,
+          "time": 3.89999999999999
+        },
+        {
+          "count": 2,
+          "kind": "anchor_break",
+          "live_entities": 2,
+          "position": [
+            6.89562845230103,
+            -1.43059515953064
+          ],
+          "rpm": 0.90721835899733,
+          "speed": 101.05640411377,
+          "time": 5.18333333333332
+        },
+        {
+          "count": 2,
+          "kind": "counterweight_release",
+          "live_entities": 2,
+          "position": [
+            6.89562845230103,
+            -1.43059515953064
+          ],
+          "rpm": 0.90721835899733,
+          "speed": 101.05640411377,
+          "time": 5.18333333333332
+        },
+        {
+          "count": 3,
+          "kind": "anchor",
+          "live_entities": 2,
+          "position": [
+            37.9133110046387,
+            -2.7504620552063
+          ],
+          "rpm": 0.90561668239157,
+          "speed": 4.98388051986694,
+          "time": 6.19999999999998
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 0.38299999999999995,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.483,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.583,
+          "row": {
+            "counters": {
+              "anchor": 1
+            },
+            "fx": 1,
+            "position": [
+              -51.5872955322266,
+              16.1858310699463
+            ],
+            "rpm": 0.998757754764649,
+            "speed": 6.1160454750061,
+            "states": {
+              "anchor": true,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.0,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.683,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 4,
+            "position": [
+              -30.5964546203613,
+              11.5343265533447
+            ],
+            "rpm": 0.975784107472685,
+            "speed": 98.4692993164063,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.7829999999999999,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 4,
+            "position": [
+              -30.5964546203613,
+              11.5343265533447
+            ],
+            "rpm": 0.975784107472685,
+            "speed": 98.4692993164063,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.25,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.883,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 1,
+            "position": [
+              -14.7532234191895,
+              8.00470733642578
+            ],
+            "rpm": 0.975086551451086,
+            "speed": 54.5181121826172,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.9830000000000001,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 1,
+            "position": [
+              -14.7532234191895,
+              8.00470733642578
+            ],
+            "rpm": 0.975086551451086,
+            "speed": 54.5181121826172,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.083,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 1,
+            "position": [
+              -14.7532234191895,
+              8.00470733642578
+            ],
+            "rpm": 0.975086551451086,
+            "speed": 54.5181121826172,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.183,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 0,
+            "position": [
+              -2.59056544303894,
+              4.81460571289063
+            ],
+            "rpm": 0.974726248776709,
+            "speed": 43.2383651733398,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.283,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 1
+            },
+            "fx": 0,
+            "position": [
+              -2.59056544303894,
+              4.81460571289063
+            ],
+            "rpm": 0.974726248776709,
+            "speed": 43.2383651733398,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.383,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 2
+            },
+            "fx": 2,
+            "position": [
+              1.23665964603424,
+              2.46959257125854
+            ],
+            "rpm": 0.96926391918647,
+            "speed": 11.8276920318604,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.483,
+          "row": {
+            "counters": {
+              "anchor": 1,
+              "anchor_break": 1,
+              "counterweight_release": 1,
+              "counterweight_store": 2
+            },
+            "fx": 2,
+            "position": [
+              1.23665964603424,
+              2.46959257125854
+            ],
+            "rpm": 0.96926391918647,
+            "speed": 11.8276920318604,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.01666666666666,
+            "trace_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "selection": "momentum_bank",
+      "source_avi": "C:\\GPT GAME BUILDING\\task-002c5-qa\\art-correction-v2\\motion\\momentum_bank.avi",
+      "avi_sha256": "417c5f7ea2b548c0623756603935ab204f55ab0c05c70d5c26198ece4acf204b",
+      "actual_start": 1.3,
+      "capture_frames": 360,
+      "window_counters": {
+        "momentum_release": 1,
+        "momentum_store": 2
+      },
+      "proc_moments": [
+        {
+          "count": 1,
+          "kind": "momentum_store",
+          "live_entities": 2,
+          "position": [
+            81.3583221435547,
+            -65.8507843017578
+          ],
+          "rpm": 0.993979427414898,
+          "speed": 142.038940429688,
+          "time": 1.81666666666667
+        },
+        {
+          "count": 1,
+          "kind": "momentum_release",
+          "live_entities": 2,
+          "position": [
+            98.6175308227539,
+            -44.3344688415527
+          ],
+          "rpm": 0.963876556960747,
+          "speed": 147.978439331055,
+          "time": 2.71666666666666
+        },
+        {
+          "count": 2,
+          "kind": "momentum_store",
+          "live_entities": 2,
+          "position": [
+            -38.3676071166992,
+            100.849067687988
+          ],
+          "rpm": 0.992521565992266,
+          "speed": 139.845474243164,
+          "time": 6.74999999999998
+        }
+      ],
+      "samples": [
+        {
+          "relative_time": 0.317,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              43.8698272705078,
+              -90.8736419677734
+            ],
+            "rpm": 0.99502389806753,
+            "speed": 149.951522827148,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.51666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.492,
+          "row": {
+            "counters": {},
+            "fx": 0,
+            "position": [
+              76.0961456298828,
+              -71.2594375610352
+            ],
+            "rpm": 0.994171538093216,
+            "speed": 154.48225402832,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 1.76666666666667,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.667,
+          "row": {
+            "counters": {
+              "momentum_store": 1
+            },
+            "fx": 1,
+            "position": [
+              92.7769927978516,
+              -53.6070594787598
+            ],
+            "rpm": 0.993093308355821,
+            "speed": 50.5553817749023,
+            "states": {
+              "anchor": false,
+              "bank": true,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 0.8419999999999999,
+          "row": {
+            "counters": {
+              "momentum_store": 1
+            },
+            "fx": 0,
+            "position": [
+              97.5651168823242,
+              -47.7438278198242
+            ],
+            "rpm": 0.9920427914505,
+            "speed": 19.5202941894531,
+            "states": {
+              "anchor": false,
+              "bank": true,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.017,
+          "row": {
+            "counters": {
+              "momentum_store": 1
+            },
+            "fx": 0,
+            "position": [
+              97.5651168823242,
+              -47.7438278198242
+            ],
+            "rpm": 0.9920427914505,
+            "speed": 19.5202941894531,
+            "states": {
+              "anchor": false,
+              "bank": true,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.192,
+          "row": {
+            "counters": {
+              "momentum_store": 1
+            },
+            "fx": 0,
+            "position": [
+              99.4268112182617,
+              -44.4835357666016
+            ],
+            "rpm": 0.991008592312274,
+            "speed": 12.7162351608276,
+            "states": {
+              "anchor": false,
+              "bank": true,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.51666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.3669999999999998,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 1,
+            "position": [
+              93.677978515625,
+              -50.3871002197266
+            ],
+            "rpm": 0.963715885875466,
+            "speed": 160.331420898438,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.5419999999999998,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 1,
+            "position": [
+              93.677978515625,
+              -50.3871002197266
+            ],
+            "rpm": 0.963715885875466,
+            "speed": 160.331420898438,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 2.76666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.7169999999999999,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 3,
+            "position": [
+              67.1866989135742,
+              -82.8498611450195
+            ],
+            "rpm": 0.999950731762465,
+            "speed": 66.0098648071289,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.01666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 1.892,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 2,
+            "position": [
+              58.0423622131348,
+              -85.5407409667969
+            ],
+            "rpm": 0.999244586859333,
+            "speed": 38.243824005127,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 2.067,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 2,
+            "position": [
+              58.0423622131348,
+              -85.5407409667969
+            ],
+            "rpm": 0.999244586859333,
+            "speed": 38.243824005127,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.26666666666666,
+            "trace_count": 0
+          }
+        },
+        {
+          "relative_time": 2.242,
+          "row": {
+            "counters": {
+              "momentum_release": 1,
+              "momentum_store": 1
+            },
+            "fx": 0,
+            "position": [
+              58.5520095825195,
+              -98.9338150024414
+            ],
+            "rpm": 0.998539962301836,
+            "speed": 71.8475952148438,
+            "states": {
+              "anchor": false,
+              "bank": false,
+              "catch": false,
+              "comet": false,
+              "danger": false,
+              "drift": false,
+              "guard": false,
+              "heat": false,
+              "hunt": false,
+              "overcap": false,
+              "preview": false,
+              "redline": false
+            },
+            "time": 3.51666666666666,
+            "trace_count": 0
+          }
+        }
+      ]
+    }
+  ]
+}

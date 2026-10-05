@@ -1,28 +1,28 @@
 {
   "family": "crash_guard",
-  "initial_tier": "C",
-  "target_tier": "A or B after runtime motion review",
+  "correction": "Human requested physical top restoration v2",
   "grammar": {
-    "silhouette": "contact-side telescoping twin rods and broad end-stop",
-    "motion": "incoming compression, mechanical shortening, damped rebound",
-    "location": "incoming contact side of real top, no floor fortress",
-    "persistence": "contact event only; no automatically orbiting shield",
-    "palette": "cool gray steel, pale mint faceplate and restrained brass seals",
-    "feature": "an exposed piston physically changes length rather than expanding an aura"
+    "silhouette": "round actual defender top receives an angular incoming top",
+    "motion": "contact bends at the blade, defender yields slightly, attacker redirects",
+    "location": "genuine incoming blade rim and local recoil skid",
+    "persistence": "existing contact event only",
+    "palette": "accepted blue steel defender against red attacker and short silver rim pressure",
+    "feature": "absorption and redirected displacement without piston, box or shield device"
   },
   "static_frames": {
-    "crash_guard": 5,
-    "crash_guard_ii": 5
+    "crash_guard": 4,
+    "crash_guard_ii": 4
   },
   "event_tags": {
     "crash_guard": "damper_contact"
   },
   "notes": [
-    "New individually directed native master; old source retained for before/after.",
-    "Anticipation, action, reaction and follow-through are separate authored poses, not a uniformly spinning six-frame loop.",
-    "Rank II adds physical structure rather than palette substitution.",
-    "Cards illustrate actual machines; FX deliberately omit replacement rotors to keep gameplay subjects visible.",
-    "Icon is a separately drawn small-scale silhouette.",
-    "All eight projected headings have native keyed placements/strokes. Machinery stays upright; no sprite rotation/resampling. No duplicate base tags: directional variants cover every actual heading while the largest bank sheet remains below 4096 pixels tall."
+    "Six strong card poses occupy twelve keyed frames through explicit two-key holds.",
+    "Card bodies copy exact accepted starter_blade_accents_002b1 native cels and the accepted bit/ratchet parts, without resizing or recolouring.",
+    "Rank II develops physical force and travel marks rather than adding a device.",
+    "Icons are separately authored recognizable miniature tops and travel/contact.",
+    "FX omit replacement bodies, gadgets and synthetic particles; real gameplay tops remain visible.",
+    "All eight projected headings have eight authored native keys. Existing gameplay fields/events remain authoritative.",
+    "Historical internal tag damper_contact now means a short physical blade absorption/redirect response, with no piston or device pixels."
   ]
 }
