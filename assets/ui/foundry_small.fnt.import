@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://ct6kbp1yhqq6v"
+path="res://.godot/imported/foundry_small.fnt-79219f434ffae8fa32d7212db3bfe5df.fontdata"
+
+[deps]
+
+source_file="res://assets/ui/foundry_small.fnt"
+dest_files=["res://.godot/imported/foundry_small.fnt-79219f434ffae8fa32d7212db3bfe5df.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

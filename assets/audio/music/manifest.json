@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "title": "Foundry Circuit",
+  "authorship": "Original Task 002C.6 composition; hand-authored notes, harmony and drum patterns; all instruments synthesized by the checked-in generator. No borrowed songs or samples.",
+  "score_sha256": "6f2d9f60ae3d5e5f4040a7cfe6bcadb70cf4eb08aa2135c00a46976d398ca8bd",
+  "generator_sha256": "42694dec740edb0f80bfcd3512c56ad8906e76f261a39e6fa3a414274a9b6175",
+  "grid": {
+    "sample_rate": 32000,
+    "channels": 2,
+    "sample_width_bytes": 2,
+    "frames": 1117091,
+    "seconds": 34.90909375,
+    "beats": 64,
+    "bars": 16,
+    "bpm": 110,
+    "actual_bpm": 109.99999104817782,
+    "render_gain": 1.0,
+    "note_counts": {
+      "title": 518,
+      "workshop": 400,
+      "run_base": 534,
+      "run_pressure": 416,
+      "run_boss": 332
+    }
+  },
+  "stems": {
+    "title": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1117091,
+      "peak": 0.35718863490707115,
+      "rms": 0.08449465852241919,
+      "rms_dbfs": -21.463414897352024,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.13394573809015167,
+      "clipped_samples": 0,
+      "sha256": "dca9f42823abaff2b7a356aa0ea3c9f1f1e7ea23500a69ad0c9123042150526b",
+      "description": "Front-door hook: four-note steel/pluck melody, warm D-minor harmony and steady arcade pulse."
+    },
+    "workshop": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1117091,
+      "peak": 0.18591875972777488,
+      "rms": 0.04425950687578281,
+      "rms_dbfs": -27.07986858283381,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.04443494979705191,
+      "clipped_samples": 0,
+      "sha256": "ed8fef71e75f836db66e1fef4679a90fa275d109c4b63935bdfffbc5b2e8096e",
+      "description": "A lighter bench arrangement: glass keys, sparse bass and half-time brushed percussion."
+    },
+    "run_base": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1117091,
+      "peak": 0.3053987243263039,
+      "rms": 0.07840670487598052,
+      "rms_dbfs": -22.112935948828365,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.16696676534318064,
+      "clipped_samples": 0,
+      "sha256": "e382b730847ce45c38f9f9e0cda80c4df591537db2d7e44f1c9941fabd4806b5",
+      "description": "Continuous Run foundation: syncopated rotor bass, restrained mechanical groove and a repeating harmonic rail."
+    },
+    "run_pressure": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1117091,
+      "peak": 0.15152439954832606,
+      "rms": 0.03917053041023866,
+      "rms_dbfs": -28.14081095215212,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.10592974639118626,
+      "clipped_samples": 0,
+      "sha256": "8f8b95b05f04159bfb64c1c0415b785108e068b2d1204cf9d827daefb200e30b",
+      "description": "Aligned pressure layer: answering upper counterline and interlocking off-beat percussion; never a separate restarted encounter cue."
+    },
+    "run_boss": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1117091,
+      "peak": 0.22150334177678763,
+      "rms": 0.056641072350523465,
+      "rms_dbfs": -24.937370660212352,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.03137302774132511,
+      "clipped_samples": 0,
+      "sha256": "ee5818b88df259e1b1db500da8f9c2542d9211a1674cbd41a2f24a03e008c91d",
+      "description": "Aligned boss/late-Run layer: low brassy motif, doubled machine kick and deliberate tom cadence."
+    }
+  },
+  "mixes": {
+    "normal_run": {
+      "peak": 0.3053987243263039,
+      "rms": 0.07840670487598052,
+      "rms_dbfs": -22.112935948828365,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.16696676534318064,
+      "clipped_samples": 0
+    },
+    "pressure_run": {
+      "peak": 0.3962218085268715,
+      "rms": 0.10138264747501483,
+      "rms_dbfs": -19.880727438662433,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.17770928067873165,
+      "clipped_samples": 0
+    },
+    "boss_run": {
+      "peak": 0.5824762718588824,
+      "rms": 0.1421732573649263,
+      "rms_dbfs": -16.943641724879306,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.17581713309121982,
+      "clipped_samples": 0
+    }
+  },
+  "loop": {
+    "begin_frame": 0,
+    "end_frame": 1117091,
+    "mode": "forward",
+    "tails": "written notes and releases wrap into the beginning",
+    "boundary_bridge_seconds": 0.002
+  },
+  "mix": {
+    "maximum_full_run_peak": 0.7,
+    "music_bus_trim_db": -8.0,
+    "default_music_volume": 0.55,
+    "duck_db": -4.0,
+    "duck_seconds": 0.18
+  },
+  "source": "foundation_score.json + tools/audio/compose_foundation.py"
+}

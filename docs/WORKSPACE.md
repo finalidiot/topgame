@@ -110,7 +110,7 @@ is authorised by workspace organisation. Historical LFS objects remain intact.
 From a clean, committed checkout with Godot 4.7.2 and its Windows templates:
 
 ```powershell
-python tools/build/windows_checkpoint.py build --task 002C.5.1 --checkpoint 002C.5 --archive-checkpoint
+python tools/build/windows_checkpoint.py build --task 002C.6 --checkpoint 002C.6 --archive-checkpoint
 ```
 
 The helper snapshots exact tracked HEAD source into a fresh external QA staging
@@ -132,7 +132,7 @@ README/hash/manifest travel with the executable. Optional checkpoint promotion
 uses one folder per milestone, preserving an earlier revision externally rather
 than creating dozens of nominal checkpoints. To promote an already validated
 candidate use `python tools/build/windows_checkpoint.py promote --candidate
-<payload-directory> --checkpoint 002C.5`.
+<payload-directory> --checkpoint 002C.6`.
 
 `builds/latest/README.txt` states the exact source Git SHA, task, UTC build date,
 controls and the acceptance status recorded for that checkpoint. The default editor export targets
@@ -141,6 +141,38 @@ Release output is reserved for an explicitly authorised distribution. Substantia
 future tasks must finish with a validated human-playable `builds/latest` unless
 explicitly exempted. An existing collection continues; testing should use an
 isolated save rather than resetting the human's collection.
+
+## Presentation sources, saves and isolated review
+
+Native front-end masters are in `assets/source-art/ui/`; their runtime PNG/JSON
+and original bitmap-font exports are in `assets/ui/`. Export saved artist edits
+with `python tools/art/build_front_end.py`. Its `--check` mode compares actual
+Aseprite source/runtime parity; `--author` explicitly reconstructs and overwrites
+those UI masters, so it is not an ordinary export command.
+
+Original music's editable score is `assets/audio/music/foundation_score.json`;
+runtime stems and exact PCM metadata share that music directory.
+`tools/audio/compose_foundation.py --verify-only` verifies frozen output without
+rewriting assets. External audio audition renders may use a task's `audio/`
+folder; logs/provenance still belong in `logs/` and `manifests/`.
+
+The production window title is Spinning Metal. Preserve the historical Godot
+application/save identity `Spinning Metal — Prototype` until an explicit tested
+save migration is implemented: changing `config/name` silently changes the
+default user-data location. Collection reset and settings reset are separate.
+Options → Save / Testing Tools makes exact-byte verified collection backups
+under the save directory's `collection-backups/<name>/` before a separately
+confirmed reset. These are user recovery data, never automatic-cleaner targets.
+Never run automated reset against the human's profile.
+
+New captures/tests use unique explicit external collections. Packaged catalogue
+inspection accepts `--qa-task=<TASK>` in addition to `--qa-catalogue`, a new
+absolute collection under that task's `temp/` and a fresh report under its
+`manifests/`. `tools/parts/verify_packaged_catalogue.py --task <TASK> --exe <EXE>`
+uses this boundary; it verifies actual embedded part/beast pixels and music PCM.
+`tools/presentation/verify_foundation.py` runs current regression contracts with
+preserved external logs and player/source fingerprints. Input-driven review
+movies are distinct from clearly labelled smoke/profiler state fixtures.
 
 ## Audit, archive and cleanup
 

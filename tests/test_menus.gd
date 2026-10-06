@@ -330,7 +330,8 @@ func _test_garage_assemblies() -> void:
 
 func _select_part(category: String, part_id: String) -> void:
 	var button: Button = menus._part_buttons[category][part_id]
-	button.grab_focus()
+	menus.focus_collection_part(category, part_id)
+	await process_frame
 	var action_count: int = actions.size()
 	await _key(KEY_ENTER)
 	check(actions.size() == action_count + 1 and actions.back().name == "build_changed" and actions.back().value[category] == part_id, "Part button keyboard activation emits the selected part")

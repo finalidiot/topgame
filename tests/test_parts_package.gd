@@ -94,6 +94,16 @@ func _test_valid_probe() -> void:
 			check(str(row.get("visible_rgba_sha256", "")).length() == 64 and bool(row.get("transparent_rgb_normalized", false)), "Beast sheet records a visible-pixel fingerprint")
 		for kind: String in ["black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"]:
 			check(beast_ids.count(kind) == 1, "Release probe covers exactly one sheet for " + kind)
+		check(str(report.get("music_json", "")) == FileAccess.get_file_as_string(Probe.MUSIC_MANIFEST), "Probe reads the actual synchronized music manifest")
+		var music_rows: Array = report.get("music_stems", [])
+		check(music_rows.size() == 5, "Probe includes the complete bounded original score")
+		var music_ids: Array[String] = []
+		for row: Dictionary in music_rows:
+			music_ids.append(str(row.kind))
+			check(bool(row.valid) and int(row.mix_rate) == 32000 and int(row.pcm_frames) > 1000000, "Imported music has real uncompressed stereo PCM on the shared sample grid")
+			check(str(row.pcm_sha256).length() == 64, "Imported PCM fingerprint is recorded for actual package comparison")
+		for kind: String in ["title", "workshop", "run_base", "run_pressure", "run_boss"]:
+			check(music_ids.count(kind) == 1, "Probe covers exactly one original music stem for " + kind)
 		var rows: Array = report.get("textures", [])
 		check(rows.size() == 42, "Report contains all 42 distinct runtime component textures")
 		var found: Dictionary = {}

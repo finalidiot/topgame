@@ -4,6 +4,7 @@ extends RefCounted
 const Catalog = preload("res://scripts/parts.gd")
 const FEEDBACK_MANIFEST: String = "res://assets/powers/feedback_002c5_2/manifest.json"
 const BEAST_MANIFEST: String = "res://assets/powers/beasts_002c5_2/manifest.json"
+const MUSIC_MANIFEST: String = "res://assets/audio/music/manifest.json"
 
 static func inspect(output: String) -> Dictionary:
 	if output.is_empty() or FileAccess.file_exists(output) or DirAccess.dir_exists_absolute(output):
@@ -76,11 +77,29 @@ static func inspect(output: String) -> Dictionary:
 			var record: Dictionary = _inspect_beast_sheet(kind, beasts.effects.get(kind, {}))
 			beast_records.append(record)
 			if not bool(record.valid): failures.append(str(record.path))
+	var music_json: String = FileAccess.get_file_as_string(MUSIC_MANIFEST)
+	var music: Variant = JSON.parse_string(music_json)
+	var music_records: Array[Dictionary] = []
+	if not music is Dictionary or not music.get("stems", {}) is Dictionary:
+		failures.append(MUSIC_MANIFEST)
+	else:
+		for kind: String in ["title", "workshop", "run_base", "run_pressure", "run_boss"]:
+			var path: String = "res://assets/audio/music/" + kind + ".wav"
+			var sample: AudioStreamWAV = (load(path) as AudioStreamWAV) if ResourceLoader.exists(path) else null
+			var valid: bool = sample != null and sample.format == AudioStreamWAV.FORMAT_16_BITS and sample.stereo and sample.mix_rate == 32000
+			var pcm_data: PackedByteArray = sample.data if sample != null else PackedByteArray()
+			valid = valid and pcm_data.size() == int(music.grid.frames) * 4
+			var hash: HashingContext = HashingContext.new()
+			hash.start(HashingContext.HASH_SHA256)
+			hash.update(pcm_data)
+			music_records.append({"kind":kind,"path":path,"valid":valid,"pcm_frames":pcm_data.size() / 4,"mix_rate":sample.mix_rate if sample != null else 0,"pcm_sha256":hash.finish().hex_encode()})
+			if not valid: failures.append(path)
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
 		"textures":records, "feedback_json":feedback_json, "feedback_textures":feedback_records,
 		"beast_json":beast_json, "beast_textures":beast_records,
+		"music_json":music_json, "music_stems":music_records,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()

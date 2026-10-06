@@ -58,6 +58,35 @@ func _tap(code: Key) -> void:
 		Input.parse_input_event(event)
 		await _settle()
 
+func _navigate(target: Control) -> bool:
+	# Catalogue rows now contain two cards. Follow the live focus graph with
+	# real directional keys rather than assuming Right walks the whole list.
+	check(target != null and target.is_visible_in_tree(), "Keyboard target is an actual visible catalogue control")
+	if target == null or not target.is_visible_in_tree(): return false
+	var origin: Control = root.gui_get_focus_owner()
+	check(origin != null, "Keyboard catalogue navigation begins with visible focus")
+	if origin == null: return false
+	var frontier: Array[Control] = [origin]
+	var paths: Dictionary = {origin:[]}
+	var directions: Array[Key] = [KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN]
+	while not frontier.is_empty() and not paths.has(target):
+		var current: Control = frontier.pop_front()
+		for side: Side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+			var next: Control = current.find_valid_focus_neighbor(side)
+			if next == null or not next.is_visible_in_tree() or paths.has(next): continue
+			var steps: Array = paths[current].duplicate()
+			steps.append({"key":directions[int(side)], "control":next})
+			paths[next] = steps
+			frontier.append(next)
+	check(paths.has(target), "Real keyboard focus graph reaches every active catalogue control")
+	if not paths.has(target): return false
+	for step: Dictionary in paths[target]:
+		await _tap(step.key)
+		check(root.gui_get_focus_owner() == step.control, "Actual directional key follows the explicit focus neighbour")
+		if root.gui_get_focus_owner() != step.control: return false
+	check(root.gui_get_focus_owner() == target, "Keyboard reaches the requested catalogue entry")
+	return root.gui_get_focus_owner() == target
+
 func _capture(name: String) -> void:
 	if capture_dir.is_empty() or DisplayServer.get_name() == "headless": return
 	await RenderingServer.frame_post_draw
@@ -137,18 +166,37 @@ func _test_isolated_qa() -> void:
 	await _settle()
 	for category: String in Collection.CATEGORIES:
 		var first: String = str(Parts.PARTS[category].keys()[0])
-		game.menus.focus_collection_part(category, first)
-		await _settle()
+		if await _navigate(game.menus._catalogue_tabs[category]): await _tap(KEY_ENTER)
+		check(game.menus._catalogue_category == category, "Real keyboard activation opens the required catalogue category")
+		for other: String in Collection.CATEGORIES:
+			for card: Button in game.menus._part_buttons[other].values():
+				check(card.is_visible_in_tree() == (other == category), "Only the active catalogue category is visible")
+				check(card.focus_mode == (Control.FOCUS_ALL if other == category else Control.FOCUS_NONE), "Hidden category entries cannot steal live keyboard focus")
+		var index: int = 0
 		for id: String in Parts.PARTS[category]:
+			await _navigate(game.menus._part_buttons[category][id])
 			var focused: Control = root.gui_get_focus_owner()
 			check(str(focused.get_meta("part_id")) == id, "Actual keyboard focus traverses catalogue order")
 			check(NATIVE_RECT.encloses(focused.get_global_rect()), "Every traversed card is visible at native resolution")
+			check(game.menus._part_scrolls[category].get_global_rect().encloses(focused.get_global_rect()), "Every keyboard-focused card is fully contained by its clipped catalogue")
 			_check_inspector(game, category, id)
 			await _tap(KEY_ENTER)
 			check(game.collection.equipped_build()[category] == id, "Every QA part equips through the production collection API")
 			_check_preview_assets(game)
-			await _tap(KEY_RIGHT)
-		check(str(root.gui_get_focus_owner().get_meta("part_id")) == first, "Keyboard navigation wraps and scrolls to the first catalogue card")
+			# Check the actual two-column contract separately from vertical travel.
+			if index % 2 == 0:
+				var ids: Array = Parts.PARTS[category].keys()
+				var right_id: String = str(ids[mini(index + 1, ids.size() - 1)])
+				await _tap(KEY_RIGHT)
+				check(str(root.gui_get_focus_owner().get_meta("part_id")) == right_id, "Right selects the neighbouring grid column, or stays in the unpaired final row")
+				await _tap(KEY_LEFT)
+				check(str(root.gui_get_focus_owner().get_meta("part_id")) == id, "Left returns through the same native catalogue row")
+			index += 1
+		# Tab traverses the real footer/category controls, then wraps to the
+		# first entry. Horizontal row wrapping must not fake linear scrolling.
+		for step: int in range(game.menus._catalogue_footer.size() + game.menus._catalogue_tabs.size() + 1): await _tap(KEY_TAB)
+		check(str(root.gui_get_focus_owner().get_meta("part_id")) == first, "Tab navigation wraps through the entire view and scrolls to the first catalogue card")
+		check(game.menus._part_scrolls[category].get_global_rect().encloses(root.gui_get_focus_owner().get_global_rect()), "Wrapped first-card focus is fully visible in the native catalogue")
 	await _capture("002c5_2_isolated_catalogue_native")
 	var chosen: Dictionary = game.collection.equipped_build()
 	game._action("launch_owned_run")

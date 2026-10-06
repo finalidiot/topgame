@@ -54,6 +54,7 @@ const SOUNDS: Dictionary = {
 	"slipstream_cross": preload("res://assets/audio/slipstream_cross.wav")
 }
 const MAX_CHANNELS: int = 8
+const SFX_BUS: String = "SFX"
 const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
 	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
 	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
@@ -86,8 +87,14 @@ var suppressed_count: int = 0
 func _ready() -> void:
 	rng.randomize()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if AudioServer.get_bus_index(SFX_BUS) < 0:
+		AudioServer.add_bus()
+		var slot: int = AudioServer.bus_count - 1
+		AudioServer.set_bus_name(slot, SFX_BUS)
+		AudioServer.set_bus_send(slot, "Master")
 	for i: int in range(MAX_CHANNELS):
 		var player: AudioStreamPlayer = AudioStreamPlayer.new()
+		player.bus = SFX_BUS
 		add_child(player)
 		channels.append(player)
 		channel_priority.append(-1)
@@ -100,6 +107,11 @@ func apply_settings(settings: Dictionary) -> void:
 	muted = bool(settings.get("muted", false))
 	AudioServer.set_bus_mute(0, muted)
 	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(0.001, float(settings.get("volume", 0.65)))))
+	var bus: int = AudioServer.get_bus_index(SFX_BUS)
+	if bus >= 0:
+		var gain: float = clampf(float(settings.get("sfx_volume", 1.0)), 0.0, 1.0)
+		AudioServer.set_bus_mute(bus, gain <= 0.0)
+		AudioServer.set_bus_volume_db(bus, linear_to_db(maxf(0.001, gain)))
 
 func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
