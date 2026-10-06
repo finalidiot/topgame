@@ -35,13 +35,14 @@
       "evidence_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_actual_accepted_save_final.json"
     }
   ],
-  "python_tests": 66,
+  "python_tests": 93,
   "python_suites": [
     {
       "suite": "guarded_windows_pipeline",
-      "tests": 29,
-      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_build_tool_tests_final.log",
-      "log_sha256": "c1ba7600effbafb939d1fbbf07eba76ffd908b2fe8811fd68027def11f2721f0"
+      "tests": 56,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_release_progression_guards_final_20261006.log",
+      "log_sha256": "ccd8d6bc55bd70388556784d8ed8ed899c4daae986a2005340f57b2539d66eb9",
+      "supersedes_previous_29_test_run": true
     },
     {
       "suite": "regression_harness",
@@ -159,8 +160,21 @@
   "post_regression_qa_capture_fix": {
     "file": "scripts/main.gd",
     "scope": "Four packaged smoke calls now pass a stem to _capture, which appends .png. Gameplay and packet presentation unchanged. Failed first candidate preserved; full guarded build must rerun.",
-    "final_file_sha256": "360db936e6f0f1016a5a27fbc7df32ac2f016ec12885c374f038a87105520ffc",
+    "final_file_sha256": "75751e783b53dd39313efe6666922f05e2afc71839faaefb63eb737b1c90575c",
     "first_failed_candidate_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\windows-003a-caeb91a15da3.json",
     "validation": "Actual second exported integration smoke and required captures recorded in003a_delivery.json"
-  }
+  },
+  "post_regression_release_smoke_hardening": {
+    "scope": "QA-only capture stems, release-safe Main smoke checks/funding/seed19, independent saved-state promotion validation and scoped child QA environment. Normal capture/gameplay functions unchanged.",
+    "final_main_sha256": "75751e783b53dd39313efe6666922f05e2afc71839faaefb63eb737b1c90575c",
+    "affected_engine_rerun": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_release_smoke_affected.json",
+    "affected_suites": 4,
+    "checks_already_in_unique_engine_total": 2261,
+    "actual_api_guard_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_release_guard_actual_api_verified.json",
+    "actual_main_smoke_preflight": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_release_shop_smoke_preflight.json",
+    "first_refused_candidate": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\windows-003a-caeb91a15da3.json",
+    "second_candidate_rejected_by_final_guard": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\temp\\windows-003a-c9a2af0e1ca3\\payload",
+    "final_build_validation": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_delivery.json"
+  },
+  "natural_payout_audit": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_run_payout_outcome_audit_final.json"
 }

@@ -378,7 +378,7 @@ func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
 	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
 	var source: RandomNumberGenerator = null
-	if packet_rng_override != null and qa_task_id == "003A" and _is_isolated_qa_path(collection_path, "temp"):
+	if packet_rng_override != null and (qa_task_id == "003A" or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
 		source = packet_rng_override
 	var purchase: Dictionary = collection.purchase_packet(_packet_product, source, _packet_request_id)
 	if not bool(purchase.ok):
@@ -1186,46 +1186,60 @@ func _smoke_test() -> void:
 	_pause()
 	_action("end_run")
 	assert(run_context.status == "empty" and screen == "garage")
-	await _smoke_shop_progression()
+	if not await _smoke_shop_progression(): return
 	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" continuous_threats=10 one_launch_per_run (flow fixtures)")
 	get_tree().quit()
 
-func _smoke_shop_progression() -> void:
+func _smoke_shop_require(condition: bool, description: String) -> bool:
+	# Release exports remove assert expressions, so these checks must execute.
+	if condition: return true
+	push_error("SHOP_PROGRESSION_SMOKE_FAIL " + description)
+	get_tree().quit(1)
+	return false
+
+func _smoke_shop_progression() -> bool:
 	# Explicit packaged flow fixture. Real earned gameplay is captured separately.
-	assert(smoke_mode and not _is_default_collection_path(collection_path))
-	assert(collection.owned_count() == 3 and collection.credits == 0)
+	if not _smoke_shop_require(smoke_mode and _is_isolated_qa_path(collection_path, "temp"), "isolated boundary"): return false
+	if not _smoke_shop_require(collection.owned_count() == 3 and collection.credits == 0, "starter wallet"): return false
 	var started: Dictionary = collection.begin_reward_run()
-	assert(started.ok)
+	if not _smoke_shop_require(bool(started.ok), "fixture run nonce"): return false
 	var outcome: Dictionary = {"reward_provenance":"earned-clear-v1", "reward_fixture":false, "aborted":false, "earned_threats_cleared":4, "earned_elites_cleared":0, "earned_bosses_cleared":0}
-	assert(collection.pay_run_reward(str(started.run_id), outcome).ok)
-	print("SHOP_QA_FIXTURE isolated saved clear records fund flow; not earned gameplay evidence")
+	var funded: Dictionary = collection.pay_run_reward(str(started.run_id), outcome)
+	if not _smoke_shop_require(bool(funded.ok) and collection.credits == 48, "saved fixture funding"): return false
+	packet_rng_override = RandomNumberGenerator.new()
+	packet_rng_override.seed = 19
+	print("SHOP_QA_FIXTURE isolated saved clear records and packet seed19 fund flow; not earned gameplay evidence")
 	_action("open_shop")
-	assert(screen == "shop")
+	if not _smoke_shop_require(screen == "shop", "shop route"): return false
 	await _capture("003a-shop")
 	_action("packet_odds")
+	if not _smoke_shop_require(screen == "packet_odds", "odds route"): return false
 	await _capture("003a-odds")
 	_action("open_shop")
 	_action("request_packet_purchase", "standard")
 	_action("confirm_packet_purchase", _packet_purchase_token)
-	assert(screen == "packet_open" and collection.credits == 0)
+	if not _smoke_shop_require(screen == "packet_open" and collection.credits == 0, "actual packet debit and route"): return false
 	var receipt: Dictionary = collection.pending_packet()
-	assert(receipt.status == "resolved" and receipt.rows.size() == 3)
+	if not _smoke_shop_require(str(receipt.get("status", "")) == "resolved" and receipt.get("rows", []).size() == 3, "fixed resolved receipt"): return false
 	_action("packet_tear")
 	await get_tree().create_timer(2.5).timeout
-	assert(menus._packet_view.phase == "RESULT")
+	if not _smoke_shop_require(is_instance_valid(menus._packet_view) and menus._packet_view.phase == "RESULT", "physical result"): return false
 	await _capture("003a-packet-result")
 	_action("packet_workshop")
-	assert(screen == "garage" and collection.pending_packet().is_empty() and collection.owned_count() > 3)
+	if not _smoke_shop_require(screen == "garage" and collection.pending_packet().is_empty() and collection.owned_count() > 3, "acquired workshop route"): return false
+	var new_equipped: bool = false
 	for row: Dictionary in receipt.rows:
 		if bool(row.new):
 			_action("equip_part", {"category":row.category, "id":row.id})
-			assert(collection.equipped_build()[row.category] == row.id)
+			new_equipped = collection.equipped_build()[row.category] == row.id
 			break
+	if not _smoke_shop_require(new_equipped, "new design actually equipped"): return false
 	await _capture("003a-acquired-workshop")
 	_action("launch_owned_run")
-	assert(screen == "reward")
+	if not _smoke_shop_require(screen == "reward", "new machine launch"): return false
 	_action("end_run")
 	print("SHOP_PROGRESSION_SMOKE_PASS fixed_receipt=3 new_design_equipped=1 (flow fixture)")
+	return true
 
 func _smoke_clear_threat() -> void:
 	# Controlled outcome fixture only; real combat is measured separately.

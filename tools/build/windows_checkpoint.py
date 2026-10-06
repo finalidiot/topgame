@@ -33,6 +33,7 @@ REQUIRED_CAPTURES = (
     "run-failed.png",
 )
 SHOP_REQUIRED_CAPTURES = ("003a-shop.png", "003a-odds.png", "003a-packet-result.png", "003a-acquired-workshop.png")
+SHOP_SMOKE_MARKER = "SHOP_PROGRESSION_SMOKE_PASS"
 NATIVE_IMPORT_EXIT_CODES = (-1073741819, 3221225477)
 
 
@@ -134,6 +135,127 @@ def run_logged(command: list[str], log: Path, timeout: int) -> dict:
     if result.returncode != 0 or ERRORS.search(content):
         raise ProcessValidationError(record)
     return record
+
+
+def run_packaged_smoke(executable: Path, engine_log: Path, images: Path,
+                       collection: Path, log: Path, qa_root: Path,
+                       qa_task: str, timeout: int = 240) -> dict:
+    """Pass the same explicit QA boundary to the actual packaged child only."""
+    workspace.valid_task(qa_task)
+    configured_qa = str(qa_root.resolve())
+    command = [str(executable), "--log-file", str(engine_log), "--", "--smoke-test",
+               "--qa-task=" + qa_task, "--capture-dir=" + str(images),
+               "--collection-path=" + str(collection)]
+    previous = os.environ.get("TOPGAME_QA_ROOT")
+    try:
+        os.environ["TOPGAME_QA_ROOT"] = configured_qa
+        record = run_logged(command, log, timeout)
+    finally:
+        if previous is None:
+            os.environ.pop("TOPGAME_QA_ROOT", None)
+        else:
+            os.environ["TOPGAME_QA_ROOT"] = previous
+    return {**record, "qa_task": qa_task,
+            "child_environment": {"TOPGAME_QA_ROOT": configured_qa},
+            "isolated_collection": str(collection.resolve())}
+
+
+def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) -> dict:
+    """Verify actual persisted 003A smoke progression, independent of markers.
+
+    This checks the fixed, explicitly labelled one-purchase smoke fixture. Real
+    earned gameplay is different evidence. Rechecking the save before promotion
+    prevents a release build with stripped assert-side effects from passing.
+    """
+    if qa_task != "003A":
+        raise ValueError("Shop progression requires the explicit 003A QA task.")
+    collection = collection.absolute()
+    if is_reparse(collection):
+        raise ValueError("Shop progression save cannot be a reparse point.")
+    collection = within(collection, qa_root.resolve() / qa_task / "temp")
+    if not collection.is_file():
+        raise ValueError("Shop progression persisted save is missing.")
+    try:
+        saved = json.loads(collection.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise ValueError("Shop progression persisted save is not valid JSON.") from error
+
+    def require(condition: bool, message: str) -> None:
+        if not condition:
+            raise ValueError("Shop progression " + message)
+
+    def exact_integer(value, expected: int) -> bool:
+        return type(value) in (int, float) and value == expected
+
+    require(isinstance(saved, dict) and exact_integer(saved.get("schema_version"), 2),
+            "requires a schema2 saved collection.")
+    require(saved.get("starter_selected") == "breaker", "starter fixture changed.")
+    baseline = {"blade:smash", "ratchet:high", "bit:flat"}
+    owned = saved.get("owned_part_ids")
+    require(isinstance(owned, list) and all(isinstance(part, str) for part in owned)
+            and len(owned) == len(set(owned)) and len(owned) > 3,
+            "owned collection did not actually grow beyond the starter.")
+    progression = saved.get("progression")
+    require(isinstance(progression, dict), "persistent economic state is absent.")
+    require(exact_integer(progression.get("credits"), 0), "wallet must reflect the actual 48-CREDIT debit.")
+    require(exact_integer(progression.get("packet_serial"), 1), "must purchase exactly one packet without replay.")
+    require(progression.get("pending_packet") == {}, "pending packet was not acknowledged.")
+    require(progression.get("active_run") == "", "active Run was not retired.")
+    require(exact_integer(progression.get("run_serial"), 1), "funding Run nonce changed or replayed.")
+    receipt = progression.get("last_packet")
+    require(isinstance(receipt, dict) and receipt.get("id") == "packet-1"
+            and receipt.get("request_nonce") == "packet-1" and receipt.get("kind") == "standard"
+            and receipt.get("currency") == "credits" and exact_integer(receipt.get("cost"), 48)
+            and receipt.get("status") == "resolved", "resolved paid receipt is missing or changed.")
+    rows = receipt.get("rows")
+    require(isinstance(rows, list) and len(rows) == 3, "receipt must contain all three physical slots.")
+    categories = ("blade", "ratchet", "bit")
+    rarities = ("TRASH", "COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY")
+    salvage_values = {"TRASH": 1, "COMMON": 1, "UNCOMMON": 2, "RARE": 4, "EPIC": 7, "LEGENDARY": 10}
+    fresh = []
+    total_salvage = 0
+    for category, row in zip(categories, rows):
+        require(isinstance(row, dict) and row.get("category") == category
+                and isinstance(row.get("id"), str) and row["id"]
+                and row.get("part_id") == category + ":" + row["id"]
+                and row.get("rarity") in rarities and type(row.get("new")) is bool,
+                "receipt contains an invalid category, identity, rarity or NEW flag.")
+        part = row["part_id"]
+        if row["new"]:
+            require(part not in baseline and exact_integer(row.get("salvage"), 0),
+                    "NEW receipt row is a starter duplicate or grants SALVAGE.")
+            fresh.append(part)
+        else:
+            require(part in baseline and exact_integer(row.get("salvage"), salvage_values[row["rarity"]]),
+                    "duplicate conversion is inconsistent with the one-purchase fixture.")
+            total_salvage += int(row["salvage"])
+    require(bool(fresh) and set(owned) == baseline.union(fresh),
+            "ownership does not match the actually acquired NEW receipt designs.")
+    require(any(rarities.index(row["rarity"]) >= 2 for row in rows), "receipt lost its Uncommon+ guarantee.")
+    require(exact_integer(receipt.get("total_salvage"), total_salvage)
+            and exact_integer(progression.get("salvage"), total_salvage),
+            "SALVAGE wallet/receipt indicates a duplicate grant or replay.")
+    build = saved.get("equipped_build")
+    require(isinstance(build, dict) and set(build) == set(categories)
+            and all(isinstance(build[category], str) and category + ":" + build[category] in owned
+                    for category in categories), "equipped build is not a legal owned assembly.")
+    equipped_new = [row["part_id"] for row in rows if row["new"] and build[row["category"]] == row["id"]]
+    require(bool(equipped_new), "NEW design was not actually equipped in the persisted build.")
+    reward = progression.get("last_reward")
+    require(isinstance(reward, dict) and reward.get("id") == "run-1"
+            and exact_integer(reward.get("credits"), 48) and reward.get("eligible") is True,
+            "actual saved 48-CREDIT funding reward is absent or replayed.")
+    breakdown = reward.get("breakdown")
+    require(isinstance(breakdown, dict) and set(breakdown) == {"threats", "elites", "bosses"}
+            and exact_integer(breakdown.get("threats"), 48) and exact_integer(breakdown.get("elites"), 0)
+            and exact_integer(breakdown.get("bosses"), 0), "saved fixture funding ledger changed.")
+    return {"path": str(collection), "sha256": sha256(collection), "schema_version": 2,
+            "scope": "Actual persisted packaged one-purchase Shop flow; labelled funding/seed fixture, not earned gameplay.",
+            "summary": {"owned_count": len(owned), "owned_part_ids": sorted(owned),
+                        "credits": 0, "salvage": total_salvage, "packet_serial": 1, "receipt_id": "packet-1",
+                        "receipt_status": "resolved", "receipt_rows": rows, "pending_packet_empty": True,
+                        "new_part_ids": fresh, "equipped_build": build, "equipped_new_part_ids": equipped_new,
+                        "run_serial": 1, "active_run_empty": True, "last_reward": reward}}
 
 
 def completed_native_import_crash(record: dict) -> bool:
@@ -263,7 +385,7 @@ def verify_candidate(candidate: Path) -> dict:
         raise ValueError("Packaged engine log did not independently pass.")
     captures = {Path(c["path"]).name: c for c in smoke.get("captures", [])}
     required = REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if manifest["checkpoint"] == "003A" else ())
-    if manifest["checkpoint"] == "003A" and "SHOP_PROGRESSION_SMOKE_PASS" not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
+    if manifest["checkpoint"] == "003A" and SHOP_SMOKE_MARKER not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
         raise ValueError("Task 003A packaged Shop flow marker is absent.")
     for name in required:
         if name not in captures:
@@ -271,6 +393,23 @@ def verify_candidate(candidate: Path) -> dict:
         capture = captures[name]
         if not Path(capture["path"]).is_file() or sha256(Path(capture["path"])) != capture["sha256"]:
             raise ValueError(f"Packaged smoke capture changed: {name}")
+    if manifest["checkpoint"] == "003A":
+        shop = smoke.get("shop_progression")
+        if not isinstance(shop, dict) or not isinstance(shop.get("path"), str):
+            raise ValueError("Task 003A has no verified persisted Shop progression evidence.")
+        environment = smoke.get("child_environment", {})
+        qa_root = environment.get("TOPGAME_QA_ROOT") if isinstance(environment, dict) else None
+        if not isinstance(qa_root, str) or not qa_root or smoke.get("qa_task") != manifest["qa_task"]:
+            raise ValueError("Task 003A persisted Shop progression has no explicit child QA boundary.")
+        command = smoke.get("command", [])
+        collection_flags = [arg for arg in command if isinstance(arg, str) and arg.startswith("--collection-path=")]
+        if ("--qa-task=" + manifest["qa_task"] not in command or len(collection_flags) != 1
+                or Path(collection_flags[0].removeprefix("--collection-path=")).resolve() != Path(shop["path"]).resolve()
+                or smoke.get("isolated_collection") != str(Path(shop["path"]).resolve())):
+            raise ValueError("Task 003A persisted Shop progression does not match the actual smoke command.")
+        actual = shop_progression_record(Path(shop["path"]), qa_root=Path(qa_root), qa_task=manifest["qa_task"])
+        if actual != shop:
+            raise ValueError("Task 003A persisted Shop progression save/hash/summary changed after validation.")
     return manifest
 
 
@@ -364,9 +503,9 @@ def build(args: argparse.Namespace) -> dict:
             raise RuntimeError("Export produced no executable.")
         before = production_profile(root)
         print(f"PACKAGED_SMOKE_ISOLATED {images}", flush=True)
-        smoke = run_logged([str(payload / EXE), "--log-file", str(logs / "packaged-engine.log"), "--",
-                            "--smoke-test", "--capture-dir=" + str(images),
-                            "--collection-path=" + str(staging / "isolated-collection.json")], logs / "packaged-smoke.log", 240)
+        isolated_collection = staging / "isolated-collection.json"
+        smoke = run_packaged_smoke(payload / EXE, logs / "packaged-engine.log", images,
+                                  isolated_collection, logs / "packaged-smoke.log", qa, args.task)
         after = production_profile(root)
         engine_log = logs / "packaged-engine.log"
         if not engine_log.is_file():
@@ -377,6 +516,8 @@ def build(args: argparse.Namespace) -> dict:
                      fixture_scope="Packaged menu/controller/starter/draft/continuous Run flow; synthetic outcomes are fixtures, not balance evidence.",
                      captures=[png_record(images / name) for name in REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if args.checkpoint == "003A" else ())])
         report["packaged_smoke"] = smoke
+        if args.checkpoint == "003A":
+            smoke["shop_progression"] = shop_progression_record(isolated_collection, qa_root=qa, qa_task=args.task)
         if before != after:
             raise RuntimeError("Real profile changed during isolated smoke; preserve latest and inspect concurrent activity.")
         if SMOKE_MARKER not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
