@@ -279,6 +279,13 @@ func apply_settings(settings: Dictionary) -> void:
 	if is_node_ready(): _apply_bus_gain()
 
 func notify_cue(kind: String) -> void:
+	if kind in ["packet_tear", "packet_rare"]:
+		# Packet foley clears a short space above the accepted workshop stem.
+		# The synchronized transport and its arrangement position keep running.
+		_duck_duration = 0.38 if kind == "packet_tear" else 0.48
+		_duck_strength = -4.0 if kind == "packet_tear" else -2.5
+		_duck_left = maxf(_duck_left, _duck_duration)
+		return
 	if kind == "low_rpm":
 		# This existing warning is intentionally quiet. Clear its brief two-note
 		# window rather than altering the accepted SFX sample/priority/gain.

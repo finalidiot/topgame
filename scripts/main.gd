@@ -12,6 +12,8 @@ const Encounters = preload("res://scripts/encounters.gd")
 const Collection = preload("res://scripts/collection_save.gd")
 const PackageProbe = preload("res://scripts/parts_package_probe.gd")
 const RunPickupScript = preload("res://scripts/run_pickups.gd")
+const PacketEconomy = preload("res://scripts/packet_economy.gd")
+const RunRewards = preload("res://scripts/run_rewards.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false}
@@ -61,6 +63,14 @@ var _draft_resume_origin: String = "starting"
 var _level_up_remaining: float = 0.0
 var _run_launched: bool = false
 var _practice_branch: String = ""
+var run_rewards = RunRewards.new()
+var _run_reward_token: String = ""
+var _pending_run_payout: Dictionary = {}
+var _packet_purchase_token: int = 0
+var _packet_product: String = ""
+var _packet_request_id: String = ""
+## In-process deterministic review injection. Refused outside fresh 003A QA paths.
+var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
 	if is_instance_valid(music) and run_context.is_active() and screen in ["reward", "mutation", "acquisition", "level_up", "pause", "settings"]:
@@ -302,8 +312,12 @@ func _title_gate() -> void:
 
 func _title() -> void:
 	if run_context.is_active(): return
+	if not _pay_pending_run_payout(): return
 	_clear_run()
 	_hide_battle()
+	if not collection.pending_packet().is_empty():
+		_show_packet(true)
+		return
 	screen = "title"
 	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
 	if is_instance_valid(music):
@@ -312,6 +326,10 @@ func _title() -> void:
 
 func _garage() -> void:
 	if run_context.is_active(): return
+	if not _pay_pending_run_payout(): return
+	if not collection.pending_packet().is_empty():
+		_show_packet(true)
+		return
 	if not collection.is_initialized():
 		_begin_collection()
 		return
@@ -325,6 +343,82 @@ func _garage() -> void:
 	menus.show_collection_workshop(collection.equipped_build(), snapshot)
 	music.set_context("workshop")
 	music.set_paused(false)
+
+func _shop(status: String = "") -> void:
+	if run_context.is_active(): return
+	if not _pay_pending_run_payout():
+		if str(last_result.get("payout_status", "")) != "balance_limit": return
+		status = "Wallet full. Spend CREDITS to make room for your pending Run reward."
+	if not collection.is_initialized():
+		_begin_collection()
+		return
+	_clear_run()
+	_hide_battle()
+	if not collection.pending_packet().is_empty():
+		_show_packet(true)
+		return
+	screen = "shop"
+	menus.show_shop(collection.snapshot(), status)
+	music.set_context("workshop")
+	music.set_paused(false)
+
+func _request_packet_purchase(kind: String) -> void:
+	if screen != "shop" or run_context.is_active() or kind not in ["standard", "reclaimed"]: return
+	if collection.read_only or not collection.pending_packet().is_empty(): return
+	var wallet: Dictionary = collection.wallet()
+	var unit: String = str(PacketEconomy.config().packets[kind].currency)
+	if int(wallet[unit]) < PacketEconomy.packet_cost(kind): return
+	_packet_purchase_token += 1
+	_packet_product = kind
+	_packet_request_id = collection.expected_packet_request_id()
+	screen = "packet_purchase"
+	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token)
+
+func _confirm_packet_purchase(token: Variant) -> void:
+	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
+	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
+	var source: RandomNumberGenerator = null
+	if packet_rng_override != null and qa_task_id == "003A" and _is_isolated_qa_path(collection_path, "temp"):
+		source = packet_rng_override
+	var purchase: Dictionary = collection.purchase_packet(_packet_product, source, _packet_request_id)
+	if not bool(purchase.ok):
+		_shop("Purchase stopped: %s. Your balance was preserved." % str(purchase.status).replace("_", " "))
+		return
+	_show_packet(false)
+
+func _show_packet(recovered: bool = false) -> void:
+	var pending: Dictionary = collection.pending_packet()
+	if pending.is_empty():
+		_shop()
+		return
+	_hide_battle()
+	var result: Dictionary = collection.finalize_packet(str(pending.id))
+	if not bool(result.ok):
+		_collection_error("Your purchased packet is safely saved. Opening stopped: %s. Reload to retry." % str(result.status).replace("_", " "), "packet")
+		return
+	screen = "packet_open"
+	menus.show_packet_open(result.receipt, collection.snapshot(), recovered)
+	music.set_context("workshop")
+	music.set_paused(false)
+
+func _leave_packet(route: String, kind: String = "") -> void:
+	if screen != "packet_open" or not is_instance_valid(menus._packet_view) or menus._packet_view.phase != "RESULT": return
+	var pending: Dictionary = collection.pending_packet()
+	if pending.is_empty(): return
+	if not _pay_pending_run_payout():
+		if str(last_result.get("payout_status", "")) != "balance_limit": return
+		route = "shop"
+	var result: Dictionary = collection.acknowledge_packet(str(pending.id))
+	if not bool(result.ok):
+		_collection_error("Your acquired parts are saved. The receipt could not be closed. Reload to retry.", "packet")
+		return
+	match route:
+		"workshop": _garage()
+		"another":
+			_shop()
+			_request_packet_purchase(kind)
+		"shop": _shop()
+		_: _title()
 
 func _practice_garage() -> void:
 	if run_context.is_active(): return
@@ -405,6 +499,10 @@ func _confirm_collection_reset(token: Variant) -> void:
 		_save_tools_status = "Reset stopped. The collection and verified backup were preserved."
 		_show_save_tools()
 		return
+	# An explicit full progression reset also retires any verified, unpaid
+	# session outcome; its old nonce cannot belong to the fresh collection.
+	_pending_run_payout.clear()
+	_run_reward_token = ""
 	_clear_run()
 	last_result.clear()
 	_save_tools_status = "Collection reset. Verified backup retained; options unchanged."
@@ -484,6 +582,10 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	music.set_paused(false)
 
 func _clear_run() -> void:
+	if _pending_run_payout.is_empty():
+		if not _run_reward_token.is_empty(): collection.abort_reward_run(_run_reward_token)
+		_run_reward_token = ""
+	run_rewards.abort()
 	if is_instance_valid(reroll_pickups): reroll_pickups.clear()
 	_run_launched = false
 	_practice_branch = ""
@@ -500,6 +602,9 @@ func _clear_run() -> void:
 
 func _start_run() -> void:
 	if run_context.is_active(): return
+	if not collection.pending_packet().is_empty():
+		_show_packet(true)
+		return
 	if not collection.is_initialized():
 		_begin_collection()
 		return
@@ -510,6 +615,10 @@ func _start_run() -> void:
 
 func _restart_run() -> void:
 	if not collection.can_launch(): return
+	if not _pay_pending_run_payout(): return
+	if not _run_reward_token.is_empty(): collection.abort_reward_run(_run_reward_token)
+	_run_reward_token = ""
+	run_rewards.abort()
 	_run_launched = false
 	# Entropy is sampled only here, never from menu duration or encounter timing.
 	var selected: Dictionary = collection.equipped_build()
@@ -537,6 +646,15 @@ func _restart_run() -> void:
 
 func _launch_run_encounter() -> void:
 	if not run_context.is_active() or _run_launched: return
+	var eligible: bool = not smoke_mode and not qa_catalogue_requested and _practice_branch.is_empty()
+	if eligible:
+		var started: Dictionary = collection.begin_reward_run()
+		if not bool(started.ok):
+			_clear_run()
+			_collection_error("The Run could not start because its reward record could not be saved. Your collection is preserved.", "workshop")
+			return
+		_run_reward_token = str(started.run_id)
+	run_rewards.start(run_context.run_seed, _run_reward_token if eligible else "fixture", eligible)
 	_run_launched = true
 	_acquisition_remaining = 0.0
 	_acquired_power_id = ""
@@ -587,6 +705,7 @@ func _acquisition_prompt() -> String:
 func _threat_cleared(summary: Dictionary) -> void:
 	if mode != "run" or not run_context.is_active() or battle.continuous == null: return
 	if summary != battle.continuous.last_clear or int(summary.get("run_seed",-1)) != run_context.run_seed: return
+	run_rewards.observe_clear(summary)
 	reroll_pickups.notify_clear(summary)
 	battle._emit_hud()
 
@@ -687,11 +806,44 @@ func _round_finished(result: Dictionary) -> void:
 		last_result["director_history"] = battle.continuous.director.history.duplicate(true)
 		last_result["investments"] = run_context.committed_rewards
 		last_result["rerolls"] = run_context.reroll_snapshot()
+		last_result["credits_earned"] = 0
+		last_result["wallet_credits"] = collection.credits
+		var reward: Dictionary = run_rewards.finalize(result)
+		if bool(reward.ok) and not _run_reward_token.is_empty():
+			_pending_run_payout = reward.outcome.duplicate(true)
+			_pay_pending_run_payout()
+		last_result["reward_accounting"] = run_rewards.snapshot()
 		if not smoke_mode:
 			var diagnostic_path: String = "user://last_run_director.json" if preferences_path == "user://prototype.cfg" else collection_path + ".last_run_director.json"
 			var diagnostic: FileAccess = FileAccess.open(diagnostic_path,FileAccess.WRITE)
 			if diagnostic != null: diagnostic.store_string(JSON.stringify(last_result,"\t"))
 	menus.show_result(last_result)
+
+func _pay_pending_run_payout() -> bool:
+	if _pending_run_payout.is_empty(): return true
+	# Keep the verified outcome while a transient write failure is retried. Never
+	# call finalize twice, discard the nonce on navigation, or infer a new reward.
+	if collection.read_only:
+		var loaded: Dictionary = collection.load_save()
+		if not bool(loaded.ok):
+			last_result.payout_pending = true
+			last_result.payout_detail = "CREDITS not saved. Close other game instances and use RETRY CREDITS."
+			return false
+	var paid: Dictionary = collection.pay_run_reward(_run_reward_token, _pending_run_payout)
+	if not bool(paid.ok):
+		last_result.payout_pending = true
+		last_result.payout_status = str(paid.status)
+		last_result.payout_detail = "CREDITS not saved: %s. Use RETRY CREDITS before leaving Results." % str(paid.status).replace("_", " ")
+		return false
+	last_result.credits_earned = int(paid.credits_earned)
+	last_result.wallet_credits = collection.credits
+	last_result.payout_pending = false
+	last_result.payout_status = str(paid.status)
+	var rules: Dictionary = PacketEconomy.config().reward
+	last_result.payout_detail = "%d CREDITS per player-cleared threat +%d per elite +%d per boss. Maximum %d per Run." % [int(rules.threat_clear), int(rules.elite_clear), int(rules.boss_clear), int(rules.max_run_payout)]
+	_pending_run_payout.clear()
+	_run_reward_token = ""
+	return true
 
 func _battle_sound(kind: String) -> void:
 	# Read-only packaged inspection exits immediately after boot. Starting a
@@ -703,7 +855,7 @@ func _battle_sound(kind: String) -> void:
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
 	# All build/menu routes respect the lock, including stale UI signals.
-	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "open_shop", "request_packet_purchase", "confirm_packet_purchase", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
 		if not (name == "settings" and screen == "pause"): return
 	_battle_sound("ui")
 	match name:
@@ -729,6 +881,27 @@ func _action(name: String, value: Variant = null) -> void:
 		"back_settings": _back_settings()
 		"begin_collection": _begin_collection()
 		"open_workshop": _garage()
+		"open_shop": _shop()
+		"request_packet_purchase": _request_packet_purchase(str(value))
+		"confirm_packet_purchase": _confirm_packet_purchase(value)
+		"cancel_packet_purchase":
+			if screen == "packet_purchase": _shop()
+		"packet_odds":
+			if screen in ["shop", "packet_odds"]:
+				screen = "packet_odds"
+				menus.show_packet_odds(PacketEconomy.rarity_odds("standard"))
+		"packet_reclaimed_odds":
+			if screen == "packet_odds": menus.show_packet_odds(PacketEconomy.rarity_odds("reclaimed", collection.owned_parts()))
+		"packet_salvage_info":
+			if screen == "packet_odds": menus.show_packet_salvage_info(PacketEconomy.config().duplicate_salvage, PacketEconomy.packet_cost("reclaimed"))
+		"packet_tear":
+			if screen == "packet_open": menus.tear_packet()
+		"packet_skip":
+			if screen == "packet_open": menus.skip_packet()
+		"packet_workshop": _leave_packet("workshop")
+		"packet_another": _leave_packet("another", str(value))
+		"packet_shop": _leave_packet("shop")
+		"packet_continue": _leave_packet("hub")
 		"practice_garage": _practice_garage()
 		"select_first_starter":
 			if screen == "starter_ceremony" and str(value) in Starters.IDS and not collection.is_initialized():
@@ -758,11 +931,17 @@ func _action(name: String, value: Variant = null) -> void:
 						screen = "starter_confirm"
 						_confirm_first_starter(_first_starter_focus)
 				elif _collection_retry == "workshop": _garage()
+				elif _collection_retry == "packet": _show_packet(true)
 		"start_run": _start_run()
+		"retry_run_payout":
+			if screen == "result":
+				_pay_pending_run_payout()
+				menus.show_result(last_result)
 		"restart_run":
 			if mode == "run" and screen in ["pause", "result"]: _restart_run()
 		"end_run":
 			if mode == "run":
+				if not _pay_pending_run_payout(): return
 				_clear_run()
 				last_result.clear()
 				_garage()
@@ -844,7 +1023,12 @@ func _resume() -> void:
 	music.set_paused(screen != "battle")
 
 func _escape() -> void:
-	if screen == "reset_confirm": _show_save_tools()
+	if screen == "packet_open":
+		if is_instance_valid(menus._packet_view) and menus._packet_view.phase == "RESULT": _leave_packet("shop")
+		else: menus.skip_packet()
+	elif screen in ["packet_purchase", "packet_odds"]: _shop()
+	elif screen == "shop": _title()
+	elif screen == "reset_confirm": _show_save_tools()
 	elif screen in ["save_tools", "settings"]: _back_settings()
 	elif screen == "title_gate": return
 	elif screen == "pause": _resume()
@@ -1002,8 +1186,46 @@ func _smoke_test() -> void:
 	_pause()
 	_action("end_run")
 	assert(run_context.status == "empty" and screen == "garage")
+	await _smoke_shop_progression()
 	print("INTEGRATION_SMOKE_PASS actions="+str(audit_actions)+" continuous_threats=10 one_launch_per_run (flow fixtures)")
 	get_tree().quit()
+
+func _smoke_shop_progression() -> void:
+	# Explicit packaged flow fixture. Real earned gameplay is captured separately.
+	assert(smoke_mode and not _is_default_collection_path(collection_path))
+	assert(collection.owned_count() == 3 and collection.credits == 0)
+	var started: Dictionary = collection.begin_reward_run()
+	assert(started.ok)
+	var outcome: Dictionary = {"reward_provenance":"earned-clear-v1", "reward_fixture":false, "aborted":false, "earned_threats_cleared":4, "earned_elites_cleared":0, "earned_bosses_cleared":0}
+	assert(collection.pay_run_reward(str(started.run_id), outcome).ok)
+	print("SHOP_QA_FIXTURE isolated saved clear records fund flow; not earned gameplay evidence")
+	_action("open_shop")
+	assert(screen == "shop")
+	await _capture("003a-shop.png")
+	_action("packet_odds")
+	await _capture("003a-odds.png")
+	_action("open_shop")
+	_action("request_packet_purchase", "standard")
+	_action("confirm_packet_purchase", _packet_purchase_token)
+	assert(screen == "packet_open" and collection.credits == 0)
+	var receipt: Dictionary = collection.pending_packet()
+	assert(receipt.status == "resolved" and receipt.rows.size() == 3)
+	_action("packet_tear")
+	await get_tree().create_timer(2.5).timeout
+	assert(menus._packet_view.phase == "RESULT")
+	await _capture("003a-packet-result.png")
+	_action("packet_workshop")
+	assert(screen == "garage" and collection.pending_packet().is_empty() and collection.owned_count() > 3)
+	for row: Dictionary in receipt.rows:
+		if bool(row.new):
+			_action("equip_part", {"category":row.category, "id":row.id})
+			assert(collection.equipped_build()[row.category] == row.id)
+			break
+	await _capture("003a-acquired-workshop.png")
+	_action("launch_owned_run")
+	assert(screen == "reward")
+	_action("end_run")
+	print("SHOP_PROGRESSION_SMOKE_PASS fixed_receipt=3 new_design_equipped=1 (flow fixture)")
 
 func _smoke_clear_threat() -> void:
 	# Controlled outcome fixture only; real combat is measured separately.

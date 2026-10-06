@@ -217,7 +217,7 @@ func _test_hud_cleanup() -> void:
 	await process_frame
 	check(_find_label(menus,"RUN ENDED") != null and _find_label(menus,"SURVIVED  07:55") != null, "Run loss has a survival result rather than a duel victory")
 	for label: Label in _labels(menus): _check_label_fits(label)
-	check(_buttons(menus).size() == 3 and root.gui_get_focus_owner().text == "RESTART RUN", "Run loss focuses Restart with Garage/Main Menu and no Continue")
+	check(_buttons(menus).size() == 4 and root.gui_get_focus_owner().text == "RUN AGAIN", "Run loss focuses Run Again with Shop, Workshop and Workbench routes")
 	await _capture("continuous-run-result")
 	menus.show_hud({"is_run":true,"run_label":"THREAT 8","owned_power_ids":owned,"status":"battle"})
 	var before: Node = menus._content

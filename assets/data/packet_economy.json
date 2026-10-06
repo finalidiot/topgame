@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "currency_name": "CREDITS",
+  "salvage_name": "SALVAGE",
+  "max_balance": 1000000000,
+  "packets": {
+    "standard": {"name": "PARTS PACKET", "currency": "credits", "cost": 48},
+    "reclaimed": {"name": "RECLAIMED PARTS PACKET", "currency": "salvage", "cost": 36}
+  },
+  "categories": ["blade", "ratchet", "bit"],
+  "rarity_weights": {"TRASH": 7, "COMMON": 50, "UNCOMMON": 28, "RARE": 10, "EPIC": 4, "LEGENDARY": 1},
+  "duplicate_salvage": {"TRASH": 1, "COMMON": 1, "UNCOMMON": 2, "RARE": 4, "EPIC": 7, "LEGENDARY": 10},
+  "guarantee_min_rarity": "UNCOMMON",
+  "reward": {"threat_clear": 12, "elite_clear": 10, "boss_clear": 30, "max_run_payout": 600},
+  "rules": {
+    "standard": "Choose one eligible category uniformly for the Uncommon+ slot; other slots use the base rarity pool. Only available eligible rarities are weighted; choose parts uniformly within the selected rarity.",
+    "reclaimed": "If unowned eligible parts remain, choose a category uniformly among categories with unowned parts, then use base rarity weights conditioned on its unowned pool. Another eligible category supplies Uncommon+. All other slots use base weights. Complete collections use standard rules.",
+    "missing_rarity": "Exclude unavailable rarities and normalize remaining positive weights. Missing component categories or impossible guarantees refuse purchase."
+  }
+}

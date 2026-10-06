@@ -9,6 +9,8 @@ const FrontEnd = preload("res://scripts/front_end.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Starters = preload("res://scripts/starters.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
+const PacketView = preload("res://scripts/packet_view.gd")
+const PacketEconomy = preload("res://scripts/packet_economy.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -74,6 +76,11 @@ var _catalogue_footer: Array = []
 var _catalogue_practice: bool = false
 var _part_texture_cache: Dictionary = {}
 var _equipped_slot_labels: Dictionary = {}
+var _packet_view: Control
+var _packet_receipt: Dictionary = {}
+var _packet_wallet: Dictionary = {}
+var _packet_controls: Array[Control] = []
+var _packet_note: Label
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -169,6 +176,8 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_catalogue_groups.clear()
 	_catalogue_footer.clear()
 	_equipped_slot_labels.clear()
+	_packet_view = null
+	_packet_controls.clear()
 	# F2 can hide combat HUD for the visual checkpoint. Required choices and
 	# results must restore their own visibility when combat ends or pauses.
 	if next_screen != "hud": visible = true
@@ -430,12 +439,13 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 	_clear("collection_title")
 	_label(_content, "SPINNING METAL", Rect2(22, 16, 594, 37), 30)
 	_label(_content, "THE WORKBENCH / ASSEMBLE A MACHINE. MAKE IT LAST.", Rect2(24, 55, 590, 17), 10, ORANGE)
-	var begin: Button = _button(_content, "START RUN" if initialized else "BEGIN / CHOOSE FIRST TOP", Rect2(24, 94, 286, 34), "start_run" if initialized else "begin_collection", null, true)
-	var workshop: Button = _button(_content, "WORKSHOP", Rect2(24, 136, 286, 32), "open_workshop")
-	var modes: Button = _button(_content, "PLAY MODES", Rect2(24, 176, 286, 32), "play_modes")
-	var options: Button = _button(_content, "OPTIONS", Rect2(24, 216, 138, 32), "settings")
-	var help: Button = _button(_content, "HOW TO PLAY", Rect2(172, 216, 138, 32), "help")
-	var quit_button: Button = _button(_content, "EXIT", Rect2(24, 256, 286, 30), "quit")
+	var begin: Button = _button(_content, "START RUN" if initialized else "BEGIN / CHOOSE FIRST TOP", Rect2(24, 88, 286, 32), "start_run" if initialized else "begin_collection", null, true)
+	var workshop: Button = _button(_content, "WORKSHOP", Rect2(24, 126, 286, 30), "open_workshop")
+	var shop: Button = _button(_content, "PARTS SHOP", Rect2(24, 164, 286, 30), "open_shop")
+	var modes: Button = _button(_content, "PLAY MODES", Rect2(24, 202, 286, 30), "play_modes")
+	var options: Button = _button(_content, "OPTIONS", Rect2(24, 240, 138, 30), "settings")
+	var help: Button = _button(_content, "HOW TO PLAY", Rect2(172, 240, 138, 30), "help")
+	var quit_button: Button = _button(_content, "EXIT", Rect2(24, 278, 286, 28), "quit")
 	_panel(_content, Rect2(338, 94, 280, 212), Color("18242c"))
 	if initialized and _complete_build(_build):
 		_label(_content, "YOUR EQUIPPED MACHINE", Rect2(350, 104, 256, 18), 10, BLUE)
@@ -458,9 +468,178 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 		var invitation: Label = _label(_content, "Three personalities. One first choice.\nBuild your collection from here." if not initialized else "Inspect your owned parts\nin the Workshop.", Rect2(350, 239, 256, 33), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		invitation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_label(_content, "0 OWNED PARTS" if not initialized else "SAVED COLLECTION", Rect2(350, 284, 256, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "Your Run ends. Your collection stays.", Rect2(24, 295, 286, 19), 10, MUTED)
+	_label(_content, "Your Run ends. Your collection stays.", Rect2(24, 310, 286, 16), 10, MUTED)
 	_input_footer()
-	_focus_rows([[begin], [workshop], [modes], [options, help], [quit_button]])
+	_focus_rows([[begin], [workshop], [shop], [modes], [options, help], [quit_button]])
+
+func _packet_image(parent: Node, kind: String, area: Rect2) -> void:
+	var value: AtlasTexture = AtlasTexture.new()
+	value.atlas = load("res://assets/ui/shop_003a/" + ("reclaimed_packet.png" if kind == "reclaimed" else "packet.png"))
+	value.region = Rect2(0, 0, 96, 96)
+	var sprite: TextureRect = TextureRect.new()
+	sprite.texture = value
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sprite.position = area.position
+	sprite.size = area.size
+	parent.add_child(sprite)
+
+func show_shop(snapshot: Dictionary, status: String = "") -> void:
+	_clear("shop")
+	var credits: int = int(snapshot.get("credits", 0))
+	var salvage: int = int(snapshot.get("salvage", 0))
+	var missing_eligible: bool = false
+	for part_id: String in PacketEconomy.eligible_ids():
+		if part_id not in snapshot.get("owned_part_ids", []): missing_eligible = true
+	var catalogue_total: int = 0
+	for category: String in PartCatalog.PARTS: catalogue_total += PartCatalog.PARTS[category].size()
+	_header("FOUNDRY PARTS SHOP", "CREDITS %d   /   SALVAGE %d   /   OWNED %d / %d" % [credits, salvage, int(snapshot.get("total_owned", 0)), catalogue_total])
+	var choices: Array = []
+	for index: int in range(2):
+		var kind: String = "standard" if index == 0 else "reclaimed"
+		var x: float = 22 + index * 304
+		var price: int = PacketEconomy.packet_cost(kind)
+		var unit: String = "CREDITS" if kind == "standard" else "SALVAGE"
+		_panel(_content, Rect2(x, 69, 292, 202), Color("18242c"))
+		_label(_content, PacketEconomy.packet_name(kind), Rect2(x + 12, 78, 268, 16), 10, TEXT)
+		_packet_image(_content, kind, Rect2(x + 7, 107, 96, 96))
+		_label(_content, "%d %s" % [price, unit], Rect2(x + 108, 105, 172, 24), 20, ORANGE)
+		_label(_content, "1 BLADE\n1 RATCHET\n1 BIT", Rect2(x + 108, 138, 172, 43), 10, TEXT)
+		var rule: String = "AT LEAST ONE UNCOMMON+" if kind == "standard" else ("AT LEAST ONE UNOWNED" if missing_eligible else "ALL PACKET DESIGNS OWNED")
+		_label(_content, rule, Rect2(x + 12, 199, 268, 16), 10, BLUE)
+		_label(_content, "Duplicates become SALVAGE.", Rect2(x + 12, 217, 268, 14), 10, MUTED)
+		var enough: bool = (credits if kind == "standard" else salvage) >= price and not bool(snapshot.get("read_only", false))
+		var purchase: Button = _button(_content, "BUY / %d %s" % [price, unit] if enough else "NEED %d MORE %s" % [maxi(0, price - (credits if kind == "standard" else salvage)), unit], Rect2(x + 12, 239, 268, 25), "request_packet_purchase", kind, enough)
+		purchase.disabled = not enough
+		if enough: choices.append(purchase)
+	_label(_content, status if not status.is_empty() else "Earn CREDITS by clearing threats in Runs. SALVAGE gives missing designs a route home.", Rect2(24, 280, 592, 17), 10, MUTED)
+	var odds: Button = _button(_content, "INFO / ODDS", Rect2(22, 306, 190, 26), "packet_odds")
+	var workshop: Button = _button(_content, "WORKSHOP", Rect2(224, 306, 190, 26), "open_workshop")
+	var hub: Button = _button(_content, "WORKBENCH", Rect2(426, 306, 192, 26), "main_menu")
+	_input_footer(339)
+	var rows: Array = []
+	if not choices.is_empty(): rows.append(choices)
+	rows.append([odds, workshop, hub])
+	_focus_rows(rows)
+
+func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> void:
+	_clear("packet_purchase")
+	_header("BUY A PARTS PACKET", "A sealed hobby pouch. Three permanent component designs.")
+	_panel(_content, Rect2(98, 75, 444, 216), Color("18242c"))
+	_packet_image(_content, kind, Rect2(113, 99, 96, 96))
+	_label(_content, PacketEconomy.packet_name(kind), Rect2(220, 100, 308, 23), 20, TEXT)
+	var unit: String = "SALVAGE" if kind == "reclaimed" else "CREDITS"
+	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind), unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
+	_label(_content, "1 Blade + 1 Ratchet + 1 Bit\nDuplicates recycle into SALVAGE.", Rect2(220, 162, 306, 35), 10, TEXT)
+	_label(_content, "Your contents are saved before the seam tears.", Rect2(112, 214, 417, 17), 10, MUTED)
+	var cancel: Button = _button(_content, "CANCEL", Rect2(112, 248, 184, 28), "cancel_packet_purchase")
+	var confirm: Button = _button(_content, "BUY / %d %s" % [PacketEconomy.packet_cost(kind), unit], Rect2(310, 248, 218, 28), "confirm_packet_purchase", token, true)
+	_input_footer()
+	_focus_rows([[cancel, confirm]], cancel)
+
+func show_packet_odds(odds: Dictionary) -> void:
+	_clear("packet_odds")
+	var reclaimed: bool = str(odds.get("kind", "standard")) == "reclaimed"
+	_header("RECLAIMED / REAL ODDS" if reclaimed else "PACKET INFO / REAL ODDS", "Reclaimed: one Blade, one Ratchet, one Bit. Uncommon+ and one unowned if any remain." if reclaimed else "Standard: one Blade, one Ratchet, one Bit. At least one Uncommon+.")
+	_panel(_content, Rect2(22, 65, 596, 225), Color("18242c"))
+	_label(_content, "RARITY", Rect2(36, 76, 132, 16), 10, MUTED)
+	for column: int in range(3):
+		var category: String = ["blade", "ratchet", "bit"][column]
+		_label(_content, category.to_upper(), Rect2(183 + column * 140, 76, 130, 16), 10, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+	for row: int in range(6):
+		var rarity: String = PartCatalog.RARITIES[row]
+		_label(_content, rarity, Rect2(36, 103 + row * 22, 132, 17), 10, _rarity_color(rarity))
+		for column: int in range(3):
+			var category: String = ["blade", "ratchet", "bit"][column]
+			var chance: float = float(odds.get("categories", {}).get(category, {}).get(rarity, 0.0))
+			_label(_content, "%.3f%%" % (chance * 100.0), Rect2(183 + column * 140, 103 + row * 22, 130, 17), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "Final per-slot probabilities for your collection, including the unowned guarantee." if reclaimed else "Final per-slot probabilities, including the guarantee. Absent tiers show 0%.", Rect2(36, 241, 568, 17), 10, MUTED)
+	_label(_content, "All packet designs owned: no NEW guarantee." if reclaimed and not bool(odds.get("new_guarantee", false)) else "Reclaimed: one unowned if any remain, plus Uncommon+. Other parts may duplicate.", Rect2(36, 262, 568, 17), 10, BLUE)
+	var back: Button = _button(_content, "BACK TO SHOP", Rect2(22, 306, 184, 26), "open_shop", null, true)
+	var alternate: Button = _button(_content, "STANDARD ODDS" if reclaimed else "RECLAIMED ODDS", Rect2(216, 306, 196, 26), "packet_odds" if reclaimed else "packet_reclaimed_odds")
+	var salvage_info: Button = _button(_content, "RECYCLING VALUES", Rect2(422, 306, 196, 26), "packet_salvage_info")
+	_input_footer(339)
+	_focus_rows([[back, alternate, salvage_info]])
+
+func show_packet_salvage_info(values: Dictionary, cost: int) -> void:
+	_clear("packet_odds")
+	_header("SALVAGE / RECLAIMED PARTS", "You unlock designs, not quantities. Every duplicate becomes SALVAGE.")
+	_panel(_content, Rect2(22, 65, 596, 225), Color("18242c"))
+	for index: int in range(6):
+		var rarity: String = PartCatalog.RARITIES[index]
+		_label(_content, "%s DUPLICATE" % rarity, Rect2(40, 80 + index * 28, 250, 17), 10, _rarity_color(rarity))
+		_label(_content, "+%d SALVAGE" % int(values.get(rarity, 0)), Rect2(315, 80 + index * 28, 262, 17), 10, TEXT)
+	_label(_content, "RECLAIMED PACKET / %d SALVAGE / AT LEAST ONE UNOWNED ELIGIBLE DESIGN" % cost, Rect2(40, 259, 562, 17), 10, BLUE)
+	var back: Button = _button(_content, "BACK TO SHOP", Rect2(22, 306, 292, 26), "open_shop", null, true)
+	var odds: Button = _button(_content, "STANDARD ODDS", Rect2(326, 306, 292, 26), "packet_odds")
+	_input_footer(339)
+	_focus_rows([[back, odds]])
+
+func _rarity_color(rarity: String) -> Color:
+	return {"TRASH":Color("a49a87"), "COMMON":TEXT, "UNCOMMON":Color("afc28d"), "RARE":BLUE, "EPIC":Color("b1a0c7"), "LEGENDARY":ORANGE}.get(rarity, TEXT)
+
+func show_packet_open(receipt: Dictionary, snapshot: Dictionary, recovered: bool = false) -> void:
+	_clear("packet_open")
+	_packet_receipt = receipt.duplicate(true)
+	_packet_wallet = snapshot.duplicate(true)
+	_packet_view = PacketView.new()
+	_packet_view.size = Vector2(640, 360)
+	_content.add_child(_packet_view)
+	_packet_view.cue.connect(func(kind: String) -> void: focus_sound.emit(kind))
+	_packet_view.settled.connect(_show_packet_summary)
+	_header("PARTS ON THE WORKBENCH", "Your packet is saved. Tear the seam and see what came home.")
+	_packet_note = _label(_content, "CRINKLE / TEAR / SPILL / INSPECT", Rect2(145, 281, 446, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var tear: Button = _button(_content, "TEAR OPEN", Rect2(22, 309, 292, 27), "packet_tear", null, true)
+	var skip: Button = _button(_content, "FAST OPEN", Rect2(326, 309, 292, 27), "packet_skip")
+	tear.tooltip_text = "Confirm to tear. Hold Confirm to accelerate. Back resolves the saved results immediately."
+	_packet_controls = [tear, skip]
+	_input_footer(339)
+	_focus_rows([[tear, skip]])
+	_packet_view.configure(receipt, recovered)
+
+func tear_packet() -> void:
+	if screen != "packet_open" or not is_instance_valid(_packet_view): return
+	_packet_view.tear()
+	if is_instance_valid(_packet_note): _packet_note.text = "HOLD CONFIRM TO SPEED UP / BACK TO RESOLVE"
+	if not _packet_controls.is_empty(): (_packet_controls[0] as Button).text = "OPENING / HOLD TO SPEED UP"
+
+func skip_packet() -> void:
+	if screen == "packet_open" and is_instance_valid(_packet_view): _packet_view.resolve()
+
+func _show_packet_summary() -> void:
+	if screen != "packet_open": return
+	for control: Control in _packet_controls:
+		if is_instance_valid(control):
+			control.get_parent().remove_child(control)
+			control.queue_free()
+	_packet_controls.clear()
+	if is_instance_valid(_packet_note): _packet_note.visible = false
+	for index: int in range(_packet_receipt.get("rows", []).size()):
+		var row: Dictionary = _packet_receipt.rows[index]
+		var x: float = 88 + index * 156
+		var accent: Color = _rarity_color(str(row.rarity))
+		_rect(_content, Rect2(x + 13, 212, 126, 1), accent)
+		_label(_content, str(row.category).to_upper(), Rect2(x, 219, 152, 15), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, str(PartCatalog.PARTS[row.category][row.id].name), Rect2(x, 237, 152, 17), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, str(row.rarity), Rect2(x, 257, 152, 16), 10, accent, HORIZONTAL_ALIGNMENT_CENTER)
+		_panel(_content, Rect2(x + 5, 279, 142, 20), Color("263640"), ORANGE if bool(row.new) else BORDER)
+		_label(_content, "NEW DESIGN" if bool(row.new) else "DUPLICATE / +%d SALVAGE" % int(row.salvage), Rect2(x + 6, 282, 140, 14), 10, ORANGE if bool(row.new) else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		focus_sound.emit("packet_new" if bool(row.new) else "packet_recycle")
+		if str(row.rarity) in ["RARE", "EPIC", "LEGENDARY"]: focus_sound.emit("packet_rare")
+	var workshop: Button = _button(_content, "WORKSHOP", Rect2(22, 309, 174, 27), "packet_workshop", null, true)
+	var price: int = PacketEconomy.packet_cost(str(_packet_receipt.kind))
+	var unit: String = str(_packet_receipt.currency)
+	var another: Button = _button(_content, "OPEN ANOTHER", Rect2(206, 309, 156, 27), "packet_another", str(_packet_receipt.kind))
+	another.disabled = int(_packet_wallet.get(unit, 0)) < price
+	var shop: Button = _button(_content, "SHOP", Rect2(372, 309, 110, 27), "packet_shop")
+	var hub: Button = _button(_content, "CONTINUE", Rect2(492, 309, 126, 27), "packet_continue")
+	var row_controls: Array = [workshop]
+	if not another.disabled: row_controls.append(another)
+	row_controls.append_array([shop, hub])
+	_packet_controls.assign(row_controls)
+	_accept_needs_release = Input.is_action_pressed("ui_accept")
+	_focus_rows([row_controls], workshop)
 
 func show_title_gate(initialized: bool = false) -> void:
 	_clear("title_gate")
@@ -586,11 +765,12 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	for category: String in ["blade", "ratchet", "bit"]: total_owned += _collection_owned(category).size()
 	_label(_content, "%d / 31" % total_owned, Rect2(181, 70, 45, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
 	_create_workshop_catalogue()
-	var back: Button = _button(_content, "WORKBENCH", Rect2(16, 321, 118, 28), "main_menu")
-	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(144, 321, 228, 28), "quick_duel")
-	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(382, 321, 242, 28), "launch_owned_run", null, true)
+	var back: Button = _button(_content, "WORKBENCH", Rect2(16, 321, 104, 28), "main_menu")
+	var shop: Button = _button(_content, "SHOP", Rect2(128, 321, 88, 28), "open_shop")
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(224, 321, 180, 28), "quick_duel")
+	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(412, 321, 212, 28), "launch_owned_run", null, true)
 	launch.disabled = not _owned_build_is_complete()
-	_catalogue_footer = [back, practice, launch] if not launch.disabled else [back, practice]
+	_catalogue_footer = [back, shop, practice, launch] if not launch.disabled else [back, shop, practice]
 	_refresh_garage()
 	_show_catalogue_category(_catalogue_category, false)
 	_catalogue_navigation(launch if not launch.disabled else back)
@@ -1226,27 +1406,34 @@ func _show_run_result(result: Dictionary) -> void:
 	_label(_content, "%d THREATS CLEARED / LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(281, 109, 325, 16), 10, BLUE)
 	var defeats: Label = _label(_content, "%d RIVALS / %d SMALL / %d ELITES / %d BOSSES" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0)),int(result.get("elites_defeated",0)),int(result.get("bosses_defeated",0))], Rect2(281, 134, 325, 23), 10, MUTED)
 	defeats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_panel(_content, Rect2(269, 173, 349, 134))
-	_label(_content, "FINAL INVESTMENTS", Rect2(281, 181, 325, 14), 10, ORANGE)
+	_panel(_content, Rect2(269, 173, 349, 31), Color("263640"), BLUE)
+	var earned: int = int(result.get("credits_earned", 0))
+	var wallet: int = int(result.get("wallet_credits", 0))
+	var pending: bool = bool(result.get("payout_pending", false))
+	var payout: Label = _label(_content, "CREDITS NOT SAVED / RETRY BELOW" if pending else "+%d CREDITS / WALLET %d" % [earned, wallet], Rect2(281, 181, 325, 16), 10, ORANGE if pending else BLUE)
+	payout.tooltip_text = str(result.get("payout_detail", "Earned from player-cleared threats, elites and bosses."))
+	_panel(_content, Rect2(269, 212, 349, 95))
+	_label(_content, "FINAL INVESTMENTS", Rect2(281, 219, 325, 14), 10, ORANGE)
 	var ids: Array = result.get("owned_power_ids", [])
-	if ids.is_empty(): _label(_content, "No power was committed.", Rect2(281, 214, 325, 20), 10, MUTED)
+	if ids.is_empty(): _label(_content, "No power was committed.", Rect2(281, 240, 325, 20), 10, MUTED)
 	for index: int in range(ids.size()):
 		var id: String = str(ids[index])
 		var rank: int = int(result.get("power_ranks", {}).get(id, 1))
 		var mutation: String = str(result.get("power_mutations", {}).get(id, ""))
 		var data: Dictionary = Powers.get_owned_power(id, rank, mutation)
 		var x: float = 281 + (index % 2) * 166
-		var y: float = 202 + (index / 2) * 17
+		var y: float = 239 + (index / 2) * 17
 		_power_icon(_content, id, Rect2(x, y, 16, 16))
 		_label(_content, ["Ⅰ", "Ⅱ", "Ⅲ"][clampi(rank - 1, 0, 2)], Rect2(x + 18, y, 7, 16), 10, ORANGE)
 		var display_name: String = str(data.get("name", id)) if not mutation.is_empty() else str(Powers.get_power(id).get("name", id))
 		var name: Label = _label(_content, display_name, Rect2(x + 28, y, 136, 16), 10, TEXT)
 		name.tooltip_text = str(data.get("name", id)) + " / RANK %d" % rank + (" / " + mutation.replace("_", " ") if not mutation.is_empty() else "")
 		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var restart: Button = _button(_content, "RESTART RUN", Rect2(22, 321, 286, 28), "restart_run", null, true)
-	var garage: Button = _button(_content, "WORKSHOP", Rect2(321, 321, 140, 28), "customize")
-	var hub: Button = _button(_content, "WORKBENCH", Rect2(475, 321, 143, 28), "main_menu")
-	_focus_rows([[restart, garage, hub]])
+	var restart: Button = _button(_content, "RETRY CREDITS" if pending else "RUN AGAIN", Rect2(22, 321, 186, 28), "retry_run_payout" if pending else "restart_run", null, true)
+	var shop: Button = _button(_content, "SHOP" + (" / READY" if wallet >= PacketEconomy.packet_cost("standard") else ""), Rect2(218, 321, 112, 28), "open_shop")
+	var garage: Button = _button(_content, "WORKSHOP", Rect2(340, 321, 126, 28), "customize")
+	var hub: Button = _button(_content, "WORKBENCH", Rect2(476, 321, 142, 28), "main_menu")
+	_focus_rows([[restart, shop, garage, hub]])
 
 func show_hud(stats: Dictionary) -> void:
 	if screen != "hud":

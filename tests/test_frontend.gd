@@ -345,8 +345,14 @@ func _run() -> void:
 	await _test_changed_collection_guard()
 	await _test_pause_options_preserves_run()
 	if is_instance_valid(game):
+		# Normal-boot UI intentionally plays real SFX. Let the Dummy audio thread
+		# release its queued playbacks before SceneTree teardown, even on fast QA.
+		game.sounds.muted = true
+		for channel: AudioStreamPlayer in game.sounds.channels: channel.stop()
+		await create_timer(0.12).timeout
 		game.queue_free()
 		await _settle()
+		await create_timer(0.12).timeout
 	check(_player_files() == _player_files_before, "The actual human collection and preferences remained byte-for-byte unchanged")
 	print("FRONT_END_TEST_%s checks=%d failures=%d synthetic_device=%d qa_profiles=%s" % ["PASS" if failures == 0 else "FAIL", checks, failures, PAD, _qa_profiles])
 	quit(1 if failures else 0)

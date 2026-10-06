@@ -343,7 +343,13 @@ func _write_report() -> void:
 		var path: String = argument.get_slice("=", 1).replace("\\", "/").simplify_path()
 		var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
 		var qa_root: String = configured if not configured.is_empty() else ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-		var prefix: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.6/manifests").to_lower() + "/"
+		var task_id: String = "002C.6"
+		for option: String in OS.get_cmdline_user_args():
+			if option.begins_with("--qa-task="): task_id = option.trim_prefix("--qa-task=")
+		var valid_task: RegEx = RegEx.create_from_string("^[0-9]{3}[A-Z](?:\\.[0-9]+)*$")
+		check(valid_task.search(task_id) != null, "Music evidence task has a valid workspace identity")
+		if valid_task.search(task_id) == null: continue
+		var prefix: String = qa_root.replace("\\", "/").simplify_path().path_join(task_id + "/manifests").to_lower() + "/"
 		check(path.is_absolute_path() and path.to_lower().begins_with(prefix) and path.get_extension().to_lower() == "json", "Music escalation report is scoped to external task QA manifests")
 		if not path.is_absolute_path() or not path.to_lower().begins_with(prefix) or path.get_extension().to_lower() != "json": continue
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())

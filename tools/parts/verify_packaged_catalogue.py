@@ -41,17 +41,111 @@ def verify_collection(path: Path, expected: set[str]) -> dict:
         raise RuntimeError("The actual package did not create its isolated QA collection")
     saved = json.loads(path.read_text(encoding="utf-8"))
     owned = saved.get("owned_part_ids")
-    if (saved.get("schema_version") != 1 or saved.get("starter_selected") != "breaker"
+    if (type(saved.get("schema_version")) is not int or saved.get("schema_version") != 2 or saved.get("starter_selected") != "breaker"
             or not isinstance(owned, list) or not all(isinstance(p, str) for p in owned)
             or len(owned) != len(expected) or set(owned) != expected):
         raise RuntimeError("Packaged QA collection does not own exactly the current 31 qualified part IDs")
     build = saved.get("equipped_build")
     if build != {"blade": "smash", "ratchet": "high", "bit": "flat"}:
         raise RuntimeError("The newly created QA collection changed its initial Breaker assembly")
+    progression = saved.get("progression")
+    empty_progression = {"credits":0,"salvage":0,"packet_serial":0,"pending_packet":{},
+                         "last_packet":{},"run_serial":0,"active_run":"","last_reward":{}}
+    if (not isinstance(progression, dict) or progression != empty_progression
+            or any(type(progression.get(key)) is not int for key in ("credits","salvage","packet_serial","run_serial"))):
+        raise RuntimeError("Packaged catalogue inspection must create zero economic state with no pending transactions or rewards")
     return {"path": str(path), "sha256": workspace.sha256(path), "owned_count": len(owned),
             "category_counts": {c: sum(p.startswith(c + ":") for p in owned)
                                 for c in ("blade", "ratchet", "bit")},
-            "owned_part_ids": sorted(owned), "equipped_build": build}
+            "owned_part_ids": sorted(owned), "equipped_build": build,
+            "schema_version":2,"progression":progression,"qa_economy_empty":True}
+
+
+def _visible_pixels(path: Path) -> tuple[list[int], str]:
+    with Image.open(path) as image:
+        size = list(image.size)
+        data = bytearray(image.convert("RGBA").tobytes())
+    for offset in range(0,len(data),4):
+        if data[offset+3] == 0: data[offset:offset+3] = b"\0\0\0"
+    return size,hashlib.sha256(data).hexdigest()
+
+
+def _source_economy_odds(source_root: Path) -> dict:
+    """Require source identity for the real GDScript study's versioned odds."""
+    summary_path = source_root / "tests/results/003a_economy_save_summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    required = ("scripts/packet_economy.gd","assets/data/packet_economy.json","assets/data/parts_catalogue.json")
+    for path in required:
+        if summary.get("source_hashes",{}).get(path) != workspace.sha256(source_root / path):
+            raise RuntimeError("Source economy odds evidence is stale; rerun the production economy study: " + path)
+    return summary["rarity_odds"]
+
+
+def verify_shop_assets(assets: dict, source_root: Path = ROOT) -> dict:
+    """Match imported packaged pixels/metadata and PCM against authored source."""
+    packet_meta = assets.get("packet_json",{})
+    texture_rows = assets.get("packet_textures",[])
+    kinds = {"packet","reclaimed_packet","reveal_mat"}
+    if (not isinstance(packet_meta,dict) or set(packet_meta) != kinds
+            or not isinstance(texture_rows,list) or len(texture_rows) != 3
+            or {row.get("kind") for row in texture_rows} != kinds):
+        raise RuntimeError("Actual package did not inspect both packet sheets and the physical reveal mat")
+    for row in texture_rows:
+        kind = row["kind"]
+        relative = "assets/ui/shop_003a/" + kind
+        metadata = json.loads((source_root / (relative + ".json")).read_text(encoding="utf-8"))
+        if json.loads(packet_meta[kind]) != metadata:
+            raise RuntimeError("Packaged packet authored metadata differs: " + kind)
+        if (row.get("path") != "res://" + relative + ".png"
+                or row.get("metadata_path") != "res://" + relative + ".json"):
+            raise RuntimeError("Packaged packet texture/metadata path differs: " + kind)
+        size,visible = _visible_pixels(source_root / (relative + ".png"))
+        if (row.get("valid") is not True or row.get("visible_pixels") is not True
+                or row.get("transparent_rgb_normalized") is not True
+                or row.get("size") != size or row.get("visible_rgba_sha256") != visible):
+            raise RuntimeError("Actual packaged packet pixels differ: " + kind)
+        for key in ("cell","pivot","tags","durations_ms","columns","frame_count"):
+            if row.get(key) != metadata.get(key):
+                raise RuntimeError("Actual imported packet topology differs: " + kind + "/" + key)
+    config = json.loads((source_root / "assets/data/packet_economy.json").read_text(encoding="utf-8"))
+    if (json.loads(assets.get("economy_json","null")) != config
+            or assets.get("economy_config") != config or assets.get("economy_validation_errors") != []):
+        raise RuntimeError("Packaged packet economy differs from production data")
+    odds = assets.get("economy_odds",{})
+    expected_odds = _source_economy_odds(source_root)
+    if (not isinstance(odds,dict) or odds.get("kind") != "standard" or odds.get("guarantee") != "UNCOMMON+"
+            or odds.get("new_guarantee") is not False or odds.get("rarity_weights") != config["rarity_weights"]
+            or odds.get("categories") != expected_odds
+            or odds.get("rules") != config["rules"]["standard"]
+            or odds.get("missing_rarity_rule") != config["rules"]["missing_rarity"]):
+        raise RuntimeError("Actual compiled packet odds differ from source production algorithm evidence")
+    audio_path = source_root / "assets/audio/shop_003a/manifest.json"
+    audio_manifest = json.loads(audio_path.read_text(encoding="utf-8"))
+    if json.loads(assets.get("packet_audio_json","null")) != audio_manifest:
+        raise RuntimeError("Packaged packet audio manifest differs from authored source")
+    cues = {"packet_land","packet_crinkle","packet_tear","packet_spill","packet_clink","packet_new","packet_rare","packet_recycle"}
+    rows = assets.get("packet_audio",[])
+    if (set(audio_manifest.get("cues",{})) != cues or not isinstance(rows,list) or len(rows) != 8
+            or {row.get("kind") for row in rows} != cues):
+        raise RuntimeError("Actual package did not inspect all eight physical packet cues")
+    for row in rows:
+        kind = row["kind"]
+        cue = audio_manifest["cues"][kind]
+        expected_path = "res://assets/audio/shop_003a/" + cue["file"]
+        with wave.open(str(source_root / expected_path.removeprefix("res://")),"rb") as sample:
+            pcm = sample.readframes(sample.getnframes())
+            frames,rate,channels,width = sample.getnframes(),sample.getframerate(),sample.getnchannels(),sample.getsampwidth()
+        digest = hashlib.sha256(pcm).hexdigest()
+        if (rate,channels,width) != (32000,1,2) or frames != cue["pcm_frames"] or digest != cue["pcm_sha256"]:
+            raise RuntimeError("Packet source PCM no longer matches its authored manifest: " + kind)
+        if (row.get("path") != expected_path or row.get("valid") is not True
+                or row.get("mix_rate") != rate or row.get("channels") != channels
+                or row.get("stereo") is not False or row.get("format") != 1 or row.get("loop_mode") != 0
+                or row.get("pcm_frames") != frames or row.get("pcm_sha256") != digest):
+            raise RuntimeError("Actual packaged packet PCM differs from authored source: " + kind)
+    return {"packet_textures_verified":3,"packet_metadata_matches_source":True,"packet_pixels_exact":True,
+            "packet_audio_cues_verified":8,"packet_audio_pcm_exact":True,"economy_matches_source":True,
+            "production_odds_match":True,"odds_source":"tests/results/003a_economy_save_summary.json"}
 
 
 def main() -> None:
@@ -182,6 +276,7 @@ def main() -> None:
                     raise RuntimeError("Packaged imported PCM differs from original composition: " + expected_path)
         report["assets"]["music_stems_verified"] = 5
         report["assets"]["music_pcm_exact"] = True
+        report["assets"].update(verify_shop_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

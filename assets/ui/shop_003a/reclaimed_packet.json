@@ -1,0 +1,81 @@
+{
+  "cell": [
+    96,
+    96
+  ],
+  "pivot": [
+    48,
+    86
+  ],
+  "layers": [
+    "placed contact shadow",
+    "opaque pouch body",
+    "sealed and torn edges",
+    "authored paper crinkles",
+    "physical printed label",
+    "detached tear strip"
+  ],
+  "tags": {
+    "SEALED": {
+      "from": 0,
+      "to": 0
+    },
+    "CRINKLE": {
+      "from": 1,
+      "to": 3
+    },
+    "TEAR_START": {
+      "from": 4,
+      "to": 5
+    },
+    "TEAR_OPEN": {
+      "from": 6,
+      "to": 8
+    },
+    "SPILL": {
+      "from": 9,
+      "to": 11
+    },
+    "EMPTY_PACKET": {
+      "from": 12,
+      "to": 12
+    }
+  },
+  "durations_ms": [
+    500,
+    100,
+    90,
+    100,
+    120,
+    120,
+    110,
+    110,
+    180,
+    130,
+    130,
+    180,
+    1000
+  ],
+  "version": 1,
+  "texture": "reclaimed_packet.png",
+  "columns": 13,
+  "frame_count": 13,
+  "source": "../../source-art/shop_003a/reclaimed_packet.aseprite",
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A",
+  "sealed_mouth": [
+    48,
+    19
+  ],
+  "open_mouth": [
+    48,
+    29
+  ],
+  "spill_mouth": [
+    52,
+    45
+  ],
+  "material": "opaque matte laminate hobby pouch",
+  "reclaimed": true
+}

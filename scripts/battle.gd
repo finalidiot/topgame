@@ -444,7 +444,10 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		_hit_stop = maxf(0.0, _hit_stop - dt)
 		return
 	elapsed += dt
-	if continuous != null: continuous.economy.begin_tick(dt, screen_direction)
+	if continuous != null:
+		continuous.economy.begin_tick(dt, screen_direction)
+		var reward_player: Dictionary = player_entity()
+		continuous.observe_input(dt, screen_direction, brake, _burst_buffer > 0.0 or float(reward_player.get("burst_time", 0.0)) > 0.0)
 	powers.begin_tick(dt)
 	roster.begin_tick(dt)
 	swarm.begin_tick(dt)

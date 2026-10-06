@@ -1,6 +1,14 @@
 extends Node
 
 const SOUNDS: Dictionary = {
+	"packet_land": preload("res://assets/audio/shop_003a/packet_land.wav"),
+	"packet_crinkle": preload("res://assets/audio/shop_003a/packet_crinkle.wav"),
+	"packet_tear": preload("res://assets/audio/shop_003a/packet_tear.wav"),
+	"packet_spill": preload("res://assets/audio/shop_003a/packet_spill.wav"),
+	"packet_clink": preload("res://assets/audio/shop_003a/packet_clink.wav"),
+	"packet_new": preload("res://assets/audio/shop_003a/packet_new.wav"),
+	"packet_rare": preload("res://assets/audio/shop_003a/packet_rare.wav"),
+	"packet_recycle": preload("res://assets/audio/shop_003a/packet_recycle.wav"),
 	"redline_overcap":preload("res://assets/audio/redline_overcap.wav"),
 	"redline_heat":preload("res://assets/audio/redline_heat.wav"),
 	"clutch_activate":preload("res://assets/audio/clutch_activate.wav"),
@@ -63,7 +71,9 @@ const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low
 	"counterweight_store": 3, "counterweight_release": 5,
 	"afterimage_ii": 1, "ghost_closure": 5, "ghost_activation": 5, "slipstream_cross": 3,
 	"redline_overcap":4,"redline_heat":3,"clutch_activate":4,"clutch_recover":5,
-	"high_gear_surge":3,"ghost_preview":1,"momentum_release":3,"crash_guard":3,"crosscut":3}
+	"high_gear_surge":3,"ghost_preview":1,"momentum_release":3,"crash_guard":3,"crosscut":3,
+	"packet_land":5,"packet_crinkle":5,"packet_tear":6,"packet_spill":6,
+	"packet_clink":5,"packet_new":6,"packet_rare":6,"packet_recycle":5}
 const COOLDOWN: Dictionary = {"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
 	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
 	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
@@ -72,7 +82,9 @@ const COOLDOWN: Dictionary = {"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.
 	"counterweight_store": 0.28, "counterweight_release": 0.28,
 	"afterimage_ii": 0.22, "ghost_closure": 0.40, "ghost_activation": 0.35, "slipstream_cross": 0.30,
 	"redline_overcap":1.0,"redline_heat":2.5,"clutch_activate":1.5,"clutch_recover":1.0,
-	"high_gear_surge":0.4,"ghost_preview":0.65,"momentum_release":0.4,"crash_guard":0.6,"crosscut":0.6}
+	"high_gear_surge":0.4,"ghost_preview":0.65,"momentum_release":0.4,"crash_guard":0.6,"crosscut":0.6,
+	"packet_land":0.10,"packet_crinkle":0.10,"packet_tear":0.30,"packet_spill":0.15,
+	"packet_clink":0.065,"packet_new":0.15,"packet_rare":0.30,"packet_recycle":0.10}
 var channels: Array[AudioStreamPlayer] = []
 var current: int = 0
 var muted: bool = false
@@ -182,6 +194,10 @@ func play_sound(kind: String) -> void:
 	if key in ["redline_overcap","clutch_recover","high_gear_surge","momentum_release"]: player.volume_db=-6.0
 	if key in ["redline_heat","clutch_activate","crash_guard","crosscut"]: player.volume_db=-9.0
 	if key=="ghost_preview": player.volume_db=-15.0
+	if key in ["packet_land", "packet_clink", "packet_new", "packet_recycle"]: player.volume_db = -7.0
+	if key in ["packet_crinkle", "packet_spill"]: player.volume_db = -5.5
+	if key == "packet_tear": player.volume_db = -4.5
+	if key == "packet_rare": player.volume_db = -7.5
 	if kind == "boss_warning":
 		player.pitch_scale = 0.68
 		player.volume_db = -3.0

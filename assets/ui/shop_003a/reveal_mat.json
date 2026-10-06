@@ -1,0 +1,32 @@
+{
+  "cell": [
+    272,
+    134
+  ],
+  "pivot": [
+    136,
+    124
+  ],
+  "layers": [
+    "quiet rubber spill surface",
+    "front rolled bench lip",
+    "placed corner wear"
+  ],
+  "tags": {
+    "REVEAL_MAT": {
+      "from": 0,
+      "to": 0
+    }
+  },
+  "durations_ms": [
+    1000
+  ],
+  "version": 1,
+  "texture": "reveal_mat.png",
+  "columns": 1,
+  "frame_count": 1,
+  "source": "../../source-art/shop_003a/reveal_mat.aseprite",
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A"
+}

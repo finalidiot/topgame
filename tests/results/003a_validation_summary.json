@@ -1,0 +1,159 @@
+{
+  "task": "003A",
+  "status": "passed",
+  "created_utc": "2026-10-06T10:26:17.153212+00:00",
+  "branch": "task-003a-shop-parts-packets",
+  "accepted_parent_sha": "b7812e17ddce6166258eca7285a0a38e8cae37fc",
+  "count_policy": "Latest final passing run per unique suite; reruns and embedded smoke assertions not added again. Packet transaction count is174 in normal regression invocation; its separately written report adds one report-output check (175).",
+  "engine_suites": 60,
+  "engine_checks": 124548,
+  "headless_suites": 57,
+  "headless_checks": 124459,
+  "native_and_actual_migration": [
+    {
+      "suite": "beast_render_attachment",
+      "passed": true,
+      "checks": 20,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_beast_render_final.log",
+      "log_sha256": "d5a632e808ac17c4b33eb5614a35fb9cdcf2490f1ee5a4530195c05f8648ff7a",
+      "evidence_manifest": null
+    },
+    {
+      "suite": "music_native",
+      "passed": true,
+      "checks": 24,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_music_native_final.log",
+      "log_sha256": "bc565b953a400f1a1a18a8bc3d3f57d41c61bb86102b259cdb419d67bcf49459",
+      "evidence_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_music_native_final.json"
+    },
+    {
+      "suite": "accepted_parent_actual_api_migration",
+      "passed": true,
+      "checks": 45,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_actual_accepted_save_final.log",
+      "log_sha256": "1a89ac565d5b126fec91caa3e45eb1ca9ab7601a63a91623a00cf89c8125b9be",
+      "evidence_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_actual_accepted_save_final.json"
+    }
+  ],
+  "python_tests": 66,
+  "python_suites": [
+    {
+      "suite": "guarded_windows_pipeline",
+      "tests": 29,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_build_tool_tests_final.log",
+      "log_sha256": "c1ba7600effbafb939d1fbbf07eba76ffd908b2fe8811fd68027def11f2721f0"
+    },
+    {
+      "suite": "regression_harness",
+      "tests": 14,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_presentation_tool_tests_delivery.log",
+      "log_sha256": "8f7352c52b54b5c952ca20bab5d32b03769baf506a2ac4cfdbb8915c7775e381"
+    },
+    {
+      "suite": "packaged_catalogue_verifier",
+      "tests": 23,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_parts_tool_tests_final.log",
+      "log_sha256": "26ac7a0f5f0facf1310a3000e00a442f07b77b564a025f2779f597e882076db2"
+    }
+  ],
+  "engine_suite_counts": {
+    "collection_save": 371,
+    "collection_flow": 575,
+    "collection_ui": 2380,
+    "spin_economy": 232,
+    "threat_director": 83,
+    "continuous_run": 200,
+    "run_context": 362,
+    "flow": 161,
+    "combat_architecture": 35,
+    "menus": 4827,
+    "controller": 1007,
+    "powers": 79,
+    "swarm": 33,
+    "presentation": 78,
+    "progression": 169,
+    "starters": 17,
+    "starter_physics": 37,
+    "xp_observer": 30,
+    "ramp_integration": 19,
+    "card_assets": 132,
+    "escalation_progression": 765,
+    "escalation_physics": 103,
+    "escalation_integration": 906,
+    "escalation_completion": 42,
+    "escalation_assets": 351,
+    "rpm_replay": 0,
+    "signature_presentation": 3362,
+    "roster_draft": 21791,
+    "roster_physics": 30,
+    "roster_presentation": 3585,
+    "ability_rebalance": 92,
+    "ability_rebalance_integration": 32,
+    "collection_c5_integration": 174,
+    "power_identity": 4584,
+    "parts_catalogue": 8945,
+    "parts_collection": 1217,
+    "parts_package": 285,
+    "packet_package": 380,
+    "feedback_drift": 1409,
+    "feedback_anchor_contacts": 65,
+    "power_feedback": 2463,
+    "feedback_rerolls": 1052,
+    "feedback_effects": 14404,
+    "feedback_live_pickup": 4,
+    "feedback_parts_retention": 148,
+    "beast_manifestations": 20065,
+    "music": 1830,
+    "music_escalation": 407,
+    "save_tools": 92,
+    "presentation_flow": 49,
+    "presentation_retention": 13248,
+    "frontend": 403,
+    "packet_economy": 10172,
+    "packet_transactions": 174,
+    "run_rewards": 31,
+    "packet_art_audio": 170,
+    "shop_progression": 802
+  },
+  "detailed_evidence": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_regression_final.json",
+      "sha256": "b10d692b37b1acddb669f0cc9324fcc262de8d37d21eeae285120e3c6d0fb36a",
+      "reported_status": "passed",
+      "scope": "full current contracts"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_boundary_regression.json",
+      "sha256": "5af16f0a3235605e87981909a59bb8982c29fdf5eed8b02171b25697ac68b1d1",
+      "reported_status": "failed",
+      "scope": "affected final boundary contracts; final front-end teardown supersedes earlier failed teardown"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_frontend_teardown.json",
+      "sha256": "098de7e63cc5ed6e271318f9b1d263795e54e4cb0968533dd0e8659895e81848",
+      "reported_status": "passed",
+      "scope": "affected final boundary contracts; final front-end teardown supersedes earlier failed teardown"
+    }
+  ],
+  "source_sha256": "a1287364e9555516cbd4df36c7ce2c4d1bcdfe3e2db7b0ae5fbcf5f04c3eebcf",
+  "assets_sha256": "b8c8475453c32e975b654e58d1ea462e97d43d3a8bb9014be5d510716d99b08b",
+  "profile_unchanged": true,
+  "profile": {
+    "available": true,
+    "directory": "E:\\AppData\\Roaming\\Godot\\app_userdata\\Spinning Metal \u2014 Prototype",
+    "files": {
+      "collection.json": "21a020af0ed88331966a1c988bbe96456664e655083ee34f1b8b44123751b48c",
+      "collection.json.bak": "21a020af0ed88331966a1c988bbe96456664e655083ee34f1b8b44123751b48c",
+      "prototype.cfg": "c584d1ca02b808973e86366681b34b91b360ea8186c695f06f671d23c66cbbd1"
+    }
+  },
+  "superseded_failure": "The boundary front-end had403 passing assertions but audio resources still queued at SceneTree shutdown. Test harness now stops/settles its channels; final teardown rerun exits cleanly. No production behavior changed.",
+  "historical_contracts_excluded": [
+    "baseline_physics",
+    "catalogue_legacy_run",
+    "parts_legacy"
+  ],
+  "exclusion_reason": "Accepted C5.2 feedback changed drift/power/RPM trajectories; current behavior and exact accepted-main retention are tested instead.",
+  "human_acceptance": "PENDING HUMAN PROGRESSION PLAYTEST",
+  "build_and_remote_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_delivery.json"
+}

@@ -492,7 +492,7 @@ func _test_run() -> void:
 	_focus_is_visible("Run failure")
 	await _capture("09-controller-run-failure")
 	old_seed = game.run_context.run_seed
-	await _activate("RESTART RUN")
+	await _activate("RUN AGAIN")
 	check(game.screen == "reward" and game.run_context.run_seed != old_seed, "Controller restarts a failed Run at the initial draft")
 	await _draft_and_resume(true)
 	for slot: int in range(1, 11):
@@ -517,7 +517,7 @@ func _test_run() -> void:
 	check(game.screen == "result" and game.run_context.status == "failed", "Player loss still opens the controller result")
 	await _capture("11-controller-continuous-loss")
 	old_seed = game.run_context.run_seed
-	await _activate("RESTART RUN")
+	await _activate("RUN AGAIN")
 	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a continuous Run at its initial power offer")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "pause", "Back opens restarted Run draft overlay, observed "+game.screen)

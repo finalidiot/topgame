@@ -43,7 +43,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/balance_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "smash": {
         "name": "SMASH",
@@ -78,7 +80,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/smash_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "guard": {
         "name": "GUARD",
@@ -113,7 +117,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/guard_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "hook": {
         "name": "HOOK",
@@ -149,7 +155,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/hook_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "hammerfall": {
         "name": "HAMMERFALL",
@@ -190,7 +198,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/hammerfall_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "sawtooth": {
         "name": "SAWTOOTH",
@@ -232,7 +242,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/sawtooth_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "puck": {
         "name": "PUCK",
@@ -271,7 +283,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/puck_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "outrigger": {
         "name": "OUTRIGGER",
@@ -312,7 +326,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/outrigger_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "lopsider": {
         "name": "LOPSIDER",
@@ -357,7 +373,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/lopsider_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "crescent": {
         "name": "CRESCENT",
@@ -401,7 +419,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/crescent_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "fork": {
         "name": "FORK",
@@ -448,7 +468,9 @@
           ],
           "nearest": true,
           "spin": "res://assets/top/parts/blades/fork_spin.png"
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       }
     },
     "ratchet": {
@@ -484,7 +506,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "mid": {
         "name": "MID",
@@ -518,7 +542,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "high": {
         "name": "HIGH",
@@ -552,7 +578,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "ballast": {
         "name": "BALLAST",
@@ -591,7 +619,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "flex": {
         "name": "FLEX",
@@ -629,7 +659,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "kickback": {
         "name": "KICKBACK",
@@ -669,7 +701,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "offset": {
         "name": "OFFSET",
@@ -709,7 +743,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "flywheel": {
         "name": "FLYWHEEL",
@@ -749,7 +785,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "scrap": {
         "name": "SCRAP",
@@ -791,7 +829,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       }
     },
     "bit": {
@@ -825,7 +865,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "ball": {
         "name": "BALL",
@@ -857,7 +899,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "flat": {
         "name": "FLAT",
@@ -889,7 +933,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "rubber": {
         "name": "RUBBER",
@@ -921,7 +967,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "skate": {
         "name": "SKATE",
@@ -960,7 +1008,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "claw": {
         "name": "CLAW",
@@ -1002,7 +1052,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "freewheel": {
         "name": "FREEWHEEL",
@@ -1040,7 +1092,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "eccentric": {
         "name": "ECCENTRIC",
@@ -1080,7 +1134,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "chisel": {
         "name": "CHISEL",
@@ -1120,7 +1176,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "tripod": {
         "name": "TRIPOD",
@@ -1160,7 +1218,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       },
       "groove": {
         "name": "GROOVE",
@@ -1200,7 +1260,9 @@
             48
           ],
           "nearest": true
-        }
+        },
+        "pack_eligible": true,
+        "acquisition_source": "ordinary_packet"
       }
     }
   }

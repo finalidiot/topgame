@@ -28,6 +28,13 @@ var elites_defeated: int = 0
 var bosses_defeated: int = 0
 var last_entry: Dictionary = {}
 var last_clear: Dictionary = {}
+var earned_threats_cleared: int = 0
+var earned_elites_cleared: int = 0
+var earned_bosses_cleared: int = 0
+var reward_fixture: bool = false
+var _reward_defeated: Dictionary = {}
+var _active_input_seconds: float = 0.0
+var _last_active_input: float = -INF
 
 func setup(host: Node2D, seed_value: int) -> void:
 	_host = weakref(host)
@@ -49,12 +56,27 @@ func host() -> Node2D:
 func threat_elapsed() -> float:
 	return maxf(0.0, host().elapsed - threat_started_at)
 
+func observe_input(dt: float, direction: Vector2, braking: bool = false, bursting: bool = false) -> void:
+	# Discrete clears pay, never control duration. This gate merely distinguishes
+	# played battles from no-input natural expiry and automatic swarm cleanup.
+	# Godot has already applied the native0.22 circular stick deadzone. Fine
+	# defensive steering is small after remapping and remains deliberate input.
+	if direction.length() < 0.01 and not braking and not bursting: return
+	# A released-and-pressed Burst is explicit intent, including an immediate
+	# knockout. Its physical attribution still has to pass the outcome gate.
+	_active_input_seconds = maxf(0.35, _active_input_seconds + dt) if bursting else _active_input_seconds + dt
+	_last_active_input = host().elapsed
+
 func observe_outcomes() -> void:
 	if host().continuous != self: return
 	for f: Dictionary in host().fighters:
 		if f.team_id != "hostile" or str(f.outcome).is_empty() or _counted.has(int(f.entity_id)): continue
 		_counted[int(f.entity_id)] = true
 		if f.outcome in ["ring_out", "spin_out", "impact"]:
+			var attributed: bool = str(host().powers.cause_for(f).get("owner_id", "")) == "player"
+			if f.combatant_type == "full_top": attributed = attributed or host()._progression_contacted.has(int(f.entity_id))
+			if attributed and _active_input_seconds >= 0.35 and host().elapsed - _last_active_input <= 3.0:
+				_reward_defeated[int(f.entity_id)] = true
 			if f.combatant_type == "full_top":
 				rivals_defeated += 1
 				if f.get("enemy_kind", "") == "elite": elites_defeated += 1
@@ -108,6 +130,16 @@ func after_tick(dt: float) -> void:
 		threats_cleared += 1
 		director.cleared(serial,b.elapsed,events.is_empty() and pending.is_empty())
 		last_clear = {"run_seed":run_seed,"threat":serial,"kind":event.kind,"key":event.key,"duration":b.elapsed-float(event.time)}
+		var earned_defeats: int = 0
+		for id: int in event.ids:
+			if _reward_defeated.has(id): earned_defeats += 1
+		var earned: bool = not reward_fixture and earned_defeats >= (3 if event.swarm else 1)
+		if earned:
+			earned_threats_cleared += 1
+			if event.kind == "elite": earned_elites_cleared += 1
+			if event.kind == "boss": earned_bosses_cleared += 1
+		last_clear.merge({"reward_provenance":"earned-clear-v1","reward_eligible":earned,"reward_fixture":reward_fixture}, true)
+		for id: int in event.ids: _reward_defeated.erase(id)
 		if event.kind == "boss":
 			callout = "BOSS TOPPLED"
 			callout_until = b.elapsed+2.5
@@ -165,6 +197,7 @@ func _admit_pending() -> bool:
 func _admit(event: Dictionary, position: Vector2, fixture_descriptor: Dictionary = {}) -> void:
 	var b: Node2D = host()
 	if b.continuous != self or b.battle_status != "battle" or b.paused: return
+	if not fixture_descriptor.is_empty(): reward_fixture = true
 	threat_number += 1
 	threat_started_at = b.elapsed
 	var descriptor: Dictionary = Encounters.for_run_event(threat_number,run_seed) if fixture_descriptor.is_empty() else fixture_descriptor
@@ -191,6 +224,7 @@ func _admit(event: Dictionary, position: Vector2, fixture_descriptor: Dictionary
 func _spawn_next() -> void:
 	# Explicit QA fixture seam used by legacy menu/controller tests and --smoke-test.
 	# Production pacing calls only Director.decide -> warning -> _admit_pending.
+	reward_fixture = true
 	if not pending.is_empty():
 		director.active.erase(int(pending.serial))
 		pending.clear()
@@ -227,4 +261,6 @@ func snapshot() -> Dictionary:
 		"director":true,"limits":Director.limits(host().elapsed,progression_level),
 		"census":census(),"calm":director.draining or host().elapsed < director.calm_until,
 		"callout":callout if host().elapsed < callout_until else "",
-		"elites_defeated":elites_defeated,"bosses_defeated":bosses_defeated}
+		"elites_defeated":elites_defeated,"bosses_defeated":bosses_defeated,
+		"reward_provenance":"earned-clear-v1","earned_threats_cleared":earned_threats_cleared,
+		"earned_elites_cleared":earned_elites_cleared,"earned_bosses_cleared":earned_bosses_cleared,"reward_fixture":reward_fixture}

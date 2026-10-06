@@ -33,6 +33,10 @@ const SCREEN_REGISTRY: Dictionary = {
 	"level_up":{"scope":"run_choice", "background":1},
 	"pause":{"scope":"run_choice", "background":1},
 	"result":{"scope":"menu", "background":1},
+	"shop":{"scope":"menu", "background":1},
+	"packet_purchase":{"scope":"menu", "background":1},
+	"packet_odds":{"scope":"menu", "background":1},
+	"packet_open":{"scope":"menu", "background":1},
 	"hud":{"scope":"combat", "background":-1},
 }
 

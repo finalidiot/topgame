@@ -32,6 +32,7 @@ REQUIRED_CAPTURES = (
     "09c-owned-workshop.png", "10-starting-draft.png", "run-past-eight.png",
     "run-failed.png",
 )
+SHOP_REQUIRED_CAPTURES = ("003a-shop.png", "003a-odds.png", "003a-packet-result.png", "003a-acquired-workshop.png")
 NATIVE_IMPORT_EXIT_CODES = (-1073741819, 3221225477)
 
 
@@ -211,6 +212,8 @@ def verify_candidate(candidate: Path) -> dict:
         raise ValueError("Task 002C.5 must retain its pending human gameplay acceptance.")
     if manifest["checkpoint"] == "002C.6" and manifest.get("human_acceptance") != "PENDING HUMAN PRESENTATION PLAYTEST":
         raise ValueError("Task 002C.6 must retain its pending human presentation acceptance.")
+    if manifest["checkpoint"] == "003A" and manifest.get("human_acceptance") != "PENDING HUMAN PROGRESSION PLAYTEST":
+        raise ValueError("Task 003A must retain its pending human progression acceptance.")
     if not re.fullmatch(r"[0-9a-f]{40}", manifest.get("source", {}).get("git_sha", "")):
         raise ValueError("Candidate has no exact Git checkpoint.")
     if not manifest["source"].get("tracked_clean"):
@@ -259,7 +262,10 @@ def verify_candidate(candidate: Path) -> dict:
     if SMOKE_MARKER not in engine_content or ERRORS.search(engine_content):
         raise ValueError("Packaged engine log did not independently pass.")
     captures = {Path(c["path"]).name: c for c in smoke.get("captures", [])}
-    for name in REQUIRED_CAPTURES:
+    required = REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if manifest["checkpoint"] == "003A" else ())
+    if manifest["checkpoint"] == "003A" and "SHOP_PROGRESSION_SMOKE_PASS" not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
+        raise ValueError("Task 003A packaged Shop flow marker is absent.")
+    for name in required:
         if name not in captures:
             raise ValueError(f"Missing packaged smoke capture: {name}")
         capture = captures[name]
@@ -369,7 +375,7 @@ def build(args: argparse.Namespace) -> dict:
                      engine_log=str(engine_log.resolve()), engine_log_sha256=sha256(engine_log),
                      profile_before=before, profile_after=after,
                      fixture_scope="Packaged menu/controller/starter/draft/continuous Run flow; synthetic outcomes are fixtures, not balance evidence.",
-                     captures=[png_record(images / name) for name in REQUIRED_CAPTURES])
+                     captures=[png_record(images / name) for name in REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if args.checkpoint == "003A" else ())])
         report["packaged_smoke"] = smoke
         if before != after:
             raise RuntimeError("Real profile changed during isolated smoke; preserve latest and inspect concurrent activity.")
@@ -380,7 +386,7 @@ def build(args: argparse.Namespace) -> dict:
         digest = sha256(payload / EXE)
         (payload / (EXE + ".sha256")).write_text(digest + "  " + EXE + "\n", encoding="ascii")
         provisional_c5 = args.checkpoint == "002C.5" or args.checkpoint.startswith("002C.5.")
-        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "Human acceptance is separate from automated validation."
+        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "PENDING HUMAN PROGRESSION PLAYTEST" if args.checkpoint == "003A" else "Human acceptance is separate from automated validation."
         report["human_acceptance"] = acceptance
         readme = ("Spinning Metal / GyroBrothers\n"
                   f"Task/checkpoint: {args.checkpoint} (workspace/build task {args.task})\n"

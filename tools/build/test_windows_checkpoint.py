@@ -70,6 +70,32 @@ class PromotionGuards(unittest.TestCase):
         self.save_manifest()
         self.reject()
 
+    def test_003a_requires_pending_human_progression_acceptance(self):
+        self.manifest["checkpoint"] = "003A"
+        self.manifest["qa_task"] = "003A"
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, "pending human progression"):
+            pipeline.verify_candidate(self.candidate)
+        self.assert_latest_preserved()
+
+    def test_003a_requires_actual_shop_flow_marker(self):
+        self.manifest.update(checkpoint="003A", qa_task="003A", human_acceptance="PENDING HUMAN PROGRESSION PLAYTEST")
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, "Shop flow marker"):
+            pipeline.verify_candidate(self.candidate)
+        self.assert_latest_preserved()
+
+    def test_003a_requires_verified_shop_captures(self):
+        self.manifest.update(checkpoint="003A", qa_task="003A", human_acceptance="PENDING HUMAN PROGRESSION PLAYTEST")
+        smoke = self.manifest["packaged_smoke"]
+        log = Path(smoke["log"])
+        log.write_text(pipeline.SMOKE_MARKER + "\nSHOP_PROGRESSION_SMOKE_PASS (isolated fixture)")
+        smoke["log_sha256"] = smoke["engine_log_sha256"] = pipeline.sha256(log)
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, "Missing packaged smoke capture: 003a-shop"):
+            pipeline.verify_candidate(self.candidate)
+        self.assert_latest_preserved()
+
     def test_changed_executable_never_replaces_latest(self):
         with (self.candidate / pipeline.EXE).open("ab") as stream:
             stream.write(b"modified")
