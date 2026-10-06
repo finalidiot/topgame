@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import sys
 import uuid
+import wave
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,6 +58,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", type=Path, required=True, help="Explicit candidate or latest Windows executable")
     parser.add_argument("--qa-root", type=Path, help="External QA root; defaults to the workspace convention")
+    parser.add_argument("--task", default=TASK, help="Task QA workspace; preserved default for older checkpoint tooling")
     args = parser.parse_args()
     exe = args.exe.expanduser().resolve(strict=True)
     if not exe.is_file() or exe.suffix.lower() != ".exe":
@@ -69,9 +71,10 @@ def main() -> None:
         user_directory = Path(before["directory"]).resolve()
         if qa_root == user_directory or user_directory in qa_root.parents:
             parser.error("The external QA root must be outside the player's user-data directory")
-    task = workspace.create_task_workspace(TASK, qa_root)
+    workspace.valid_task(args.task)
+    task = workspace.create_task_workspace(args.task, qa_root)
     run_id = uuid.uuid4().hex
-    stem = "002c5_2_packaged_catalogue_" + run_id
+    stem = ("002c5_2" if args.task == TASK else args.task.lower().replace(".", "")) + "_packaged_catalogue_" + run_id
     collection = task / "temp" / (stem + "_collection.json")
     asset_report = task / "manifests" / (stem + "_assets.json")
     manifest = task / "manifests" / (stem + ".json")
@@ -85,7 +88,7 @@ def main() -> None:
                          for part in parts.values() for field in (["sprite", "spin"] if category == "blade" else ["sprite"])}
     if len(expected) != 31 or len(expected_textures) != 42:
         raise RuntimeError("This task's package check requires the final 31-part / 42-texture catalogue")
-    report = {"task": TASK, "run_id": run_id, "status": "running",
+    report = {"task": args.task, "run_id": run_id, "status": "running",
               "started_utc": datetime.now(timezone.utc).isoformat(), "exe": str(exe),
               "exe_sha256": workspace.sha256(exe), "source_catalogue_sha256": workspace.sha256(source),
               "profile_before": before, "child_environment": {"TOPGAME_QA_ROOT": str(qa_root)},
@@ -97,7 +100,7 @@ def main() -> None:
         os.environ["TOPGAME_QA_ROOT"] = str(qa_root)
         engine_log = task / "logs" / (stem + "_engine.log")
         command = [str(exe), "--headless", "--quit-after", "120", "--log-file", str(engine_log),
-                   "--", "--qa-catalogue", "--collection-path=" + str(collection),
+                   "--", "--qa-catalogue", "--qa-task=" + args.task, "--collection-path=" + str(collection),
                    "--qa-assets-report=" + str(asset_report)]
         report["collection_process"] = pipeline.run_logged(command, task / "logs" / (stem + "_process.log"), 180)
         report["collection_engine_log"] = check_engine_log(engine_log)
@@ -165,6 +168,20 @@ def main() -> None:
                 raise RuntimeError("Packaged beast sheet pixels differ: " + expected_path)
         report["assets"]["beast_textures_verified"] = 4
         report["assets"]["beast_manifest_matches_source"] = True
+        music_source = json.loads((ROOT / "assets/audio/music/manifest.json").read_text(encoding="utf-8"))
+        music_rows = assets.get("music_stems", [])
+        music_ids = {"title", "workshop", "run_base", "run_pressure", "run_boss"}
+        if json.loads(assets.get("music_json", "null")) != music_source or len(music_rows) != 5 or {row.get("kind") for row in music_rows} != music_ids:
+            raise RuntimeError("Actual package does not contain the five current original synchronized music stems")
+        for row in music_rows:
+            expected_path = "res://assets/audio/music/" + row["kind"] + ".wav"
+            with wave.open(str(ROOT / expected_path.removeprefix("res://")), "rb") as sample:
+                pcm = sample.readframes(sample.getnframes())
+                if (row.get("path") != expected_path or not row.get("valid") or row.get("pcm_frames") != sample.getnframes()
+                        or row.get("mix_rate") != sample.getframerate() or row.get("pcm_sha256") != hashlib.sha256(pcm).hexdigest()):
+                    raise RuntimeError("Packaged imported PCM differs from original composition: " + expected_path)
+        report["assets"]["music_stems_verified"] = 5
+        report["assets"]["music_pcm_exact"] = True
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

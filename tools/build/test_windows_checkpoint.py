@@ -125,6 +125,26 @@ class PromotionGuards(unittest.TestCase):
         result = pipeline.promote_candidate(self.candidate, self.root, self.qa, "002C.5.2")
         self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/002C.5.2" / pipeline.EXE))
 
+    def test_c6_false_human_acceptance_never_replaces_latest(self):
+        self.manifest["checkpoint"] = "002C.6"
+        self.manifest["qa_task"] = "002C.6"
+        self.manifest["human_acceptance"] = "accepted"
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, "pending human presentation"):
+            pipeline.promote_candidate(self.candidate, self.root, self.qa, "002C.6")
+        self.assert_latest_preserved()
+        self.assertFalse((self.root / "builds/checkpoints/002C.6").exists())
+
+    def test_c6_pending_validated_candidate_promotes_fixture(self):
+        self.manifest["checkpoint"] = "002C.6"
+        self.manifest["qa_task"] = "002C.6"
+        self.manifest["human_acceptance"] = "PENDING HUMAN PRESENTATION PLAYTEST"
+        self.save_manifest()
+        result = pipeline.promote_candidate(self.candidate, self.root, self.qa, "002C.6")
+        self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/002C.6" / pipeline.EXE))
+        self.assertEqual(pipeline.sha256(self.latest / pipeline.EXE), self.manifest["delivery_sha256"][pipeline.EXE])
+        self.assertEqual((Path(result["preserved_previous"]) / "latest" / pipeline.EXE).read_bytes(), b"known-good human build")
+
     def test_build_directory_redirect_is_rejected(self):
         with patch.object(pipeline, "is_reparse", lambda path: Path(path) == self.root / "builds"):
             self.reject()

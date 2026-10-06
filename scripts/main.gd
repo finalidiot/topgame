@@ -3,6 +3,7 @@ extends Node2D
 const BattleScript = preload("res://scripts/battle.gd")
 const MenuScript = preload("res://scripts/menus.gd")
 const SoundScript = preload("res://scripts/sound.gd")
+const MusicScript = preload("res://scripts/music.gd")
 const Catalog = preload("res://scripts/parts.gd")
 const RunContext = preload("res://scripts/run_context.gd")
 const Starters = preload("res://scripts/starters.gd")
@@ -13,7 +14,7 @@ const PackageProbe = preload("res://scripts/parts_package_probe.gd")
 const RunPickupScript = preload("res://scripts/run_pickups.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "muted":false, "screen_shake":true, "fullscreen":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false}
 var mode: String = "duel"
 var round_index: int = 0
 var screen: String = "title"
@@ -21,6 +22,12 @@ var last_result: Dictionary = {}
 var battle: Node2D
 var menus: Control
 var sounds: Node
+var music: Node
+var _settings_origin: String = "title"
+var _reset_token: int = 0
+var _reset_files: Dictionary = {}
+var _save_tools_status: String = ""
+var _reset_on_boot_dialog: bool = false
 var reroll_pickups: Node2D
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var smoke_mode: bool = false
@@ -32,6 +39,7 @@ var reset_collection_requested: bool = false
 var _collection_reset_failed: bool = false
 ## Full catalogue access is only enabled for an explicitly isolated QA save.
 var qa_catalogue_requested: bool = false
+var qa_task_id: String = "002C.5.2"
 var qa_catalogue_error: String = ""
 var qa_assets_report: String = ""
 var qa_assets_report_requested: bool = false
@@ -55,6 +63,8 @@ var _run_launched: bool = false
 var _practice_branch: String = ""
 
 func _process(delta: float) -> void:
+	if is_instance_valid(music) and run_context.is_active() and screen in ["reward", "mutation", "acquisition", "level_up", "pause", "settings"]:
+		music.set_paused(true)
 	if screen == "starter_owned":
 		_ownership_remaining -= delta
 		if _ownership_remaining <= 0.0: _garage()
@@ -71,7 +81,7 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	DisplayServer.window_set_title("Spinning Metal — 002C.5.2 Parts Catalogue")
+	DisplayServer.window_set_title("Spinning Metal")
 	rng.randomize()
 	var practice_request: String = ""
 	for argument: String in OS.get_cmdline_user_args():
@@ -81,6 +91,7 @@ func _ready() -> void:
 		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
 		if argument == "--reset-collection": reset_collection_requested = true
 		if argument == "--qa-catalogue": qa_catalogue_requested = true
+		if argument.begins_with("--qa-task="): qa_task_id = argument.trim_prefix("--qa-task=")
 		if argument.begins_with("--qa-assets-report="):
 			qa_assets_report_requested = true
 			qa_assets_report = argument.trim_prefix("--qa-assets-report=")
@@ -103,7 +114,10 @@ func _ready() -> void:
 	collection.load_save()
 	if not qa_catalogue_error.is_empty(): collection.read_only = true
 	if reset_collection_requested:
-		_collection_reset_failed = not bool(collection.reset_collection(true).ok)
+		# CLI resets of the real profile open the same confirmation as Options.
+		# An explicitly isolated dev fixture can reset directly after backup.
+		_reset_on_boot_dialog = _is_default_collection_path(collection_path)
+		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
 	battle = BattleScript.new()
@@ -128,8 +142,15 @@ func _ready() -> void:
 	menus.focus_sound.connect(_battle_sound)
 	sounds = SoundScript.new()
 	add_child(sounds)
+	music = MusicScript.new()
+	music.configure_playback(not qa_assets_report_requested and not smoke_mode and DisplayServer.get_name() != "headless")
+	add_child(music)
 	_apply_settings()
-	_title()
+	if smoke_mode or qa_assets_report_requested or qa_catalogue_requested or not practice_request.is_empty(): _title()
+	else: _title_gate()
+	if _reset_on_boot_dialog:
+		_show_save_tools()
+		_request_collection_reset()
 	if _collection_reset_failed:
 		_collection_error("The explicitly requested collection reset could not finish. Close other game instances and check the save folder before retrying.")
 	if not qa_catalogue_error.is_empty(): _collection_error(qa_catalogue_error)
@@ -139,6 +160,11 @@ func _ready() -> void:
 	elif smoke_mode: call_deferred("_smoke_test")
 	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
+
+func _is_default_collection_path(path: String) -> bool:
+	# Windows paths are case insensitive; spelling/casing must never bypass
+	# the real profile's reset confirmation.
+	return ProjectSettings.globalize_path(path).replace("\\", "/").simplify_path().to_lower() == ProjectSettings.globalize_path(Collection.DEFAULT_PATH).replace("\\", "/").simplify_path().to_lower()
 
 func _is_isolated_catalogue_path(path: String) -> bool:
 	return _is_isolated_qa_path(path, "temp")
@@ -154,7 +180,9 @@ func _is_isolated_qa_path(path: String, folder: String) -> bool:
 	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
 	var project_folder: String = ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/")
 	var qa_root: String = configured if not configured.is_empty() else project_folder.get_base_dir().path_join("GyroBrothers-QA")
-	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join("002C.5.2/" + folder).to_lower() + "/"
+	var task_pattern: RegEx = RegEx.create_from_string("^[0-9]{3}[A-Z](?:\\.[0-9]+)*$")
+	if task_pattern.search(qa_task_id) == null: return false
+	var allowed: String = qa_root.replace("\\", "/").simplify_path().path_join(qa_task_id + "/" + folder).to_lower() + "/"
 	var repository: String = ProjectSettings.globalize_path("res://").replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
 	var userdata: String = OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower().trim_suffix("/") + "/"
 	var candidate: String = normalized.to_lower()
@@ -222,6 +250,9 @@ func _start_build_practice(branch_id: String) -> void:
 	battle.begin_encounter(Starters.build_for(starter), descriptor)
 	_apply_settings()
 	battle._emit_hud()
+	music.set_context("run")
+	music.observe_run({}, {})
+	music.set_paused(false)
 
 func _load_preferences() -> void:
 	var cfg: ConfigFile = ConfigFile.new()
@@ -232,7 +263,16 @@ func _load_preferences() -> void:
 		if value in legal: build[key] = value
 	for key: String in settings:
 		settings[key] = cfg.get_value("settings", key, settings[key])
-	settings.volume = clampf(float(settings.volume), 0.0, 1.0)
+	settings = _validated_settings(settings)
+
+func _validated_settings(values: Dictionary) -> Dictionary:
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false}
+	for key: String in ["volume", "music_volume", "sfx_volume"]:
+		var value: Variant = values.get(key, result[key])
+		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
+	for key: String in ["muted", "screen_shake", "fullscreen"]:
+		if values.get(key) is bool: result[key] = values[key]
+	return result
 
 func _save_preferences() -> void:
 	if smoke_mode or not qa_catalogue_error.is_empty(): return
@@ -243,6 +283,7 @@ func _save_preferences() -> void:
 
 func _apply_settings() -> void:
 	sounds.apply_settings(settings)
+	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
 	if not smoke_mode:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if bool(settings.fullscreen) else DisplayServer.WINDOW_MODE_WINDOWED)
@@ -252,12 +293,22 @@ func _hide_battle() -> void:
 	battle.set_physics_process(false)
 	battle.visible = false
 
+func _title_gate() -> void:
+	_hide_battle()
+	screen = "title_gate"
+	menus.show_title_gate(collection.is_initialized())
+	music.set_context("title")
+	music.set_paused(false)
+
 func _title() -> void:
 	if run_context.is_active(): return
 	_clear_run()
 	_hide_battle()
 	screen = "title"
 	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
+	if is_instance_valid(music):
+		music.set_context("title")
+		music.set_paused(false)
 
 func _garage() -> void:
 	if run_context.is_active(): return
@@ -272,6 +323,8 @@ func _garage() -> void:
 	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
 	snapshot["isolated_catalogue_qa"] = qa_catalogue_requested
 	menus.show_collection_workshop(collection.equipped_build(), snapshot)
+	music.set_context("workshop")
+	music.set_paused(false)
 
 func _practice_garage() -> void:
 	if run_context.is_active(): return
@@ -279,6 +332,83 @@ func _practice_garage() -> void:
 	_hide_battle()
 	screen = "practice_garage"
 	menus.show_garage(build, true)
+	music.set_context("workshop")
+	music.set_paused(false)
+
+func _show_settings() -> void:
+	if _settings_origin != "pause": _hide_battle()
+	screen = "settings"
+	menus.show_settings(settings, "back_settings", not run_context.is_active())
+	if _settings_origin == "pause": music.set_paused(true)
+
+func _back_settings() -> void:
+	if screen in ["save_tools", "reset_confirm"]:
+		_show_settings()
+	elif screen == "settings":
+		match _settings_origin:
+			"pause":
+				screen = "pause"
+				menus.show_pause(mode == "run")
+			"garage": _garage()
+			"play_modes":
+				screen = "play_modes"
+				menus.show_play_modes(build)
+			_: _title()
+
+func _collection_file_hashes() -> Dictionary:
+	var result: Dictionary = {}
+	for suffix: String in ["", ".bak", ".tmp", ".bak.tmp"]:
+		var path: String = collection_path + suffix
+		result[suffix] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+	return result
+
+func _collection_backups() -> Array:
+	var source: String = ProjectSettings.globalize_path(collection_path).replace("\\", "/").simplify_path()
+	var folder: String = source.get_base_dir().path_join("collection-backups").path_join(source.get_file().get_basename())
+	var result: Array = []
+	if not DirAccess.dir_exists_absolute(folder): return result
+	var directory: DirAccess = DirAccess.open(folder)
+	if directory == null: return result
+	var entries: PackedStringArray = directory.get_directories()
+	entries.sort()
+	# Display metadata only. This page never silently restores/deletes archives.
+	for index: int in range(maxi(0, entries.size() - 5), entries.size()):
+		var manifest: String = folder.path_join(entries[index]).path_join("manifest.json")
+		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest)) if FileAccess.file_exists(manifest) else null
+		if data is Dictionary and str(data.get("source", "")) == source:
+			result.append({"name":entries[index],"created_utc":data.get("created_utc", ""),"path":folder.path_join(entries[index]),"file_count":data.get("files", []).size()})
+	return result
+
+func _show_save_tools() -> void:
+	if run_context.is_active(): return
+	screen = "save_tools"
+	menus.show_save_tools(collection.snapshot(), _collection_backups(), _save_tools_status, "back_settings")
+
+func _request_collection_reset() -> void:
+	if screen != "save_tools" or run_context.is_active(): return
+	_reset_token += 1
+	_reset_files = _collection_file_hashes()
+	var info: Dictionary = collection.snapshot()
+	info["reset_token"] = _reset_token
+	screen = "reset_confirm"
+	menus.show_reset_confirmation(info)
+
+func _confirm_collection_reset(token: Variant) -> void:
+	if screen != "reset_confirm" or run_context.is_active() or not (token is int or token is float) or float(token) != float(_reset_token): return
+	if _collection_file_hashes() != _reset_files:
+		_save_tools_status = "Collection changed in another window. Reset stopped."
+		_show_save_tools()
+		return
+	var result: Dictionary = collection.reset_collection(true)
+	_reset_token += 1
+	if not bool(result.ok):
+		_save_tools_status = "Reset stopped. The collection and verified backup were preserved."
+		_show_save_tools()
+		return
+	_clear_run()
+	last_result.clear()
+	_save_tools_status = "Collection reset. Verified backup retained; options unchanged."
+	_begin_collection()
 
 func _collection_error(message: String, retry: String = "") -> void:
 	_collection_retry = retry
@@ -297,6 +427,8 @@ func _begin_collection() -> void:
 	_hide_battle()
 	screen = "starter_ceremony"
 	menus.show_starter_ceremony(_first_starter_focus)
+	music.set_context("workshop")
+	music.set_paused(false)
 
 func _confirm_first_starter(starter_id: String) -> void:
 	if screen != "starter_confirm" or starter_id != _first_starter_focus: return
@@ -347,6 +479,9 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	battle.begin(build.duplicate(), opponent_build.duplicate(), 1, 7341 if smoke_mode else rng.randi())
 	_apply_settings()
 	battle._emit_hud()
+	music.set_context("run")
+	music.observe_run({}, {})
+	music.set_paused(false)
 
 func _clear_run() -> void:
 	if is_instance_valid(reroll_pickups): reroll_pickups.clear()
@@ -396,6 +531,9 @@ func _restart_run() -> void:
 	mode = "run"
 	_hide_battle()
 	_show_reward()
+	music.set_context("run")
+	music.observe_run({}, {})
+	music.set_paused(true)
 
 func _launch_run_encounter() -> void:
 	if not run_context.is_active() or _run_launched: return
@@ -494,6 +632,9 @@ func _progression_events(events: Array) -> void:
 
 func _hud_updated(stats: Dictionary) -> void:
 	if screen != "battle": return
+	if is_instance_valid(music):
+		music.set_context("run")
+		music.set_paused(false)
 	stats = stats.duplicate()
 	stats["run_label"] = "THREAT %d" % run_context.slot if mode == "run" else "DUEL"
 	stats["owned_power_ids"] = run_context.owned_power_ids if mode == "run" else []
@@ -513,6 +654,7 @@ func _hud_updated(stats: Dictionary) -> void:
 		stats["xp"] = progress.xp
 		stats["xp_threshold"] = progress.threshold
 		stats["progression_max"] = progress.maxed
+	if is_instance_valid(music): music.observe_run(stats.get("run_state", {}), stats)
 	menus.show_hud(stats)
 
 func _round_finished(result: Dictionary) -> void:
@@ -526,6 +668,8 @@ func _round_finished(result: Dictionary) -> void:
 		if not run_context.fail_run(): return
 	screen = "result"
 	battle.set_paused(true)
+	music.set_context("result")
+	music.set_paused(false)
 	last_result = result.duplicate(true)
 	if not smoke_mode: sounds.play_sound("win" if bool(result.get("won", false)) else "loss")
 	last_result["is_run"] = mode == "run"
@@ -553,14 +697,36 @@ func _battle_sound(kind: String) -> void:
 	# Read-only packaged inspection exits immediately after boot. Starting a
 	# focus cue there leaves a native WAV playback alive at headless shutdown.
 	if qa_assets_report_requested: return
+	if is_instance_valid(music): music.notify_cue(kind)
 	if not smoke_mode or review_audio: sounds.play_sound(kind)
 
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
 	# All build/menu routes respect the lock, including stale UI signals.
-	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership"]: return
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
+		if not (name == "settings" and screen == "pause"): return
 	_battle_sound("ui")
 	match name:
+		"enter_frontend":
+			if screen == "title_gate": _title()
+		"play_modes":
+			if not run_context.is_active():
+				_hide_battle()
+				screen = "play_modes"
+				menus.show_play_modes(build)
+				music.set_context("title")
+		"save_tools":
+			if screen == "settings": _show_save_tools()
+		"backup_collection":
+			if screen == "save_tools":
+				var result: Dictionary = collection.backup_collection()
+				_save_tools_status = "Verified backup saved. Options were retained." if bool(result.ok) and not str(result.get("backup_directory", "")).is_empty() else ("No saved collection to back up." if bool(result.ok) else "Backup stopped. Your collection was preserved.")
+				_show_save_tools()
+		"request_reset_collection": _request_collection_reset()
+		"confirm_reset_collection": _confirm_collection_reset(value)
+		"cancel_reset_collection":
+			if screen == "reset_confirm": _show_save_tools()
+		"back_settings": _back_settings()
 		"begin_collection": _begin_collection()
 		"open_workshop": _garage()
 		"practice_garage": _practice_garage()
@@ -633,9 +799,8 @@ func _action(name: String, value: Variant = null) -> void:
 			screen = "help"
 			menus.show_help()
 		"settings":
-			_hide_battle()
-			screen = "settings"
-			menus.show_settings(settings)
+			_settings_origin = screen if screen in ["pause", "garage", "play_modes", "title"] else "title"
+			_show_settings()
 		"main_menu": _title()
 		"build_changed":
 			if screen == "practice_garage" and value is Dictionary:
@@ -644,6 +809,7 @@ func _action(name: String, value: Variant = null) -> void:
 		"settings_changed":
 			if value is Dictionary:
 				settings.merge(value, true)
+				settings = _validated_settings(settings)
 				_apply_settings()
 				_save_preferences()
 		"pause": _pause()
@@ -662,6 +828,7 @@ func _pause() -> void:
 	screen = "pause"
 	battle.set_paused(true)
 	menus.show_pause(mode == "run")
+	music.set_paused(true)
 
 func _resume() -> void:
 	if screen != "pause": return
@@ -674,9 +841,13 @@ func _resume() -> void:
 	else:
 		battle.set_paused(false)
 		battle._emit_hud()
+	music.set_paused(screen != "battle")
 
 func _escape() -> void:
-	if screen == "pause": _resume()
+	if screen == "reset_confirm": _show_save_tools()
+	elif screen in ["save_tools", "settings"]: _back_settings()
+	elif screen == "title_gate": return
+	elif screen == "pause": _resume()
 	elif screen == "battle" or run_context.is_active(): _pause()
 	elif screen == "starter_confirm": _begin_collection()
 	elif screen == "starter_owned":
@@ -695,11 +866,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		settings.fullscreen = not bool(settings.fullscreen)
 		_apply_settings()
 		_save_preferences()
-		if screen == "settings": menus.show_settings(settings)
+		if screen == "settings": _show_settings()
 		get_viewport().set_input_as_handled()
 
 func _find_button(node: Node, text: String) -> Button:
+	if node is Control and not node.is_visible_in_tree(): return null
 	if node is Button and node.text.to_lower().contains(text.to_lower()): return node
+	if node is Button:
+		for child: Node in node.get_children():
+			if child is Label and child.text.to_lower().contains(text.to_lower()): return node
 	for child: Node in node.get_children():
 		var found: Button = _find_button(child, text)
 		if found != null: return found
@@ -716,11 +891,17 @@ func _capture(name: String) -> void:
 func _smoke_test() -> void:
 	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
 	await get_tree().create_timer(0.3).timeout
+	_title_gate()
 	await _capture("01-title")
+	_action("enter_frontend")
+	await _capture("01a-workbench")
 	_action("practice_garage")
 	await get_tree().create_timer(0.15).timeout
 	await _capture("02-garage")
-	for part_name: String in ["HOOK", "HIGH", "RUBBER"]:
+	for pair: Array in [["blade", "HOOK"], ["ratchet", "HIGH"], ["bit", "RUBBER"]]:
+		menus._catalogue_tabs[pair[0]].pressed.emit()
+		await get_tree().process_frame
+		var part_name: String = pair[1]
 		var part_button: Button = _find_button(menus, part_name)
 		assert(part_button != null, "Garage button present: "+part_name)
 		part_button.pressed.emit()

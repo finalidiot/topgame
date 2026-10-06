@@ -5,16 +5,17 @@ signal action(name: String, value: Variant)
 signal focus_sound(kind: String)
 
 const Preview = preload("res://scripts/top_preview.gd")
+const FrontEnd = preload("res://scripts/front_end.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Starters = preload("res://scripts/starters.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
-const INK: Color = Color("0b141e")
-const PANEL: Color = Color("172737")
-const BORDER: Color = Color("30495d")
-const TEXT: Color = Color("e2eaf0")
-const MUTED: Color = Color("95aabc")
-const BLUE: Color = Color("67c9e7")
-const ORANGE: Color = Color("f0a15c")
+const INK: Color = FrontEnd.INK
+const PANEL: Color = FrontEnd.PANEL
+const BORDER: Color = FrontEnd.BORDER
+const TEXT: Color = FrontEnd.TEXT
+const MUTED: Color = FrontEnd.MUTED
+const BLUE: Color = FrontEnd.BLUE
+const ORANGE: Color = FrontEnd.ORANGE
 # Shared action language keeps HUD/menu prompts independent of controller glyphs.
 # Platform glyph presentation can replace these hints without changing screens.
 const INPUT_HINTS: Dictionary = {
@@ -61,6 +62,18 @@ var _ownership_flash: ColorRect
 var _ownership_note: Label
 var _rpm_overdrive: bool = false
 var _rpm_heat: float = 0.0
+var _appearance_elapsed: float = 0.0
+var _input_profile: String = "keyboard"
+var _ui_owner_device: int = -1
+var _prompt_labels: Dictionary = {}
+var _prompt_glyphs: Dictionary = {}
+var _catalogue_category: String = "blade"
+var _catalogue_tabs: Dictionary = {}
+var _catalogue_groups: Dictionary = {}
+var _catalogue_footer: Array = []
+var _catalogue_practice: bool = false
+var _part_texture_cache: Dictionary = {}
+var _equipped_slot_labels: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -70,6 +83,9 @@ func _ready() -> void:
 	theme = _make_theme()
 
 func _process(_delta: float) -> void:
+	if screen != "hud" and is_instance_valid(_content):
+		_appearance_elapsed = minf(0.08, _appearance_elapsed + _delta)
+		_content.modulate.a = 0.65 + _appearance_elapsed / 0.08 * 0.35
 	_menu_clock += _delta
 	_animate_cards()
 	_animate_power_art(_delta)
@@ -98,6 +114,15 @@ func _process(_delta: float) -> void:
 		_default_focus.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	if screen != "hud":
+		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+			if _ui_owner_device >= 0 and event.device != _ui_owner_device:
+				get_viewport().set_input_as_handled()
+				return
+			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
+				_note_input_profile(FrontEnd.controller_profile(event.device))
+		elif (event is InputEventKey and event.pressed) or event is InputEventMouseButton:
+			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
 	# before any new screen can accept it, including keyboard echo events.
 	if screen != "hud" and _accept_needs_release and event.is_action("ui_accept"):
@@ -130,38 +155,20 @@ func _move_analogue_focus(direction: String) -> void:
 	if target != null: target.grab_focus()
 
 func _make_theme() -> Theme:
-	var value: Theme = Theme.new()
-	value.default_font_size = 12
-	value.set_color("font_color", "Label", TEXT)
-	value.set_color("font_color", "Button", TEXT)
-	value.set_color("font_hover_color", "Button", Color.WHITE)
-	value.set_color("font_pressed_color", "Button", INK)
-	value.set_color("font_focus_color", "Button", Color.WHITE)
-	value.set_stylebox("normal", "Button", _box(Color("203548"), BORDER, 1))
-	value.set_stylebox("hover", "Button", _box(Color("2e4b62"), BLUE, 1))
-	value.set_stylebox("pressed", "Button", _box(BLUE, BLUE, 1))
-	value.set_stylebox("focus", "Button", _box(Color(0, 0, 0, 0), ORANGE, 2))
-	value.set_stylebox("disabled", "Button", _box(Color("152331"), BORDER, 1))
-	value.set_stylebox("background", "ProgressBar", _box(Color("0e1924"), Color("23394c"), 1))
-	value.set_stylebox("fill", "ProgressBar", _box(BLUE, BLUE, 0))
-	value.set_stylebox("slider", "HSlider", _box(Color("30495d"), Color("30495d"), 0))
-	value.set_stylebox("grabber_area", "HSlider", _box(BLUE, BLUE, 0))
-	value.set_stylebox("focus", "HSlider", _box(Color(0, 0, 0, 0), ORANGE, 2))
-	return value
+	return FrontEnd.make_theme()
 
 func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBoxFlat:
-	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = fill
-	style.border_color = outline
-	style.set_border_width_all(border_width)
-	style.content_margin_left = 8.0
-	style.content_margin_right = 8.0
-	style.content_margin_top = 2.0
-	style.content_margin_bottom = 2.0
-	return style
+	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
 	screen = next_screen
+	_appearance_elapsed = 0.0
+	_prompt_labels.clear()
+	_prompt_glyphs.clear()
+	_catalogue_tabs.clear()
+	_catalogue_groups.clear()
+	_catalogue_footer.clear()
+	_equipped_slot_labels.clear()
 	# F2 can hide combat HUD for the visual checkpoint. Required choices and
 	# results must restore their own visibility when combat ends or pauses.
 	if next_screen != "hud": visible = true
@@ -188,9 +195,9 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
 	if dim:
-		_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.97))
-		_rect(_content, Rect2(0, 0, 640, 3), ORANGE)
-		_rect(_content, Rect2(0, 357, 640, 3), Color("23394c"))
+		var backdrop: Control = FrontEnd.new()
+		backdrop.screen_id = next_screen
+		_content.add_child(backdrop)
 
 func _focus_rows(rows: Array, first: Control = null) -> void:
 	# Explicit links make every control reachable even across the workshop's
@@ -201,8 +208,10 @@ func _focus_rows(rows: Array, first: Control = null) -> void:
 		for column: int in range(row.size()):
 			var control: Control = row[column]
 			controls.append(control)
-			control.focus_entered.connect(func() -> void: _default_focus = control)
-			control.focus_entered.connect(func() -> void: focus_sound.emit("ui_focus"))
+			if not control.has_meta("frontend_focus_hooks"):
+				control.set_meta("frontend_focus_hooks", true)
+				control.focus_entered.connect(func() -> void: _default_focus = control)
+				control.focus_entered.connect(func() -> void: focus_sound.emit("ui_focus"))
 			control.focus_neighbor_left = control.get_path_to(row[(column + row.size() - 1) % row.size()])
 			control.focus_neighbor_right = control.get_path_to(row[(column + 1) % row.size()])
 			control.focus_neighbor_top = control.get_path_to(_nearest_control(control, rows[(row_index + rows.size() - 1) % rows.size()]))
@@ -216,10 +225,10 @@ func _focus_rows(rows: Array, first: Control = null) -> void:
 
 func _nearest_control(origin: Control, candidates: Array) -> Control:
 	var nearest: Control = candidates[0]
-	var center_x: float = origin.position.x + origin.size.x * 0.5
+	var center_x: float = origin.get_global_rect().get_center().x
 	var distance: float = INF
 	for candidate: Control in candidates:
-		var candidate_distance: float = absf(candidate.position.x + candidate.size.x * 0.5 - center_x)
+		var candidate_distance: float = absf(candidate.get_global_rect().get_center().x - center_x)
 		if candidate_distance < distance:
 			nearest = candidate
 			distance = candidate_distance
@@ -246,7 +255,14 @@ func _panel(parent: Node, area: Rect2, fill: Color = PANEL, border: Color = BORD
 func _label(parent: Node, value: String, area: Rect2, font_size: int = 12, color: Color = TEXT, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
 	var node: Label = Label.new()
 	node.text = value
-	node.add_theme_font_size_override("font_size", font_size)
+	var pixel_size: int = FrontEnd.font_size(font_size)
+	var face: Font = get_theme_font("font")
+	while pixel_size > 10:
+		var maximum: float = 0
+		for line: String in value.split("\n"): maximum = maxf(maximum, face.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, pixel_size).x)
+		if maximum <= area.size.x and face.get_height(pixel_size) <= area.size.y: break
+		pixel_size -= 10
+	node.add_theme_font_size_override("font_size", pixel_size)
 	node.add_theme_color_override("font_color", color)
 	node.clip_text = true
 	node.horizontal_alignment = align
@@ -267,6 +283,8 @@ func _button(parent: Node, value: String, area: Rect2, intent: String = "", payl
 		node.add_theme_stylebox_override("hover", _box(Color("c77343"), Color("ffbd7e"), 1))
 		node.add_theme_stylebox_override("pressed", _box(ORANGE, ORANGE, 1))
 	if intent != "":
+		node.set_meta("intent", intent)
+		if payload != null: node.set_meta("payload", payload)
 		node.pressed.connect(func() -> void: action.emit(intent, payload))
 	parent.add_child(node)
 	node.position = area.position
@@ -299,6 +317,83 @@ func _new_preview(area: Rect2, scale_factor: float = 3.0) -> Preview:
 	_content.add_child(node)
 	node.set_build(_build)
 	return node
+
+func set_ui_input_owner(device: int = -1) -> void:
+	# Default remains shared single-player input. This seam scopes future menu
+	# ownership without changing combat bindings or inventing a second player.
+	_ui_owner_device = device
+
+func input_profile() -> String:
+	return _input_profile
+
+func _note_input_profile(profile: String) -> void:
+	if profile == _input_profile: return
+	_input_profile = profile
+	for purpose: String in _prompt_labels:
+		var label: Label = _prompt_labels[purpose]
+		if is_instance_valid(label): label.text = FrontEnd.prompt(profile, purpose) + (" CONFIRM" if purpose == "confirm" else (" BACK" if purpose == "back" else ""))
+		var glyph: TextureRect = _prompt_glyphs.get(purpose)
+		if is_instance_valid(glyph): glyph.texture = FrontEnd.glyph(profile, purpose)
+
+func _input_footer(y: float = 333.0) -> void:
+	for index: int in range(2):
+		var purpose: String = "confirm" if index == 0 else "back"
+		var x: float = 22.0 + index * 222.0
+		var glyph: TextureRect = TextureRect.new()
+		glyph.texture = FrontEnd.glyph(_input_profile, purpose)
+		glyph.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		glyph.position = Vector2(x, y - 1)
+		glyph.size = Vector2(16, 16)
+		_content.add_child(glyph)
+		_prompt_glyphs[purpose] = glyph
+		_prompt_labels[purpose] = _label(_content, FrontEnd.prompt(_input_profile, purpose) + (" CONFIRM" if purpose == "confirm" else " BACK"), Rect2(x + 22, y, 196, 14), 10, MUTED)
+
+func _part_image(parent: Node, category: String, id: String, area: Rect2) -> void:
+	var path: String = "res://assets/top/parts/%s/%s.png" % [{"blade":"blades", "ratchet":"ratchets", "bit":"bits"}[category], id]
+	if not _part_texture_cache.has(path):
+		var texture: Texture2D = load(path) if ResourceLoader.exists(path) else null
+		if texture == null: return
+		var image: Image = texture.get_image()
+		if image.is_compressed(): image.decompress()
+		var crop: AtlasTexture = AtlasTexture.new()
+		crop.atlas = texture
+		crop.region = image.get_used_rect()
+		_part_texture_cache[path] = crop
+	var texture: Texture2D = _part_texture_cache[path]
+	var multiple: int = 2 if category == "bit" else 1
+	var dimensions: Vector2 = texture.get_size() * multiple
+	var sprite: TextureRect = TextureRect.new()
+	sprite.texture = texture
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sprite.position = (area.position + (area.size - dimensions) * 0.5).round()
+	sprite.size = dimensions
+	parent.add_child(sprite)
+
+func _build_station(collection_mode: bool) -> void:
+	_panel(_content, Rect2(16, 62, 220, 245), Color("18242c"), BORDER)
+	_label(_content, "EQUIPPED MACHINE" if collection_mode else "PRACTICE MACHINE", Rect2(27, 70, 154, 16), 10, BLUE)
+	_preview = _new_preview(Rect2(22, 86, 208, 108), 3.0)
+	if collection_mode: _set_preview_build_identity(_preview, _build)
+	_assembly_name = _label(_content, PartCatalog.title(_build), Rect2(25, 195, 202, 21), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_assembly_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	for index: int in range(3):
+		var category: String = ["blade", "ratchet", "bit"][index]
+		var name: String = str(PartCatalog.PARTS[category].get(str(_build.get(category, "")), {}).get("name", "EMPTY"))
+		_label(_content, category.to_upper(), Rect2(26, 218 + index * 14, 51, 13), 10, MUTED)
+		_equipped_slot_labels[category] = _label(_content, name, Rect2(79, 218 + index * 14, 147, 13), 10, TEXT)
+	var stat_ids: Array[String] = ["power", "stamina", "grip", "speed", "stability", "mass"]
+	var stat_names: Array[String] = ["POWER", "STAMINA", "GRIP", "SPEED", "STABILITY", "MASS"]
+	for index: int in range(6):
+		var column: int = index % 2
+		var row: int = index / 2
+		var x: float = 26 + column * 101
+		var y: float = 260 + row * 15
+		_label(_content, stat_names[index], Rect2(x, y, 63, 10), 10, MUTED)
+		_stat_numbers[stat_ids[index]] = _label(_content, "", Rect2(x + 63, y, 28, 10), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
+		_stat_bars[stat_ids[index]] = _bar(_content, Rect2(x, y + 11, 91, 2), ORANGE if index == 0 else BLUE)
 
 func _header(title: String, subtitle: String) -> void:
 	_label(_content, title, Rect2(22, 12, 580, 26), 23)
@@ -333,33 +428,71 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 	_build = build.duplicate()
 	_settings = settings.duplicate()
 	_clear("collection_title")
-	_label(_content, "SPINNING METAL", Rect2(28, 24, 565, 42), 32)
-	_label(_content, "YOUR MACHINE. YOUR COLLECTION. YOUR RUN.", Rect2(30, 65, 570, 18), 11, ORANGE)
-	var begin: Button = _button(_content, "CONTINUE TO WORKSHOP" if initialized else "BEGIN", Rect2(30, 104, 268, 34), "open_workshop" if initialized else "begin_collection", null, true)
-	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(30, 148, 268, 31), "quick_duel")
-	var practice_garage: Button = _button(_content, "PRACTICE GARAGE", Rect2(30, 188, 268, 31), "practice_garage")
-	var help: Button = _button(_content, "HOW TO PLAY", Rect2(30, 228, 128, 30), "help")
-	var options: Button = _button(_content, "SETTINGS", Rect2(168, 228, 130, 30), "settings")
-	var quit_button: Button = _button(_content, "QUIT", Rect2(30, 268, 268, 28), "quit")
-	_panel(_content, Rect2(324, 104, 286, 211))
+	_label(_content, "SPINNING METAL", Rect2(22, 16, 594, 37), 30)
+	_label(_content, "THE WORKBENCH / ASSEMBLE A MACHINE. MAKE IT LAST.", Rect2(24, 55, 590, 17), 10, ORANGE)
+	var begin: Button = _button(_content, "START RUN" if initialized else "BEGIN / CHOOSE FIRST TOP", Rect2(24, 94, 286, 34), "start_run" if initialized else "begin_collection", null, true)
+	var workshop: Button = _button(_content, "WORKSHOP", Rect2(24, 136, 286, 32), "open_workshop")
+	var modes: Button = _button(_content, "PLAY MODES", Rect2(24, 176, 286, 32), "play_modes")
+	var options: Button = _button(_content, "OPTIONS", Rect2(24, 216, 138, 32), "settings")
+	var help: Button = _button(_content, "HOW TO PLAY", Rect2(172, 216, 138, 32), "help")
+	var quit_button: Button = _button(_content, "EXIT", Rect2(24, 256, 286, 30), "quit")
+	_panel(_content, Rect2(338, 94, 280, 212), Color("18242c"))
 	if initialized and _complete_build(_build):
-		_label(_content, "YOUR EQUIPPED MACHINE", Rect2(339, 114, 255, 18), 11, BLUE)
-		var preview: Preview = _new_preview(Rect2(351, 133, 230, 135), 4.0)
+		_label(_content, "YOUR EQUIPPED MACHINE", Rect2(350, 104, 256, 18), 10, BLUE)
+		var preview: Preview = _new_preview(Rect2(346, 126, 264, 126), 4.0)
 		_set_preview_build_identity(preview, _build)
-		_label(_content, PartCatalog.title(_build), Rect2(334, 268, 266, 23), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-		_label(_content, "OWNED PARTS STAY WITH YOU", Rect2(334, 291, 266, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		var name: Label = _label(_content, PartCatalog.title(_build), Rect2(350, 258, 256, 23), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_label(_content, "PERMANENT PARTS / TEMPORARY POWERS", Rect2(350, 286, 256, 13), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	else:
-		_label(_content, "YOUR FIRST MACHINE" if not initialized else "ASSEMBLY INCOMPLETE", Rect2(341, 126, 252, 25), 18, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, "YOUR FIRST MACHINE" if not initialized else "ASSEMBLY INCOMPLETE", Rect2(350, 104, 256, 26), 20, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 		for index: int in range(3):
-			var color: Color = Starters.get_starter(Starters.IDS[index]).accent
-			_rect(_content, Rect2(382 + index * 54, 174, 32, 3), color)
-			_rect(_content, Rect2(389 + index * 54, 183, 18, 2), color.darkened(0.35))
-		var invitation: Label = _label(_content, "Three personalities. One first choice.\nBuild your collection from here." if not initialized else "Inspect your owned parts\nin the Workshop.", Rect2(345, 215, 244, 51), 12, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+			var starter: Dictionary = Starters.get_starter(Starters.IDS[index])
+			var preview: Preview = Preview.new()
+			preview.position = Vector2(345 + index * 88, 141)
+			preview.size = Vector2(88, 89)
+			preview.preview_scale = 2
+			preview.set_build(starter.assembly)
+			preview.set_identity(starter.id, starter.accent)
+			_content.add_child(preview)
+		var invitation: Label = _label(_content, "Three personalities. One first choice.\nBuild your collection from here." if not initialized else "Inspect your owned parts\nin the Workshop.", Rect2(350, 239, 256, 33), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		invitation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_label(_content, "0 OWNED PARTS" if not initialized else "SAVED COLLECTION", Rect2(341, 285, 252, 18), 11, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "Your Run ends. Your collection stays.", Rect2(30, 302, 285, 24), 11, MUTED)
-	_label(_content, "KEYBOARD + GAMEPAD + MOUSE   /   CONTROLS IN HOW TO PLAY", Rect2(30, 333, 582, 17), 10, MUTED)
-	_focus_rows([[begin], [practice], [practice_garage], [help, options], [quit_button]])
+		_label(_content, "0 OWNED PARTS" if not initialized else "SAVED COLLECTION", Rect2(350, 284, 256, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "Your Run ends. Your collection stays.", Rect2(24, 295, 286, 19), 10, MUTED)
+	_input_footer()
+	_focus_rows([[begin], [workshop], [modes], [options, help], [quit_button]])
+
+func show_title_gate(initialized: bool = false) -> void:
+	_clear("title_gate")
+	_label(_content, "SPINNING", Rect2(24, 34, 368, 51), 50)
+	_label(_content, "METAL", Rect2(24, 86, 368, 51), 50, ORANGE)
+	_rect(_content, Rect2(27, 144, 241, 3), ORANGE)
+	_label(_content, "PHYSICAL TOPS. HARD CONTACT.", Rect2(27, 160, 324, 19), 10, TEXT)
+	_label(_content, "Build your machine.\nKeep it spinning.", Rect2(27, 185, 302, 39), 10, MUTED)
+	_build = Starters.build_for("breaker")
+	# Put the physical contact/shadow on the authored service tray at (450,226).
+	var preview: Preview = _new_preview(Rect2(310, 73, 280, 178), 4)
+	var starter: Dictionary = Starters.get_starter("breaker")
+	preview.set_identity("breaker", starter.accent)
+	var enter: Button = _button(_content, "PRESS START", Rect2(27, 256, 286, 36), "enter_frontend", null, true)
+	_label(_content, "CONTINUE YOUR COLLECTION" if initialized else "CHOOSE YOUR FIRST MACHINE", Rect2(29, 300, 348, 19), 10, BLUE)
+	_input_footer()
+	_focus_rows([[enter]])
+
+func show_play_modes(build: Dictionary) -> void:
+	_build = build.duplicate()
+	_clear("play_modes")
+	_header("PLAY MODES", "Your owned collection and practice builds remain separate.")
+	_panel(_content, Rect2(22, 70, 288, 230))
+	_panel(_content, Rect2(330, 70, 288, 230))
+	_label(_content, "QUICK DUEL", Rect2(38, 84, 256, 31), 20, BLUE)
+	_label(_content, "One rival. One exchange.\nTest your steering, Burst and brake.\nNo collection rewards or purchases.", Rect2(38, 129, 256, 73), 10, TEXT)
+	var duel: Button = _button(_content, "LAUNCH QUICK DUEL", Rect2(38, 250, 256, 32), "quick_duel", null, true)
+	_label(_content, "PRACTICE GARAGE", Rect2(346, 84, 256, 31), 20, ORANGE)
+	_label(_content, "Try every catalogue component.\nBuild and inspect a different top.\nPractice never grants owned parts.", Rect2(346, 129, 256, 73), 10, TEXT)
+	var garage: Button = _button(_content, "PRACTICE GARAGE", Rect2(346, 250, 256, 32), "practice_garage")
+	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 320, 232, 28), "main_menu")
+	_focus_rows([[duel, garage], [back]])
 
 func show_starter_ceremony(focus_id: String = "breaker") -> void:
 	_clear("starter_ceremony")
@@ -385,6 +518,7 @@ func show_starter_ceremony(focus_id: String = "breaker") -> void:
 		card.add_child(preview)
 		_label(card, _ceremony_role(id), Rect2(11, 172, 170, 16), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		var copy: Label = _label(card, _ceremony_copy(id), Rect2(12, 192, 168, 31), 11, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		copy.add_theme_constant_override("line_spacing", -1)
 		_label(card, "CHOOSE AS FIRST TOP", Rect2(12, 223, 168, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
@@ -444,106 +578,112 @@ func _ceremony_copy(id: String) -> String:
 func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	_build = build.duplicate()
 	_collection_snapshot = snapshot.duplicate(true)
+	_catalogue_practice = false
 	_clear("collection_workshop")
-	_header("TOP WORKSHOP", "ISOLATED CATALOGUE QA / Player collection is separate." if bool(snapshot.get("isolated_catalogue_qa", false)) else "Your collection is permanent. Powers, XP and RPM belong to each Run.")
-	_panel(_content, Rect2(22, 62, 207, 244))
-	_label(_content, "YOUR EQUIPPED MACHINE", Rect2(34, 73, 184, 18), 11, BLUE)
-	var can_launch: bool = _owned_build_is_complete()
-	if can_launch:
-		_preview = _new_preview(Rect2(34, 89, 185, 124), 3.0)
-		_set_preview_build_identity(_preview, _build)
-		_label(_content, PartCatalog.title(_build), Rect2(29, 208, 193, 23), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	else:
-		_label(_content, "ASSEMBLY\nINCOMPLETE", Rect2(35, 117, 181, 56), 18, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_header("TOP WORKSHOP", "Owned parts build your machine. Run powers never enter your collection.")
+	_build_station(true)
 	var total_owned: int = 0
-	var total_catalogue: int = 0
-	for category: String in ["blade", "ratchet", "bit"]:
-		total_owned += _collection_owned(category).size()
-		total_catalogue += PartCatalog.PARTS[category].size()
-	_label(_content, "%d / %d PARTS OWNED" % [total_owned, total_catalogue], Rect2(34, 234, 184, 23), 13, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
-	var historical: String = str(snapshot.get("starter_selected", snapshot.get("starter_id", "")))
-	_label(_content, "FIRST CHOICE: " + Starters.display_name(historical), Rect2(34, 260, 184, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	var future: Label = _label(_content, "Isolated QA collection.\nAll catalogue parts available." if bool(snapshot.get("isolated_catalogue_qa", false)) else "New parts will open up\nnew ways to build.", Rect2(34, 279, 184, 24), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	future.add_theme_constant_override("line_spacing", -1)
-	_panel(_content, Rect2(244, 62, 374, 244))
-	_create_catalogue_inspector()
-	_collection_part_row("blade", "BLADE", PartCatalog.BLADE_IDS, 73)
-	_collection_part_row("ratchet", "RATCHET", PartCatalog.RATCHET_IDS, 132)
-	_collection_part_row("bit", "BIT", PartCatalog.BIT_IDS, 191)
-	var back: Button = _button(_content, "TITLE", Rect2(22, 319, 98, 29), "main_menu")
-	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(131, 319, 232, 29), "quick_duel")
-	practice.add_theme_font_size_override("font_size", 11)
-	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(374, 319, 244, 29), "launch_owned_run", null, true)
-	launch.disabled = not can_launch
-	var navigation: Array = [_part_buttons.blade.values(), _part_buttons.ratchet.values(), _part_buttons.bit.values(), [back, practice, launch] if can_launch else [back, practice]]
-	_focus_rows(navigation, launch if can_launch else back)
-
-func _collection_part_row(category: String, title: String, ids: Array, y: float) -> void:
-	var owned: Array = _collection_owned(category)
-	_label(_content, title, Rect2(256, y, 211, 17), 11, ORANGE)
-	_label(_content, "%d / %d OWNED" % [owned.size(), ids.size()], Rect2(527, y, 77, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_part_buttons[category] = {}
-	var strip: HBoxContainer = _catalogue_strip(category, y + 19)
-	for index: int in range(ids.size()):
-		var id: String = str(ids[index])
-		var data: Dictionary = PartCatalog.PARTS[category][id]
-		var is_owned: bool = id in owned
-		var selected: bool = is_owned and str(_build.get(category, "")) == id
-		var button: Button = _button(strip, "", Rect2(0, 0, 122, 36), "equip_part" if is_owned else "inspect_locked_part", {"category":category,"id":id})
-		button.custom_minimum_size = Vector2(122, 36)
-		button.set_meta("part_category", category)
-		button.set_meta("part_id", id)
-		button.set_meta("owned", is_owned)
-		button.set_meta("locked", not is_owned)
-		button.tooltip_text = "%s / %s / %s\n%s\n%s" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON")), str(data.description), "OWNED" if is_owned else "NOT OWNED"]
-		if category == "blade": button.tooltip_text += "\nSPIRIT: " + BeastManifestations.display_name_for_blade(id)
-		button.add_theme_stylebox_override("normal", _box(Color("9b5a37") if selected else (Color("203548") if is_owned else Color("13212e")), ORANGE if selected else BORDER, 1))
-		_label(button, str(data.name), Rect2(3, 2, 116, 17), 11, TEXT if is_owned else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-		_label(button, "EQUIPPED" if selected else ("OWNED" if is_owned else "NOT OWNED"), Rect2(3, 20, 116, 13), 9, ORANGE if selected else (BLUE if is_owned else MUTED), HORIZONTAL_ALIGNMENT_CENTER)
-		button.focus_entered.connect(func() -> void:
-			_reveal_catalogue_part(category, button)
-			_describe_collection_part(category, id))
-		button.mouse_entered.connect(func() -> void: _describe_collection_part(category, id))
-		_part_buttons[category][id] = button
-	_part_descriptions[category] = _catalogue_description
-	var selected_button: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
-	if selected_button != null: _reveal_catalogue_part.call_deferred(category, selected_button)
-	if category == "blade": _describe_collection_part(category, str(_build.get(category, str(ids[0]))))
+	for category: String in ["blade", "ratchet", "bit"]: total_owned += _collection_owned(category).size()
+	_label(_content, "%d / 31" % total_owned, Rect2(181, 70, 45, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
+	_create_workshop_catalogue()
+	var back: Button = _button(_content, "WORKBENCH", Rect2(16, 321, 118, 28), "main_menu")
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(144, 321, 228, 28), "quick_duel")
+	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(382, 321, 242, 28), "launch_owned_run", null, true)
+	launch.disabled = not _owned_build_is_complete()
+	_catalogue_footer = [back, practice, launch] if not launch.disabled else [back, practice]
+	_refresh_garage()
+	_show_catalogue_category(_catalogue_category, false)
+	_catalogue_navigation(launch if not launch.disabled else back)
+	_catalogue_navigation.call_deferred(launch if not launch.disabled else back)
 
 func _create_catalogue_inspector() -> void:
-	_catalogue_metadata = _label(_content, "", Rect2(256, 249, 348, 16), 9, BLUE)
-	_catalogue_description = _label(_content, "", Rect2(256, 266, 348, 37), 9, MUTED)
+	_catalogue_metadata = _label(_content, "", Rect2(254, 249, 362, 16), 10, BLUE)
+	_catalogue_description = _label(_content, "", Rect2(254, 266, 362, 39), 10, TEXT)
 	_catalogue_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_catalogue_description.add_theme_constant_override("line_spacing", -1)
+	_catalogue_description.add_theme_constant_override("line_spacing", 0)
 	_catalogue_description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 
-func _catalogue_strip(category: String, y: float) -> HBoxContainer:
-	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.position = Vector2(256, y)
-	scroll.size = Vector2(348, 38)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.follow_focus = true
-	scroll.focus_mode = Control.FOCUS_NONE
-	_content.add_child(scroll)
-	_part_scrolls[category] = scroll
-	for step: int in [-1, 1]:
-		var arrow: Button = _button(_content, "<" if step < 0 else ">", Rect2(476 if step < 0 else 502, y - 19, 22, 17))
-		arrow.add_theme_font_size_override("font_size", 10)
-		arrow.focus_mode = Control.FOCUS_NONE
-		arrow.tooltip_text = "Browse " + category + "s. Keyboard and controller use Left / Right."
-		var style: StyleBoxFlat = _box(Color("203548"), BORDER, 1)
-		style.content_margin_left = 2
-		style.content_margin_right = 2
-		arrow.add_theme_stylebox_override("normal", style)
-		arrow.add_theme_stylebox_override("hover", style)
-		arrow.add_theme_stylebox_override("pressed", style)
-		arrow.pressed.connect(func() -> void: scroll.scroll_horizontal += step * 128)
-	var strip: HBoxContainer = HBoxContainer.new()
-	strip.add_theme_constant_override("separation", 6)
-	strip.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	scroll.add_child(strip)
-	return strip
+func _create_workshop_catalogue() -> void:
+	_panel(_content, Rect2(246, 62, 378, 245), Color("17232b"), BORDER)
+	_create_catalogue_inspector()
+	for index: int in range(3):
+		var category: String = ["blade", "ratchet", "bit"][index]
+		var tab: Button = _button(_content, category.to_upper(), Rect2(254 + index * 122, 68, 116, 25))
+		tab.set_meta("catalogue_tab", category)
+		tab.set_meta("intent", "catalogue_tab")
+		tab.set_meta("payload", category)
+		tab.pressed.connect(func() -> void: _show_catalogue_category(category))
+		_catalogue_tabs[category] = tab
+		var scroll: ScrollContainer = ScrollContainer.new()
+		scroll.position = Vector2(254, 98)
+		scroll.size = Vector2(362, 146)
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+		scroll.follow_focus = true
+		scroll.focus_mode = Control.FOCUS_NONE
+		_content.add_child(scroll)
+		_part_scrolls[category] = scroll
+		_catalogue_groups[category] = scroll
+		var grid: GridContainer = GridContainer.new()
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 8)
+		grid.add_theme_constant_override("v_separation", 7)
+		scroll.add_child(grid)
+		_part_buttons[category] = {}
+		_part_descriptions[category] = _catalogue_description
+		var ids: Array = PartCatalog.PARTS[category].keys()
+		for id: String in ids:
+			var data: Dictionary = PartCatalog.PARTS[category][id]
+			var owned: bool = _catalogue_practice or id in _collection_owned(category)
+			var selected: bool = owned and str(_build.get(category, "")) == id
+			var button: Button = _button(grid, "", Rect2(0, 0, 172, 44), "" if _catalogue_practice else ("equip_part" if owned else "inspect_locked_part"), {"category":category, "id":id})
+			button.custom_minimum_size = Vector2(172, 44)
+			button.set_meta("part_category", category)
+			button.set_meta("part_id", id)
+			button.set_meta("owned", owned and not _catalogue_practice)
+			button.set_meta("locked", not owned)
+			button.tooltip_text = "%s / %s / %s\n%s\n%s" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON")), str(data.description), "PRACTICE" if _catalogue_practice else ("OWNED" if owned else "NOT OWNED")]
+			if category == "blade": button.tooltip_text += "\nSPIRIT: " + BeastManifestations.display_name_for_blade(id)
+			_part_image(button, category, id, Rect2(3, 3, 43, 38))
+			var title: Label = _label(button, str(data.name), Rect2(50, 5, 117, 17), 10, TEXT if owned else MUTED)
+			title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			var status: Label = _label(button, "EQUIPPED" if selected else ("PRACTICE" if _catalogue_practice else ("OWNED" if owned else "NOT OWNED")), Rect2(50, 25, 117, 13), 10, ORANGE if selected else (BLUE if owned else MUTED))
+			button.set_meta("status_label", status)
+			button.add_theme_stylebox_override("normal", _box(Color("704c33") if selected else (Color("263640") if owned else Color("162129")), ORANGE if selected else BORDER))
+			if _catalogue_practice: button.pressed.connect(func() -> void: _choose_part(category, id))
+			button.focus_entered.connect(func() -> void:
+				_reveal_catalogue_part(category, button)
+				if _catalogue_practice: _describe_practice_part(category, id)
+				else: _describe_collection_part(category, id))
+			button.mouse_entered.connect(func() -> void:
+				if _catalogue_practice: _describe_practice_part(category, id)
+				else: _describe_collection_part(category, id))
+			_part_buttons[category][id] = button
+
+func _show_catalogue_category(category: String, focus_part: bool = true) -> void:
+	if not _catalogue_groups.has(category): return
+	_catalogue_category = category
+	for id: String in _catalogue_groups:
+		_catalogue_groups[id].visible = id == category
+		_catalogue_tabs[id].add_theme_stylebox_override("normal", _box(Color("704c33") if id == category else Color("263640"), ORANGE if id == category else BORDER))
+		for button: Button in _part_buttons[id].values(): button.focus_mode = Control.FOCUS_ALL if id == category else Control.FOCUS_NONE
+	var selected: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
+	if selected == null: selected = _part_buttons[category].values()[0]
+	if _catalogue_practice: _describe_practice_part(category, str(selected.get_meta("part_id")))
+	else: _describe_collection_part(category, str(selected.get_meta("part_id")))
+	_reveal_catalogue_part.call_deferred(category, selected)
+	if not _catalogue_footer.is_empty():
+		_catalogue_navigation(selected if focus_part else get_viewport().gui_get_focus_owner())
+		_catalogue_navigation.call_deferred(selected if focus_part else get_viewport().gui_get_focus_owner())
+
+func _catalogue_navigation(first: Control = null) -> void:
+	if _catalogue_footer.is_empty() or not _part_buttons.has(_catalogue_category): return
+	var rows: Array = [_catalogue_tabs.values()]
+	var buttons: Array = _part_buttons[_catalogue_category].values()
+	for index: int in range(0, buttons.size(), 2): rows.append(buttons.slice(index, mini(index + 2, buttons.size())))
+	rows.append(_catalogue_footer)
+	if first == null or not is_instance_valid(first) or not first.is_visible_in_tree(): first = _catalogue_tabs[_catalogue_category]
+	_focus_rows(rows, first)
 
 func _reveal_catalogue_part(category: String, button: Button) -> void:
 	if not is_instance_valid(button) or not _part_scrolls.has(category): return
@@ -568,9 +708,13 @@ func inspect_locked_part(category: String, id: String) -> void:
 		_describe_collection_part(category, id)
 
 func focus_collection_part(category: String, id: String) -> void:
-	if screen != "collection_workshop" or not _part_buttons.has(category): return
+	if screen not in ["collection_workshop", "garage"] or not _part_buttons.has(category): return
+	_show_catalogue_category(category, false)
 	var button: Button = _part_buttons[category].get(id) as Button
-	if button != null: button.grab_focus()
+	if button != null:
+		_reveal_catalogue_part(category, button)
+		_catalogue_navigation(button)
+		_catalogue_navigation.call_deferred(button)
 
 func _collection_owned(category: String) -> Array:
 	var rows: Variant = _collection_snapshot.get("owned_parts", {})
@@ -606,32 +750,19 @@ func show_collection_error(message: String, return_intent: String = "open_worksh
 
 func show_garage(build: Dictionary, practice: bool = false) -> void:
 	_build = build.duplicate()
+	_catalogue_practice = true
 	_clear("garage")
-	_header("PRACTICE GARAGE" if practice else "TOP WORKSHOP", "Every catalogue part is available here. Practice builds do not grant ownership." if practice else "Choose a Blade, Ratchet and Bit. Every part changes how your top battles.")
-	_panel(_content, Rect2(22, 62, 207, 244))
-	_label(_content, "LIVE ASSEMBLY", Rect2(35, 72, 180, 16), 10, BLUE)
-	_preview = _new_preview(Rect2(35, 86, 181, 126), 3.0)
-	_assembly_name = _label(_content, "", Rect2(30, 207, 190, 18), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	var stat_ids: Array[String] = ["power", "stamina", "grip", "speed", "stability", "mass"]
-	var stat_names: Array[String] = ["IMPACT", "STAMINA", "GRIP", "SPEED", "STABILITY", "MASS"]
-	for index in range(6):
-		var column: int = index % 2
-		var row: int = index / 2
-		var x: float = 35.0 + column * 96.0
-		var y: float = 231.0 + row * 23.0
-		_label(_content, stat_names[index], Rect2(x, y, 65, 11), 8, MUTED)
-		_stat_numbers[stat_ids[index]] = _label(_content, "", Rect2(x + 64, y, 17, 11), 8, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-		_stat_bars[stat_ids[index]] = _bar(_content, Rect2(x, y + 13, 81, 4), ORANGE if index == 0 else BLUE)
-	_panel(_content, Rect2(244, 62, 374, 244))
-	_create_catalogue_inspector()
-	_part_row("blade", "01   BLADE", PartCatalog.BLADE_IDS, 73)
-	_part_row("ratchet", "02   RATCHET", PartCatalog.RATCHET_IDS, 132)
-	_part_row("bit", "03   BIT", PartCatalog.BIT_IDS, 191)
-	var back_button: Button = _button(_content, "BACK", Rect2(22, 319, 98, 27), "main_menu")
-	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(131, 319, 200, 27), "start_battle", "duel", true)
-	var run_button: Button = _button(_content, "OWNED WORKSHOP" if practice else "CONTINUOUS RUN", Rect2(342, 319, 276, 27), "open_workshop" if practice else "start_run")
+	_header("PRACTICE GARAGE", "Try every component. Practice never grants permanent ownership.")
+	_build_station(false)
+	_create_workshop_catalogue()
+	var back: Button = _button(_content, "BACK", Rect2(16, 321, 118, 28), "main_menu")
+	var duel: Button = _button(_content, "QUICK DUEL", Rect2(144, 321, 228, 28), "start_battle", "duel", true)
+	var workshop: Button = _button(_content, "OWNED WORKSHOP", Rect2(382, 321, 242, 28), "open_workshop")
+	_catalogue_footer = [back, duel, workshop]
 	_refresh_garage()
-	_focus_rows([_part_buttons["blade"].values(), _part_buttons["ratchet"].values(), _part_buttons["bit"].values(), [back_button, duel_button, run_button]], _part_buttons["blade"][_build.get("blade", "balance")])
+	_show_catalogue_category(_catalogue_category, false)
+	_catalogue_navigation(_part_buttons[_catalogue_category].get(str(_build.get(_catalogue_category, ""))))
+	_catalogue_navigation.call_deferred(_part_buttons[_catalogue_category].get(str(_build.get(_catalogue_category, ""))))
 
 func show_starters(focus_id: String = "breaker") -> void:
 	_clear("starters")
@@ -658,14 +789,16 @@ func show_starters(focus_id: String = "breaker") -> void:
 		var tagline: Label = _label(card, str(data.tagline), Rect2(12, 142, 168, 29), 9, TEXT)
 		tagline.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		tagline.add_theme_constant_override("line_spacing", -1)
-		_label(card, str(data.strengths), Rect2(12, 178, 168, 16), 9, color)
-		_label(card, str(data.weakness), Rect2(12, 195, 168, 15), 9, MUTED)
-		_label(card, "CONFIRM  /  MAKE IT YOURS", Rect2(12, 216, 168, 14), 9, TEXT)
+		var strengths: Label = _label(card, str(data.strengths), Rect2(12, 173, 168, 23), 10, color)
+		strengths.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		var weakness: Label = _label(card, str(data.weakness), Rect2(12, 199, 168, 23), 10, MUTED)
+		weakness.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_label(card, "CONFIRM / LOCK IN", Rect2(12, 223, 168, 12), 10, TEXT)
 		cards.append(card)
 		if id == focus_id: selected = card
 	_label(_content, "LEFT / RIGHT  CHOOSE      CONFIRM  LOCK IN", Rect2(22, 323, 384, 18), 9, MUTED)
 	var custom: Button = _button(_content, "CUSTOM ASSEMBLY RUN", Rect2(426, 321, 192, 25), "custom_run")
-	custom.add_theme_font_size_override("font_size", 9)
+	custom.add_theme_font_size_override("font_size", 10)
 	_focus_rows([cards, [custom]], selected)
 
 func focused_starter_id() -> String:
@@ -689,31 +822,6 @@ func _animate_cards() -> void:
 		card.position = entry.position + Vector2(0, -2 if focused else 0)
 		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else Color("385266"), 1))
 
-func _part_row(category: String, title: String, ids: Array, y: float) -> void:
-	_label(_content, title, Rect2(256, y, 211, 15), 10, ORANGE)
-	_label(_content, "%d PARTS" % ids.size(), Rect2(529, y, 75, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_part_buttons[category] = {}
-	var strip: HBoxContainer = _catalogue_strip(category, y + 19)
-	for index in range(ids.size()):
-		var id: String = str(ids[index])
-		var data: Dictionary = PartCatalog.PARTS[category][id]
-		var button: Button = _button(strip, str(data.get("name", id.capitalize())), Rect2(0, 0, 122, 36))
-		button.custom_minimum_size = Vector2(122, 36)
-		button.add_theme_font_size_override("font_size", 11)
-		button.set_meta("part_category", category)
-		button.set_meta("part_id", id)
-		button.tooltip_text = str(data.get("description", ""))
-		if category == "blade": button.tooltip_text += "\nSPIRIT: " + BeastManifestations.display_name_for_blade(id)
-		button.pressed.connect(func() -> void: _choose_part(category, id))
-		button.focus_entered.connect(func() -> void:
-			_reveal_catalogue_part(category, button)
-			_describe_practice_part(category, id))
-		button.mouse_entered.connect(func() -> void: _describe_practice_part(category, id))
-		_part_buttons[category][id] = button
-	_part_descriptions[category] = _catalogue_description
-	var selected_button: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
-	if selected_button != null: _reveal_catalogue_part.call_deferred(category, selected_button)
-
 func _describe_practice_part(category: String, id: String) -> void:
 	if not is_instance_valid(_catalogue_description): return
 	var data: Dictionary = PartCatalog.PARTS[category][id]
@@ -727,109 +835,159 @@ func _choose_part(category: String, id: String) -> void:
 	action.emit("build_changed", _build.duplicate())
 
 func _refresh_garage() -> void:
+	var complete: bool = _catalogue_practice or _owned_build_is_complete()
+	_preview.visible = complete
 	_preview.set_build(_build)
-	_assembly_name.text = PartCatalog.title(_build)
-	for category in _part_buttons:
-		for id in _part_buttons[category]:
+	_assembly_name.text = PartCatalog.title(_build) if complete else "ASSEMBLY INCOMPLETE"
+	for category: String in _equipped_slot_labels:
+		_equipped_slot_labels[category].text = str(PartCatalog.PARTS[category].get(str(_build.get(category, "")), {}).get("name", "EMPTY"))
+	for category: String in _part_buttons:
+		for id: String in _part_buttons[category]:
 			var button: Button = _part_buttons[category][id]
-			var selected: bool = str(_build.get(category, "")) == str(id)
-			button.add_theme_stylebox_override("normal", _box(Color("9b5a37") if selected else Color("203548"), ORANGE if selected else BORDER, 1))
-			button.add_theme_color_override("font_color", Color.WHITE if selected else TEXT)
-	_describe_practice_part("blade", str(_build.blade))
+			var owned: bool = _catalogue_practice or id in _collection_owned(category)
+			var selected: bool = owned and str(_build.get(category, "")) == id
+			button.add_theme_stylebox_override("normal", _box(Color("704c33") if selected else (Color("263640") if owned else Color("162129")), ORANGE if selected else BORDER))
+			var status: Label = button.get_meta("status_label", null) as Label
+			if status != null:
+				status.text = "EQUIPPED" if selected else ("PRACTICE" if _catalogue_practice else ("OWNED" if owned else "NOT OWNED"))
+				status.add_theme_color_override("font_color", ORANGE if selected else (BLUE if owned else MUTED))
 	var stats: Dictionary = PartCatalog.derive(_build)
-	for stat in _stat_bars:
+	for stat: String in _stat_bars:
 		var amount: float = float(stats.get(stat, 5.0))
-		_stat_bars[stat].value = clampf(amount / 10.0, 0.0, 1.0)
-		_stat_numbers[stat].text = "%.1f" % amount
+		_stat_bars[stat].value = clampf(amount / 10.0, 0.0, 1.0) if complete else 0
+		_stat_numbers[stat].text = "%.1f" % amount if complete else "--"
 
 func show_help() -> void:
 	_clear("help")
-	_header("HOW TO PLAY", "A spinning-top duel in a fixed isometric arena.")
-	_panel(_content, Rect2(22, 65, 279, 238))
-	_panel(_content, Rect2(313, 65, 305, 238))
-	_label(_content, "CONTROL YOUR TOP", Rect2(37, 78, 242, 18), 12, BLUE)
-	_label(_content, "STEER", Rect2(37, 104, 246, 17), 11, TEXT)
-	_label(_content, INPUT_HINTS.steer, Rect2(37, 122, 246, 16), 9, BLUE)
-	_label(_content, "Movement follows the screen directions.", Rect2(37, 139, 246, 16), 9, MUTED)
-	_label(_content, "BURST   /   Dash toward your steering", Rect2(37, 164, 246, 17), 10, TEXT)
-	_label(_content, INPUT_HINTS.burst, Rect2(37, 181, 246, 16), 9, BLUE)
-	_label(_content, "BRAKE   /   Line up a hit or avoid a gate", Rect2(37, 204, 246, 17), 10, TEXT)
-	_label(_content, INPUT_HINTS.brake, Rect2(37, 221, 246, 16), 9, BLUE)
-	_label(_content, "PAUSE   " + INPUT_HINTS.pause, Rect2(37, 247, 246, 14), 9, MUTED)
-	_label(_content, "CONFIRM   " + INPUT_HINTS.confirm, Rect2(37, 263, 246, 14), 9, MUTED)
-	_label(_content, "BACK   " + INPUT_HINTS.back, Rect2(37, 279, 246, 14), 9, MUTED)
-	_label(_content, "WIN THE EXCHANGE", Rect2(329, 78, 272, 18), 12, ORANGE)
-	_label(_content, "RING OUT", Rect2(329, 110, 268, 20), 12, TEXT)
-	_label(_content, "Knock your rival through either orange side gate.\nThe remaining rim keeps tops inside.", Rect2(329, 133, 269, 39), 11, MUTED)
-	_label(_content, "SPIN OUT", Rect2(329, 184, 268, 20), 12, TEXT)
-	_label(_content, "Drain your rival's spin through collisions.\nSteering and bursts also spend your own spin.", Rect2(329, 207, 269, 39), 11, MUTED)
-	_label(_content, "BUILD FOR YOUR STYLE", Rect2(329, 258, 268, 18), 10, BLUE)
-	_label(_content, "Speed for pursuit. Grip for control. Mass for recoil.", Rect2(329, 278, 269, 17), 9, MUTED)
-	var back_button: Button = _button(_content, "BACK TO MENU", Rect2(22, 318, 184, 28), "main_menu")
-	var garage_button: Button = _button(_content, "CUSTOMIZE TOP", Rect2(218, 318, 184, 28), "customize")
-	var duel_button: Button = _button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
-	_focus_rows([[back_button, garage_button, duel_button]])
+	_header("HOW TO PLAY", "Physical movement. Permanent parts. A Run that keeps pushing back.")
+	_panel(_content, Rect2(22, 65, 279, 237))
+	_panel(_content, Rect2(313, 65, 305, 237))
+	_label(_content, "CONTROL YOUR TOP", Rect2(37, 77, 249, 20), 20, BLUE)
+	var actions: Array[String] = ["steer", "burst", "brake", "pause"]
+	var titles: Array[String] = ["STEER / FOLLOW THE SCREEN", "BURST / COMMIT TO A HIT", "BRAKE / LOAD OR CHANGE LINE", "PAUSE / OPTIONS AND RESUME"]
+	for index: int in range(actions.size()):
+		var purpose: String = actions[index]
+		var y: float = 109 + index * 39
+		_label(_content, titles[index], Rect2(37, y, 250, 14), 10, TEXT)
+		_prompt_labels[purpose] = _label(_content, FrontEnd.prompt(_input_profile, purpose), Rect2(37, y + 15, 250, 14), 10, BLUE)
+	_label(_content, "Burst and steering spend spin.\nBrake to shape your next contact.", Rect2(37, 272, 250, 26), 10, MUTED)
+	_label(_content, "BUILD A LASTING RUN", Rect2(329, 77, 271, 20), 20, ORANGE)
+	var run_copy: Label = _label(_content, "CHOOSE A TOP\nYour three first parts stay owned.\n\nSURVIVE AND INVEST\nCollide with rivals. Earn XP.\nChoose powers, ranks and mutations.\n\nREROLL A DRAFT\nCollect charges on the arena floor.\nSpend a charge for a fresh offer.\n\nKEEP YOUR COLLECTION\nA lost Run ends temporary powers.\nOwned parts and your build remain.", Rect2(329, 106, 273, 165), 10, TEXT)
+	run_copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(_content, "DUEL: DRAIN SPIN OR FIND THE GATE.", Rect2(329, 281, 273, 16), 10, MUTED)
+	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 318, 184, 28), "main_menu")
+	var workshop: Button = _button(_content, "OWNED WORKSHOP", Rect2(218, 318, 184, 28), "open_workshop")
+	var duel: Button = _button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
+	_focus_rows([[back, workshop, duel]])
 
-func show_settings(settings: Dictionary) -> void:
+func show_settings(settings: Dictionary, return_intent: String = "main_menu", save_tools_allowed: bool = true) -> void:
 	_settings = settings.duplicate()
 	_clear("settings")
-	_header("SETTINGS", "Your top and preferences are saved automatically.")
-	_panel(_content, Rect2(90, 71, 460, 229))
-	_label(_content, "MASTER VOLUME", Rect2(111, 90, 230, 20), 12)
-	var volume_label: Label = _label(_content, "%d%%" % roundi(float(_settings.get("volume", 0.75)) * 100.0), Rect2(453, 90, 72, 20), 12, BLUE, HORIZONTAL_ALIGNMENT_RIGHT)
-	var slider: HSlider = HSlider.new()
-	slider.position = Vector2(111, 122)
-	slider.size = Vector2(413, 20)
-	slider.min_value = 0.0
-	slider.max_value = 1.0
-	slider.step = 0.05
-	slider.focus_mode = Control.FOCUS_ALL
-	slider.value = float(_settings.get("volume", 0.75))
-	slider.value_changed.connect(func(value: float) -> void:
-		_settings["volume"] = value
-		volume_label.text = "%d%%" % roundi(value * 100.0)
-		action.emit("settings_changed", _settings.duplicate()))
-	_content.add_child(slider)
-	# HSlider does not draw the Button-style focus box itself. Draw a separate
-	# outline so controller focus remains visible even without a mouse hover.
-	var focus_outline: Panel = _panel(slider, Rect2(Vector2(-4, -4), slider.size + Vector2(8, 8)), Color(0, 0, 0, 0), ORANGE)
-	focus_outline.name = "FocusOutline"
-	focus_outline.add_theme_stylebox_override("panel", slider.get_theme_stylebox("focus"))
-	focus_outline.visible = false
-	slider.focus_entered.connect(focus_outline.show)
-	slider.focus_exited.connect(focus_outline.hide)
-	var mute_button: Button = _toggle_setting("muted", "MUTE AUDIO", 163, false)
-	var shake_button: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 201, true)
-	var fullscreen_button: Button = _toggle_setting("fullscreen", "FULL SCREEN", 239, false)
-	_label(_content, "Pixel art uses nearest-neighbor scaling. 1280 Ãƒâ€” 720 recommended.", Rect2(90, 302, 460, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	var back_button: Button = _button(_content, "BACK TO MENU", Rect2(226, 325, 188, 26), "main_menu")
-	_focus_rows([[slider], [mute_button], [shake_button], [fullscreen_button], [back_button]])
+	_header("OPTIONS", "Changes apply immediately. Your collection is independent of these settings.")
+	_panel(_content, Rect2(22, 65, 596, 128))
+	_label(_content, "AUDIO", Rect2(34, 71, 116, 15), 10, ORANGE)
+	var controls: Array = []
+	for index: int in range(3):
+		var key: String = ["volume", "music_volume", "sfx_volume"][index]
+		var caption: String = ["MASTER", "MUSIC", "SFX"][index]
+		var y: float = 91 + index * 22
+		_label(_content, caption, Rect2(34, y, 112, 17), 10, TEXT)
+		var value_label: Label = _label(_content, "%d%%" % roundi(float(_settings.get(key, 0.65)) * 100), Rect2(542, y, 64, 17), 10, BLUE, HORIZONTAL_ALIGNMENT_RIGHT)
+		var slider: HSlider = HSlider.new()
+		slider.name = {"volume":"VolumeSlider", "music_volume":"MusicVolumeSlider", "sfx_volume":"SfxVolumeSlider"}[key]
+		slider.set_meta("setting_key", key)
+		slider.position = Vector2(152, y + 1)
+		slider.size = Vector2(374, 15)
+		slider.min_value = 0
+		slider.max_value = 1
+		slider.step = 0.05
+		slider.focus_mode = Control.FOCUS_ALL
+		slider.value = float(_settings.get(key, 0.65))
+		slider.value_changed.connect(func(value: float) -> void:
+			_settings[key] = value
+			value_label.text = "%d%%" % roundi(value * 100)
+			action.emit("settings_changed", _settings.duplicate()))
+		_content.add_child(slider)
+		var outline: Panel = _panel(slider, Rect2(Vector2(-3, -3), slider.size + Vector2(6, 6)), Color(0, 0, 0, 0), ORANGE)
+		outline.name = "FocusOutline"
+		outline.add_theme_stylebox_override("panel", slider.get_theme_stylebox("focus"))
+		outline.visible = false
+		slider.focus_entered.connect(outline.show)
+		slider.focus_exited.connect(outline.hide)
+		controls.append([slider])
+	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 161, false)
+	controls.append([mute])
+	_panel(_content, Rect2(22, 204, 596, 96))
+	_label(_content, "DISPLAY / COMFORT", Rect2(34, 210, 310, 15), 10, ORANGE)
+	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 234, true)
+	var fullscreen: Button = _toggle_setting("fullscreen", "FULL SCREEN", 265, false)
+	controls.append([shake])
+	controls.append([fullscreen])
+	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
+	var footer: Array = [back]
+	if save_tools_allowed:
+		footer.append(_button(_content, "SAVE / TESTING TOOLS", Rect2(405, 321, 213, 28), "save_tools"))
+	else:
+		_label(_content, "SAVE TOOLS LOCKED DURING A RUN", Rect2(237, 325, 381, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	controls.append(footer)
+	_focus_rows(controls)
 
 func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> Button:
-	_label(_content, title, Rect2(111, y, 300, 24), 12)
-	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(444, y, 81, 25))
+	_label(_content, title, Rect2(34, y, 410, 24), 10, TEXT)
+	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(507, y, 99, 25))
+	button.set_meta("setting_key", key)
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
 		button.text = "ON" if _settings[key] else "OFF"
 		action.emit("settings_changed", _settings.duplicate()))
 	return button
 
+func show_save_tools(snapshot: Dictionary, backups: Array = [], status: String = "", return_intent: String = "back_settings") -> void:
+	_clear("save_tools")
+	_header("SAVE / TESTING TOOLS", "Explicit local tools. Reset affects the collection, not audio or display settings.")
+	_panel(_content, Rect2(22, 66, 596, 242))
+	var owned: int = 0
+	for category: String in ["blade", "ratchet", "bit"]: owned += snapshot.get("owned_parts", {}).get(category, []).size()
+	_label(_content, "COLLECTION: %d OWNED PARTS" % owned, Rect2(38, 81, 556, 22), 20, BLUE)
+	_label(_content, "VERIFIED LOCAL BACKUPS: %d" % backups.size(), Rect2(38, 116, 556, 18), 10, TEXT)
+	var note: Label = _label(_content, status if not status.is_empty() else "Back up before testing a fresh first choice. Reset first preserves\nthe existing collection in a verified local archive.", Rect2(38, 145, 556, 48), 10, MUTED)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var backup: Button = _button(_content, "BACK UP COLLECTION", Rect2(38, 211, 556, 31), "backup_collection")
+	var reset: Button = _button(_content, "RESET COLLECTION...", Rect2(38, 255, 556, 31), "request_reset_collection")
+	var back: Button = _button(_content, "BACK TO OPTIONS", Rect2(22, 321, 238, 28), return_intent)
+	_focus_rows([[backup], [reset], [back]], back)
+
+func show_reset_confirmation(snapshot: Dictionary = {}) -> void:
+	_clear("reset_confirmation")
+	_header("RESET THIS COLLECTION?", "Testing action / A second deliberate confirmation is required.")
+	_panel(_content, Rect2(54, 75, 532, 222), Color("2c2524"), ORANGE)
+	_label(_content, "YOUR CURRENT COLLECTION WILL BE ARCHIVED.", Rect2(72, 94, 496, 27), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var message: Label = _label(_content, "The next start will ask you to choose a first machine again.\n\nOwned parts and the equipped assembly are reset.\nYour audio and display preferences stay as they are.\n\nCancel keeps your collection exactly as it is.", Rect2(76, 134, 488, 99), 10, TEXT)
+	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var cancel: Button = _button(_content, "CANCEL / KEEP COLLECTION", Rect2(76, 247, 237, 30), "cancel_reset_collection", null, true)
+	var confirm: Button = _button(_content, "ARCHIVE AND RESET", Rect2(326, 247, 236, 30), "confirm_reset_collection", snapshot.get("reset_token", -1))
+	_focus_rows([[cancel, confirm]], cancel)
+	_input_footer()
+
 func show_pause(is_run: bool = false) -> void:
 	_clear("pause", false)
-	_rect(_content, Rect2(0, 0, 640, 360), Color(0.02, 0.04, 0.065, 0.8))
-	_panel(_content, Rect2(186, 48, 268, 268))
-	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(202, 66, 236, 31), 23, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "Take a breath. Your spin can wait.", Rect2(202, 101, 236, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	var resume_button: Button = _button(_content, "RESUME", Rect2(207, 135, 226, 31), "resume", null, true)
-	var restart_button: Button = _button(_content, "RESTART RUN" if is_run else "RESTART DUEL", Rect2(207, 176, 226, 31), "restart_run" if is_run else "rematch")
-	var focus_rows: Array = [[resume_button], [restart_button]]
+	_rect(_content, Rect2(0, 0, 640, 360), Color(0.02, 0.03, 0.04, 0.77))
+	_panel(_content, Rect2(170, 35, 300, 289), Color("1c2933"), BORDER)
+	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(187, 50, 266, 31), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "Take a breath. Your spin can wait.", Rect2(187, 88, 266, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	var resume: Button = _button(_content, "RESUME", Rect2(190, 119, 260, 31), "resume", null, true)
+	var options: Button = _button(_content, "OPTIONS", Rect2(190, 158, 260, 29), "settings")
+	var restart: Button = _button(_content, "RESTART RUN" if is_run else "RESTART DUEL", Rect2(190, 196, 260, 29), "restart_run" if is_run else "rematch")
+	var rows: Array = [[resume], [options], [restart]]
 	if is_run:
-		focus_rows.append([_button(_content, "END RUN", Rect2(207, 217, 226, 31), "end_run")])
-		_label(_content, "Assembly locked for this run", Rect2(202, 258, 236, 22), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		rows.append([_button(_content, "END RUN", Rect2(190, 234, 260, 29), "end_run")])
+		_label(_content, "ASSEMBLY LOCKED FOR THIS RUN", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	else:
-		focus_rows.append([_button(_content, "CUSTOMIZE TOP", Rect2(207, 217, 226, 31), "customize")])
-		focus_rows.append([_button(_content, "MAIN MENU", Rect2(207, 258, 226, 31), "main_menu")])
-	_focus_rows(focus_rows)
+		var garage: Button = _button(_content, "WORKSHOP", Rect2(190, 234, 125, 29), "customize")
+		var hub: Button = _button(_content, "WORKBENCH", Rect2(325, 234, 125, 29), "main_menu")
+		rows.append([garage, hub])
+		_label(_content, "DUEL ASSEMBLY / PRACTICE", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_focus_rows(rows)
 
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
@@ -1049,26 +1207,46 @@ func show_result(result: Dictionary) -> void:
 	_focus_rows(focus_rows)
 
 func _show_run_result(result: Dictionary) -> void:
-	_clear("result", false)
-	_rect(_content, Rect2(0, 0, 640, 360), Color(0.025, 0.045, 0.07, 0.9))
-	_panel(_content, Rect2(82, 22, 476, 316))
-	_label(_content, "RUN ENDED", Rect2(100, 35, 440, 32), 25, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	_clear("result")
+	_header("RUN ENDED", "Your temporary powers end here. Your collection stays with you.")
+	_panel(_content, Rect2(22, 65, 232, 242))
+	_label(_content, "YOUR FINAL MACHINE", Rect2(35, 76, 208, 16), 10, BLUE)
+	_build = result.get("build", Starters.build_for(str(result.get("starter_id", "breaker")))).duplicate()
+	if not _complete_build(_build): _build = Starters.build_for("breaker")
+	var preview: Preview = _new_preview(Rect2(28, 97, 220, 98), 3)
+	_set_preview_build_identity(preview, _build)
+	var machine: Label = _label(_content, PartCatalog.title(_build), Rect2(34, 200, 208, 26), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	machine.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var reason: String = str(result.get("reason", "spin_out")).replace("_", " ").to_upper()
-	_label(_content, Starters.display_name(str(result.get("starter_id", "custom"))) + " / " + reason, Rect2(100, 73, 440, 20), 11, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "SEED %d" % int(result.get("run_seed",0)), Rect2(100, 94, 440, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, Starters.display_name(str(result.get("starter_id", "custom"))) + " / " + reason, Rect2(34, 239, 208, 27), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(_content, "SEED %d" % int(result.get("run_seed",0)), Rect2(34, 281, 208, 16), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_panel(_content, Rect2(269, 65, 349, 97))
 	var seconds: int = floori(float(result.get("survival_time", 0.0)))
-	_label(_content, "SURVIVED  %02d:%02d" % [seconds / 60, seconds % 60], Rect2(105, 108, 430, 27), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "%d THREATS CLEARED    /    LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(100, 148, 440, 20), 12, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "%d RIVALS / %d SMALL / %d ELITES / %d BOSSES" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0)),int(result.get("elites_defeated",0)),int(result.get("bosses_defeated",0))], Rect2(100, 177, 440, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	var names: PackedStringArray = []
-	for id: String in result.get("owned_power_ids", []):
-		names.append(str(Powers.get_owned_power(id, int(result.get("power_ranks", {}).get(id, 1)), str(result.get("power_mutations", {}).get(id, ""))).get("name", id)))
-	var collection: Label = _label(_content, " / ".join(names), Rect2(105, 201, 430, 51), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	collection.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var restart: Button = _button(_content, "RESTART RUN", Rect2(105, 257, 430, 28), "restart_run", null, true)
-	var garage: Button = _button(_content, "GARAGE", Rect2(105, 296, 210, 26), "customize")
-	var title: Button = _button(_content, "MAIN MENU", Rect2(325, 296, 210, 26), "main_menu")
-	_focus_rows([[restart], [garage, title]])
+	_label(_content, "SURVIVED  %02d:%02d" % [seconds / 60, seconds % 60], Rect2(281, 76, 325, 25), 20, TEXT)
+	_label(_content, "%d THREATS CLEARED / LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(281, 109, 325, 16), 10, BLUE)
+	var defeats: Label = _label(_content, "%d RIVALS / %d SMALL / %d ELITES / %d BOSSES" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0)),int(result.get("elites_defeated",0)),int(result.get("bosses_defeated",0))], Rect2(281, 134, 325, 23), 10, MUTED)
+	defeats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_panel(_content, Rect2(269, 173, 349, 134))
+	_label(_content, "FINAL INVESTMENTS", Rect2(281, 181, 325, 14), 10, ORANGE)
+	var ids: Array = result.get("owned_power_ids", [])
+	if ids.is_empty(): _label(_content, "No power was committed.", Rect2(281, 214, 325, 20), 10, MUTED)
+	for index: int in range(ids.size()):
+		var id: String = str(ids[index])
+		var rank: int = int(result.get("power_ranks", {}).get(id, 1))
+		var mutation: String = str(result.get("power_mutations", {}).get(id, ""))
+		var data: Dictionary = Powers.get_owned_power(id, rank, mutation)
+		var x: float = 281 + (index % 2) * 166
+		var y: float = 202 + (index / 2) * 17
+		_power_icon(_content, id, Rect2(x, y, 16, 16))
+		_label(_content, ["Ⅰ", "Ⅱ", "Ⅲ"][clampi(rank - 1, 0, 2)], Rect2(x + 18, y, 7, 16), 10, ORANGE)
+		var display_name: String = str(data.get("name", id)) if not mutation.is_empty() else str(Powers.get_power(id).get("name", id))
+		var name: Label = _label(_content, display_name, Rect2(x + 28, y, 136, 16), 10, TEXT)
+		name.tooltip_text = str(data.get("name", id)) + " / RANK %d" % rank + (" / " + mutation.replace("_", " ") if not mutation.is_empty() else "")
+		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var restart: Button = _button(_content, "RESTART RUN", Rect2(22, 321, 286, 28), "restart_run", null, true)
+	var garage: Button = _button(_content, "WORKSHOP", Rect2(321, 321, 140, 28), "customize")
+	var hub: Button = _button(_content, "WORKBENCH", Rect2(475, 321, 143, 28), "main_menu")
+	_focus_rows([[restart, garage, hub]])
 
 func show_hud(stats: Dictionary) -> void:
 	if screen != "hud":
@@ -1201,7 +1379,7 @@ func show_hud(stats: Dictionary) -> void:
 			var power: Dictionary = Powers.get_owned_power(id, rank, mutation)
 			icon.texture = _power_texture(id, power) if not id.is_empty() else null
 			icon.tooltip_text = str(power.get("name", "")) + " / RANK " + str(rank)
-		_hud["power_rank_%d" % index].text = ["", "I", "II", "III"][clampi(rank, 0, 3)] if not id.is_empty() else ""
+		_hud["power_rank_%d" % index].text = ["", "Ⅰ", "Ⅱ", "Ⅲ"][clampi(rank, 0, 3)] if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
 	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
@@ -1230,7 +1408,7 @@ func _create_hud() -> void:
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause")
-	pause_button.add_theme_font_size_override("font_size", 9)
+	pause_button.add_theme_font_size_override("font_size", 10)
 	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
 	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
 	pause_button.focus_mode = Control.FOCUS_NONE

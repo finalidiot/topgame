@@ -1,0 +1,41 @@
+{
+  "cell": [
+    640,
+    360
+  ],
+  "pivot": [
+    0,
+    0
+  ],
+  "layers": [
+    "quiet steel workbench",
+    "physical rubber service station",
+    "placed paint wear"
+  ],
+  "tags": {
+    "title": {
+      "from": 0,
+      "to": 0
+    },
+    "hub": {
+      "from": 1,
+      "to": 1
+    },
+    "workshop": {
+      "from": 1,
+      "to": 1
+    }
+  },
+  "durations_ms": [
+    1000,
+    1000
+  ],
+  "version": 1,
+  "texture": "frontend_background.png",
+  "columns": 2,
+  "frame_count": 2,
+  "source": "../source-art/ui/frontend_background.aseprite",
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "002C.6"
+}

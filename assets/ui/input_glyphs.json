@@ -1,0 +1,75 @@
+{
+  "cell": [
+    16,
+    16
+  ],
+  "pivot": [
+    8,
+    8
+  ],
+  "layers": [
+    "key or controller bezel",
+    "native input symbol"
+  ],
+  "tags": {
+    "key_enter": {
+      "from": 0,
+      "to": 0
+    },
+    "key_escape": {
+      "from": 1,
+      "to": 1
+    },
+    "pad_south": {
+      "from": 2,
+      "to": 2
+    },
+    "pad_east": {
+      "from": 3,
+      "to": 3
+    },
+    "dpad": {
+      "from": 4,
+      "to": 4
+    },
+    "pad_back": {
+      "from": 5,
+      "to": 5
+    },
+    "pad_start": {
+      "from": 6,
+      "to": 6
+    },
+    "pad_cross": {
+      "from": 7,
+      "to": 7
+    },
+    "pad_circle": {
+      "from": 8,
+      "to": 8
+    },
+    "pad_bottom": {
+      "from": 2,
+      "to": 2
+    }
+  },
+  "durations_ms": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ],
+  "version": 1,
+  "texture": "input_glyphs.png",
+  "columns": 9,
+  "frame_count": 9,
+  "source": "../source-art/ui/input_glyphs.aseprite",
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "002C.6"
+}

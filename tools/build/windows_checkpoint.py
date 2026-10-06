@@ -209,6 +209,8 @@ def verify_candidate(candidate: Path) -> dict:
     provisional_c5 = manifest["checkpoint"] == "002C.5" or manifest["checkpoint"].startswith("002C.5.")
     if provisional_c5 and manifest.get("human_acceptance") != "PENDING HOME HUMAN PLAYTEST":
         raise ValueError("Task 002C.5 must retain its pending human gameplay acceptance.")
+    if manifest["checkpoint"] == "002C.6" and manifest.get("human_acceptance") != "PENDING HUMAN PRESENTATION PLAYTEST":
+        raise ValueError("Task 002C.6 must retain its pending human presentation acceptance.")
     if not re.fullmatch(r"[0-9a-f]{40}", manifest.get("source", {}).get("git_sha", "")):
         raise ValueError("Candidate has no exact Git checkpoint.")
     if not manifest["source"].get("tracked_clean"):
@@ -378,7 +380,7 @@ def build(args: argparse.Namespace) -> dict:
         digest = sha256(payload / EXE)
         (payload / (EXE + ".sha256")).write_text(digest + "  " + EXE + "\n", encoding="ascii")
         provisional_c5 = args.checkpoint == "002C.5" or args.checkpoint.startswith("002C.5.")
-        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "Human acceptance is separate from automated validation."
+        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "Human acceptance is separate from automated validation."
         report["human_acceptance"] = acceptance
         readme = ("Spinning Metal / GyroBrothers\n"
                   f"Task/checkpoint: {args.checkpoint} (workspace/build task {args.task})\n"
@@ -393,8 +395,11 @@ def build(args: argparse.Namespace) -> dict:
                   "shoulder/trigger brakes; Menu/Start pauses; east face button goes back.\n"
                   "D-pad/stick navigate menus; mouse and keyboard are also supported.\n\n"
                   "Select and confirm your first owned top when starting a fresh collection.\n"
-                  "Task 002C.5 remains PENDING HOME HUMAN PLAYTEST.\n"
-                  "This checkpoint does not approve Task 002C.5 balance or gameplay.\n")
+                  + ("Task 002C.5 remains PENDING HOME HUMAN PLAYTEST.\n"
+                     "This checkpoint does not approve Task 002C.5 balance or gameplay.\n" if provisional_c5 else
+                     "The C5 parts/combat foundation and Black Arrow/beasts are accepted in main.\n"
+                     "Task 002C.6 presentation remains a human-review checkpoint.\n" if args.checkpoint == "002C.6" else
+                     "This checkpoint's human acceptance remains separate from automated checks.\n"))
         (payload / "README.txt").write_text(readme, encoding="utf-8")
         report["delivery_sha256"] = {name: sha256(payload / name) for name in DELIVERY_FILES[:-1]}
         report["validation"] = "passed"

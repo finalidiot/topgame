@@ -19,6 +19,7 @@ var starter_id: String:
 	get: return str(_data.get("starter_selected", ""))
 var _data: Dictionary = _empty_state()
 var _write_status: String = "write_failed"
+var last_backup_path: String = ""
 
 func _init(path: String = DEFAULT_PATH) -> void:
 	save_path = path
@@ -140,19 +141,86 @@ func equip_build(build: Dictionary) -> Dictionary:
 	candidate.equipped_build = build.duplicate(true)
 	return _commit(candidate, "equipped")
 
+func backup_collection() -> Dictionary:
+	var source: String = ProjectSettings.globalize_path(save_path).replace("\\", "/").simplify_path()
+	var project: String = ProjectSettings.globalize_path("res://").replace("\\", "/").simplify_path().trim_suffix("/") + "/"
+	if not source.is_absolute_path() or source.get_extension().to_lower() != "json" or source.to_lower().begins_with(project.to_lower()):
+		return _result(false, "unsafe_save_path")
+	var files: Array[Dictionary] = []
+	for suffix: String in ["", ".bak", ".tmp", ".bak.tmp"]:
+		var path: String = source + suffix
+		if DirAccess.dir_exists_absolute(path): return _result(false, "unexpected_save_directory")
+		if FileAccess.file_exists(path):
+			var input: FileAccess = FileAccess.open(path, FileAccess.READ)
+			if input == null: return _result(false, "unreadable_save")
+			input.close()
+			files.append({"source":path,"name":path.get_file(),"sha256":FileAccess.get_sha256(path)})
+	if files.is_empty(): return {"ok":true,"status":"no_save_files","backup_directory":"","files":[]}
+	var stamp: String = Time.get_datetime_string_from_system(true).replace(":", "").replace("-", "")
+	var archive: String = source.get_base_dir().path_join("collection-backups").path_join(source.get_file().get_basename()).path_join("backup_%s_%d_%d" % [stamp, OS.get_process_id(), Time.get_ticks_usec()])
+	if DirAccess.dir_exists_absolute(archive) or DirAccess.make_dir_recursive_absolute(archive) != OK:
+		return _result(false, "backup_directory_failed")
+	for row: Dictionary in files:
+		var destination: String = archive.path_join(str(row.name))
+		if DirAccess.copy_absolute(str(row.source), destination) != OK or FileAccess.get_sha256(destination) != row.sha256:
+			return _result(false, "backup_verification_failed")
+	# Corrupt/future saves and interrupted temps are retained as exact bytes.
+	# No sanitisation, rewrite or preference/settings copy is involved.
+	var manifest_path: String = archive.path_join("manifest.json")
+	var payload: String = JSON.stringify({"schema":1,"purpose":"explicit_collection_backup","created_utc":Time.get_datetime_string_from_system(true),"source":source,"files":files}, "\t")
+	if not _write_file(manifest_path, payload): return _result(false, "backup_manifest_failed")
+	if not _files_match_backup(files): return _result(false, "save_changed_during_backup")
+	last_backup_path = archive
+	return {"ok":true,"status":"backed_up","backup_directory":archive,"files":files}
+
+func _files_match_backup(files: Array, removed: Array = []) -> bool:
+	# Absent siblings are part of the inventory too. A concurrent writer must
+	# not create a new backup/temp that can silently restore the old collection.
+	var source: String = ProjectSettings.globalize_path(save_path).replace("\\", "/").simplify_path()
+	for suffix: String in ["", ".bak", ".tmp", ".bak.tmp"]:
+		var path: String = source + suffix
+		var expected: String = ""
+		for row: Dictionary in files:
+			if str(row.source) == path and row not in removed: expected = str(row.sha256)
+		if DirAccess.dir_exists_absolute(path): return false
+		if expected.is_empty():
+			if FileAccess.file_exists(path): return false
+		elif not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != expected: return false
+	return true
+
+func _restore_removed_collection(removed: Array, archive: String) -> void:
+	for row: Dictionary in removed:
+		if not FileAccess.file_exists(str(row.source)) and not DirAccess.dir_exists_absolute(str(row.source)):
+			DirAccess.copy_absolute(archive.path_join(str(row.name)), str(row.source))
+
 func reset_collection(explicitly_requested: bool = false) -> Dictionary:
 	if not explicitly_requested: return _result(false, "explicit_reset_required")
-	# Exact named files only. Preferences and unrelated user data are untouched.
-	for suffix: String in ["", ".bak", ".tmp", ".bak.tmp"]:
-		var path: String = ProjectSettings.globalize_path(save_path + suffix)
-		if FileAccess.file_exists(path) and DirAccess.remove_absolute(path) != OK:
-			last_error = "Unable to remove the collection file: " + suffix
-			return _result(false, "reset_failed")
+	var backup: Dictionary = backup_collection()
+	if not bool(backup.ok):
+		last_error = "Reset stopped because a verified collection backup could not be made."
+		return _result(false, str(backup.status))
+	var removed: Array[Dictionary] = []
+	if not _files_match_backup(backup.files):
+		last_error = "The collection changed during backup. Close other game instances and retry."
+		return {"ok":false,"status":"save_changed_during_backup","backup_directory":backup.backup_directory}
+	for row: Dictionary in backup.files:
+		# Exact files only, rechecked immediately before removal. A concurrent
+		# replacement is preserved; already removed files can be restored safely.
+		var path: String = str(row.source)
+		if not _files_match_backup(backup.files, removed) or DirAccess.remove_absolute(path) != OK:
+			_restore_removed_collection(removed, str(backup.backup_directory))
+			last_error = "Reset could not finish. The verified backup is retained. Close other game instances and retry."
+			return {"ok":false,"status":"reset_failed","backup_directory":backup.backup_directory}
+		removed.append(row)
+	if not _files_match_backup(backup.files, removed):
+		_restore_removed_collection(removed, str(backup.backup_directory))
+		last_error = "Another game instance wrote during reset. The verified backup is retained."
+		return {"ok":false,"status":"reset_failed","backup_directory":backup.backup_directory}
 	_data = _empty_state()
 	read_only = false
 	load_status = "fresh"
 	last_error = ""
-	return _result(true, "reset")
+	return {"ok":true,"status":"reset","backup_directory":backup.backup_directory,"files":backup.files}
 
 func _commit(candidate: Dictionary, status: String) -> Dictionary:
 	if not _write_save(candidate): return _result(false, _write_status)

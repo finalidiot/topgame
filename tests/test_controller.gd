@@ -254,7 +254,7 @@ func _descendants(parent: Node) -> Array[Node]:
 
 func _button(text: String) -> Button:
 	for node: Node in _descendants(game.menus):
-		if node is Button and (node.text == text or (text == "QUICK DUEL" and node.text == "QUICK DUEL / PRACTICE")): return node
+		if node is Button and (node.text == text or (text == "BEGIN" and node.text == "BEGIN / CHOOSE FIRST TOP") or (text == "QUICK DUEL" and node.text in ["QUICK DUEL / PRACTICE", "LAUNCH QUICK DUEL"]) or (text == "SETTINGS" and node.text == "OPTIONS") or (text == "BACK TO MENU" and node.text in ["BACK", "BACK TO WORKBENCH"]) or (text == "MAIN MENU" and node.text == "WORKBENCH")): return node
 	return null
 
 func _focus_is_visible(context: String) -> void:
@@ -296,6 +296,9 @@ func _navigate(target: Control) -> bool:
 	return root.gui_get_focus_owner() == target
 
 func _activate(text: String) -> void:
+	if text in ["QUICK DUEL", "PRACTICE GARAGE"] and _button(text) == null and _button("PLAY MODES") != null:
+		await _activate("PLAY MODES")
+		check(game.screen == "play_modes", "Real controller navigation enters Play Modes before practice")
 	if await _navigate(_button(text)): await _tap(JOY_BUTTON_A)
 
 func _test_title_garage_settings() -> void:
@@ -310,10 +313,14 @@ func _test_title_garage_settings() -> void:
 	check(root.gui_get_focus_owner() != initial, "Left stick navigates the title")
 	await _tap(JOY_BUTTON_DPAD_DOWN)
 	_focus_is_visible("D-pad navigation coexists with stick navigation")
+	await _activate("PLAY MODES")
+	check(game.screen == "play_modes", "Controller reaches genuine Play Modes from the hub")
 	await _activate("PRACTICE GARAGE")
 	check(game.screen == "practice_garage", "Controller Confirm opens separate unrestricted practice garage")
 	_focus_is_visible("Garage")
 	for category: String in ["blade", "ratchet", "bit"]:
+		if await _navigate(game.menus._catalogue_tabs[category]): await _tap(JOY_BUTTON_A)
+		check(game.menus._catalogue_category == category, "Actual controller input opens the catalogue category")
 		for id: String in Parts.PARTS[category]:
 			var part: Control = game.menus._part_buttons[category][id]
 			if await _navigate(part): await _tap(JOY_BUTTON_A)
@@ -342,7 +349,7 @@ func _test_title_garage_settings() -> void:
 	var slider: HSlider
 	var toggles: Array[Button] = []
 	for node: Node in _descendants(game.menus):
-		if node is HSlider: slider = node
+		if node is HSlider and str(node.get_meta("setting_key", "")) == "volume": slider = node
 		if node is Button and node.text in ["ON", "OFF"]: toggles.append(node)
 	if await _navigate(slider):
 		check(slider.get_node("FocusOutline").visible, "Focused volume slider displays its actual outline control")

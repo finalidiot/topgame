@@ -89,18 +89,9 @@ func _draw() -> void:
 
 func _draw_identity_motion(origin: Vector2, factor: float) -> void:
 	var center: Vector2 = (origin + Vector2(24, 29) * factor).round()
-	var dim: Color = Color(accent.r, accent.g, accent.b, 0.4)
-	if identity == "breaker":
-		for index: int in range(3):
-			var offset: Vector2 = Vector2(-19 - index * 3, 4 + index * 2) * factor
-			draw_line((center + offset).round(), (center + offset + Vector2(7, -2) * factor).round(), dim, factor)
-	elif identity == "bastion":
-		var radius: Vector2 = Vector2(20, 6) * factor
-		for side: int in [-1, 1]:
-			var point: Vector2 = center + Vector2(side * radius.x, radius.y)
-			draw_line((point - Vector2(0, factor * 2)).round(), (point + Vector2(0, factor * 2)).round(), dim, factor)
-			draw_line(point.round(), (point + Vector2(-side * factor * 5, 0)).round(), dim, factor)
-	elif identity == "vane":
+	# Breaker/Bastion use their opaque native silhouette and enamel. Permanent
+	# side streaks/brackets looked like detached pixels even when the rig idled.
+	if identity == "vane":
 		for index: int in range(3):
 			var phase: float = _clock * 2.0 - index * 0.28
 			var point: Vector2 = (center + Vector2(cos(phase) * 20, sin(phase) * 6) * factor).round()

@@ -1,0 +1,29 @@
+{
+  "task": "002C.6",
+  "branch": "task-002c6-presentation-foundation",
+  "accepted_parent_main_sha": "58cd1790561337be1fc7c4c114b87564c4617aa1",
+  "regression": {
+    "status": "passed",
+    "suites": 50,
+    "counted_checks": 112301,
+    "failed_suites": [],
+    "source_unchanged": true,
+    "assets_unchanged": true,
+    "player_profile_unchanged": true,
+    "evidence": "GyroBrothers-QA/002C.6/manifests/002c6_regression_frozen.json"
+  },
+  "python_guards": {
+    "tests": 50,
+    "passed": true,
+    "evidence": "GyroBrothers-QA/002C.6/manifests/002c6_python_tool_guards_final.json"
+  },
+  "protected_accepted_production_files": 45,
+  "editable_ui_masters": 3,
+  "native_aseprite_parity": true,
+  "native_starter_keys_preserved": 24,
+  "music_stems": 5,
+  "physical_controller_tested": false,
+  "final_build_and_sha_evidence": "GyroBrothers-QA/002C.6/manifests/002c6_checkpoint.json",
+  "human_presentation_acceptance": "pending",
+  "merge_to_main": "not_authorised_for_C6"
+}

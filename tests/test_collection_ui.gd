@@ -240,7 +240,9 @@ func _check_workshop(starter: String) -> void:
 	for category: String in ["blade", "ratchet", "bit"]:
 		for id: String in Parts.PARTS[category]:
 			var button: Button = game.menus._part_buttons[category][id]
-			check(button != null and button.is_visible_in_tree(), "Wider catalogue remains visible: "+category+":"+id)
+			check(button != null, "Every expanded catalogue card is retained: "+category+":"+id)
+			check(button.is_visible_in_tree() == (category == game.menus._catalogue_category), "Only the selected category is visible: "+category+":"+id)
+			check(button.focus_mode == (Control.FOCUS_ALL if category == game.menus._catalogue_category else Control.FOCUS_NONE), "Inactive category cards cannot enter the focus graph")
 			if game.collection.owns_part(category+":"+id): owned_count += 1
 			else:
 				locked_count += 1
@@ -346,12 +348,12 @@ func _test_keyboard() -> void:
 	await _key_tap(KEY_ESCAPE)
 	check(game.screen == "title", "Keyboard Back returns from Workshop to title")
 	await _key_tap(KEY_ENTER)
-	check(game.screen == "garage" and game.collection.owned_count() == 3, "Initialized keyboard title skips ceremony and keeps ownership")
+	check(game.screen == "reward" and game.collection.owned_count() == 3 and game.run_context.selected_build == Starters.build_for("bastion"), "Initialized hub launches the owned machine directly and skips the first-choice ceremony")
 
 func _test_mouse() -> void:
 	await _fresh("mouse-vane")
 	var begin: Button = _button_text("BEGIN")
-	if begin == null: begin = _button_text("BEGIN / NEW GAME")
+	if begin == null: begin = _button_text("BEGIN / CHOOSE FIRST TOP")
 	await _click(begin)
 	_check_ceremony()
 	await _click(_button("select_first_starter", "vane"))
@@ -363,6 +365,7 @@ func _test_mouse() -> void:
 	await _settle()
 	_check_workshop("vane")
 	var before: Dictionary = game.collection.snapshot().duplicate(true)
+	await _click(game.menus._catalogue_tabs.bit)
 	await _click(game.menus._part_buttons.bit.flat)
 	check(game.collection.snapshot() == before and game.build.bit == "rubber", "Mouse cannot equip a visible unowned part")
 	_check_layout("Mouse locked inspection")
