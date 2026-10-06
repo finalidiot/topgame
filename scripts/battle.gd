@@ -25,6 +25,7 @@ const EnemyRoles = preload("res://scripts/enemy_roles.gd")
 const ContinuousRun = preload("res://scripts/continuous_run.gd")
 const RunPowers = preload("res://scripts/run_powers.gd")
 const FeedbackEffects = preload("res://scripts/feedback_effects.gd")
+const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
 const NEUTRAL_TEAM: String = "neutral"
@@ -41,6 +42,11 @@ const ENEMY_COLOR: Color = Color("f0a468")
 
 var continuous = null
 var powers = PowerRuntime.new()
+var beasts = BeastManifestations.new()
+var beast_manifestations_enabled: bool = true:
+	set(value):
+		beast_manifestations_enabled = value
+		beasts.set_enabled(value)
 var roster = RosterRuntime.new()
 # QA descriptors may opt into continuous power semantics without a director.
 var ability_rebalance: bool = false
@@ -169,6 +175,8 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 		entity(2)["power_mutations"] = descriptor.get("opponent_power_mutations", {}).duplicate(true)
 	powers.setup(self)
 	roster.setup(self)
+	beasts.setup(self)
+	beasts.set_enabled(beast_manifestations_enabled)
 	_power_fx.clear()
 	_blast_waves.clear()
 	battle_status = "countdown"
@@ -974,6 +982,7 @@ func present_reclaim(amount: float, source: String) -> void:
 	add_power_fx("rpm_reclaim",player_entity().pos,Vector2.ZERO,amount)
 
 func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO, strength: float = 1.0, presentation: Dictionary = {}) -> void:
+	beasts.accept_event(kind, pos, direction, strength, presentation)
 	var durations: Dictionary = {"impact_wake":0.40,"second_wind":0.64,"redline":0.28,"redline_release":0.32,"comet_charge":0.22,"comet_release":0.28,"afterimage":0.24,"chain_impact":0.38,
 		"redline_ii":0.40,"runaway":0.44,"runaway_hit":0.30,"breakneck_charge":0.36,"breakneck_impact":0.45,"anchor":0.42,"anchor_break":0.30,"bulwark_impact":0.48,"counterweight_store":0.36,"counterweight_release":0.45,"afterimage_ii":0.24,"ghost_closure":0.48,"ghost_activation":0.60,"slipstream_cross":0.42}
 	if kind in ["boss_entry","boss_defeat"]: durations[kind] = 0.75
@@ -1241,6 +1250,7 @@ func _finish(winner_entity_id: int, reason: String) -> void:
 		else: return
 	battle_status = "finished"
 	powers.finish()
+	beasts.finish()
 	_finish_timer = 1.35 if reason == "ring_out" else 2.38
 	for loser: Dictionary in _ordered_fighters():
 		if loser.combatant_type == "small_top" and not str(loser.outcome).is_empty(): continue
@@ -1343,6 +1353,9 @@ func snapshot() -> Dictionary:
 		"winner": last_result.get("winner", -1), "reason": last_result.get("reason", ""),
 		"hits": hits, "result": last_result.duplicate(true), "swarm":swarm.telemetry()}
 
+func beast_presentation_snapshot() -> Dictionary:
+	return beasts.snapshot()
+
 ## Positional seam retained only for the Task 001 regression fixtures.
 ## New callers should use explicit entity IDs through test_set_entity_state.
 func test_set_state(side: int, overrides: Dictionary) -> void:
@@ -1379,6 +1392,7 @@ func _spawn_ring(screen_position: Vector2, color: Color, duration: float) -> voi
 	_rings.append({"pos": screen_position, "life": duration, "max_life": duration, "color": color})
 
 func _update_effects(dt: float) -> void:
+	beasts.update(dt)
 	for index: int in range(_blast_waves.size() - 1, -1, -1):
 		_blast_waves[index].age += dt
 		if float(_blast_waves[index].age) >= float(_blast_waves[index].duration): _blast_waves.remove_at(index)
@@ -1441,6 +1455,7 @@ func _draw() -> void:
 	for fighter: Dictionary in order:
 		_draw_shadow(fighter)
 	_draw_drift_sparks()
+	beasts.draw(self)
 	order.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		var depth_a: float = Vector2(a["pos"]).x + Vector2(a["pos"]).y
 		var depth_b: float = Vector2(b["pos"]).x + Vector2(b["pos"]).y

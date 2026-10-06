@@ -140,6 +140,31 @@ def main() -> None:
                 raise RuntimeError("Packaged feedback sheet pixels differ: " + row["path"])
         report["assets"]["feedback_textures_verified"] = 3
         report["assets"]["feedback_manifest_matches_source"] = True
+        beast_source = ROOT / "assets/powers/beasts_002c5_2/manifest.json"
+        expected_beasts = json.loads(beast_source.read_text(encoding="utf-8"))
+        if json.loads(assets.get("beast_json", "null")) != expected_beasts:
+            raise RuntimeError("Packaged beast manifest differs from current source")
+        beast_rows = assets.get("beast_textures", [])
+        beast_ids = {"black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"}
+        if len(beast_rows) != 4 or {row.get("kind") for row in beast_rows} != beast_ids:
+            raise RuntimeError("Actual package did not inspect all four beast sheets")
+        for row in beast_rows:
+            expected_path = expected_beasts["effects"][row["kind"]]["texture"]
+            if row.get("path") != expected_path:
+                raise RuntimeError("Packaged beast texture path differs: " + row["kind"])
+            path = ROOT / expected_path.removeprefix("res://")
+            with Image.open(path) as image:
+                size = list(image.size)
+                data = bytearray(image.convert("RGBA").tobytes())
+                for offset in range(0, len(data), 4):
+                    if data[offset + 3] == 0:
+                        data[offset:offset + 3] = b"\0\0\0"
+                rgba = hashlib.sha256(data).hexdigest()
+            if (not row.get("valid") or not row.get("visible_pixels") or row.get("size") != size
+                    or row.get("transparent_rgb_normalized") is not True or row.get("visible_rgba_sha256") != rgba):
+                raise RuntimeError("Packaged beast sheet pixels differ: " + expected_path)
+        report["assets"]["beast_textures_verified"] = 4
+        report["assets"]["beast_manifest_matches_source"] = True
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

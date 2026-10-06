@@ -257,7 +257,7 @@ func _end_redline(fighter: Dictionary) -> void:
 	fighter["runaway_heat"] = 0.0
 	fighter["redline_active_rank"] = 0
 	fighter["redline_active_mutation"] = ""
-	_fx(release_fx, fighter["pos"], state["redline_heading"])
+	_fx(release_fx, fighter["pos"], state["redline_heading"], 1.0, {"owner_entity_id": int(fighter["entity_id"]), "beast_trigger": true})
 
 ## Called only after battle accepts Burst and pays its ordinary reserve cost.
 func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -> void:
@@ -293,7 +293,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 		if level >= 2:
 			fighter["vel"] = Vector2(fighter["vel"]) + heading.normalized() * (180.0 if branch == "breakneck" else 55.0)
 		_record("redline", int(fighter["entity_id"]))
-		_fx("breakneck_charge" if branch == "breakneck" else ("runaway" if branch == "runaway" else ("redline_ii" if level >= 2 else "redline")), fighter["pos"], heading)
+		_fx("breakneck_charge" if branch == "breakneck" else ("runaway" if branch == "runaway" else ("redline_ii" if level >= 2 else "redline")), fighter["pos"], heading, 1.0, {"owner_entity_id": int(fighter["entity_id"]), "beast_trigger": true})
 	if float(state["chain_until"]) > time:
 		state["chain_until"] = 0.0
 		var target: Dictionary = _host().entity(int(state["chain_target"]))
@@ -315,7 +315,7 @@ func wall_rebound(fighter: Dictionary, outward_speed: float, normal: Vector2, co
 	fighter["iron_comet_time"] = lifetime
 	fighter["comet_time"] = lifetime
 	_record("comet_charge", int(fighter["entity_id"]))
-	_fx("comet_charge", contact_pos, -normal)
+	_fx("comet_charge", contact_pos, -normal, 1.0, {"owner_entity_id": int(fighter["entity_id"]), "beast_trigger": true})
 
 ## Real movement and inverse mass are exposed to the canonical battle solver.
 ## No-power and Rank I Redline return neutral modifiers, preserving the baseline.
@@ -598,7 +598,7 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 	if not _modern(owner) and redline_active(owner) and redline_branch == "breakneck" and severity >= 0.35 and not bool(state["redline_hit"]):
 		_request(target, normal * (100.0 if _small(target) else 80.0), _power_cause(cause, "breakneck", int(owner["entity_id"])))
 		_record("breakneck_impact", int(owner["entity_id"]), int(target["entity_id"]))
-		_fx("breakneck_impact", position, normal, severity)
+		_fx("breakneck_impact", position, normal, severity, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
 		state["redline_until"] = time
 		owner["redline_time"] = 0.0
 		state["redline_hit"] = true
@@ -624,14 +624,14 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 		if secondary_count == 0:
 			_request(target, normal * ((48.0 if _small(target) else 18.0) if rank(owner, "impact_wake") >= 2 else (36.0 if _small(target) else 12.0)), _power_cause(cause, "impact_wake", int(owner["entity_id"])))
 		_record("impact_wake", int(owner["entity_id"]), int(target["entity_id"]), event_id)
-		_fx("impact_wake", position, normal)
+		_fx("impact_wake", position, normal, 1.0, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
 	if _has(owner, "iron_comet") and float(state["comet_until"]) > time:
 		state["comet_until"] = 0.0
 		owner["iron_comet_time"] = 0.0
 		owner["comet_time"] = 0.0
 		_request(target, normal * ((90.0 if _small(target) else 34.0) if rank(owner, "iron_comet") >= 2 else (75.0 if _small(target) else 25.0)), _power_cause(cause, "iron_comet", int(owner["entity_id"])))
 		_record("comet_release", int(owner["entity_id"]), int(target["entity_id"]), event_id)
-		_fx("comet_release", position, normal)
+		_fx("comet_release", position, normal, 1.0, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
 	if _has(owner, "chain_impact") and not _small(target) and severity >= 0.60 and time >= float(state["chain_ready"]):
 		state["chain_until"] = time + (3.0 if rank(owner, "chain_impact") >= 2 else 2.0)
 		state["chain_ready"] = time + (1.65 if rank(owner, "chain_impact") >= 2 else 2.0)
@@ -1115,7 +1115,7 @@ func _modern_burst(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 			fighter.vel = Vector2(fighter.vel) + heading.normalized() * 160.0
 			state.diagnostic.commitments += 1
 			_record("breakneck_commit", int(fighter.entity_id))
-			_fx("breakneck_charge", fighter.pos, heading)
+			_fx("breakneck_charge", fighter.pos, heading, 1.0, {"owner_entity_id": int(fighter.entity_id), "beast_trigger": true})
 		return
 	if pre_cost_rpm < 0.13: return
 	var level: int = rank(fighter, "redline")
@@ -1153,7 +1153,7 @@ func _modern_end_redline(fighter: Dictionary) -> void:
 		if missed:
 			state.diagnostic.failed_commitments += 1
 			_record("breakneck_miss", int(fighter.entity_id))
-		_fx("breakneck_recovery", fighter.pos, state.redline_heading)
+		_fx("breakneck_recovery", fighter.pos, state.redline_heading, 1.0, {"owner_entity_id": int(fighter.entity_id), "beast_trigger": true})
 	else:
 		_fx("redline_release", fighter.pos, state.redline_heading)
 	# The cap changes only here. Never silently discard earned ledger reserve.
@@ -1224,7 +1224,7 @@ func _modern_contact(owner: Dictionary, target: Dictionary, severity: float, nor
 		_request(target, normal * minf(100.0, 75.0 + float(state.redline_strike) * 100.0), _power_cause(cause, "breakneck", int(owner.entity_id)))
 		_request(owner, -normal * minf(70.0, recoil.length() * 0.35 + 20.0), _power_cause(cause, "breakneck_recoil", int(owner.entity_id)))
 		_record("breakneck_impact", int(owner.entity_id), int(target.entity_id))
-		_fx("breakneck_impact", position, normal, severity)
+		_fx("breakneck_impact", position, normal, severity, {"owner_entity_id": int(owner.entity_id), "beast_trigger": true})
 		state.redline_until = time
 		owner.redline_time = 0.0
 		_end_redline(owner)
