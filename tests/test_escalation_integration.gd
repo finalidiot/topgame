@@ -6,6 +6,8 @@ class QuietMain extends "res://scripts/main.gd":
 
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
+const Run = preload("res://scripts/run_context.gd")
+const Physics = preload("res://scripts/battle.gd")
 const PAD: int = 3
 var game: QuietMain
 var checks: int = 0
@@ -21,6 +23,24 @@ func check(condition: bool, message: String) -> void:
 	if not condition:
 		failures += 1
 		push_error(message)
+
+func _finish_reentry() -> void:
+	var ticks: int = 0
+	while game.battle.battle_status == "reentry" and ticks < 91:
+		game.battle.test_step(Physics.FIXED_DT)
+		ticks += 1
+	check(game.battle.battle_status != "reentry", "Actual ready ticks settle before continuing live physics")
+
+func _seed_offering_target(power_id: String) -> int:
+	# Each branch UI fixture starts from a real seeded offer containing its
+	# target. Expanded content must not fill seven other families and thereby
+	# permanently exclude the family this controlled fixture intends to inspect.
+	for seed_value: int in range(4096):
+		var probe: RefCounted = Run.new()
+		probe.start(Parts.DEFAULT_BUILD,seed_value,"custom")
+		if power_id in probe.pending_offer: return seed_value
+	check(false,"A genuine initial seeded offer exists for "+power_id)
+	return 421
 
 func _settle() -> void:
 	game.battle.set_physics_process(false)
@@ -79,15 +99,16 @@ func _claim(power_id: String) -> void:
 		game._action("choose_mutation", {"encounter_id":game.run_context.pending_draft_id,"branch_id":game.run_context.pending_mutation_offer[0],"run_seed":game.run_context.run_seed})
 	game._process(1.1)
 	game.battle.set_physics_process(false)
+	_finish_reentry()
 
 func _prepare_target(power_id: String) -> void:
 	game._clear_run()
-	game.run_context.start(Parts.DEFAULT_BUILD, 421, "custom")
+	game.run_context.start(Parts.DEFAULT_BUILD, _seed_offering_target(power_id), "custom")
 	game.mode = "run"
 	game._draft_resume_origin = "starting"
 	game._show_reward()
 	event_time = 0.0
-	for _investment: int in range(13):
+	for _investment: int in range(Powers.run_investment_capacity()):
 		var chosen: String = power_id if power_id in game.run_context.pending_offer else game.run_context.pending_offer[0]
 		_claim(chosen)
 		if int(game.run_context.power_ranks.get(power_id, 0)) >= 2: break
@@ -95,7 +116,7 @@ func _prepare_target(power_id: String) -> void:
 	check(int(game.run_context.power_ranks.get(power_id, 0)) == 2, "Repeated real claims reach rank II for " + power_id)
 	game.battle.battle_status = "battle"
 	_earn_offer()
-	for _investment: int in range(13):
+	for _investment: int in range(Powers.run_investment_capacity()):
 		if power_id in game.run_context.pending_offer: break
 		_claim(game.run_context.pending_offer[0])
 		_earn_offer()
@@ -237,6 +258,8 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	game._process(1.1)
 	check(game.screen == "battle" and not game.battle.paused and _body_state() == body, "Acquisition returns to the exact same live encounter")
 	game.battle.set_physics_process(false)
+	_finish_reentry()
+	check(_body_state() == body,"Ready buffer preserves the same exact fighter and power state")
 	# A live impact hold survives a draft just like other exact arena state.
 	# Drain its bounded fixed ticks, then require actual combat advancement.
 	var held_ticks: int = ceili(game.battle._hit_stop / (1.0/60.0))

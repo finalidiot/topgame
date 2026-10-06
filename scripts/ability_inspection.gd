@@ -3,6 +3,9 @@ extends Control
 const Powers = preload("res://scripts/run_powers.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
 const GUIDES: Dictionary = {
+	"gyro_lock":["Smooth steering builds moving ballast.", "Hold a smooth heading while moving.", "Idle, sharp turns and Burst break lock.", "A stronger lock with longer retention."],
+	"impact_sink":["Absorb recoil into a finite reservoir.", "Take force; tap Brake at lower speed.", "A full sink cannot absorb more force.", "Store and vent more impact energy."],
+	"anchor_exchange":["Brake trades mobility for paid ballast.", "Hold Brake below 78 speed; release to move.", "Bracing spends RPM every second.", "Deeper portable mass and stability."],
 	"impact_wake":["Heavy impacts push nearby tops away.", "Commit to a substantial collision.", "Small taps do not trigger a wake.", "A broader, stronger pressure wake."],
 	"second_wind":["Recover from near spin-out once.", "Reach dangerous spin or severe wobble.", "One rescue per launch.", "Fully developed for this Run."],
 	"redline":["Burst and hard hits build overdrive.", "Burst, keep moving, then land hits.", "Overdrive spends spin and risks control.", "Hotter thrust and harder impacts."],
@@ -19,6 +22,12 @@ const GUIDES: Dictionary = {
 	"crosscut":["Steered glances create a sideways cut.", "Steer through a glancing collision.", "The shear spends your own spin.", "A stronger spin-powered lateral shear."]
 }
 const MUTATION_GUIDES: Dictionary = {
+	"keel":["Deep ballast rewards a steady line.", "Maintain a very smooth moving heading.", "Sharp correction breaks the deep lock."],
+	"flywheel":["Carry a lighter lock through wider arcs.", "Steer smoothly through sustained motion.", "Burst and idle still clear the lock."],
+	"shock_bleed":["Stored force vents into RPM recovery.", "Tap Brake after real incoming recoil.", "Recovery shares the Run budget."],
+	"return_spring":["Venting steadies wobble and returns motion.", "Tap Brake with a charged impact sink.", "Only previously stored force returns."],
+	"deep_footing":["Very slow braking plants extreme ballast.", "Hold Brake below 34 speed.", "Higher RPM cost and reduced mobility."],
+	"slip_anchor":["Released ballast briefly carries into motion.", "Brace, release Brake and choose a line.", "The carried brace decays in 0.35 seconds."],
 	"runaway":["Heavy hits sustain a wild overload.", "Keep landing heavy Redline contacts.", "Misses end the sustaining chain."],
 	"breakneck":["Commit overclock to one violent strike.", "Build heat, then Burst again.", "The strike brings recoil and recovery."],
 	"bulwark":["A planted top throws attackers back.", "Fully Anchor, then receive heavy hits.", "Requires a committed central hold."],

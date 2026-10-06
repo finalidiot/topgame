@@ -358,7 +358,7 @@ func _test_title_garage_settings() -> void:
 		check(float(game.settings.volume) < volume, "Gamepad changes volume with slider focus")
 		await _tap(JOY_BUTTON_DPAD_RIGHT)
 		check(is_equal_approx(float(game.settings.volume), volume), "Slider supports both horizontal directions")
-	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen"]
+	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen", "reduced_flashing"]
 	check(toggles.size() == setting_keys.size(), "All settings toggles are present")
 	for index: int in range(mini(toggles.size(), setting_keys.size())):
 		var before: bool = game.settings[setting_keys[index]]

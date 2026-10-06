@@ -33,6 +33,10 @@ func claim(game: QuietMain) -> void:
 	if game.screen == "mutation":
 		game._action("choose_mutation", {"encounter_id":id,"branch_id":game.run_context.pending_mutation_offer[0],"run_seed":game.run_context.run_seed})
 	game._process(1.1)
+	# The accepted danger-return buffer belongs to Battle, not Main's reveal
+	# timer. Advance only its real fixed ticks; never cross into live physics.
+	while is_instance_valid(game.battle) and game.battle.battle_status == "reentry":
+		game.battle.test_step(Battle.FIXED_DT)
 func settle_drafts(game: QuietMain) -> void:
 	if game.screen == "level_up": game._process(0.2)
 	while game.screen in ["reward", "mutation"]: claim(game)

@@ -26,6 +26,7 @@ const ContinuousRun = preload("res://scripts/continuous_run.gd")
 const RunPowers = preload("res://scripts/run_powers.gd")
 const FeedbackEffects = preload("res://scripts/feedback_effects.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
+const ArenaPresentation = preload("res://scripts/arena_presentation.gd")
 const PLAYER_TEAM: String = "player"
 const HOSTILE_TEAM: String = "hostile"
 const NEUTRAL_TEAM: String = "neutral"
@@ -41,6 +42,12 @@ const PLAYER_COLOR: Color = Color("69c7e3")
 const ENEMY_COLOR: Color = Color("f0a468")
 
 var continuous = null
+var arena_presentation = ArenaPresentation.new()
+var floor_pickups: Node2D
+var input_provider: Node2D
+var reduced_flashing: bool = false
+var presentation_quality: float = 1.0
+var _reentry_remaining: float = 0.0
 var powers = PowerRuntime.new()
 var beasts = BeastManifestations.new()
 var beast_manifestations_enabled: bool = true:
@@ -328,6 +335,7 @@ func _team_color(fighter: Dictionary) -> Color:
 
 func set_paused(value: bool) -> void:
 	paused = value
+	if value and is_instance_valid(input_provider): input_provider.set_enabled(false)
 	# The same face button confirms menus and bursts. A held confirmation must
 	# be released before it can become a new combat press after launch/resume.
 	_burst_was_down = Input.is_action_pressed("burst")
@@ -338,13 +346,28 @@ func set_paused(value: bool) -> void:
 	_emit_hud()
 	queue_redraw()
 
+func begin_reentry(duration: float = 1.25) -> void:
+	# Preserve the entire live solver and threat schedule while the player prepares.
+	if battle_status not in ["battle", "reentry"]:
+		set_paused(false)
+		return
+	paused = false
+	battle_status = "reentry"
+	_reentry_remaining = clampf(duration, 1.0, 1.5)
+	_accumulator = 0.0
+	_burst_buffer = 0.0
+	_combat_needs_release = true
+	if is_instance_valid(input_provider): input_provider.reset_actions()
+	if is_instance_valid(input_provider): input_provider.set_enabled(true)
+	_emit_hud()
+
 func combat_input_neutral() -> bool:
 	return Input.get_vector("move_left", "move_right", "move_up", "move_down").length() <= 0.05 and not Input.is_action_pressed("burst") and not Input.is_action_pressed("brake")
 
 func _combat_buttons_neutral() -> bool:
 	# Directions are continuous controls. A draft must not swallow a steering
 	# key/stick that the player keeps holding through their acquisition.
-	return not Input.is_action_pressed("burst") and not Input.is_action_pressed("brake")
+	return not Input.is_action_pressed("burst") and not Input.is_action_pressed("brake") and (not is_instance_valid(input_provider) or (not input_provider.action_down("burst") and not input_provider.action_down("brake")))
 
 func acquire_run_power(power_id: String, rank_value: int = 1, mutation_value: String = "") -> bool:
 	# Preserve the live PowerRuntime and every existing cooldown/cause/trace.
@@ -377,9 +400,14 @@ func _physics_process(delta: float) -> void:
 	# circular deadzone while retaining analogue direction and magnitude.
 	var direction: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var burst_down: bool = Input.is_action_pressed("burst")
+	var brake: bool = Input.is_action_pressed("brake")
+	if is_instance_valid(input_provider):
+		var controls: Dictionary = input_provider.sample()
+		direction = controls.direction
+		burst_down = controls.burst
+		brake = controls.brake
 	var trigger_burst: bool = burst_down and not _burst_was_down
 	_burst_was_down = burst_down
-	var brake: bool = Input.is_action_pressed("brake")
 	if _combat_needs_release:
 		if _combat_buttons_neutral(): _combat_needs_release = false
 		trigger_burst = false
@@ -390,7 +418,7 @@ func _physics_process(delta: float) -> void:
 func test_step(dt: float, input_direction: Vector2 = Vector2.ZERO, burst: bool = false, brake: bool = false) -> void:
 	if paused or battle_status == "idle":
 		return
-	if burst:
+	if burst and battle_status == "battle":
 		# A press during the brief impact hold survives until the next live tick.
 		_burst_buffer = 0.12
 		_buffered_burst_direction = input_direction.limit_length(1.0)
@@ -401,6 +429,15 @@ func test_step(dt: float, input_direction: Vector2 = Vector2.ZERO, burst: bool =
 	queue_redraw()
 
 func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
+	if battle_status == "reentry":
+		_reentry_remaining = maxf(0.0, _reentry_remaining - dt)
+		if _reentry_remaining <= 0.0:
+			battle_status = "battle"
+			_burst_buffer = 0.0
+			_combat_needs_release = not _combat_buttons_neutral()
+			event_sfx.emit("land")
+		_emit_hud()
+		return
 	_visual_time += dt
 	_burst_buffer = maxf(0.0, _burst_buffer - dt)
 	_update_effects(dt)
@@ -974,7 +1011,7 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
 	var braced_velocity: Vector2 = delta_velocity.limit_length(100.0)
 	powers.incoming_power_impulse(target, braced_velocity, _cause)
-	if float(target.get("anchor_charge", 0.0)) > 0.0:
+	if float(target.get("anchor_charge", 0.0)) > 0.0 or powers.rank(target, "gyro_lock") > 0 or powers.rank(target, "anchor_exchange") > 0:
 		braced_velocity *= powers.inverse_mass(target) * float(target.mass)
 	target.vel = (Vector2(target.vel) + braced_velocity).limit_length(cap)
 	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
@@ -1331,6 +1368,7 @@ func _emit_hud() -> void:
 		"burst_cooldown": float(player["cooldown"]), "burst_cooldown_max": BURST_COOLDOWN,
 		"elapsed": elapsed, "time": elapsed, "time_left": maxf(0.0, live_time_limit - elapsed),
 		"status": battle_status, "countdown": ceili(_countdown),
+		"reentry_remaining": _reentry_remaining,
 		"player_name": str(player["name"]), "enemy_name": str(enemy["name"]),
 		"player_wobble": float(player["wobble"]), "enemy_wobble": float(enemy["wobble"]),
 		"hits": hits, "paused": paused, "player_entity_id": int(player["entity_id"]),
@@ -1435,6 +1473,9 @@ func _draw() -> void:
 		var texture: Texture2D = _textures.get("arena/" + layer)
 		if texture != null:
 			draw_texture(texture, Vector2.ZERO)
+	var boss_pressure: bool = continuous != null and int(continuous.census().get("bosses", 0)) > 0
+	arena_presentation.draw_background(self, elapsed, boss_pressure, reduced_flashing, presentation_quality)
+	if is_instance_valid(floor_pickups): floor_pickups.draw_floor(self)
 	for entry: Dictionary in swarm.schedule:
 		if entry.state == "telegraph":
 			PowerVisuals.draw_spawn(self, project(swarm.PORTS[int(entry.port)]), clampf(1.0-(float(entry.ready)-swarm.local_time())/swarm.TELEGRAPH,0.0,1.0))

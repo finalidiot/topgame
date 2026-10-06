@@ -2,16 +2,18 @@ extends RefCounted
 class_name RunPowerCatalog
 
 const IdentityArt = preload("res://scripts/power_identity.gd")
+const DefenceArt = preload("res://scripts/defence_art.gd")
 
 ## Catalogue identity stays stable as the implemented draft pool grows.
 ## Physical Blade / Ratchet / Bit ratings remain exclusively in parts.gd.
 const IDS: Array[String] = [
 	"impact_wake", "second_wind", "redline", "iron_comet", "dead_centre", "afterimage",
 	"reversal", "chain_impact", "slip_gear", "rim_runner", "flywheel_cache", "crosscut",
-	"clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line"
+	"clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line",
+	"gyro_lock", "impact_sink", "anchor_exchange"
 ]
-const ACTIVE_IDS: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut"]
-const VERTICAL_IDS: Array[String] = ["redline", "dead_centre", "afterimage", "high_gear"]
+const ACTIVE_IDS: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut", "gyro_lock", "impact_sink", "anchor_exchange"]
+const VERTICAL_IDS: Array[String] = ["redline", "dead_centre", "afterimage", "high_gear", "gyro_lock", "impact_sink", "anchor_exchange"]
 const FAMILY_CAP: int = 7
 # Retired IDs remain readable for historical fixtures; normal drafts use ACTIVE_IDS.
 const LEGACY_OWNED_IDS: Array[String] = ["second_wind"]
@@ -30,7 +32,10 @@ const MUTATION_BRANCHES: Dictionary = {
 	"redline":["runaway", "breakneck"],
 	"dead_centre":["bulwark", "counterweight"],
 	"afterimage":["ghost_circuit", "slipstream"],
-	"high_gear":["terminal_velocity", "flow_state"]
+	"high_gear":["terminal_velocity", "flow_state"],
+	"gyro_lock":["keel", "flywheel"],
+	"impact_sink":["shock_bleed", "return_spring"],
+	"anchor_exchange":["deep_footing", "slip_anchor"]
 }
 # Native 64px, six discrete poses per row. Presentation reads source timing.
 const CARD_DURATIONS_MS: Array[int] = [110, 90, 75, 75, 100, 170]
@@ -49,7 +54,10 @@ const CARD_COPY: Dictionary = {
 	"crash_guard": {"category":"BRAWL", "copy":"Heavy hits engage a short collision damper."},
 	"momentum_bank": {"category":"BRAKE", "copy":"Brake to bank motion. Burst to release it."},
 	"predator_line": {"category":"PRESSURE", "copy":"Keep hitting one rival. Build pursuit pressure."},
-	"crosscut": {"category":"SHEAR", "copy":"Steer through glancing hits to cut sideways."}
+	"crosscut": {"category":"SHEAR", "copy":"Steer through glancing hits to cut sideways."},
+	"gyro_lock": {"category":"CONTROLLED DEFENCE", "copy":"Steer smoothly. Build a moving displacement lock."},
+	"impact_sink": {"category":"SHOCK STORAGE", "copy":"Catch real recoil. Tap Brake to vent and recover."},
+	"anchor_exchange": {"category":"ACTIVE BRACE", "copy":"Hold Brake. Trade mobility and spin for heavy footing."}
 }
 const CONDITIONS: Dictionary = {
 	"impact_wake":"Heavy contact / 1.25 s cooldown",
@@ -65,7 +73,10 @@ const CONDITIONS: Dictionary = {
 	"crash_guard":"Heavy incoming contact / short guarded recovery window",
 	"momentum_bank":"Controlled braking / next Burst spends stored motion",
 	"predator_line":"Repeated meaningful contacts with the same full rival",
-	"crosscut":"Glancing contact while steering / spin-powered lateral shear"
+	"crosscut":"Glancing contact while steering / spin-powered lateral shear",
+	"gyro_lock":"Smooth deliberate steering while moving / sharp correction, idle or Burst breaks the lock",
+	"impact_sink":"Meaningful incoming recoil fills a finite sink / fresh Brake below high speed vents it",
+	"anchor_exchange":"Hold Brake at controlled speed / portable brace spends RPM and slows steering"
 }
 const DEFINITIONS: Dictionary = {
 	"impact_wake": {"id":"impact_wake", "name":"Impact Wake", "description":"Heavy contacts send a pressure ring through nearby tops.", "short_label":"WAKE", "tags":["impact"], "icon":"", "active":true},
@@ -85,7 +96,10 @@ const DEFINITIONS: Dictionary = {
 	"orbit_drive": {"id":"orbit_drive", "name":"Orbit Drive", "description":"Brake and turn into a deliberate drift; sustained curved motion builds efficient momentum and sharp reversals break the orbit.", "short_label":"ORBIT", "tags":["mobility", "efficiency"], "icon":"", "active":true},
 	"crash_guard": {"id":"crash_guard", "name":"Crash Guard", "description":"A heavy incoming hit engages a temporary collision damper, inviting another close exchange.", "short_label":"GUARD", "tags":["defence", "impact"], "icon":"", "active":true},
 	"momentum_bank": {"id":"momentum_bank", "name":"Momentum Bank", "description":"Controlled braking stores capped lost motion; the next Burst releases it along your chosen line.", "short_label":"BANK", "tags":["brake", "burst"], "icon":"", "active":true},
-	"predator_line": {"id":"predator_line", "name":"Predator Line", "description":"Repeated meaningful contacts with one full rival build pursuit pressure; switching or disengaging loses it.", "short_label":"HUNT", "tags":["impact", "pressure"], "icon":"", "active":true}
+	"predator_line": {"id":"predator_line", "name":"Predator Line", "description":"Repeated meaningful contacts with one full rival build pursuit pressure; switching or disengaging loses it.", "short_label":"HUNT", "tags":["impact", "pressure"], "icon":"", "active":true},
+	"gyro_lock": {"id":"gyro_lock", "name":"Gyro Lock", "description":"Smooth deliberate steering winds a moving displacement lock. Idle, hard corrections and Burst break it.", "short_label":"GYRO", "tags":["defence", "control"], "icon":"", "active":true},
+	"impact_sink": {"id":"impact_sink", "name":"Impact Sink", "description":"Partly cushion meaningful incoming recoil in a finite shock reservoir. A fresh Brake vents stored force into spin and wobble recovery.", "short_label":"SINK", "tags":["defence", "recovery", "brake"], "icon":"", "active":true},
+	"anchor_exchange": {"id":"anchor_exchange", "name":"Anchor Exchange", "description":"Holding Brake at controlled speed pays spin for heavy portable footing. Release Brake to recover your normal mobility.", "short_label":"BRACE", "tags":["defence", "brake"], "icon":"", "active":true}
 }
 
 const RANK_II: Dictionary = {
@@ -101,7 +115,10 @@ const RANK_II: Dictionary = {
 	"crash_guard": {"name":"Crash Guard II", "description":"Heavy impacts engage a deeper short-lived damper, reducing the cost of continuing the brawl.", "card_copy":"A deeper short damper. Keep fighting after the hit.", "category":"BRAWL DEFENCE", "short_label":"GUARD II", "art_id":"crash_guard_ii"},
 	"momentum_bank": {"name":"Momentum Bank II", "description":"Controlled brakes bank more capped motion for a stronger purposeful Burst release.", "card_copy":"Bank a deeper brake. Release a stronger chosen line.", "category":"BRAKE STORAGE", "short_label":"BANK II", "art_id":"momentum_bank_ii"},
 	"predator_line": {"name":"Predator Line II", "description":"Consecutive meaningful contacts build a deeper hunt with more persistent pursuit pressure.", "card_copy":"Stay on one rival. Build a deeper pressure chain.", "category":"PURSUIT", "short_label":"HUNT II", "art_id":"predator_line_ii"},
-	"crosscut": {"name":"Crosscut II", "description":"Committed steering through a glance spends spin for a stronger lateral shear and physical disruption.", "card_copy":"Cut harder through a glance. Spin pays for shear.", "category":"SHEAR", "short_label":"CUT II", "art_id":"crosscut_ii"}
+	"crosscut": {"name":"Crosscut II", "description":"Committed steering through a glance spends spin for a stronger lateral shear and physical disruption.", "card_copy":"Cut harder through a glance. Spin pays for shear.", "category":"SHEAR", "short_label":"CUT II", "art_id":"crosscut_ii"},
+	"gyro_lock": {"name":"Gyro Lock II", "description":"Smooth steering establishes a stronger displacement lock sooner; deliberate movement remains mandatory.", "card_copy":"Build a deeper moving lock through smooth steering.", "category":"CONTROLLED DEFENCE", "short_label":"GYRO II", "art_id":"gyro_lock_ii"},
+	"impact_sink": {"name":"Impact Sink II", "description":"Absorb a larger share of real recoil and hold a deeper finite force reservoir before a deliberate Brake vent.", "card_copy":"Catch more recoil. Choose a fresh Brake to recover.", "category":"DEEP SHOCK STORAGE", "short_label":"SINK II", "art_id":"impact_sink_ii"},
+	"anchor_exchange": {"name":"Anchor Exchange II", "description":"Held Brake establishes heavier footing sooner; mobility and reserve still pay for the brace.", "card_copy":"Brace sooner. Hold heavier ground. Release to move.", "category":"HEAVY ACTIVE BRACE", "short_label":"BRACE II", "art_id":"anchor_exchange_ii"}
 }
 const MUTATIONS: Dictionary = {
 	"runaway": {"id":"runaway", "power_id":"redline", "name":"Runaway", "description":"Heavy hits sustain Redline and build a wilder overload. Keep hitting or lose the engine.", "card_copy":"Heavy hits sustain overload. Keep attacking to stay alive.", "category":"SUSTAINED OVERLOAD", "short_label":"RUNAWAY", "condition":"Heavy contacts during Redline / misses end the chain"},
@@ -111,7 +128,13 @@ const MUTATIONS: Dictionary = {
 	"ghost_circuit": {"id":"ghost_circuit", "power_id":"afterimage", "name":"Ghost Circuit", "description":"Close a live route into a loop to energise the circuit and pressure the enclosed arena.", "card_copy":"Draw a fast loop. Close the circuit. Crush its interior.", "category":"CIRCUIT CLOSURE", "short_label":"CIRCUIT", "condition":"Close a live Afterimage loop / forgiving route closure"},
 	"slipstream": {"id":"slipstream", "power_id":"afterimage", "name":"Slipstream", "description":"Re-enter your own live route to recover momentum and handling. Reuse crossings to power your movement.", "card_copy":"Cross your old route. Recover momentum. Go again.", "category":"ROUTE ENGINE", "short_label":"STREAM", "condition":"Re-enter or cross your own active Afterimage path"},
 	"terminal_velocity": {"id":"terminal_velocity", "power_id":"high_gear", "name":"Terminal Velocity", "description":"Commit to extreme raw speed; hard steering and braking burn more RPM and correction is harder.", "card_copy":"Extreme velocity. Expensive corrections. Hold your nerve.", "category":"RAW SPEED", "short_label":"TERMINAL", "condition":"High-speed movement / steering and brake expenditure"},
-	"flow_state": {"id":"flow_state", "power_id":"high_gear", "name":"Flow State", "description":"Trade the extreme raw ceiling for smoother turning, better retained velocity and efficient sustained movement.", "card_copy":"Keep your velocity through turns. Maintain the flow.", "category":"MAINTAINED SPEED", "short_label":"FLOW", "condition":"Sustained movement / smooth velocity retention"}
+	"flow_state": {"id":"flow_state", "power_id":"high_gear", "name":"Flow State", "description":"Trade the extreme raw ceiling for smoother turning, better retained velocity and efficient sustained movement.", "card_copy":"Keep your velocity through turns. Maintain the flow.", "category":"MAINTAINED SPEED", "short_label":"FLOW", "condition":"Sustained movement / smooth velocity retention"},
+	"keel": {"id":"keel", "power_id":"gyro_lock", "name":"Keel", "description":"A slower controlled line builds an exceptionally heavy moving lock; tight turns break it sooner.", "card_copy":"Slow your line. Build a heavier moving keel.", "category":"MOVING FORTRESS", "short_label":"KEEL", "condition":"Smooth low-angle steering / reduced speed and stricter turning"},
+	"flywheel": {"id":"flywheel", "power_id":"gyro_lock", "name":"Flywheel", "description":"Keep the developed Gyro Lock through wider controlled curves and faster travel, trading Keel's extreme footing for flexibility.", "card_copy":"Carry your lock through wider, faster controlled turns.", "category":"CURVED DEFENCE", "short_label":"FLYWHEEL", "condition":"Smooth curves / deliberate steering and motion remain required"},
+	"shock_bleed": {"id":"shock_bleed", "power_id":"impact_sink", "name":"Shock Bleed", "description":"A fresh Brake vents accepted stored recoil into a stronger bounded spin catch and wobble recovery.", "card_copy":"Weather the hit. Brake to bleed shock into recovery.", "category":"STORED RECOVERY", "short_label":"BLEED", "condition":"Stored incoming force / fresh Brake / shared recovery budget"},
+	"return_spring": {"id":"return_spring", "power_id":"impact_sink", "name":"Return Spring", "description":"Trade the recovery vent for a Brake-triggered physical counter pulse against nearby rivals, paid by stored accepted recoil.", "card_copy":"Store recoil. Brake to release a close counter pulse.", "category":"ACTIVE COUNTER PULSE", "short_label":"SPRING", "condition":"Stored force / fresh Brake / six nearby targets maximum"},
+	"deep_footing": {"id":"deep_footing", "power_id":"anchor_exchange", "name":"Deep Footing", "description":"Braking near rest establishes extreme portable footing at a higher spin cost; letting Brake go gives up the brace.", "card_copy":"Almost stop. Hold Brake. Pay spin for extreme footing.", "category":"PORTABLE FORTRESS", "short_label":"FOOTING", "condition":"Brake below 34 speed / extra spin cost / limited movement"},
+	"slip_anchor": {"id":"slip_anchor", "power_id":"anchor_exchange", "name":"Slip Anchor", "description":"Release Brake to carry a rapidly fading fraction of the brace through the first moment of your repositioning.", "card_copy":"Brace, then release. Carry footing into your escape.", "category":"BRACED REPOSITION", "short_label":"SLIP", "condition":"Release a developed brace / 0.35 s carry / Burst clears it"}
 }
 
 static func get_power(power_id: String) -> Dictionary:
@@ -203,6 +226,10 @@ static func get_owned_power(power_id: String, rank: int = 1, mutation: String = 
 	return power
 
 static func _apply_art(power: Dictionary, art_id: String) -> void:
+	var defence_art: Dictionary = DefenceArt.art(art_id)
+	if not defence_art.is_empty():
+		power.merge(defence_art, true)
+		return
 	var authored: Dictionary = IdentityArt.art(art_id)
 	if not authored.is_empty():
 		power.merge(authored, true)

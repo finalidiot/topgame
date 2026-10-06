@@ -10,6 +10,21 @@ const PACKET_ART_ROOT: String = "res://assets/ui/shop_003a/"
 const PACKET_AUDIO_ROOT: String = "res://assets/audio/shop_003a/"
 const PACKET_AUDIO_MANIFEST: String = PACKET_AUDIO_ROOT + "manifest.json"
 const UI_POLISH_ROOT: String = "res://assets/ui/human_feedback003a/"
+const DEFENCE_MANIFEST: String = "res://assets/powers/defence003a/manifest.json"
+const DEFENCE_VARIANTS: Dictionary = {
+	"gyro_lock":["gyro_lock", "gyro_lock_ii", "keel", "flywheel"],
+	"impact_sink":["impact_sink", "impact_sink_ii", "shock_bleed", "return_spring"],
+	"anchor_exchange":["anchor_exchange", "anchor_exchange_ii", "deep_footing", "slip_anchor"]
+}
+const ARENA_ROOT: String = "res://assets/arena/escalation003a/"
+const ARENA_LAYOUT: Dictionary = {
+	"display_panel":{"cell":[40,24],"pivot":[20,22],"frames":8,"layers":3,"tags":["IDLE","LOAD"]},
+	"machinery":{"cell":[64,40],"pivot":[32,38],"frames":12,"layers":4,"tags":["IDLE","DRIVE","OVERDRIVE"]},
+	"perimeter":{"cell":[32,16],"pivot":[16,8],"frames":8,"layers":2,"tags":["LEFT","RIGHT"]},
+	"sparks":{"cell":[24,24],"pivot":[12,19],"frames":6,"layers":2,"tags":["SPARK"]},
+	"vent":{"cell":[32,32],"pivot":[16,30],"frames":8,"layers":3,"tags":["IDLE","HOT"]},
+	"warning_bank":{"cell":[48,16],"pivot":[24,12],"frames":16,"layers":3,"tags":["SAFE","BUILDING","WARNING","ALARM"]}
+}
 const UI_POLISH_LAYOUT: Dictionary = {
 	"metal_plate":{"cell":[32, 32], "frames":3},
 	"inspection_frame":{"cell":[32, 32], "frames":1},
@@ -143,6 +158,27 @@ static func inspect(output: String) -> Dictionary:
 		var record: Dictionary = _inspect_ui_polish_sheet(kind, parsed if parsed is Dictionary else {})
 		ui_polish_records.append(record)
 		if not bool(record.valid): failures.append(str(record.path))
+	var defence_json: String = FileAccess.get_file_as_string(DEFENCE_MANIFEST)
+	var defence: Variant = JSON.parse_string(defence_json)
+	var defence_records: Array[Dictionary] = []
+	if not defence is Dictionary or not defence.get("families", {}) is Dictionary:
+		failures.append(DEFENCE_MANIFEST)
+	else:
+		for family: String in DEFENCE_VARIANTS:
+			var family_meta: Dictionary = defence.families.get(family, {})
+			for group: String in ["cards", "icons", "fx"]:
+				var record: Dictionary = _inspect_defence_sheet(family, group, family_meta.get(group, {}))
+				defence_records.append(record)
+				if not bool(record.valid): failures.append(str(record.path))
+	var arena_json: Dictionary = {}
+	var arena_records: Array[Dictionary] = []
+	for kind: String in ARENA_LAYOUT:
+		var text: String = FileAccess.get_file_as_string(ARENA_ROOT + kind + ".json")
+		arena_json[kind] = text
+		var parsed: Variant = JSON.parse_string(text)
+		var record: Dictionary = _inspect_arena_sheet(kind, parsed if parsed is Dictionary else {})
+		arena_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
@@ -154,6 +190,8 @@ static func inspect(output: String) -> Dictionary:
 		"economy_json":economy_json, "economy_config":PacketEconomyModel.config(),
 		"economy_odds":economy_odds, "economy_validation_errors":economy_validation_errors,
 		"ui_polish_json":ui_polish_json, "ui_polish_textures":ui_polish_records,
+		"defence_json":defence_json,"defence_textures":defence_records,
+		"arena_json":arena_json,"arena_textures":arena_records,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()
@@ -161,6 +199,81 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_defence_sheet(family: String, group: String, meta: Dictionary) -> Dictionary:
+	var expected: Dictionary = {"path":"res://assets/powers/defence003a/" + family + "_" + group + ".png",
+		"source":"assets/source-art/defence003a/" + family + "_" + group + ".aseprite"}
+	var required: Array = DEFENCE_VARIANTS.get(family, [])
+	if group == "cards": expected.merge({"cell":[64,64],"pivot":[32,32],"frames":48,"columns":12,"layers":5,"tags":required})
+	elif group == "icons": expected.merge({"cell":[16,16],"pivot":[8,8],"frames":4,"columns":4,"layers":3,"tags":required})
+	elif group == "fx":
+		var tags: Array = ["stored", "engage", "vent", "return"] if family == "impact_sink" else (["lock", "engage", "release"] if family == "gyro_lock" else ["brace", "engage", "release"])
+		expected.merge({"cell":[96,80],"pivot":[48,48],"frames":tags.size()*8,"columns":8,"layers":4,"tags":tags})
+	var record: Dictionary = _inspect_final_sheet(family + "/" + group, meta, expected)
+	record["family"] = family; record["group"] = group
+	record["metadata_path"] = DEFENCE_MANIFEST
+	if required.is_empty(): record.valid = false
+	return record
+
+static func _inspect_arena_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var expected: Dictionary = ARENA_LAYOUT.get(kind, {}).duplicate(true)
+	expected["path"] = ARENA_ROOT + kind + ".png"
+	expected["source"] = "assets/source-art/arena_escalation003a/" + kind + ".aseprite"
+	expected["columns"] = expected.get("frames", 0)
+	var record: Dictionary = _inspect_final_sheet(kind, meta, expected)
+	record["metadata_path"] = ARENA_ROOT + kind + ".json"
+	if not bool(meta.get("native_pixels", false)) or not bool(meta.get("presentation_only", false)) or str(meta.get("filter", "")) != "nearest": record.valid = false
+	return record
+
+static func _inspect_final_sheet(kind: String, meta: Dictionary, expected: Dictionary) -> Dictionary:
+	var path: String = str(expected.get("path", ""))
+	var texture: Texture2D = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var visible: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	var count: int = int(meta.get("frame_count", 0))
+	var columns: int = int(meta.get("columns", 0))
+	var durations: Array = meta.get("durations_ms", [])
+	var tags: Dictionary = meta.get("tags", {})
+	var layers: Array = meta.get("layers", [])
+	var cell: Array = meta.get("cell", [])
+	var pivot: Array = meta.get("pivot", [])
+	var expected_cell: Array = expected.get("cell", [])
+	var expected_pivot: Array = expected.get("pivot", [])
+	var valid: bool = visible and cell.size() == 2 and pivot.size() == 2 and expected_cell.size() == 2 and expected_pivot.size() == 2
+	if valid:
+		valid = Vector2i(int(cell[0]), int(cell[1])) == Vector2i(int(expected_cell[0]), int(expected_cell[1])) and Vector2i(int(pivot[0]), int(pivot[1])) == Vector2i(int(expected_pivot[0]), int(expected_pivot[1]))
+	valid = valid and count > 0 and count == int(expected.get("frames", -1)) and columns > 0 and columns == int(expected.get("columns", -1))
+	if valid: valid = size == Vector2i(int(cell[0]) * columns, int(cell[1]) * ceili(float(count) / columns))
+	valid = valid and str(meta.get("texture", "")) == path and str(meta.get("source", "")) == str(expected.get("source", "invalid"))
+	valid = valid and durations.size() == count and layers.size() == int(expected.get("layers", -1))
+	var names: Dictionary = {}
+	for name: Variant in layers:
+		valid = valid and name is String and not str(name).is_empty() and not names.has(name)
+		names[name] = true
+	for duration: Variant in durations: valid = valid and is_finite(float(duration)) and float(duration) > 0.0 and float(duration) <= 10000.0
+	var required: Array = expected.get("tags", [])
+	valid = valid and not required.is_empty() and tags.size() == required.size()
+	for tag: String in required: valid = valid and tags.has(tag)
+	for span: Dictionary in tags.values():
+		valid = valid and int(span.get("from", -1)) >= 0 and int(span.get("to", -1)) >= int(span.get("from", -1)) and int(span.get("to", -1)) < count
+	var fingerprint: String = ""
+	if visible:
+		if pixels.is_compressed(): pixels.decompress()
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset+3] == 0:
+				for channel: int in range(3): decoded[offset+channel] = 0
+		fingerprint = _digest(decoded)
+	var source: String = "res://" + str(expected.get("source", ""))
+	var source_available: bool = FileAccess.file_exists(source)
+	var native_hash: String = FileAccess.get_sha256(source) if source_available else ""
+	if source_available and meta.has("source_sha256"): valid = valid and native_hash == str(meta.source_sha256)
+	return {"kind":kind,"path":path,"valid":valid,"visible_pixels":visible,"size":[size.x,size.y],
+		"cell":cell,"pivot":pivot,"columns":columns,"frame_count":count,"durations_ms":durations,"tags":tags,"layers":layers,
+		"visible_rgba_sha256":fingerprint,"transparent_rgb_normalized":true,"source":meta.get("source", ""),
+		"native_source_available":source_available,"native_source_sha256":native_hash}
 
 static func _inspect_ui_polish_sheet(kind: String, meta: Dictionary) -> Dictionary:
 	var path: String = UI_POLISH_ROOT + kind + ".png"

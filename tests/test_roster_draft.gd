@@ -17,7 +17,7 @@ func check(ok: bool, label: String) -> void:
 		failures += 1
 		push_error(label)
 func _run() -> void:
-	check(Powers.ACTIVE_IDS.size() == 13 and Powers.investment_capacity() == 30,"Thirteen meaningful families, thirty total investments")
+	check(Powers.ACTIVE_IDS.size() == 16 and Powers.investment_capacity() == 39,"Sixteen meaningful families, thirty-nine total investments")
 	check(not "second_wind" in Powers.ACTIVE_IDS and "clutch" in Powers.ACTIVE_IDS,"Retired revive is excluded from every normal offer")
 	check(not Powers.get_owned_power("second_wind").is_empty() and not Powers.get_power("second_wind").active and Powers.get_offer("second_wind").is_empty(),"Legacy owned identity remains readable without re-entering drafts")
 	for power: String in Powers.ACTIVE_IDS:
@@ -56,7 +56,7 @@ func _test_real_claims(seed_value: int) -> void:
 		var event: Dictionary = {"kind":"elimination","encounter_id":"run_slot_01","time":1.0,"entity_id":entity_id,"combatant_type":"full_top","reason":"spin_out","player_attributed":true}
 		first.award_xp(event)
 		second.award_xp(event)
-	check(first.level == Powers.run_investment_capacity(),"Large real attributed XP queues the maximum eighteen machine investments")
+	check(first.level == Powers.run_investment_capacity(),"Large real attributed XP queues the maximum available machine investments")
 	while not first.pending_offer.is_empty():
 		var seen: Dictionary = {}
 		check(first.pending_offer == second.pending_offer,"Same seed and choices reproduce every enlarged offer")
@@ -73,7 +73,7 @@ func _test_real_claims(seed_value: int) -> void:
 	for id: String in first.owned_power_ids:
 		if id in Powers.VERTICAL_IDS: owned_flagships += 1
 	check(first.owned_power_ids.size() == Powers.FAMILY_CAP and first.power_mutations.size() == owned_flagships and first.committed_rewards.size() == first.available_investment_capacity(),"Seven chosen families reach full depth without empty queued claims")
-	check(first.pending_draft_id.is_empty() and first.level == first.available_investment_capacity() and first.progression_snapshot().maxed and first.xp == 0,"Dynamic fourteen-to-eighteen investment ceiling closes unavailable overflow")
+	check(first.pending_draft_id.is_empty() and first.level == first.available_investment_capacity() and first.progression_snapshot().maxed and first.xp == 0,"Dynamic investment ceiling closes unavailable overflow")
 	check(first.power_ranks == second.power_ranks and first.power_mutations == second.power_mutations,"Final ranks and branches are deterministic across starters")
 func _test_late_seventh(seed_value: int) -> void:
 	var run = Run.new()
@@ -99,14 +99,14 @@ func _test_late_seventh(seed_value: int) -> void:
 	while not run.pending_offer.is_empty(): _claim(run,run.pending_offer[0])
 	check(run.pending_draft_id.is_empty() and run.committed_rewards.size() == run.available_investment_capacity() and run.progression_snapshot().total_xp == before_xp,"Large pre-earned queues close coherently without losing XP attribution history")
 	run.start(Parts.DEFAULT_BUILD,seed_value)
-	check(run.owned_power_ids.is_empty() and run.progression_snapshot().max_level == 18 and run.level == 1,"A fresh Run restores uncommitted family slots and maximum possible depth")
+	check(run.owned_power_ids.is_empty() and run.progression_snapshot().max_level == Powers.run_investment_capacity() and run.level == 1,"A fresh Run restores uncommitted family slots and maximum possible depth")
 func _claim(run, choice: String) -> void:
 	var claim: String = run.pending_draft_id
 	check(run.choose_power(claim,choice),"Cap fixture accepts only a real current offer")
 	if not run.pending_mutation_power.is_empty(): check(run.choose_mutation(claim,run.pending_mutation_offer[0]),"Cap fixture commits an ordinary behavioural branch")
 func _test_live_claims() -> void:
 	var tunes_seen: Dictionary = {}
-	for seed_value: int in range(1,13):
+	for seed_value: int in range(1,33):
 		var game: QuietMain = QuietMain.new()
 		game.smoke_mode = true
 		root.add_child(game)
@@ -135,7 +135,7 @@ func _test_live_claims() -> void:
 			game._process(1.1)
 		check(game.screen == "battle" and game.run_context.pending_draft_id.is_empty(),"Full capped investment resumes live combat after actual acquisition screens")
 		game.free()
-	check(tunes_seen.size() == Powers.ACTIVE_IDS.size(),"All thirteen Rank II paths were installed through actual Main acquisition, including support families")
+	check(tunes_seen.size() == Powers.ACTIVE_IDS.size(),"All active Rank II paths were installed through actual Main acquisition, including support families")
 func _test_ownership_state(owned_count: int) -> void:
 	var new_seen: Dictionary = {}
 	var counts: Dictionary = {"owned":owned_count,"new":0,"rank":0,"mutation":0,"offers":0}
@@ -155,10 +155,10 @@ func _test_ownership_state(owned_count: int) -> void:
 			else: new_seen[id] = true
 		check(run.pending_offer.size() == 3 and develops,"At three/five/seven families an eligible upgrade always occupies one slot")
 		counts.offers += 1
-	check(new_seen.size() == (13-owned_count if owned_count < Powers.FAMILY_CAP else 0),"All families remain reachable until seven slots; full machines offer only development")
+	check(new_seen.size() == (Powers.ACTIVE_IDS.size()-owned_count if owned_count < Powers.FAMILY_CAP else 0),"All families remain reachable until seven slots; full machines offer only development")
 	report.ownership_states.append(counts)
 func _model(policy: String, preference: String, investments: int = 12) -> Dictionary:
-	var result: Dictionary = {"policy":policy,"preference":preference,"investments":investments,"runs":256,"mean_families":0.0,"mean_mutations":0.0,"offered_new":0,"offered_rank":0,"offered_mutation":0,"picked_new":0,"picked_rank":0,"picked_mutation":0,"families_min":13,"families_max":0}
+	var result: Dictionary = {"policy":policy,"preference":preference,"investments":investments,"runs":256,"mean_families":0.0,"mean_mutations":0.0,"offered_new":0,"offered_rank":0,"offered_mutation":0,"picked_new":0,"picked_rank":0,"picked_mutation":0,"families_min":Powers.ACTIVE_IDS.size(),"families_max":0}
 	for seed_value: int in range(1,257):
 		var ranks: Dictionary = {}
 		var rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -181,7 +181,7 @@ func _model(policy: String, preference: String, investments: int = 12) -> Dictio
 				for id: String in Powers.ACTIVE_IDS:
 					var rank: int = int(ranks.get(id,0))
 					if not Powers.can_progress(id,rank): continue
-					var cap: int = {"hard_five":5,"hard_six":6,"hard_seven":7}.get(policy,13)
+					var cap: int = {"hard_five":5,"hard_six":6,"hard_seven":7}.get(policy,Powers.ACTIVE_IDS.size())
 					if rank == 0 and ranks.size() >= cap: continue
 					candidates.append(id)
 					weights.append(Run.draft_weight(ranks.size(),rank) if policy == "soft_depth" else (1.0 if rank == 0 else 1.2))

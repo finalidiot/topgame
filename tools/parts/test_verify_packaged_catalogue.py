@@ -274,4 +274,130 @@ class UIPolishAssetsContracts(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "UI pixels"): self.verify(report)
 
 
+class FinalAcceptanceAssetsTests(unittest.TestCase):
+    """Parser rejection fixtures; actual EXE/APK evidence comes from the probe."""
+
+    @classmethod
+    def setUpClass(cls):
+        root = verifier.ROOT
+        manifest_path = root / "assets/powers/defence003a/manifest.json"
+        defence_text = manifest_path.read_text(encoding="utf-8")
+        defence = json.loads(defence_text)
+        cls.fixture = {"defence_json": defence_text, "defence_textures": [],
+                       "arena_json": {}, "arena_textures": []}
+        for family, groups in defence["families"].items():
+            for group in ("cards", "icons", "fx"):
+                meta = groups[group]
+                row = cls.make_row(family + "/" + group, meta,
+                                   "res://assets/powers/defence003a/manifest.json")
+                row.update(family=family, group=group)
+                cls.fixture["defence_textures"].append(row)
+        for kind in ("display_panel", "machinery", "perimeter", "sparks", "vent", "warning_bank"):
+            metadata_path = "res://assets/arena/escalation003a/" + kind + ".json"
+            content = (root / metadata_path.removeprefix("res://")).read_text(encoding="utf-8")
+            cls.fixture["arena_json"][kind] = content
+            cls.fixture["arena_textures"].append(cls.make_row(kind, json.loads(content), metadata_path))
+
+    @staticmethod
+    def make_row(kind, meta, metadata_path):
+        size, digest = verifier._visible_pixels(verifier.ROOT / meta["texture"].removeprefix("res://"))
+        source = verifier.ROOT / meta["source"]
+        row = {"kind": kind, "path": meta["texture"], "metadata_path": metadata_path,
+               "size": size, "valid": True, "visible_pixels": True,
+               "transparent_rgb_normalized": True, "visible_rgba_sha256": digest,
+               "native_source_available": True,
+               "native_source_sha256": hashlib.sha256(source.read_bytes()).hexdigest()}
+        row.update({key: deepcopy(meta[key]) for key in
+                    ("cell", "pivot", "tags", "durations_ms", "layers", "columns", "frame_count", "source")})
+        return row
+
+    def setUp(self): self.report = deepcopy(self.fixture)
+    def verify(self): return verifier.verify_final_acceptance_assets(self.report)
+
+    def test_all_fifteen_actual_source_assets_and_native_masters_are_required(self):
+        result = self.verify()
+        self.assertEqual((result["defence_textures_verified"], result["arena_textures_verified"],
+                          result["native_masters_verified"]), (9, 6, 15))
+        self.assertTrue(result["final_acceptance_metadata_matches_source"])
+        self.assertTrue(result["final_acceptance_pixels_exact"])
+
+    def test_missing_duplicate_unknown_or_marker_only_pixel_reports_rejected(self):
+        for key in ("defence_textures", "arena_textures"):
+            for change in ("missing", "duplicate", "unknown"):
+                self.report = deepcopy(self.fixture)
+                rows = self.report[key]
+                if change == "missing": rows.pop()
+                elif change == "duplicate": rows[-1] = deepcopy(rows[0])
+                else: rows[0]["kind"] = "unknown"
+                with self.subTest(key=key, change=change):
+                    with self.assertRaisesRegex(RuntimeError, "did not inspect all"): self.verify()
+        self.report = {"final_acceptance_pass": True}
+        with self.assertRaisesRegex(RuntimeError, "defence metadata"): self.verify()
+
+    def test_actual_metadata_text_changes_and_invalid_json_rejected(self):
+        for key in ("defence_json", "arena_json"):
+            for bad in ("invalid-json", "changed"):
+                self.report = deepcopy(self.fixture)
+                text = self.report[key] if key == "defence_json" else self.report[key]["machinery"]
+                data = json.loads(text)
+                if key == "defence_json": data["families"]["gyro_lock"]["cards"]["pivot"][0] += 1
+                else: data["durations_ms"][0] += 1
+                text = "{" if bad == "invalid-json" else json.dumps(data)
+                if key == "defence_json": self.report[key] = text
+                else: self.report[key]["machinery"] = text
+                with self.subTest(key=key, bad=bad):
+                    with self.assertRaisesRegex(RuntimeError, "metadata (is invalid|differs)"): self.verify()
+        self.report = deepcopy(self.fixture)
+        self.report["arena_json"].pop("vent")
+        with self.assertRaisesRegex(RuntimeError, "six arena metadata"): self.verify()
+
+    def test_actual_imported_pixels_alpha_visibility_and_dimensions_rejected(self):
+        for key in ("defence_textures", "arena_textures"):
+            for field, value in (("visible_rgba_sha256", "0" * 64), ("valid", False),
+                                 ("visible_pixels", False), ("transparent_rgb_normalized", False),
+                                 ("size", [1, 1])):
+                self.report = deepcopy(self.fixture)
+                self.report[key][0][field] = value
+                with self.subTest(key=key, field=field):
+                    with self.assertRaisesRegex(RuntimeError, "alpha/visible RGB pixels"): self.verify()
+
+    def test_actual_resource_paths_cannot_be_substituted(self):
+        for key in ("defence_textures", "arena_textures"):
+            for field in ("path", "metadata_path"):
+                self.report = deepcopy(self.fixture)
+                self.report[key][0][field] = "res://assets/wrong.png"
+                with self.subTest(key=key, field=field):
+                    with self.assertRaisesRegex(RuntimeError, "runtime/metadata path"): self.verify()
+        for field in ("family", "group"):
+            self.report = deepcopy(self.fixture)
+            self.report["defence_textures"][0][field] = "wrong"
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(RuntimeError, "family/group identity"): self.verify()
+
+    def test_native_import_topology_and_master_provenance_cannot_drift(self):
+        for key in ("defence_textures", "arena_textures"):
+            for field, value in (("cell", [1, 1]), ("pivot", [0, 0]), ("tags", {}),
+                                 ("durations_ms", []), ("layers", []), ("columns", 0),
+                                 ("frame_count", 0), ("source", "assets/wrong.aseprite")):
+                self.report = deepcopy(self.fixture)
+                self.report[key][0][field] = value
+                with self.subTest(key=key, field=field):
+                    with self.assertRaisesRegex(RuntimeError, "topology differs"): self.verify()
+
+    def test_optional_package_master_presence_is_explicit_and_consistent(self):
+        for key in ("defence_textures", "arena_textures"):
+            for field, value in (("native_source_available", "true"),
+                                 ("native_source_sha256", "0" * 64)):
+                self.report = deepcopy(self.fixture)
+                self.report[key][0][field] = value
+                with self.subTest(key=key, field=field):
+                    with self.assertRaisesRegex(RuntimeError, "native-source evidence"): self.verify()
+        self.report = deepcopy(self.fixture)
+        for row in self.report["defence_textures"] + self.report["arena_textures"]:
+            row.update(native_source_available=False, native_source_sha256="")
+        result = self.verify()
+        self.assertEqual(result["native_masters_verified"], 15)
+        self.assertFalse(any(result["packaged_native_master_presence"].values()))
+
+
 if __name__ == "__main__": unittest.main(verbosity=2)

@@ -67,6 +67,11 @@ func observe_input(dt: float, direction: Vector2, braking: bool = false, burstin
 	_active_input_seconds = maxf(0.35, _active_input_seconds + dt) if bursting else _active_input_seconds + dt
 	_last_active_input = host().elapsed
 
+func has_recent_control() -> bool:
+	# Shared participation evidence for earned sustain. Physical power effects
+	# still own their XP/kill attribution, but cannot manufacture recent input.
+	return _active_input_seconds >= 0.35 and host().elapsed-_last_active_input <= 3.0
+
 func observe_outcomes() -> void:
 	if host().continuous != self: return
 	for f: Dictionary in host().fighters:
@@ -167,7 +172,13 @@ func after_tick(dt: float) -> void:
 func _safe_entry() -> Vector2:
 	var best: Vector2 = Vector2.INF
 	var distance: float = -1.0
-	for point: Vector2 in ENTRY_POINTS:
+	# Equal-clearance centre holds used to select the first port every time.
+	# Rotate only tie order, preserving the furthest safe port and its warning.
+	# This naturally admits attacks from different sides without inspecting AFK
+	# duration, teleporting a top, bypassing caps or spawning a counter enemy.
+	var first: int = (int(pending.get("serial",next_entity_id))+threat_number)%ENTRY_POINTS.size()
+	for offset: int in range(ENTRY_POINTS.size()):
+		var point: Vector2 = ENTRY_POINTS[(first+offset)%ENTRY_POINTS.size()]
 		var score: float = point.distance_to(host().player_entity().pos)
 		if score < 60.0: continue
 		for f: Dictionary in host().fighters:

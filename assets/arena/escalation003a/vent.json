@@ -1,0 +1,43 @@
+{
+  "cell": [
+    32,
+    32
+  ],
+  "pivot": [
+    16,
+    30
+  ],
+  "layers": [
+    "01 peripheral extraction housing",
+    "02 four keyed fan poses",
+    "03 controlled exhaust plume"
+  ],
+  "tags": {
+    "IDLE": {
+      "from": 0,
+      "to": 3
+    },
+    "HOT": {
+      "from": 4,
+      "to": 7
+    }
+  },
+  "durations_ms": [
+    500,
+    500,
+    500,
+    500,
+    230,
+    230,
+    230,
+    230
+  ],
+  "version": 1,
+  "texture": "res://assets/arena/escalation003a/vent.png",
+  "columns": 8,
+  "frame_count": 8,
+  "filter": "nearest",
+  "native_pixels": true,
+  "source": "assets/source-art/arena_escalation003a/vent.aseprite",
+  "presentation_only": true
+}

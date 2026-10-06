@@ -1,0 +1,419 @@
+{
+  "schema": 1,
+  "task": "003A",
+  "pass": "FINAL HUMAN ACCEPTANCE PASS",
+  "status": "desktop_regressions_passed_android_final_native_pending",
+  "human_acceptance": "PENDING HUMAN DEFENCE AND PHONE PLAYTEST",
+  "branch": "task-003a-shop-parts-packets",
+  "starting_sha": "92b3c5664ff92b54ff3c07d07933803d45aec470",
+  "main_sha": "b7812e17ddce6166258eca7285a0a38e8cae37fc",
+  "final_commit_provenance": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_delivery.json",
+  "tested_source_sha256": "b3decabdf0a798decc3e952c92fbc081aa18d02bdbde561e9088f93bb649a96f",
+  "tested_assets_sha256": "830a752a2e481db19b4718b1323881332a3cd5851469cb3e3bc09fa6e5453fc9",
+  "headless": {
+    "passed_suites": 71,
+    "checks": 184488,
+    "failures": [],
+    "source_unchanged": true,
+    "assets_unchanged": true,
+    "profile_unchanged": true,
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_frozen.json",
+    "suites": [
+      {
+        "name": "collection_save",
+        "checks": 371
+      },
+      {
+        "name": "collection_flow",
+        "checks": 575
+      },
+      {
+        "name": "collection_ui",
+        "checks": 2362
+      },
+      {
+        "name": "spin_economy",
+        "checks": 232
+      },
+      {
+        "name": "threat_director",
+        "checks": 83
+      },
+      {
+        "name": "continuous_run",
+        "checks": 200
+      },
+      {
+        "name": "run_context",
+        "checks": 377
+      },
+      {
+        "name": "flow",
+        "checks": 162
+      },
+      {
+        "name": "combat_architecture",
+        "checks": 35
+      },
+      {
+        "name": "menus",
+        "checks": 4942
+      },
+      {
+        "name": "controller",
+        "checks": 1017
+      },
+      {
+        "name": "powers",
+        "checks": 79
+      },
+      {
+        "name": "swarm",
+        "checks": 33
+      },
+      {
+        "name": "presentation",
+        "checks": 78
+      },
+      {
+        "name": "progression",
+        "checks": 190
+      },
+      {
+        "name": "starters",
+        "checks": 17
+      },
+      {
+        "name": "starter_physics",
+        "checks": 37
+      },
+      {
+        "name": "xp_observer",
+        "checks": 30
+      },
+      {
+        "name": "ramp_integration",
+        "checks": 21
+      },
+      {
+        "name": "card_assets",
+        "checks": 132
+      },
+      {
+        "name": "escalation_progression",
+        "checks": 1445
+      },
+      {
+        "name": "escalation_physics",
+        "checks": 103
+      },
+      {
+        "name": "escalation_integration",
+        "checks": 1929
+      },
+      {
+        "name": "escalation_completion",
+        "checks": 42
+      },
+      {
+        "name": "escalation_assets",
+        "checks": 351
+      },
+      {
+        "name": "rpm_replay",
+        "checks": 0
+      },
+      {
+        "name": "signature_presentation",
+        "checks": 3362
+      },
+      {
+        "name": "roster_draft",
+        "checks": 23705
+      },
+      {
+        "name": "roster_physics",
+        "checks": 30
+      },
+      {
+        "name": "roster_presentation",
+        "checks": 3585
+      },
+      {
+        "name": "ability_rebalance",
+        "checks": 92
+      },
+      {
+        "name": "ability_rebalance_integration",
+        "checks": 32
+      },
+      {
+        "name": "collection_c5_integration",
+        "checks": 207
+      },
+      {
+        "name": "power_identity",
+        "checks": 4584
+      },
+      {
+        "name": "parts_catalogue",
+        "checks": 8945
+      },
+      {
+        "name": "parts_collection",
+        "checks": 1217
+      },
+      {
+        "name": "parts_package",
+        "checks": 285
+      },
+      {
+        "name": "packet_package",
+        "checks": 380
+      },
+      {
+        "name": "feedback_drift",
+        "checks": 1409
+      },
+      {
+        "name": "feedback_anchor_contacts",
+        "checks": 65
+      },
+      {
+        "name": "power_feedback",
+        "checks": 2463
+      },
+      {
+        "name": "feedback_rerolls",
+        "checks": 1052
+      },
+      {
+        "name": "feedback_effects",
+        "checks": 14404
+      },
+      {
+        "name": "feedback_live_pickup",
+        "checks": 4
+      },
+      {
+        "name": "feedback_parts_retention",
+        "checks": 148
+      },
+      {
+        "name": "beast_manifestations",
+        "checks": 20065
+      },
+      {
+        "name": "music",
+        "checks": 1830
+      },
+      {
+        "name": "music_escalation",
+        "checks": 407
+      },
+      {
+        "name": "save_tools",
+        "checks": 92
+      },
+      {
+        "name": "presentation_flow",
+        "checks": 49
+      },
+      {
+        "name": "presentation_retention",
+        "checks": 13252
+      },
+      {
+        "name": "frontend",
+        "checks": 405
+      },
+      {
+        "name": "packet_economy",
+        "checks": 10172
+      },
+      {
+        "name": "packet_transactions",
+        "checks": 174
+      },
+      {
+        "name": "run_rewards",
+        "checks": 31
+      },
+      {
+        "name": "packet_art_audio",
+        "checks": 170
+      },
+      {
+        "name": "shop_progression",
+        "checks": 777
+      },
+      {
+        "name": "human_feedback_ui",
+        "checks": 8159
+      },
+      {
+        "name": "beast_orientation",
+        "checks": 5030
+      },
+      {
+        "name": "music_revision",
+        "checks": 40
+      },
+      {
+        "name": "ui_polish_package",
+        "checks": 199
+      },
+      {
+        "name": "preview_human_feedback",
+        "checks": 7817
+      },
+      {
+        "name": "enemy_commitment",
+        "checks": 23499
+      },
+      {
+        "name": "defence_pressure",
+        "checks": 15
+      },
+      {
+        "name": "defence_depth",
+        "checks": 432
+      },
+      {
+        "name": "grounded_pickups",
+        "checks": 3220
+      },
+      {
+        "name": "arena_escalation",
+        "checks": 7084
+      },
+      {
+        "name": "android_foundation",
+        "checks": 138
+      },
+      {
+        "name": "defence_participation",
+        "checks": 21
+      },
+      {
+        "name": "final_acceptance_package",
+        "checks": 479
+      },
+      {
+        "name": "mobile_combat_input",
+        "checks": 119
+      }
+    ]
+  },
+  "python_unit_tests": {
+    "passed": 134,
+    "failures": 0,
+    "seconds": 18.896,
+    "scope": "workspace/export/checkpoint/foundation/package/parts/feedback guards; genuine previous in-session unittest result"
+  },
+  "accepted_locks": {
+    "accepted_music": {
+      "files": 12,
+      "changed": [],
+      "unchanged": true
+    },
+    "accepted_packets": {
+      "files": 30,
+      "changed": [],
+      "unchanged": true
+    }
+  },
+  "preservation_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_preservation_validation.json",
+  "desktop_profile": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\benchmarks\\003a_arena_profile_20261006_172809.json",
+  "pressure": {
+    "final_level15_no_input": {
+      "end_seconds": 476.07,
+      "outcome": "natural spin_out"
+    },
+    "same_build_fine_steer": {
+      "observed_seconds": 638.02,
+      "rpm_fraction": 0.9979,
+      "brake": false,
+      "burst": false
+    },
+    "full_bulwark_effective_anchor_mass_multiplier_retained": 81,
+    "fixtures": "Opening invested build and threat maturity explicitly labelled. Every observed solver tick real; no artificial failure or runtime RPM grants."
+  },
+  "media": {
+    "003a_defence_pressure_acceptance.mp4": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_defence_pressure_acceptance.mp4",
+    "003a_defence_power_showcase.mp4": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_defence_power_showcase.mp4",
+    "003a_grounded_pickups.mp4": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_grounded_pickups.mp4",
+    "003a_arena_escalation.mp4": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_arena_escalation.mp4",
+    "003a_final_ui_matrix.png": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\images\\003a_final_ui_matrix.png"
+  },
+  "android": {
+    "final_native_smoke": "pending",
+    "promotable": false,
+    "phone_preflight": "Samsung Galaxy A14 Android14; real native MotionEvent control/menu/READ/multitouch/reentry preflight plus human confirmation that music and taps were audible. Earlier pre-final source, not canonical final APK proof.",
+    "phone_session_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_android_session_609a68b82f03424da9837a999661f53f.json",
+    "phone_state": "User unplugged to sleep; isolated QA marker cleared and native driver ended before unplug. No personal UI used.",
+    "blocker": "Five emulator launches across official37.2.12 and35.6.11 crashed host QEMU0xC0000005 before guest boot; no final APK ran. Host virtualization unavailable. No BIOS/reboot changes.",
+    "diagnostics": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_android_emulator_startup_diagnostics.json",
+    "required_touch_showcase": "pending; no video made from still frames",
+    "remaining_native_coverage": [
+      "exact final APK install/boot and embedded pixel/audio probe",
+      "packet gesture and complete purchase/result/save-load chain",
+      "background/resume on final APK",
+      "mature actual Android performance",
+      "Android touch showcase video",
+      "human thumb/control feel"
+    ]
+  },
+  "claims_limit": "Native UI matrix uses a specifically labelled real-phone preflight cell. Mobile quality profile measured on desktop is not Android performance. In-flight failed test attempts and all old QA are preserved.",
+  "native_desktop": {
+    "passed_suites": 3,
+    "checks": 387,
+    "contracts": [
+      {
+        "suite": "starter_preview",
+        "checks": 343,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_final_native_preview_20261006_180252_755249.log",
+        "log_sha256": "b3ae8c1312b774ed5b0b22a2f2dbcf70b3cf8eb5934c7d11ff354271a83d781f",
+        "passed": true
+      },
+      {
+        "suite": "beast_attachment",
+        "checks": 20,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_final_native_beast_attachment_20261006_180252_758588.log",
+        "log_sha256": "d5a632e808ac17c4b33eb5614a35fb9cdcf2490f1ee5a4530195c05f8648ff7a",
+        "passed": true
+      },
+      {
+        "suite": "wasapi_music",
+        "checks": 24,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_final_native_wasapi_20261006_180319_966013.log",
+        "log_sha256": "bc565b953a400f1a1a18a8bc3d3f57d41c61bb86102b259cdb419d67bcf49459",
+        "passed": true
+      }
+    ],
+    "audio": "WASAPI actual non-silent PCM peak0.5854 RMS0.01819; audio output is not a human judgement of the soundtrack."
+  },
+  "engine_totals": {
+    "unique_passed_suites": 74,
+    "checks": 184875,
+    "failed": 0,
+    "headless": 71,
+    "native_desktop": 3,
+    "android_final_native": "pending"
+  },
+  "media_sha256": {
+    "003a_defence_pressure_acceptance.mp4": "ed445cbcae5ce272c50bd88a561d7ae6253c0d9a00294fd4e3f00704ac7ccfe1",
+    "003a_defence_power_showcase.mp4": "fcd42e2c48394e00eb716696309432b9af99853a5f4b069f4a6d63862419f651",
+    "003a_grounded_pickups.mp4": "3dea804eb05b19f6d2130975810c9b4d3382c7dd76236eecec501d2021aab371",
+    "003a_arena_escalation.mp4": "942f523e76fb9b304232745b9839105e7bdf354a9a59642ce0d9db8b4500eb2e",
+    "003a_final_ui_matrix.png": "86c819733465776476036eb7b482a4be050aad00b918baea45d31980573e936f"
+  },
+  "ui_matrix_provenance": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_ui_matrix.json",
+  "android_preflight_pixel_provenance": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_android_preflight_matrix_provenance.json",
+  "native_art": {
+    "defence_masters": 9,
+    "arena_masters": 6,
+    "source_export_parity": "passed via actual Aseprite check; original layers, tags, pivots and timing retained",
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_arena_native_sources_final.json"
+  }
+}

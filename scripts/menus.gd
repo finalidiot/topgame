@@ -14,6 +14,7 @@ const PacketEconomy = preload("res://scripts/packet_economy.gd")
 const ShopMerchant = preload("res://scripts/shop_merchant.gd")
 const AbilityInspection = preload("res://scripts/ability_inspection.gd")
 const CreditTransfer = preload("res://scripts/credit_transfer.gd")
+const TouchButton = preload("res://scripts/touch_button.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -97,8 +98,12 @@ var _shop_reaction: String = "IDLE"
 var _ability_inspector: Control
 var _credit_transfer: Control
 var _inspection_owned_state: Dictionary = {}
+var reduced_flashing: bool = false
+var _packet_touch_index: int = -1
+var _packet_touch_origin: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	if OS.has_feature("mobile"): _input_profile = "touch"
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -125,9 +130,9 @@ func _process(_delta: float) -> void:
 	if screen == "hud" and _run_active:
 		_xp_display = move_toward(_xp_display, _xp_target, _delta * 1.6)
 		# Quantise the fill to native pixels, while easing meaningful XP increments.
-		_hud.xp_bar.value = roundf(_xp_display * 354.0) / 354.0
+		_hud.xp_bar.value = roundf(_xp_display * _hud.xp_bar.size.x) / _hud.xp_bar.size.x
 		_xp_flash = maxf(0.0, _xp_flash - _delta * 2.5)
-		_hud.xp_bar.modulate = Color(1.0, 1.0, 1.0, 1.0 if not _xp_near else (1.0 if int(_menu_clock * 7.0) % 2 == 0 else 0.65))
+		_hud.xp_bar.modulate = Color(1.0, 1.0, 1.0, 1.0 if reduced_flashing or not _xp_near else (1.0 if int(_menu_clock * 7.0) % 2 == 0 else 0.65))
 		_hud.xp_hit.color.a = _xp_flash * 0.32
 	if _accept_needs_release and not Input.is_action_pressed("ui_accept"):
 		_accept_needs_release = false
@@ -137,6 +142,18 @@ func _process(_delta: float) -> void:
 		_default_focus.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		_note_input_profile("touch")
+		if (not event.pressed or event.canceled) and event.index == _packet_touch_index: _packet_touch_index = -1
+		if screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and _packet_view.phase in ["SEALED", "CRINKLE"]:
+			if event.pressed and Rect2(222, 72, 196, 205).has_point(event.position):
+				_packet_touch_index = event.index
+				_packet_touch_origin = event.position
+	if event is InputEventScreenDrag and screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and event.index == _packet_touch_index:
+		if absf(event.position.x - _packet_touch_origin.x) >= 42.0:
+			_packet_touch_index = -1
+			action.emit("packet_tear", null)
+			get_viewport().set_input_as_handled()
 	if screen != "hud":
 		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
 			if _ui_owner_device >= 0 and event.device != _ui_owner_device:
@@ -144,7 +161,7 @@ func _input(event: InputEvent) -> void:
 				return
 			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
 				_note_input_profile(FrontEnd.controller_profile(event.device))
-		elif (event is InputEventKey and event.pressed) or event is InputEventMouseButton:
+		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (OS.has_feature("mobile") and event.device == InputEvent.DEVICE_ID_EMULATION)):
 			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
 	# before any new screen can accept it, including keyboard echo events.
@@ -190,6 +207,7 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 
 func _clear(next_screen: String, dim: bool = true) -> void:
 	screen = next_screen
+	_packet_touch_index = -1
 	_appearance_elapsed = 0.0
 	_prompt_labels.clear()
 	_prompt_glyphs.clear()
@@ -313,7 +331,7 @@ func _label(parent: Node, value: String, area: Rect2, font_size: int = 12, color
 	return node
 
 func _button(parent: Node, value: String, area: Rect2, intent: String = "", payload: Variant = null, primary: bool = false) -> Button:
-	var node: Button = Button.new()
+	var node: Button = TouchButton.new()
 	node.text = value
 	node.focus_mode = Control.FOCUS_ALL
 	node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -1225,12 +1243,15 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		controls.append([slider])
 	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 161, false)
 	controls.append([mute])
-	_panel(_content, Rect2(22, 204, 596, 96))
-	_label(_content, "DISPLAY / COMFORT", Rect2(34, 210, 310, 15), 10, ORANGE)
-	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 234, true)
-	var fullscreen: Button = _toggle_setting("fullscreen", "FULL SCREEN", 265, false)
+	_panel(_content, Rect2(22, 198, 596, 113))
+	_label(_content, "DISPLAY / COMFORT", Rect2(34, 201, 310, 15), 10, ORANGE)
+	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 221, true)
 	controls.append([shake])
-	controls.append([fullscreen])
+	if not OS.has_feature("mobile"):
+		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 249, false)])
+	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 249 if OS.has_feature("mobile") else 277, false)
+	controls.append([reduced])
+	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,282,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
 	if save_tools_allowed:
@@ -1346,7 +1367,7 @@ func _bind_power_inspection(control: Control, id: String, rank: int, mutation: S
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
 	_header(str(context.get("title", "VICTORY / PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one for the Run." % slot)))
-	_label(_content, "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
+	_label(_content, "CHOOSE ONE / TAP READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
 	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
 	var selected: Control
@@ -1363,20 +1384,26 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
 		_bind_power_inspection(card, id, rank, mutation)
+		_touch_info(card, id, rank, mutation)
 		var color: Color = _power_accent(id)
 		_style_card(card, color)
 		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(8, 5, 108, 13), 10, color)
 		_power_art(card, id, Rect2(30, 23, 64, 64), card, power)
-		_label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, TEXT)
+		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, TEXT)
+		if id == "anchor_exchange":
+			power_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			power_name.add_theme_constant_override("line_spacing", 0)
+			power_name.position.y = 89
+			power_name.size.y = 28
 		var reading: Dictionary = AbilityInspection.describe(id, rank, mutation)
-		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 116, 108, 61), 10, TEXT)
+		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 120 if id=="anchor_exchange" else 116, 108, 57 if id=="anchor_exchange" else 61), 10, TEXT)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.add_theme_constant_override("line_spacing", 0)
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 		_label(card, "CONFIRM / CHOOSE" if rank == 2 else "CONFIRM / COLLECT", Rect2(8, 181, 108, 14), 10, color)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
+	if not OS.has_feature("mobile"): _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
 	var rows: Array = [cards]
 	if context.has("rerolls"):
 		var rerolls: Dictionary = context.rerolls
@@ -1385,7 +1412,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		reroll.add_theme_font_size_override("font_size", 10)
 		reroll.disabled = not bool(rerolls.available)
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "CHOOSE / CONFIRM  DOWN: REROLL  BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
+		_label(_content, "TAP CARD TO CHOOSE / READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE / CONFIRM  DOWN: REROLL  BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
 		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  BACK: RUN MENU", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
@@ -1409,6 +1436,7 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		card.set_meta("power_id", id)
 		_style_card(card, color)
 		_bind_power_inspection(card, power_id, 2, id, true)
+		_touch_info(card, power_id, 2, id, true)
 		_label(card, "PERMANENT FOR THIS RUN", Rect2(10, 6, 172, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		_power_art(card, power_id, Rect2(32, 25, 128, 128), card, branch)
 		_label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
@@ -1419,12 +1447,21 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		_label(card, "CONFIRM / TRANSFORM", Rect2(10, 220, 172, 14), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "BATTLE PAUSED / FOCUS TO INSPECT / CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 10, MUTED)
+	_label(_content, "BATTLE PAUSED / TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "BATTLE PAUSED / FOCUS TO INSPECT / CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows([cards], selected)
 
 func focused_power_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	return str(focused.get_meta("power_id", "")) if focused != null else ""
+
+func _touch_info(card: Button, id: String, rank: int, mutation: String, branch_preview: bool = false) -> void:
+	if not OS.has_feature("mobile"): return
+	# A separate tap reads the complete guide without accepting a permanent choice.
+	var info: Button = _button(_content, "READ", Rect2(card.position.x, 290, card.size.x, 44))
+	info.name = "ReadPower_" + id
+	info.pressed.connect(func() -> void:
+		card.grab_focus()
+		if is_instance_valid(_ability_inspector): _ability_inspector.inspect(id, rank, mutation, branch_preview))
 
 func _power_texture(power_id: String, metadata: Dictionary = {}) -> Texture2D:
 	var power: Dictionary = Powers.get_power(power_id) if metadata.is_empty() else metadata
@@ -1689,8 +1726,10 @@ func show_hud(stats: Dictionary) -> void:
 	var announcement: String = ""
 	if phase == "countdown":
 		announcement = str(stats.get("countdown", 3))
+	elif phase == "reentry":
+		announcement = "READY  %.1f" % float(stats.get("reentry_remaining", 1.25))
 	elif phase == "launch":
-		announcement = "LET IT RIP"
+		announcement = "LAUNCH"
 	_hud["announcement"].text = announcement
 	_run_active = bool(stats.get("is_run", false))
 	var starter_id: String = str(stats.get("starter_id", ""))
@@ -1804,6 +1843,10 @@ func _create_hud() -> void:
 		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
 		_hud["power_rank_%d" % index] = _label(_content, "", Rect2(210 + index * 32, 307, 9, 12), 7, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
+		icon.gui_input.connect(func(event: InputEvent) -> void:
+			if event is InputEventScreenTouch and event.pressed:
+				action.emit("pause", null)
+				get_viewport().set_input_as_handled())
 		_hud["power_%d" % index] = icon
 	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
@@ -1814,6 +1857,15 @@ func _create_hud() -> void:
 	_hud["xp_detail"] = _label(_content, "0 / 1 XP", Rect2(496, 327, 122, 13), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["xp_bar"] = _bar(_content, Rect2(261, 343, 354, 5), Color("83d89a"))
 	_hud["xp_hit"] = _rect(_content, Rect2(252, 324, 376, 28), Color(1, 0.9, 0.6, 0))
+	if OS.has_feature("mobile"):
+		# Opposite-thumb actions own the right edge; all progress remains readable.
+		_hud["xp_panel"].size.x = 286
+		_hud["xp_hit"].size.x = 286
+		_hud["xp_label"].size.x = 148
+		_hud["xp_detail"].position.x = 412
+		_hud["xp_detail"].size.x = 116
+		_hud["xp_bar"].size.x = 264
+		_hud["controls"].visible = false
 	var focus: Control = get_viewport().gui_get_focus_owner()
 	if focus != null:
 		focus.release_focus()
@@ -1833,7 +1885,7 @@ func _inspect_hud_power(index: int) -> void:
 
 func _animate_rpm_meter() -> void:
 	if screen != "hud" or not _hud.has("player_bar"): return
-	var pulse: float = 0.5 + sin(_menu_clock * (8.0 + _rpm_heat * 8.0)) * 0.5
+	var pulse: float = 0.5 if reduced_flashing else 0.5 + sin(_menu_clock * (8.0 + _rpm_heat * 8.0)) * 0.5
 	var color: Color = Color("ff632e").lerp(Color("ffb44b"), pulse) if _rpm_overdrive else BLUE
 	var fill: StyleBoxFlat = _hud["rpm_overflow"].get_theme_stylebox("fill") as StyleBoxFlat
 	fill.bg_color = color

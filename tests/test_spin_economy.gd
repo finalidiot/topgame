@@ -83,6 +83,9 @@ func _test_recovery() -> void:
 	check(float(target.rpm) > 0.045,"Enemy emergency recovery remains valid")
 	target.outcome = "spin_out"
 	for kind: String in ["elite","boss"]:
+		# This fixture represents a recently controlled defensive impact; raw
+		# dictionary credit alone must not stand in for production activity.
+		b.continuous.observe_input(0.4,Vector2(0.20,0))
 		e.paid.clear()
 		e.tokens = Economy.TUNING.bucket_capacity
 		target.enemy_kind = kind

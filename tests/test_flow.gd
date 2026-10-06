@@ -9,6 +9,7 @@ class QuietMain extends "res://scripts/main.gd":
 const Fixtures = preload("res://tests/continuous_fixtures.gd")
 const SELECTED_BUILD: Dictionary = {"blade":"guard", "ratchet":"low", "bit":"needle"}
 const Starters = preload("res://scripts/starters.gd")
+const Physics = preload("res://scripts/battle.gd")
 var failures: int = 0
 var checks: int = 0
 
@@ -20,6 +21,13 @@ func check(value: bool, message: String) -> void:
 	if not value:
 		failures += 1
 		push_error(message)
+
+func _finish_reentry(game: QuietMain) -> void:
+	var ticks: int = 0
+	while game.battle.battle_status == "reentry" and ticks < 91:
+		game.battle.test_step(Physics.FIXED_DT)
+		ticks += 1
+	check(game.battle.battle_status == "battle", "Ready buffer ends through actual fixed ticks before any live physics")
 
 func _state(game: QuietMain) -> Dictionary:
 	var context = game.run_context
@@ -184,6 +192,7 @@ func _test_midbattle_and_swarm(game: QuietMain) -> void:
 	check(game.screen == "pause" and _state(game) == acquired and _physical_state(game) == physical, "Acquisition pause freezes live combat and ignores repeated confirm")
 	game._resume()
 	game._process(0.6)
+	_finish_reentry(game)
 	check(game.screen == "battle" and not game.battle.paused and game.run_context.slot == 3, "Acquisition resumes the same swarm instead of relaunching")
 	check(_physical_state(game) == physical and game.battle.encounter.player_power_ids == game.run_context.owned_power_ids, "Resume preserves the exact encounter and applies the new power immediately")
 	game.battle.test_step(1.0 / 60.0)

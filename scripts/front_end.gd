@@ -138,6 +138,7 @@ static func controller_profile(device: int) -> String:
 	return "gamepad"
 
 static func prompt(profile: String, action: String) -> String:
+	if profile == "touch": return {"confirm":"TAP", "back":"ANDROID", "choose":"TAP / SWIPE", "pause":"PAUSE", "steer":"HOLD / DRAG", "burst":"BURST", "brake":"BRAKE"}.get(action,action.to_upper())
 	if profile == "keyboard":
 		return {"confirm":"ENTER / CLICK", "back":"ESC", "choose":"ARROWS / TAB", "pause":"ESC", "steer":"WASD / ARROWS", "burst":"SPACE", "brake":"SHIFT"}.get(action, action.to_upper())
 	var south: String = {"playstation":"CROSS", "nintendo":"B", "xbox":"A"}.get(profile, "SOUTH BUTTON")
@@ -145,6 +146,7 @@ static func prompt(profile: String, action: String) -> String:
 	return {"confirm":south, "back":east, "choose":"D-PAD / STICK", "pause":"MENU", "steer":"LEFT STICK", "burst":south, "brake":"SHOULDER / TRIGGER"}.get(action, action.to_upper())
 
 static func glyph(profile: String, action: String) -> AtlasTexture:
+	if profile == "touch": return null
 	if not ResourceLoader.exists(GLYPH_PATH): return null
 	var tag: String = "key_enter" if action == "confirm" else "key_escape"
 	if profile != "keyboard":

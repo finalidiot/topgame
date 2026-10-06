@@ -14,9 +14,17 @@ const PackageProbe = preload("res://scripts/parts_package_probe.gd")
 const RunPickupScript = preload("res://scripts/run_pickups.gd")
 const PacketEconomy = preload("res://scripts/packet_economy.gd")
 const RunRewards = preload("res://scripts/run_rewards.gd")
+const TouchControls = preload("res://scripts/touch_controls.gd")
+const AndroidQA = preload("res://scripts/android_qa.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false}
+var touch_controls: Node2D
+var _application_suspended: bool = false
+var _resume_after_foreground: bool = false
+var _android_qa: Dictionary = {}
+var _android_qa_clock: float = 0.0
+var _android_qa_screen: String = ""
 var mode: String = "duel"
 var round_index: int = 0
 var screen: String = "title"
@@ -73,6 +81,17 @@ var _packet_request_id: String = ""
 var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
+	if not _android_qa.is_empty():
+		_android_qa_clock -= delta
+		if _android_qa_clock <= 0.0:
+			_android_qa_clock = 0.25
+			AndroidQA.report(self, _android_qa)
+		var capture_state: String = screen+"_"+battle.battle_status if screen=="battle" else screen
+		if capture_state != _android_qa_screen:
+			_android_qa_screen = capture_state
+			_capture("android_"+capture_state+"_%d" % Time.get_ticks_msec())
+	if is_instance_valid(touch_controls): touch_controls.set_enabled(screen == "battle" and not _application_suspended and not battle.paused)
+	if _application_suspended: return
 	if is_instance_valid(music) and run_context.is_active() and screen in ["reward", "mutation", "acquisition", "level_up", "pause", "settings"]:
 		music.set_paused(true)
 	if screen == "starter_owned":
@@ -106,6 +125,11 @@ func _ready() -> void:
 			qa_assets_report_requested = true
 			qa_assets_report = argument.trim_prefix("--qa-assets-report=")
 	qa_assets_report_requested = qa_assets_report_requested or not qa_assets_report.is_empty()
+	_android_qa = AndroidQA.request()
+	if not _android_qa.is_empty():
+		collection_path = _android_qa.collection_path
+		capture_dir = _android_qa.capture_dir
+		DirAccess.make_dir_recursive_absolute(capture_dir)
 	if smoke_mode: rng.seed = 7341
 	if qa_catalogue_requested and not _is_isolated_catalogue_path(collection_path):
 		qa_catalogue_error = "Catalogue QA requires an absolute --collection-path inside the configured GyroBrothers-QA/002C.5.2/temp folder. No parts were granted and your player save was not opened."
@@ -142,6 +166,8 @@ func _ready() -> void:
 	battle.threat_started.connect(_threat_started)
 	reroll_pickups = RunPickupScript.new()
 	battle.add_child(reroll_pickups)
+	battle.floor_pickups = reroll_pickups
+	reroll_pickups.render_in_battle = true
 	reroll_pickups.reroll_collected.connect(_reroll_collected)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
@@ -150,6 +176,9 @@ func _ready() -> void:
 	layer.add_child(menus)
 	menus.action.connect(_action)
 	menus.focus_sound.connect(_battle_sound)
+	touch_controls = TouchControls.new()
+	layer.add_child(touch_controls)
+	battle.input_provider = touch_controls
 	sounds = SoundScript.new()
 	add_child(sounds)
 	music = MusicScript.new()
@@ -170,6 +199,15 @@ func _ready() -> void:
 	elif smoke_mode: call_deferred("_smoke_test")
 	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
+	if not _android_qa.is_empty(): call_deferred("_inspect_android_assets")
+
+func _inspect_android_assets() -> void:
+	if _android_qa.is_empty(): return
+	var output: String = _android_qa.capture_dir.path_join("packaged_assets.json")
+	if FileAccess.file_exists(output): return
+	var result: Dictionary = PackageProbe.inspect(output)
+	if bool(result.get("ok",false)): print("ANDROID_PACKAGED_ASSETS_PASS")
+	else: push_error(str(result.get("error","Android package asset inspection failed")))
 
 func _is_default_collection_path(path: String) -> bool:
 	# Windows paths are case insensitive; spelling/casing must never bypass
@@ -276,11 +314,11 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false}
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false}
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "fullscreen"]:
+	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing"]:
 		if values.get(key) is bool: result[key] = values[key]
 	return result
 
@@ -295,7 +333,11 @@ func _apply_settings() -> void:
 	sounds.apply_settings(settings)
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
-	if not smoke_mode:
+	battle.reduced_flashing = bool(settings.reduced_flashing)
+	battle.presentation_quality = 0.6 if OS.has_feature("mobile") else 1.0
+	reroll_pickups.reduced_flashing = bool(settings.reduced_flashing)
+	menus.reduced_flashing = bool(settings.reduced_flashing)
+	if not smoke_mode and not OS.has_feature("mobile"):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if bool(settings.fullscreen) else DisplayServer.WINDOW_MODE_WINDOWED)
 
 func _hide_battle() -> void:
@@ -629,6 +671,7 @@ func _restart_run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--run-seed=") and argument.trim_prefix("--run-seed=").is_valid_int():
 			fresh_seed = int(argument.trim_prefix("--run-seed="))
+	if not _android_qa.is_empty() and int(_android_qa.run_seed) > 0: fresh_seed = int(_android_qa.run_seed)
 	_previous_run_seed = fresh_seed
 	_acquisition_remaining = 0.0
 	_level_up_remaining = 0.0
@@ -725,7 +768,7 @@ func _finish_acquisition() -> void:
 		_launch_run_encounter()
 	else:
 		screen = "battle"
-		battle.set_paused(false)
+		battle.begin_reentry()
 		battle._emit_hud()
 		if not smoke_mode: sounds.play_sound("resume")
 
@@ -1007,6 +1050,7 @@ func _pause() -> void:
 	if screen == "reward": _reward_focus_id = menus.focused_power_id()
 	if screen == "mutation": _mutation_focus_id = menus.focused_power_id()
 	pause_origin = screen
+	if is_instance_valid(touch_controls): touch_controls.clear()
 	screen = "pause"
 	battle.set_paused(true)
 	menus.show_pause(mode == "run")
@@ -1021,7 +1065,7 @@ func _resume() -> void:
 	elif screen == "result": menus.show_result(last_result)
 	elif screen == "level_up": menus.show_level_up(run_context.pending_draft_level)
 	else:
-		battle.set_paused(false)
+		battle.begin_reentry()
 		battle._emit_hud()
 	music.set_paused(screen != "battle")
 
@@ -1050,11 +1094,33 @@ func _unhandled_input(event: InputEvent) -> void:
 		_escape()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("toggle_fullscreen"):
+		if screen == "battle": battle.begin_reentry()
 		settings.fullscreen = not bool(settings.fullscreen)
 		_apply_settings()
 		_save_preferences()
 		if screen == "settings": _show_settings()
 		get_viewport().set_input_as_handled()
+
+func _notification(what: int) -> void:
+	if smoke_mode and what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_FOCUS_IN]: return
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_instance_valid(menus):
+		menus.visible = true
+		_escape()
+	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT]:
+		if not is_instance_valid(battle): return
+		_application_suspended = true
+		_resume_after_foreground = screen == "battle"
+		if is_instance_valid(touch_controls): touch_controls.clear()
+		if _resume_after_foreground:
+			battle.set_paused(true)
+			music.set_paused(true)
+	elif what in [NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN]:
+		if not _application_suspended or not is_instance_valid(battle): return
+		_application_suspended = false
+		if _resume_after_foreground and screen == "battle":
+			battle.begin_reentry()
+			music.set_paused(false)
+		_resume_after_foreground = false
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Control and not node.is_visible_in_tree(): return null

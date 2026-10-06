@@ -206,6 +206,88 @@ def verify_ui_polish_assets(assets: dict, source_root: Path = ROOT) -> dict:
             "ui_polish_pixels_exact": True, "ui_polish_native_topology_verified": True}
 
 
+def verify_final_acceptance_assets(assets: dict, source_root: Path = ROOT) -> dict:
+    """Compare actual candidate-loaded defence/arena pixels with saved source.
+
+    Editor existence and a self-reported valid flag cannot substitute for every
+    alpha/visible RGB byte, topology and actual compiled metadata. Native masters
+    are verified locally; their optional package presence is recorded explicitly.
+    """
+    defence_path = source_root / "assets/powers/defence003a/manifest.json"
+    expected_defence = json.loads(defence_path.read_text(encoding="utf-8"))
+    try:
+        actual_defence = json.loads(assets.get("defence_json", "null"))
+    except (TypeError, ValueError) as error:
+        raise RuntimeError("Packaged defence metadata is invalid") from error
+    if actual_defence != expected_defence:
+        raise RuntimeError("Packaged defence metadata differs from saved source")
+    expected_families = {"gyro_lock", "impact_sink", "anchor_exchange"}
+    if set(expected_defence.get("families", {})) != expected_families or len(expected_defence.get("art", {})) != 12:
+        raise RuntimeError("Defence source must contain three developed families and twelve card/icon states")
+    metadata_rows = assets.get("arena_json", {})
+    arena_kinds = {"display_panel", "machinery", "perimeter", "sparks", "vent", "warning_bank"}
+    if not isinstance(metadata_rows, dict) or set(metadata_rows) != arena_kinds:
+        raise RuntimeError("Actual package did not inspect all six arena metadata files")
+    defence_rows = assets.get("defence_textures", [])
+    arena_rows = assets.get("arena_textures", [])
+    defence_keys = {family + "/" + group for family in expected_families for group in ("cards", "icons", "fx")}
+    for rows, expected, label in [(defence_rows, defence_keys, "nine defence"), (arena_rows, arena_kinds, "six arena")]:
+        if (not isinstance(rows, list) or len(rows) != len(expected) or not all(isinstance(r, dict) for r in rows)
+                or {r.get("kind") for r in rows} != expected):
+            raise RuntimeError("Actual package did not inspect all " + label + " sheets")
+    sys.path.insert(0, str(source_root / "tools"))
+    from build_power_art import read_ase
+    native_presence = {}
+    for row in defence_rows + arena_rows:
+        kind = row["kind"]
+        if "/" in kind:
+            family, group = kind.split("/")
+            metadata = expected_defence["families"][family][group]
+            metadata_path = "res://assets/powers/defence003a/manifest.json"
+            if row.get("family") != family or row.get("group") != group:
+                raise RuntimeError("Actual defence family/group identity differs: " + kind)
+        else:
+            metadata_path = "res://assets/arena/escalation003a/" + kind + ".json"
+            metadata = json.loads((source_root / metadata_path.removeprefix("res://")).read_text(encoding="utf-8"))
+            try:
+                actual = json.loads(metadata_rows[kind])
+            except (TypeError, ValueError) as error:
+                raise RuntimeError("Packaged arena metadata is invalid: " + kind) from error
+            if actual != metadata:
+                raise RuntimeError("Packaged arena metadata differs from saved source: " + kind)
+            if metadata.get("presentation_only") is not True or metadata.get("native_pixels") is not True or metadata.get("filter") != "nearest":
+                raise RuntimeError("Arena source must retain native presentation-only topology: " + kind)
+        if row.get("path") != metadata.get("texture") or row.get("metadata_path") != metadata_path:
+            raise RuntimeError("Actual packaged runtime/metadata path differs: " + kind)
+        size, visible = _visible_pixels(source_root / metadata["texture"].removeprefix("res://"))
+        if (row.get("valid") is not True or row.get("visible_pixels") is not True
+                or row.get("transparent_rgb_normalized") is not True or row.get("size") != size
+                or row.get("visible_rgba_sha256") != visible):
+            raise RuntimeError("Actual packaged alpha/visible RGB pixels differ: " + kind)
+        for key in ("cell", "pivot", "tags", "durations_ms", "layers", "columns", "frame_count", "source"):
+            if row.get(key) != metadata.get(key):
+                raise RuntimeError("Actual imported final-acceptance topology differs: " + kind + "/" + key)
+        native = source_root / metadata["source"]
+        if not native.is_file() or native.suffix != ".aseprite":
+            raise RuntimeError("Saved editable native master is missing: " + kind)
+        source_hash = hashlib.sha256(native.read_bytes()).hexdigest()
+        if "source_sha256" in metadata and metadata["source_sha256"] != source_hash:
+            raise RuntimeError("Defence manifest no longer matches its actual native master: " + kind)
+        frames, native_metadata = read_ase(native)
+        if len(frames) != metadata["frame_count"]:
+            raise RuntimeError("Native authored frame count differs: " + kind)
+        for key in ("cell", "pivot", "tags", "durations_ms", "layers"):
+            if native_metadata.get(key) != metadata.get(key):
+                raise RuntimeError("Native authored topology differs: " + kind + "/" + key)
+        available = row.get("native_source_available")
+        if type(available) is not bool or row.get("native_source_sha256") != (source_hash if available else ""):
+            raise RuntimeError("Optional packaged native-source evidence is inconsistent: " + kind)
+        native_presence[kind] = available
+    return {"defence_textures_verified": 9, "arena_textures_verified": 6,
+            "final_acceptance_metadata_matches_source": True, "final_acceptance_pixels_exact": True,
+            "native_masters_verified": 15, "packaged_native_master_presence": native_presence}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", type=Path, required=True, help="Explicit candidate or latest Windows executable")
@@ -336,6 +418,7 @@ def main() -> None:
         report["assets"]["music_pcm_exact"] = True
         report["assets"].update(verify_shop_assets(assets))
         report["assets"].update(verify_ui_polish_assets(assets))
+        report["assets"].update(verify_final_acceptance_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))
