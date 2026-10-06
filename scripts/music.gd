@@ -9,6 +9,15 @@ const SILENCE_DB: float = -80.0
 const MAX_EVENTS: int = 64
 const DUCK_SECONDS: float = 0.18
 const DUCK_DB: float = -4.0
+## Arrangement maturity uses observed Run milestones, not this node's clock.
+## The final floor leaves headroom for a real boss/danger surge above it.
+const PROGRESSION_STAGES: Array[Dictionary] = [
+	{"name":"opening", "seconds":0.0, "tier":0, "clears":0, "pressure":0.0, "boss":0.0},
+	{"name":"drive", "seconds":35.0, "tier":1, "clears":2, "pressure":0.25, "boss":0.0},
+	{"name":"lead", "seconds":100.0, "tier":2, "clears":4, "pressure":0.5, "boss":0.25},
+	{"name":"anthem", "seconds":210.0, "tier":3, "clears":7, "pressure":0.75, "boss":0.5},
+	{"name":"full", "seconds":360.0, "tier":4, "clears":10, "pressure":0.75, "boss":0.75}
+]
 
 var _player: AudioStreamPlayer
 var _stream: AudioStreamSynchronized
@@ -32,6 +41,10 @@ var _starts: int = 0
 var _events: Array[Dictionary] = []
 var _asset_errors: Array[String] = []
 var _manifest: Dictionary = {}
+var _run_seed: int = 0
+var _has_run_seed: bool = false
+var _progression: Dictionary = {"stage":0, "name":"opening", "pressure_floor":0.0, "boss_floor":0.0,
+	"elapsed":0.0, "tier":0, "threats_cleared":0, "run_seed":0, "continuous":false}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -100,11 +113,7 @@ func set_context(context: String) -> void:
 	var valid: String = context if context in ["title", "workshop", "run", "result", "silent"] else "silent"
 	if valid == _context: return
 	if valid == "run":
-		_stable_run = {"pressure": 0.0, "boss": 0.0, "reason": "opening"}
-		_run_targets = _stable_run.duplicate(true)
-		_candidate_key = ""
-		_candidate_age = 0.0
-		_last_adaptive_change = -10.0
+		_reset_run_progression()
 	_context = valid
 	_record("context")
 	_rebuild_targets()
@@ -118,7 +127,53 @@ func set_paused(paused: bool) -> void:
 ## Absolute pressure keeps the opening one-rival Run in its ordinary groove.
 ## Director census includes a genuinely admitted pending boss, allowing the
 ## music to build through its real warning rather than fake a new encounter.
-static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}) -> Dictionary:
+static func progression_targets(state: Dictionary, player_stats: Dictionary = {}) -> Dictionary:
+	# Duel HUDs also have elapsed time. Only the actual continuous-Run schema
+	# may build this floor; survival_time is authoritative over the HUD fallback.
+	var continuous: bool = state.has("survival_time") or state.has("run_seed") or bool(state.get("director", false)) or bool(player_stats.get("continuous_run", false))
+	var elapsed: float = maxf(0.0, float(state.get("survival_time", player_stats.get("elapsed", 0.0)))) if continuous else 0.0
+	if not is_finite(elapsed): elapsed = 0.0
+	var tier: int = maxi(0, int(state.get("limits", {}).get("tier", 0))) if continuous else 0
+	var cleared: int = maxi(0, int(state.get("threats_cleared", 0))) if continuous else 0
+	var stage: int = 0
+	for index: int in range(1, PROGRESSION_STAGES.size()):
+		var threshold: Dictionary = PROGRESSION_STAGES[index]
+		if elapsed >= float(threshold.seconds) or tier >= int(threshold.tier) or cleared >= int(threshold.clears): stage = index
+	var row: Dictionary = PROGRESSION_STAGES[stage]
+	return {"stage":stage, "name":str(row.name), "pressure_floor":float(row.pressure), "boss_floor":float(row.boss),
+		"elapsed":elapsed, "tier":tier, "threats_cleared":cleared, "run_seed":int(state.get("run_seed", 0)), "continuous":continuous}
+
+func _reset_run_progression(record_reset: bool = false) -> void:
+	_progression = progression_targets({})
+	_has_run_seed = false
+	_run_seed = 0
+	_stable_run = {"pressure":0.0, "boss":0.0, "reason":"opening"}
+	_run_targets = _stable_run.duplicate(true)
+	_candidate_key = ""
+	_candidate_age = 0.0
+	_last_adaptive_change = -10.0
+	if record_reset: _record("run_reset")
+	_rebuild_targets()
+
+func _observe_progression(state: Dictionary, player_stats: Dictionary) -> void:
+	# Paused drafts/options advance envelopes and transport, never Run maturity.
+	if _paused: return
+	var observed: Dictionary = progression_targets(state, player_stats)
+	if not bool(observed.continuous): return
+	if state.has("run_seed"):
+		var seed: int = int(state.run_seed)
+		if _has_run_seed and seed != _run_seed: _reset_run_progression(true)
+		_run_seed = seed
+		_has_run_seed = true
+	var previous_stage: int = int(_progression.stage)
+	var stage: int = maxi(previous_stage, int(observed.stage))
+	var row: Dictionary = PROGRESSION_STAGES[stage]
+	_progression = {"stage":stage, "name":str(row.name), "pressure_floor":float(row.pressure), "boss_floor":float(row.boss),
+		"elapsed":maxf(float(_progression.elapsed), float(observed.elapsed)), "tier":maxi(int(_progression.tier), int(observed.tier)),
+		"threats_cleared":maxi(int(_progression.threats_cleared), int(observed.threats_cleared)), "run_seed":_run_seed, "continuous":true}
+	if stage > previous_stage: _record("progression_" + str(row.name))
+
+static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}, progression: Dictionary = {}) -> Dictionary:
 	var census: Dictionary = state.get("census", {})
 	var limits: Dictionary = state.get("limits", {})
 	var pressure: float = maxf(0.0, float(census.get("pressure", 0.0)))
@@ -143,12 +198,35 @@ static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}) -
 	if calm and bosses == 0 and not danger:
 		weight *= 0.25
 		boss *= 0.25
+	var observed: Dictionary = progression_targets(state, player_stats)
+	# A supplied retained snapshot is authoritative; this also prevents fresh
+	# observations from maturing the instance's arrangement while it is paused.
+	var stage: int = clampi(int(observed.stage) if progression.is_empty() else int(progression.get("stage", 0)), 0, PROGRESSION_STAGES.size() - 1)
+	var row: Dictionary = PROGRESSION_STAGES[stage]
+	# Calm/draining can release temporary density, but a mature Run retains its
+	# lead and anthem arrangement. The two components keep their own hysteresis.
+	weight = maxf(weight, float(row.pressure))
+	boss = maxf(boss, float(row.boss))
+	# Critical spin and a genuinely observed boss still have a musical step
+	# above a mature anthem; the old fixed danger minimum alone would be below
+	# the late floor and make the warning cease to change the arrangement.
+	if danger or bosses > 0 or overclock: weight = maxf(weight, minf(1.0, float(row.pressure) + 0.25))
+	if danger: boss = maxf(boss, minf(1.0, float(row.boss) + 0.25))
 	return {"pressure": weight, "boss": boss, "absolute_pressure": pressure, "tier": tier,
 		"bosses": bosses, "elites": elites, "danger": danger, "overclock": overclock, "investment": investment, "calm": calm,
-		"reason": "boss" if bosses > 0 else ("danger" if danger else ("late_pressure" if boss > 0.0 else ("pressure" if weight > 0.0 else "opening")))}
+		"progression_stage":stage, "pressure_floor":float(row.pressure), "boss_floor":float(row.boss),
+		"reason": "boss" if bosses > 0 else ("danger" if danger else ("progression_" + str(row.name) if stage > 0 else ("late_pressure" if boss > 0.0 else ("pressure" if weight > 0.0 else "opening"))))}
 
 func observe_run(state: Dictionary, player_stats: Dictionary = {}) -> void:
-	_run_targets = adaptive_targets(state, player_stats)
+	# Main already sends this explicit empty observation when it starts/restarts
+	# a Run or duel, including Restart from an existing paused Run context.
+	if state.is_empty() and player_stats.is_empty():
+		_reset_run_progression(true)
+		_rebuild_targets()
+		return
+	if _paused: return
+	_observe_progression(state, player_stats)
+	_run_targets = adaptive_targets(state, player_stats, _progression)
 	# Only a genuinely observed boss can immediately increase the boss layer.
 	# Its removal still needs the ordinary stable-release window below.
 	if int(_run_targets.get("bosses", 0)) > 0 and float(_stable_run.boss) < 1.0:
@@ -242,7 +320,7 @@ func music_snapshot() -> Dictionary:
 		"position": _player.get_playback_position() if _player != null and _player.playing else 0.0,
 		"stem_count": STEM_NAMES.size(), "gains": _gains.duplicate(), "targets": _targets.duplicate(),
 		"run": _run_targets.duplicate(true), "stable_run": _stable_run.duplicate(true), "music_volume": _music_volume, "music_muted": _music_muted,
-		"duck_left": _duck_left, "events": _events.duplicate(true), "asset_errors": _asset_errors.duplicate()}
+		"progression":_progression.duplicate(true), "duck_left": _duck_left, "events": _events.duplicate(true), "asset_errors": _asset_errors.duplicate()}
 
 ## Read-only resource inspection/mixer tests can instantiate independent
 ## playback without starting a native device/player or changing game state.

@@ -1,0 +1,35 @@
+{
+  "task": "002C.6 music review revision",
+  "branch": "task-002c6-presentation-foundation",
+  "parent_foundation_sha": "c18672000cc28445369c7929cd78fc0cd3cc2ef0",
+  "targeted_regression": {
+    "status": "passed",
+    "suites": 8,
+    "counted_checks": 16613,
+    "source_assets_profile_unchanged_during_tests": true,
+    "evidence": "GyroBrothers-QA/002C.6/manifests/002c6_metal_regression.json"
+  },
+  "native_audio_checks": 24,
+  "presentation_guard_tests": 14,
+  "composition": {
+    "title": "Foundry Circuit / Steel Horizon",
+    "bpm": 172,
+    "bars": 32,
+    "sample_rate": 32000,
+    "frames_per_stem": 1428837,
+    "stems": 5,
+    "all_run_gain_vertices_peak_at_most": 0.680014,
+    "exact_pcm_regeneration": true,
+    "clipped_samples": 0
+  },
+  "escalation": {
+    "milestone_seconds": [35, 100, 210, 360],
+    "also_uses_real_director_tier_and_cleared_threats": true,
+    "earned_layers_retained_through_calm": true,
+    "new_run_resets_without_transport_restart": true,
+    "gameplay_changed": false
+  },
+  "audition_scope": "Controlled music-state fixture using the actual production synchronized player; no fabricated gameplay",
+  "final_build_and_sha_evidence": "GyroBrothers-QA/002C.6/manifests/002c6_metal_checkpoint.json",
+  "human_auditory_acceptance": "pending"
+}

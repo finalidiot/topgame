@@ -56,10 +56,16 @@ func mixer(music: Node) -> void:
 	var stream: AudioStreamSynchronized = music.synchronized_stream()
 	check(music.music_snapshot().asset_errors.is_empty(), "All five runtime stems import as exact stereo PCM grids")
 	var duration: float = stream.get_length()
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Music.ASSET_ROOT + "manifest.json"))
+	var grid: Dictionary = manifest.get("grid", {})
+	var frames: int = int(grid.get("frames", 0))
+	var rate: int = int(grid.get("sample_rate", 0))
+	var bytes_per_frame: int = int(grid.get("channels", 0)) * int(grid.get("sample_width_bytes", 0))
+	check(frames > 0 and rate == 32000 and bytes_per_frame == 4 and is_equal_approx(duration, float(frames) / rate), "The declared score grid matches exact native stereo PCM duration")
 	var refs: Array[AudioStreamPlayback] = []
 	for index: int in range(5):
 		var wav: AudioStreamWAV = stream.get_sync_stream(index)
-		check(wav.loop_mode == AudioStreamWAV.LOOP_FORWARD and wav.loop_begin == 0 and wav.loop_end == 1117091 and wav.mix_rate == 32000 and wav.stereo and wav.data.size() == 4468364, "Every imported stem keeps the identical exact sample grid and native loop")
+		check(wav.loop_mode == AudioStreamWAV.LOOP_FORWARD and wav.loop_begin == 0 and wav.loop_end == frames and wav.mix_rate == rate and wav.stereo and wav.data.size() == frames * bytes_per_frame, "Every imported stem keeps the identical exact manifest sample grid and native loop")
 		var ref: AudioStreamPlayback = wav.instantiate_playback()
 		ref.start(duration - 0.025)
 		refs.append(ref)
@@ -80,7 +86,8 @@ func mixer(music: Node) -> void:
 	check(maximum_error < 0.00001, "Actual synchronized mixing exactly follows five uninterrupted reference stem cursors while gains change")
 	check(energy > 0.01, "Engine mixer produces actual audible non-silent music samples")
 	# WAV's native get_loop_count() intentionally returns zero in Godot. The
-	# real playback cursor wrapping from34.88s tobelow1s proves this boundary.
+	# real playback cursor wrapping from the declared endpoint to below1s proves
+	# this boundary even when a new authored score changes bars/tempo/duration.
 	var wrapped_position: float = playback.get_playback_position()
 	check(wrapped_position > 0.05 and wrapped_position < 1.0, "Actual imported synchronized playback cursor crosses the common seamless loop boundary")
 	for ref: AudioStreamPlayback in refs:

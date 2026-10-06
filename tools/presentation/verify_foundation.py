@@ -25,7 +25,7 @@ from verify_feedback import run_suite, source_fingerprint
 ADDED = ["power_identity", "parts_catalogue", "parts_collection", "parts_package",
          "feedback_drift", "feedback_anchor_contacts", "power_feedback",
          "feedback_rerolls", "feedback_effects", "feedback_live_pickup",
-         "feedback_parts_retention", "beast_manifestations", "music",
+         "feedback_parts_retention", "beast_manifestations", "music", "music_escalation",
          "save_tools", "presentation_flow", "presentation_retention", "frontend"]
 
 
@@ -83,7 +83,7 @@ def main() -> int:
             command = [engine, "--headless", "--path", str(ROOT), "--script", "res://tests/test_" + name + ".gd"]
             if name == "parts_catalogue":
                 command += ["--", "--out=" + str(task / "benchmarks" / (args.stem + "_parts.json"))]
-            elif name in ["feedback_drift", "feedback_anchor_contacts", "power_feedback", "feedback_parts_retention", "save_tools", "presentation_flow", "presentation_retention", "music", "frontend"]:
+            elif name in ["feedback_drift", "feedback_anchor_contacts", "power_feedback", "feedback_parts_retention", "save_tools", "presentation_flow", "presentation_retention", "music", "music_escalation", "frontend"]:
                 command += ["--", "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json"))]
             row = run_suite(command, task / "logs" / (args.stem + "_" + name + ".log"), name, args.timeout)
             evidence["suites"].append(row)

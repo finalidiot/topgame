@@ -1,8 +1,8 @@
-"""Render the original editable Foundry Circuit score to five aligned PCM loops.
+"""Render an original editable32-bar melodic metal score to five PCM loops.
 
-Requires NumPy (available in the Codex bundled Python). No downloaded samples,
-external song inputs or runtime/game RNG. --verify-only checks frozen output;
---review-dir creates external audition mixes, never source/runtime replacements.
+NumPy only; no samples, songs, external instruments or runtime/game RNG.
+Modal plucked strings feed an oversampled smooth amp/cabinet model. Written
+notes/riffs/drums define the music; fixed offline noise only excites instruments.
 """
 from __future__ import annotations
 import argparse
@@ -23,196 +23,259 @@ def fingerprint(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def synth(kind: str, note: int, seconds: float, rate: int, seed: int) -> np.ndarray:
-    """Small original subtractive/FM palette; random texture is offline only."""
-    count = max(1, round(seconds * rate))
-    t = np.arange(count, dtype=np.float64) / rate
-    frequency = 440.0 * 2 ** ((note - 69) / 12)
-    phase = math.tau * frequency * t
-    attack = 0.005
-    release = 0.06
-    if kind == "pad":
-        attack, release = 0.14, 0.35
-        signal = (np.sin(phase) + 0.26 * np.sin(phase * 2 + 0.11 * np.sin(t * 3.2)) + 0.12 * np.sin(phase * 3)) * 0.65
-    elif kind == "bass":
-        signal = np.tanh(1.35 * (np.sin(phase) + 0.25 * np.sin(phase * 2))) * np.exp(-t * 1.5)
-        release = 0.045
-    elif kind in ("pluck", "glass", "brass"):
-        if kind == "glass":
-            signal = (np.sin(phase + 0.6 * np.sin(phase * 2) * np.exp(-t * 12)) + 0.15 * np.sin(phase * 3)) * np.exp(-t * 3.8)
-        elif kind == "brass":
-            signal = np.tanh(1.2 * (np.sin(phase) + 0.35 * np.sin(phase * 2) + 0.16 * np.sin(phase * 3))) * np.exp(-t * 1.8)
-            attack = 0.025
-        else:
-            signal = (np.sin(phase + 1.0 * np.sin(phase * 2) * np.exp(-t * 9)) + 0.15 * np.sin(phase * 3)) * np.exp(-t * 3.0)
-    elif kind == "kick":
-        f0, f1, decay = 126.0, 46.0, 35.0
-        swept = math.tau * (f1 * t + (f0 - f1) * (1 - np.exp(-decay * t)) / decay)
-        signal = np.tanh(1.4 * np.sin(swept)) * np.exp(-t * 15)
-        attack, release = 0.0015, 0.025
-    elif kind in ("snare", "hat"):
-        # Separate deterministic offline noise for each written drum note.
-        noise = np.random.default_rng(seed).uniform(-1.0, 1.0, count)
-        high = noise - np.convolve(noise, np.ones(9) / 9, mode="same")
-        if kind == "snare":
-            signal = (0.6 * high + 0.32 * np.sin(math.tau * 178 * t) + 0.14 * np.sin(math.tau * 283 * t)) * np.exp(-t * 24)
-        else:
-            signal = high * np.exp(-t * 85) * 0.52
-        attack, release = 0.001, 0.015
-    elif kind == "tom":
-        signal = (np.sin(phase * (1 + 0.18 * np.exp(-t * 24))) + 0.14 * np.sin(phase * 2.71)) * np.exp(-t * 17)
-        attack, release = 0.003, 0.025
+def filtered(signal: np.ndarray, rate: int, kind: str) -> np.ndarray:
+    """Original cabinet/band shaping, padded to keep circular FFT tails quiet."""
+    count = len(signal)
+    size = 1 << (count + round(rate * .06) - 1).bit_length()
+    spectrum = np.fft.rfft(signal, n=size)
+    hz = np.fft.rfftfreq(size, 1 / rate)
+    if kind == "cabinet":
+        curve = hz ** 2 / (hz ** 2 + 82 ** 2)
+        curve *= 1 / np.sqrt(1 + (hz / 4300) ** 10)
+        curve *= 1 + .52 * np.exp(-((hz - 760) / 390) ** 2)
+        curve *= 1 + .28 * np.exp(-((hz - 1650) / 650) ** 2)
+        curve *= 1 - .35 * np.exp(-((hz - 3350) / 630) ** 2)
+    elif kind == "clean":
+        curve = hz ** 2 / (hz ** 2 + 75 ** 2) / np.sqrt(1 + (hz / 4900) ** 8)
+    elif kind == "snare":
+        curve = hz ** 2 / (hz ** 2 + 650 ** 2) / np.sqrt(1 + (hz / 7100) ** 8)
     else:
-        raise ValueError(kind)
-    envelope = np.minimum(1.0, t / attack) * np.minimum(1.0, (seconds - t) / release)
-    return signal * np.maximum(0.0, envelope)
+        curve = hz ** 2 / (hz ** 2 + 2900 ** 2) / np.sqrt(1 + (hz / 11200) ** 10)
+    return np.fft.irfft(spectrum * curve, n=size)[:count]
+
+
+def string(note: int, t: np.ndarray, muted: bool, variant: int) -> np.ndarray:
+    """Dispersive/damped string modes and pick position, rather than a beep."""
+    frequency = 440 * 2 ** ((note - 69 + (variant - 1) * .035) / 12)
+    modes = min(48, int(6400 / frequency))
+    signal = np.zeros(len(t), dtype=np.float64)
+    pickup = .19 + .013 * variant
+    for harmonic in range(1, modes + 1):
+        partial = frequency * harmonic * math.sqrt(1 + .000014 * harmonic ** 2)
+        amplitude = math.sin(math.pi * harmonic * pickup) * math.exp(-harmonic * .042) / harmonic ** .73
+        decay = (12.0 if muted else 1.1) + harmonic * (.52 if muted else .09)
+        phase = math.tau * partial * t + .11 * np.sin(math.tau * 5.4 * t) * np.minimum(1, t / .18)
+        signal += amplitude * np.sin(phase - .22 * harmonic) * np.exp(-t * decay)
+    pick = np.random.default_rng(0x2C6A00 + note * 7 + variant).uniform(-1, 1, len(t))
+    signal += .055 * pick * np.exp(-t * 230)
+    return signal * .48
+
+
+def synth(kind: str, note: int, seconds: float, rate: int, variant: int) -> np.ndarray:
+    count = max(1, round(seconds * rate))
+    attack, release = .003, .035
+    if kind in ("chug", "power", "lead", "clean"):
+        oversample = 1 if kind == "clean" else 2
+        t = np.arange(count * oversample, dtype=np.float64) / (rate * oversample)
+        if kind in ("chug", "power"):
+            signal = np.zeros(len(t), dtype=np.float64)
+            for tone, weight, shift in [(0, .68, 0), (7, .23, .0018), (12, .15, .0031)]:
+                shifted = np.maximum(0, t - shift)
+                signal += string(note + tone, shifted, kind == "chug", variant) * weight
+            attack = .0018
+            release = .024 if kind == "chug" else .09
+        else:
+            signal = string(note, t, False, variant)
+            release = .075
+        if kind != "clean":
+            # Two smooth amplifier stages; no hard waveform clipping. Cabinet
+            # suppresses newly created treble before decimation to native32k.
+            signal = np.tanh(4.2 * signal + .16 * signal ** 2)
+            signal = np.tanh(1.45 * signal) * .72
+            signal = filtered(signal, rate * oversample, "cabinet")[::oversample]
+        else:
+            signal = filtered(signal, rate, "clean") * .8
+    else:
+        t = np.arange(count, dtype=np.float64) / rate
+        noise = np.random.default_rng(0x2C6D00 + variant * 97 + note).uniform(-1, 1, count)
+        frequency = 440 * 2 ** ((note - 69) / 12)
+        if kind == "bass":
+            signal = (np.sin(math.tau * frequency * t) + .30 * np.sin(math.tau * frequency * 2 * t) + .12 * np.sin(math.tau * frequency * 3 * t)) * np.exp(-t * 2.8)
+            signal = np.tanh(signal * 1.8) * .76
+        elif kind == "kick":
+            phase = math.tau * (51 * t + (168 - 51) * (1 - np.exp(-t * 68)) / 68)
+            beater = filtered(noise, rate, "snare") * np.exp(-t * 180) * .25
+            signal = np.sin(phase) * np.exp(-t * 17) * .91 + beater
+            attack, release = .0006, .020
+        elif kind == "snare":
+            signal = (filtered(noise, rate, "snare") * .62 + np.sin(math.tau * 185 * t) * .36 + np.sin(math.tau * 331 * t) * .10) * np.exp(-t * 20)
+            attack, release = .0006, .025
+        elif kind in ("hat", "ride", "crash"):
+            decay = {"hat":75, "ride":9, "crash":3.9}[kind]
+            signal = filtered(noise, rate, "cymbal") * .34
+            for index, mode in enumerate([2143, 2851, 3279, 3881, 4427, 5033, 5711, 6419, 7297, 8219, 9343, 10729]):
+                signal += .038 * np.sin(math.tau * (mode + variant * 3) * t + index) * np.exp(-t * (index * .28))
+            signal *= np.exp(-t * decay)
+            attack, release = .0008, .035
+        elif kind == "tom":
+            phase = math.tau * frequency * (t + .11 * (1 - np.exp(-t * 32)) / 32)
+            signal = (np.sin(phase) + .19 * np.sin(phase * 1.51) + noise * np.exp(-t * 95) * .15) * np.exp(-t * 12)
+        else: raise ValueError(kind)
+    t = np.arange(count, dtype=np.float64) / rate
+    envelope = np.minimum(1, t / attack) * np.minimum(1, (seconds - t) / release)
+    return signal[:count] * np.maximum(0, envelope)
+
+
+def harmonized(note: int, dominant: bool) -> int:
+    scale = [0, 2, 3, 5, 7, 8, 11 if dominant else 10]
+    pitches = [40 + octave * 12 + degree for octave in range(-2, 7) for degree in scale]
+    index = min(range(len(pitches)), key=lambda i: abs(pitches[i] - note))
+    return pitches[min(len(pitches) - 1, index + 2)]
 
 
 def render(score: dict) -> tuple[dict[str, np.ndarray], dict]:
     grid = score["grid"]
-    rate = int(grid["sample_rate"])
-    beats = int(grid["bars"]) * int(grid["beats_per_bar"])
-    frames = round(beats * 60 / float(grid["bpm"]) * rate)
-    seconds_per_beat = frames / rate / beats
-    stems = {name: np.zeros((frames, 2), dtype=np.float64) for name in NAMES}
-    notes = {name: 0 for name in NAMES}
+    rate = int(grid["sample_rate"]); beats = int(grid["bars"]) * int(grid["beats_per_bar"])
+    assert len(score["progression"]) == len(score["phrase_order"]) == len(score["sections"]) == int(grid["bars"])
+    frames = round(beats * 60 / float(grid["bpm"]) * rate); beat_seconds = frames / rate / beats
+    stems = {name:np.zeros((frames, 2), dtype=np.float64) for name in NAMES}
+    counts = {name:0 for name in NAMES}; instruments = {name:{} for name in NAMES}; cache = {}
 
-    def add(name: str, kind: str, beat: float, length: float, note: int, gain: float, pan: float = 0.0) -> None:
+    def add(name, kind, beat, length, note, gain, pan=0.0, variant=1, echo=False):
         if gain <= 0: return
-        start = round(beat / beats * frames)
-        tail = 0.38 if kind == "pad" else (0.12 if kind in ("pluck", "glass", "brass") else 0.035)
-        seed = 0x2C6000 + NAMES.index(name) * 10000 + notes[name]
-        voice = synth(kind, note, length * seconds_per_beat + tail, rate, seed) * gain
-        stereo = voice[:, None] * np.array([math.sqrt((1 - pan) / 2), math.sqrt((1 + pan) / 2)])
-        # Every note and its release tail is periodic across the common boundary.
-        indices = (start + np.arange(len(voice))) % frames
-        np.add.at(stems[name], indices, stereo)
-        notes[name] += 1
+        tails = {"chug":.025, "power":.18, "lead":.11, "clean":.16, "crash":.9, "ride":.25}
+        seconds = length * beat_seconds + tails.get(kind, .035)
+        key = (kind, note, round(seconds, 7), variant)
+        if key not in cache: cache[key] = synth(kind, note, seconds, rate, variant)
+        voice = cache[key] * gain; start = round(beat / beats * frames)
+        stereo = voice[:,None] * np.array([math.sqrt((1-pan)/2),math.sqrt((1+pan)/2)])
+        if start + len(voice) <= frames: stems[name][start:start+len(voice)] += stereo
+        else:
+            first = frames-start; stems[name][start:] += stereo[:first]; stems[name][:len(voice)-first] += stereo[first:]
+        if echo:
+            for delay,level in [(.5,.14),(1,.065)]:
+                index=(start+round(delay*beat_seconds)+np.arange(len(voice))) % frames
+                np.add.at(stems[name],index,stereo[:,::-1]*level)
+        counts[name] += 1; instruments[name][kind] = instruments[name].get(kind,0)+1
 
-    for bar, harmony_name in enumerate(score["progression"]):
-        harmony = score["harmony"][harmony_name]
-        beat = bar * 4
+    def rhythm(name,part,bar,harmony,section):
+        beat=bar*4; root=harmony["guitar_root"]
+        pattern=score["riff_patterns"]["space" if section=="bridge" else "gallop" if bar%4!=2 else "drive"]
+        turns=score["riff_turns"][bar%8]
+        for i,(offset,length) in enumerate(pattern):
+            note=root+(turns[i-len(pattern)+2] if i>=len(pattern)-2 else 0)
+            for pan,variant in [(-.73,0),(.73,2)]: add(name,"chug",beat+offset+(0 if variant==0 else .018),length,note,part["rhythm"]*.61,pan,variant)
+            add(name,"bass",beat+offset,length,harmony["bass"]+(7 if i==len(pattern)-1 and bar%4==3 else 0),part["bass"])
+        if section in ("hook","anthem"):
+            for pan,variant in [(-.68,0),(.68,2)]: add(name,"power",beat,.8,root,part["rhythm"]*.25,pan,variant)
+
+    for bar,chord in enumerate(score["progression"]):
+        harmony=score["harmony"][chord]; section=score["sections"][bar]; beat=bar*4
+        phrase=score["lead_phrases"][score["phrase_order"][bar]]
         for name in NAMES:
-            part = score["parts"][name]
-            for tone, note in enumerate(harmony[:4]):
-                add(name, "pad", beat, 4.0, note + 12, part["pad"] / 4, (-0.45 if tone % 2 else 0.45))
-            for offset, length in score["bass_rhythm"]:
-                add(name, "bass", beat + offset, length, harmony[0] - 12, part["bass"])
-            if name in ("title", "run_base"):
-                for offset, length, note in score["melody_bars"][bar % 8]:
-                    add(name, "pluck", beat + offset, length, note, part["melody"], -0.12)
-            elif name == "workshop":
-                for offset, tone in ((0.5, 0), (1.75, 2), (3, 3)):
-                    add(name, "glass", beat + offset, 0.85, harmony[tone] + 12, part["melody"], 0.18)
-            elif name == "run_pressure":
-                for index, tone in enumerate(score["pressure_order"]):
-                    if index in (1, 4): continue
-                    add(name, "pluck", beat + index * 0.5 + 0.25, 0.24, harmony[tone] + 24, part["melody"], 0.26)
-            elif name == "run_boss":
-                for index, tone in enumerate(score["boss_order"]):
-                    add(name, "brass", beat + index * 0.5, 0.36 if index < 7 else 0.65, harmony[tone] + 12, part["melody"], 0.0)
-                if bar % 4 == 3:
-                    for offset, note in ((2.75, 50), (3.25, 45), (3.75, 38)):
-                        add(name, "tom", beat + offset, 0.35, note, part["drums"] * 0.65, -0.2)
-            for index, tone in enumerate(score["run_arp_order"]):
-                add(name, "glass" if name == "workshop" else "pluck", beat + index * 0.5, 0.24, harmony[tone] + 12, part["arp"], 0.3)
-            for drum, offsets in score["drums"][name].items():
-                for offset in offsets:
-                    add(name, drum, beat + offset, 0.3 if drum != "hat" else 0.12, 36, part["drums"] * (0.50 if drum == "hat" else 1.0), 0.24 if drum == "hat" else 0.0)
+            part=score["parts"][name]
+            if name in ("title","run_base"): rhythm(name,part,bar,harmony,section)
+            elif name=="workshop":
+                for i,note in enumerate(harmony["clean"]): add(name,"clean",beat+i,.85,note,part["rhythm"],(-.35 if i%2 else .35),i%3)
+                add(name,"bass",beat,1.7,harmony["bass"],part["bass"])
+                for offset,length,note in phrase[::3]: add(name,"clean",beat+offset,length*1.1,note-12,part["lead"],.1,1,True)
+            elif name=="run_boss":
+                for offset in (0,2):
+                    for pan,variant in [(-.62,0),(.62,2)]: add(name,"power",beat+offset,1.6,harmony["guitar_root"],part["rhythm"]*.68,pan,variant)
+                for offset,note in [(0,harmony["clean"][0]),(1.5,harmony["clean"][2]),(2.5,harmony["clean"][1]),(3.5,harmony["clean"][3])]: add(name,"lead",beat+offset,.4,note,part["lead"],-.28,0)
+            if name in ("title","run_pressure"):
+                for offset,length,note in phrase: add(name,"lead",beat+offset,length,note,part["lead"]*(.84 if section=="bridge" else 1),-.09,1,True)
+            if name in ("title","run_boss"):
+                for offset,length,note in phrase: add(name,"lead",beat+offset+.015,length,harmonized(note,chord=="B"),part["harmony"],.33,2,True)
+            drums=score["drums"]
+            if name in ("title","run_base"):
+                kick=drums["base_kick"]+(drums["pressure_kick"] if name=="title" else [])
+                for offset in kick: add(name,"kick",beat+offset,.3,36,part["kick"],0,bar%3)
+                for offset in drums["snare"]: add(name,"snare",beat+offset,.5,38,part["snare"],-.1,bar%3)
+                for i,offset in enumerate(drums["ride"]): add(name,"hat" if section=="verse" else "ride",beat+offset,.2,42,part["cymbal"]*(1 if i%2 else 1.22),.38,bar%3)
+            elif name=="workshop":
+                add(name,"kick",beat,.3,36,part["kick"]); add(name,"snare",beat+2,.4,38,part["snare"])
+                for offset in (0,1,2,3): add(name,"hat",beat+offset,.16,42,part["cymbal"],.28)
+            elif name=="run_pressure":
+                for offset in drums["pressure_kick"]: add(name,"kick",beat+offset,.3,36,part["kick"],0,(bar+1)%3)
+                for offset in (.25,1.25,2.25,3.25): add(name,"hat",beat+offset,.15,42,part["cymbal"],-.34,bar%3)
+            if name in ("title","run_base","run_pressure","run_boss") and bar%8==0: add(name,"crash",beat,1.4,49,part["cymbal"]*.95,-.28,bar%3)
+            if name in ("title","run_pressure","run_boss") and bar%4==3:
+                for i,(offset,kind,note) in enumerate(drums["fills"]["cadence" if bar%8==7 else "short"]): add(name,kind,beat+offset,.35,note,(part["snare"]+.025)*.74,-.38+i*.1,bar%3)
+            if name=="run_boss" and section=="anthem":
+                for offset in (1.875,3.875): add(name,"kick",beat+offset,.25,36,part["kick"])
 
-    # Join the final and first PCM samples with a 2 ms raised-cosine bridge.
-    # Wrapped release tails stay present; this is not a fade-to-silence/padding
-    # of the bar. Both edges meet at the same value and near-zero derivative.
-    join_frames = round(rate * 0.002)
-    bridge = np.sin(np.linspace(0, math.pi / 2, join_frames)) ** 2
+    join_frames=round(rate*.002); bridge=np.sin(np.linspace(0,math.pi/2,join_frames))**2
     for samples in stems.values():
-        boundary = (samples[0] + samples[-1]) * 0.5
-        samples[:join_frames] = boundary + (samples[:join_frames] - boundary) * bridge[:, None]
-        samples[-join_frames:] = boundary + (samples[-join_frames:] - boundary) * bridge[::-1, None]
-    peak = max(float(np.max(np.abs(stems[n]))) for n in ("title", "workshop"))
-    run_mix = stems["run_base"] + stems["run_pressure"] + stems["run_boss"]
-    peak = max(peak, float(np.max(np.abs(run_mix))))
-    gain = min(1.0, float(score["mix"]["maximum_full_run_peak"]) / peak)
-    for name in NAMES: stems[name] *= gain
-    return stems, {"sample_rate": rate, "channels": 2, "sample_width_bytes": 2, "frames": frames,
-                   "seconds": frames / rate, "beats": beats, "bars": grid["bars"], "bpm": grid["bpm"],
-                   "actual_bpm": beats * 60 * rate / frames, "render_gain": gain, "note_counts": notes}
+        boundary=(samples[0]+samples[-1])*.5
+        samples[:join_frames]=boundary+(samples[:join_frames]-boundary)*bridge[:,None]
+        samples[-join_frames:]=boundary+(samples[-join_frames:]-boundary)*bridge[::-1,None]
+        # The asymmetric amp/pick/envelope combination may leave a tiny DC
+        # residue. A constant per-channel correction preserves the loop join.
+        samples -= np.mean(samples,axis=0,keepdims=True)
+    # All cube vertices bound every0..1 adaptive gain combination, including
+    # combinations peaking higher than the complete sum due to phase.
+    peak=max(float(np.max(np.abs(stems[n]))) for n in ("title","workshop"))
+    for mask in range(1,8):
+        combined=sum((stems[NAMES[2+i]] for i in range(3) if mask&(1<<i)),np.zeros_like(stems["run_base"]))
+        peak=max(peak,float(np.max(np.abs(combined))))
+    gain=min(1,float(score["mix"]["maximum_full_run_peak"])/peak)
+    for samples in stems.values(): samples *= gain
+    return stems,{"sample_rate":rate,"channels":2,"sample_width_bytes":2,"frames":frames,"seconds":frames/rate,"beats":beats,"bars":grid["bars"],"bpm":grid["bpm"],"actual_bpm":beats*60*rate/frames,"render_gain":gain,"note_counts":counts,"instrument_events":instruments,"cached_voices":len(cache)}
 
 
-def write_wav(path: Path, samples: np.ndarray, rate: int) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    pcm = np.round(np.clip(samples, -1, 1) * 32767).astype("<i2")
-    with wave.open(str(path), "wb") as output:
-        output.setnchannels(2); output.setsampwidth(2); output.setframerate(rate)
-        output.writeframes(pcm.tobytes())
+def write_wav(path: Path,samples: np.ndarray,rate: int) -> None:
+    path.parent.mkdir(parents=True,exist_ok=True)
+    assert np.max(np.abs(samples))<1,"Audio rendering must never depend on hard clipping"
+    pcm=np.round(samples*32767).astype("<i2")
+    with wave.open(str(path),"wb") as output:
+        output.setnchannels(2); output.setsampwidth(2); output.setframerate(rate); output.writeframes(pcm.tobytes())
 
 
-def read_wav(path: Path) -> tuple[np.ndarray, dict]:
-    with wave.open(str(path), "rb") as source:
-        spec = {"sample_rate": source.getframerate(), "channels": source.getnchannels(), "sample_width_bytes": source.getsampwidth(), "frames": source.getnframes()}
-        samples = np.frombuffer(source.readframes(source.getnframes()), dtype="<i2").astype(np.float64).reshape(-1, spec["channels"]) / 32767
-    return samples, spec
+def read_wav(path: Path) -> tuple[np.ndarray,dict]:
+    with wave.open(str(path),"rb") as source:
+        spec={"sample_rate":source.getframerate(),"channels":source.getnchannels(),"sample_width_bytes":source.getsampwidth(),"frames":source.getnframes()}
+        samples=np.frombuffer(source.readframes(source.getnframes()),dtype="<i2").astype(np.float64).reshape(-1,spec["channels"])/32767
+    return samples,spec
 
 
 def metrics(samples: np.ndarray) -> dict:
-    peak = float(np.max(np.abs(samples)))
-    rms = math.sqrt(float(np.mean(samples ** 2)))
-    seam = float(np.max(np.abs(samples[0] - samples[-1])))
-    return {"peak": peak, "rms": rms, "rms_dbfs": 20 * math.log10(max(rms, 1e-12)),
-            "boundary_step": seam, "largest_adjacent_step": float(np.max(np.abs(np.diff(samples, axis=0)))),
-            "clipped_samples": int(np.count_nonzero(np.abs(samples) >= 0.999))}
+    rms=math.sqrt(float(np.mean(samples**2)))
+    return {"peak":float(np.max(np.abs(samples))),"rms":rms,"rms_dbfs":20*math.log10(max(rms,1e-12)),"boundary_step":float(np.max(np.abs(samples[0]-samples[-1]))),"largest_adjacent_step":float(np.max(np.abs(np.diff(samples,axis=0)))),"clipped_samples":int(np.count_nonzero(np.abs(samples)>=.999))}
 
 
-def verify(directory: Path, score: dict, expected: dict) -> dict:
-    output = {}
-    stems = {}
+def verify(directory: Path,score: dict,expected: dict) -> dict:
+    output={}; stems={}
     for name in NAMES:
-        path = directory / (name + ".wav")
-        samples, spec = read_wav(path)
-        assert all(spec[key] == expected[key] for key in spec), f"Mismatched stem/grid: {name}"
-        stats = metrics(samples)
-        assert stats["clipped_samples"] == 0 and 0.002 < stats["rms"] < 0.25
-        assert stats["boundary_step"] < 0.006, f"Loop seam clicks: {name}"
-        output[name] = dict(spec, **stats, sha256=fingerprint(path), description=score["parts"][name]["description"])
-        stems[name] = samples
-    combinations = {"normal_run": stems["run_base"], "pressure_run": stems["run_base"] + stems["run_pressure"],
-                    "boss_run": stems["run_base"] + stems["run_pressure"] + stems["run_boss"]}
-    mix = {name: metrics(samples) for name, samples in combinations.items()}
-    assert all(record["peak"] <= 0.701 and record["clipped_samples"] == 0 and record["boundary_step"] < 0.012 for record in mix.values())
-    return {"schema_version": 1, "title": score["title"], "authorship": score["authorship"], "score_sha256": fingerprint(SCORE),
-            "generator_sha256": fingerprint(Path(__file__)), "grid": expected, "stems": output, "mixes": mix,
-            "loop": {"begin_frame": 0, "end_frame": expected["frames"], "mode": "forward", "tails": "written notes and releases wrap into the beginning", "boundary_bridge_seconds": 0.002},
-            "mix": score["mix"], "source": "foundation_score.json + tools/audio/compose_foundation.py"}
+        path=directory/(name+".wav"); samples,spec=read_wav(path); stats=metrics(samples)
+        assert all(spec[k]==expected[k] for k in spec),name+" grid differs"
+        assert stats["clipped_samples"]==0 and .002<stats["rms"]<.25,name+" invalid energy"
+        assert stats["boundary_step"]<.006,name+" loop seam clicks"
+        output[name]=dict(spec,**stats,sha256=fingerprint(path),description=score["parts"][name]["description"]); stems[name]=samples
+    mixes={"normal_run":metrics(stems["run_base"]),"pressure_run":metrics(stems["run_base"]+stems["run_pressure"]),"boss_run":metrics(stems["run_base"]+stems["run_pressure"]+stems["run_boss"])}
+    peaks=[]
+    for mask in range(1,8):
+        combined=sum((stems[NAMES[2+i]] for i in range(3) if mask&(1<<i)),np.zeros_like(stems["run_base"]))
+        peaks.append(float(np.max(np.abs(combined))))
+    assert max(peaks)<=.7001 and all(x["clipped_samples"]==0 for x in mixes.values())
+    return {"schema_version":1,"title":score["title"],"authorship":score["authorship"],"score_sha256":fingerprint(SCORE),"generator_sha256":fingerprint(Path(__file__)),"grid":expected,"stems":output,"mixes":mixes,"adaptive_vertex_maximum_peak":max(peaks),"loop":{"begin_frame":0,"end_frame":expected["frames"],"mode":"forward","tails":"written string/drum releases and tempo echoes wrap into the beginning","boundary_bridge_seconds":.002},"mix":score["mix"],"source":"foundation_score.json + tools/audio/compose_foundation.py"}
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", type=Path, default=ASSETS)
-    parser.add_argument("--verify-only", action="store_true")
-    parser.add_argument("--review-dir", type=Path)
-    args = parser.parse_args()
-    score = json.loads(SCORE.read_text(encoding="utf-8"))
-    stems, grid = render(score)
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out",type=Path,default=ASSETS); parser.add_argument("--verify-only",action="store_true")
+    parser.add_argument("--review-dir",type=Path); parser.add_argument("--review-stem",default="002c6_metal"); parser.add_argument("--review-seconds",type=float,default=24)
+    args=parser.parse_args(); score=json.loads(SCORE.read_text(encoding="utf-8")); stems,grid=render(score)
     if not args.verify_only:
-        for name, samples in stems.items(): write_wav(args.out / (name + ".wav"), samples, grid["sample_rate"])
-    manifest = verify(args.out, score, grid)
-    if not args.verify_only: (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        for name,samples in stems.items(): write_wav(args.out/(name+".wav"),samples,grid["sample_rate"])
+    manifest=verify(args.out,score,grid)
+    if not args.verify_only: (args.out/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
     else:
-        previous = json.loads((args.out / "manifest.json").read_text(encoding="utf-8"))
-        assert previous == manifest, "Frozen score/generator/audio metadata changed"
+        assert json.loads((args.out/"manifest.json").read_text(encoding="utf-8"))==manifest,"Frozen score/generator/metadata changed"
         for name in NAMES:
-            source, _ = read_wav(args.out / (name + ".wav"))
-            regenerated = np.round(stems[name] * 32767) / 32767
-            assert np.array_equal(source, regenerated), f"Regeneration mismatch: {name}"
+            source,_=read_wav(args.out/(name+".wav")); regenerated=np.round(stems[name]*32767)/32767
+            assert np.array_equal(source,regenerated),"Regeneration mismatch: "+name
     if args.review_dir:
-        reviews = {"title": stems["title"], "workshop": stems["workshop"], "normal_run": stems["run_base"],
-                   "pressure_run": stems["run_base"] + stems["run_pressure"],
-                   "boss_run": stems["run_base"] + stems["run_pressure"] + stems["run_boss"]}
-        for name, samples in reviews.items():
-            # Runtime Music trim/default volume, before the existing Master slider.
-            mastered = samples * (10 ** (-8 / 20)) * 0.55
-            write_wav(args.review_dir / ("002c6_music_" + name + ".wav"), np.concatenate([mastered, mastered]), grid["sample_rate"])
-    print(json.dumps({"passed": True, "grid": grid, "stems": {name: manifest["stems"][name]["rms_dbfs"] for name in NAMES}, "mixes": manifest["mixes"]}, indent=2))
+        destination=args.review_dir.resolve(); assert destination!=ROOT and ROOT not in destination.parents,"Reviews belong outside repository"
+        assert 12<=args.review_seconds<=24 and args.review_stem.replace("_","").isalnum()
+        mixes={"title":stems["title"],"workshop":stems["workshop"],"normal_run":stems["run_base"],"pressure_run":stems["run_base"]+stems["run_pressure"],"boss_run":stems["run_base"]+stems["run_pressure"]+stems["run_boss"]}
+        for name,samples in mixes.items():
+            path=destination/(args.review_stem+"_"+name+".wav"); assert not path.exists(),"Preserved review already exists"
+            mastered=samples*(10**(-8/20))*.55
+            write_wav(path,mastered[:round(args.review_seconds*grid["sample_rate"])],grid["sample_rate"])
+        path=destination/(args.review_stem+"_boss_two_loops.wav"); assert not path.exists()
+        write_wav(path,np.tile(mixes["boss_run"]*(10**(-8/20))*.55,(2,1)),grid["sample_rate"])
+    print(json.dumps({"passed":True,"grid":grid,"stems":{n:manifest["stems"][n]["rms_dbfs"] for n in NAMES},"mixes":manifest["mixes"],"adaptive_vertex_maximum_peak":manifest["adaptive_vertex_maximum_peak"]},indent=2))
 
 
-if __name__ == "__main__": main()
+if __name__=="__main__": main()

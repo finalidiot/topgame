@@ -38,18 +38,41 @@ func run() -> void:
 	AudioServer.add_bus_effect(0, recorder)
 	recorder.set_recording_active(true)
 	var rows: Array[Dictionary] = []
-	for context: String in ["title", "workshop", "run", "boss", "pause"]:
+	var run_observations: Dictionary = {
+		"run":{"survival_time":5.0, "threats_cleared":0, "tier":0, "pressure":2.6, "bosses":0},
+		"middle":{"survival_time":110.0, "threats_cleared":4, "tier":2, "pressure":2.6, "bosses":0},
+		"late":{"survival_time":240.0, "threats_cleared":7, "tier":3, "pressure":2.6, "bosses":0},
+		"boss":{"survival_time":380.0, "threats_cleared":10, "tier":4, "pressure":13.0, "bosses":1},
+		"calm":{"survival_time":385.0, "threats_cleared":10, "tier":4, "pressure":2.6, "bosses":0}
+	}
+	var previous_position: float = -1.0
+	for context: String in ["title", "workshop", "run", "middle", "late", "boss", "calm", "pause"]:
 		print("MUSIC_NATIVE_STAGE ", context)
-		music.set_context("run" if context in ["boss", "pause"] else context)
+		music.set_context("run" if context in ["middle", "late", "boss", "calm", "pause"] else context)
 		music.set_paused(context == "pause")
-		if context == "run": music.observe_run({"census": {"pressure": 2.6}, "limits": {"tier": 0}})
-		if context == "boss": music.observe_run({"census": {"pressure": 13.0, "bosses": 1, "elites": 1}, "limits": {"tier": 4}})
+		if run_observations.has(context):
+			var observation: Dictionary = run_observations[context]
+			music.observe_run({"director":true, "run_seed":7101, "survival_time":observation.survival_time, "threats_cleared":observation.threats_cleared,
+				"census":{"pressure":observation.pressure, "bosses":observation.bosses, "elites":0, "active_total":2},
+				"limits":{"tier":observation.tier}, "calm":context == "calm"})
 		await create_timer(2.0).timeout
 		if context == "run": sound.play_sound("heavy"); music.notify_cue("heavy")
 		if context == "boss": sound.play_sound("low_rpm"); music.notify_cue("low_rpm")
 		await create_timer(1.0).timeout
 		var snap: Dictionary = music.music_snapshot()
 		check(snap.playing and snap.transport_starts == 1 and snap.position > 0.1, "Real native transport stays alive without restart through " + context)
+		if previous_position >= 0.0:
+			var duration: float = music.synchronized_stream().get_length()
+			var forward: float = fposmod(float(snap.position) - previous_position, duration)
+			check(forward > 2.6 and forward < 3.5, "Actual native phase continues through arrangement/pause changes: " + context)
+		previous_position = float(snap.position)
+		if context in ["middle", "late", "boss", "calm"]:
+			check(float(snap.targets[3]) >= float(snap.progression.pressure_floor) and float(snap.targets[4]) >= float(snap.progression.boss_floor), "Native mix retains the observed Run's musical floor: " + context)
+		if context == "calm":
+			check(int(snap.progression.stage) == 4 and is_equal_approx(float(snap.targets[4]), 0.75), "Real calm release leaves the full anthem floor rather than the opening arrangement")
+		if context == "pause":
+			check(float(snap.progression.elapsed) == 385.0 and is_equal_approx(float(snap.targets[3]), 0.75 * 0.35), "Pause subdues the retained late floor without advancing observed Run time")
+		snap["review_stage"] = context
 		rows.append(snap)
 	recorder.set_recording_active(false)
 	var recording: AudioStreamWAV = recorder.get_recording()
