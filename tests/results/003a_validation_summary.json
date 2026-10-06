@@ -155,5 +155,12 @@
   ],
   "exclusion_reason": "Accepted C5.2 feedback changed drift/power/RPM trajectories; current behavior and exact accepted-main retention are tested instead.",
   "human_acceptance": "PENDING HUMAN PROGRESSION PLAYTEST",
-  "build_and_remote_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_delivery.json"
+  "build_and_remote_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_delivery.json",
+  "post_regression_qa_capture_fix": {
+    "file": "scripts/main.gd",
+    "scope": "Four packaged smoke calls now pass a stem to _capture, which appends .png. Gameplay and packet presentation unchanged. Failed first candidate preserved; full guarded build must rerun.",
+    "final_file_sha256": "360db936e6f0f1016a5a27fbc7df32ac2f016ec12885c374f038a87105520ffc",
+    "first_failed_candidate_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\windows-003a-caeb91a15da3.json",
+    "validation": "Actual second exported integration smoke and required captures recorded in003a_delivery.json"
+  }
 }

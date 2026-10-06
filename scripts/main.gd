@@ -1201,9 +1201,9 @@ func _smoke_shop_progression() -> void:
 	print("SHOP_QA_FIXTURE isolated saved clear records fund flow; not earned gameplay evidence")
 	_action("open_shop")
 	assert(screen == "shop")
-	await _capture("003a-shop.png")
+	await _capture("003a-shop")
 	_action("packet_odds")
-	await _capture("003a-odds.png")
+	await _capture("003a-odds")
 	_action("open_shop")
 	_action("request_packet_purchase", "standard")
 	_action("confirm_packet_purchase", _packet_purchase_token)
@@ -1213,7 +1213,7 @@ func _smoke_shop_progression() -> void:
 	_action("packet_tear")
 	await get_tree().create_timer(2.5).timeout
 	assert(menus._packet_view.phase == "RESULT")
-	await _capture("003a-packet-result.png")
+	await _capture("003a-packet-result")
 	_action("packet_workshop")
 	assert(screen == "garage" and collection.pending_packet().is_empty() and collection.owned_count() > 3)
 	for row: Dictionary in receipt.rows:
@@ -1221,7 +1221,7 @@ func _smoke_shop_progression() -> void:
 			_action("equip_part", {"category":row.category, "id":row.id})
 			assert(collection.equipped_build()[row.category] == row.id)
 			break
-	await _capture("003a-acquired-workshop.png")
+	await _capture("003a-acquired-workshop")
 	_action("launch_owned_run")
 	assert(screen == "reward")
 	_action("end_run")
