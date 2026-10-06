@@ -1,10 +1,11 @@
 # Workspace policy
 
-Read this file before producing task output. The Task 002C.5 / 002C.5.1 / 002C.5.2
-stack received human playtest acceptance on 2026-10-05 and is approved as the next
-main milestone. After the milestone merge, branch new work from the updated main
-unless a task explicitly requires another base. Historical task reports may still
-say PENDING HOME HUMAN PLAYTEST because they record the state at their own checkpoint.
+Read this file before producing task output. Task 002C.6 received explicit human
+merge acceptance on 2026-10-06 after inspection of its presentation, music, save
+tooling and validation evidence. After the C6 milestone merge, branch new work from
+the updated main unless a task explicitly requires another base. Historical task
+reports and compact test evidence may still say human review pending because they
+record the state at their own checkpoint.
 
 ## Authoritative locations
 
