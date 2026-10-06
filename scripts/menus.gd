@@ -11,6 +11,9 @@ const Starters = preload("res://scripts/starters.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
 const PacketView = preload("res://scripts/packet_view.gd")
 const PacketEconomy = preload("res://scripts/packet_economy.gd")
+const ShopMerchant = preload("res://scripts/shop_merchant.gd")
+const AbilityInspection = preload("res://scripts/ability_inspection.gd")
+const CreditTransfer = preload("res://scripts/credit_transfer.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -81,6 +84,19 @@ var _packet_receipt: Dictionary = {}
 var _packet_wallet: Dictionary = {}
 var _packet_controls: Array[Control] = []
 var _packet_note: Label
+var _shop_kind: String = "standard"
+var _shop_snapshot: Dictionary = {}
+var _shop_detail: Control
+var _shop_merchant: Control
+var _shop_rows: Array[Button] = []
+var _shop_scroll: ScrollContainer
+var _shop_buy: Button
+var _shop_odds: Button
+var _shop_routes: Array[Button] = []
+var _shop_reaction: String = "IDLE"
+var _ability_inspector: Control
+var _credit_transfer: Control
+var _inspection_owned_state: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -150,6 +166,11 @@ func _input(event: InputEvent) -> void:
 				var direction: String = ("left" if value < 0 else "right") if event.axis == JOY_AXIS_LEFT_X else ("top" if value < 0 else "bottom")
 				_move_analogue_focus(direction)
 		if screen != "hud": get_viewport().set_input_as_handled()
+	if screen == "result" and is_instance_valid(_credit_transfer) and _credit_transfer.running and event.is_action_pressed("ui_accept"):
+		if event is InputEventKey and event.echo: return
+		_credit_transfer.finish()
+		_accept_needs_release = true
+		get_viewport().set_input_as_handled()
 
 func _move_analogue_focus(direction: String) -> void:
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -164,7 +185,7 @@ func _move_analogue_focus(direction: String) -> void:
 func _make_theme() -> Theme:
 	return FrontEnd.make_theme()
 
-func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBoxFlat:
+func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
@@ -178,6 +199,15 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_equipped_slot_labels.clear()
 	_packet_view = null
 	_packet_controls.clear()
+	_shop_detail = null
+	_shop_merchant = null
+	_shop_rows.clear()
+	_shop_routes.clear()
+	_shop_buy = null
+	_shop_odds = null
+	_shop_scroll = null
+	_ability_inspector = null
+	_credit_transfer = null
 	# F2 can hide combat HUD for the visual checkpoint. Required choices and
 	# results must restore their own visibility when combat ends or pauses.
 	if next_screen != "hud": visible = true
@@ -306,8 +336,13 @@ func _bar(parent: Node, area: Rect2, color: Color = BLUE) -> ProgressBar:
 	node.step = 0.001
 	node.show_percentage = false
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var background: StyleBoxFlat = _box(Color("0e1924"), Color("23394c"), 1)
-	var fill: StyleBoxFlat = _box(color, color, 0)
+	# Thin combat meters retain their native pixel geometry.
+	var background: StyleBoxFlat = StyleBoxFlat.new()
+	background.bg_color = Color("0e1924")
+	background.border_color = Color("23394c")
+	background.set_border_width_all(1)
+	background.anti_aliasing = false
+	var fill: StyleBox = _box(color, color, 0)
 	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
 		background.set_content_margin(side, 0.0)
 		fill.set_content_margin(side, 0.0)
@@ -451,6 +486,7 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 		_label(_content, "YOUR EQUIPPED MACHINE", Rect2(350, 104, 256, 18), 10, BLUE)
 		var preview: Preview = _new_preview(Rect2(346, 126, 264, 126), 4.0)
 		_set_preview_build_identity(preview, _build)
+		preview.set("show_station", true)
 		var name: Label = _label(_content, PartCatalog.title(_build), Rect2(350, 258, 256, 23), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_label(_content, "PERMANENT PARTS / TEMPORARY POWERS", Rect2(350, 286, 256, 13), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
@@ -468,7 +504,6 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 		var invitation: Label = _label(_content, "Three personalities. One first choice.\nBuild your collection from here." if not initialized else "Inspect your owned parts\nin the Workshop.", Rect2(350, 239, 256, 33), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		invitation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_label(_content, "0 OWNED PARTS" if not initialized else "SAVED COLLECTION", Rect2(350, 284, 256, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "Your Run ends. Your collection stays.", Rect2(24, 310, 286, 16), 10, MUTED)
 	_input_footer()
 	_focus_rows([[begin], [workshop], [shop], [modes], [options, help], [quit_button]])
 
@@ -485,49 +520,138 @@ func _packet_image(parent: Node, kind: String, area: Rect2) -> void:
 	sprite.size = area.size
 	parent.add_child(sprite)
 
+func _ui_image(parent: Node, path: String, area: Rect2) -> TextureRect:
+	var node: TextureRect = TextureRect.new()
+	node.texture = load(path) if ResourceLoader.exists(path) else null
+	node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	node.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	node.stretch_mode = TextureRect.STRETCH_SCALE
+	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(node)
+	node.position = area.position
+	node.size = area.size
+	return node
+
+func selected_shop_product() -> String:
+	return _shop_kind
+
 func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_clear("shop")
-	var credits: int = int(snapshot.get("credits", 0))
-	var salvage: int = int(snapshot.get("salvage", 0))
-	var missing_eligible: bool = false
-	for part_id: String in PacketEconomy.eligible_ids():
-		if part_id not in snapshot.get("owned_part_ids", []): missing_eligible = true
+	_shop_snapshot = snapshot.duplicate(true)
 	var catalogue_total: int = 0
 	for category: String in PartCatalog.PARTS: catalogue_total += PartCatalog.PARTS[category].size()
-	_header("FOUNDRY PARTS SHOP", "CREDITS %d   /   SALVAGE %d   /   OWNED %d / %d" % [credits, salvage, int(snapshot.get("total_owned", 0)), catalogue_total])
-	var choices: Array = []
-	for index: int in range(2):
-		var kind: String = "standard" if index == 0 else "reclaimed"
-		var x: float = 22 + index * 304
-		var price: int = PacketEconomy.packet_cost(kind)
-		var unit: String = "CREDITS" if kind == "standard" else "SALVAGE"
-		_panel(_content, Rect2(x, 69, 292, 202), Color("18242c"))
-		_label(_content, PacketEconomy.packet_name(kind), Rect2(x + 12, 78, 268, 16), 10, TEXT)
-		_packet_image(_content, kind, Rect2(x + 7, 107, 96, 96))
-		_label(_content, "%d %s" % [price, unit], Rect2(x + 108, 105, 172, 24), 20, ORANGE)
-		_label(_content, "1 BLADE\n1 RATCHET\n1 BIT", Rect2(x + 108, 138, 172, 43), 10, TEXT)
-		var rule: String = "AT LEAST ONE UNCOMMON+" if kind == "standard" else ("AT LEAST ONE UNOWNED" if missing_eligible else "ALL PACKET DESIGNS OWNED")
-		_label(_content, rule, Rect2(x + 12, 199, 268, 16), 10, BLUE)
-		_label(_content, "Duplicates become SALVAGE.", Rect2(x + 12, 217, 268, 14), 10, MUTED)
-		var enough: bool = (credits if kind == "standard" else salvage) >= price and not bool(snapshot.get("read_only", false))
-		var purchase: Button = _button(_content, "BUY / %d %s" % [price, unit] if enough else "NEED %d MORE %s" % [maxi(0, price - (credits if kind == "standard" else salvage)), unit], Rect2(x + 12, 239, 268, 25), "request_packet_purchase", kind, enough)
-		purchase.disabled = not enough
-		if enough: choices.append(purchase)
-	_label(_content, status if not status.is_empty() else "Earn CREDITS by clearing threats in Runs. SALVAGE gives missing designs a route home.", Rect2(24, 280, 592, 17), 10, MUTED)
-	var odds: Button = _button(_content, "INFO / ODDS", Rect2(22, 306, 190, 26), "packet_odds")
-	var workshop: Button = _button(_content, "WORKSHOP", Rect2(224, 306, 190, 26), "open_workshop")
-	var hub: Button = _button(_content, "WORKBENCH", Rect2(426, 306, 192, 26), "main_menu")
+	_header("FOUNDRY PARTS COUNTER", "CREDITS %d   /   SALVAGE %d   /   OWNED %d / %d" % [int(snapshot.get("credits", 0)), int(snapshot.get("salvage", 0)), int(snapshot.get("total_owned", 0)), catalogue_total])
+	_panel(_content, Rect2(22, 65, 207, 238), Color("18242c"))
+	_label(_content, "SORTED. SEALED. READY.", Rect2(33, 76, 185, 16), 10, ORANGE)
+	_shop_merchant = ShopMerchant.new()
+	_shop_merchant.position = Vector2(80, 106)
+	_shop_merchant.size = Vector2(96, 128)
+	_content.add_child(_shop_merchant)
+	_shop_merchant.react(_shop_reaction)
+	_shop_reaction = "IDLE"
+	_ui_image(_content, "res://assets/ui/human_feedback003a/merchant_fixture.png", Rect2(29, 221, 192, 64))
+	_label(_content, status if not status.is_empty() else "Threats pay CREDITS.", Rect2(34, 278, 184, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_shop_scroll = ScrollContainer.new()
+	_shop_scroll.position = Vector2(245, 65)
+	_shop_scroll.size = Vector2(373, 63)
+	_shop_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_content.add_child(_shop_scroll)
+	var list: VBoxContainer = VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 5)
+	_shop_scroll.add_child(list)
+	var products: Dictionary = PacketEconomy.config().packets
+	if not products.has(_shop_kind): _shop_kind = str(products.keys()[0])
+	for kind: String in products:
+		var row: Button = _button(list, PacketEconomy.packet_name(kind), Rect2(0, 0, 355, 27), "inspect_shop_product", kind)
+		row.custom_minimum_size = Vector2(355, 27)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.set_meta("shop_product", kind)
+		row.focus_entered.connect(func() -> void: select_shop_product(kind); _shop_scroll.ensure_control_visible(row))
+		row.mouse_entered.connect(func() -> void: select_shop_product(kind))
+		row.pressed.connect(func() -> void:
+			if screen == "shop" and is_instance_valid(_shop_buy) and not _shop_buy.disabled:
+				action.emit("request_packet_purchase", kind))
+		_shop_rows.append(row)
+	_shop_routes.append(_button(_content, "WORKSHOP", Rect2(22, 310, 290, 26), "open_workshop"))
+	_shop_routes.append(_button(_content, "WORKBENCH", Rect2(326, 310, 292, 26), "main_menu"))
 	_input_footer(339)
+	_build_shop_detail()
+	_shop_focus(_selected_shop_row())
+
+func _selected_shop_row() -> Button:
+	for row: Button in _shop_rows:
+		if str(row.get_meta("shop_product", "")) == _shop_kind: return row
+	return _shop_rows[0] if not _shop_rows.is_empty() else null
+
+func select_shop_product(kind: String) -> void:
+	if screen != "shop" or not PacketEconomy.config().packets.has(kind): return
+	if kind == _shop_kind and is_instance_valid(_shop_detail): return
+	_shop_kind = kind
+	if is_instance_valid(_shop_merchant): _shop_merchant.react("SELECT")
+	_build_shop_detail()
+	_shop_focus(_selected_shop_row())
+
+func _shop_focus(first: Control) -> void:
 	var rows: Array = []
-	if not choices.is_empty(): rows.append(choices)
-	rows.append([odds, workshop, hub])
-	_focus_rows(rows)
+	for row: Button in _shop_rows: rows.append([row])
+	var detail: Array = []
+	if is_instance_valid(_shop_buy) and not _shop_buy.disabled: detail.append(_shop_buy)
+	if is_instance_valid(_shop_odds): detail.append(_shop_odds)
+	if not detail.is_empty(): rows.append(detail)
+	rows.append(_shop_routes)
+	_focus_rows(rows, first)
+	# Right opens the selected product's actions without stepping through another
+	# product first. Down remains the natural scroll-list traversal.
+	if not detail.is_empty():
+		for row: Button in _shop_rows:
+			row.focus_neighbor_right = row.get_path_to(detail[0])
+		for control: Control in detail:
+			control.focus_neighbor_left = control.get_path_to(_selected_shop_row())
+
+func _build_shop_detail() -> void:
+	if is_instance_valid(_shop_detail):
+		_content.remove_child(_shop_detail)
+		_shop_detail.queue_free()
+	_shop_detail = Control.new()
+	_shop_detail.position = Vector2(245, 137)
+	_shop_detail.size = Vector2(373, 166)
+	_shop_detail.mouse_filter = Control.MOUSE_FILTER_PASS
+	_content.add_child(_shop_detail)
+	_panel(_shop_detail, Rect2(0, 0, 373, 166), Color("18242c"))
+	_label(_shop_detail, PacketEconomy.packet_name(_shop_kind), Rect2(13, 8, 347, 16), 10, TEXT)
+	_packet_image(_shop_detail, _shop_kind, Rect2(6, 27, 96, 96))
+	var product: Dictionary = PacketEconomy.config().packets[_shop_kind]
+	var unit: String = str(product.currency).to_upper()
+	var price: int = PacketEconomy.packet_cost(_shop_kind)
+	var available: int = int(_shop_snapshot.get(str(product.currency), 0))
+	_label(_shop_detail, "%d %s" % [price, unit], Rect2(111, 28, 247, 25), 20, ORANGE)
+	_label(_shop_detail, "1 BLADE / 1 RATCHET / 1 BIT", Rect2(111, 60, 247, 14), 10)
+	_label(_shop_detail, "Uncommon+ guaranteed.", Rect2(111, 79, 247, 14), 10, BLUE)
+	var missing: bool = false
+	for id: String in PacketEconomy.eligible_ids():
+		if id not in _shop_snapshot.get("owned_part_ids", []): missing = true
+	var rule: String = "One missing design while any remain." if missing else "All packet designs already owned."
+	_label(_shop_detail, rule if _shop_kind == "reclaimed" else "Three permanent machine designs.", Rect2(111, 97, 247, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(_shop_detail, "Duplicates become SALVAGE.", Rect2(111, 119, 247, 14), 10, MUTED)
+	var enough: bool = available >= price and not bool(_shop_snapshot.get("read_only", false))
+	_shop_buy = _button(_shop_detail, "BUY / %d %s" % [price, unit] if enough else "NEED %d MORE %s" % [maxi(0, price - available), unit], Rect2(13, 138, 236, 27), "request_packet_purchase", _shop_kind, enough)
+	_shop_buy.disabled = not enough
+	_shop_odds = _button(_shop_detail, "INFO / ODDS", Rect2(257, 138, 103, 27), "packet_odds")
+	for row: Button in _shop_rows:
+		var chosen: bool = str(row.get_meta("shop_product", "")) == _shop_kind
+		row.add_theme_stylebox_override("normal", _box(Color("344853") if chosen else Color("263640"), ORANGE if chosen else BORDER))
 
 func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> void:
 	_clear("packet_purchase")
 	_header("BUY A PARTS PACKET", "A sealed hobby pouch. Three permanent component designs.")
 	_panel(_content, Rect2(98, 75, 444, 216), Color("18242c"))
-	_packet_image(_content, kind, Rect2(113, 99, 96, 96))
+	var attendant: Control = ShopMerchant.new()
+	attendant.position = Vector2(110, 96)
+	attendant.size = Vector2(96, 128)
+	_content.add_child(attendant)
+	attendant.react("PURCHASE")
+	_packet_image(_content, kind, Rect2(176, 157, 48, 48))
 	_label(_content, PacketEconomy.packet_name(kind), Rect2(220, 100, 308, 23), 20, TEXT)
 	var unit: String = "SALVAGE" if kind == "reclaimed" else "CREDITS"
 	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind), unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
@@ -609,6 +733,8 @@ func skip_packet() -> void:
 
 func _show_packet_summary() -> void:
 	if screen != "packet_open": return
+	for row: Dictionary in _packet_receipt.get("rows", []):
+		if str(row.get("rarity", "")) in ["RARE", "EPIC", "LEGENDARY"]: _shop_reaction = "RARE"
 	for control: Control in _packet_controls:
 		if is_instance_valid(control):
 			control.get_parent().remove_child(control)
@@ -651,6 +777,7 @@ func show_title_gate(initialized: bool = false) -> void:
 	_build = Starters.build_for("breaker")
 	# Put the physical contact/shadow on the authored service tray at (450,226).
 	var preview: Preview = _new_preview(Rect2(310, 73, 280, 178), 4)
+	preview.set("show_station", true)
 	var starter: Dictionary = Starters.get_starter("breaker")
 	preview.set_identity("breaker", starter.accent)
 	var enter: Button = _button(_content, "PRESS START", Rect2(27, 256, 286, 36), "enter_frontend", null, true)
@@ -732,21 +859,22 @@ func show_starter_owned(starter_id: String) -> void:
 
 func _starter_ownership_stage(data: Dictionary, owned: bool) -> void:
 	_panel(_content, Rect2(22, 65, 256, 241), Color("172737"), data.accent)
+	_panel(_content, Rect2(294, 65, 324, 241), Color("18242c"))
 	_label(_content, "YOUR FIRST TOP" if owned else "ONE COMPLETE STARTING MACHINE", Rect2(36, 76, 228, 17), 10, data.accent, HORIZONTAL_ALIGNMENT_CENTER)
 	var preview: Preview = _new_preview(Rect2(33, 94, 234, 183), 4.0)
 	preview.set_identity(str(data.id), data.accent)
 	_label(_content, _ceremony_role(str(data.id)), Rect2(36, 276, 228, 19), 11, data.accent, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, str(data.name), Rect2(300, 67, 308, 35), 28, data.accent)
-	_label(_content, _ceremony_copy(str(data.id)), Rect2(301, 106, 306, 42), 13)
-	_label(_content, "THESE PARTS ARE YOURS" if owned else "YOU WILL OWN THESE THREE PARTS", Rect2(301, 157, 306, 17), 11, MUTED)
+	_label(_content, str(data.name), Rect2(308, 77, 294, 30), 28, data.accent)
+	_label(_content, _ceremony_copy(str(data.id)), Rect2(309, 113, 290, 37), 10)
+	_label(_content, "THESE PARTS ARE YOURS" if owned else "YOU WILL OWN THESE THREE PARTS", Rect2(309, 158, 290, 17), 10, MUTED)
 	for index: int in range(3):
 		var category: String = ["blade", "ratchet", "bit"][index]
 		var id: String = str(data.assembly[category])
 		var y: float = 181 + index * 29
-		_rect(_content, Rect2(301, y + 2, 3, 17), data.accent)
-		_label(_content, category.to_upper(), Rect2(312, y, 91, 22), 11, MUTED)
-		_label(_content, str(PartCatalog.PARTS[category][id].name), Rect2(411, y, 197, 22), 13, TEXT)
-	_label(_content, "Other parts can join your collection later.", Rect2(301, 274, 306, 26), 11, MUTED)
+		_rect(_content, Rect2(309, y + 2, 3, 17), data.accent)
+		_label(_content, category.to_upper(), Rect2(320, y, 83, 22), 10, MUTED)
+		_label(_content, str(PartCatalog.PARTS[category][id].name), Rect2(411, y, 188, 22), 10, TEXT)
+	_label(_content, "Other parts can join your collection later.", Rect2(309, 274, 290, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 func _ceremony_role(id: String) -> String:
 	return {"breaker":"AGGRESSIVE / FAST / UNSTABLE", "bastion":"HEAVY / CONTROLLED / DURABLE", "vane":"MOBILE / PRECISE / MOMENTUM"}.get(id, "CUSTOM MACHINE")
@@ -1152,6 +1280,31 @@ func show_reset_confirmation(snapshot: Dictionary = {}) -> void:
 func show_pause(is_run: bool = false) -> void:
 	_clear("pause", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(0.02, 0.03, 0.04, 0.77))
+	var powers: Array = _inspection_owned_state.get("ids", [])
+	if is_run and not powers.is_empty():
+		_panel(_content, Rect2(22, 35, 390, 289))
+		_label(_content, "RUN PAUSED", Rect2(38, 48, 358, 31), 20, TEXT)
+		_label(_content, "Your machine waits. Inspect your mechanisms.", Rect2(38, 86, 358, 17), 10, MUTED)
+		var resume: Button = _button(_content, "RESUME", Rect2(38, 116, 182, 31), "resume", null, true)
+		var options: Button = _button(_content, "OPTIONS", Rect2(38, 159, 182, 29), "settings")
+		var restart: Button = _button(_content, "RESTART RUN", Rect2(38, 200, 182, 29), "restart_run")
+		var end: Button = _button(_content, "END RUN", Rect2(38, 241, 182, 29), "end_run")
+		_label(_content, "ASSEMBLY LOCKED", Rect2(38, 285, 182, 17), 10, MUTED)
+		_label(_content, "RUN POWERS", Rect2(234, 99, 162, 14), 10, ORANGE)
+		_create_power_inspector(Rect2(430, 65, 188, 242))
+		var rows: Array = [[resume], [options], [restart], [end]]
+		for index: int in range(mini(powers.size(), Powers.FAMILY_CAP)):
+			var id: String = str(powers[index])
+			var rank: int = int(_inspection_owned_state.get("ranks", {}).get(id, 1))
+			var mutation: String = str(_inspection_owned_state.get("mutations", {}).get(id, ""))
+			var data: Dictionary = Powers.get_owned_power(id, rank, mutation)
+			var inspect: Button = _button(_content, "", Rect2(234, 116 + index * 27, 164, 24))
+			_label(inspect, str(data.name), Rect2(8, 4, 148, 16), 10)
+			_bind_power_inspection(inspect, id, rank, mutation)
+			rows.append([inspect])
+		_focus_rows(rows, resume)
+		_ability_inspector.inspect(str(powers[0]), int(_inspection_owned_state.get("ranks", {}).get(powers[0], 1)), str(_inspection_owned_state.get("mutations", {}).get(powers[0], "")))
+		return
 	_panel(_content, Rect2(170, 35, 300, 289), Color("1c2933"), BORDER)
 	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(187, 50, 266, 31), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Take a breath. Your spin can wait.", Rect2(187, 88, 266, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
@@ -1169,49 +1322,72 @@ func show_pause(is_run: bool = false) -> void:
 		_label(_content, "DUEL ASSEMBLY / PRACTICE", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_focus_rows(rows)
 
+func _create_power_inspector(area: Rect2) -> void:
+	_ability_inspector = AbilityInspection.new()
+	_ability_inspector.position = area.position
+	_ability_inspector.size = area.size
+	_ability_inspector.visible = false
+	_content.add_child(_ability_inspector)
+
+func _bind_power_inspection(control: Control, id: String, rank: int, mutation: String = "", branch_preview: bool = false, hide_on_exit: bool = false) -> void:
+	control.tooltip_text = ""
+	control.set_meta("inspection_power", id)
+	control.set_meta("inspection_rank", rank)
+	control.focus_entered.connect(func() -> void:
+		if is_instance_valid(_ability_inspector): _ability_inspector.inspect(id, rank, mutation, branch_preview))
+	control.mouse_entered.connect(func() -> void:
+		if is_instance_valid(_ability_inspector): _ability_inspector.inspect(id, rank, mutation, branch_preview))
+	if hide_on_exit:
+		control.focus_exited.connect(func() -> void:
+			if is_instance_valid(_ability_inspector): _ability_inspector.visible = false)
+		control.mouse_exited.connect(func() -> void:
+			if not control.has_focus() and is_instance_valid(_ability_inspector): _ability_inspector.visible = false)
+
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
-	_header(str(context.get("title", "VICTORY  /  PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one to carry into the next battle." % slot)))
-	_label(_content, "MAKE THE NEXT HIT COUNT  /  " + ("FINAL INVESTMENT IN THIS POOL" if offer.size() == 1 else "CHOOSE ONE. KEEP IT FOR THE RUN."), Rect2(24, 60, 592, 18), 10, ORANGE)
+	_header(str(context.get("title", "VICTORY / PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one for the Run." % slot)))
+	_label(_content, "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
+	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
 	var selected: Control
-	var start_x: float = (640.0 - offer.size() * 192.0 - (offer.size() - 1) * 10.0) * 0.5
+	var start_x: float = 22 + (392.0 - offer.size() * 124.0 - (offer.size() - 1) * 10.0) * 0.5
 	for index: int in range(offer.size()):
 		var id: String = str(offer[index])
-		var power: Dictionary = Powers.get_offer(id, int(context.get("power_ranks", {}).get(id, 0)), str(context.get("power_mutations", {}).get(id, "")))
+		var rank: int = int(context.get("power_ranks", {}).get(id, 0))
+		var mutation: String = str(context.get("power_mutations", {}).get(id, ""))
+		var power: Dictionary = Powers.get_offer(id, rank, mutation)
 		if power.is_empty(): power = Powers.get_power(id)
 		var payload: Dictionary = {"encounter_id":encounter_id, "power_id":id, "run_seed":run_seed}
 		if context.has("rerolls"): payload["offer_revision"] = int(context.rerolls.revision)
-		var card: Button = _button(_content, "", Rect2(start_x + index * 202, 92, 192, 185), "choose_power", payload)
+		var card: Button = _button(_content, "", Rect2(start_x + index * 134, 86, 124, 202), "choose_power", payload)
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
-		card.tooltip_text = str(power.name) + ": " + str(power.description)
+		_bind_power_inspection(card, id, rank, mutation)
 		var color: Color = _power_accent(id)
 		_style_card(card, color)
-		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(12, 5, 168, 13), 9, color)
-		_power_art(card, id, Rect2(64, 19, 64, 64), card, power)
-		_label(card, str(power.name), Rect2(12, 87, 168, 25), 16, TEXT)
-		var description: Label = _label(card, str(power.get("card_copy", power.description)), Rect2(12, 112, 168, 48), 11, TEXT)
+		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(8, 5, 108, 13), 10, color)
+		_power_art(card, id, Rect2(30, 23, 64, 64), card, power)
+		_label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, TEXT)
+		var reading: Dictionary = AbilityInspection.describe(id, rank, mutation)
+		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 116, 108, 61), 10, TEXT)
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		description.add_theme_constant_override("line_spacing", 0)
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		description.add_theme_constant_override("line_spacing", -1)
-		_label(card, "CONFIRM  /  " + ("CHOOSE BRANCH" if int(context.get("power_ranks", {}).get(id, 0)) == 2 else str(context.get("resume_label", "COLLECT"))), Rect2(12, 166, 168, 16), 9, color)
+		_label(card, "CONFIRM / CHOOSE" if rank == 2 else "CONFIRM / COLLECT", Rect2(8, 181, 108, 14), 10, color)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "POWER FAMILIES  %d / %d  /  FILL SLOTS, THEN DEVELOP YOUR POWERS" % [owned.size(),Powers.FAMILY_CAP], Rect2(24, 281, 592, 15), 9, MUTED)
-	_power_labels(owned, 302)
+	_label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
 	var rows: Array = [cards]
 	if context.has("rerolls"):
 		var rerolls: Dictionary = context.rerolls
-		var reroll: Button = _button(_content, "REROLL  /  %d LEFT" % int(rerolls.charges), Rect2(437, 324, 179, 25), "reroll_power", {"encounter_id":encounter_id, "run_seed":run_seed, "offer_revision":int(rerolls.revision)})
+		var reroll: Button = _button(_content, "REROLL / %d LEFT" % int(rerolls.charges), Rect2(437, 324, 179, 25), "reroll_power", {"encounter_id":encounter_id, "run_seed":run_seed, "offer_revision":int(rerolls.revision)})
 		reroll.name = "RerollPower"
 		reroll.add_theme_font_size_override("font_size", 10)
 		reroll.disabled = not bool(rerolls.available)
-		reroll.tooltip_text = "Spend one Run charge for a different offer. Drive through floor chips to collect more."
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "CHOOSE / CONFIRM   DOWN: REROLL   PAUSE: RUN MENU", Rect2(24, 334, 402, 16), 8, MUTED)
+		_label(_content, "CHOOSE / CONFIRM  DOWN: REROLL  BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
-		_label(_content, "D-PAD / STICK / ARROWS  CHOOSE     CONFIRM  COLLECT     BACK / PAUSE  RUN MENU", Rect2(24, 334, 592, 16), 9, MUTED)
+		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  BACK: RUN MENU", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func _power_accent(power_id: String) -> Color:
@@ -1220,33 +1396,30 @@ func _power_accent(power_id: String) -> Color:
 func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "") -> void:
 	_clear("mutation")
 	var color: Color = _power_accent(power_id)
-	_rect(_content, Rect2(0, 0, 640, 4), color)
-	_label(_content, "MUTATION AVAILABLE", Rect2(24, 12, 592, 32), 26, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, str(Powers.get_power(power_id).name).to_upper() + " III  /  CHOOSE HOW YOUR MACHINE CHANGES", Rect2(24, 46, 592, 17), 11, color, HORIZONTAL_ALIGNMENT_CENTER)
+	_header("MUTATION AVAILABLE", str(Powers.get_power(power_id).name).to_upper() + " III / CHOOSE HOW YOUR MACHINE CHANGES")
+	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
 	var selected: Control
-	# This event has exactly two valid, opposing branches, separate from drafts.
 	for index: int in range(mini(2, branches.size())):
 		var id: String = str(branches[index])
 		if not id in Powers.mutation_choices(power_id): continue
 		var branch: Dictionary = Powers.get_mutation(id)
-		var card: Button = _button(_content, "", Rect2(28 + index * 318, 73, 266, 248), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed})
+		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed})
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
-		card.tooltip_text = str(branch.name) + ": " + str(branch.description)
 		_style_card(card, color)
-		_label(card, "PERMANENT FOR THIS RUN", Rect2(13, 6, 240, 15), 9, color, HORIZONTAL_ALIGNMENT_CENTER)
-		_power_art(card, power_id, Rect2(69, 23, 128, 128), card, branch)
-		_label(card, str(branch.name).to_upper(), Rect2(13, 154, 240, 29), 22, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-		var copy: Label = _label(card, str(branch.get("card_copy", branch.description)), Rect2(16, 186, 234, 39), 11, TEXT)
+		_bind_power_inspection(card, power_id, 2, id, true)
+		_label(card, "PERMANENT FOR THIS RUN", Rect2(10, 6, 172, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_power_art(card, power_id, Rect2(32, 25, 128, 128), card, branch)
+		_label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		var copy: Label = _label(card, str(branch.get("card_copy", branch.description)), Rect2(10, 184, 172, 33), 10, TEXT)
 		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		copy.add_theme_constant_override("line_spacing", 0)
 		copy.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		copy.add_theme_constant_override("line_spacing", -1)
-		_label(card, "CONFIRM  /  TRANSFORM", Rect2(13, 227, 240, 16), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(card, "CONFIRM / TRANSFORM", Rect2(10, 220, 172, 14), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "VS", Rect2(300, 176, 40, 29), 16, color, HORIZONTAL_ALIGNMENT_CENTER)
-	_label(_content, "BATTLE PAUSED   /   LEFT OR RIGHT TO CHOOSE   /   CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, "BATTLE PAUSED / FOCUS TO INSPECT / CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows([cards], selected)
 
 func focused_power_id() -> String:
@@ -1338,7 +1511,7 @@ func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT
 
 func _power_labels(ids: Array, y: float) -> void:
 	var step: float = minf(101.0, 592.0 / maxf(1.0, float(ids.size())))
-	for index: int in range(ids.size()):
+	for index: int in range(mini(ids.size(), Powers.FAMILY_CAP)):
 		var power: Dictionary = Powers.get_power(str(ids[index]))
 		var area: Rect2 = Rect2(roundf(24 + index * step), y, floorf(step) - 5, 20)
 		_panel(_content, area, PANEL, BORDER)
@@ -1406,36 +1579,56 @@ func _show_run_result(result: Dictionary) -> void:
 	_label(_content, "%d THREATS CLEARED / LEVEL %d" % [int(result.get("threats_cleared", 0)), int(result.get("level", 1))], Rect2(281, 109, 325, 16), 10, BLUE)
 	var defeats: Label = _label(_content, "%d RIVALS / %d SMALL / %d ELITES / %d BOSSES" % [int(result.get("rivals_defeated", 0)), int(result.get("small_enemies_defeated", 0)),int(result.get("elites_defeated",0)),int(result.get("bosses_defeated",0))], Rect2(281, 134, 325, 23), 10, MUTED)
 	defeats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_panel(_content, Rect2(269, 173, 349, 31), Color("263640"), BLUE)
+	_panel(_content, Rect2(269, 172, 349, 42), Color("263640"), BLUE)
 	var earned: int = int(result.get("credits_earned", 0))
 	var wallet: int = int(result.get("wallet_credits", 0))
 	var pending: bool = bool(result.get("payout_pending", false))
-	var payout: Label = _label(_content, "CREDITS NOT SAVED / RETRY BELOW" if pending else "+%d CREDITS / WALLET %d" % [earned, wallet], Rect2(281, 181, 325, 16), 10, ORANGE if pending else BLUE)
-	payout.tooltip_text = str(result.get("payout_detail", "Earned from player-cleared threats, elites and bosses."))
-	_panel(_content, Rect2(269, 212, 349, 95))
-	_label(_content, "FINAL INVESTMENTS", Rect2(281, 219, 325, 14), 10, ORANGE)
+	if pending:
+		_label(_content, "CREDITS NOT SAVED / RETRY BELOW", Rect2(281, 184, 325, 16), 10, ORANGE)
+	else:
+		_credit_transfer = CreditTransfer.new()
+		_credit_transfer.position = Vector2(269, 172)
+		_credit_transfer.size = Vector2(349, 42)
+		_credit_transfer.configure(earned, wallet)
+		_credit_transfer.cue.connect(func(kind: String) -> void: focus_sound.emit(kind))
+		_content.add_child(_credit_transfer)
+	_panel(_content, Rect2(269, 223, 349, 84))
+	_label(_content, "FINAL INVESTMENTS / FOCUS TO INSPECT", Rect2(281, 229, 325, 14), 10, ORANGE)
 	var ids: Array = result.get("owned_power_ids", [])
-	if ids.is_empty(): _label(_content, "No power was committed.", Rect2(281, 240, 325, 20), 10, MUTED)
-	for index: int in range(ids.size()):
+	var investments: Array[Button] = []
+	if ids.is_empty(): _label(_content, "No power was committed.", Rect2(281, 244, 325, 20), 10, MUTED)
+	for index: int in range(mini(ids.size(), Powers.FAMILY_CAP)):
 		var id: String = str(ids[index])
 		var rank: int = int(result.get("power_ranks", {}).get(id, 1))
 		var mutation: String = str(result.get("power_mutations", {}).get(id, ""))
 		var data: Dictionary = Powers.get_owned_power(id, rank, mutation)
 		var x: float = 281 + (index % 2) * 166
-		var y: float = 239 + (index / 2) * 17
-		_power_icon(_content, id, Rect2(x, y, 16, 16))
-		_label(_content, ["Ⅰ", "Ⅱ", "Ⅲ"][clampi(rank - 1, 0, 2)], Rect2(x + 18, y, 7, 16), 10, ORANGE)
+		var y: float = 244 + (index / 2) * 15
+		var inspect: Button = _button(_content, "", Rect2(x, y, 163, 15))
+		inspect.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+		inspect.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+		_power_icon(inspect, id, Rect2(0, 0, 14, 14))
+		_label(inspect, ["I", "II", "III"][clampi(rank - 1, 0, 2)], Rect2(16, 0, 22, 15), 10, ORANGE)
 		var display_name: String = str(data.get("name", id)) if not mutation.is_empty() else str(Powers.get_power(id).get("name", id))
-		var name: Label = _label(_content, display_name, Rect2(x + 28, y, 136, 16), 10, TEXT)
-		name.tooltip_text = str(data.get("name", id)) + " / RANK %d" % rank + (" / " + mutation.replace("_", " ") if not mutation.is_empty() else "")
-		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_label(inspect, display_name, Rect2(40, 0, 122, 15), 10, TEXT)
+		investments.append(inspect)
+
 	var restart: Button = _button(_content, "RETRY CREDITS" if pending else "RUN AGAIN", Rect2(22, 321, 186, 28), "retry_run_payout" if pending else "restart_run", null, true)
 	var shop: Button = _button(_content, "SHOP" + (" / READY" if wallet >= PacketEconomy.packet_cost("standard") else ""), Rect2(218, 321, 112, 28), "open_shop")
 	var garage: Button = _button(_content, "WORKSHOP", Rect2(340, 321, 126, 28), "customize")
 	var hub: Button = _button(_content, "WORKBENCH", Rect2(476, 321, 142, 28), "main_menu")
-	_focus_rows([[restart, shop, garage, hub]])
+	_create_power_inspector(Rect2(269, 65, 349, 242))
+	for index: int in range(investments.size()):
+		var id: String = str(ids[index])
+		_bind_power_inspection(investments[index], id, int(result.get("power_ranks", {}).get(id, 1)), str(result.get("power_mutations", {}).get(id, "")), false, true)
+	var rows: Array = []
+	if not investments.is_empty(): rows.append(investments)
+	rows.append([restart, shop, garage, hub])
+	_focus_rows(rows, restart)
 
 func show_hud(stats: Dictionary) -> void:
+	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate()}
+
 	if screen != "hud":
 		_create_hud()
 	var player_spin: float = float(stats.get("player_rpm", 1.0))
@@ -1565,8 +1758,10 @@ func show_hud(stats: Dictionary) -> void:
 			icon.set_meta("power_state", key)
 			var power: Dictionary = Powers.get_owned_power(id, rank, mutation)
 			icon.texture = _power_texture(id, power) if not id.is_empty() else null
-			icon.tooltip_text = str(power.get("name", "")) + " / RANK " + str(rank)
-		_hud["power_rank_%d" % index].text = ["", "Ⅰ", "Ⅱ", "Ⅲ"][clampi(rank, 0, 3)] if not id.is_empty() else ""
+			icon.tooltip_text = ""
+			icon.set_meta("current_rank", rank)
+			icon.set_meta("current_mutation", mutation)
+		_hud["power_rank_%d" % index].text = str(rank) if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
 	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
@@ -1622,6 +1817,19 @@ func _create_hud() -> void:
 	var focus: Control = get_viewport().gui_get_focus_owner()
 	if focus != null:
 		focus.release_focus()
+	_create_power_inspector(Rect2(430, 70, 188, 242))
+	for index: int in range(Powers.ACTIVE_IDS.size()):
+		var icon: Control = _hud["power_%d" % index]
+		icon.mouse_filter = Control.MOUSE_FILTER_PASS
+		icon.mouse_entered.connect(func() -> void: _inspect_hud_power(index))
+		icon.mouse_exited.connect(func() -> void:
+			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
+
+func _inspect_hud_power(index: int) -> void:
+	if screen != "hud" or not is_instance_valid(_ability_inspector): return
+	var icon: Control = _hud.get("power_%d" % index)
+	if not is_instance_valid(icon) or not icon.visible: return
+	_ability_inspector.inspect(str(icon.get_meta("power_id", "")), int(icon.get_meta("current_rank", 1)), str(icon.get_meta("current_mutation", "")))
 
 func _animate_rpm_meter() -> void:
 	if screen != "hud" or not _hud.has("player_bar"): return

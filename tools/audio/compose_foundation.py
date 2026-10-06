@@ -1,4 +1,4 @@
-"""Render an original editable32-bar melodic metal score to five PCM loops.
+"""Render an original editable 32-bar metal score to five synchronized loops.
 
 NumPy only; no samples, songs, external instruments or runtime/game RNG.
 Modal plucked strings feed an oversampled smooth amp/cabinet model. Written
@@ -159,11 +159,73 @@ def render(score: dict) -> tuple[dict[str, np.ndarray], dict]:
         if section in ("hook","anthem"):
             for pan,variant in [(-.68,0),(.68,2)]: add(name,"power",beat,.8,root,part["rhythm"]*.25,pan,variant)
 
+    def revised_part(name, part, bar, harmony):
+        """Written riff/groove/hook form; solo punctuation occupies two bars.
+
+        Accepted workshop and opening-Run arrangements bypass this function.
+        All new notes follow their established moving harmony and PCM grid.
+        """
+        revision = score["human_feedback_revision"]
+        form = revision["arrangements"][name]
+        section = form["sections"][bar]
+        beat = bar * 4; root = harmony["guitar_root"]
+        pattern = revision["riffs"][form["patterns"][section]]
+        for index, (offset, length, interval) in enumerate(pattern):
+            # Brief alternating low riffs, independently voiced stereo takes.
+            for pan, variant in [(-.73, 0), (.73, 2)]:
+                add(name, "chug", beat + offset + (.018 if variant == 2 else 0), length,
+                    root + interval, part["rhythm"] * .61, pan, variant)
+            add(name, "bass", beat + offset, length, harmony["bass"] + interval,
+                part["bass"] * (1.13 if section == "drive" else 1))
+        if section in ("hook", "return"):
+            for pan, variant in [(-.65, 0), (.65, 2)]:
+                add(name, "power", beat, 1.15, root, part["rhythm"] * .4, pan, variant)
+        if bar in form["hook_bars"]:
+            phrase = revision["hooks"]["answer" if bar % 2 else "call"]
+            for offset, length, interval in phrase:
+                note = root + 12 + interval
+                add(name, "lead", beat + offset, length, note, part["lead"], -.12, 1)
+                add(name, "lead", beat + offset + .015, length, harmonized(note, score["progression"][bar] == "B"),
+                    part["harmony"], .35, 2)
+        if bar in form["lead_break_bars"]:
+            for offset, length, interval in revision["lead_break"]["answer" if bar % 2 else "call"]:
+                add(name, "lead", beat + offset, length, root + 36 + interval,
+                    part["lead"] * 1.08, -.08, 1, True)
+        # Sections breathe: groove is spacious, drive completes sixteenth kicks,
+        # hooks broaden the backbeat, and written fills mark phrase boundaries.
+        drums = score["drums"]
+        if name == "title":
+            kick = revision["groove_kick"] if section == "groove" else drums["base_kick"]
+            if section in ("drive", "return"): kick = kick + drums["pressure_kick"]
+            for offset in kick: add(name, "kick", beat + offset, .3, 36, part["kick"], 0, bar % 3)
+            for offset in drums["snare"]: add(name, "snare", beat + offset, .5, 38, part["snare"], -.1, bar % 3)
+            for i, offset in enumerate(drums["ride"]):
+                add(name, "hat" if section in ("riff", "groove") else "ride", beat + offset, .2, 42,
+                    part["cymbal"] * (1 if i % 2 else 1.22), .38, bar % 3)
+        elif name == "run_pressure":
+            kick = revision["groove_pressure_kick"] if section == "groove" else drums["pressure_kick"]
+            for offset in kick: add(name, "kick", beat + offset, .3, 36, part["kick"], 0, (bar + 1) % 3)
+            for offset in (.25, 1.25, 2.25, 3.25): add(name, "hat", beat + offset, .15, 42, part["cymbal"], -.34, bar % 3)
+        elif name == "run_boss":
+            for offset in (0, 2):
+                for pan, variant in [(-.62, 0), (.62, 2)]:
+                    add(name, "power", beat + offset, 1.4, root, part["rhythm"] * .48, pan, variant)
+            for offset in (1, 3): add(name, "snare", beat + offset, .4, 38, part["snare"] * .52, -.05, bar % 3)
+            if section in ("drive", "return"):
+                for offset in (1.875, 3.875): add(name, "kick", beat + offset, .25, 36, part["kick"])
+        if bar % 8 == 0: add(name, "crash", beat, 1.4, 49, part["cymbal"] * .95, -.28, bar % 3)
+        if bar % 4 == 3:
+            for i, (offset, kind, note) in enumerate(drums["fills"]["cadence" if bar % 8 == 7 else "short"]):
+                add(name, kind, beat + offset, .35, note, (part["snare"] + .025) * .74, -.38 + i * .1, bar % 3)
+
     for bar,chord in enumerate(score["progression"]):
         harmony=score["harmony"][chord]; section=score["sections"][bar]; beat=bar*4
         phrase=score["lead_phrases"][score["phrase_order"][bar]]
         for name in NAMES:
             part=score["parts"][name]
+            if name in score.get("human_feedback_revision", {}).get("arrangements", {}):
+                revised_part(name, part, bar, harmony)
+                continue
             if name in ("title","run_base"): rhythm(name,part,bar,harmony,section)
             elif name=="workshop":
                 for i,note in enumerate(harmony["clean"]): add(name,"clean",beat+i,.85,note,part["rhythm"],(-.35 if i%2 else .35),i%3)
@@ -203,15 +265,41 @@ def render(score: dict) -> tuple[dict[str, np.ndarray], dict]:
         # The asymmetric amp/pick/envelope combination may leave a tiny DC
         # residue. A constant per-channel correction preserves the loop join.
         samples -= np.mean(samples,axis=0,keepdims=True)
-    # All cube vertices bound every0..1 adaptive gain combination, including
+    # The two human-liked stems retain the accepted exact mastering gain. New
+    # layers are bounded around that fixed base; edits cannot silently remaster
+    # First Machine, Results or ordinary opening-Run PCM.
+    revision = score.get("human_feedback_revision")
+    if revision:
+        preserved = revision["preserved"]
+        for name in ("workshop", "run_base"): stems[name] *= float(preserved["render_gain"])
+        title_gain = min(1.0, float(revision["title_peak"]) / float(np.max(np.abs(stems["title"]))))
+        stems["title"] *= title_gain
+        base = stems["run_base"]
+        layer_gain = 1.0; ceiling = float(score["mix"]["maximum_full_run_peak"])
+        # Each vertex is fixed_base + gain * revised_layers. Solve its linear
+        # sample inequalities exactly rather than repeatedly rendering mixes.
+        for mask in range(1, 8):
+            fixed = base if mask & 1 else np.zeros_like(base)
+            layers = np.zeros_like(base)
+            if mask & 2: layers += stems["run_pressure"]
+            if mask & 4: layers += stems["run_boss"]
+            nonzero = np.abs(layers) > 1e-12
+            limits = (ceiling - np.sign(layers[nonzero]) * fixed[nonzero]) / np.abs(layers[nonzero])
+            if limits.size: layer_gain = min(layer_gain, float(np.min(limits)))
+        for name in ("run_pressure", "run_boss"): stems[name] *= layer_gain
+        mastering = {"preserved_gain":float(preserved["render_gain"]), "title_gain":title_gain, "revised_layer_gain":layer_gain}
+        gain = float(preserved["render_gain"])
+    else:
+        mastering = {}
+        # All cube vertices bound every0..1 adaptive gain combination, including
     # combinations peaking higher than the complete sum due to phase.
-    peak=max(float(np.max(np.abs(stems[n]))) for n in ("title","workshop"))
-    for mask in range(1,8):
-        combined=sum((stems[NAMES[2+i]] for i in range(3) if mask&(1<<i)),np.zeros_like(stems["run_base"]))
-        peak=max(peak,float(np.max(np.abs(combined))))
-    gain=min(1,float(score["mix"]["maximum_full_run_peak"])/peak)
-    for samples in stems.values(): samples *= gain
-    return stems,{"sample_rate":rate,"channels":2,"sample_width_bytes":2,"frames":frames,"seconds":frames/rate,"beats":beats,"bars":grid["bars"],"bpm":grid["bpm"],"actual_bpm":beats*60*rate/frames,"render_gain":gain,"note_counts":counts,"instrument_events":instruments,"cached_voices":len(cache)}
+        peak=max(float(np.max(np.abs(stems[n]))) for n in ("title","workshop"))
+        for mask in range(1,8):
+            combined=sum((stems[NAMES[2+i]] for i in range(3) if mask&(1<<i)),np.zeros_like(stems["run_base"]))
+            peak=max(peak,float(np.max(np.abs(combined))))
+        gain=min(1,float(score["mix"]["maximum_full_run_peak"])/peak)
+        for samples in stems.values(): samples *= gain
+    return stems,{"sample_rate":rate,"channels":2,"sample_width_bytes":2,"frames":frames,"seconds":frames/rate,"beats":beats,"bars":grid["bars"],"bpm":grid["bpm"],"actual_bpm":beats*60*rate/frames,"render_gain":gain,"mastering":mastering,"note_counts":counts,"instrument_events":instruments,"cached_voices":len(cache)}
 
 
 def write_wav(path: Path,samples: np.ndarray,rate: int) -> None:
@@ -242,6 +330,8 @@ def verify(directory: Path,score: dict,expected: dict) -> dict:
         assert stats["clipped_samples"]==0 and .002<stats["rms"]<.25,name+" invalid energy"
         assert stats["boundary_step"]<.006,name+" loop seam clicks"
         output[name]=dict(spec,**stats,sha256=fingerprint(path),description=score["parts"][name]["description"]); stems[name]=samples
+        preserved = score.get("human_feedback_revision", {}).get("preserved", {}).get("wav_sha256", {})
+        if name in preserved: assert output[name]["sha256"] == preserved[name], "Human-liked PCM changed: " + name
     mixes={"normal_run":metrics(stems["run_base"]),"pressure_run":metrics(stems["run_base"]+stems["run_pressure"]),"boss_run":metrics(stems["run_base"]+stems["run_pressure"]+stems["run_boss"])}
     peaks=[]
     for mask in range(1,8):

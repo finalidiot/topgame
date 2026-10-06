@@ -9,6 +9,16 @@ const PacketEconomyModel = preload("res://scripts/packet_economy.gd")
 const PACKET_ART_ROOT: String = "res://assets/ui/shop_003a/"
 const PACKET_AUDIO_ROOT: String = "res://assets/audio/shop_003a/"
 const PACKET_AUDIO_MANIFEST: String = PACKET_AUDIO_ROOT + "manifest.json"
+const UI_POLISH_ROOT: String = "res://assets/ui/human_feedback003a/"
+const UI_POLISH_LAYOUT: Dictionary = {
+	"metal_plate":{"cell":[32, 32], "frames":3},
+	"inspection_frame":{"cell":[32, 32], "frames":1},
+	"button_caps":{"cell":[24, 24], "frames":6},
+	"merchant":{"cell":[48, 64], "frames":14},
+	"merchant_fixture":{"cell":[192, 64], "frames":1},
+	"credit_chip":{"cell":[16, 16], "frames":4},
+	"preview_station":{"cell":[160, 56], "frames":1}
+}
 
 static func inspect(output: String) -> Dictionary:
 	if output.is_empty() or FileAccess.file_exists(output) or DirAccess.dir_exists_absolute(output):
@@ -124,6 +134,15 @@ static func inspect(output: String) -> Dictionary:
 	var economy_validation_errors: Array[String] = PacketEconomyModel.validate_config()
 	var economy_odds: Dictionary = PacketEconomyModel.rarity_odds("standard")
 	if not economy_validation_errors.is_empty() or economy_odds.is_empty(): failures.append(PacketEconomyModel.DATA_PATH)
+	var ui_polish_json: Dictionary = {}
+	var ui_polish_records: Array[Dictionary] = []
+	for kind: String in UI_POLISH_LAYOUT:
+		var source_json: String = FileAccess.get_file_as_string(UI_POLISH_ROOT + kind + ".json")
+		ui_polish_json[kind] = source_json
+		var parsed: Variant = JSON.parse_string(source_json)
+		var record: Dictionary = _inspect_ui_polish_sheet(kind, parsed if parsed is Dictionary else {})
+		ui_polish_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
@@ -134,6 +153,7 @@ static func inspect(output: String) -> Dictionary:
 		"packet_audio_json":packet_audio_json, "packet_audio":packet_audio_records,
 		"economy_json":economy_json, "economy_config":PacketEconomyModel.config(),
 		"economy_odds":economy_odds, "economy_validation_errors":economy_validation_errors,
+		"ui_polish_json":ui_polish_json, "ui_polish_textures":ui_polish_records,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()
@@ -141,6 +161,48 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_ui_polish_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var path: String = UI_POLISH_ROOT + kind + ".png"
+	var texture: Texture2D = (load(path) as Texture2D) if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var visible: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	var cell: Array = meta.get("cell", [])
+	var pivot: Array = meta.get("pivot", [])
+	var durations: Array = meta.get("durations_ms", [])
+	var layers: Array = meta.get("layers", [])
+	var tags: Dictionary = meta.get("tags", {})
+	var expected: Dictionary = UI_POLISH_LAYOUT.get(kind, {})
+	var columns: int = int(meta.get("columns", 0))
+	var count: int = int(meta.get("frame_count", 0))
+	var expected_cell: Array = expected.get("cell", [])
+	var valid: bool = visible and cell.size() == 2 and expected_cell.size() == 2 and pivot.size() == 2
+	if valid: valid = Vector2i(int(cell[0]), int(cell[1])) == Vector2i(int(expected_cell[0]), int(expected_cell[1]))
+	valid = valid and count == int(expected.get("frames", 0)) and columns == count
+	if valid:
+		valid = size == Vector2i(int(cell[0]) * count, int(cell[1]))
+		valid = valid and int(pivot[0]) >= 0 and int(pivot[0]) <= int(cell[0]) and int(pivot[1]) >= 0 and int(pivot[1]) <= int(cell[1])
+	valid = valid and str(meta.get("texture", "")) == kind + ".png" and str(meta.get("filter", "")) == "nearest" and bool(meta.get("native_pixels", false))
+	valid = valid and durations.size() == count and not layers.is_empty() and not tags.is_empty()
+	for duration: Variant in durations: valid = valid and float(duration) > 0.0
+	for tag: String in tags:
+		var bounds: Dictionary = tags[tag]
+		valid = valid and int(bounds.get("from", -1)) >= 0 and int(bounds.get("to", -1)) >= int(bounds.get("from", -1)) and int(bounds.get("to", -1)) < count
+	var fingerprint: String = ""
+	if visible:
+		if pixels.is_compressed(): pixels.decompress()
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset + 3] == 0:
+				for channel: int in range(3): decoded[offset + channel] = 0
+		fingerprint = _digest(decoded)
+	return {"kind":kind, "path":path, "metadata_path":UI_POLISH_ROOT + kind + ".json",
+		"valid":valid, "visible_pixels":visible, "size":[size.x, size.y], "cell":cell,
+		"pivot":pivot, "tags":tags, "durations_ms":durations, "layers":layers,
+		"columns":columns, "frame_count":count, "visible_rgba_sha256":fingerprint,
+		"transparent_rgb_normalized":true}
 
 static func _inspect_beast_sheet(kind: String, meta: Dictionary) -> Dictionary:
 	var path: String = str(meta.get("texture", ""))

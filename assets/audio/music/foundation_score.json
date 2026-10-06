@@ -836,14 +836,14 @@
   },
   "parts": {
     "title": {
-      "description": "Bold original metal introduction: wide galloping power chords, complete hook with thirds, melodic bass, full driving drums and written fills.",
-      "rhythm": 0.2,
-      "bass": 0.16,
-      "lead": 0.18,
-      "harmony": 0.075,
-      "kick": 0.17,
+      "description": "Riff-led original title form: low doubled guitars, groove and drive, spaced lower-register harmonized hook, two-bar lead punctuation, then return to the riff.",
+      "rhythm": 0.38,
+      "bass": 0.2,
+      "lead": 0.105,
+      "harmony": 0.06,
+      "kick": 0.19,
       "snare": 0.16,
-      "cymbal": 0.05
+      "cymbal": 0.048
     },
     "workshop": {
       "description": "Restrained version of the same key/progression: clean plucked strings, slow octave fragments of the hook, light bass and half-time brushed groove.",
@@ -866,24 +866,24 @@
       "cymbal": 0.038
     },
     "run_pressure": {
-      "description": "Phase-aligned original lead hook plus complementary kick strokes that complete the double-kick grid, upper cymbal drive and changing eight-bar fills.",
-      "rhythm": 0,
-      "bass": 0,
-      "lead": 0.19,
-      "harmony": 0,
-      "kick": 0.14,
-      "snare": 0.04,
-      "cymbal": 0.024
+      "description": "Rhythmic pressure layer: complementary chugs and bass, developed double kick, phrase fills and occasional lower hook; only two lead-break bars in a 32-bar cycle.",
+      "rhythm": 0.22,
+      "bass": 0.085,
+      "lead": 0.07,
+      "harmony": 0.025,
+      "kick": 0.15,
+      "snare": 0.045,
+      "cymbal": 0.028
     },
     "run_boss": {
-      "description": "Full anthem layer: harmonized guitar thirds, wide sustained power chords, lower melodic counterline and tom/crash cadence; adds to the same moving score.",
-      "rhythm": 0.095,
-      "bass": 0,
-      "lead": 0.065,
-      "harmony": 0.135,
-      "kick": 0.045,
-      "snare": 0.065,
-      "cymbal": 0.045
+      "description": "Broader heavy-band layer: low power chords and chugs, aggressive bass, stronger backbeat/fills and spaced lower harmonized hooks; no solo line.",
+      "rhythm": 0.155,
+      "bass": 0.065,
+      "lead": 0.04,
+      "harmony": 0.065,
+      "kick": 0.065,
+      "snare": 0.1,
+      "cymbal": 0.052
     }
   },
   "tone": {
@@ -901,5 +901,573 @@
     "duck_db": -4.0,
     "duck_seconds": 0.18
   },
-  "editing": "MIDI pitches, beat offsets/durations, per-bar phrase/chord/section choices, riff patterns, fills and part gains are editable here. All event tails/echoes wrap on one common32-bar grid; five fixed stem IDs retain uninterrupted runtime transport."
+  "editing": "MIDI pitches, beat offsets/durations, per-bar phrase/chord/section choices, riff patterns, fills and part gains are editable here. All event tails/echoes wrap on one common32-bar grid; five fixed stem IDs retain uninterrupted runtime transport. The human_feedback_revision defines separately editable rhythmic forms/riffs/hooks/brief lead bars and fixed mastering for the two preserved stems.",
+  "human_feedback_revision": {
+    "task": "003A human playtest polish",
+    "direction": "Original rhythmic metal: riff-led title form, low guitar/bass weight and complementary double kick. Lower harmonized hooks are spaced; only two written bars carry high lead punctuation. No external song, recording, sample or artist imitation.",
+    "preserved": {
+      "accepted_ref": "7c26ae7e949324bac8cff0707b2905af76a033c3",
+      "render_gain": 0.7993717491144928,
+      "wav_sha256": {
+        "workshop": "5f389ddff9f71e39d2afd2ba6647ee4e66ab654d543f057c25cb9f30069aab21",
+        "run_base": "d556305faf1a92b385091647d0b2a01548462002c717b19c5e84eff371848ca6"
+      },
+      "reason": "Actual First Machine and Results share workshop; ordinary early Run is run_base. Both original arrangements and exact mastered PCM are retained."
+    },
+    "title_peak": 0.5,
+    "riffs": {
+      "forge": [
+        [
+          0,
+          0.38,
+          0
+        ],
+        [
+          0.5,
+          0.16,
+          0
+        ],
+        [
+          0.75,
+          0.16,
+          0
+        ],
+        [
+          1.25,
+          0.18,
+          3
+        ],
+        [
+          1.5,
+          0.18,
+          0
+        ],
+        [
+          2,
+          0.42,
+          0
+        ],
+        [
+          2.75,
+          0.18,
+          5
+        ],
+        [
+          3,
+          0.22,
+          0
+        ],
+        [
+          3.5,
+          0.18,
+          7
+        ],
+        [
+          3.75,
+          0.16,
+          3
+        ]
+      ],
+      "sixteenth": [
+        [
+          0.25,
+          0.16,
+          0
+        ],
+        [
+          0.5,
+          0.16,
+          0
+        ],
+        [
+          0.75,
+          0.16,
+          0
+        ],
+        [
+          1.25,
+          0.16,
+          3
+        ],
+        [
+          1.5,
+          0.16,
+          0
+        ],
+        [
+          1.75,
+          0.16,
+          0
+        ],
+        [
+          2.25,
+          0.16,
+          0
+        ],
+        [
+          2.5,
+          0.16,
+          0
+        ],
+        [
+          2.75,
+          0.16,
+          5
+        ],
+        [
+          3.25,
+          0.16,
+          0
+        ],
+        [
+          3.5,
+          0.16,
+          7
+        ],
+        [
+          3.75,
+          0.16,
+          3
+        ]
+      ],
+      "groove": [
+        [
+          0,
+          0.55,
+          0
+        ],
+        [
+          0.75,
+          0.25,
+          0
+        ],
+        [
+          1.5,
+          0.26,
+          3
+        ],
+        [
+          2,
+          0.5,
+          0
+        ],
+        [
+          2.75,
+          0.25,
+          5
+        ],
+        [
+          3.5,
+          0.25,
+          7
+        ]
+      ],
+      "drive": [
+        [
+          0,
+          0.4,
+          0
+        ],
+        [
+          0.5,
+          0.4,
+          0
+        ],
+        [
+          1,
+          0.4,
+          0
+        ],
+        [
+          1.5,
+          0.4,
+          3
+        ],
+        [
+          2,
+          0.4,
+          0
+        ],
+        [
+          2.5,
+          0.4,
+          0
+        ],
+        [
+          3,
+          0.4,
+          7
+        ],
+        [
+          3.5,
+          0.4,
+          5
+        ]
+      ],
+      "space": [
+        [
+          0,
+          0.7,
+          0
+        ],
+        [
+          1.5,
+          0.3,
+          3
+        ],
+        [
+          2,
+          0.7,
+          0
+        ],
+        [
+          3.5,
+          0.3,
+          7
+        ]
+      ],
+      "gallop": [
+        [
+          0,
+          0.38,
+          0
+        ],
+        [
+          0.5,
+          0.16,
+          0
+        ],
+        [
+          0.75,
+          0.16,
+          0
+        ],
+        [
+          1,
+          0.38,
+          0
+        ],
+        [
+          1.5,
+          0.16,
+          3
+        ],
+        [
+          1.75,
+          0.16,
+          0
+        ],
+        [
+          2,
+          0.38,
+          0
+        ],
+        [
+          2.5,
+          0.16,
+          0
+        ],
+        [
+          2.75,
+          0.16,
+          5
+        ],
+        [
+          3,
+          0.38,
+          0
+        ],
+        [
+          3.5,
+          0.16,
+          7
+        ],
+        [
+          3.75,
+          0.16,
+          3
+        ]
+      ]
+    },
+    "hooks": {
+      "call": [
+        [
+          0,
+          1.3,
+          0
+        ],
+        [
+          1.5,
+          0.85,
+          3
+        ],
+        [
+          3,
+          0.75,
+          7
+        ]
+      ],
+      "answer": [
+        [
+          0,
+          0.85,
+          7
+        ],
+        [
+          1,
+          0.75,
+          5
+        ],
+        [
+          2,
+          1.4,
+          3
+        ]
+      ]
+    },
+    "lead_break": {
+      "call": [
+        [
+          0,
+          0.25,
+          0
+        ],
+        [
+          0.375,
+          0.25,
+          3
+        ],
+        [
+          0.75,
+          0.35,
+          7
+        ],
+        [
+          1.25,
+          0.45,
+          10
+        ],
+        [
+          2,
+          0.65,
+          7
+        ],
+        [
+          3,
+          0.6,
+          3
+        ]
+      ],
+      "answer": [
+        [
+          0,
+          0.7,
+          7
+        ],
+        [
+          1,
+          0.25,
+          5
+        ],
+        [
+          1.375,
+          0.25,
+          3
+        ],
+        [
+          1.75,
+          0.3,
+          2
+        ],
+        [
+          2.5,
+          1.1,
+          0
+        ]
+      ]
+    },
+    "groove_kick": [
+      0,
+      0.75,
+      2,
+      2.75
+    ],
+    "groove_pressure_kick": [
+      0.75,
+      1.75,
+      2.75,
+      3.75
+    ],
+    "arrangements": {
+      "title": {
+        "sections": [
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "drive",
+          "drive",
+          "groove",
+          "groove",
+          "groove",
+          "groove",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "riff",
+          "riff",
+          "drive",
+          "drive",
+          "drive",
+          "drive",
+          "break",
+          "break",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return"
+        ],
+        "patterns": {
+          "riff": "forge",
+          "drive": "sixteenth",
+          "groove": "groove",
+          "hook": "drive",
+          "break": "space",
+          "return": "gallop"
+        },
+        "hook_bars": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          28,
+          29
+        ],
+        "lead_break_bars": [
+          22,
+          23
+        ]
+      },
+      "run_pressure": {
+        "sections": [
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "groove",
+          "groove",
+          "groove",
+          "groove",
+          "drive",
+          "drive",
+          "break",
+          "break",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return"
+        ],
+        "patterns": {
+          "riff": "forge",
+          "drive": "sixteenth",
+          "groove": "groove",
+          "hook": "drive",
+          "break": "space",
+          "return": "gallop"
+        },
+        "hook_bars": [
+          10,
+          11,
+          14,
+          15,
+          26,
+          27
+        ],
+        "lead_break_bars": [
+          22,
+          23
+        ]
+      },
+      "run_boss": {
+        "sections": [
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "riff",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "hook",
+          "groove",
+          "groove",
+          "groove",
+          "groove",
+          "drive",
+          "drive",
+          "drive",
+          "drive",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return",
+          "return"
+        ],
+        "patterns": {
+          "riff": "forge",
+          "drive": "sixteenth",
+          "groove": "groove",
+          "hook": "drive",
+          "break": "space",
+          "return": "gallop"
+        },
+        "hook_bars": [
+          8,
+          9,
+          12,
+          13,
+          24,
+          25,
+          28,
+          29
+        ],
+        "lead_break_bars": []
+      }
+    }
+  }
 }

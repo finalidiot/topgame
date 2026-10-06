@@ -855,7 +855,7 @@ func _battle_sound(kind: String) -> void:
 func _action(name: String, value: Variant = null) -> void:
 	audit_actions.append(name)
 	# All build/menu routes respect the lock, including stale UI signals.
-	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "open_shop", "request_packet_purchase", "confirm_packet_purchase", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
+	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "open_shop", "inspect_shop_product", "request_packet_purchase", "confirm_packet_purchase", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
 		if not (name == "settings" and screen == "pause"): return
 	_battle_sound("ui")
 	match name:
@@ -882,14 +882,17 @@ func _action(name: String, value: Variant = null) -> void:
 		"begin_collection": _begin_collection()
 		"open_workshop": _garage()
 		"open_shop": _shop()
+		"inspect_shop_product":
+			if screen == "shop": menus.select_shop_product(str(value))
 		"request_packet_purchase": _request_packet_purchase(str(value))
 		"confirm_packet_purchase": _confirm_packet_purchase(value)
 		"cancel_packet_purchase":
 			if screen == "packet_purchase": _shop()
 		"packet_odds":
 			if screen in ["shop", "packet_odds"]:
+				var kind: String = "reclaimed" if screen == "shop" and menus.selected_shop_product() == "reclaimed" else "standard"
 				screen = "packet_odds"
-				menus.show_packet_odds(PacketEconomy.rarity_odds("standard"))
+				menus.show_packet_odds(PacketEconomy.rarity_odds(kind, collection.owned_parts()))
 		"packet_reclaimed_odds":
 			if screen == "packet_odds": menus.show_packet_odds(PacketEconomy.rarity_odds("reclaimed", collection.owned_parts()))
 		"packet_salvage_info":

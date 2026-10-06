@@ -95,13 +95,17 @@ func _draw() -> void:
 		var slide: float = clampf((elapsed - _tear_seconds) / 0.95, 0.0, 1.0)
 		center = Vector2(320, 218).lerp(Vector2(95, 282), slide)
 		factor = 2.0 - slide
+		# The parts have settled; slide the discarded wrapper off the bench.
+		var discard: float = clampf((elapsed - 1.98) / 0.37, 0.0, 1.0)
+		center = center.lerp(Vector2(-64, 336), discard)
 	elif phase == "RESULT":
 		frame = 12
 		center = Vector2(95, 282)
 		factor = 1.0
 	var dimensions: Vector2 = Vector2(96, 96) * factor
 	var origin: Vector2 = center - Vector2(48, 86) * factor
-	draw_texture_rect_region(_packet, Rect2(origin.round(), dimensions.round()), Rect2(frame * 96, 0, 96, 96))
+	if phase != "RESULT":
+		draw_texture_rect_region(_packet, Rect2(origin.round(), dimensions.round()), Rect2(frame * 96, 0, 96, 96))
 	if phase not in ["SPILL", "RESULT"]: return
 	for index: int in range(_parts.size()):
 		var progress: float = 1.0 if phase == "RESULT" else clampf((elapsed - 0.65 - index * 0.13) / 0.85, 0.0, 1.0)

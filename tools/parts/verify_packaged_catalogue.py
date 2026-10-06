@@ -20,6 +20,15 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK = "002C.5.2"
+UI_POLISH_LAYOUT = {
+    "metal_plate": ([32, 32], 3),
+    "inspection_frame": ([32, 32], 1),
+    "button_caps": ([24, 24], 6),
+    "merchant": ([48, 64], 14),
+    "merchant_fixture": ([192, 64], 1),
+    "credit_chip": ([16, 16], 4),
+    "preview_station": ([160, 56], 1),
+}
 sys.path.insert(0, str(ROOT / "tools" / "workspace"))
 import workspace
 sys.path.insert(0, str(ROOT / "tools" / "build"))
@@ -146,6 +155,55 @@ def verify_shop_assets(assets: dict, source_root: Path = ROOT) -> dict:
     return {"packet_textures_verified":3,"packet_metadata_matches_source":True,"packet_pixels_exact":True,
             "packet_audio_cues_verified":8,"packet_audio_pcm_exact":True,"economy_matches_source":True,
             "production_odds_match":True,"odds_source":"tests/results/003a_economy_save_summary.json"}
+
+
+def verify_ui_polish_assets(assets: dict, source_root: Path = ROOT) -> dict:
+    """Require all seven actual imported UI atlases and exact authored metadata.
+
+    Alpha and visible RGB are compared independently with the source PNGs.
+    Only RGB under zero alpha is normalized, as with the retained packet and
+    beast checks. Report flags or screenshot markers cannot replace this parity.
+    """
+    metadata_rows = assets.get("ui_polish_json", {})
+    rows = assets.get("ui_polish_textures", [])
+    kinds = set(UI_POLISH_LAYOUT)
+    if (not isinstance(metadata_rows, dict) or set(metadata_rows) != kinds
+            or not isinstance(rows, list) or len(rows) != len(kinds)
+            or not all(isinstance(row, dict) for row in rows)
+            or {row.get("kind") for row in rows} != kinds):
+        raise RuntimeError("Actual package did not inspect all seven authored human-feedback UI sheets")
+    for row in rows:
+        kind = row["kind"]
+        relative = "assets/ui/human_feedback003a/" + kind
+        source_metadata = json.loads((source_root / (relative + ".json")).read_text(encoding="utf-8"))
+        try:
+            packaged_metadata = json.loads(metadata_rows[kind])
+        except (TypeError, ValueError) as error:
+            raise RuntimeError("Packaged UI authored metadata is invalid: " + kind) from error
+        if packaged_metadata != source_metadata:
+            raise RuntimeError("Packaged UI authored metadata differs: " + kind)
+        if (row.get("path") != "res://" + relative + ".png"
+                or row.get("metadata_path") != "res://" + relative + ".json"):
+            raise RuntimeError("Packaged UI texture/metadata path differs: " + kind)
+        cell, frames = UI_POLISH_LAYOUT[kind]
+        size, visible = _visible_pixels(source_root / (relative + ".png"))
+        with Image.open(source_root / (relative + ".png")) as image:
+            source_visible = image.convert("RGBA").getchannel("A").getbbox() is not None
+        if (not source_visible or row.get("valid") is not True or row.get("visible_pixels") is not True
+                or row.get("transparent_rgb_normalized") is not True
+                or row.get("size") != size or size != [cell[0] * frames, cell[1]]
+                or row.get("visible_rgba_sha256") != visible):
+            raise RuntimeError("Actual packaged UI pixels differ: " + kind)
+        if (source_metadata.get("cell") != cell or source_metadata.get("columns") != frames
+                or source_metadata.get("frame_count") != frames
+                or source_metadata.get("texture") != kind + ".png"
+                or source_metadata.get("filter") != "nearest" or source_metadata.get("native_pixels") is not True):
+            raise RuntimeError("Authored UI native topology is invalid: " + kind)
+        for key in ("cell", "pivot", "tags", "durations_ms", "layers", "columns", "frame_count"):
+            if row.get(key) != source_metadata.get(key):
+                raise RuntimeError("Actual imported UI topology differs: " + kind + "/" + key)
+    return {"ui_polish_textures_verified": len(kinds), "ui_polish_metadata_matches_source": True,
+            "ui_polish_pixels_exact": True, "ui_polish_native_topology_verified": True}
 
 
 def main() -> None:
@@ -277,6 +335,7 @@ def main() -> None:
         report["assets"]["music_stems_verified"] = 5
         report["assets"]["music_pcm_exact"] = True
         report["assets"].update(verify_shop_assets(assets))
+        report["assets"].update(verify_ui_polish_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

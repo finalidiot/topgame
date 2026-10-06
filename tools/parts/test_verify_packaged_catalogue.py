@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import wave
+from PIL import Image
 
 import verify_packaged_catalogue as verifier
 
@@ -171,6 +172,106 @@ class ShopAssetsContracts(unittest.TestCase):
                 report = deepcopy(self.report)
                 report["packet_audio"][0][key] = value
                 with self.assertRaisesRegex(RuntimeError,"packet PCM"): verifier.verify_shop_assets(report)
+
+
+class UIPolishAssetsContracts(unittest.TestCase):
+    """Synthetic helper fixtures never substitute for actual EXE evidence."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        directory = self.root / "assets/ui/human_feedback003a"
+        directory.mkdir(parents=True)
+        self.report = {"ui_polish_json": {}, "ui_polish_textures": []}
+        for index, (kind, (cell, frames)) in enumerate(verifier.UI_POLISH_LAYOUT.items()):
+            metadata = {"cell": cell, "pivot": [cell[0] // 2, cell[1] // 2], "columns": frames,
+                        "frame_count": frames, "texture": kind + ".png", "filter": "nearest",
+                        "native_pixels": True, "durations_ms": [100] * frames,
+                        "layers": ["authored fixture"], "tags": {"ALL": {"from": 0, "to": frames - 1}}}
+            (directory / (kind + ".json")).write_text(json.dumps(metadata), encoding="utf-8")
+            pixels = Image.new("RGBA", (cell[0] * frames, cell[1]), (index * 20, 80, 100, 0))
+            pixels.putpixel((1, 1), (30, 50, 70, 255))
+            pixels.save(directory / (kind + ".png"))
+            size, digest = verifier._visible_pixels(directory / (kind + ".png"))
+            self.report["ui_polish_json"][kind] = json.dumps(metadata)
+            row = {"kind": kind, "path": "res://assets/ui/human_feedback003a/" + kind + ".png",
+                   "metadata_path": "res://assets/ui/human_feedback003a/" + kind + ".json",
+                   "size": size, "valid": True, "visible_pixels": True,
+                   "transparent_rgb_normalized": True, "visible_rgba_sha256": digest}
+            row.update({key: deepcopy(metadata[key]) for key in
+                        ("cell", "pivot", "tags", "durations_ms", "layers", "columns", "frame_count")})
+            self.report["ui_polish_textures"].append(row)
+
+    def tearDown(self): self.temp.cleanup()
+
+    def verify(self, report=None): return verifier.verify_ui_polish_assets(self.report if report is None else report, self.root)
+
+    def test_complete_source_pixels_metadata_and_native_topology_accepted(self):
+        result = self.verify()
+        self.assertEqual(result["ui_polish_textures_verified"], 7)
+        self.assertTrue(result["ui_polish_pixels_exact"])
+        self.assertTrue(result["ui_polish_metadata_matches_source"])
+
+    def test_missing_duplicate_unknown_or_marker_only_reports_rejected(self):
+        cases = [deepcopy(self.report) for _ in range(5)]
+        cases[0]["ui_polish_textures"].pop()
+        cases[1]["ui_polish_textures"][-1] = deepcopy(cases[1]["ui_polish_textures"][0])
+        cases[2]["ui_polish_textures"][0]["kind"] = "unknown"
+        cases[3]["ui_polish_json"].pop("merchant")
+        cases[4] = {"ui_polish_pass": True}
+        for case in cases:
+            with self.subTest(case=case):
+                with self.assertRaisesRegex(RuntimeError, "all seven"): self.verify(case)
+
+    def test_one_visible_pixel_or_alpha_change_rejected(self):
+        path = self.root / "assets/ui/human_feedback003a/merchant.png"
+        for value in [(31, 50, 70, 255), (30, 50, 70, 254)]:
+            with self.subTest(value=value):
+                with Image.open(path) as source: pixels = source.copy()
+                pixels.putpixel((1, 1), value)
+                pixels.save(path)
+                with self.assertRaisesRegex(RuntimeError, "UI pixels"): self.verify()
+
+    def test_invisible_rgb_normalization_does_not_hide_visible_changes(self):
+        path = self.root / "assets/ui/human_feedback003a/merchant.png"
+        with Image.open(path) as source: pixels = source.copy()
+        pixels.putpixel((2, 2), (255, 20, 35, 0))
+        pixels.save(path)
+        self.assertTrue(self.verify()["ui_polish_pixels_exact"])
+
+    def test_no_visible_source_cannot_pass_with_success_flags(self):
+        row = self.report["ui_polish_textures"][0]
+        path = self.root / row["path"].removeprefix("res://")
+        Image.new("RGBA", tuple(row["size"]), (255, 10, 20, 0)).save(path)
+        row["visible_rgba_sha256"] = verifier._visible_pixels(path)[1]
+        with self.assertRaisesRegex(RuntimeError, "UI pixels"): self.verify()
+
+    def test_metadata_and_runtime_resource_path_drift_rejected(self):
+        for field in ("path", "metadata_path"):
+            report = deepcopy(self.report)
+            report["ui_polish_textures"][0][field] = "res://assets/ui/other.png"
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(RuntimeError, "path differs"): self.verify(report)
+        metadata = json.loads(self.report["ui_polish_json"]["merchant"])
+        metadata["durations_ms"][0] += 1
+        self.report["ui_polish_json"]["merchant"] = json.dumps(metadata)
+        with self.assertRaisesRegex(RuntimeError, "authored metadata differs"): self.verify()
+
+    def test_imported_pivot_tags_duration_layers_and_grid_drift_rejected(self):
+        for field, value in (("pivot", [0, 0]), ("tags", {}), ("durations_ms", []),
+                             ("layers", []), ("columns", 1), ("frame_count", 1), ("cell", [1, 1])):
+            report = deepcopy(self.report)
+            report["ui_polish_textures"][3][field] = value
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(RuntimeError, "topology differs"): self.verify(report)
+
+    def test_incomplete_pixel_evidence_or_failure_flags_rejected(self):
+        for field, value in (("visible_rgba_sha256", "0" * 64), ("valid", False),
+                             ("visible_pixels", False), ("transparent_rgb_normalized", False), ("size", [1, 1])):
+            report = deepcopy(self.report)
+            report["ui_polish_textures"][0][field] = value
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(RuntimeError, "UI pixels"): self.verify(report)
 
 
 if __name__ == "__main__": unittest.main(verbosity=2)

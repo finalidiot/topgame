@@ -2,8 +2,8 @@
   "schema_version": 1,
   "title": "Foundry Circuit / Steel Horizon",
   "authorship": "Original Task 002C.6 fast melodic metal composition: authored riffs, hook, harmonies, fills and synthesized instruments. Broad power-metal energy only; no borrowed song, melody, audio sample or named-artist imitation.",
-  "score_sha256": "1c6735617648581db7d7ebfe3f7776d9d97960710d5520d0334f9a16e9a024f1",
-  "generator_sha256": "2d59720b204fe96ca7c27ad7324ac46fc24dcdb277c14dd0c8393fc9720ae922",
+  "score_sha256": "2a442752b67c860bfead5362e5cbecb49b5b25931cd7707f7576c89c477e5bdf",
+  "generator_sha256": "0d01bab9062099562d74943ad71a46b2c2ea655e99d0fa13f0772d016a1a0fe7",
   "grid": {
     "sample_rate": 32000,
     "channels": 2,
@@ -15,25 +15,30 @@
     "bpm": 172,
     "actual_bpm": 172.0000251953162,
     "render_gain": 0.7993717491144928,
+    "mastering": {
+      "preserved_gain": 0.7993717491144928,
+      "title_gain": 0.8987780148656391,
+      "revised_layer_gain": 0.6367834961815998
+    },
     "note_counts": {
-      "title": 2314,
+      "title": 1711,
       "workshop": 448,
       "run_base": 1436,
-      "run_pressure": 757,
-      "run_boss": 581
+      "run_pressure": 1447,
+      "run_boss": 1288
     },
     "instrument_events": {
       "title": {
-        "chug": 592,
-        "bass": 296,
-        "lead": 506,
-        "kick": 516,
+        "chug": 616,
+        "bass": 308,
+        "kick": 328,
         "snare": 80,
-        "hat": 64,
+        "hat": 80,
         "crash": 4,
         "tom": 32,
-        "power": 32,
-        "ride": 192
+        "ride": 176,
+        "power": 28,
+        "lead": 59
       },
       "workshop": {
         "clean": 224,
@@ -53,23 +58,28 @@
         "ride": 192
       },
       "run_pressure": {
-        "lead": 253,
-        "kick": 324,
+        "chug": 592,
+        "bass": 296,
+        "kick": 300,
         "hat": 128,
         "crash": 4,
         "tom": 32,
-        "snare": 16
+        "snare": 16,
+        "power": 32,
+        "lead": 47
       },
       "run_boss": {
-        "power": 128,
-        "lead": 381,
+        "chug": 624,
+        "bass": 312,
+        "power": 160,
+        "snare": 80,
         "crash": 4,
         "tom": 32,
-        "snare": 16,
-        "kick": 20
+        "kick": 28,
+        "lead": 48
       }
     },
-    "cached_voices": 283
+    "cached_voices": 510
   },
   "stems": {
     "title": {
@@ -77,14 +87,14 @@
       "channels": 2,
       "sample_width_bytes": 2,
       "frames": 1428837,
-      "peak": 0.48075807977538376,
-      "rms": 0.10253309028701492,
-      "rms_dbfs": -19.782719060973136,
+      "peak": 0.499984740745262,
+      "rms": 0.08855461086703928,
+      "rms_dbfs": -21.055776420256542,
       "boundary_step": 0.0,
-      "largest_adjacent_step": 0.13162633136997587,
+      "largest_adjacent_step": 0.07650990325632495,
       "clipped_samples": 0,
-      "sha256": "50c26465dc380274c3c02615b02d634dc0f75e64a8e60e2476fc025a543f22ee",
-      "description": "Bold original metal introduction: wide galloping power chords, complete hook with thirds, melodic bass, full driving drums and written fills."
+      "sha256": "7829769e72ec39ff0075e927df2f4361d62aaa4792461aea0ce2e3cd0ae35ee1",
+      "description": "Riff-led original title form: low doubled guitars, groove and drive, spaced lower-register harmonized hook, two-bar lead punctuation, then return to the riff."
     },
     "workshop": {
       "sample_rate": 32000,
@@ -119,28 +129,28 @@
       "channels": 2,
       "sample_width_bytes": 2,
       "frames": 1428837,
-      "peak": 0.31998657185583057,
-      "rms": 0.08296160617046303,
-      "rms_dbfs": -21.622456968393664,
+      "peak": 0.1976683858760338,
+      "rms": 0.0339952264588516,
+      "rms_dbfs": -29.371641228640147,
       "boundary_step": 0.0,
-      "largest_adjacent_step": 0.10950041199987792,
+      "largest_adjacent_step": 0.031311990722373124,
       "clipped_samples": 0,
-      "sha256": "0c6184e8fd08d4a59a6d73d2756587752e355d66e8e135a87827cd26153d3edd",
-      "description": "Phase-aligned original lead hook plus complementary kick strokes that complete the double-kick grid, upper cymbal drive and changing eight-bar fills."
+      "sha256": "6dfb99156f4e667fcccc82386cdd5681282f1624bf685f6faaf03c5ab4be62b0",
+      "description": "Rhythmic pressure layer: complementary chugs and bass, developed double kick, phrase fills and occasional lower hook; only two lead-break bars in a 32-bar cycle."
     },
     "run_boss": {
       "sample_rate": 32000,
       "channels": 2,
       "sample_width_bytes": 2,
       "frames": 1428837,
-      "peak": 0.25659962767418437,
-      "rms": 0.06321117037079181,
-      "rms_dbfs": -23.984123370514475,
+      "peak": 0.16107669301431318,
+      "rms": 0.027833987506246292,
+      "rms_dbfs": -31.108491440758797,
       "boundary_step": 0.0,
-      "largest_adjacent_step": 0.08566545609912411,
+      "largest_adjacent_step": 0.0315256202887051,
       "clipped_samples": 0,
-      "sha256": "8c164b0ac53a52b891d1c691d91c01a5064720c113e1bf2ce1346c571c647e7a",
-      "description": "Full anthem layer: harmonized guitar thirds, wide sustained power chords, lower melodic counterline and tom/crash cadence; adds to the same moving score."
+      "sha256": "dda2cc7a0af2123a9a1b8955c0a9b3682635d032b381b49e98ffd2bdae5a0384",
+      "description": "Broader heavy-band layer: low power chords and chugs, aggressive bass, stronger backbeat/fills and spaced lower harmonized hooks; no solo line."
     }
   },
   "mixes": {
@@ -153,23 +163,23 @@
       "clipped_samples": 0
     },
     "pressure_run": {
-      "peak": 0.5360576189458907,
-      "rms": 0.10041023814553138,
-      "rms_dbfs": -19.964440057880047,
+      "peak": 0.5312662129581591,
+      "rms": 0.07640166304035609,
+      "rms_dbfs": -22.337943760059723,
       "boundary_step": 0.0,
-      "largest_adjacent_step": 0.12689596240119633,
+      "largest_adjacent_step": 0.07611316263313697,
       "clipped_samples": 0
     },
     "boss_run": {
-      "peak": 0.6800134281441695,
-      "rms": 0.12040281152264495,
-      "rms_dbfs": -18.387267435232616,
+      "peak": 0.6800134281441694,
+      "rms": 0.09656064966334978,
+      "rms_dbfs": -20.303996419055327,
       "boundary_step": 0.0,
-      "largest_adjacent_step": 0.15131076998199408,
+      "largest_adjacent_step": 0.10480056154057435,
       "clipped_samples": 0
     }
   },
-  "adaptive_vertex_maximum_peak": 0.6800134281441695,
+  "adaptive_vertex_maximum_peak": 0.6800134281441694,
   "loop": {
     "begin_frame": 0,
     "end_frame": 1428837,

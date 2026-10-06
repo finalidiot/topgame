@@ -153,6 +153,27 @@ func _capture(name: String) -> void:
 	check(frame != null and not frame.is_empty(), "Rendered " + name)
 	if frame != null: check(frame.save_png(captures.path_join(name + ".png")) == OK, "Saved " + name)
 
+func _check_mutation_layout(cards: Array[Button]) -> void:
+	check(cards.size() == 2, "Mutation presents exactly two opposing branch cards")
+	if cards.size() != 2: return
+	var inspector: Control = game.menus._ability_inspector
+	check(is_instance_valid(inspector) and inspector.visible and is_equal_approx(inspector.size.x,188.0), "Mutation has a fixed 188px reading panel")
+	for card: Button in cards:
+		check(is_equal_approx(card.size.x,192.0), "Mutation retains larger 192px cards beside the reading panel")
+		check(card.focus_mode == Control.FOCUS_ALL, "Each mutation remains a native keyboard/controller focus target")
+		if is_instance_valid(inspector):
+			check(not card.get_global_rect().intersects(inspector.get_global_rect()), "Mutation card and reading panel have separate nonoverlapping areas")
+		var authored: Array[TextureRect] = []
+		for child: Node in _nodes(card):
+			if child is TextureRect and child.texture is AtlasTexture: authored.append(child)
+		check(authored.size() == 1, "Each mutation keeps one native authored illustration")
+		if authored.size() == 1:
+			check(authored[0].size == Vector2(128,128) and (authored[0].texture as AtlasTexture).region.size == Vector2(64,64), "Mutation illustration keeps its complete native cell at integer2x")
+	check(not cards[0].get_global_rect().intersects(cards[1].get_global_rect()), "Opposing mutation cards do not overlap each other")
+	if is_instance_valid(inspector):
+		check(Rect2(0,0,640,360).encloses(inspector.get_global_rect()), "Fixed reading panel stays inside the native viewport")
+		check(get_root().gui_get_focus_owner() in cards and str(inspector.get("mutation_id")) == game.menus.focused_power_id(), "Native focused branch drives the fixed reading panel")
+
 func _test_branch(power_id: String, branch_id: String) -> void:
 	_prepare_target(power_id)
 	await _settle()
@@ -179,11 +200,15 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	var cards: Array[Button] = []
 	for node: Node in _nodes(game.menus):
 		if node is Button: cards.append(node)
-	check(cards.size() == 2 and cards[0].size.x > 192, "Mutation uses two larger opposing cards")
+	_check_mutation_layout(cards)
 	_check_layout()
 	await _capture("mutation-" + power_id)
 	await _tap(JOY_BUTTON_DPAD_LEFT)
 	check(game.menus.focused_power_id() == str(branches[1]), "D-pad wraps through opposing mutation branches")
+	var inspector: Control = game.menus._ability_inspector
+	if is_instance_valid(inspector):
+		var reading: Dictionary = inspector.get("breakdown")
+		check(str(inspector.get("mutation_id")) == str(branches[1]) and bool(reading.get("branch_preview",false)) and int(reading.get("rank",0)) == 2, "Mapped branch focus updates preview details while retaining the owned Rank II")
 	_axis(0.9)
 	await _settle()
 	var focused: String = game.menus.focused_power_id()

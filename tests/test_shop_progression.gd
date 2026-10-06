@@ -146,7 +146,9 @@ func _controller_and_mouse() -> void:
 func _insufficient() -> void:
 	await _boot_fixture("empty-wallet", 0)
 	await _click(_button("open_shop"))
-	check(_button("request_packet_purchase", "standard").disabled and _button("request_packet_purchase", "reclaimed").disabled, "Both unavailable purchases communicate insufficient funds")
+	check(_button("request_packet_purchase", "standard").disabled, "Standard purchase communicates insufficient funds")
+	await _key_tap(KEY_DOWN)
+	check(game.menus.selected_shop_product() == "reclaimed" and _button("request_packet_purchase", "reclaimed").disabled, "Selecting Reclaimed communicates its insufficient funds")
 	_focus("Empty wallet Shop")
 	_check_layout("Empty wallet Shop")
 	game._action("request_packet_purchase", "standard")

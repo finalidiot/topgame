@@ -1,0 +1,60 @@
+{
+  "cell": [
+    48,
+    64
+  ],
+  "pivot": [
+    24,
+    60
+  ],
+  "layers": [
+    "bounded contact shadow",
+    "boots and fixed stance",
+    "work clothes and leather apron",
+    "cap goggles and expression",
+    "authored arm and glove poses",
+    "sorting slip or hand-delivered pouch"
+  ],
+  "tags": {
+    "IDLE": {
+      "from": 0,
+      "to": 3
+    },
+    "SELECT": {
+      "from": 4,
+      "to": 5
+    },
+    "PURCHASE": {
+      "from": 6,
+      "to": 9
+    },
+    "RARE": {
+      "from": 10,
+      "to": 13
+    }
+  },
+  "durations_ms": [
+    1200,
+    160,
+    1300,
+    180,
+    180,
+    220,
+    140,
+    140,
+    170,
+    220,
+    130,
+    180,
+    160,
+    250
+  ],
+  "version": 1,
+  "texture": "merchant.png",
+  "columns": 14,
+  "frame_count": 14,
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A human feedback",
+  "source": "../../source-art/human_feedback003a/merchant.aseprite"
+}

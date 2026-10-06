@@ -1,5 +1,8 @@
 extends Node
-## Original synchronized presentation music. Inputs are copied scalar values
+## Original synchronized presentation music. Rhythmic pressure and broad hooks
+## carry escalation; the authored score reserves high leads for brief breaks.
+## First Machine/Results and opening-Run PCM retain their accepted arrangements.
+## Inputs are copied scalar values
 ## from existing Run observations; this node has no combat host/RNG/save access.
 const ASSET_ROOT: String = "res://assets/audio/music/"
 const STEM_NAMES: Array[String] = ["title", "workshop", "run_base", "run_pressure", "run_boss"]
@@ -204,7 +207,7 @@ static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}, p
 	var stage: int = clampi(int(observed.stage) if progression.is_empty() else int(progression.get("stage", 0)), 0, PROGRESSION_STAGES.size() - 1)
 	var row: Dictionary = PROGRESSION_STAGES[stage]
 	# Calm/draining can release temporary density, but a mature Run retains its
-	# lead and anthem arrangement. The two components keep their own hysteresis.
+	# rhythmic drive and broad hook arrangement. The two components keep their own hysteresis.
 	weight = maxf(weight, float(row.pressure))
 	boss = maxf(boss, float(row.boss))
 	# Critical spin and a genuinely observed boss still have a musical step

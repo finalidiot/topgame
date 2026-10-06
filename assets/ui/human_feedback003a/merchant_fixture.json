@@ -1,0 +1,32 @@
+{
+  "cell": [
+    192,
+    64
+  ],
+  "pivot": [
+    96,
+    20
+  ],
+  "layers": [
+    "counter surface and lower weight",
+    "fasteners and used workshop tools",
+    "printed parts-trade paper label"
+  ],
+  "tags": {
+    "COUNTER": {
+      "from": 0,
+      "to": 0
+    }
+  },
+  "durations_ms": [
+    1000
+  ],
+  "version": 1,
+  "texture": "merchant_fixture.png",
+  "columns": 1,
+  "frame_count": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A human feedback",
+  "source": "../../source-art/human_feedback003a/merchant_fixture.aseprite"
+}

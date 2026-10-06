@@ -263,8 +263,8 @@ func _focus_is_visible(context: String) -> void:
 	if focused == null: return
 	check(focused.is_visible_in_tree() and focused.focus_mode == Control.FOCUS_ALL, context+": focused control is visible and navigable")
 	check(Rect2(Vector2.ZERO, Vector2(640, 360)).encloses(focused.get_global_rect()), context+": focused control is inside the viewport")
-	var style: StyleBoxFlat = focused.get_theme_stylebox("focus") as StyleBoxFlat
-	check(style != null and style.border_color.a > 0.0 and style.get_border_width(SIDE_LEFT) > 0, context+": focus has a visible border")
+	var style: StyleBoxTexture = focused.get_theme_stylebox("focus") as StyleBoxTexture
+	check(style != null and style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible(), context+": focus has a visible authored pixel frame")
 
 func _navigate(target: Control) -> bool:
 	check(target != null, "Requested navigation target exists")

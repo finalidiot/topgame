@@ -9,6 +9,13 @@ const MAX_LIVE: int = 3
 const OWNER_COOLDOWN: float = 4.0
 const MAX_INSTANCE_SECONDS: float = 4.0
 const MAX_HISTORY: int = 96
+const ORIENTATION_MIN_SPEED: float = 16.0
+const ORIENTATION_ENTER: float = PI / 4.0
+const ORIENTATION_EXIT: float = PI / 6.0
+const ORIENTATION_CANDIDATE_CONE: float = PI / 9.0
+const ORIENTATION_HOLD: float = 0.10
+const ORIENTATION_SETTLE: float = 0.22
+const ORIENTATION_FACING_DEADZONE: float = 0.24
 const BLADE_BEASTS: Dictionary = {
 	"smash": "black_arrow", "lopsider": "black_arrow", "fork": "black_arrow",
 	"hammerfall": "iron_bull", "sawtooth": "iron_bull", "puck": "iron_bull",
@@ -24,6 +31,7 @@ var _enabled: bool = true
 var _active: Array[Dictionary] = []
 var _owner_ready: Dictionary = {}
 var _guard_seen: Dictionary = {}
+var _orientations: Dictionary = {}
 var _metadata: Dictionary = {}
 var _textures: Dictionary = {}
 var _assets_loaded: bool = false
@@ -49,6 +57,7 @@ func reset() -> void:
 	_active.clear()
 	_owner_ready.clear()
 	_guard_seen.clear()
+	_orientations.clear()
 	_events.clear()
 	_clock = 0.0
 	_sequence = 0
@@ -60,16 +69,98 @@ func set_enabled(value: bool) -> void:
 	_enabled = value
 	if not value:
 		_active.clear()
+		_orientations.clear()
 
 func finish() -> void:
 	for item: Dictionary in _active: _record("expired", item, "battle_end")
 	_active.clear()
+	_orientations.clear()
 
 func _host() -> Object:
 	return _host_ref.get_ref() if _host_ref != null else null
 
 func _live_owner(owner: Dictionary) -> bool:
 	return not owner.is_empty() and str(owner.get("outcome", "")).is_empty() and str(owner.get("combatant_type", "")) == "full_top"
+
+static func _facing(direction: Vector2, previous: bool) -> bool:
+	# Isometric screen heading, independent of the authored frame's floor pivot.
+	var screen: Vector2 = Vector2(direction.x - direction.y, (direction.x + direction.y) * 0.5).normalized()
+	if absf(screen.x) < ORIENTATION_FACING_DEADZONE: return previous
+	return screen.x < 0.0
+
+static func orientation_state(direction: Vector2) -> Dictionary:
+	var stable: Vector2 = direction.normalized() if direction.is_finite() and direction.length_squared() > 0.000001 else Vector2.RIGHT
+	return {"direction": stable, "mirror": _facing(stable, false), "candidate": Vector2.ZERO,
+		"candidate_seconds": 0.0, "settle_remaining": 0.0, "responses": 0}
+
+## One bounded facing response to a sustained turn. This only transforms the
+## complete native frame by its existing mirror path; it never retimes frames,
+## tracks every heading, rotates pixels or changes any simulated owner state.
+static func orientation_step(previous: Dictionary, velocity: Vector2, dt: float) -> Dictionary:
+	var state: Dictionary = previous.duplicate(true)
+	if state.is_empty(): state = orientation_state(velocity)
+	if not is_finite(dt) or dt <= 0.0: return state
+	state.settle_remaining = maxf(0.0, float(state.settle_remaining) - dt)
+	if not velocity.is_finite() or velocity.length_squared() < ORIENTATION_MIN_SPEED * ORIENTATION_MIN_SPEED:
+		state.candidate = Vector2.ZERO
+		state.candidate_seconds = 0.0
+		return state
+	var heading: Vector2 = velocity.normalized()
+	# Do not absorb a gradual turn at the projected vertical seam. Retaining the
+	# last meaningful heading here lets the later clear left/right travel earn
+	# its response, rather than silently consuming the threshold inside deadzone.
+	var screen: Vector2 = Vector2(heading.x - heading.y, (heading.x + heading.y) * 0.5).normalized()
+	if absf(screen.x) < ORIENTATION_FACING_DEADZONE:
+		state.candidate = Vector2.ZERO
+		state.candidate_seconds = 0.0
+		return state
+	var angle: float = absf(Vector2(state.direction).angle_to(heading))
+	if angle <= ORIENTATION_EXIT:
+		state.candidate = Vector2.ZERO
+		state.candidate_seconds = 0.0
+		return state
+	# Once a turn enters at 45 degrees, the 30-degree exit threshold keeps its
+	# candidate alive through small corrections around the entry boundary.
+	if angle < ORIENTATION_ENTER and Vector2(state.candidate) == Vector2.ZERO: return state
+	if float(state.settle_remaining) > 0.0: return state
+	var candidate: Vector2 = state.candidate
+	if candidate == Vector2.ZERO or absf(candidate.angle_to(heading)) > ORIENTATION_CANDIDATE_CONE:
+		state.candidate = heading
+		state.candidate_seconds = 0.0
+	state.candidate_seconds = float(state.candidate_seconds) + dt
+	if float(state.candidate_seconds) + 0.000001 >= ORIENTATION_HOLD:
+		state.direction = Vector2(state.candidate)
+		state.mirror = _facing(Vector2(state.direction), bool(state.mirror))
+		state.candidate = Vector2.ZERO
+		state.candidate_seconds = 0.0
+		state.settle_remaining = ORIENTATION_SETTLE
+		state.responses = int(state.responses) + 1
+	return state
+
+func _owner_orientation(owner: Dictionary, initial_direction: Vector2) -> Dictionary:
+	var id: int = int(owner.entity_id)
+	if not _orientations.has(id): _orientations[id] = orientation_state(initial_direction)
+	return _orientations[id]
+
+func _observe_orientations(dt: float) -> void:
+	var host: Object = _host()
+	for id: int in _orientations.keys():
+		var owner: Dictionary = host.entity(id)
+		if not _live_owner(owner):
+			_orientations.erase(id)
+			continue
+		_orientations[id] = orientation_step(_orientations[id], Vector2(owner.vel), dt)
+	for item: Dictionary in _active:
+		if not bool(item.follow_owner): continue
+		var owner: Dictionary = host.entity(int(item.owner_entity_id))
+		if not _live_owner(owner): continue
+		var state: Dictionary = _owner_orientation(owner, Vector2(item.direction))
+		if int(state.responses) > int(item.get("orientation_responses", 0)):
+			_record("direction_response", item, "sustained_turn")
+		item.direction = Vector2(state.direction)
+		item.orientation_mirror = bool(state.mirror)
+		item.orientation_responses = int(state.responses)
+		item.orientation_settle = float(state.settle_remaining)
 
 func _load_assets() -> void:
 	if _assets_loaded or not FileAccess.file_exists(MANIFEST_PATH): return
@@ -177,12 +268,14 @@ func _spawn(owner: Dictionary, trigger: String, phase: String, pos: Vector2, dir
 		_active.remove_at(replace)
 	var beast: String = beast_for_blade(str(owner.get("build", {}).get("blade", "")))
 	if beast.is_empty(): return {}
+	var orientation: Dictionary = _owner_orientation(owner, direction)
 	_sequence += 1
 	var rank_value: int = clampi(int(owner.get("power_ranks", {}).get(EVENT_POWERS.get(trigger, ""), 1)), 1, 3)
 	var item: Dictionary = {"instance_id": _sequence, "beast": beast, "owner_entity_id": owner_id,
 		"trigger": trigger, "phase": phase, "phase_age": 0.0, "phase_duration": _tag_seconds(beast, phase),
 		"age": 0.0, "world_pos": pos, "direction": direction, "strength": clampf(strength, 0.0, 3.0),
-		"rank": rank_value, "player": player, "impact": phase == "strike", "follow_owner": phase != "strike"}
+		"rank": rank_value, "player": player, "impact": phase == "strike", "follow_owner": phase != "strike",
+		"orientation_mirror": bool(orientation.mirror), "orientation_responses": int(orientation.responses), "orientation_settle": float(orientation.settle_remaining)}
 	_active.append(item)
 	_owner_ready[owner_id] = _clock + OWNER_COOLDOWN
 	_spawned += 1
@@ -272,6 +365,7 @@ func update(dt: float) -> void:
 		finish()
 		return
 	_clock += maxf(0.0, dt)
+	_observe_orientations(dt)
 	for index: int in range(_active.size() - 1, -1, -1):
 		var item: Dictionary = _active[index]
 		var owner: Dictionary = host.entity(int(item.owner_entity_id))
@@ -320,7 +414,7 @@ func draw_geometry_for(item: Dictionary) -> Dictionary:
 	if str(item.phase) == "prepare": lift = 12.0 * clampf(float(item.phase_age) / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
 	elif str(item.phase) == "travel": lift = 12.0
 	var direction: Vector2 = Vector2(item.direction)
-	var mirror: bool = direction.x - direction.y < -0.001
+	var mirror: bool = bool(item.get("orientation_mirror", direction.x - direction.y < -0.001)) if bool(item.follow_owner) else direction.x - direction.y < -0.001
 	var mirrored_pivot: Vector2 = Vector2(size.x - pivot.x, pivot.y) if mirror else pivot
 	var anchor: Vector2 = point - Vector2(0.0, lift)
 	var rect: Rect2 = Rect2((anchor - mirrored_pivot).round(), Vector2(-size.x if mirror else size.x, size.y))
@@ -364,4 +458,4 @@ func snapshot() -> Dictionary:
 			if not owner.is_empty(): item.world_pos = Vector2(owner.pos)
 	return {"enabled": _enabled, "count": _active.size(), "max_live": MAX_LIVE, "peak_live": _peak_live,
 		"spawned": _spawned, "suppressed": _suppressed, "cooldown_seconds": OWNER_COOLDOWN,
-		"max_instance_seconds": MAX_INSTANCE_SECONDS, "active": active, "events": _events.duplicate(true)}
+		"max_instance_seconds": MAX_INSTANCE_SECONDS, "active": active, "events": _events.duplicate(true), "orientations": _orientations.duplicate(true)}

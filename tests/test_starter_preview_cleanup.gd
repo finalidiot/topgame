@@ -27,27 +27,58 @@ func check(value: bool, message: String) -> void:
 		failures+=1
 		push_error(message)
 
-func fixture(id: String, clock: float, animated: bool, assembly_only: bool) -> SubViewport:
+func fixture(id: String, clock: float, animated: bool, assembly_only: bool, ceremony: bool = false) -> SubViewport:
 	var viewport := SubViewport.new()
-	viewport.size=Vector2i(192,144)
+	viewport.size=Vector2i(300,180) if ceremony else Vector2i(192,144)
 	viewport.disable_3d=true
 	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
 	viewport.canvas_item_default_texture_filter=Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	root.add_child(viewport)
 	var preview: Control=AssemblyOnlyPreview.new() if assembly_only else Preview.new()
-	preview.size=Vector2(192,144)
+	preview.size=Vector2(170,138) if ceremony else Vector2(192,144)
+	preview.position=Vector2(65,20) if ceremony else Vector2.ZERO
 	viewport.add_child(preview)
 	var starter: Dictionary=Starters.get_starter(id)
 	preview.set_build(starter.assembly)
 	preview.set_identity(id,starter.accent)
 	preview.animated=animated
-	preview.preview_scale=3.0
+	preview.preview_scale=4.0 if ceremony else 3.0
 	preview.set_process(false)
 	preview._clock=clock
 	preview.queue_redraw()
 	check(preview.texture_filter==CanvasItem.TEXTURE_FILTER_NEAREST,"Preview retains native nearest filtering")
 	check(preview.build==Starters.build_for(id),"Rendering preserves the exact legal assembly")
 	return viewport
+
+func test_native_ceremony_containment() -> void:
+	# The real ceremony owns a 170x138 preview at 4x inside a 192px card. The
+	# original larger fixture alone failed to catch neighbouring-card leaks.
+	var preview_area: Rect2i = Rect2i(65,20,170,138)
+	var card_area: Rect2i = Rect2i(54,0,192,180)
+	for id: String in ["breaker", "bastion"]:
+		var total_visible: int = 0
+		for clock: float in [0.0,0.32,0.35,0.4,0.6,0.7,1.1,1.4,1.45,1.6,1.98,2.7,3.12,3.51,3.96,4.2]:
+			var actual: SubViewport = fixture(id,clock,true,false,true)
+			var assembly: SubViewport = fixture(id,clock,true,true,true)
+			await process_frame
+			await process_frame
+			await RenderingServer.frame_post_draw
+			var image: Image = actual.get_texture().get_image()
+			var body: Image = assembly.get_texture().get_image()
+			check(image.get_size()==Vector2i(300,180) and body.get_size()==Vector2i(300,180),"Ceremony regression reads actual native rendered pixels")
+			var outside_preview: int = 0
+			var outside_card: int = 0
+			for y: int in range(image.get_height()):
+				for x: int in range(image.get_width()):
+					if image.get_pixel(x,y)==body.get_pixel(x,y): continue
+					total_visible += 1
+					if not preview_area.has_point(Vector2i(x,y)): outside_preview += 1
+					if not card_area.has_point(Vector2i(x,y)): outside_card += 1
+			check(outside_preview==0,"New %s ambient flecks stay inside their actual 170px ceremony preview at %.2f" % [id,clock])
+			check(outside_card==0,"New %s flecks never enter neighbouring machine cards at%.2f" % [id,clock])
+			actual.free()
+			assembly.free()
+		check(total_visible>0,"Containment preserves visible intentional %s ambient identity" % id)
 
 func run() -> void:
 	for path: String in PROTECTED_HASHES:
@@ -74,8 +105,11 @@ func run() -> void:
 						# Clocks0/.37 expose it beside the rig; both states are legitimate.
 						check(not same if clock<1.0 else same,"Vane retains visible orbit dots and normal opaque occlusion (%.2f animated=%s)"%[clock,str(animated)])
 					else:
-						check(same,"Breaker/Bastion have no detached identity marks (%s %.2f animated=%s)"%[id,clock,str(animated)])
+						var preview: Control = actual.get_child(0)
+						var emitted: Array[Dictionary] = preview.ambient_samples(clock)
+						check(same if emitted.is_empty() else not same,"Intentional bounded %s flecks appear only during authored sparse emission windows (%.2f animated=%s)"%[id,clock,str(animated)])
 				actual.free()
 				assembly.free()
+	await test_native_ceremony_containment()
 	print("STARTER_PREVIEW_CLEANUP_%s checks=%d failures=%d"%["PASS" if failures==0 else "FAIL",checks,failures])
 	quit(1 if failures else 0)
