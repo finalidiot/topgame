@@ -1,14 +1,21 @@
 extends RefCounted
-## Bounded, cosmetic manifestations driven by explicit, real power events.
+## Bounded cosmetic punctuation for exceptionally severe full-top collisions.
 ## This controller only reads its host/fighters. It never calls a gameplay
 ## hook, writes a fighter, or spends any random stream.
 
 const MANIFEST_PATH: String = "res://assets/powers/beasts_002c5_2/manifest.json"
 const ASSET_ROOT: String = "res://assets/powers/beasts_002c5_2/"
-const MAX_LIVE: int = 3
+const MAX_LIVE: int = 1
 const OWNER_COOLDOWN: float = 4.0
+const GLOBAL_COOLDOWN: float = 1.6
 const MAX_INSTANCE_SECONDS: float = 4.0
 const MAX_HISTORY: int = 96
+# Fixed production value is calibrated by the deterministic natural Run study.
+# Canonical normal impulse × relative closing speed is an impact work proxy,
+# not physical joules/dissipated energy. Natural Run study: 4,292 meaningful
+# contacts, 32 exceptional qualifiers. No moving live percentile or build gate.
+const EXTREME_IMPACT_SCORE: float = 1000000.0
+const MOTION_PHASES: Array[String] = ["prepare", "travel", "strike", "recovery"]
 const ORIENTATION_MIN_SPEED: float = 16.0
 const ORIENTATION_ENTER: float = PI / 4.0
 const ORIENTATION_EXIT: float = PI / 6.0
@@ -21,16 +28,13 @@ const BLADE_BEASTS: Dictionary = {
 	"hammerfall": "iron_bull", "sawtooth": "iron_bull", "puck": "iron_bull",
 	"guard": "stone_tortoise",
 	"balance": "coil_dragon", "outrigger": "coil_dragon", "hook": "coil_dragon", "crescent": "coil_dragon"}
-const EVENT_POWERS: Dictionary = {
-	"comet_charge": "iron_comet", "comet_release": "iron_comet",
-	"breakneck_charge": "redline", "breakneck_impact": "redline", "breakneck_recovery": "redline",
-	"impact_wake": "impact_wake", "anchor_mature": "dead_centre"}
-
 var _host_ref: WeakRef
 var _enabled: bool = true
 var _active: Array[Dictionary] = []
 var _owner_ready: Dictionary = {}
-var _guard_seen: Dictionary = {}
+var _seen_collisions: Dictionary = {}
+var _latest_collision_id: int = 0
+var _global_ready: float = 0.0
 var _orientations: Dictionary = {}
 var _metadata: Dictionary = {}
 var _textures: Dictionary = {}
@@ -40,6 +44,9 @@ var _sequence: int = 0
 var _spawned: int = 0
 var _suppressed: int = 0
 var _peak_live: int = 0
+var _qualified: int = 0
+var _contacts: int = 0
+var _duplicates: int = 0
 var _events: Array[Dictionary] = []
 
 static func beast_for_blade(blade: String) -> String:
@@ -56,7 +63,9 @@ func setup(battle: Object) -> void:
 func reset() -> void:
 	_active.clear()
 	_owner_ready.clear()
-	_guard_seen.clear()
+	_seen_collisions.clear()
+	_latest_collision_id = 0
+	_global_ready = 0.0
 	_orientations.clear()
 	_events.clear()
 	_clock = 0.0
@@ -64,6 +73,9 @@ func reset() -> void:
 	_spawned = 0
 	_suppressed = 0
 	_peak_live = 0
+	_qualified = 0
+	_contacts = 0
+	_duplicates = 0
 
 func set_enabled(value: bool) -> void:
 	_enabled = value
@@ -151,16 +163,28 @@ func _observe_orientations(dt: float) -> void:
 			continue
 		_orientations[id] = orientation_step(_orientations[id], Vector2(owner.vel), dt)
 	for item: Dictionary in _active:
-		if not bool(item.follow_owner): continue
 		var owner: Dictionary = host.entity(int(item.owner_entity_id))
 		if not _live_owner(owner): continue
 		var state: Dictionary = _owner_orientation(owner, Vector2(item.direction))
 		if int(state.responses) > int(item.get("orientation_responses", 0)):
-			_record("direction_response", item, "sustained_turn")
-		item.direction = Vector2(state.direction)
-		item.orientation_mirror = bool(state.mirror)
+			_record("direction_pending" if _unsafe_turn(item) else "direction_response", item, "sustained_turn")
+		item.pending_direction = Vector2(state.direction)
+		item.pending_mirror = bool(state.mirror)
 		item.orientation_responses = int(state.responses)
 		item.orientation_settle = float(state.settle_remaining)
+		_apply_pending_facing(item)
+
+func _unsafe_turn(item: Dictionary) -> bool:
+	# Black Arrow's complete rotating travel sequence stays on one root facing.
+	# The first strike key is the safe horizontal opening after the somersault.
+	return str(item.beast) == "black_arrow" and str(item.phase) == "travel"
+
+func _apply_pending_facing(item: Dictionary) -> void:
+	if _unsafe_turn(item): return
+	var changed: bool = bool(item.orientation_mirror) != bool(item.pending_mirror)
+	item.direction = Vector2(item.pending_direction)
+	item.orientation_mirror = bool(item.pending_mirror)
+	if changed: _record("facing_applied", item, "safe_authored_key")
 
 func _load_assets() -> void:
 	if _assets_loaded or not FileAccess.file_exists(MANIFEST_PATH): return
@@ -205,194 +229,160 @@ func frame_for(beast: String, phase: String, age: float, loop: bool = false) -> 
 
 func _record(kind: String, item: Dictionary = {}, reason: String = "") -> void:
 	var event: Dictionary = {"kind": kind, "time": _clock, "reason": reason}
-	for key: String in ["instance_id", "owner_entity_id", "beast", "trigger", "phase", "impact"]:
+	for key: String in ["instance_id", "collision_id", "owner_entity_id", "beast", "trigger", "phase", "impact", "impulse", "closing", "impact_score"]:
 		if item.has(key): event[key] = item[key]
 	_events.append(event)
 	if _events.size() > MAX_HISTORY: _events.pop_front()
 
-func _existing(owner_id: int, trigger: String) -> Dictionary:
-	for item: Dictionary in _active:
-		if int(item.owner_entity_id) == owner_id and str(item.trigger) == trigger: return item
-	return {}
-
-func _suppress(reason: String) -> void:
+func _suppress(reason: String, event: Dictionary = {}) -> void:
 	_suppressed += 1
-	_record("suppressed", {}, reason)
+	_record("suppressed", event, reason)
 
-func _phase(item: Dictionary, phase: String) -> void:
-	item.phase = phase
-	item.phase_age = 0.0
-	item.phase_duration = _tag_seconds(str(item.beast), phase)
-	_record("phase", item)
+## The already computed normal solver impulse incorporates both effective
+## masses/component modifiers. Multiplying by genuine closing speed distinguishes
+## violent motion from huge effective mass merely pressing slowly at contact.
+## No power state, build label or rolling sample participates in qualification.
+static func impact_metric(event: Dictionary) -> float:
+	return float(event.get("impulse", 0.0)) * float(event.get("closing", 0.0))
 
-func _spawn(owner: Dictionary, trigger: String, phase: String, pos: Vector2, direction: Vector2, strength: float) -> Dictionary:
+static func qualifies_impact(event: Dictionary) -> bool:
+	var score: float = impact_metric(event)
+	var impulse: float = float(event.get("impulse", 0.0))
+	var closing: float = float(event.get("closing", 0.0))
+	return is_finite(score) and is_finite(impulse) and is_finite(closing) and impulse > 0.0 and closing > 0.0 and score >= EXTREME_IMPACT_SCORE
+
+func _presentation_owner(event: Dictionary, first: Dictionary, second: Dictionary) -> Dictionary:
+	# The local player's huge received force is equally valid as delivered force.
+	# Otherwise use incoming normal momentum; an exact tie uses stable entity ID.
+	var player_id: int = int(_host().player_entity_id)
+	if int(first.entity_id) == player_id: return first
+	if int(second.entity_id) == player_id: return second
+	var first_momentum: float = float(event.get("first_normal_speed", 0.0)) * float(event.get("first_effective_mass", 0.0))
+	var second_momentum: float = float(event.get("second_normal_speed", 0.0)) * float(event.get("second_effective_mass", 0.0))
+	if not is_equal_approx(first_momentum, second_momentum): return first if first_momentum > second_momentum else second
+	return first if int(first.entity_id) < int(second.entity_id) else second
+
+## The canonical full-top solver supplies one monotonic event identity after
+## accepting a real contact. Suppressed events are consumed too, so replaying
+## that identity after a cooldown can never allocate another giant silhouette.
+func accept_impact(event: Dictionary) -> bool:
+	var host: Object = _host()
+	if not _enabled or host == null or bool(host.paused) or str(host.battle_status) != "battle": return false
+	var collision_id: int = int(event.get("collision_id", 0))
+	var first: Dictionary = host.entity(int(event.get("first_entity_id", 0)))
+	var second: Dictionary = host.entity(int(event.get("second_entity_id", 0)))
+	var normal: Vector2 = Vector2(event.get("normal", Vector2.ZERO))
+	var position: Vector2 = Vector2(event.get("position", Vector2.ZERO))
+	if collision_id <= 0 or not _live_owner(first) or not _live_owner(second) or int(first.entity_id) == int(second.entity_id): return false
+	if not normal.is_finite() or normal.length_squared() < 0.000001 or not position.is_finite(): return false
+	if collision_id <= _latest_collision_id:
+		_duplicates += 1
+		_record("duplicate", event, "collision_already_consumed")
+		return false
+	_latest_collision_id = collision_id
+	_seen_collisions[collision_id] = true
+	if _seen_collisions.size() > MAX_HISTORY: _seen_collisions.erase(_seen_collisions.keys()[0])
+	_contacts += 1
+	if not qualifies_impact(event): return false
+	_qualified += 1
+	var owner: Dictionary = _presentation_owner(event, first, second)
 	var owner_id: int = int(owner.entity_id)
-	# A real paid preparation takes over a still-visible generic strike/guard.
-	# Reuse its slot instead of losing the committed move or adding a copy.
-	for previous: Dictionary in _active:
-		if int(previous.owner_entity_id) != owner_id: continue
-		if trigger in ["comet_charge", "breakneck_charge"] and str(previous.trigger) in ["impact_wake", "anchor_mature"]:
-			_record("superseded", previous, "real_commit_priority")
-			previous.trigger = trigger
-			previous.world_pos = pos
-			previous.direction = direction
-			previous.strength = clampf(strength, 0.0, 3.0)
-			previous.rank = clampi(int(owner.get("power_ranks", {}).get(EVENT_POWERS[trigger], 1)), 1, 3)
-			# Preserve allocation age: priority cannot extend the four-second
-			# lifetime ceiling of an existing slot.
-			previous.impact = false
-			previous.follow_owner = true
-			_owner_ready[owner_id] = _clock + OWNER_COOLDOWN
-			_phase(previous, phase)
-			_record("repurposed", previous, "real_commit_priority")
-			return previous
-	if _clock < float(_owner_ready.get(owner_id, 0.0)):
-		_suppress("owner_cooldown")
-		return {}
-	# One meaningful event per owner at a time; an ongoing preparation retains
-	# its slot and its resolution updates that same instance.
-	for item: Dictionary in _active:
-		if int(item.owner_entity_id) == owner_id:
-			_suppress("owner_active")
-			return {}
-	var player: bool = owner_id == int(_host().player_entity_id)
 	if _active.size() >= MAX_LIVE:
-		var replace: int = -1
-		if player:
-			for index: int in range(_active.size()):
-				if not bool(_active[index].player): replace = index; break
-		if replace < 0:
-			_suppress("live_budget")
-			return {}
-		_record("evicted", _active[replace], "player_priority")
-		_active.remove_at(replace)
+		_suppress("live_budget", event)
+		return false
+	if _clock < float(_owner_ready.get(owner_id, 0.0)):
+		_suppress("owner_cooldown", event)
+		return false
+	if _clock < _global_ready:
+		_suppress("global_cooldown", event)
+		return false
 	var beast: String = beast_for_blade(str(owner.get("build", {}).get("blade", "")))
-	if beast.is_empty(): return {}
-	var orientation: Dictionary = _owner_orientation(owner, direction)
+	if beast.is_empty(): return false
+	_load_assets()
+	var velocity: Vector2 = Vector2(event.get("first_velocity" if owner_id == int(first.entity_id) else "second_velocity", owner.vel))
+	var direction: Vector2 = velocity.normalized() if velocity.is_finite() and velocity.length_squared() >= ORIENTATION_MIN_SPEED * ORIENTATION_MIN_SPEED else (normal if owner_id == int(first.entity_id) else -normal)
+	# Each new authored performance starts with this collision's facing; previous
+	# performances cannot drag a stale root candidate into the new timeline.
+	_orientations[owner_id] = orientation_state(direction)
+	var orientation: Dictionary = _orientations[owner_id]
 	_sequence += 1
-	var rank_value: int = clampi(int(owner.get("power_ranks", {}).get(EVENT_POWERS.get(trigger, ""), 1)), 1, 3)
-	var item: Dictionary = {"instance_id": _sequence, "beast": beast, "owner_entity_id": owner_id,
-		"trigger": trigger, "phase": phase, "phase_age": 0.0, "phase_duration": _tag_seconds(beast, phase),
-		"age": 0.0, "world_pos": pos, "direction": direction, "strength": clampf(strength, 0.0, 3.0),
-		"rank": rank_value, "player": player, "impact": phase == "strike", "follow_owner": phase != "strike",
-		"orientation_mirror": bool(orientation.mirror), "orientation_responses": int(orientation.responses), "orientation_settle": float(orientation.settle_remaining)}
+	var item: Dictionary = {"instance_id": _sequence, "collision_id": collision_id, "beast": beast, "owner_entity_id": owner_id,
+		"trigger": "extreme_impact", "phase": "prepare", "phase_age": 0.0, "phase_duration": _tag_seconds(beast, "prepare"),
+		"age": 0.0, "world_pos": Vector2(owner.pos), "impact_pos": position, "direction": direction,
+		"impulse": float(event.impulse), "closing": float(event.closing), "impact_score": impact_metric(event),
+		"strength": clampf(impact_metric(event) / EXTREME_IMPACT_SCORE, 1.0, 3.0), "rank": 1,
+		"player": owner_id == int(host.player_entity_id), "impact": true, "follow_owner": true,
+		"orientation_mirror": bool(orientation.mirror), "orientation_responses": 0, "orientation_settle": 0.0,
+		"pending_direction": direction, "pending_mirror": bool(orientation.mirror)}
 	_active.append(item)
 	_owner_ready[owner_id] = _clock + OWNER_COOLDOWN
+	_global_ready = _clock + GLOBAL_COOLDOWN
 	_spawned += 1
 	_peak_live = maxi(_peak_live, _active.size())
 	_record("spawned", item)
-	return item
+	return true
 
-## No inferred owner or acquisition preview may create a beast. Provenance is
-## supplied only at the actual semantic power hooks in PowerRuntime.
-func accept_event(kind: String, pos: Vector2, direction: Vector2, strength: float, provenance: Dictionary) -> void:
-	var host: Object = _host()
-	if not _enabled or host == null or bool(host.paused) or str(host.battle_status) != "battle": return
-	if not bool(provenance.get("beast_trigger", false)) or not EVENT_POWERS.has(kind) or kind == "anchor_mature": return
-	var owner: Dictionary = host.entity(int(provenance.get("owner_entity_id", 0)))
-	if not _live_owner(owner) or not pos.is_finite() or not direction.is_finite(): return
-	if EVENT_POWERS[kind] not in owner.get("powers", []): return
-	_load_assets()
-	var trigger: String = "comet_charge" if kind in ["comet_charge", "comet_release"] else ("breakneck_charge" if kind.begins_with("breakneck_") else kind)
-	var item: Dictionary = _existing(int(owner.entity_id), trigger)
-	match kind:
-		"comet_charge", "breakneck_charge":
-			if not item.is_empty(): return
-			item = _spawn(owner, trigger, "prepare", Vector2(owner.pos), direction, strength)
-			if not item.is_empty():
-				var remaining: float = float(owner.get("comet_time", 0.0)) if kind == "comet_charge" else maxf(float(owner.get("redline_commit_time", 0.0)), float(owner.get("redline_time", 0.0)))
-				item.phase_duration = minf(float(item.phase_duration), maxf(0.06, remaining * 0.5))
-		"comet_release", "breakneck_impact":
-			if item.is_empty(): return
-			item.world_pos = pos
-			item.direction = direction
-			item.impact = true
-			item.follow_owner = false
-			_phase(item, "strike")
-		"breakneck_recovery":
-			if item.is_empty(): return
-			# The semantic impact and recovery hooks occur in the same tick.
-			# Retain the honest strike first; a miss has no strike/contact core.
-			if str(item.phase) != "strike": _phase(item, "recovery")
-		"impact_wake":
-			_spawn(owner, trigger, "strike", pos, direction, strength)
+## Existing power-specific small VFX retain their ordinary Battle path. Semantic
+## charge, maturity, activation, impact and recovery hooks never summon a beast.
+func accept_event(_kind: String, _pos: Vector2, _direction: Vector2, _strength: float, _provenance: Dictionary) -> void:
+	pass
 
-func _armed(item: Dictionary, owner: Dictionary) -> bool:
-	if str(item.trigger) == "comet_charge": return float(owner.get("comet_time", 0.0)) > 0.0
-	if str(item.trigger) == "breakneck_charge":
-		# The modern paid commitment field and accepted standalone overload
-		# are both real timed commitments, never inferred from an ordinary Burst.
-		return float(owner.get("redline_commit_time", 0.0)) > 0.0 or (str(owner.get("redline_active_mutation", "")) == "breakneck" and float(owner.get("redline_time", 0.0)) > 0.0)
-	return false
-
-func _armed_remaining(item: Dictionary, owner: Dictionary) -> float:
-	if str(item.trigger) == "comet_charge": return maxf(0.0, float(owner.get("comet_time", 0.0)))
-	return maxf(float(owner.get("redline_commit_time", 0.0)), float(owner.get("redline_time", 0.0)))
-
-func _observe_guard() -> void:
-	var host: Object = _host()
-	var retained: Dictionary = {}
-	# Read a stable ordered view, with the player's meaningful hold first.
-	var owners: Array[Dictionary] = host._ordered_fighters()
-	owners.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		if int(a.entity_id) == int(b.entity_id): return false
-		if int(a.entity_id) == int(host.player_entity_id): return true
-		if int(b.entity_id) == int(host.player_entity_id): return false
-		return int(a.entity_id) < int(b.entity_id))
-	for owner: Dictionary in owners:
-		if not _live_owner(owner): continue
-		var id: int = int(owner.entity_id)
-		retained[id] = true
-		var mature: bool = "dead_centre" in owner.get("powers", []) and bool(owner.get("anchor_central_hold", false)) and float(owner.get("anchor_hold_seconds", 0.0)) >= 6.0 - 0.000001
-		if mature and not bool(_guard_seen.get(id, false)):
-			if _clock < float(_owner_ready.get(id, 0.0)): continue
-			var busy: bool = false
-			for active: Dictionary in _active:
-				if int(active.owner_entity_id) == id: busy = true; break
-			if busy or (_active.size() >= MAX_LIVE and id != int(host.player_entity_id)): continue
-			var guard: Dictionary = _spawn(owner, "anchor_mature", "guard", Vector2(owner.pos), Vector2(owner.vel).normalized(), 1.0)
-			if not guard.is_empty(): _guard_seen[id] = true
-		elif not mature: _guard_seen[id] = false
-	for id: int in _guard_seen.keys():
-		if not retained.has(id): _guard_seen.erase(id)
-	for id: int in _owner_ready.keys():
-		if not retained.has(id): _owner_ready.erase(id)
+func _phase(item: Dictionary, phase: String) -> void:
+	item.phase = phase
+	item.phase_duration = _tag_seconds(str(item.beast), phase)
+	# This brief automatic reaction stays attached to its real spinning top. The
+	# old collision point is provenance/ordinary contact VFX, never a delayed
+	# authored strike jumping back to an empty piece of arena.
+	item.follow_owner = true
+	_apply_pending_facing(item)
+	_record("phase", item)
 
 func update(dt: float) -> void:
 	var host: Object = _host()
-	if not _enabled or host == null or bool(host.paused): return
-	if str(host.battle_status) != "battle":
+	if not _enabled or host == null or bool(host.paused) or not is_finite(dt) or dt <= 0.0: return
+	# Pause/draft and countdown/re-entry suspend the performance intact. A real
+	# terminal battle result removes it; beginning a new battle calls reset().
+	if str(host.battle_status) == "finished":
 		finish()
 		return
-	_clock += maxf(0.0, dt)
+	if str(host.battle_status) != "battle": return
+	_clock += dt
 	_observe_orientations(dt)
 	for index: int in range(_active.size() - 1, -1, -1):
 		var item: Dictionary = _active[index]
 		var owner: Dictionary = host.entity(int(item.owner_entity_id))
-		item.age = float(item.age) + dt
-		item.phase_age = float(item.phase_age) + dt
-		if not _live_owner(owner) or float(item.age) >= MAX_INSTANCE_SECONDS:
-			_record("expired", item, "owner_retired" if not _live_owner(owner) else "lifetime_budget")
+		if not _live_owner(owner):
+			_record("expired", item, "owner_retired")
 			_active.remove_at(index)
 			continue
+		item.age = float(item.age) + dt
+		item.phase_age = float(item.phase_age) + dt
 		if bool(item.follow_owner): item.world_pos = Vector2(owner.pos)
-		match str(item.phase):
-			"prepare", "travel":
-				if not _armed(item, owner): _phase(item, "recovery")
-				elif str(item.phase) == "prepare" and float(item.phase_age) >= float(item.phase_duration):
-					_phase(item, "travel")
-					# A short paid Breakneck commitment still exposes all travel
-					# keys in its real remaining window, preserving authored ratios.
-					item.phase_duration = minf(float(item.phase_duration), maxf(0.001, _armed_remaining(item, owner)))
-			"guard":
-				if not bool(owner.get("anchor_central_hold", false)) or float(owner.get("anchor_hold_seconds", 0.0)) < 6.0 - 0.000001 or float(item.phase_age) >= float(item.phase_duration): _phase(item, "recovery")
-			"strike":
-				if float(item.phase_age) >= float(item.phase_duration): _phase(item, "recovery")
-			"recovery":
-				if float(item.phase_age) >= float(item.phase_duration):
-					_record("expired", item, "resolved")
-					_active.remove_at(index)
-	_observe_guard()
+		# Always consume authored phase duration, retaining excess delta. A coarse
+		# frame may cross several keys/phases; it cannot hold an intermediate pose
+		# or reset the clock. All four phases belong to one collision instance.
+		var resolved: bool = false
+		for transition: int in range(MOTION_PHASES.size()):
+			if float(item.phase_age) + 0.000000001 < float(item.phase_duration): break
+			item.phase_age = maxf(0.0, float(item.phase_age) - float(item.phase_duration))
+			var next_index: int = MOTION_PHASES.find(str(item.phase)) + 1
+			if next_index >= MOTION_PHASES.size():
+				_record("expired", item, "resolved")
+				_active.remove_at(index)
+				resolved = true
+				break
+			_phase(item, MOTION_PHASES[next_index])
+		if not resolved and float(item.age) >= MAX_INSTANCE_SECONDS:
+			_record("expired", item, "lifetime_budget")
+			_active.remove_at(index)
+	# Presentation owner IDs remain bounded by current live performers/cooldowns.
+	for id: int in _orientations.keys():
+		var retained: bool = false
+		for item: Dictionary in _active:
+			if int(item.owner_entity_id) == id: retained = true; break
+		if not retained: _orientations.erase(id)
+	for id: int in _owner_ready.keys():
+		if _clock >= float(_owner_ready[id]) or not _live_owner(host.entity(id)): _owner_ready.erase(id)
 
 ## Read-only geometry shared by rendering and attachment diagnostics. Godot
 ## flips a negative destination width inside the same positive-area footprint;
@@ -414,7 +404,7 @@ func draw_geometry_for(item: Dictionary) -> Dictionary:
 	if str(item.phase) == "prepare": lift = 12.0 * clampf(float(item.phase_age) / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
 	elif str(item.phase) == "travel": lift = 12.0
 	var direction: Vector2 = Vector2(item.direction)
-	var mirror: bool = bool(item.get("orientation_mirror", direction.x - direction.y < -0.001)) if bool(item.follow_owner) else direction.x - direction.y < -0.001
+	var mirror: bool = bool(item.get("orientation_mirror", direction.x - direction.y < -0.001))
 	var mirrored_pivot: Vector2 = Vector2(size.x - pivot.x, pivot.y) if mirror else pivot
 	var anchor: Vector2 = point - Vector2(0.0, lift)
 	var rect: Rect2 = Rect2((anchor - mirrored_pivot).round(), Vector2(-size.x if mirror else size.x, size.y))
@@ -434,17 +424,13 @@ func draw(canvas: CanvasItem) -> void:
 		if geometry.is_empty(): continue
 		var phase: String = str(item.phase)
 		var phase_age: float = float(item.phase_age)
-		var authored_age: float = phase_age
-		if phase in ["prepare", "travel"]: authored_age *= _tag_seconds(str(item.beast), phase) / maxf(0.001, float(item.phase_duration))
-		# Play the single authored committed motion once, then hold its final
-		# travel key while the real charge remains armed. Never loop attacks.
-		var frame: int = frame_for(str(item.beast), phase, authored_age)
+		var frame: int = frame_for(str(item.beast), phase, phase_age)
 		var size: Vector2 = geometry.size
 		var columns: int = maxi(1, int(meta.columns))
 		var source: Rect2 = Rect2(Vector2(float(frame % columns) * size.x, floorf(float(frame) / float(columns)) * size.y), size)
 		# Only the spectral figure rises. The real rig, contact plane and height
 		# remain exactly as simulated during Comet/Breakneck preparation.
-		var alpha: float = (0.56 if bool(item.player) else 0.34) + float(int(item.rank) - 1) * 0.07 + minf(0.04, float(item.strength) * 0.015)
+		var alpha: float = (0.60 if bool(item.player) else 0.40) + minf(0.04, float(item.strength) * 0.015)
 		if phase == "prepare": alpha *= lerpf(0.30, 1.0, clampf(phase_age / maxf(0.001, float(item.phase_duration)), 0.0, 1.0))
 		if phase == "recovery": alpha *= clampf(1.0 - phase_age / maxf(0.001, float(item.phase_duration)), 0.0, 1.0)
 		canvas.draw_texture_rect_region(texture, geometry.rect, source, Color(1.0, 1.0, 1.0, clampf(alpha, 0.0, 0.78)))
@@ -458,4 +444,6 @@ func snapshot() -> Dictionary:
 			if not owner.is_empty(): item.world_pos = Vector2(owner.pos)
 	return {"enabled": _enabled, "count": _active.size(), "max_live": MAX_LIVE, "peak_live": _peak_live,
 		"spawned": _spawned, "suppressed": _suppressed, "cooldown_seconds": OWNER_COOLDOWN,
+		"global_cooldown_seconds": GLOBAL_COOLDOWN, "extreme_threshold": EXTREME_IMPACT_SCORE, "impact_metric": "canonical_normal_impulse_times_closing_speed",
+		"accepted_full_top_contacts": _contacts, "qualified": _qualified, "duplicates": _duplicates, "dedup_entries": _seen_collisions.size(),
 		"max_instance_seconds": MAX_INSTANCE_SECONDS, "active": active, "events": _events.duplicate(true), "orientations": _orientations.duplicate(true)}

@@ -7,6 +7,7 @@ signal round_finished(result: Dictionary)
 signal hud_updated(stats: Dictionary)
 signal event_sfx(kind: String)
 signal contact_accepted(first_entity_id: int, second_entity_id: int)
+signal full_top_impact_accepted(impact: Dictionary)
 signal progression_events(events: Array)
 signal threat_cleared(summary: Dictionary)
 signal threat_started(summary: Dictionary)
@@ -92,6 +93,7 @@ var _blast_waves: Array[Dictionary] = []
 var _shake_strength: float = 2.0
 var _signature_ready: float = 0.0
 var _presentation_full_contact: bool = false
+var _beast_collision_sequence: int = 0
 var _reclaim_ready: float = 0.0
 var _low_rpm_ready: float = 0.0
 var _shake_time: float = 0.0
@@ -183,6 +185,7 @@ func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
 	powers.setup(self)
 	roster.setup(self)
 	beasts.setup(self)
+	_beast_collision_sequence = 0
 	beasts.set_enabled(beast_manifestations_enabled)
 	_power_fx.clear()
 	_blast_waves.clear()
@@ -974,6 +977,17 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	_presentation_full_contact = true
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
 	_presentation_full_contact = false
+	# Presentation reads this accepted solver event; the impulse, mass and
+	# incoming velocities are the actual values above, never a power-state proxy.
+	_beast_collision_sequence += 1
+	var beast_impact: Dictionary = {"collision_id": _beast_collision_sequence, "time": elapsed,
+		"first_entity_id": int(first.entity_id), "second_entity_id": int(second.entity_id),
+		"closing": closing, "severity": severity, "impulse": impulse,
+		"first_normal_speed": maxf(0.0, va.dot(normal)), "second_normal_speed": maxf(0.0, -vb.dot(normal)),
+		"first_effective_mass": 1.0 / inv_a, "second_effective_mass": 1.0 / inv_b,
+		"first_velocity": va, "second_velocity": vb, "normal": normal, "position": (a+b)*0.5}
+	beasts.accept_impact(beast_impact)
+	full_top_impact_accepted.emit(beast_impact)
 	roster.contact(first,second,severity,normal,va,vb)
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))

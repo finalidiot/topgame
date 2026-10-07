@@ -400,4 +400,49 @@ class FinalAcceptanceAssetsTests(unittest.TestCase):
         self.assertFalse(any(result["packaged_native_master_presence"].values()))
 
 
+class BeastColourPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        meta = json.loads((verifier.ROOT / "assets/powers/beasts_002c5_2/manifest.json").read_text(encoding="utf-8"))
+        cls.fixture = {"beast_json": json.dumps(meta), "beast_textures": []}
+        for kind, item in meta["effects"].items():
+            size, visible = verifier._visible_pixels(verifier.ROOT / item["texture"].removeprefix("res://"))
+            cls.fixture["beast_textures"].append({"kind": kind, "path": item["texture"], "size": size,
+                "valid": True, "visible_pixels": True, "transparent_rgb_normalized": True,
+                "visible_rgba_sha256": visible})
+
+    def setUp(self): self.report = deepcopy(self.fixture)
+
+    def test_exact_colour_and_alpha_source_report_accepted(self):
+        result = verifier.verify_beast_assets(self.report)
+        self.assertTrue(result["beast_colour_identity_verified"])
+        self.assertTrue(result["beast_transparency_alpha_exact"])
+
+    def test_old_grayscale_or_pixel_alpha_drift_rejected(self):
+        for index in range(4):
+            self.report = deepcopy(self.fixture)
+            row = self.report["beast_textures"][index]
+            row["visible_rgba_sha256"] = "0" * 64
+            with self.subTest(beast=row["kind"]), self.assertRaisesRegex(RuntimeError, "colour/alpha pixels"):
+                verifier.verify_beast_assets(self.report)
+
+    def test_colour_identity_metadata_drift_rejected(self):
+        meta = json.loads(self.report["beast_json"])
+        for field, value in (("colour_identity", "charcoal"), ("runtime_colour_tint", True),
+                             ("native_palette", {}), ("native_alpha_sha256", "0" * 64)):
+            altered = deepcopy(meta)
+            altered["effects"]["stone_tortoise"][field] = value
+            self.report["beast_json"] = json.dumps(altered)
+            with self.subTest(field=field), self.assertRaisesRegex(RuntimeError, "manifest differs"):
+                verifier.verify_beast_assets(self.report)
+
+    def test_duplicate_or_missing_beast_rejected(self):
+        self.report["beast_textures"][0] = self.report["beast_textures"][1]
+        with self.assertRaisesRegex(RuntimeError, "all four"): verifier.verify_beast_assets(self.report)
+
+    def test_invalid_manifest_rejected(self):
+        self.report["beast_json"] = "broken"
+        with self.assertRaisesRegex(RuntimeError, "manifest is invalid"): verifier.verify_beast_assets(self.report)
+
+
 if __name__ == "__main__": unittest.main(verbosity=2)

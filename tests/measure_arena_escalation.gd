@@ -39,6 +39,14 @@ func run() -> void:
 		if scenario.stress:
 			for index: int in range(3):b.add_full_top({"blade":"hammerfall","ratchet":"mid","bit":"flat"},100+index,"hostile","held_%d"%index,Vector2.ZERO)
 			for index: int in range(12):b.swarm.add_small(200+index,Vector2(cos(index*TAU/12.0),sin(index*TAU/12.0))*90.0)
+			# Disclosed held-load fixture: one real canonical extreme collision
+			# starts the single beast. Guard maturity is no longer a spawn hook.
+			var source: Dictionary=b.player_entity();var target: Dictionary=b.entity(2)
+			assert(not target.is_empty())
+			source.pos=Vector2(-float(source.radius)*0.5,0);target.pos=Vector2(float(target.radius)*0.5,0)
+			source.vel=Vector2(800,0);target.vel=Vector2(-800,0)
+			b._resolve_pair_records(source,target)
+			assert(b.beast_presentation_snapshot().active.size()==1)
 		var cpu: Array[float]=[];var wall: Array[float]=[];var started: int=Time.get_ticks_usec()
 		var peak_particles: int=0;var peak_fx: int=0;var peak_beasts: int=0;var peak_bodies: int=0;var peak_arena: int=0
 		var caption: Label=Label.new();caption.text="HELD PROFILER FIXTURE / "+str(scenario.name).to_upper();caption.position=Vector2(12,58)
@@ -66,7 +74,7 @@ func run() -> void:
 			if tick==60:b.draw_samples.clear()
 			if tick>60:cpu.append(duration);wall.append(float(Time.get_ticks_usec()-started)/1000.0)
 			started=Time.get_ticks_usec()
-		assert(peak_particles<=120 and peak_fx<=32 and peak_beasts<=3)
+		assert(peak_particles<=120 and peak_fx<=32 and peak_beasts<=1)
 		assert(peak_arena<= (14 if float(scenario.quality)<0.75 else 17))
 		if scenario.stress:assert(peak_beasts>=1)
 		if not frames.is_empty():

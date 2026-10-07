@@ -1,0 +1,125 @@
+{
+  "task": "003A",
+  "created_utc": "2026-10-07T05:55:30.413690+00:00",
+  "masters": 4,
+  "keys": 80,
+  "native_aseprite": "Aseprite 1.3.18.6-x64",
+  "native_export_repeated_deterministically": true,
+  "native_runtime_rgba_exact": true,
+  "all_original_native_cel_geometry_alpha_noncolour_chunks_preserved": true,
+  "frame_counts_tags_durations_layers_pivots_preserved": true,
+  "source_authored_colour_not_runtime_tint": true,
+  "checks": [
+    {
+      "beast": "black_arrow",
+      "source_sha256": "530498c74cc3662e2988251496fd754e5077660d124c1fdd8be8d818f609fd13",
+      "texture_sha256": "82496a41b2a62a18e1febb1f3f7752a10de4f90f2c2acf15f6358ddbb71bd8bf",
+      "native_sheet_sha256": "5e2faa91e436bb6f738b24e4b79aed4646bf5a242d7e3d9b3080fd62ad6a7e9a",
+      "colour_identity": "smoky charcoal with cool silver edges",
+      "native_palette": {
+        "smoke": "#2c2f33",
+        "shadow": "#292d32",
+        "body": "#454a50",
+        "plane": "#686e75",
+        "silver": "#b4b8bf",
+        "light": "#dde0e5"
+      },
+      "native_alpha_range": [
+        31,
+        255
+      ],
+      "native_translucent_pixel_fraction": 0.9998351195383347,
+      "native_alpha_sha256": "7515d5a7fd6c5aaa2a54854ff9750c3fb46ac67e34a74b6041a51157edf9e9ad",
+      "native_shape_sha256": "d65450b1fb64071559bb4dcde63a4e4abf29b7f4a8f9477a5bfe9bb0874d6c91"
+    },
+    {
+      "beast": "iron_bull",
+      "source_sha256": "df772f0c01dc3b6ee23bb830858e1bed00bb4c21e27b12bb3689c21b81d16164",
+      "texture_sha256": "e537aa947d825a758da530c5761a608de6b9760e6b64af2a0f9a92c6aace0071",
+      "native_sheet_sha256": "268ea646f763d4e0bd376a07883eefe6c7e39fca606da0dc48f811cf4c446f3c",
+      "colour_identity": "deep rust and heated iron red with warm silver edges",
+      "native_palette": {
+        "smoke": "#392b2a",
+        "shadow": "#4b2b29",
+        "body": "#743f36",
+        "plane": "#965b4b",
+        "silver": "#b9b3ae",
+        "light": "#dfd7cc"
+      },
+      "native_alpha_range": [
+        30,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "d55daa24e96e1ac2eb7ed8f6617675def5f73084a27c7ed3f5b18ebb1ac1ce96",
+      "native_shape_sha256": "b538769bedc93da32dbfd7ee0f086da16601b75789c45eab3f809d8166220729"
+    },
+    {
+      "beast": "stone_tortoise",
+      "source_sha256": "203adb6c72eb13509f88e5102c197fed9a2d98d8b375f3efda50460c5ba8e4a1",
+      "texture_sha256": "bbaed5db09c76fa757437d02a2a364fadae153eeb209ee7a344fa79cc8d3cac2",
+      "native_sheet_sha256": "6698b5f224d60e15fe901caeceddd86bc2219eeb47fef721a2c93859acefb1c2",
+      "colour_identity": "earthy spectral green with pale sage silver edges",
+      "native_palette": {
+        "smoke": "#263526",
+        "shadow": "#2c482c",
+        "body": "#416b3e",
+        "plane": "#608b53",
+        "silver": "#a9bca6",
+        "light": "#d3e0c5"
+      },
+      "native_alpha_range": [
+        28,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "c099f1a425fdc4ed6ffcb205f81dbc71cb224aec9ea8d1b0e5e4a7fee59fab7a",
+      "native_shape_sha256": "1a538f0d18794e5bddda30948a21f4166098544687cfc6cb0074096b3c91927d"
+    },
+    {
+      "beast": "coil_dragon",
+      "source_sha256": "3840f483002234a03e2b9390ba1289c54ba8cc877d668bb53f0e522dd056235d",
+      "texture_sha256": "a946042e2e335bb868d0fb5fa2ab3ed75492f181c9bb19a5ea9d0fc946612a57",
+      "native_sheet_sha256": "1278ab9a33008b977764170a88957ad29eb95bbbe380ad798d798c40918e0645",
+      "colour_identity": "muted cyan blue with blue violet shadow and ice silver edges",
+      "native_palette": {
+        "smoke": "#222c3b",
+        "shadow": "#2a3954",
+        "body": "#36627a",
+        "plane": "#51849d",
+        "silver": "#a6b9c8",
+        "light": "#cfe0e8"
+      },
+      "native_alpha_range": [
+        28,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "32b313aeea4d7a497ecedeb91876e71c128499884776758e3276d3b0b0eebcf5",
+      "native_shape_sha256": "f87c9af8f7937300ca475287436f7efa8a4ee596c1674c226b69fe97b12dc394"
+    }
+  ],
+  "evidence": {
+    "baseline_migration": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\beast-colour-identity\\003a_beast_colour_migration.json",
+    "final_parity": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\beast-manifestations\\003a_beast_art_report.json",
+    "repeat_parity": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\temp\\beast-colour-repeat\\003A\\manifests\\beast-manifestations\\003a_beast_art_report.json",
+    "native_tests": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_beast_colour_native_tools_with_qa_guard.log",
+    "package_tools_tests": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_beast_colour_packaged_tools.log",
+    "latest_native_check": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\beast-manifestations\\20261007T060245_468521Z_75db4884\\003a_beast_art_report.json",
+    "actual_gameplay_colour_matrix": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\images\\003a_beast_colour_matrix.png",
+    "actual_gameplay_colour_matrix_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_beast_colour_matrix.json"
+  },
+  "python_tests": {
+    "native_colour_tests": 9,
+    "packaged_catalogue_total_tests": 37,
+    "new_package_colour_tests": 5,
+    "status": "passed"
+  },
+  "static_review_is_gameplay_evidence": false,
+  "human_colour_acceptance_pending": true,
+  "qa_evidence_preserved_on_repeated_checks": true,
+  "check_skips_static_review_and_production_writes": true,
+  "actual_gameplay_colour_matrix_sha256": "40de4fa826f1f6409f379a4850c47a17a142953c1d6af77fa39a64fc57a812fd",
+  "actual_gameplay_matrix_uses_complete_pixel_exact_viewports": true,
+  "actual_gameplay_matrix_was_visually_inspected": true
+}

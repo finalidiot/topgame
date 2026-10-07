@@ -3,6 +3,7 @@ extends SceneTree
 ## through Godot, replacing only its atlas with pivot sentinels. This is an
 ## engine anchoring regression, never gameplay evidence or review footage.
 const Battle = preload("res://scripts/battle.gd")
+const Beasts = preload("res://scripts/beast_manifestations.gd")
 const BUILD: Dictionary = {"blade": "balance", "ratchet": "mid", "bit": "ball"}
 const SHAKE: Vector2 = Vector2(11.0, 7.0)
 var checks: int = 0
@@ -75,17 +76,20 @@ func run() -> void:
 	var meta: Dictionary = battle.beasts._metadata.coil_dragon
 	battle.beasts._textures.coil_dragon = sentinel_texture(meta)
 	for mirrored: bool in [false, true]:
-		for phase: String in ["prepare", "travel", "strike"]:
+		for phase: String in ["prepare", "travel", "strike", "recovery"]:
 			battle.beasts.reset()
-			player.comet_time = 2.0
 			var direction: Vector2 = Vector2.LEFT if mirrored else Vector2.RIGHT
-			battle.beasts.accept_event("comet_charge", player.pos, direction, 1.0, {"owner_entity_id": 1, "beast_trigger": true})
+			player.vel = direction * 90.0
+			battle.beasts.accept_impact({"collision_id":1, "first_entity_id":1, "second_entity_id":2,
+				"impulse":(Beasts.EXTREME_IMPACT_SCORE + 1.0) / 300.0, "closing":300.0, "normal":direction,
+				"position":Vector2(18.0,-10.0), "first_velocity":direction * 90.0})
 			if phase == "prepare": battle.beasts.update(0.125)
 			elif phase == "travel": battle.beasts.update(0.3)
-			else: battle.beasts.accept_event("comet_release", Vector2(18.0, -10.0), direction, 1.0, {"owner_entity_id": 1, "beast_trigger": true})
+			elif phase == "strike": battle.beasts.update(0.8)
+			else: battle.beasts.update(1.15)
 			var item: Dictionary = battle.beast_presentation_snapshot().active[0]
 			var geometry: Dictionary = battle.beasts.draw_geometry_for(item)
-			var ground: Vector2 = Battle.project(Vector2(18.0, -10.0)) if phase == "strike" else Battle.project(Vector2(player.pos), float(player.height))
+			var ground: Vector2 = Battle.project(Vector2(player.pos), float(player.height))
 			var lift: float = 6.0 if phase == "prepare" else (12.0 if phase == "travel" else 0.0)
 			var expected: Vector2 = ground - Vector2(0.0, lift) + SHAKE
 			canvas.queue_redraw()
@@ -104,8 +108,10 @@ func run() -> void:
 	var legacy: RefCounted = LegacyShiftController.new()
 	legacy.setup(battle)
 	legacy._textures.coil_dragon = sentinel_texture(meta)
-	player.comet_time = 2.0
-	legacy.accept_event("comet_charge", player.pos, Vector2.LEFT, 1.0, {"owner_entity_id": 1, "beast_trigger": true})
+	player.vel = Vector2.LEFT * 90.0
+	legacy.accept_impact({"collision_id":1, "first_entity_id":1, "second_entity_id":2,
+		"impulse":(Beasts.EXTREME_IMPACT_SCORE + 1.0) / 300.0, "closing":300.0, "normal":Vector2.LEFT,
+		"position":Vector2.ZERO, "first_velocity":Vector2.LEFT * 90.0})
 	legacy.update(0.3)
 	canvas.controller = legacy
 	canvas.queue_redraw()

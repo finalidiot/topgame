@@ -1,0 +1,970 @@
+{
+  "metric_id": "impulse_work",
+  "metric": "Canonical full-top collision work proxy = accepted solver normal impulse J \u00d7 actual positive pre-contact normal closing speed.",
+  "formula": "J=(1.70*normal_closing_speed+19)/(inverse_mass_first+inverse_mass_second); component contact multiplies J by clamp(sqrt(contact_attack_first*contact_attack_second),0.70,1.30).",
+  "units": "Game mass \u00d7 squared world units/second; impulse times closing speed has energy dimensions, and is a work proxy rather than measured dissipated energy.",
+  "meaningful_definition": "Canonical progression collision severity >=0.22; raw full-top accepted contacts below this remain reported separately.",
+  "severity_limitation": "clamp(closing/220,0.08,1.30) saturates at286 world units/second and cannot separate exceptionally fast upper-tail contacts.",
+  "total_raw_full_top_collision_events": 5351,
+  "total_meaningful_full_top_collision_events": 4292,
+  "meaningful_player_events": 2915,
+  "raw_quantiles": {
+    "impulse": {
+      "0": 69.5197,
+      "0.1": 352.266,
+      "0.25": 546.4543,
+      "0.5": 973.4569,
+      "0.75": 1584.6933,
+      "0.9": 2346.8338,
+      "0.95": 2975.8372,
+      "0.975": 3654.2831,
+      "0.99": 4482.6334,
+      "0.995": 5025.333,
+      "0.999": 6707.1343,
+      "1": 7732.2578
+    },
+    "impulse_work": {
+      "0": 72.2195,
+      "0.1": 12888.5926,
+      "0.25": 31721.783,
+      "0.5": 98454.4153,
+      "0.75": 237577.521,
+      "0.9": 413192.6401,
+      "0.95": 556382.2477,
+      "0.975": 697042.9004,
+      "0.99": 863041.2864,
+      "0.995": 1020528.1974,
+      "0.999": 1352760.5462,
+      "1": 1603353.0398
+    },
+    "closing": {
+      "0": 0.7896,
+      "0.1": 34.4593,
+      "0.25": 55.5607,
+      "0.5": 96.8726,
+      "0.75": 148.9865,
+      "0.9": 205.2167,
+      "0.95": 241.0801,
+      "0.975": 279.7807,
+      "0.99": 321.2988,
+      "0.995": 339.7947,
+      "0.999": 389.1463,
+      "1": 430.0824
+    },
+    "severity": {
+      "0": 0.08,
+      "0.1": 0.1566,
+      "0.25": 0.2525,
+      "0.5": 0.4403,
+      "0.75": 0.6772,
+      "0.9": 0.9328,
+      "0.95": 1.0958,
+      "0.975": 1.2717,
+      "0.99": 1.3,
+      "0.995": 1.3,
+      "0.999": 1.3,
+      "1": 1.3
+    }
+  },
+  "representative_quantiles": {
+    "impulse": {
+      "0": 340.4418,
+      "0.1": 535.4192,
+      "0.25": 764.2288,
+      "0.5": 1171.6526,
+      "0.75": 1742.5672,
+      "0.9": 2549.346,
+      "0.95": 3199.4975,
+      "0.975": 3871.4112,
+      "0.99": 4690.7122,
+      "0.995": 5174.4153,
+      "0.999": 6740.3396,
+      "1": 7732.2578
+    },
+    "impulse_work": {
+      "0": 16898.2204,
+      "0.1": 34604.261,
+      "0.25": 66366.8444,
+      "0.5": 144509.3998,
+      "0.75": 279306.7671,
+      "0.9": 456636.8714,
+      "0.95": 597848.2177,
+      "0.975": 736597.7555,
+      "0.99": 936685.933,
+      "0.995": 1094421.6877,
+      "0.999": 1384344.3815,
+      "1": 1603353.0398
+    },
+    "closing": {
+      "0": 48.4001,
+      "0.1": 60.1272,
+      "0.25": 80.3764,
+      "0.5": 115.3512,
+      "0.75": 163.8531,
+      "0.9": 216.5389,
+      "0.95": 252.6688,
+      "0.975": 288.816,
+      "0.99": 329.7105,
+      "0.995": 346.7074,
+      "0.999": 395.6172,
+      "1": 430.0824
+    },
+    "severity": {
+      "0": 0.22,
+      "0.1": 0.2733,
+      "0.25": 0.3653,
+      "0.5": 0.5243,
+      "0.75": 0.7448,
+      "0.9": 0.9843,
+      "0.95": 1.1485,
+      "0.975": 1.3,
+      "0.99": 1.3,
+      "0.995": 1.3,
+      "0.999": 1.3,
+      "1": 1.3
+    }
+  },
+  "chosen_fixed_extreme_threshold": 1000000.0,
+  "threshold_reasoning": "Fixed offline calibration against multiple assembly/policy/seed distributions. Work proxy separates exceptional impacts while avoiding a nonzero-impulse solver separation bias near zero closing speed. No live percentile and no fixed frequency target.",
+  "number_qualifying": 32,
+  "number_actually_shown_after_cooldown_and_deduplication": 31,
+  "presentation_policy": {
+    "maximum_live": 1,
+    "owner_cooldown_seconds": 4,
+    "global_cooldown_seconds": 1.6,
+    "deduplication": "Monotonic canonical accepted collision identity, consumed even when suppressed; bounded96-entry diagnostics."
+  },
+  "actual_suppression_reasons": {
+    "owner_cooldown": 1
+  },
+  "natural_duplicate_collision_count": 0,
+  "actually_shown_player": 23,
+  "actually_shown_npc": 8,
+  "presentation_by_style_seed": [
+    {
+      "style": "aggressive",
+      "seed": 421,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 0,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "aggressive",
+      "seed": 7341,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 0,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "aggressive",
+      "seed": 2026,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 2,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "balanced",
+      "seed": 421,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 1,
+      "shown_npc": 1,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "balanced",
+      "seed": 7341,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 1,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "balanced",
+      "seed": 2026,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 1,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "defensive",
+      "seed": 421,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 4,
+      "shown_npc": 2,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "defensive",
+      "seed": 7341,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 1,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "defensive",
+      "seed": 2026,
+      "blocked_reasons": {
+        "owner_cooldown": 1
+      },
+      "blocked_events": [
+        {
+          "closing": 293.909973144531,
+          "collision_id": 97,
+          "impulse": 4694.95207502442,
+          "kind": "suppressed",
+          "reason": "owner_cooldown",
+          "time": 268.900000000084
+        }
+      ],
+      "shown_player": 3,
+      "shown_npc": 1,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_mass",
+      "seed": 421,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 3,
+      "shown_npc": 2,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_mass",
+      "seed": 7341,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 6,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_mass",
+      "seed": 2026,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 3,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 1,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_speed",
+      "seed": 421,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 0,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_speed",
+      "seed": 7341,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 0,
+      "complete_presentation_history": true
+    },
+    {
+      "style": "high_speed",
+      "seed": 2026,
+      "blocked_reasons": {},
+      "blocked_events": [],
+      "shown_player": 0,
+      "shown_npc": 0,
+      "duplicates": 0,
+      "peak_live": 0,
+      "complete_presentation_history": true
+    }
+  ],
+  "all_simulation_seconds": 6127.93333333159,
+  "minimum_qualifying_closing_speed": 147.20979309082,
+  "highest_impulse_under20_closing_speed": 970.677489903789,
+  "highest_work_under20_closing_speed": 17478.61554415739,
+  "pre_gate_comparison": {
+    "baseline_raw": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\temp\\003a_beast_impact_distribution_20261007_055232_728273_events.json",
+    "baseline_sha256": "731691432081d21b2e5c2bffaf6596e92bfbd957321c1f49a7af70efc568d034",
+    "runs": 15,
+    "exact_collision_and_draft_equality": true,
+    "elapsed_and_outcome_equality": true
+  },
+  "source_unchanged": true,
+  "profile_unchanged": true,
+  "limitations": "Deterministic sampled-bot physics observation, not human feel acceptance; no exact manifestations-per-minute target. Separate deliberate pose fixtures demonstrate the visual ladder.",
+  "natural_runs": [
+    {
+      "build_context": {
+        "build": {
+          "bit": "flat",
+          "blade": "smash",
+          "ratchet": "high"
+        },
+        "id": "aggressive",
+        "starter": "breaker",
+        "style": "aggressive"
+      },
+      "seed": 421,
+      "simulation_seconds": 27.4166666666664,
+      "end_reason": "ring_out",
+      "final_level": 3,
+      "final_powers": [
+        "impact_wake",
+        "redline"
+      ],
+      "final_ranks": {
+        "impact_wake": 2,
+        "redline": 1
+      },
+      "final_mutations": {},
+      "raw_full_top_contacts": 41,
+      "meaningful_full_top_contacts": 24,
+      "qualifying_extreme_contacts": 0,
+      "actually_shown": 0,
+      "presentation_suppressed": 0,
+      "peak_live": 0
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "flat",
+          "blade": "smash",
+          "ratchet": "high"
+        },
+        "id": "aggressive",
+        "starter": "breaker",
+        "style": "aggressive"
+      },
+      "seed": 7341,
+      "simulation_seconds": 4.91666666666665,
+      "end_reason": "ring_out",
+      "final_level": 1,
+      "final_powers": [
+        "crosscut"
+      ],
+      "final_ranks": {
+        "crosscut": 1
+      },
+      "final_mutations": {},
+      "raw_full_top_contacts": 9,
+      "meaningful_full_top_contacts": 8,
+      "qualifying_extreme_contacts": 0,
+      "actually_shown": 0,
+      "presentation_suppressed": 0,
+      "peak_live": 0
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "flat",
+          "blade": "smash",
+          "ratchet": "high"
+        },
+        "id": "aggressive",
+        "starter": "breaker",
+        "style": "aggressive"
+      },
+      "seed": 2026,
+      "simulation_seconds": 235.350000000079,
+      "end_reason": "ring_out",
+      "final_level": 11,
+      "final_powers": [
+        "iron_comet",
+        "afterimage",
+        "predator_line",
+        "crosscut",
+        "chain_impact",
+        "momentum_bank"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "chain_impact": 1,
+        "crosscut": 2,
+        "iron_comet": 2,
+        "momentum_bank": 1,
+        "predator_line": 2
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "raw_full_top_contacts": 220,
+      "meaningful_full_top_contacts": 161,
+      "qualifying_extreme_contacts": 2,
+      "actually_shown": 2,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "balance",
+          "ratchet": "mid"
+        },
+        "id": "balanced",
+        "starter": "custom",
+        "style": "hybrid"
+      },
+      "seed": 421,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 17,
+      "final_powers": [
+        "impact_wake",
+        "redline",
+        "iron_comet",
+        "afterimage",
+        "momentum_bank",
+        "high_gear",
+        "crash_guard"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "crash_guard": 2,
+        "high_gear": 3,
+        "impact_wake": 2,
+        "iron_comet": 2,
+        "momentum_bank": 2,
+        "redline": 3
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "high_gear": "terminal_velocity",
+        "redline": "runaway"
+      },
+      "raw_full_top_contacts": 832,
+      "meaningful_full_top_contacts": 639,
+      "qualifying_extreme_contacts": 2,
+      "actually_shown": 2,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "balance",
+          "ratchet": "mid"
+        },
+        "id": "balanced",
+        "starter": "custom",
+        "style": "hybrid"
+      },
+      "seed": 7341,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 17,
+      "final_powers": [
+        "crosscut",
+        "impact_wake",
+        "afterimage",
+        "gyro_lock",
+        "momentum_bank",
+        "chain_impact",
+        "dead_centre"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "chain_impact": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "gyro_lock": 3,
+        "impact_wake": 2,
+        "momentum_bank": 2
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "dead_centre": "bulwark",
+        "gyro_lock": "keel"
+      },
+      "raw_full_top_contacts": 699,
+      "meaningful_full_top_contacts": 544,
+      "qualifying_extreme_contacts": 1,
+      "actually_shown": 1,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "balance",
+          "ratchet": "mid"
+        },
+        "id": "balanced",
+        "starter": "custom",
+        "style": "hybrid"
+      },
+      "seed": 2026,
+      "simulation_seconds": 502.199999999872,
+      "end_reason": "ring_out",
+      "final_level": 19,
+      "final_powers": [
+        "iron_comet",
+        "afterimage",
+        "dead_centre",
+        "high_gear",
+        "impact_sink",
+        "redline",
+        "impact_wake"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "dead_centre": 3,
+        "high_gear": 3,
+        "impact_sink": 3,
+        "impact_wake": 2,
+        "iron_comet": 2,
+        "redline": 3
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "dead_centre": "bulwark",
+        "high_gear": "terminal_velocity",
+        "impact_sink": "shock_bleed",
+        "redline": "runaway"
+      },
+      "raw_full_top_contacts": 611,
+      "meaningful_full_top_contacts": 473,
+      "qualifying_extreme_contacts": 1,
+      "actually_shown": 1,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "id": "defensive",
+        "starter": "bastion",
+        "style": "defensive"
+      },
+      "seed": 421,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 18,
+      "final_powers": [
+        "high_gear",
+        "impact_wake",
+        "impact_sink",
+        "crosscut",
+        "dead_centre",
+        "chain_impact",
+        "redline"
+      ],
+      "final_ranks": {
+        "chain_impact": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "high_gear": 3,
+        "impact_sink": 3,
+        "impact_wake": 2,
+        "redline": 3
+      },
+      "final_mutations": {
+        "dead_centre": "bulwark",
+        "high_gear": "terminal_velocity",
+        "impact_sink": "shock_bleed",
+        "redline": "runaway"
+      },
+      "raw_full_top_contacts": 455,
+      "meaningful_full_top_contacts": 372,
+      "qualifying_extreme_contacts": 6,
+      "actually_shown": 6,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "id": "defensive",
+        "starter": "bastion",
+        "style": "defensive"
+      },
+      "seed": 7341,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 17,
+      "final_powers": [
+        "crash_guard",
+        "crosscut",
+        "dead_centre",
+        "gyro_lock",
+        "momentum_bank",
+        "afterimage",
+        "iron_comet"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "crash_guard": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "gyro_lock": 3,
+        "iron_comet": 2,
+        "momentum_bank": 2
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "dead_centre": "bulwark",
+        "gyro_lock": "keel"
+      },
+      "raw_full_top_contacts": 424,
+      "meaningful_full_top_contacts": 368,
+      "qualifying_extreme_contacts": 1,
+      "actually_shown": 1,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "ball",
+          "blade": "guard",
+          "ratchet": "low"
+        },
+        "id": "defensive",
+        "starter": "bastion",
+        "style": "defensive"
+      },
+      "seed": 2026,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 18,
+      "final_powers": [
+        "anchor_exchange",
+        "gyro_lock",
+        "impact_sink",
+        "dead_centre",
+        "crash_guard",
+        "impact_wake",
+        "crosscut"
+      ],
+      "final_ranks": {
+        "anchor_exchange": 3,
+        "crash_guard": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "gyro_lock": 3,
+        "impact_sink": 3,
+        "impact_wake": 2
+      },
+      "final_mutations": {
+        "anchor_exchange": "deep_footing",
+        "dead_centre": "bulwark",
+        "gyro_lock": "keel",
+        "impact_sink": "shock_bleed"
+      },
+      "raw_full_top_contacts": 316,
+      "meaningful_full_top_contacts": 270,
+      "qualifying_extreme_contacts": 5,
+      "actually_shown": 4,
+      "presentation_suppressed": 1,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "tripod",
+          "blade": "hammerfall",
+          "ratchet": "ballast"
+        },
+        "id": "high_mass",
+        "starter": "custom",
+        "style": "defensive"
+      },
+      "seed": 421,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 18,
+      "final_powers": [
+        "high_gear",
+        "impact_wake",
+        "impact_sink",
+        "crosscut",
+        "dead_centre",
+        "chain_impact",
+        "redline"
+      ],
+      "final_ranks": {
+        "chain_impact": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "high_gear": 3,
+        "impact_sink": 3,
+        "impact_wake": 2,
+        "redline": 3
+      },
+      "final_mutations": {
+        "dead_centre": "bulwark",
+        "high_gear": "terminal_velocity",
+        "impact_sink": "shock_bleed",
+        "redline": "runaway"
+      },
+      "raw_full_top_contacts": 503,
+      "meaningful_full_top_contacts": 417,
+      "qualifying_extreme_contacts": 5,
+      "actually_shown": 5,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "tripod",
+          "blade": "hammerfall",
+          "ratchet": "ballast"
+        },
+        "id": "high_mass",
+        "starter": "custom",
+        "style": "defensive"
+      },
+      "seed": 7341,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 17,
+      "final_powers": [
+        "crash_guard",
+        "crosscut",
+        "dead_centre",
+        "gyro_lock",
+        "momentum_bank",
+        "afterimage",
+        "iron_comet"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "crash_guard": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "gyro_lock": 3,
+        "iron_comet": 2,
+        "momentum_bank": 2
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "dead_centre": "bulwark",
+        "gyro_lock": "keel"
+      },
+      "raw_full_top_contacts": 416,
+      "meaningful_full_top_contacts": 337,
+      "qualifying_extreme_contacts": 6,
+      "actually_shown": 6,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "tripod",
+          "blade": "hammerfall",
+          "ratchet": "ballast"
+        },
+        "id": "high_mass",
+        "starter": "custom",
+        "style": "defensive"
+      },
+      "seed": 2026,
+      "simulation_seconds": 600.01666666645,
+      "end_reason": "observation_horizon",
+      "final_level": 18,
+      "final_powers": [
+        "anchor_exchange",
+        "gyro_lock",
+        "impact_sink",
+        "dead_centre",
+        "crash_guard",
+        "impact_wake",
+        "crosscut"
+      ],
+      "final_ranks": {
+        "anchor_exchange": 3,
+        "crash_guard": 2,
+        "crosscut": 2,
+        "dead_centre": 3,
+        "gyro_lock": 3,
+        "impact_sink": 3,
+        "impact_wake": 2
+      },
+      "final_mutations": {
+        "anchor_exchange": "deep_footing",
+        "dead_centre": "bulwark",
+        "gyro_lock": "keel",
+        "impact_sink": "shock_bleed"
+      },
+      "raw_full_top_contacts": 420,
+      "meaningful_full_top_contacts": 347,
+      "qualifying_extreme_contacts": 3,
+      "actually_shown": 3,
+      "presentation_suppressed": 0,
+      "peak_live": 1
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "skate",
+          "blade": "sawtooth",
+          "ratchet": "high"
+        },
+        "id": "high_speed",
+        "starter": "custom",
+        "style": "aggressive"
+      },
+      "seed": 421,
+      "simulation_seconds": 307.983333333382,
+      "end_reason": "ring_out",
+      "final_level": 14,
+      "final_powers": [
+        "impact_wake",
+        "redline",
+        "iron_comet",
+        "high_gear",
+        "afterimage",
+        "crosscut",
+        "crash_guard"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "crash_guard": 1,
+        "crosscut": 2,
+        "high_gear": 1,
+        "impact_wake": 2,
+        "iron_comet": 2,
+        "redline": 3
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit",
+        "redline": "runaway"
+      },
+      "raw_full_top_contacts": 245,
+      "meaningful_full_top_contacts": 212,
+      "qualifying_extreme_contacts": 0,
+      "actually_shown": 0,
+      "presentation_suppressed": 0,
+      "peak_live": 0
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "skate",
+          "blade": "sawtooth",
+          "ratchet": "high"
+        },
+        "id": "high_speed",
+        "starter": "custom",
+        "style": "aggressive"
+      },
+      "seed": 7341,
+      "simulation_seconds": 119.449999999995,
+      "end_reason": "spin_out",
+      "final_level": 6,
+      "final_powers": [
+        "crosscut",
+        "impact_wake",
+        "redline",
+        "iron_comet"
+      ],
+      "final_ranks": {
+        "crosscut": 2,
+        "impact_wake": 1,
+        "iron_comet": 1,
+        "redline": 2
+      },
+      "final_mutations": {},
+      "raw_full_top_contacts": 75,
+      "meaningful_full_top_contacts": 52,
+      "qualifying_extreme_contacts": 0,
+      "actually_shown": 0,
+      "presentation_suppressed": 0,
+      "peak_live": 0
+    },
+    {
+      "build_context": {
+        "build": {
+          "bit": "skate",
+          "blade": "sawtooth",
+          "ratchet": "high"
+        },
+        "id": "high_speed",
+        "starter": "custom",
+        "style": "aggressive"
+      },
+      "seed": 2026,
+      "simulation_seconds": 130.483333333329,
+      "end_reason": "ring_out",
+      "final_level": 6,
+      "final_powers": [
+        "iron_comet",
+        "afterimage",
+        "predator_line"
+      ],
+      "final_ranks": {
+        "afterimage": 3,
+        "iron_comet": 2,
+        "predator_line": 1
+      },
+      "final_mutations": {
+        "afterimage": "ghost_circuit"
+      },
+      "raw_full_top_contacts": 85,
+      "meaningful_full_top_contacts": 68,
+      "qualifying_extreme_contacts": 0,
+      "actually_shown": 0,
+      "presentation_suppressed": 0,
+      "peak_live": 0
+    }
+  ],
+  "external_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_beast_impact_distribution.json",
+  "external_manifest_sha256": "7c52994ba928860f60165bb19b883e958797fe6daa2c5847ad6fbc50fc201e50",
+  "raw_telemetry": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\temp\\003a_beast_impact_distribution_20261007_060235_909302_events.json",
+  "raw_sha256": "694c8dffff30a52b33e7fc4247329fa32794089f1db2a604427408cffbcb9ea6",
+  "source_git_sha_at_observation": "a1ef8b771072505d49aca7012a20ce8c5bd69a0b",
+  "source_dependency_digest": "c6dd9b2731c8be5ad4cc50f8ad92b45bc038d8977830a02fe37a26a79a908617",
+  "human_acceptance": "PENDING HUMAN REVIEW; deterministic sampled controls are not human feel acceptance."
+}

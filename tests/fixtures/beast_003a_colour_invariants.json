@@ -1,0 +1,86 @@
+{
+  "task": "003A",
+  "scope": "original native beast noncolour chunk bytes / cel alpha / cel geometry preservation",
+  "baseline": {
+    "black_arrow": {
+      "before_source_sha256": "902ee804a2a76da0062bc085ffa5f67b7bca11a0e81b3aedef89aca881c75119",
+      "before_runtime_sha256": "33a0080a5393fc9afeb90e4fcefc8d97b4c808ea75548fcf055d39e0ba86fb2c",
+      "invariants": {
+        "noncolour_native_sha256": "520c0cbaa1c208b52fd2ebe17d7b743a66bef991858a9fdbfaf753669e02b27f",
+        "native_cel_alpha_sha256": "cd7b77c1754e6bf571d8a6ad2825992ee819bd6551f65f48763f0ae139a9dbcd",
+        "native_cel_shape_sha256": "3405c17089ac2932fc64129f0b8daf3bedd607a8f67653e5f466a3878606c6e9",
+        "native_cels": 80,
+        "frame_count": 20,
+        "chunk_types": {
+          "0x2004": 4,
+          "0x2005": 80,
+          "0x2018": 1,
+          "0x2019": 1,
+          "0x2020": 1,
+          "0x2022": 1
+        }
+      },
+      "baseline_native_alpha_sha256": "7515d5a7fd6c5aaa2a54854ff9750c3fb46ac67e34a74b6041a51157edf9e9ad"
+    },
+    "iron_bull": {
+      "before_source_sha256": "a9e83cd93debe6a91597dd54f8cbf720fea1e1148504f79c186d21a924029728",
+      "before_runtime_sha256": "a844b70d9a6b43fd4f89280a82b058160b77d0600db3fe9429a6152f274e7d1f",
+      "invariants": {
+        "noncolour_native_sha256": "86123b1c5f2f7a0c3e3ce477fab3a74e340ec566855c605ad5d952e9434af154",
+        "native_cel_alpha_sha256": "39af761c43a043f716294845aa9d412deaa22cfa155b9410b77dde2f9e17dbf2",
+        "native_cel_shape_sha256": "0811ad53f6ab313f41f68a8ad964a189cae4da7f5da4b81ce8b125d76f960945",
+        "native_cels": 80,
+        "frame_count": 20,
+        "chunk_types": {
+          "0x2004": 4,
+          "0x2005": 80,
+          "0x2018": 1,
+          "0x2019": 1,
+          "0x2020": 1,
+          "0x2022": 1
+        }
+      },
+      "baseline_native_alpha_sha256": "d55daa24e96e1ac2eb7ed8f6617675def5f73084a27c7ed3f5b18ebb1ac1ce96"
+    },
+    "stone_tortoise": {
+      "before_source_sha256": "3a21d7aa75388fee6fef61f34db8d83faa3b20803761f9de39f3626a961f4e82",
+      "before_runtime_sha256": "6046538bff898ae4e7b1e9e80c0fe1de010f556cd91b5be6e72830037e576ab0",
+      "invariants": {
+        "noncolour_native_sha256": "20c2930a6a4921252a38ec83982ab386e3dcc08fe0778e1ab126c7efa358bedc",
+        "native_cel_alpha_sha256": "d41991f2428c3ecce119557e2fc3f6b2b337d5d60e6fa9879891f11d0aae50c9",
+        "native_cel_shape_sha256": "2166ed85d60da531277d1c547f26f1837be6aa4037fc5d0a8783e4f0acfb3656",
+        "native_cels": 80,
+        "frame_count": 20,
+        "chunk_types": {
+          "0x2004": 4,
+          "0x2005": 80,
+          "0x2018": 1,
+          "0x2019": 1,
+          "0x2020": 1,
+          "0x2022": 1
+        }
+      },
+      "baseline_native_alpha_sha256": "c099f1a425fdc4ed6ffcb205f81dbc71cb224aec9ea8d1b0e5e4a7fee59fab7a"
+    },
+    "coil_dragon": {
+      "before_source_sha256": "e78094252bbcd3b66a89f0b2bc4a7a0ccf557a3a8e7aac01fad91530f6a379df",
+      "before_runtime_sha256": "b987c047813ad0343fafa3b1a30585db97e9813f7bda8a011cc1cba20c504111",
+      "invariants": {
+        "noncolour_native_sha256": "e52af71c5d95a80c5788e47e25217f29f6dae29034d356254f94c953a7514c0d",
+        "native_cel_alpha_sha256": "f2db153a3eb56d05466cfe9d2f9da61d4434cc7c6d517b8bbf1256a130ac7a9f",
+        "native_cel_shape_sha256": "50bec465cddc56d960f01c10cf4ec7873fcb256f4129ee8fcba1b432310089fa",
+        "native_cels": 80,
+        "frame_count": 20,
+        "chunk_types": {
+          "0x2004": 4,
+          "0x2005": 80,
+          "0x2018": 1,
+          "0x2019": 1,
+          "0x2020": 1,
+          "0x2022": 1
+        }
+      },
+      "baseline_native_alpha_sha256": "32b313aeea4d7a497ecedeb91876e71c128499884776758e3276d3b0b0eebcf5"
+    }
+  }
+}

@@ -79,6 +79,57 @@ def _visible_pixels(path: Path) -> tuple[list[int], str]:
     return size,hashlib.sha256(data).hexdigest()
 
 
+def verify_beast_assets(assets: dict, source_root: Path = ROOT) -> dict:
+    """Prove actual imported beast colour and alpha against the native exports.
+
+    Full visible RGBA comparison preserves every alpha byte, even where RGB is
+    normalized only under alpha zero. The package's exact manifest also retains
+    the native palette and named anatomy layers; a scalar runtime tint cannot
+    substitute for source-authored colour.
+    """
+    source = source_root / "assets/powers/beasts_002c5_2/manifest.json"
+    expected = json.loads(source.read_text(encoding="utf-8"))
+    try:
+        actual = json.loads(assets.get("beast_json", "null"))
+    except (TypeError, ValueError) as error:
+        raise RuntimeError("Packaged beast manifest is invalid") from error
+    if actual != expected:
+        raise RuntimeError("Packaged beast manifest differs from current source")
+    rows = assets.get("beast_textures", [])
+    identities = {"black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"}
+    if (not isinstance(rows, list) or len(rows) != 4 or not all(isinstance(row, dict) for row in rows)
+            or {row.get("kind") for row in rows} != identities):
+        raise RuntimeError("Actual package did not inspect all four beast sheets")
+    for row in rows:
+        kind = row["kind"]
+        meta = expected["effects"][kind]
+        expected_path = meta["texture"]
+        if row.get("path") != expected_path:
+            raise RuntimeError("Packaged beast texture path differs: " + kind)
+        path = source_root / expected_path.removeprefix("res://")
+        size, visible = _visible_pixels(path)
+        if (row.get("valid") is not True or row.get("visible_pixels") is not True
+                or row.get("size") != size or row.get("transparent_rgb_normalized") is not True
+                or row.get("visible_rgba_sha256") != visible):
+            raise RuntimeError("Packaged beast sheet colour/alpha pixels differ: " + expected_path)
+        with Image.open(path) as image:
+            alpha = image.convert("RGBA").getchannel("A").tobytes()
+        visible_alpha = [value for value in alpha if value]
+        if (not meta.get("colour_identity") or not isinstance(meta.get("native_palette"), dict)
+                or len(meta["native_palette"]) != 6 or meta.get("colour_authored_in_native_layers") is not True
+                or meta.get("runtime_colour_tint") is not False
+                or meta.get("native_alpha_sha256") != hashlib.sha256(alpha).hexdigest()
+                or meta.get("native_alpha_range") != [min(visible_alpha), max(visible_alpha)]
+                or not any(value < 255 for value in visible_alpha)):
+            raise RuntimeError("Native beast colour/transparency metadata differs: " + kind)
+        if (pipeline.sha256(path) != meta.get("texture_sha256")
+                or pipeline.sha256(source_root / meta["source"]) != meta.get("source_sha256")):
+            raise RuntimeError("Native beast source/export fingerprint differs: " + kind)
+    return {"beast_textures_verified": 4, "beast_manifest_matches_source": True,
+            "beast_colour_identity_verified": True, "beast_visible_rgba_exact": True,
+            "beast_transparency_alpha_exact": True, "beast_native_palette_metadata": True}
+
+
 def _source_economy_odds(source_root: Path) -> dict:
     """Require source identity for the real GDScript study's versioned odds."""
     summary_path = source_root / "tests/results/003a_economy_save_summary.json"
@@ -377,31 +428,7 @@ def main() -> None:
                 raise RuntimeError("Packaged feedback sheet pixels differ: " + row["path"])
         report["assets"]["feedback_textures_verified"] = 3
         report["assets"]["feedback_manifest_matches_source"] = True
-        beast_source = ROOT / "assets/powers/beasts_002c5_2/manifest.json"
-        expected_beasts = json.loads(beast_source.read_text(encoding="utf-8"))
-        if json.loads(assets.get("beast_json", "null")) != expected_beasts:
-            raise RuntimeError("Packaged beast manifest differs from current source")
-        beast_rows = assets.get("beast_textures", [])
-        beast_ids = {"black_arrow", "iron_bull", "stone_tortoise", "coil_dragon"}
-        if len(beast_rows) != 4 or {row.get("kind") for row in beast_rows} != beast_ids:
-            raise RuntimeError("Actual package did not inspect all four beast sheets")
-        for row in beast_rows:
-            expected_path = expected_beasts["effects"][row["kind"]]["texture"]
-            if row.get("path") != expected_path:
-                raise RuntimeError("Packaged beast texture path differs: " + row["kind"])
-            path = ROOT / expected_path.removeprefix("res://")
-            with Image.open(path) as image:
-                size = list(image.size)
-                data = bytearray(image.convert("RGBA").tobytes())
-                for offset in range(0, len(data), 4):
-                    if data[offset + 3] == 0:
-                        data[offset:offset + 3] = b"\0\0\0"
-                rgba = hashlib.sha256(data).hexdigest()
-            if (not row.get("valid") or not row.get("visible_pixels") or row.get("size") != size
-                    or row.get("transparent_rgb_normalized") is not True or row.get("visible_rgba_sha256") != rgba):
-                raise RuntimeError("Packaged beast sheet pixels differ: " + expected_path)
-        report["assets"]["beast_textures_verified"] = 4
-        report["assets"]["beast_manifest_matches_source"] = True
+        report["assets"].update(verify_beast_assets(assets))
         music_source = json.loads((ROOT / "assets/audio/music/manifest.json").read_text(encoding="utf-8"))
         music_rows = assets.get("music_stems", [])
         music_ids = {"title", "workshop", "run_base", "run_pressure", "run_boss"}
