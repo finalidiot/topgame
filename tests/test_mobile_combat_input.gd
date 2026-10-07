@@ -11,6 +11,7 @@ var checks: int = 0
 var failures: Array[String] = []
 var games: Array[QuietMain] = []
 var before: Dictionary = {}
+var collection_path: String = ""
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, label: String) -> void:
@@ -43,10 +44,31 @@ func neutral() -> void:
 	for button: JoyButton in [JOY_BUTTON_A,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]: pad(button,false)
 	axis(JOY_AXIS_LEFT_X,0.0); axis(JOY_AXIS_LEFT_Y,0.0)
 	axis(JOY_AXIS_TRIGGER_LEFT,0.0); axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
+func configure_fixture() -> bool:
+	var qa_task: String = "003A"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--qa-task="): qa_task = argument.trim_prefix("--qa-task=")
+		if argument.begins_with("--collection="): collection_path = argument.trim_prefix("--collection=")
+		if argument.begins_with("--collection-path="): collection_path = argument.trim_prefix("--collection-path=")
+	var task_pattern: RegEx = RegEx.new(); task_pattern.compile("^[A-Za-z0-9][A-Za-z0-9._-]*$")
+	if task_pattern.search(qa_task) == null: push_error("QA task must be a single task identifier"); return false
+	var base: String = OS.get_environment("TOPGAME_QA_ROOT")
+	if base.is_empty(): base = ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
+	var temp_root: String = base.path_join(qa_task).path_join("temp").replace("\\", "/").simplify_path()
+	if collection_path.is_empty(): collection_path = temp_root.path_join("mobile_provider_%d_%d.json" % [OS.get_process_id(),Time.get_ticks_usec()])
+	collection_path = collection_path.replace("\\", "/").simplify_path()
+	if not collection_path.is_absolute_path() or not collection_path.to_lower().begins_with(temp_root.to_lower()+"/"):
+		push_error("Mobile input collection must be an absolute path inside the selected QA task/temp folder"); return false
+	for suffix: String in ["", ".bak", ".tmp", ".bak.tmp", ".preferences.cfg", ".last_run_director.json"]:
+		if FileAccess.file_exists(collection_path+suffix): push_error("Refusing an existing mobile input fixture: "+collection_path+suffix); return false
+	if DirAccess.make_dir_recursive_absolute(collection_path.get_base_dir()) != OK:
+		push_error("Cannot create external mobile input fixture directory"); return false
+	print("MOBILE_COMBAT_INPUT_FIXTURE ",collection_path)
+	return true
 func make_game() -> QuietMain:
 	var game: QuietMain = QuietMain.new()
 	game.smoke_mode = true
-	game.collection_path = "user://test_collection/mobile_provider_%d_%d.json" % [OS.get_process_id(),Time.get_ticks_usec()]
+	game.collection_path = collection_path
 	root.add_child(game)
 	game.set_process(false)
 	game.battle.set_physics_process(false)
@@ -100,6 +122,7 @@ func check_hold_and_fresh(game: QuietMain, kind: String) -> void:
 	check(float(player.cooldown) > 3.9,"A new " + kind + " activation after release starts exactly one fresh Burst")
 
 func run() -> void:
+	if not configure_fixture(): quit(2); return
 	Input.use_accumulated_input = false
 	for path: String in ["user://collection.json","user://collection.json.bak","user://prototype.cfg","user://last_run_director.json"]: before[path] = snapshot(path)
 	var game: QuietMain = make_game()

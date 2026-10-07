@@ -1,0 +1,395 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "status": "source_regressions_and_native_review_capture_passed_delivery_recorded_externally",
+  "human_acceptance": "PENDING HUMAN REVIEW; exact Android candidate native acceptance remains pending without a device",
+  "branch": "task-003a1-bastion-active-defence",
+  "starting_main_sha": "c4228d446b5ed70a91c2e66c37dca0f8a32e56fc",
+  "production_change": {
+    "path": "scripts/starters.gd",
+    "coefficient": "bastion.spin_drain",
+    "before": 0.9,
+    "after": 1.0,
+    "additional_full_reserve_per_300_combat_seconds": 0.03858,
+    "other_production_inputs_byte_identical": 46
+  },
+  "tested_source_sha256": "78fcd21111aaa5944fae149a73aea0312e7bb5611a4126008403cce23cfa0e32",
+  "tested_assets_sha256": "fdea0c9a746370fd58c418fedc4d9c419424295f8d0d39025909502e08d6aca6",
+  "headless": {
+    "passed_suites": 72,
+    "checks": 196208,
+    "reports": [
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_frozen.json",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_music_scope_retry.json"
+    ],
+    "suites": [
+      {
+        "name": "collection_save",
+        "checks": 371
+      },
+      {
+        "name": "collection_flow",
+        "checks": 575
+      },
+      {
+        "name": "collection_ui",
+        "checks": 2362
+      },
+      {
+        "name": "spin_economy",
+        "checks": 232
+      },
+      {
+        "name": "threat_director",
+        "checks": 83
+      },
+      {
+        "name": "continuous_run",
+        "checks": 200
+      },
+      {
+        "name": "run_context",
+        "checks": 377
+      },
+      {
+        "name": "flow",
+        "checks": 162
+      },
+      {
+        "name": "combat_architecture",
+        "checks": 35
+      },
+      {
+        "name": "menus",
+        "checks": 4942
+      },
+      {
+        "name": "controller",
+        "checks": 1017
+      },
+      {
+        "name": "powers",
+        "checks": 79
+      },
+      {
+        "name": "swarm",
+        "checks": 33
+      },
+      {
+        "name": "presentation",
+        "checks": 78
+      },
+      {
+        "name": "progression",
+        "checks": 190
+      },
+      {
+        "name": "starters",
+        "checks": 17
+      },
+      {
+        "name": "starter_physics",
+        "checks": 38
+      },
+      {
+        "name": "xp_observer",
+        "checks": 30
+      },
+      {
+        "name": "ramp_integration",
+        "checks": 21
+      },
+      {
+        "name": "card_assets",
+        "checks": 132
+      },
+      {
+        "name": "escalation_progression",
+        "checks": 1445
+      },
+      {
+        "name": "escalation_physics",
+        "checks": 103
+      },
+      {
+        "name": "escalation_integration",
+        "checks": 1929
+      },
+      {
+        "name": "escalation_completion",
+        "checks": 42
+      },
+      {
+        "name": "escalation_assets",
+        "checks": 351
+      },
+      {
+        "name": "rpm_replay",
+        "checks": 0
+      },
+      {
+        "name": "signature_presentation",
+        "checks": 3362
+      },
+      {
+        "name": "roster_draft",
+        "checks": 23705
+      },
+      {
+        "name": "roster_physics",
+        "checks": 30
+      },
+      {
+        "name": "roster_presentation",
+        "checks": 3585
+      },
+      {
+        "name": "ability_rebalance",
+        "checks": 92
+      },
+      {
+        "name": "ability_rebalance_integration",
+        "checks": 32
+      },
+      {
+        "name": "collection_c5_integration",
+        "checks": 207
+      },
+      {
+        "name": "power_identity",
+        "checks": 4584
+      },
+      {
+        "name": "parts_catalogue",
+        "checks": 8945
+      },
+      {
+        "name": "parts_collection",
+        "checks": 1217
+      },
+      {
+        "name": "parts_package",
+        "checks": 285
+      },
+      {
+        "name": "packet_package",
+        "checks": 380
+      },
+      {
+        "name": "feedback_drift",
+        "checks": 1409
+      },
+      {
+        "name": "feedback_anchor_contacts",
+        "checks": 65
+      },
+      {
+        "name": "power_feedback",
+        "checks": 2463
+      },
+      {
+        "name": "feedback_rerolls",
+        "checks": 1052
+      },
+      {
+        "name": "feedback_effects",
+        "checks": 14404
+      },
+      {
+        "name": "feedback_live_pickup",
+        "checks": 4
+      },
+      {
+        "name": "feedback_parts_retention",
+        "checks": 148
+      },
+      {
+        "name": "beast_manifestations",
+        "checks": 16894
+      },
+      {
+        "name": "music",
+        "checks": 1830
+      },
+      {
+        "name": "music_escalation",
+        "checks": 407
+      },
+      {
+        "name": "save_tools",
+        "checks": 92
+      },
+      {
+        "name": "presentation_flow",
+        "checks": 49
+      },
+      {
+        "name": "presentation_retention",
+        "checks": 13252
+      },
+      {
+        "name": "frontend",
+        "checks": 405
+      },
+      {
+        "name": "packet_economy",
+        "checks": 10173
+      },
+      {
+        "name": "packet_transactions",
+        "checks": 175
+      },
+      {
+        "name": "run_rewards",
+        "checks": 31
+      },
+      {
+        "name": "packet_art_audio",
+        "checks": 170
+      },
+      {
+        "name": "shop_progression",
+        "checks": 777
+      },
+      {
+        "name": "human_feedback_ui",
+        "checks": 8159
+      },
+      {
+        "name": "beast_orientation",
+        "checks": 19878
+      },
+      {
+        "name": "music_revision",
+        "checks": 40
+      },
+      {
+        "name": "ui_polish_package",
+        "checks": 199
+      },
+      {
+        "name": "preview_human_feedback",
+        "checks": 7817
+      },
+      {
+        "name": "enemy_commitment",
+        "checks": 23499
+      },
+      {
+        "name": "defence_pressure",
+        "checks": 15
+      },
+      {
+        "name": "defence_depth",
+        "checks": 432
+      },
+      {
+        "name": "grounded_pickups",
+        "checks": 3220
+      },
+      {
+        "name": "arena_escalation",
+        "checks": 7084
+      },
+      {
+        "name": "android_foundation",
+        "checks": 138
+      },
+      {
+        "name": "defence_participation",
+        "checks": 21
+      },
+      {
+        "name": "final_acceptance_package",
+        "checks": 479
+      },
+      {
+        "name": "mobile_combat_input",
+        "checks": 119
+      },
+      {
+        "name": "bastion_active_defence",
+        "checks": 40
+      }
+    ]
+  },
+  "native": {
+    "passed_suites": 3,
+    "checks": 393,
+    "reports": [
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_auxiliary_regression.json",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_auxiliary_retry.json"
+    ],
+    "suites": [
+      {
+        "name": "starter_preview_cleanup",
+        "checks": 343
+      },
+      {
+        "name": "beast_render_attachment",
+        "checks": 26
+      },
+      {
+        "name": "music_native",
+        "checks": 24
+      }
+    ]
+  },
+  "python": {
+    "tests": 154,
+    "tool_guard_retry_tests": 16,
+    "guard_retry_log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_foundation_routing_retry.log",
+    "reports": [
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_auxiliary_retry.json"
+    ]
+  },
+  "study": {
+    "primary_observations": 136,
+    "exact_handoff_pairs": 38,
+    "maximum_ledger_error": 9.338085860122192e-13,
+    "fixed_parameter_shared_enemy_count": 22,
+    "fixed_parameter_afk_mature_seconds": 280.916666666412,
+    "fixed_parameter_active_final_rpm": 0.98723615476824,
+    "unchanged_non_bastion_comparisons": 24,
+    "reports": [
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_passive_audit.json",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_active_vs_afk.json",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_starter_passive_comparison.json",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_after_fixed_parameter_order_421.summary.json"
+    ]
+  },
+  "review_video": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_bastion_active_defence.mp4",
+    "sha256": "a498c1e3b33c33bb8a82349d8fbd6b0304de1429d49c79dc98e01a72446cb172",
+    "capture_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_active_defence_20261007_140335_932787.json",
+    "native_seconds": 68.1666666666667,
+    "native_view": [
+      640,
+      360
+    ],
+    "raw_probe_native_resolution_verified": true,
+    "native_snapshot": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\003a1_bastion_active_defence_20261007_140335_932787_source",
+    "encoded_nearest_view": [
+      1280,
+      720
+    ]
+  },
+  "preservation": {
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_preservation_precommit.json",
+    "player_profile_byte_identical": true,
+    "collection_backups_byte_identical": true,
+    "all_assets_byte_identical": true,
+    "all_other_production_source_byte_identical": true,
+    "profile_files": 3,
+    "recovery_backup_files": 9,
+    "asset_files": 642,
+    "unchanged_production_inputs": 46
+  },
+  "preserved_failed_attempts": {
+    "initial_full_regression": "One report-root boundary failure in music_escalation, corrected only in runner routing; 407 checks pass in preserved retry.",
+    "auxiliary": "Missing native PCM folder and child Python module paths; corrected external setup, originals retained.",
+    "capture": "MovieMaker writer1280 attempts preserved; final QA-only display snapshot initializes native640 without altering canonical project."
+  },
+  "delivery_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_delivery.json",
+  "engine_checks": 196601
+}

@@ -93,15 +93,38 @@ class FoundationGuards(unittest.TestCase):
         self.runner.assert_not_called()
 
     def test_external_root_reaches_child_and_previous_environment_restored(self):
-        self.assertEqual(self.invoke(), 0)
-        self.assertEqual(self.children[0]["qa_root"], str(self.qa.resolve()))
+        self.assertEqual(self.invoke("music,presentation_retention,mobile_combat_input"), 0)
+        self.assertTrue(all(child["qa_root"] == str(self.qa.resolve()) for child in self.children))
         self.assertEqual(os.environ["TOPGAME_QA_ROOT"], "previous-fixture-root")
         self.assertIn("--report=" + str(self.task / "manifests/guard_music.json"), self.children[0]["command"])
+        for child in self.children[1:]:
+            self.assertIn("--qa-task=002C.6", child["command"])
 
     def test_initially_absent_environment_remains_absent(self):
         os.environ.pop("TOPGAME_QA_ROOT", None)
         self.assertEqual(self.invoke(), 0)
         self.assertNotIn("TOPGAME_QA_ROOT", os.environ)
+
+    def test_fresh_fixture_root_routes_historical_children_inside_current_task(self):
+        fixture = self.task / "temp" / "isolated-fixtures"
+        self.assertEqual(self.invoke("music_escalation,presentation_retention,roster_draft", extra=["--fixture-qa-root", str(fixture)]), 0)
+        self.assertTrue(fixture.is_dir())
+        self.assertEqual(self.children[0]["qa_root"], str(self.qa.resolve()))
+        self.assertIn("--qa-task=002C.6", self.children[0]["command"])
+        self.assertTrue(all(child["qa_root"] == str(fixture.resolve()) for child in self.children[1:]))
+        self.assertIn("--report=" + str(self.task / "manifests/guard_roster_draft.json"), self.children[2]["command"])
+        self.assertEqual(os.environ["TOPGAME_QA_ROOT"], "previous-fixture-root")
+
+    def test_fixture_root_outside_task_temp_or_existing_is_preserved(self):
+        existing = self.task / "temp" / "old-fixtures"
+        existing.mkdir(parents=True)
+        sentinel = existing / "preserved.json"
+        sentinel.write_text("prior evidence")
+        for fixture in [self.qa / "003A", self.task / "temp", existing]:
+            with self.subTest(fixture=fixture), self.assertRaises((ValueError, RuntimeError)):
+                self.invoke(extra=["--fixture-qa-root", str(fixture)])
+        self.assertEqual(sentinel.read_text(), "prior evidence")
+        self.runner.assert_not_called()
 
     def test_child_failure_restores_environment_and_retains_failed_manifest(self):
         self.runner.side_effect = RuntimeError("MOCK child failure, no engine launched")

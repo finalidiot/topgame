@@ -319,11 +319,15 @@ func run() -> void:
 	test_snapshot_references()
 	var base: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if base.is_empty(): base = ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-	qa = base.path_join("002C.6"); assert(DirAccess.make_dir_recursive_absolute(qa.path_join("temp")) == OK)
+	var qa_task: String = "002C.6"
 	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--qa-task="): qa_task = arg.trim_prefix("--qa-task=")
 		if arg == "--native-sample": native_sample = true
 		if arg == "--allow-native-audio": allow_audio = true
 		if arg.begins_with("--ticks="): requested_ticks = clampi(int(arg.trim_prefix("--ticks=")),600,2400)
+	var task_pattern: RegEx = RegEx.new(); task_pattern.compile("^[A-Za-z0-9][A-Za-z0-9._-]*$")
+	if task_pattern.search(qa_task) == null: push_error("QA task must be a single task identifier"); quit(2); return
+	qa = base.path_join(qa_task); assert(DirAccess.make_dir_recursive_absolute(qa.path_join("temp")) == OK)
 	check(not native_sample or DisplayServer.get_name() != "headless","Native display sample must use an actual renderer")
 	var human_before: Dictionary = raw_hashes(Collection.DEFAULT_PATH)
 	var human_preferences_before: String = FileAccess.get_sha256("user://prototype.cfg") if FileAccess.file_exists("user://prototype.cfg") else ""
