@@ -1,5 +1,8 @@
 extends Node
-## Original synchronized presentation music. Inputs are copied scalar values
+## Original synchronized presentation music. Rhythmic pressure and broad hooks
+## carry escalation; the authored score reserves high leads for brief breaks.
+## First Machine/Results and opening-Run PCM retain their accepted arrangements.
+## Inputs are copied scalar values
 ## from existing Run observations; this node has no combat host/RNG/save access.
 const ASSET_ROOT: String = "res://assets/audio/music/"
 const STEM_NAMES: Array[String] = ["title", "workshop", "run_base", "run_pressure", "run_boss"]
@@ -204,7 +207,7 @@ static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}, p
 	var stage: int = clampi(int(observed.stage) if progression.is_empty() else int(progression.get("stage", 0)), 0, PROGRESSION_STAGES.size() - 1)
 	var row: Dictionary = PROGRESSION_STAGES[stage]
 	# Calm/draining can release temporary density, but a mature Run retains its
-	# lead and anthem arrangement. The two components keep their own hysteresis.
+	# rhythmic drive and broad hook arrangement. The two components keep their own hysteresis.
 	weight = maxf(weight, float(row.pressure))
 	boss = maxf(boss, float(row.boss))
 	# Critical spin and a genuinely observed boss still have a musical step
@@ -279,6 +282,13 @@ func apply_settings(settings: Dictionary) -> void:
 	if is_node_ready(): _apply_bus_gain()
 
 func notify_cue(kind: String) -> void:
+	if kind in ["packet_tear", "packet_rare"]:
+		# Packet foley clears a short space above the accepted workshop stem.
+		# The synchronized transport and its arrangement position keep running.
+		_duck_duration = 0.38 if kind == "packet_tear" else 0.48
+		_duck_strength = -4.0 if kind == "packet_tear" else -2.5
+		_duck_left = maxf(_duck_left, _duck_duration)
+		return
 	if kind == "low_rpm":
 		# This existing warning is intentionally quiet. Clear its brief two-note
 		# window rather than altering the accepted SFX sample/priority/gain.

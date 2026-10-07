@@ -8,11 +8,19 @@ var checks: int = 0
 var failures: int = 0
 var captures: String = ""
 var game: QuietMain
+const Physics = preload("res://scripts/battle.gd")
 
 func _initialize() -> void: call_deferred("_run")
 func check(value: bool, label: String) -> void:
 	checks += 1
 	if not value: failures += 1; push_error(label)
+
+func _finish_reentry() -> void:
+	var ticks: int = 0
+	while game.battle.battle_status == "reentry" and ticks < 91:
+		game.battle.test_step(Physics.FIXED_DT)
+		ticks += 1
+	check(game.battle.battle_status == "battle", "Actual ready ticks finish before the next live simulation step")
 
 func frozen_state() -> Dictionary:
 	var b = game.battle
@@ -111,6 +119,7 @@ func _run() -> void:
 	check(game.battle.powers == runtime and game.battle.powers._states == before.power_states, "Acquisition preserves live power runtime and spent recovery")
 	check(game.run_context.owned_power_ids.size() == 2, "Earned power appended exactly once")
 	game._process(0.51)
+	_finish_reentry()
 	check(game.screen == "battle" and not game.battle.paused and game.run_context.slot == 1, "Acquisition returns to the same encounter")
 	check(game.battle.elapsed == before.snapshot.elapsed and game.battle.player_entity().pos == before.snapshot.player.pos and game.battle.player_entity().rpm == before.snapshot.player.rpm, "Exact position, spin and live time restored")
 	check(game.battle.player_entity().powers == game.run_context.owned_power_ids, "New power becomes live in the same encounter")
@@ -132,6 +141,7 @@ func _run() -> void:
 	check(before == frozen_state(), "Swarm telegraph, wave scheduling and live timers are paused for every choice tick")
 	choose()
 	game._process(0.51)
+	_finish_reentry()
 	check(game.battle.swarm.schedule == before.schedule and game.battle.elapsed == before.snapshot.elapsed, "Swarm resumes at the exact scheduled moment")
 	game.battle.test_step(1.0/60.0)
 	check(game.battle.elapsed > before.snapshot.elapsed, "Swarm continues after selection")

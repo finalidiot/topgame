@@ -263,8 +263,8 @@ func _focus_is_visible(context: String) -> void:
 	if focused == null: return
 	check(focused.is_visible_in_tree() and focused.focus_mode == Control.FOCUS_ALL, context+": focused control is visible and navigable")
 	check(Rect2(Vector2.ZERO, Vector2(640, 360)).encloses(focused.get_global_rect()), context+": focused control is inside the viewport")
-	var style: StyleBoxFlat = focused.get_theme_stylebox("focus") as StyleBoxFlat
-	check(style != null and style.border_color.a > 0.0 and style.get_border_width(SIDE_LEFT) > 0, context+": focus has a visible border")
+	var style: StyleBoxTexture = focused.get_theme_stylebox("focus") as StyleBoxTexture
+	check(style != null and style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible(), context+": focus has a visible authored pixel frame")
 
 func _navigate(target: Control) -> bool:
 	check(target != null, "Requested navigation target exists")
@@ -358,7 +358,7 @@ func _test_title_garage_settings() -> void:
 		check(float(game.settings.volume) < volume, "Gamepad changes volume with slider focus")
 		await _tap(JOY_BUTTON_DPAD_RIGHT)
 		check(is_equal_approx(float(game.settings.volume), volume), "Slider supports both horizontal directions")
-	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen"]
+	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen", "reduced_flashing"]
 	check(toggles.size() == setting_keys.size(), "All settings toggles are present")
 	for index: int in range(mini(toggles.size(), setting_keys.size())):
 		var before: bool = game.settings[setting_keys[index]]
@@ -492,7 +492,7 @@ func _test_run() -> void:
 	_focus_is_visible("Run failure")
 	await _capture("09-controller-run-failure")
 	old_seed = game.run_context.run_seed
-	await _activate("RESTART RUN")
+	await _activate("RUN AGAIN")
 	check(game.screen == "reward" and game.run_context.run_seed != old_seed, "Controller restarts a failed Run at the initial draft")
 	await _draft_and_resume(true)
 	for slot: int in range(1, 11):
@@ -517,7 +517,7 @@ func _test_run() -> void:
 	check(game.screen == "result" and game.run_context.status == "failed", "Player loss still opens the controller result")
 	await _capture("11-controller-continuous-loss")
 	old_seed = game.run_context.run_seed
-	await _activate("RESTART RUN")
+	await _activate("RUN AGAIN")
 	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a continuous Run at its initial power offer")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "pause", "Back opens restarted Run draft overlay, observed "+game.screen)

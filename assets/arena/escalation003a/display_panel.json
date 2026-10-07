@@ -1,0 +1,43 @@
+{
+  "cell": [
+    40,
+    24
+  ],
+  "pivot": [
+    20,
+    22
+  ],
+  "layers": [
+    "01 protected display housing",
+    "02 printed load scale",
+    "03 authored bounded bar-readout keys"
+  ],
+  "tags": {
+    "IDLE": {
+      "from": 0,
+      "to": 3
+    },
+    "LOAD": {
+      "from": 4,
+      "to": 7
+    }
+  },
+  "durations_ms": [
+    700,
+    700,
+    700,
+    700,
+    300,
+    300,
+    300,
+    300
+  ],
+  "version": 1,
+  "texture": "res://assets/arena/escalation003a/display_panel.png",
+  "columns": 8,
+  "frame_count": 8,
+  "filter": "nearest",
+  "native_pixels": true,
+  "source": "assets/source-art/arena_escalation003a/display_panel.aseprite",
+  "presentation_only": true
+}

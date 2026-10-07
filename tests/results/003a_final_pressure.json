@@ -1,0 +1,41 @@
+{
+  "task": "003A",
+  "pass": "FINAL HUMAN ACCEPTANCE PASS",
+  "starting_sha": "92b3c5664ff92b54ff3c07d07933803d45aec470",
+  "scope": "Declared invested seven-family Bastion fixture, placed at centre once. Every subsequent tick uses production physics, natural Director admission and real RPM accounting. No fake outcomes, reserve refill, injected enemies or threat-time jump. Bot control is not human feel acceptance.",
+  "cause": "Automatic Dead Centre pull and Bulwark retaliation retained kill/XP attribution and also refreshed SpinEconomy elimination credit with no recent controls. Original AFK gains included 1.697973 reserve from full-top elimination/elite/boss payouts plus finite0.28 anchor quota, despite ordinary AFK combat reclamation correctly staying0.",
+  "changes": [
+    "Mature full tops use finite lane setup, imperfect sampled heading, committed through-position attack and real recovery opening.",
+    "Full-top entity phase offsets naturally overlap physical strikes; Bulwark/Anvil now commit using unchanged mass, speed, damage and Burst cost.",
+    "Safe-entry equal-distance ties rotate between the four actual ports, retaining player/body clearance and warning admission.",
+    "Only RPM credit and elimination sustain require recent deliberate steering/Brake/Burst. Physical power effects, kill/XP attribution, threat policy, wallets and all existing defensive coefficients remain unchanged."
+  ],
+  "unit_checks": {
+    "enemy_commitment": 23499,
+    "defence_participation": 21,
+    "spin_economy": 232,
+    "threat_director_after_reentry_fixture_update": 83,
+    "audited_pressure_regression_prior_level1_fixture": 15
+  },
+  "observations": [
+    {"phase":"original92b3","seed":421,"branch":"bulwark","director_investments":1,"zero_input_seconds":660.016666666395,"zero_input_reason":"observation_horizon","zero_input_rpm":0.755848120878977,"zero_input_peak_radius":3.39424562454224,"zero_input_contacts":909,"active_seconds":660.016666666395,"active_reason":"observation_horizon","report":"003A/manifests/003a_final_acceptance_defence_baseline_seed421.json"},
+    {"phase":"AI only, before sustain eligibility fix","seed":421,"branch":"bulwark","director_investments":1,"zero_input_seconds":660.016666666395,"zero_input_reason":"observation_horizon","zero_input_rpm":0.927959630326044,"active_seconds":660.016666666395,"active_rpm":0.98957738655378,"report":"003A/manifests/003a_final_acceptance_defence_ai_only_seed421_valid.json"},
+    {"phase":"combined","seed":421,"branch":"bulwark","director_investments":1,"zero_input_seconds":486.7333333332,"zero_input_reason":"spin_out","active_seconds":660.016666666395,"active_reason":"observation_horizon","report":"003A/manifests/003a_final_acceptance_defence_combined_seed421.json"},
+    {"phase":"combined","seed":7341,"branch":"bulwark","director_investments":1,"zero_input_seconds":496.8833333332,"zero_input_reason":"spin_out","active_seconds":660.016666666395,"active_rpm":0.989,"active_peak_radius":11.1,"report":"003A/manifests/003a_final_acceptance_defence_combined_seed7341.json"},
+    {"phase":"combined","seed":205252,"branch":"counterweight","director_investments":1,"zero_input_seconds":413.2,"zero_input_reason":"spin_out","active_seconds":660.016666666395,"active_rpm":0.968,"active_peak_radius":18.7,"report":"003A/manifests/003a_final_acceptance_defence_combined_counterweight_seed205252.json"},
+    {"phase":"final native film / normal15 investment budget","seed":421,"branch":"bulwark","director_investments":15,"zero_input_seconds":476.066666666562,"zero_input_reason":"spin_out","zero_input_rpm":0.0449954925849843,"active_seconds":638.016666666415,"active_reason":"observation_horizon","active_rpm":0.997883718626527,"report":"003A/manifests/003a_defence_pressure_acceptance_20261006_172035_206372.json"}
+  ],
+  "native_film": {
+    "path": "003A/video/003a_defence_pressure_acceptance.mp4",
+    "seconds": 114.67,
+    "frames": 6880,
+    "size": [1280,720],
+    "native_view": [640,360],
+    "audio": "Actual unchanged adaptive Run music and combat SFX, native stereoPCM from Godot AVI encoded to stereoAAC.",
+    "engine_errors_or_leaks": false,
+    "decodes_cleanly": true,
+    "chronology": "Same active fixture at early,3min,6min,9min,10min; identical-seed zero-input replay shows the actual final18seconds preceding natural spin-out. All omitted intervals execute every intervening solver tick."
+  },
+  "interpretation": "Bulwark retains extreme81x anchoring effective mass. Active bot supplies constantly sampled0.25 steering, no Brake/Burst. This proves preservation of strong active centre-hold and finite AFK sustain; it does not prove large displacement, mandatory timedbracing, universal seed balance or human feel. Source-level initial fixtures had Director investment1, while final film/default observer correctly use15. Historical original/AI/combined comparison is kept as an exact matched fixture, not relabelled as a natural earned playthrough.",
+  "human_review": "PENDING: judge whether committed enemy attacks, small active corrections and resource decisions feel sufficiently earned. No automatic balance/human acceptance."
+}

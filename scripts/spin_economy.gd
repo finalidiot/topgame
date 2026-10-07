@@ -91,7 +91,9 @@ func running_costs(f: Dictionary, speed: float, input: Vector2, braking: bool, d
 	spend(f,float(f.wobble)*TUNING.wobble*efficiency*dt,"wobble")
 
 func credit(target: Dictionary) -> void:
-	if valid(target) and target.team_id == "hostile" and str(target.outcome).is_empty(): credits[int(target.entity_id)] = host().elapsed
+	# Automatic anchor pull/retaliation keeps physical/XP attribution in Battle.
+	# It must not renew an endless RPM income while the controller is untouched.
+	if valid(target) and host().continuous.has_recent_control() and target.team_id == "hostile" and str(target.outcome).is_empty(): credits[int(target.entity_id)] = host().elapsed
 
 func contact(target: Dictionary, severity: float, damage: float, approach_speed: float, moving_speed: float = -1.0) -> void:
 	var p: Dictionary = host().player_entity()
@@ -118,6 +120,10 @@ func outcomes() -> void:
 		if str(f.outcome).is_empty() and "second_wind" in f.get("powers",[]) and not bool(f.get("second_wind_used",false)): continue
 		if not str(f.outcome).is_empty() and f.outcome not in ["impact","spin_out","ring_out"]: continue
 		paid[int(f.entity_id)] = true
+		# An earlier controlled hit does not license a later automatic clearance
+		# after the player stopped participating. No stats, damage, spawn policy
+		# or permanent Run reward is changed by this sustain-only eligibility.
+		if not host().continuous.has_recent_control(): continue
 		var small: bool = f.combatant_type == "small_top"
 		var attributed: bool = str(host().powers.cause_for(f).get("owner_id","")) == "player" if small else host().elapsed-float(credits.get(int(f.entity_id),-INF)) <= TUNING.credit_seconds
 		if not attributed: continue

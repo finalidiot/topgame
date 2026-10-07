@@ -1,0 +1,954 @@
+{
+  "version": 1,
+  "filter": "nearest",
+  "families": {
+    "gyro_lock": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 real floor tracks",
+          "02 physical fittings",
+          "03 incoming machine",
+          "04 accepted native defender",
+          "05 contact and release"
+        ],
+        "tags": {
+          "gyro_lock": {
+            "from": 0,
+            "to": 11
+          },
+          "gyro_lock_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "keel": {
+            "from": 24,
+            "to": 35
+          },
+          "flywheel": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/defence003a/gyro_lock_cards.aseprite",
+        "texture": "res://assets/powers/defence003a/gyro_lock_cards.png",
+        "source_sha256": "48ec464bafe25ff0166911f2ba09500d1fe2221604d15f647aa969a7f633538e"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independent silhouette",
+          "02 mechanism",
+          "03 branch identity"
+        ],
+        "tags": {
+          "gyro_lock": {
+            "from": 0,
+            "to": 0
+          },
+          "gyro_lock_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "keel": {
+            "from": 2,
+            "to": 2
+          },
+          "flywheel": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/defence003a/gyro_lock_icons.aseprite",
+        "texture": "res://assets/powers/defence003a/gyro_lock_icons.png",
+        "source_sha256": "1bd79d20b6784b5b31696720beb0cc585fef6b8a8920b533372505a0c9aba592"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 floor contact",
+          "02 mechanism and skids",
+          "03 charge fittings",
+          "04 finite release"
+        ],
+        "tags": {
+          "lock": {
+            "from": 0,
+            "to": 7
+          },
+          "engage": {
+            "from": 8,
+            "to": 15
+          },
+          "release": {
+            "from": 16,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90
+        ],
+        "columns": 8,
+        "frame_count": 24,
+        "source": "assets/source-art/defence003a/gyro_lock_fx.aseprite",
+        "texture": "res://assets/powers/defence003a/gyro_lock_fx.png",
+        "source_sha256": "4f23cd30dcfe50ef414c4e594aadbc5e3b3192c7720885217982fb920b7cd81e"
+      }
+    },
+    "impact_sink": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 real floor tracks",
+          "02 physical fittings",
+          "03 incoming machine",
+          "04 accepted native defender",
+          "05 contact and release"
+        ],
+        "tags": {
+          "impact_sink": {
+            "from": 0,
+            "to": 11
+          },
+          "impact_sink_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "shock_bleed": {
+            "from": 24,
+            "to": 35
+          },
+          "return_spring": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/defence003a/impact_sink_cards.aseprite",
+        "texture": "res://assets/powers/defence003a/impact_sink_cards.png",
+        "source_sha256": "ba85fa17f18a4cd1ad02d5a2f84ea441c0ba63b9e74f343ab46cf996c7ec60b3"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independent silhouette",
+          "02 mechanism",
+          "03 branch identity"
+        ],
+        "tags": {
+          "impact_sink": {
+            "from": 0,
+            "to": 0
+          },
+          "impact_sink_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "shock_bleed": {
+            "from": 2,
+            "to": 2
+          },
+          "return_spring": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/defence003a/impact_sink_icons.aseprite",
+        "texture": "res://assets/powers/defence003a/impact_sink_icons.png",
+        "source_sha256": "60b428019ca038e823d7a84945f4f1e6c3b577975cbc465662e924dab7adc367"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 floor contact",
+          "02 mechanism and skids",
+          "03 charge fittings",
+          "04 finite release"
+        ],
+        "tags": {
+          "stored": {
+            "from": 0,
+            "to": 7
+          },
+          "engage": {
+            "from": 8,
+            "to": 15
+          },
+          "vent": {
+            "from": 16,
+            "to": 23
+          },
+          "return": {
+            "from": 24,
+            "to": 31
+          }
+        },
+        "durations_ms": [
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90
+        ],
+        "columns": 8,
+        "frame_count": 32,
+        "source": "assets/source-art/defence003a/impact_sink_fx.aseprite",
+        "texture": "res://assets/powers/defence003a/impact_sink_fx.png",
+        "source_sha256": "8042e8d884f32ea3faf26e1ec77b25e5e7725575aeec5e4715620457ffd16f57"
+      }
+    },
+    "anchor_exchange": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 real floor tracks",
+          "02 physical fittings",
+          "03 incoming machine",
+          "04 accepted native defender",
+          "05 contact and release"
+        ],
+        "tags": {
+          "anchor_exchange": {
+            "from": 0,
+            "to": 11
+          },
+          "anchor_exchange_ii": {
+            "from": 12,
+            "to": 23
+          },
+          "deep_footing": {
+            "from": 24,
+            "to": 35
+          },
+          "slip_anchor": {
+            "from": 36,
+            "to": 47
+          }
+        },
+        "durations_ms": [
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130,
+          80,
+          80,
+          80,
+          60,
+          60,
+          80,
+          110,
+          80,
+          80,
+          80,
+          100,
+          130
+        ],
+        "columns": 12,
+        "frame_count": 48,
+        "source": "assets/source-art/defence003a/anchor_exchange_cards.aseprite",
+        "texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+        "source_sha256": "516b63974a6992085364f8e1f96ffa6c5faf6c2907b9f933b21ac8e8486f73c8"
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independent silhouette",
+          "02 mechanism",
+          "03 branch identity"
+        ],
+        "tags": {
+          "anchor_exchange": {
+            "from": 0,
+            "to": 0
+          },
+          "anchor_exchange_ii": {
+            "from": 1,
+            "to": 1
+          },
+          "deep_footing": {
+            "from": 2,
+            "to": 2
+          },
+          "slip_anchor": {
+            "from": 3,
+            "to": 3
+          }
+        },
+        "durations_ms": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "columns": 4,
+        "frame_count": 4,
+        "source": "assets/source-art/defence003a/anchor_exchange_icons.aseprite",
+        "texture": "res://assets/powers/defence003a/anchor_exchange_icons.png",
+        "source_sha256": "2e544d4431ca007385b31bb0ce5a54683f3b23c596a00ca47f37b1bd2ea41fa9"
+      },
+      "fx": {
+        "cell": [
+          96,
+          80
+        ],
+        "pivot": [
+          48,
+          48
+        ],
+        "layers": [
+          "01 floor contact",
+          "02 mechanism and skids",
+          "03 charge fittings",
+          "04 finite release"
+        ],
+        "tags": {
+          "brace": {
+            "from": 0,
+            "to": 7
+          },
+          "engage": {
+            "from": 8,
+            "to": 15
+          },
+          "release": {
+            "from": 16,
+            "to": 23
+          }
+        },
+        "durations_ms": [
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90,
+          45,
+          45,
+          45,
+          45,
+          55,
+          65,
+          75,
+          90
+        ],
+        "columns": 8,
+        "frame_count": 24,
+        "source": "assets/source-art/defence003a/anchor_exchange_fx.aseprite",
+        "texture": "res://assets/powers/defence003a/anchor_exchange_fx.png",
+        "source_sha256": "f1042cf0a813cb9deccb75661e396e57349db04e13cf1ec6d89a49b03eb922a5"
+      }
+    }
+  },
+  "art": {
+    "gyro_lock": {
+      "family": "gyro_lock",
+      "art_id": "gyro_lock",
+      "source_tag": "gyro_lock",
+      "icon": "res://assets/powers/defence003a/gyro_lock_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/defence003a/gyro_lock_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "gyro_lock_ii": {
+      "family": "gyro_lock",
+      "art_id": "gyro_lock_ii",
+      "source_tag": "gyro_lock_ii",
+      "icon": "res://assets/powers/defence003a/gyro_lock_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/defence003a/gyro_lock_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "keel": {
+      "family": "gyro_lock",
+      "art_id": "keel",
+      "source_tag": "keel",
+      "icon": "res://assets/powers/defence003a/gyro_lock_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/defence003a/gyro_lock_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "flywheel": {
+      "family": "gyro_lock",
+      "art_id": "flywheel",
+      "source_tag": "flywheel",
+      "icon": "res://assets/powers/defence003a/gyro_lock_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/defence003a/gyro_lock_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "impact_sink": {
+      "family": "impact_sink",
+      "art_id": "impact_sink",
+      "source_tag": "impact_sink",
+      "icon": "res://assets/powers/defence003a/impact_sink_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/defence003a/impact_sink_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "impact_sink_ii": {
+      "family": "impact_sink",
+      "art_id": "impact_sink_ii",
+      "source_tag": "impact_sink_ii",
+      "icon": "res://assets/powers/defence003a/impact_sink_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/defence003a/impact_sink_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "shock_bleed": {
+      "family": "impact_sink",
+      "art_id": "shock_bleed",
+      "source_tag": "shock_bleed",
+      "icon": "res://assets/powers/defence003a/impact_sink_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/defence003a/impact_sink_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "return_spring": {
+      "family": "impact_sink",
+      "art_id": "return_spring",
+      "source_tag": "return_spring",
+      "icon": "res://assets/powers/defence003a/impact_sink_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/defence003a/impact_sink_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "anchor_exchange": {
+      "family": "anchor_exchange",
+      "art_id": "anchor_exchange",
+      "source_tag": "anchor_exchange",
+      "icon": "res://assets/powers/defence003a/anchor_exchange_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "anchor_exchange_ii": {
+      "family": "anchor_exchange",
+      "art_id": "anchor_exchange_ii",
+      "source_tag": "anchor_exchange_ii",
+      "icon": "res://assets/powers/defence003a/anchor_exchange_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "deep_footing": {
+      "family": "anchor_exchange",
+      "art_id": "deep_footing",
+      "source_tag": "deep_footing",
+      "icon": "res://assets/powers/defence003a/anchor_exchange_icons.png",
+      "icon_frame": 2,
+      "card_texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+      "card_row": 2,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    },
+    "slip_anchor": {
+      "family": "anchor_exchange",
+      "art_id": "slip_anchor",
+      "source_tag": "slip_anchor",
+      "icon": "res://assets/powers/defence003a/anchor_exchange_icons.png",
+      "icon_frame": 3,
+      "card_texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+      "card_row": 3,
+      "card_cell": 64,
+      "card_frames": 12,
+      "card_static_frame": 5,
+      "card_durations_ms": [
+        80,
+        80,
+        80,
+        60,
+        60,
+        80,
+        110,
+        80,
+        80,
+        80,
+        100,
+        130
+      ]
+    }
+  },
+  "events": {
+    "gyro_lock_set": {
+      "family": "gyro_lock",
+      "tag": "engage"
+    },
+    "gyro_lock_break": {
+      "family": "gyro_lock",
+      "tag": "release"
+    },
+    "sink_store": {
+      "family": "impact_sink",
+      "tag": "engage"
+    },
+    "sink_vent": {
+      "family": "impact_sink",
+      "tag": "vent"
+    },
+    "sink_return": {
+      "family": "impact_sink",
+      "tag": "return"
+    },
+    "exchange_set": {
+      "family": "anchor_exchange",
+      "tag": "engage"
+    },
+    "exchange_release": {
+      "family": "anchor_exchange",
+      "tag": "release"
+    }
+  },
+  "scope": "Native artist-editable active defence; no accepted family changes"
+}

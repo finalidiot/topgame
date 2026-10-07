@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "task": "002C.5.2",
-  "scope": "giant beast manifestations behind actual opaque top",
+  "version": 2,
+  "task": "003A",
+  "scope": "giant coloured translucent beast manifestations behind actual opaque top",
   "filter": "nearest",
   "runtime_top_sprite_included": false,
   "effects": {
@@ -80,10 +80,28 @@
       "frame_count": 20,
       "label": "Black Arrow",
       "description": "Compact muscular human spirit: backward shooting-star somersault, asymmetric axial corkscrew, opening to a chest-down landing. PAC / Neville movement tribute; no bird.",
-      "source_sha256": "902ee804a2a76da0062bc085ffa5f67b7bca11a0e81b3aedef89aca881c75119",
-      "texture_sha256": "33a0080a5393fc9afeb90e4fcefc8d97b4c808ea75548fcf055d39e0ba86fb2c",
+      "source_sha256": "530498c74cc3662e2988251496fd754e5077660d124c1fdd8be8d818f609fd13",
+      "texture_sha256": "82496a41b2a62a18e1febb1f3f7752a10de4f90f2c2acf15f6358ddbb71bd8bf",
       "native_runtime_rgba_exact": true,
-      "python_compositor_rounding_pixels": 4550
+      "python_compositor_rounding_pixels": 6475,
+      "colour_identity": "smoky charcoal with cool silver edges",
+      "native_palette": {
+        "smoke": "#2c2f33",
+        "shadow": "#292d32",
+        "body": "#454a50",
+        "plane": "#686e75",
+        "silver": "#b4b8bf",
+        "light": "#dde0e5"
+      },
+      "colour_authored_in_native_layers": true,
+      "runtime_colour_tint": false,
+      "native_alpha_range": [
+        31,
+        255
+      ],
+      "native_translucent_pixel_fraction": 0.9998351195383347,
+      "native_alpha_sha256": "7515d5a7fd6c5aaa2a54854ff9750c3fb46ac67e34a74b6041a51157edf9e9ad",
+      "native_shape_sha256": "d65450b1fb64071559bb4dcde63a4e4abf29b7f4a8f9477a5bfe9bb0874d6c91"
     },
     "iron_bull": {
       "cell": [
@@ -160,10 +178,28 @@
       "frame_count": 20,
       "label": "Iron Bull",
       "description": "Broad-horned bull spirit: shoulder-first gather, low horn-led charge, planted lunge, recoil and a wide four-hoof guard.",
-      "source_sha256": "a9e83cd93debe6a91597dd54f8cbf720fea1e1148504f79c186d21a924029728",
-      "texture_sha256": "a844b70d9a6b43fd4f89280a82b058160b77d0600db3fe9429a6152f274e7d1f",
+      "source_sha256": "df772f0c01dc3b6ee23bb830858e1bed00bb4c21e27b12bb3689c21b81d16164",
+      "texture_sha256": "e537aa947d825a758da530c5761a608de6b9760e6b64af2a0f9a92c6aace0071",
       "native_runtime_rgba_exact": true,
-      "python_compositor_rounding_pixels": 11017
+      "python_compositor_rounding_pixels": 20416,
+      "colour_identity": "deep rust and heated iron red with warm silver edges",
+      "native_palette": {
+        "smoke": "#392b2a",
+        "shadow": "#4b2b29",
+        "body": "#743f36",
+        "plane": "#965b4b",
+        "silver": "#b9b3ae",
+        "light": "#dfd7cc"
+      },
+      "colour_authored_in_native_layers": true,
+      "runtime_colour_tint": false,
+      "native_alpha_range": [
+        30,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "d55daa24e96e1ac2eb7ed8f6617675def5f73084a27c7ed3f5b18ebb1ac1ce96",
+      "native_shape_sha256": "b538769bedc93da32dbfd7ee0f086da16601b75789c45eab3f809d8166220729"
     },
     "stone_tortoise": {
       "cell": [
@@ -240,10 +276,28 @@
       "frame_count": 20,
       "label": "Stone Tortoise",
       "description": "Low broad tortoise spirit: domed stone shell, visible head and four planted feet, weight transfer and braced low guard.",
-      "source_sha256": "3a21d7aa75388fee6fef61f34db8d83faa3b20803761f9de39f3626a961f4e82",
-      "texture_sha256": "6046538bff898ae4e7b1e9e80c0fe1de010f556cd91b5be6e72830037e576ab0",
+      "source_sha256": "203adb6c72eb13509f88e5102c197fed9a2d98d8b375f3efda50460c5ba8e4a1",
+      "texture_sha256": "bbaed5db09c76fa757437d02a2a364fadae153eeb209ee7a344fa79cc8d3cac2",
       "native_runtime_rgba_exact": true,
-      "python_compositor_rounding_pixels": 36224
+      "python_compositor_rounding_pixels": 46935,
+      "colour_identity": "earthy spectral green with pale sage silver edges",
+      "native_palette": {
+        "smoke": "#263526",
+        "shadow": "#2c482c",
+        "body": "#416b3e",
+        "plane": "#608b53",
+        "silver": "#a9bca6",
+        "light": "#d3e0c5"
+      },
+      "colour_authored_in_native_layers": true,
+      "runtime_colour_tint": false,
+      "native_alpha_range": [
+        28,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "c099f1a425fdc4ed6ffcb205f81dbc71cb224aec9ea8d1b0e5e4a7fee59fab7a",
+      "native_shape_sha256": "1a538f0d18794e5bddda30948a21f4166098544687cfc6cb0074096b3c91927d"
     },
     "coil_dragon": {
       "cell": [
@@ -320,10 +374,28 @@
       "frame_count": 20,
       "label": "Coil Dragon",
       "description": "Long serpentine dragon spirit: open-centre coils, horned open jaws, clawed forelimbs and an uncoiling bite that recoils into a defensive curl.",
-      "source_sha256": "e78094252bbcd3b66a89f0b2bc4a7a0ccf557a3a8e7aac01fad91530f6a379df",
-      "texture_sha256": "b987c047813ad0343fafa3b1a30585db97e9813f7bda8a011cc1cba20c504111",
+      "source_sha256": "3840f483002234a03e2b9390ba1289c54ba8cc877d668bb53f0e522dd056235d",
+      "texture_sha256": "a946042e2e335bb868d0fb5fa2ab3ed75492f181c9bb19a5ea9d0fc946612a57",
       "native_runtime_rgba_exact": true,
-      "python_compositor_rounding_pixels": 5513
+      "python_compositor_rounding_pixels": 8574,
+      "colour_identity": "muted cyan blue with blue violet shadow and ice silver edges",
+      "native_palette": {
+        "smoke": "#222c3b",
+        "shadow": "#2a3954",
+        "body": "#36627a",
+        "plane": "#51849d",
+        "silver": "#a6b9c8",
+        "light": "#cfe0e8"
+      },
+      "colour_authored_in_native_layers": true,
+      "runtime_colour_tint": false,
+      "native_alpha_range": [
+        28,
+        254
+      ],
+      "native_translucent_pixel_fraction": 1.0,
+      "native_alpha_sha256": "32b313aeea4d7a497ecedeb91876e71c128499884776758e3276d3b0b0eebcf5",
+      "native_shape_sha256": "f87c9af8f7937300ca475287436f7efa8a4ee596c1674c226b69fe97b12dc394"
     }
   }
 }

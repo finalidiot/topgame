@@ -1,0 +1,436 @@
+{
+  "task": "003A",
+  "status": "passed",
+  "scope": "Final 48 CREDITS production sampler, deterministic 3000 player cohort, persistent save transactions",
+  "observed_parent": "b7812e17ddce6166258eca7285a0a38e8cae37fc",
+  "branch": "task-003a-shop-parts-packets",
+  "checks": {
+    "packet_economy": 10172,
+    "packet_transactions": 175,
+    "collection_save": 371,
+    "accepted_parent_actual_api_migration": 45
+  },
+  "profile_unchanged": true,
+  "evidence_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_economy_final_48.json",
+  "economy_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_economy_final_48_packet_economy.json",
+  "preserved_initial_60_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_economy_simulation.json",
+  "cohort": 3000,
+  "costs": {
+    "reclaimed": {
+      "cost": 36.0,
+      "currency": "salvage",
+      "name": "RECLAIMED PARTS PACKET"
+    },
+    "standard": {
+      "cost": 48.0,
+      "currency": "credits",
+      "name": "PARTS PACKET"
+    }
+  },
+  "duplicate_salvage": {
+    "COMMON": 1.0,
+    "EPIC": 7.0,
+    "LEGENDARY": 10.0,
+    "RARE": 4.0,
+    "TRASH": 1.0,
+    "UNCOMMON": 2.0
+  },
+  "run_reward": {
+    "boss_clear": 30.0,
+    "elite_clear": 10.0,
+    "max_run_payout": 600.0,
+    "threat_clear": 12.0
+  },
+  "rarity_odds": {
+    "bit": {
+      "COMMON": 0.3584229390681,
+      "EPIC": 0.0596815870634325,
+      "LEGENDARY": 0.0149203967658581,
+      "RARE": 0.149203967658581,
+      "TRASH": 0.0,
+      "UNCOMMON": 0.417771109444028
+    },
+    "blade": {
+      "COMMON": 0.36231884057971,
+      "EPIC": 0.0607315389924085,
+      "LEGENDARY": 0.0,
+      "RARE": 0.151828847481021,
+      "TRASH": 0.0,
+      "UNCOMMON": 0.42512077294686
+    },
+    "ratchet": {
+      "COMMON": 0.336700336700337,
+      "EPIC": 0.0586820586820587,
+      "LEGENDARY": 0.0,
+      "RARE": 0.146705146705147,
+      "TRASH": 0.0471380471380471,
+      "UNCOMMON": 0.410774410774411
+    }
+  },
+  "completion_distributions": {
+    "25_percent": {
+      "credits_spent": {
+        "mean": 108.464,
+        "median": 96,
+        "p75": 96,
+        "p90": 144,
+        "worst_tested": 192
+      },
+      "duplicates": {
+        "mean": 1.188,
+        "median": 1,
+        "p75": 1,
+        "p90": 3,
+        "worst_tested": 7
+      },
+      "owned_threshold": 8,
+      "packets": {
+        "mean": 2.25966666666667,
+        "median": 2,
+        "p75": 2,
+        "p90": 3,
+        "worst_tested": 4
+      },
+      "reclaimed_used": {
+        "mean": 0.0,
+        "median": 0,
+        "p75": 0,
+        "p90": 0,
+        "worst_tested": 0
+      },
+      "salvage_earned": {
+        "mean": 2.03866666666667,
+        "median": 1,
+        "p75": 3,
+        "p90": 6,
+        "worst_tested": 22
+      },
+      "standard_used": {
+        "mean": 2.25966666666667,
+        "median": 2,
+        "p75": 2,
+        "p90": 3,
+        "worst_tested": 4
+      }
+    },
+    "50_percent": {
+      "credits_spent": {
+        "mean": 330.448,
+        "median": 336,
+        "p75": 384,
+        "p90": 384,
+        "worst_tested": 528
+      },
+      "duplicates": {
+        "mean": 7.233,
+        "median": 7,
+        "p75": 9,
+        "p90": 11,
+        "worst_tested": 23
+      },
+      "owned_threshold": 16,
+      "packets": {
+        "mean": 6.89033333333333,
+        "median": 7,
+        "p75": 8,
+        "p90": 8,
+        "worst_tested": 12
+      },
+      "reclaimed_used": {
+        "mean": 0.006,
+        "median": 0,
+        "p75": 0,
+        "p90": 0,
+        "worst_tested": 1
+      },
+      "salvage_earned": {
+        "mean": 14.306,
+        "median": 13,
+        "p75": 19,
+        "p90": 25,
+        "worst_tested": 49
+      },
+      "standard_used": {
+        "mean": 6.88433333333333,
+        "median": 7,
+        "p75": 8,
+        "p90": 8,
+        "worst_tested": 11
+      }
+    },
+    "75_percent": {
+      "credits_spent": {
+        "mean": 676.832,
+        "median": 672,
+        "p75": 720,
+        "p90": 816,
+        "worst_tested": 1152
+      },
+      "duplicates": {
+        "mean": 23.6786666666667,
+        "median": 23,
+        "p75": 29,
+        "p90": 34,
+        "worst_tested": 57
+      },
+      "owned_threshold": 24,
+      "packets": {
+        "mean": 14.965,
+        "median": 15,
+        "p75": 17,
+        "p90": 19,
+        "worst_tested": 26
+      },
+      "reclaimed_used": {
+        "mean": 0.864333333333333,
+        "median": 1,
+        "p75": 1,
+        "p90": 2,
+        "worst_tested": 3
+      },
+      "salvage_earned": {
+        "mean": 49.317,
+        "median": 46,
+        "p75": 60,
+        "p90": 74,
+        "worst_tested": 121
+      },
+      "standard_used": {
+        "mean": 14.1006666666667,
+        "median": 14,
+        "p75": 15,
+        "p90": 17,
+        "worst_tested": 24
+      }
+    },
+    "90_percent": {
+      "credits_spent": {
+        "mean": 983.536,
+        "median": 960,
+        "p75": 1104,
+        "p90": 1200,
+        "worst_tested": 1584
+      },
+      "duplicates": {
+        "mean": 42.6096666666667,
+        "median": 41,
+        "p75": 50,
+        "p90": 59,
+        "worst_tested": 86
+      },
+      "owned_threshold": 28,
+      "packets": {
+        "mean": 22.5673333333333,
+        "median": 22,
+        "p75": 25,
+        "p90": 28,
+        "worst_tested": 37
+      },
+      "reclaimed_used": {
+        "mean": 2.077,
+        "median": 2,
+        "p75": 3,
+        "p90": 3,
+        "worst_tested": 5
+      },
+      "salvage_earned": {
+        "mean": 90.6643333333333,
+        "median": 85,
+        "p75": 112,
+        "p90": 120,
+        "worst_tested": 189
+      },
+      "standard_used": {
+        "mean": 20.4903333333333,
+        "median": 20,
+        "p75": 23,
+        "p90": 25,
+        "worst_tested": 33
+      }
+    },
+    "complete": {
+      "credits_spent": {
+        "mean": 1396.56,
+        "median": 1392,
+        "p75": 1536,
+        "p90": 1680,
+        "worst_tested": 2304
+      },
+      "duplicates": {
+        "mean": 71.3,
+        "median": 71,
+        "p75": 83,
+        "p90": 92,
+        "worst_tested": 137
+      },
+      "owned_threshold": 31,
+      "packets": {
+        "mean": 33.1,
+        "median": 33,
+        "p75": 37,
+        "p90": 40,
+        "worst_tested": 55
+      },
+      "reclaimed_used": {
+        "mean": 4.005,
+        "median": 4,
+        "p75": 5,
+        "p90": 5,
+        "worst_tested": 7
+      },
+      "salvage_earned": {
+        "mean": 154.881,
+        "median": 152,
+        "p75": 185,
+        "p90": 193,
+        "worst_tested": 266
+      },
+      "standard_used": {
+        "mean": 29.095,
+        "median": 29,
+        "p75": 32,
+        "p90": 35,
+        "worst_tested": 48
+      }
+    }
+  },
+  "first_three_standard_new_yield": {
+    "mean": 2.37522222222222,
+    "median": 3,
+    "p75": 3,
+    "p90": 3,
+    "worst_tested": 3
+  },
+  "ownership_stage_means": {
+    "16": {
+      "standard": {
+        "mean_new": 1.455,
+        "any_new_probability": 0.8785,
+        "multiple_new_probability": 0.472
+      },
+      "reclaimed": {
+        "mean_new": 1.9705,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.746
+      }
+    },
+    "24": {
+      "standard": {
+        "mean_new": 0.68,
+        "any_new_probability": 0.5495,
+        "multiple_new_probability": 0.124
+      },
+      "reclaimed": {
+        "mean_new": 1.437,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.403
+      }
+    },
+    "28": {
+      "standard": {
+        "mean_new": 0.3155,
+        "any_new_probability": 0.2905,
+        "multiple_new_probability": 0.025
+      },
+      "reclaimed": {
+        "mean_new": 1.1445,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.1435
+      }
+    },
+    "3": {
+      "standard": {
+        "mean_new": 2.645,
+        "any_new_probability": 0.9965,
+        "multiple_new_probability": 0.96
+      },
+      "reclaimed": {
+        "mean_new": 2.792,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.99
+      }
+    },
+    "30": {
+      "standard": {
+        "mean_new": 0.0965,
+        "any_new_probability": 0.0965,
+        "multiple_new_probability": 0.0
+      },
+      "reclaimed": {
+        "mean_new": 1.0,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.0
+      }
+    },
+    "31": {
+      "standard": {
+        "mean_new": 0.0,
+        "any_new_probability": 0.0,
+        "multiple_new_probability": 0.0
+      },
+      "reclaimed": {
+        "mean_new": 0.0,
+        "any_new_probability": 0.0,
+        "multiple_new_probability": 0.0
+      }
+    },
+    "8": {
+      "standard": {
+        "mean_new": 2.2385,
+        "any_new_probability": 0.991,
+        "multiple_new_probability": 0.8615
+      },
+      "reclaimed": {
+        "mean_new": 2.4825,
+        "any_new_probability": 1.0,
+        "multiple_new_probability": 0.9435
+      }
+    }
+  },
+  "anti_loop": {
+    "complete_collection_expected_net": -29.0895,
+    "complete_collection_expected_return": 6.9105,
+    "cost": 36,
+    "worst_net_return": -12,
+    "worst_possible_salvage_return": 24
+  },
+  "analytic_completion_bound": {
+    "applies_to": "31 eligible designs, 3 starter owned; buy Reclaimed whenever affordable",
+    "minimum_salvage_from_zero_NEW_standard": 4,
+    "maximum_zero_progress_standard_before_reclaimed": 9,
+    "conservative_total_packet_bound": 280,
+    "reason": "Any zero NEW Standard returns at least 4 SALVAGE. Nine such Standards fund 36 SALVAGE; a Reclaimed grants at least one missing design. 28 missing designs require at most 28 * (9 + 1) packet purchases."
+  },
+  "save_contracts": [
+    "accepted-schema-1 migration + exact-byte backup before mutation",
+    "run nonce persistence, duplicate settlement, abort/restart, fixture and AFK guards, reward overflow",
+    "exact three-result paid receipt; reload no reroll/debit; resolved reveal recovery; finalize/ack/confirm idempotence",
+    "faults at debit/grant/temp/backup; fixed receipt recovery after corruption; stale-write guard",
+    "duplicate conversion values; full collection no fake NEW; real reclaimed SALVAGE sink has strict loss",
+    "negative/fractional/huge/bool balance refusal; bounded addition with recoverable token; malformed receipt conservatism",
+    "maximum SALVAGE Reclaimed purchase uses prospective debit capacity; exact duplicate return stays below maximum; replay idempotent",
+    "backup-first full progression reset; exact paid pending-state backup; settings retained"
+  ],
+  "reproduce": "python tools/economy/study_packets.py --task 003A --stem <fresh-stem> --cohort 3000",
+  "source_hashes": {
+    "scripts/collection_save.gd": "4670bde3f12a952a73cdc0ba1b4e056ba55a7403532d5f39bd1d390ab3bdb00f",
+    "scripts/packet_economy.gd": "b408ae46ee753e6b1f77474027cb5440028c540ab1ccec3d23c646ad2ed9aaca",
+    "assets/data/packet_economy.json": "88184c5ec42627fa90aa103bedca6f95dfccfddfe053061cbf5e1226bf7e7b6c",
+    "assets/data/parts_catalogue.json": "6ff66e7051e0fd1c2090de9fb563f65852b8b30d9d1310728927b6ceb73f6c81",
+    "tests/test_packet_economy.gd": "0c49c5a5f2dc4e1506cf0a3b9928dabb2a45a0edd4a44fd176861e5cc2e365a3",
+    "tests/test_packet_transactions.gd": "071e63ceac74999433839dacaaff5c62c4a569e353c4c20f1b1678a44e19c342",
+    "tests/test_accepted_save_migration.gd": "d868b886fb818f6abbfda38514edae0e8cd2e897007921485fdc14757f0b50a7",
+    "tools/economy/verify_accepted_migration.py": "9c89b09290a0a17aee9f141206a6c7b594cdebc06606a4980baeb33443ae0167"
+  },
+  "packet_transactions_final_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_salvage_capacity_transactions.json",
+  "accepted_parent_actual_api_migration": {
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_actual_accepted_save_final.json",
+    "engine_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_actual_accepted_save_final_engine.json",
+    "parent": "b7812e17ddce6166258eca7285a0a38e8cae37fc",
+    "source_sha256": "6825f9cd962e9ef9e1f02a29425c1c00637bdcb483e0d6ea5fa7a3b101afce55",
+    "checks": 45,
+    "profile_unchanged": true
+  },
+  "final_boundary_change": "Reclaimed SALVAGE capacity check includes the prospective debit, so spending at maximum SALVAGE remains possible; packet probabilities and displayed normal-wallet outcomes are unchanged.",
+  "initial_packet_transactions_checks": 137
+}

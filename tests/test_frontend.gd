@@ -5,6 +5,7 @@ extends "res://tests/test_collection_ui.gd"
 
 const FrontEndSkin = preload("res://scripts/front_end.gd")
 const SaveModel = preload("res://scripts/collection_save.gd")
+const ReentryPhysics = preload("res://scripts/battle.gd")
 var _qa_profiles: String = ""
 var _active_profile: String = ""
 var _player_files_before: Dictionary = {}
@@ -306,6 +307,19 @@ func _test_pause_options_preserves_run() -> void:
 	await create_timer(0.08).timeout
 	check(game.screen == "pause" and game.battle.snapshot() == battle_before, "Options Back preserves the still-stopped simulation")
 	await _click(_button("resume"))
+	# Resume now has a deliberate 1.25-second ready phase. Advance only its
+	# actual fixed ticks, then restore the ordinary enabled physics process.
+	game.battle.set_physics_process(false)
+	var ready_ticks: int = 0
+	while game.battle.battle_status == "reentry" and ready_ticks < 91:
+		game.battle.test_step(ReentryPhysics.FIXED_DT)
+		ready_ticks += 1
+	var ready_snapshot: Dictionary = game.battle.snapshot().duplicate(true)
+	var expected_snapshot: Dictionary = battle_before.duplicate(true)
+	ready_snapshot.erase("paused")
+	expected_snapshot.erase("paused")
+	check(game.battle.battle_status == "battle" and ready_snapshot == expected_snapshot, "Ready buffer ends before live physics while retaining every actual body and simulation field")
+	game.battle.set_physics_process(true)
 	await create_timer(0.08).timeout
 	check(game.screen == "battle" and not game.battle.paused and game.battle.elapsed > float(battle_before.elapsed), "Deliberate Resume restarts the same actual simulation")
 	check(game.run_context.run_seed == int(run_before.seed) and game.run_context.selected_build == run_before.build and game.run_context.owned_power_ids == run_before.owned, "Resume retains the same seed, assembled top and acquired power")
@@ -345,8 +359,14 @@ func _run() -> void:
 	await _test_changed_collection_guard()
 	await _test_pause_options_preserves_run()
 	if is_instance_valid(game):
+		# Normal-boot UI intentionally plays real SFX. Let the Dummy audio thread
+		# release its queued playbacks before SceneTree teardown, even on fast QA.
+		game.sounds.muted = true
+		for channel: AudioStreamPlayer in game.sounds.channels: channel.stop()
+		await create_timer(0.12).timeout
 		game.queue_free()
 		await _settle()
+		await create_timer(0.12).timeout
 	check(_player_files() == _player_files_before, "The actual human collection and preferences remained byte-for-byte unchanged")
 	print("FRONT_END_TEST_%s checks=%d failures=%d synthetic_device=%d qa_profiles=%s" % ["PASS" if failures == 0 else "FAIL", checks, failures, PAD, _qa_profiles])
 	quit(1 if failures else 0)

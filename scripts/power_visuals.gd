@@ -4,6 +4,7 @@ extends RefCounted
 
 const Signature = preload("res://scripts/signature_visuals.gd")
 const Identity = preload("res://scripts/power_identity.gd")
+const Defence = preload("res://scripts/defence_art.gd")
 const SMALL: Texture2D = preload("res://assets/powers/small_top.png")
 const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
@@ -80,6 +81,7 @@ static func draw_small(canvas: CanvasItem, fighter: Dictionary, position: Vector
 	_cell(canvas, "small_top", SMALL, frame, position)
 
 static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector2, quality: float = 1.0) -> void:
+	if Defence.effect(canvas, effect, position): return
 	if Identity.effect(canvas,effect,position): return
 	if Signature.effect(canvas,effect,position):
 		if effect.kind == "counterweight_release": _draw_force_release(canvas,effect.get("direction",Vector2.RIGHT),position,float(effect.age)/float(effect.duration))
@@ -133,6 +135,7 @@ static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2
 		return
 	Signature.aura(canvas,fighter,position,clock)
 	Identity.aura(canvas,fighter,position,clock)
+	Defence.aura(canvas, fighter, position)
 	_draw_anchor_feedback(canvas, fighter, position + Vector2(0.0, float(fighter.get("height", 0.0))), clock, quality)
 	if float(fighter.get("slipstream_time", 0.0)) > 0.0 and Identity.family_info("afterimage").is_empty():
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
@@ -277,6 +280,8 @@ static func draw_spawn(canvas: CanvasItem, position: Vector2, progress: float) -
 	_cell(canvas, "effects", EFFECTS, _frame("effects", "floor_stamp", age), position, Color(1.0, 0.90, 0.65))
 
 static func icon_region(power_id: String) -> Rect2:
+	var defence_art: Dictionary = Defence.art(power_id)
+	if not defence_art.is_empty(): return Rect2(int(defence_art.icon_frame) * 16, 0, 16, 16)
 	var authored: Dictionary = Identity.art(power_id)
 	if not authored.is_empty(): return Rect2(int(authored.icon_frame)*16,0,16,16)
 	var roster_tags: Dictionary=_meta("roster_icons").get("tags",{})
@@ -290,6 +295,8 @@ static func icon_region(power_id: String) -> Rect2:
 	return Rect2(float(frame) * 16.0, 0.0, 16.0, 16.0)
 
 static func icon_texture(power_id: String) -> Texture2D:
+	var defence_art: Dictionary = Defence.art(power_id)
+	if not defence_art.is_empty(): return Defence.texture(str(defence_art.icon))
 	var authored: Dictionary = Identity.art(power_id)
 	if not authored.is_empty(): return Identity.texture(str(authored.icon))
 	if _meta("roster_icons").get("tags",{}).has(power_id): return ROSTER_ICONS

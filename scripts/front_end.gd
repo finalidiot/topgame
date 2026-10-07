@@ -11,6 +11,7 @@ const ORANGE: Color = Color("df9b58")
 const FONT_PATH: String = "res://assets/ui/foundry_small.fnt"
 const BACKGROUND_PATH: String = "res://assets/ui/frontend_background.png"
 const GLYPH_PATH: String = "res://assets/ui/input_glyphs.png"
+const AUTHORED_ROOT: String = "res://assets/ui/human_feedback003a/"
 const SCREEN_REGISTRY: Dictionary = {
 	"title_gate":{"scope":"menu", "background":0},
 	"collection_title":{"scope":"menu", "background":1},
@@ -33,6 +34,10 @@ const SCREEN_REGISTRY: Dictionary = {
 	"level_up":{"scope":"run_choice", "background":1},
 	"pause":{"scope":"run_choice", "background":1},
 	"result":{"scope":"menu", "background":1},
+	"shop":{"scope":"menu", "background":1},
+	"packet_purchase":{"scope":"menu", "background":1},
+	"packet_odds":{"scope":"menu", "background":1},
+	"packet_open":{"scope":"menu", "background":1},
 	"hud":{"scope":"combat", "background":-1},
 }
 
@@ -63,7 +68,7 @@ static func font_size(requested: int) -> int:
 static func pixel_font() -> Font:
 	return load(FONT_PATH) as Font if ResourceLoader.exists(FONT_PATH) else null
 
-static func plate(fill: Color, outline: Color, width: int = 1) -> StyleBoxFlat:
+static func _flat_plate(fill: Color, outline: Color, width: int = 1) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = fill
 	style.border_color = outline
@@ -75,6 +80,35 @@ static func plate(fill: Color, outline: Color, width: int = 1) -> StyleBoxFlat:
 	style.anti_aliasing = false
 	return style
 
+static func authored_style(name: String, state: String = "NORMAL", tint: Color = Color.WHITE) -> StyleBox:
+	var path: String = AUTHORED_ROOT + name + ".png"
+	if not ResourceLoader.exists(path): return _flat_plate(PANEL, BORDER)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(AUTHORED_ROOT + name + ".json"))
+	if not parsed is Dictionary or not parsed.tags.has(state): return _flat_plate(PANEL, BORDER)
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = load(path)
+	atlas.region = Rect2(int(parsed.tags[state].from) * int(parsed.cell[0]), 0, int(parsed.cell[0]), int(parsed.cell[1]))
+	var style: StyleBoxTexture = StyleBoxTexture.new()
+	style.texture = atlas
+	style.modulate_color = tint
+	for side: int in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		style.set_texture_margin(side, 8)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	style.content_margin_top = 2
+	style.content_margin_bottom = 2
+	return style
+
+static func plate(fill: Color, outline: Color, width: int = 1) -> StyleBox:
+	# Thin combat fills/meters retain precise scalar geometry. Menu surfaces use
+	# artist-owned caps, rolled edges and fasteners, with a real transparent focus
+	# frame rather than another generic filled rectangle above the artwork.
+	if width <= 0: return _flat_plate(fill, outline, width)
+	if fill.a < 0.01:
+		return authored_style("button_caps", "FOCUS", outline)
+	var state: String = "SELECTED" if fill.r > fill.b * 1.25 else ("HOVER" if outline.b > outline.r * 1.3 else "NORMAL")
+	return authored_style("metal_plate", state)
+
 static func make_theme() -> Theme:
 	var value: Theme = Theme.new()
 	value.default_font_size = 10
@@ -84,11 +118,11 @@ static func make_theme() -> Theme:
 	value.set_color("font_hover_color", "Button", Color.WHITE)
 	value.set_color("font_focus_color", "Button", Color.WHITE)
 	value.set_color("font_pressed_color", "Button", INK)
-	value.set_stylebox("normal", "Button", plate(Color("263640"), BORDER))
-	value.set_stylebox("hover", "Button", plate(Color("344853"), BLUE))
-	value.set_stylebox("pressed", "Button", plate(ORANGE, ORANGE))
-	value.set_stylebox("focus", "Button", plate(Color(0, 0, 0, 0), ORANGE, 2))
-	value.set_stylebox("disabled", "Button", plate(Color("172129"), Color("344047")))
+	value.set_stylebox("normal", "Button", authored_style("button_caps", "NORMAL"))
+	value.set_stylebox("hover", "Button", authored_style("button_caps", "HOVER"))
+	value.set_stylebox("pressed", "Button", authored_style("button_caps", "PRESSED"))
+	value.set_stylebox("focus", "Button", authored_style("button_caps", "FOCUS", ORANGE))
+	value.set_stylebox("disabled", "Button", authored_style("button_caps", "DISABLED"))
 	value.set_stylebox("background", "ProgressBar", plate(INK, BORDER))
 	value.set_stylebox("fill", "ProgressBar", plate(BLUE, BLUE, 0))
 	value.set_stylebox("slider", "HSlider", plate(BORDER, BORDER, 0))
@@ -104,6 +138,7 @@ static func controller_profile(device: int) -> String:
 	return "gamepad"
 
 static func prompt(profile: String, action: String) -> String:
+	if profile == "touch": return {"confirm":"TAP", "back":"ANDROID", "choose":"TAP / SWIPE", "pause":"PAUSE", "steer":"HOLD / DRAG", "burst":"BURST", "brake":"BRAKE"}.get(action,action.to_upper())
 	if profile == "keyboard":
 		return {"confirm":"ENTER / CLICK", "back":"ESC", "choose":"ARROWS / TAB", "pause":"ESC", "steer":"WASD / ARROWS", "burst":"SPACE", "brake":"SHIFT"}.get(action, action.to_upper())
 	var south: String = {"playstation":"CROSS", "nintendo":"B", "xbox":"A"}.get(profile, "SOUTH BUTTON")
@@ -111,6 +146,7 @@ static func prompt(profile: String, action: String) -> String:
 	return {"confirm":south, "back":east, "choose":"D-PAD / STICK", "pause":"MENU", "steer":"LEFT STICK", "burst":south, "brake":"SHOULDER / TRIGGER"}.get(action, action.to_upper())
 
 static func glyph(profile: String, action: String) -> AtlasTexture:
+	if profile == "touch": return null
 	if not ResourceLoader.exists(GLYPH_PATH): return null
 	var tag: String = "key_enter" if action == "confirm" else "key_escape"
 	if profile != "keyboard":

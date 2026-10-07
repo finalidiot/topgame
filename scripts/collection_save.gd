@@ -7,7 +7,9 @@ class_name CollectionSave
 
 const Catalog = preload("res://scripts/parts.gd")
 const Starters = preload("res://scripts/starters.gd")
-const SCHEMA_VERSION: int = 1
+const Economy = preload("res://scripts/packet_economy.gd")
+const SCHEMA_VERSION: int = 2
+const MAX_BALANCE: int = 1000000000
 const DEFAULT_PATH: String = "user://collection.json"
 const CATEGORIES: Array[String] = ["blade", "ratchet", "bit"]
 
@@ -17,6 +19,10 @@ var last_error: String = ""
 var read_only: bool = false
 var starter_id: String:
 	get: return str(_data.get("starter_selected", ""))
+var credits: int:
+	get: return int(_data.progression.credits)
+var salvage: int:
+	get: return int(_data.progression.salvage)
 var _data: Dictionary = _empty_state()
 var _write_status: String = "write_failed"
 var last_backup_path: String = ""
@@ -25,7 +31,131 @@ func _init(path: String = DEFAULT_PATH) -> void:
 	save_path = path
 
 static func _empty_state() -> Dictionary:
-	return {"schema_version":SCHEMA_VERSION, "starter_selected":"", "owned_part_ids":[], "equipped_build":{}}
+	return {"schema_version":SCHEMA_VERSION, "starter_selected":"", "owned_part_ids":[], "equipped_build":{},
+		"progression":{"credits":0,"salvage":0,"packet_serial":0,"pending_packet":{},"last_packet":{},"run_serial":0,"active_run":"","last_reward":{}}}
+
+func wallet() -> Dictionary:
+	return {"credits":credits,"salvage":salvage}
+
+func pending_packet() -> Dictionary:
+	return _data.progression.pending_packet.duplicate(true)
+
+func expected_packet_request_id() -> String:
+	return "packet-%d" % (int(_data.progression.packet_serial) + 1)
+
+func purchase_packet(kind: String, rng: RandomNumberGenerator = null, request_nonce: String = "") -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	if not is_initialized(): return _result(false, "not_initialized")
+	if not Economy.validate_config().is_empty(): return _result(false, "invalid_economy")
+	var pending: Dictionary = pending_packet()
+	if not pending.is_empty():
+		return {"ok":request_nonce == str(pending.id),"status":"pending_packet","receipt":pending}
+	var last: Dictionary = _data.progression.last_packet
+	if not request_nonce.is_empty() and request_nonce == str(last.get("id", "")):
+		return {"ok":true,"status":"already_purchased","receipt":last.duplicate(true)}
+	if not request_nonce.is_empty() and request_nonce != expected_packet_request_id(): return _result(false, "stale_request")
+	var products: Dictionary = Economy.config().packets
+	if not products.has(kind): return _result(false, "invalid_packet")
+	var product: Dictionary = products[kind]
+	var currency: String = str(product.currency)
+	var cost: int = int(product.cost)
+	if int(_data.progression[currency]) < cost: return _result(false, "insufficient_funds")
+	if int(_data.progression.packet_serial) >= MAX_BALANCE: return _result(false, "counter_limit")
+	var roll: Dictionary = Economy.generate(kind, _data.owned_part_ids, rng)
+	if not bool(roll.ok): return roll
+	# Fixed NEW/duplicate resolution is part of the paid receipt. Reject grants
+	# during opening so ownership cannot drift under the already purchased rows.
+	var prospective_salvage: int = salvage - cost if currency == "salvage" else salvage
+	if prospective_salvage > MAX_BALANCE - int(roll.total_salvage): return _result(false, "balance_limit")
+	var candidate: Dictionary = _data.duplicate(true)
+	var receipt: Dictionary = {"id":expected_packet_request_id(),"request_nonce":expected_packet_request_id(),"kind":kind,"cost":cost,"currency":currency,
+		"status":"pending","rows":roll.rows,"total_salvage":int(roll.total_salvage)}
+	candidate.progression[currency] -= cost
+	candidate.progression.packet_serial += 1
+	candidate.progression.pending_packet = receipt
+	var result: Dictionary = _commit(candidate, "purchased")
+	if result.ok: result.receipt = receipt.duplicate(true)
+	return result
+
+func finalize_packet(receipt_id: String) -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	var receipt: Dictionary = pending_packet()
+	if receipt.is_empty():
+		var last: Dictionary = _data.progression.last_packet
+		if not last.is_empty() and str(last.id) == receipt_id: return {"ok":true,"status":"already_finalized","receipt":last.duplicate(true)}
+		return _result(false, "unknown_receipt")
+	if str(receipt.id) != receipt_id: return _result(false, "wrong_receipt")
+	if str(receipt.status) == "resolved": return {"ok":true,"status":"already_finalized","receipt":receipt}
+	if salvage > MAX_BALANCE - int(receipt.total_salvage): return _result(false, "balance_limit")
+	var candidate: Dictionary = _data.duplicate(true)
+	for row: Dictionary in receipt.rows:
+		if bool(row.new): candidate.owned_part_ids.append(str(row.part_id))
+	candidate.owned_part_ids.sort()
+	candidate.progression.salvage += int(receipt.total_salvage)
+	receipt.status = "resolved"
+	candidate.progression.pending_packet = receipt
+	candidate.progression.last_packet = receipt.duplicate(true)
+	var result: Dictionary = _commit(candidate, "finalized")
+	if result.ok: result.receipt = receipt.duplicate(true)
+	return result
+
+func acknowledge_packet(receipt_id: String) -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	var receipt: Dictionary = pending_packet()
+	if receipt.is_empty():
+		return _result(not _data.progression.last_packet.is_empty() and str(_data.progression.last_packet.id) == receipt_id, "already_acknowledged")
+	if str(receipt.id) != receipt_id: return _result(false, "wrong_receipt")
+	if str(receipt.status) != "resolved": return _result(false, "not_finalized")
+	var candidate: Dictionary = _data.duplicate(true)
+	candidate.progression.pending_packet = {}
+	return _commit(candidate, "acknowledged")
+
+func begin_reward_run() -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	if not can_launch(): return _result(false, "not_initialized")
+	if int(_data.progression.run_serial) >= MAX_BALANCE: return _result(false, "counter_limit")
+	var candidate: Dictionary = _data.duplicate(true)
+	candidate.progression.run_serial += 1
+	var token: String = "run-%d" % int(candidate.progression.run_serial)
+	candidate.progression.active_run = token
+	var result: Dictionary = _commit(candidate, "run_started")
+	if result.ok:
+		result.run_id = token
+		result.run_nonce = token
+	return result
+
+func pay_run_reward(token: String, outcome: Dictionary) -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	var last: Dictionary = _data.progression.last_reward
+	if not last.is_empty() and str(last.id) == token:
+		return {"ok":true,"status":"already_paid","credits_earned":int(last.credits),"wallet":wallet(),"reward":last.duplicate(true)}
+	if token.is_empty() or token != str(_data.progression.active_run): return _result(false, "unknown_run")
+	var reward: Dictionary = Economy.run_reward(outcome)
+	var amount: int = int(reward.credits)
+	if credits > MAX_BALANCE - amount: return _result(false, "balance_limit")
+	var candidate: Dictionary = _data.duplicate(true)
+	candidate.progression.credits += amount
+	candidate.progression.active_run = ""
+	candidate.progression.last_reward = {"id":token,"credits":amount,"breakdown":reward.breakdown,"eligible":bool(reward.eligible)}
+	var result: Dictionary = _commit(candidate, "paid" if amount > 0 else "no_reward")
+	if result.ok:
+		result.credits_earned = amount
+		result.wallet = wallet()
+		result.reward = candidate.progression.last_reward.duplicate(true)
+	return result
+
+func abort_reward_run(token: String) -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	if token.is_empty() or token != str(_data.progression.active_run): return _result(false, "unknown_run")
+	var candidate: Dictionary = _data.duplicate(true)
+	candidate.progression.active_run = ""
+	return _commit(candidate, "aborted")
+
+func begin_run_reward() -> Dictionary:
+	return begin_reward_run()
+
+func settle_run_reward(token: String, outcome: Dictionary) -> Dictionary:
+	return pay_run_reward(token, outcome)
 
 static func part_id(category: String, local_id: String) -> String:
 	var qualified: String = "%s:%s" % [category, local_id]
@@ -77,6 +207,8 @@ func snapshot() -> Dictionary:
 	result.can_launch = can_launch()
 	result.read_only = read_only
 	result.load_status = load_status
+	result.credits = credits
+	result.salvage = salvage
 	return result
 
 func load_save() -> Dictionary:
@@ -125,6 +257,7 @@ func initialize_starter(id: String) -> Dictionary:
 func grant_part(qualified_id: String) -> Dictionary:
 	if read_only: return _result(false, "read_only")
 	if not is_initialized(): return _result(false, "not_initialized")
+	if not _data.progression.pending_packet.is_empty(): return _result(false, "pending_packet")
 	if not is_valid_part_id(qualified_id): return _result(false, "invalid_part")
 	if owns_part(qualified_id): return _result(true, "already_owned")
 	var candidate: Dictionary = _data.duplicate(true)
@@ -336,10 +469,96 @@ static func _sanitize(raw: Dictionary) -> Dictionary:
 		clean.equipped_build = raw_build.duplicate(true)
 	else:
 		clean.equipped_build = _fallback_build(clean.owned_part_ids, str(chosen))
+	if int(version) >= 2:
+		var progression: Variant = raw.get("progression", null)
+		if not progression is Dictionary: return {"ok":false,"status":"malformed"}
+		for key: String in ["credits", "salvage", "packet_serial", "run_serial"]:
+			if not _safe_integer(progression.get(key, null), MAX_BALANCE): return {"ok":false,"status":"malformed"}
+			clean.progression[key] = int(progression[key])
+		var active: Variant = progression.get("active_run", null)
+		if not active is String or (not str(active).is_empty() and str(active) != "run-%d" % int(clean.progression.run_serial)):
+			return {"ok":false,"status":"malformed"}
+		clean.progression.active_run = active
+		for key: String in ["pending_packet", "last_packet"]:
+			var receipt: Variant = progression.get(key, null)
+			if not receipt is Dictionary: return {"ok":false,"status":"malformed"}
+			if not receipt.is_empty():
+				if not _valid_receipt(receipt, clean.owned_part_ids, int(clean.progression.packet_serial), key == "pending_packet"):
+					return {"ok":false,"status":"malformed"}
+				clean.progression[key] = receipt.duplicate(true)
+				clean.progression[key].cost = int(receipt.cost)
+				clean.progression[key].total_salvage = int(receipt.total_salvage)
+				for row: Dictionary in clean.progression[key].rows: row.salvage = int(row.salvage)
+		var last_reward: Variant = progression.get("last_reward", null)
+		if not last_reward is Dictionary: return {"ok":false,"status":"malformed"}
+		if not last_reward.is_empty():
+			if not _serial_id(last_reward.get("id", null), "run-", int(clean.progression.run_serial)) or not _safe_integer(last_reward.get("credits", null), 600): return {"ok":false,"status":"malformed"}
+			if not last_reward.get("breakdown", null) is Dictionary or not last_reward.get("eligible", null) is bool: return {"ok":false,"status":"malformed"}
+			for key: String in ["threats", "elites", "bosses"]:
+				if not _safe_integer(last_reward.breakdown.get(key, null), MAX_BALANCE): return {"ok":false,"status":"malformed"}
+			if str(last_reward.id) == str(active): return {"ok":false,"status":"malformed"}
+			clean.progression.last_reward = last_reward.duplicate(true)
+			clean.progression.last_reward.credits = int(last_reward.credits)
+			for key: String in ["threats", "elites", "bosses"]: clean.progression.last_reward.breakdown[key] = int(last_reward.breakdown[key])
 	var comparable: Dictionary = raw.duplicate(true)
 	comparable.schema_version = int(version)
-	var status: String = "migrated" if int(version) == 0 else ("loaded" if clean == comparable else "loaded_repaired")
+	var status: String = "migrated" if int(version) < SCHEMA_VERSION else ("loaded" if _json_equivalent(clean, comparable) else "loaded_repaired")
 	return {"ok":true, "status":status, "state":clean}
+
+static func _json_equivalent(first: Variant, second: Variant) -> bool:
+	# JSON decodes numbers as floats. Integral economics are validated and
+	# normalized to int, which is not a repair of the player's persisted facts.
+	if (first is int or first is float) and (second is int or second is float): return float(first) == float(second)
+	if first is Dictionary and second is Dictionary:
+		if first.size() != second.size(): return false
+		for key: Variant in first:
+			if not second.has(key) or not _json_equivalent(first[key], second[key]): return false
+		return true
+	if first is Array and second is Array:
+		if first.size() != second.size(): return false
+		for index: int in range(first.size()):
+			if not _json_equivalent(first[index], second[index]): return false
+		return true
+	return first == second
+
+static func _safe_integer(value: Variant, maximum: int) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) >= 0 and float(value) <= maximum and float(value) == floorf(float(value))
+
+static func _serial_id(value: Variant, prefix: String, maximum: int) -> bool:
+	if not value is String or not str(value).begins_with(prefix): return false
+	var suffix: String = str(value).trim_prefix(prefix)
+	return suffix.is_valid_int() and int(suffix) > 0 and int(suffix) <= maximum and str(int(suffix)) == suffix
+
+static func _valid_receipt(receipt: Dictionary, ownership: Array, serial: int, pending: bool) -> bool:
+	if not _serial_id(receipt.get("id", null), "packet-", serial): return false
+	if pending and str(receipt.id) != "packet-%d" % serial: return false
+	if receipt.get("request_nonce", null) != receipt.id: return false
+	var kind: Variant = receipt.get("kind", null)
+	var products: Dictionary = Economy.config().packets
+	if not kind is String or not products.has(kind): return false
+	if not _safe_integer(receipt.get("cost", null), MAX_BALANCE) or int(receipt.cost) <= 0: return false
+	# Paid costs and conversion amounts are historical receipt facts. Validate
+	# against bounded recorded values rather than rerolling after a balance patch.
+	if receipt.get("currency", null) != products[kind].currency: return false
+	var status: Variant = receipt.get("status", null)
+	if status not in ["pending", "resolved"] or (not pending and status != "resolved"): return false
+	var rows: Variant = receipt.get("rows", null)
+	if not rows is Array or rows.size() != CATEGORIES.size(): return false
+	var total: int = 0
+	for index: int in range(rows.size()):
+		var row: Variant = rows[index]
+		if not row is Dictionary or row.get("category", null) != CATEGORIES[index]: return false
+		var category: String = CATEGORIES[index]
+		if not row.get("id", null) is String or not is_valid_part_id(category + ":" + str(row.id)): return false
+		if row.get("part_id", null) != category + ":" + str(row.id) or row.get("rarity", null) != Catalog.rarity(category, str(row.id)): return false
+		if not row.get("new", null) is bool or not _safe_integer(row.get("salvage", null), MAX_BALANCE): return false
+		if bool(row.new) and int(row.salvage) != 0: return false
+		if not bool(row.new) and int(row.salvage) <= 0: return false
+		if (status == "resolved" or not bool(row.new)) and str(row.part_id) not in ownership: return false
+		if status == "pending" and bool(row.new) and str(row.part_id) in ownership: return false
+		total += int(row.salvage)
+	if not _safe_integer(receipt.get("total_salvage", null), MAX_BALANCE) or total != int(receipt.total_salvage): return false
+	return true
 
 static func _catalogue_build(build: Dictionary) -> bool:
 	if build.size() != CATEGORIES.size(): return false

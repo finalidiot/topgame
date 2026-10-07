@@ -6,6 +6,8 @@ class QuietMain extends "res://scripts/main.gd":
 
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
+const Run = preload("res://scripts/run_context.gd")
+const Physics = preload("res://scripts/battle.gd")
 const PAD: int = 3
 var game: QuietMain
 var checks: int = 0
@@ -21,6 +23,24 @@ func check(condition: bool, message: String) -> void:
 	if not condition:
 		failures += 1
 		push_error(message)
+
+func _finish_reentry() -> void:
+	var ticks: int = 0
+	while game.battle.battle_status == "reentry" and ticks < 91:
+		game.battle.test_step(Physics.FIXED_DT)
+		ticks += 1
+	check(game.battle.battle_status != "reentry", "Actual ready ticks settle before continuing live physics")
+
+func _seed_offering_target(power_id: String) -> int:
+	# Each branch UI fixture starts from a real seeded offer containing its
+	# target. Expanded content must not fill seven other families and thereby
+	# permanently exclude the family this controlled fixture intends to inspect.
+	for seed_value: int in range(4096):
+		var probe: RefCounted = Run.new()
+		probe.start(Parts.DEFAULT_BUILD,seed_value,"custom")
+		if power_id in probe.pending_offer: return seed_value
+	check(false,"A genuine initial seeded offer exists for "+power_id)
+	return 421
 
 func _settle() -> void:
 	game.battle.set_physics_process(false)
@@ -79,15 +99,16 @@ func _claim(power_id: String) -> void:
 		game._action("choose_mutation", {"encounter_id":game.run_context.pending_draft_id,"branch_id":game.run_context.pending_mutation_offer[0],"run_seed":game.run_context.run_seed})
 	game._process(1.1)
 	game.battle.set_physics_process(false)
+	_finish_reentry()
 
 func _prepare_target(power_id: String) -> void:
 	game._clear_run()
-	game.run_context.start(Parts.DEFAULT_BUILD, 421, "custom")
+	game.run_context.start(Parts.DEFAULT_BUILD, _seed_offering_target(power_id), "custom")
 	game.mode = "run"
 	game._draft_resume_origin = "starting"
 	game._show_reward()
 	event_time = 0.0
-	for _investment: int in range(13):
+	for _investment: int in range(Powers.run_investment_capacity()):
 		var chosen: String = power_id if power_id in game.run_context.pending_offer else game.run_context.pending_offer[0]
 		_claim(chosen)
 		if int(game.run_context.power_ranks.get(power_id, 0)) >= 2: break
@@ -95,7 +116,7 @@ func _prepare_target(power_id: String) -> void:
 	check(int(game.run_context.power_ranks.get(power_id, 0)) == 2, "Repeated real claims reach rank II for " + power_id)
 	game.battle.battle_status = "battle"
 	_earn_offer()
-	for _investment: int in range(13):
+	for _investment: int in range(Powers.run_investment_capacity()):
 		if power_id in game.run_context.pending_offer: break
 		_claim(game.run_context.pending_offer[0])
 		_earn_offer()
@@ -153,6 +174,27 @@ func _capture(name: String) -> void:
 	check(frame != null and not frame.is_empty(), "Rendered " + name)
 	if frame != null: check(frame.save_png(captures.path_join(name + ".png")) == OK, "Saved " + name)
 
+func _check_mutation_layout(cards: Array[Button]) -> void:
+	check(cards.size() == 2, "Mutation presents exactly two opposing branch cards")
+	if cards.size() != 2: return
+	var inspector: Control = game.menus._ability_inspector
+	check(is_instance_valid(inspector) and inspector.visible and is_equal_approx(inspector.size.x,188.0), "Mutation has a fixed 188px reading panel")
+	for card: Button in cards:
+		check(is_equal_approx(card.size.x,192.0), "Mutation retains larger 192px cards beside the reading panel")
+		check(card.focus_mode == Control.FOCUS_ALL, "Each mutation remains a native keyboard/controller focus target")
+		if is_instance_valid(inspector):
+			check(not card.get_global_rect().intersects(inspector.get_global_rect()), "Mutation card and reading panel have separate nonoverlapping areas")
+		var authored: Array[TextureRect] = []
+		for child: Node in _nodes(card):
+			if child is TextureRect and child.texture is AtlasTexture: authored.append(child)
+		check(authored.size() == 1, "Each mutation keeps one native authored illustration")
+		if authored.size() == 1:
+			check(authored[0].size == Vector2(128,128) and (authored[0].texture as AtlasTexture).region.size == Vector2(64,64), "Mutation illustration keeps its complete native cell at integer2x")
+	check(not cards[0].get_global_rect().intersects(cards[1].get_global_rect()), "Opposing mutation cards do not overlap each other")
+	if is_instance_valid(inspector):
+		check(Rect2(0,0,640,360).encloses(inspector.get_global_rect()), "Fixed reading panel stays inside the native viewport")
+		check(get_root().gui_get_focus_owner() in cards and str(inspector.get("mutation_id")) == game.menus.focused_power_id(), "Native focused branch drives the fixed reading panel")
+
 func _test_branch(power_id: String, branch_id: String) -> void:
 	_prepare_target(power_id)
 	await _settle()
@@ -179,11 +221,15 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	var cards: Array[Button] = []
 	for node: Node in _nodes(game.menus):
 		if node is Button: cards.append(node)
-	check(cards.size() == 2 and cards[0].size.x > 192, "Mutation uses two larger opposing cards")
+	_check_mutation_layout(cards)
 	_check_layout()
 	await _capture("mutation-" + power_id)
 	await _tap(JOY_BUTTON_DPAD_LEFT)
 	check(game.menus.focused_power_id() == str(branches[1]), "D-pad wraps through opposing mutation branches")
+	var inspector: Control = game.menus._ability_inspector
+	if is_instance_valid(inspector):
+		var reading: Dictionary = inspector.get("breakdown")
+		check(str(inspector.get("mutation_id")) == str(branches[1]) and bool(reading.get("branch_preview",false)) and int(reading.get("rank",0)) == 2, "Mapped branch focus updates preview details while retaining the owned Rank II")
 	_axis(0.9)
 	await _settle()
 	var focused: String = game.menus.focused_power_id()
@@ -212,6 +258,8 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	game._process(1.1)
 	check(game.screen == "battle" and not game.battle.paused and _body_state() == body, "Acquisition returns to the exact same live encounter")
 	game.battle.set_physics_process(false)
+	_finish_reentry()
+	check(_body_state() == body,"Ready buffer preserves the same exact fighter and power state")
 	# A live impact hold survives a draft just like other exact arena state.
 	# Drain its bounded fixed ticks, then require actual combat advancement.
 	var held_ticks: int = ceili(game.battle._hit_stop / (1.0/60.0))

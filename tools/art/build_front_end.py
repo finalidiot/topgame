@@ -215,7 +215,7 @@ def service_station(image, cx, cy, rx):
     d.line((cx + rx - 21, cy + 11, cx + rx - 17, cy + 10), fill=c("oxide"))
 
 
-def background_master():
+def _historical_background_master():
     frames = []
     for mode in ["title", "hub"]:
         plate, station, wear = [blank((640, 360)) for _ in range(3)]
@@ -266,6 +266,25 @@ def background_master():
         ImageDraw.Draw(wear).line((609, 305, 618, 305), fill=c("seam"))
         frames.append([plate, station, wear])
     return frames, ["quiet steel workbench", "physical rubber service station", "placed paint wear"], \
+        [("title", 0, 0), ("hub", 1, 1), ("workshop", 1, 1)], [1000, 1000], (0, 0)
+
+
+def background_master():
+    """Quiet shared chrome; display fixtures are explicit screen-local assets.
+
+    The old bay/pedestal and horizontal bench boundary were baked into frame1
+    used by every menu, exposing partial boxes and slicing starter text.
+    """
+    frames = []
+    for _ in range(2):
+        plate, fixtures, wear = [blank((640, 360)) for _ in range(3)]
+        d = ImageDraw.Draw(plate)
+        d.rectangle((0, 0, 639, 359), fill=c("ink"))
+        d.rectangle((8, 34, 631, 339), fill=c("back wall"))
+        d.line((12, 31, 627, 31), fill=c("seam"))
+        d.line((12, 33, 72, 33), fill=c("oxide"))
+        frames.append([plate, fixtures, wear])
+    return frames, ["quiet shared steel", "screen-local fixtures deliberately separate", "no leaked shared corner wear"], \
         [("title", 0, 0), ("hub", 1, 1), ("workshop", 1, 1)], [1000, 1000], (0, 0)
 
 

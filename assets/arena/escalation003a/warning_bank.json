@@ -1,0 +1,59 @@
+{
+  "cell": [
+    48,
+    16
+  ],
+  "pivot": [
+    24,
+    12
+  ],
+  "layers": [
+    "01 bounded alarm hardware",
+    "02 inset individual glass lenses",
+    "03 slow local warning state"
+  ],
+  "tags": {
+    "SAFE": {
+      "from": 0,
+      "to": 3
+    },
+    "BUILDING": {
+      "from": 4,
+      "to": 7
+    },
+    "WARNING": {
+      "from": 8,
+      "to": 11
+    },
+    "ALARM": {
+      "from": 12,
+      "to": 15
+    }
+  },
+  "durations_ms": [
+    1200,
+    1200,
+    1200,
+    1200,
+    1000,
+    1000,
+    1000,
+    1000,
+    600,
+    600,
+    600,
+    600,
+    500,
+    500,
+    500,
+    500
+  ],
+  "version": 1,
+  "texture": "res://assets/arena/escalation003a/warning_bank.png",
+  "columns": 16,
+  "frame_count": 16,
+  "filter": "nearest",
+  "native_pixels": true,
+  "source": "assets/source-art/arena_escalation003a/warning_bank.aseprite",
+  "presentation_only": true
+}

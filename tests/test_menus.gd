@@ -137,17 +137,15 @@ func _test_reward_cards() -> void:
 			var card: Button = cards[index]
 			var power: Dictionary = Powers.get_power(str(offer[index]))
 			seen[power.id] = true
-			check(_find_label(card, str(power.name)) != null, "Card shows full power name: "+str(power.name))
-			check(_find_label(card, str(power.get("card_copy", power.description))) != null, "Card shows short clear description: "+str(power.name))
+			check(_find_label(card, str(power.name).to_upper()) != null, "Card shows full power name: "+str(power.name))
+			var expected_copy: String = str(Menus.AbilityInspection.describe(str(power.id), 0).get("what", power.get("card_copy", power.description)))
+			check(_find_label(card, expected_copy) != null, "Card shows the concise mechanism description: "+str(power.name))
 			check(NATIVE_RECT.encloses(card.get_global_rect()), "Reward card remains inside native viewport")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
-			var focus: StyleBoxFlat = card.get_theme_stylebox("focus") as StyleBoxFlat
-			var normal: StyleBoxFlat = card.get_theme_stylebox("normal") as StyleBoxFlat
-			check(focus != null and focus.border_color.a > 0 and focus.get_border_width(SIDE_LEFT) > normal.get_border_width(SIDE_LEFT), "Card has a visible distinct focus border")
-		for power_id: String in owned:
-			var label: Label = _find_label(menus, str(Powers.get_power(power_id).name))
-			check(label != null and label.get_global_rect().position.y >= 300, "Collected power has a compact visible label: "+power_id)
+			var focus: StyleBoxTexture = card.get_theme_stylebox("focus") as StyleBoxTexture
+			check(focus != null and focus.texture != null and focus.modulate_color.a > 0 and not focus.texture.get_image().is_invisible(), "Card has a visible authored focus frame")
+		check(_find_label(menus, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP]) != null, "Draft retains the current family capacity beside the fixed inspection")
 		await _key(KEY_LEFT)
 		check(root.gui_get_focus_owner() == cards[2], "Left key wraps first card to third")
 		await _key(KEY_RIGHT)
@@ -217,7 +215,10 @@ func _test_hud_cleanup() -> void:
 	await process_frame
 	check(_find_label(menus,"RUN ENDED") != null and _find_label(menus,"SURVIVED  07:55") != null, "Run loss has a survival result rather than a duel victory")
 	for label: Label in _labels(menus): _check_label_fits(label)
-	check(_buttons(menus).size() == 3 and root.gui_get_focus_owner().text == "RESTART RUN", "Run loss focuses Restart with Garage/Main Menu and no Continue")
+	var routes: Array[String] = []
+	for button: Button in _buttons(menus):
+		if button.has_meta("intent"): routes.append(str(button.get_meta("intent")))
+	check(routes == ["restart_run", "open_shop", "customize", "main_menu"] and root.gui_get_focus_owner().text == "RUN AGAIN", "Run loss focuses Run Again with Shop, Workshop and Workbench routes")
 	await _capture("continuous-run-result")
 	menus.show_hud({"is_run":true,"run_label":"THREAT 8","owned_power_ids":owned,"status":"battle"})
 	var before: Node = menus._content

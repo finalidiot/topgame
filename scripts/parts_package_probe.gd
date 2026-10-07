@@ -5,6 +5,35 @@ const Catalog = preload("res://scripts/parts.gd")
 const FEEDBACK_MANIFEST: String = "res://assets/powers/feedback_002c5_2/manifest.json"
 const BEAST_MANIFEST: String = "res://assets/powers/beasts_002c5_2/manifest.json"
 const MUSIC_MANIFEST: String = "res://assets/audio/music/manifest.json"
+const PacketEconomyModel = preload("res://scripts/packet_economy.gd")
+const PACKET_ART_ROOT: String = "res://assets/ui/shop_003a/"
+const PACKET_AUDIO_ROOT: String = "res://assets/audio/shop_003a/"
+const PACKET_AUDIO_MANIFEST: String = PACKET_AUDIO_ROOT + "manifest.json"
+const UI_POLISH_ROOT: String = "res://assets/ui/human_feedback003a/"
+const DEFENCE_MANIFEST: String = "res://assets/powers/defence003a/manifest.json"
+const DEFENCE_VARIANTS: Dictionary = {
+	"gyro_lock":["gyro_lock", "gyro_lock_ii", "keel", "flywheel"],
+	"impact_sink":["impact_sink", "impact_sink_ii", "shock_bleed", "return_spring"],
+	"anchor_exchange":["anchor_exchange", "anchor_exchange_ii", "deep_footing", "slip_anchor"]
+}
+const ARENA_ROOT: String = "res://assets/arena/escalation003a/"
+const ARENA_LAYOUT: Dictionary = {
+	"display_panel":{"cell":[40,24],"pivot":[20,22],"frames":8,"layers":3,"tags":["IDLE","LOAD"]},
+	"machinery":{"cell":[64,40],"pivot":[32,38],"frames":12,"layers":4,"tags":["IDLE","DRIVE","OVERDRIVE"]},
+	"perimeter":{"cell":[32,16],"pivot":[16,8],"frames":8,"layers":2,"tags":["LEFT","RIGHT"]},
+	"sparks":{"cell":[24,24],"pivot":[12,19],"frames":6,"layers":2,"tags":["SPARK"]},
+	"vent":{"cell":[32,32],"pivot":[16,30],"frames":8,"layers":3,"tags":["IDLE","HOT"]},
+	"warning_bank":{"cell":[48,16],"pivot":[24,12],"frames":16,"layers":3,"tags":["SAFE","BUILDING","WARNING","ALARM"]}
+}
+const UI_POLISH_LAYOUT: Dictionary = {
+	"metal_plate":{"cell":[32, 32], "frames":3},
+	"inspection_frame":{"cell":[32, 32], "frames":1},
+	"button_caps":{"cell":[24, 24], "frames":6},
+	"merchant":{"cell":[48, 64], "frames":14},
+	"merchant_fixture":{"cell":[192, 64], "frames":1},
+	"credit_chip":{"cell":[16, 16], "frames":4},
+	"preview_station":{"cell":[160, 56], "frames":1}
+}
 
 static func inspect(output: String) -> Dictionary:
 	if output.is_empty() or FileAccess.file_exists(output) or DirAccess.dir_exists_absolute(output):
@@ -94,12 +123,75 @@ static func inspect(output: String) -> Dictionary:
 			hash.update(pcm_data)
 			music_records.append({"kind":kind,"path":path,"valid":valid,"pcm_frames":pcm_data.size() / 4,"mix_rate":sample.mix_rate if sample != null else 0,"pcm_sha256":hash.finish().hex_encode()})
 			if not valid: failures.append(path)
+	# These are actual compiled/imported resources, not a receipt/UI fixture.
+	# Exact source parity is checked by the external verifier from these hashes.
+	var packet_json: Dictionary = {}
+	var packet_records: Array[Dictionary] = []
+	for kind: String in ["packet", "reclaimed_packet", "reveal_mat"]:
+		var metadata_path: String = PACKET_ART_ROOT + kind + ".json"
+		var source_json: String = FileAccess.get_file_as_string(metadata_path)
+		packet_json[kind] = source_json
+		var parsed: Variant = JSON.parse_string(source_json)
+		var record: Dictionary = _inspect_packet_sheet(kind, parsed if parsed is Dictionary else {})
+		packet_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
+	var packet_audio_json: String = FileAccess.get_file_as_string(PACKET_AUDIO_MANIFEST)
+	var packet_audio_manifest: Variant = JSON.parse_string(packet_audio_json)
+	var packet_audio_records: Array[Dictionary] = []
+	if not packet_audio_manifest is Dictionary or not packet_audio_manifest.get("cues", {}) is Dictionary:
+		failures.append(PACKET_AUDIO_MANIFEST)
+	else:
+		for kind: String in ["packet_land", "packet_crinkle", "packet_tear", "packet_spill", "packet_clink", "packet_new", "packet_rare", "packet_recycle"]:
+			var record: Dictionary = _inspect_packet_audio(kind, packet_audio_manifest.cues.get(kind, {}))
+			packet_audio_records.append(record)
+			if not bool(record.valid): failures.append(str(record.path))
+	var economy_json: String = FileAccess.get_file_as_string(PacketEconomyModel.DATA_PATH)
+	var economy_validation_errors: Array[String] = PacketEconomyModel.validate_config()
+	var economy_odds: Dictionary = PacketEconomyModel.rarity_odds("standard")
+	if not economy_validation_errors.is_empty() or economy_odds.is_empty(): failures.append(PacketEconomyModel.DATA_PATH)
+	var ui_polish_json: Dictionary = {}
+	var ui_polish_records: Array[Dictionary] = []
+	for kind: String in UI_POLISH_LAYOUT:
+		var source_json: String = FileAccess.get_file_as_string(UI_POLISH_ROOT + kind + ".json")
+		ui_polish_json[kind] = source_json
+		var parsed: Variant = JSON.parse_string(source_json)
+		var record: Dictionary = _inspect_ui_polish_sheet(kind, parsed if parsed is Dictionary else {})
+		ui_polish_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
+	var defence_json: String = FileAccess.get_file_as_string(DEFENCE_MANIFEST)
+	var defence: Variant = JSON.parse_string(defence_json)
+	var defence_records: Array[Dictionary] = []
+	if not defence is Dictionary or not defence.get("families", {}) is Dictionary:
+		failures.append(DEFENCE_MANIFEST)
+	else:
+		for family: String in DEFENCE_VARIANTS:
+			var family_meta: Dictionary = defence.families.get(family, {})
+			for group: String in ["cards", "icons", "fx"]:
+				var record: Dictionary = _inspect_defence_sheet(family, group, family_meta.get(group, {}))
+				defence_records.append(record)
+				if not bool(record.valid): failures.append(str(record.path))
+	var arena_json: Dictionary = {}
+	var arena_records: Array[Dictionary] = []
+	for kind: String in ARENA_LAYOUT:
+		var text: String = FileAccess.get_file_as_string(ARENA_ROOT + kind + ".json")
+		arena_json[kind] = text
+		var parsed: Variant = JSON.parse_string(text)
+		var record: Dictionary = _inspect_arena_sheet(kind, parsed if parsed is Dictionary else {})
+		arena_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
 		"textures":records, "feedback_json":feedback_json, "feedback_textures":feedback_records,
 		"beast_json":beast_json, "beast_textures":beast_records,
 		"music_json":music_json, "music_stems":music_records,
+		"packet_json":packet_json, "packet_textures":packet_records,
+		"packet_audio_json":packet_audio_json, "packet_audio":packet_audio_records,
+		"economy_json":economy_json, "economy_config":PacketEconomyModel.config(),
+		"economy_odds":economy_odds, "economy_validation_errors":economy_validation_errors,
+		"ui_polish_json":ui_polish_json, "ui_polish_textures":ui_polish_records,
+		"defence_json":defence_json,"defence_textures":defence_records,
+		"arena_json":arena_json,"arena_textures":arena_records,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()
@@ -107,6 +199,123 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_defence_sheet(family: String, group: String, meta: Dictionary) -> Dictionary:
+	var expected: Dictionary = {"path":"res://assets/powers/defence003a/" + family + "_" + group + ".png",
+		"source":"assets/source-art/defence003a/" + family + "_" + group + ".aseprite"}
+	var required: Array = DEFENCE_VARIANTS.get(family, [])
+	if group == "cards": expected.merge({"cell":[64,64],"pivot":[32,32],"frames":48,"columns":12,"layers":5,"tags":required})
+	elif group == "icons": expected.merge({"cell":[16,16],"pivot":[8,8],"frames":4,"columns":4,"layers":3,"tags":required})
+	elif group == "fx":
+		var tags: Array = ["stored", "engage", "vent", "return"] if family == "impact_sink" else (["lock", "engage", "release"] if family == "gyro_lock" else ["brace", "engage", "release"])
+		expected.merge({"cell":[96,80],"pivot":[48,48],"frames":tags.size()*8,"columns":8,"layers":4,"tags":tags})
+	var record: Dictionary = _inspect_final_sheet(family + "/" + group, meta, expected)
+	record["family"] = family; record["group"] = group
+	record["metadata_path"] = DEFENCE_MANIFEST
+	if required.is_empty(): record.valid = false
+	return record
+
+static func _inspect_arena_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var expected: Dictionary = ARENA_LAYOUT.get(kind, {}).duplicate(true)
+	expected["path"] = ARENA_ROOT + kind + ".png"
+	expected["source"] = "assets/source-art/arena_escalation003a/" + kind + ".aseprite"
+	expected["columns"] = expected.get("frames", 0)
+	var record: Dictionary = _inspect_final_sheet(kind, meta, expected)
+	record["metadata_path"] = ARENA_ROOT + kind + ".json"
+	if not bool(meta.get("native_pixels", false)) or not bool(meta.get("presentation_only", false)) or str(meta.get("filter", "")) != "nearest": record.valid = false
+	return record
+
+static func _inspect_final_sheet(kind: String, meta: Dictionary, expected: Dictionary) -> Dictionary:
+	var path: String = str(expected.get("path", ""))
+	var texture: Texture2D = load(path) as Texture2D if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var visible: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	var count: int = int(meta.get("frame_count", 0))
+	var columns: int = int(meta.get("columns", 0))
+	var durations: Array = meta.get("durations_ms", [])
+	var tags: Dictionary = meta.get("tags", {})
+	var layers: Array = meta.get("layers", [])
+	var cell: Array = meta.get("cell", [])
+	var pivot: Array = meta.get("pivot", [])
+	var expected_cell: Array = expected.get("cell", [])
+	var expected_pivot: Array = expected.get("pivot", [])
+	var valid: bool = visible and cell.size() == 2 and pivot.size() == 2 and expected_cell.size() == 2 and expected_pivot.size() == 2
+	if valid:
+		valid = Vector2i(int(cell[0]), int(cell[1])) == Vector2i(int(expected_cell[0]), int(expected_cell[1])) and Vector2i(int(pivot[0]), int(pivot[1])) == Vector2i(int(expected_pivot[0]), int(expected_pivot[1]))
+	valid = valid and count > 0 and count == int(expected.get("frames", -1)) and columns > 0 and columns == int(expected.get("columns", -1))
+	if valid: valid = size == Vector2i(int(cell[0]) * columns, int(cell[1]) * ceili(float(count) / columns))
+	valid = valid and str(meta.get("texture", "")) == path and str(meta.get("source", "")) == str(expected.get("source", "invalid"))
+	valid = valid and durations.size() == count and layers.size() == int(expected.get("layers", -1))
+	var names: Dictionary = {}
+	for name: Variant in layers:
+		valid = valid and name is String and not str(name).is_empty() and not names.has(name)
+		names[name] = true
+	for duration: Variant in durations: valid = valid and is_finite(float(duration)) and float(duration) > 0.0 and float(duration) <= 10000.0
+	var required: Array = expected.get("tags", [])
+	valid = valid and not required.is_empty() and tags.size() == required.size()
+	for tag: String in required: valid = valid and tags.has(tag)
+	for span: Dictionary in tags.values():
+		valid = valid and int(span.get("from", -1)) >= 0 and int(span.get("to", -1)) >= int(span.get("from", -1)) and int(span.get("to", -1)) < count
+	var fingerprint: String = ""
+	if visible:
+		if pixels.is_compressed(): pixels.decompress()
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset+3] == 0:
+				for channel: int in range(3): decoded[offset+channel] = 0
+		fingerprint = _digest(decoded)
+	var source: String = "res://" + str(expected.get("source", ""))
+	var source_available: bool = FileAccess.file_exists(source)
+	var native_hash: String = FileAccess.get_sha256(source) if source_available else ""
+	if source_available and meta.has("source_sha256"): valid = valid and native_hash == str(meta.source_sha256)
+	return {"kind":kind,"path":path,"valid":valid,"visible_pixels":visible,"size":[size.x,size.y],
+		"cell":cell,"pivot":pivot,"columns":columns,"frame_count":count,"durations_ms":durations,"tags":tags,"layers":layers,
+		"visible_rgba_sha256":fingerprint,"transparent_rgb_normalized":true,"source":meta.get("source", ""),
+		"native_source_available":source_available,"native_source_sha256":native_hash}
+
+static func _inspect_ui_polish_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var path: String = UI_POLISH_ROOT + kind + ".png"
+	var texture: Texture2D = (load(path) as Texture2D) if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var visible: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	var cell: Array = meta.get("cell", [])
+	var pivot: Array = meta.get("pivot", [])
+	var durations: Array = meta.get("durations_ms", [])
+	var layers: Array = meta.get("layers", [])
+	var tags: Dictionary = meta.get("tags", {})
+	var expected: Dictionary = UI_POLISH_LAYOUT.get(kind, {})
+	var columns: int = int(meta.get("columns", 0))
+	var count: int = int(meta.get("frame_count", 0))
+	var expected_cell: Array = expected.get("cell", [])
+	var valid: bool = visible and cell.size() == 2 and expected_cell.size() == 2 and pivot.size() == 2
+	if valid: valid = Vector2i(int(cell[0]), int(cell[1])) == Vector2i(int(expected_cell[0]), int(expected_cell[1]))
+	valid = valid and count == int(expected.get("frames", 0)) and columns == count
+	if valid:
+		valid = size == Vector2i(int(cell[0]) * count, int(cell[1]))
+		valid = valid and int(pivot[0]) >= 0 and int(pivot[0]) <= int(cell[0]) and int(pivot[1]) >= 0 and int(pivot[1]) <= int(cell[1])
+	valid = valid and str(meta.get("texture", "")) == kind + ".png" and str(meta.get("filter", "")) == "nearest" and bool(meta.get("native_pixels", false))
+	valid = valid and durations.size() == count and not layers.is_empty() and not tags.is_empty()
+	for duration: Variant in durations: valid = valid and float(duration) > 0.0
+	for tag: String in tags:
+		var bounds: Dictionary = tags[tag]
+		valid = valid and int(bounds.get("from", -1)) >= 0 and int(bounds.get("to", -1)) >= int(bounds.get("from", -1)) and int(bounds.get("to", -1)) < count
+	var fingerprint: String = ""
+	if visible:
+		if pixels.is_compressed(): pixels.decompress()
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset + 3] == 0:
+				for channel: int in range(3): decoded[offset + channel] = 0
+		fingerprint = _digest(decoded)
+	return {"kind":kind, "path":path, "metadata_path":UI_POLISH_ROOT + kind + ".json",
+		"valid":valid, "visible_pixels":visible, "size":[size.x, size.y], "cell":cell,
+		"pivot":pivot, "tags":tags, "durations_ms":durations, "layers":layers,
+		"columns":columns, "frame_count":count, "visible_rgba_sha256":fingerprint,
+		"transparent_rgb_normalized":true}
 
 static func _inspect_beast_sheet(kind: String, meta: Dictionary) -> Dictionary:
 	var path: String = str(meta.get("texture", ""))
@@ -132,3 +341,68 @@ static func _inspect_beast_sheet(kind: String, meta: Dictionary) -> Dictionary:
 		fingerprint = hash.finish().hex_encode()
 	return {"kind":kind, "path":path, "size":[size.x, size.y], "visible_pixels":valid, "valid":valid,
 		"visible_rgba_sha256":fingerprint, "transparent_rgb_normalized":true}
+
+static func _digest(bytes: PackedByteArray) -> String:
+	var hash: HashingContext = HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(bytes)
+	return hash.finish().hex_encode()
+
+static func _inspect_packet_sheet(kind: String, meta: Dictionary) -> Dictionary:
+	var path: String = PACKET_ART_ROOT + kind + ".png"
+	var texture: Texture2D = (load(path) as Texture2D) if ResourceLoader.exists(path) else null
+	var size: Vector2i = Vector2i(texture.get_size()) if texture != null else Vector2i.ZERO
+	var pixels: Image = texture.get_image() if texture != null else null
+	var visible: bool = pixels != null and not pixels.is_empty() and not pixels.is_invisible()
+	var cell: Array = meta.get("cell", [])
+	var pivot: Array = meta.get("pivot", [])
+	var durations: Array = meta.get("durations_ms", [])
+	var layers: Array = meta.get("layers", [])
+	var tags: Dictionary = meta.get("tags", {})
+	var expected_cell: Vector2i = Vector2i(272, 134) if kind == "reveal_mat" else Vector2i(96, 96)
+	var expected_pivot: Vector2i = Vector2i(136, 124) if kind == "reveal_mat" else Vector2i(48, 86)
+	var expected_frames: int = 1 if kind == "reveal_mat" else 13
+	var columns: int = int(meta.get("columns", 0))
+	var count: int = int(meta.get("frame_count", 0))
+	var valid: bool = visible and cell.size() == 2 and pivot.size() == 2
+	if valid:
+		valid = Vector2i(int(cell[0]), int(cell[1])) == expected_cell and Vector2i(int(pivot[0]), int(pivot[1])) == expected_pivot
+	valid = valid and count == expected_frames and columns == expected_frames and size == Vector2i(expected_cell.x * expected_frames, expected_cell.y)
+	valid = valid and str(meta.get("texture", "")) == kind + ".png" and str(meta.get("filter", "")) == "nearest" and bool(meta.get("native_pixels", false))
+	valid = valid and durations.size() == expected_frames and layers.size() == (3 if kind == "reveal_mat" else 6)
+	var required_tags: Array = ["REVEAL_MAT"] if kind == "reveal_mat" else ["SEALED", "CRINKLE", "TEAR_START", "TEAR_OPEN", "SPILL", "EMPTY_PACKET"]
+	valid = valid and tags.size() == required_tags.size()
+	for tag: String in required_tags:
+		valid = valid and tags.has(tag)
+	for duration: Variant in durations:
+		valid = valid and float(duration) > 0.0
+	var rgba_fingerprint: String = ""
+	var visible_fingerprint: String = ""
+	if visible:
+		if pixels.is_compressed(): pixels.decompress()
+		pixels.convert(Image.FORMAT_RGBA8)
+		var decoded: PackedByteArray = pixels.get_data()
+		rgba_fingerprint = _digest(decoded)
+		# Normalize only RGB behind alpha-zero pixels, matching beast/feedback
+		# package verification while preserving every alpha and visible RGB byte.
+		for offset: int in range(0, decoded.size(), 4):
+			if decoded[offset + 3] == 0:
+				for channel: int in range(3): decoded[offset + channel] = 0
+		visible_fingerprint = _digest(decoded)
+	return {"kind":kind, "path":path, "metadata_path":PACKET_ART_ROOT + kind + ".json",
+		"valid":valid, "visible_pixels":visible, "size":[size.x, size.y],
+		"cell":cell, "pivot":pivot, "tags":tags, "durations_ms":durations, "columns":columns, "frame_count":count,
+		"rgba_sha256":rgba_fingerprint, "visible_rgba_sha256":visible_fingerprint, "transparent_rgb_normalized":true}
+
+static func _inspect_packet_audio(kind: String, meta: Dictionary) -> Dictionary:
+	var path: String = PACKET_AUDIO_ROOT + kind + ".wav"
+	var sample: AudioStreamWAV = (load(path) as AudioStreamWAV) if ResourceLoader.exists(path) else null
+	var pcm: PackedByteArray = sample.data if sample != null else PackedByteArray()
+	var fingerprint: String = _digest(pcm)
+	var valid: bool = sample != null and sample.format == AudioStreamWAV.FORMAT_16_BITS and not sample.stereo and sample.mix_rate == 32000 and sample.loop_mode == AudioStreamWAV.LOOP_DISABLED
+	valid = valid and str(meta.get("file", "")) == kind + ".wav" and int(meta.get("pcm_frames", 0)) > 0
+	valid = valid and pcm.size() == int(meta.get("pcm_frames", 0)) * 2 and fingerprint == str(meta.get("pcm_sha256", ""))
+	return {"kind":kind, "path":path, "valid":valid, "mix_rate":sample.mix_rate if sample != null else 0,
+		"channels":(2 if sample.stereo else 1) if sample != null else 0, "stereo":sample.stereo if sample != null else false,
+		"format":sample.format if sample != null else -1, "loop_mode":sample.loop_mode if sample != null else -1,
+		"pcm_frames":pcm.size() / 2, "pcm_sha256":fingerprint}

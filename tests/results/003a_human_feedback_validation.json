@@ -1,0 +1,69 @@
+{
+  "task": "003A HUMAN PLAYTEST POLISH",
+  "status": "passed_regression_and_media",
+  "branch": "task-003a-shop-parts-packets",
+  "verified_starting_sha": "7c26ae7e949324bac8cff0707b2905af76a033c3",
+  "accepted_main_sha": "b7812e17ddce6166258eca7285a0a38e8cae37fc",
+  "engine_suites": 65,
+  "engine_checks": 144501,
+  "headless_suites": 62,
+  "headless_checks": 144114,
+  "native_suites": 3,
+  "native_checks": 387,
+  "python_tests": 101,
+  "count_policy": "Latest final passing run per unique contract;24 affected UI suites rerun after TopPreview-only containment; repeats, preflights and smoke assertions excluded. Preserved stale layout assertion failure superseded by1156-check passing contract.",
+  "profile_unchanged": true,
+  "profile": {
+    "available": true,
+    "directory": "E:\\AppData\\Roaming\\Godot\\app_userdata\\Spinning Metal \u2014 Prototype",
+    "files": {
+      "collection.json": "51670438e792bac364263331c37439b13c139b710c364ecf112fc8e539f2e218",
+      "collection.json.bak": "1009b1ca188171fb14c3e56feec702cba6e6797e3c2f895438afd6bfd40fda6d",
+      "prototype.cfg": "c584d1ca02b808973e86366681b34b91b360ea8186c695f06f671d23c66cbbd1"
+    }
+  },
+  "ui_seconds": 109.47,
+  "media": {
+    "ui": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_human_feedback_ui_polish.mp4",
+    "music": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_human_feedback_music_revision.mp4",
+    "beasts": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_beast_direction_response.mp4",
+    "matrix": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\images\\003a_human_feedback_ui_matrix.png"
+  },
+  "evidence": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_human_feedback_engine_validation.json",
+      "sha256": "5c749fcdcf4f1ec2102dd47d1c1092ffc0732aa975ac1f0025e569de1490aece"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_human_feedback_ui_20261006_154140_606366.json",
+      "sha256": "52d0fcf4867cc361109ca1d3cb2e733c4aa0248dd992bcb167c3bb8ea9c64bff"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_human_feedback_music_revision_20261006_151704_463869.json",
+      "sha256": "6ac8437e354940c7cc0555dc09e5087053cba4d101dbe613baab9a16627bb14f"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_beast_direction_response_20261006_151523_601374.json",
+      "sha256": "e8f94d476002c05c66005d094b762f4dd10ee624f0c6486bc0ee2f3a3c861425"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_human_feedback_native_ui_final.json",
+      "sha256": "cd74f50734596d19d36e5f23f0b1a439c63d0c410ba301e4fbd71c2e0674b050"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_power_ui_layer_preservation.json",
+      "sha256": "570f9c51a7437b5e24c3f18e4512c5ac15e4aae1326092bc6b613b84f1c1ab7a"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_ceremony_fx_containment_final.json",
+      "sha256": "e32fc4a0fd3ec7d2cabb6906bb3fc33d29bf50bf6a4cd414b1f629d15d2ffa9e"
+    }
+  ],
+  "python_logs": [
+    "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_human_feedback_build_guard_tests.log",
+    "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_human_feedback_regression_tool_tests.log",
+    "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\logs\\003a_human_feedback_parts_guard_tests.log"
+  ],
+  "build_and_push_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_human_feedback_delivery.json",
+  "human_acceptance": "PENDING HUMAN REVIEW / NO MERGE"
+}

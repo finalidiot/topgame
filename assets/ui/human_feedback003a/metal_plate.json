@@ -1,0 +1,54 @@
+{
+  "cell": [
+    32,
+    32
+  ],
+  "pivot": [
+    0,
+    0
+  ],
+  "layers": [
+    "inset material face",
+    "rolled edge and lower lip",
+    "placed fasteners and printed state"
+  ],
+  "tags": {
+    "NORMAL": {
+      "from": 0,
+      "to": 0
+    },
+    "HOVER": {
+      "from": 1,
+      "to": 1
+    },
+    "SELECTED": {
+      "from": 2,
+      "to": 2
+    }
+  },
+  "durations_ms": [
+    1000,
+    1000,
+    1000
+  ],
+  "version": 1,
+  "texture": "metal_plate.png",
+  "columns": 3,
+  "frame_count": 3,
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A human feedback",
+  "source": "../../source-art/human_feedback003a/metal_plate.aseprite",
+  "stretch_margins": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "content_margins": [
+    8,
+    2,
+    8,
+    2
+  ]
+}

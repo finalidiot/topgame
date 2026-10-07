@@ -1,0 +1,90 @@
+{
+  "task": "003A final human acceptance",
+  "subsystem": "grounded existing reroll pickup + authored arena escalation",
+  "status": "passed_current_arena_pickup_contracts_pending_human_review",
+  "existing_pickup_audit": "Only the production reroll chip is a collectible floor actor. Spin reclamation and power XP remain earned direct combat events; no additional currency/resource mechanic was introduced.",
+  "pickup": {
+    "root_cause": "Node2D child drawing after its parent Battle overlaid every already-drawn top despite using project(world).",
+    "solution": "Main assigns real floor renderer; Battle draws native contact-pivot/shadow token before complete rigs; suppress late child draw.",
+    "lifetime_simulation_seconds": 16,
+    "warning_seconds": 2.5,
+    "collection_world_radius": 14,
+    "swept_contact": true,
+    "expiry_warning": "One soft local pulse per second; Reduced Flashing uses monotonic opacity fade."
+  },
+  "arena": {
+    "stages_seconds": {
+      "early": 0,
+      "building": 90,
+      "mid": 210,
+      "late": 390,
+      "extreme": 540
+    },
+    "boss_requests_extreme": true,
+    "native_families": [
+      "machinery",
+      "warning_bank",
+      "vent",
+      "display_panel",
+      "sparks",
+      "perimeter"
+    ],
+    "desktop_draw_cap": 17,
+    "mobile_draw_cap": 14,
+    "new_particle_nodes": 0,
+    "new_particle_objects": 0,
+    "new_background_nodes": 0,
+    "reduced_flashing": "Static warm warning/perimeter keys, no sparks; identical stage hues, opacity and machinery motion."
+  },
+  "contracts": {
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_arena_pickup_contracts_20261006_172714.json",
+    "checks": 10308,
+    "suites": {
+      "grounded_pickups": 3220,
+      "arena_escalation": 7084,
+      "feedback_live_pickup": 4
+    }
+  },
+  "modified_lifecycle_contracts": {
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_lifecycle_v2.json",
+    "latest_escalation_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_lifecycle_v3.json",
+    "unique_checks": 3530,
+    "flow": 162,
+    "controller": 1017,
+    "ramp_integration": 21,
+    "escalation_integration": 1925,
+    "changes": "Drain real reentry FIXED_DT until ready finishes without live physics; keep exact prior body/runtime assertions. Cover new Reduced Flashing toggle. Seeded initial-offer target fixtures and current investment capacity support expanded roster without offer injection.",
+    "frontend": 405,
+    "frontend_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_frontend_ready.json"
+  },
+  "native_parity_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_arena_native_parity_check.json",
+  "native_profile": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\benchmarks\\003a_arena_profile_20261006_172809.json",
+  "native_profile_scope": "Explicit held desktop stress fixtures, not natural survival/Android device performance; GTX1660. Includes early/mature and17bodies/100particles/32FX/1nativebeast extreme, Reduced Flashing and mobile quality.",
+  "films": {
+    "grounded_pickups": {
+      "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_grounded_pickups_20261006_172245_546714.json",
+      "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_grounded_pickups.mp4",
+      "sha256": "3dea804eb05b19f6d2130975810c9b4d3382c7dd76236eecec501d2021aab371",
+      "seconds": 21.93,
+      "source_matches_current": true,
+      "profile_unchanged": true
+    },
+    "arena_escalation": {
+      "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_arena_escalation_20261006_172245_549795.json",
+      "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_arena_escalation.mp4",
+      "sha256": "942f523e76fb9b304232745b9839105e7bdf354a9a59642ce0d9db8b4500eb2e",
+      "seconds": 48.02,
+      "source_matches_current": true,
+      "profile_unchanged": true
+    }
+  },
+  "profile_unchanged": true,
+  "music_changed": false,
+  "beast_art_changed": false,
+  "combat_economy_changed": false,
+  "human_review_items": [
+    "Peripheral escalation intensity/visual feel",
+    "Expiry pressure and sensible physical pickup reach",
+    "Mature Android device performance remains physical-device QA"
+  ]
+}

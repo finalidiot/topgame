@@ -2,6 +2,8 @@ extends RefCounted
 class_name PowerRuntime
 
 const PowerCatalog = preload("res://scripts/run_powers.gd")
+const Defence = preload("res://scripts/defence_runtime.gd")
+var defence: RefCounted = Defence.new()
 
 ## Semantic hooks are called explicitly by battle's fixed tick; presentation
 ## never feeds back into this runtime. Requests cannot recursively emit contacts.
@@ -45,6 +47,7 @@ const CIRCUIT_TARGET_LIMIT: int = 8
 
 func setup(battle: Object) -> void:
 	_battle = weakref(battle)
+	defence.setup(self)
 	time = 0.0
 	_next_event_id = 0
 	_stopped = false
@@ -172,6 +175,7 @@ func begin_tick(dt: float) -> void:
 	if _stopped:
 		return
 	time += dt
+	defence.begin_tick(dt)
 	for fighter: Dictionary in _fighters():
 		var state: Dictionary = _state(fighter)
 		fighter["anchor_hit_time"] = maxf(0.0, float(fighter.get("anchor_hit_time", 0.0)) - dt)
@@ -264,6 +268,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 	if _stopped or not _live(fighter):
 		return
 	var state: Dictionary = _state(fighter)
+	defence.burst(fighter)
 	if mutation(fighter, "dead_centre") == "counterweight" and float(fighter.get("stored_force", 0.0)) >= 12.0:
 		_release_counterweight(fighter, heading.normalized())
 	if _has(fighter, "dead_centre"):
@@ -374,6 +379,7 @@ func movement_control(fighter: Dictionary, direction: Vector2, braking: bool, dt
 		modifiers["speed"] = float(modifiers["speed"]) * (1.06 if deeper_crossing else 1.25)
 		modifiers["acceleration_limit"] = maxf(float(modifiers["acceleration_limit"]), 420.0 if deeper_crossing else 540.0)
 		modifiers["drain"] = float(modifiers["drain"]) * (0.82 if deeper_crossing else 0.55)
+	defence.movement(fighter, modifiers, dt)
 	return modifiers
 
 func inverse_mass(fighter: Dictionary) -> float:
@@ -383,7 +389,7 @@ func inverse_mass(fighter: Dictionary) -> float:
 	if mutation(fighter, "dead_centre") == "bulwark": multiplier = 1.0 + pow(charge, 4.0) * 80.0
 	elif _modern(fighter) and charge > 0.0:
 		multiplier = 1.0 + charge * charge * ((5.0 if rank(fighter, "dead_centre") <= 1 else 12.0) + float(fighter.get("anchor_maturity", 0.0)) * 3.0)
-	return 1.0 / (mass * multiplier)
+	return 1.0 / (mass * multiplier * defence.mass_multiplier(fighter))
 
 ## The brace dissipates collision shock into its physical floor connection.
 ## Canonical solvers apply this to both full and small body RPM/wobble loss.
@@ -580,6 +586,7 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 		return
 	var state: Dictionary = _state(owner)
 	var cause: Dictionary = _direct_cause(owner, event_id)
+	defence.contact(owner, target, severity, recoil, recoil.length() if incoming_force < 0.0 else incoming_force)
 	_anchor_contact(owner, target, severity, normal, position, recoil.length() if incoming_force < 0.0 else incoming_force, cause)
 	if _modern(owner):
 		_modern_contact(owner, target, severity, normal, position, recoil, cause)
@@ -984,6 +991,7 @@ func _outward(origin: Vector2, target: Vector2, fallback: Vector2) -> Vector2:
 
 func finish() -> void:
 	_stopped = true
+	defence.finish()
 	_requests.clear()
 	_next_tick_pulses.clear()
 	_eliminations.clear()

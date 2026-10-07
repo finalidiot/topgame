@@ -1,0 +1,44 @@
+{
+  "cell": [
+    32,
+    32
+  ],
+  "pivot": [
+    0,
+    0
+  ],
+  "layers": [
+    "inset material face",
+    "rolled edge and lower lip",
+    "placed fasteners and printed state"
+  ],
+  "tags": {
+    "INSPECTION": {
+      "from": 0,
+      "to": 0
+    }
+  },
+  "durations_ms": [
+    1000
+  ],
+  "version": 1,
+  "texture": "inspection_frame.png",
+  "columns": 1,
+  "frame_count": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A human feedback",
+  "source": "../../source-art/human_feedback003a/inspection_frame.aseprite",
+  "stretch_margins": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "content_margins": [
+    8,
+    2,
+    8,
+    2
+  ]
+}

@@ -47,8 +47,8 @@ func _start_with(power_id: String) -> RefCounted:
 	return run
 
 func _test_catalog_and_costs() -> void:
-	check(Powers.ACTIVE_IDS.size() == 13 and "clutch" in Powers.ACTIVE_IDS and not "second_wind" in Powers.ACTIVE_IDS, "Thirteen-family pool replaces draftable Second Wind with Clutch")
-	check(Powers.investment_capacity() == 30, "All families develop to II and four flagships mutate")
+	check(Powers.ACTIVE_IDS.size() == 16 and "clutch" in Powers.ACTIVE_IDS and not "second_wind" in Powers.ACTIVE_IDS, "Sixteen-family pool retains Clutch and adds three active defence tools")
+	check(Powers.investment_capacity() == 39, "All families develop to II and seven flagship behaviours mutate")
 	for power_id: String in Powers.ACTIVE_IDS:
 		var acquire: Dictionary = Powers.get_offer(power_id)
 		check(acquire.rank == 1 and acquire.offer_kind == "acquire" and acquire.id == power_id, "Rank I offer acquires its stable power ID")

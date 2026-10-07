@@ -1,0 +1,30 @@
+{
+  "cell": [
+    160,
+    56
+  ],
+  "pivot": [
+    80,
+    18
+  ],
+  "layers": [
+    "accepted C6 station extracted into explicit screen-local fixture"
+  ],
+  "tags": {
+    "STATION": {
+      "from": 0,
+      "to": 0
+    }
+  },
+  "durations_ms": [
+    1000
+  ],
+  "version": 1,
+  "texture": "preview_station.png",
+  "columns": 1,
+  "frame_count": 1,
+  "native_pixels": true,
+  "filter": "nearest",
+  "task": "003A human feedback",
+  "source": "../../source-art/human_feedback003a/preview_station.aseprite"
+}

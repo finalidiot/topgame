@@ -1,0 +1,52 @@
+{
+  "cell": [
+    64,
+    40
+  ],
+  "pivot": [
+    32,
+    38
+  ],
+  "layers": [
+    "01 bolted fixed housing",
+    "02 vertical drive shaft",
+    "03 authored isometric rotor keys",
+    "04 local load meter"
+  ],
+  "tags": {
+    "IDLE": {
+      "from": 0,
+      "to": 3
+    },
+    "DRIVE": {
+      "from": 4,
+      "to": 7
+    },
+    "OVERDRIVE": {
+      "from": 8,
+      "to": 11
+    }
+  },
+  "durations_ms": [
+    450,
+    450,
+    450,
+    450,
+    240,
+    240,
+    240,
+    240,
+    130,
+    130,
+    130,
+    130
+  ],
+  "version": 1,
+  "texture": "res://assets/arena/escalation003a/machinery.png",
+  "columns": 12,
+  "frame_count": 12,
+  "filter": "nearest",
+  "native_pixels": true,
+  "source": "assets/source-art/arena_escalation003a/machinery.aseprite",
+  "presentation_only": true
+}

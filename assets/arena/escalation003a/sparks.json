@@ -1,0 +1,36 @@
+{
+  "cell": [
+    24,
+    24
+  ],
+  "pivot": [
+    12,
+    19
+  ],
+  "layers": [
+    "01 fixed hardware contact source",
+    "02 six finite divergent pixel-grit keys"
+  ],
+  "tags": {
+    "SPARK": {
+      "from": 0,
+      "to": 5
+    }
+  },
+  "durations_ms": [
+    100,
+    120,
+    150,
+    180,
+    230,
+    300
+  ],
+  "version": 1,
+  "texture": "res://assets/arena/escalation003a/sparks.png",
+  "columns": 6,
+  "frame_count": 6,
+  "filter": "nearest",
+  "native_pixels": true,
+  "source": "assets/source-art/arena_escalation003a/sparks.aseprite",
+  "presentation_only": true
+}

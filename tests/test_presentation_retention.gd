@@ -30,14 +30,43 @@ class ConcurrentSibling extends "res://scripts/collection_save.gd":
 		if bool(result.ok): assert(DirAccess.copy_absolute(ProjectSettings.globalize_path(save_path),ProjectSettings.globalize_path(save_path)+".bak") == OK)
 		return result
 
+class SnapshotGraph extends RefCounted:
+	var counter: int = 0
+	var child: RefCounted
+	var alias: RefCounted
+	var _parent: WeakRef
+	var parent: RefCounted:
+		get: return _parent.get_ref() if _parent != null else null
+
+func test_snapshot_references() -> void:
+	var original: SnapshotGraph = SnapshotGraph.new()
+	var child: SnapshotGraph = SnapshotGraph.new()
+	original.child = child; original.alias = child; child._parent = weakref(original)
+	var before: Dictionary = script_state(original)
+	check(before.child.parent == {"runtime_reference":0},"Computed weak parent getter records the owning runtime once without recursion")
+	check(before.alias == {"runtime_reference":1},"Repeated child reference preserves alias identity instead of silently skipping it")
+	var twin: SnapshotGraph = SnapshotGraph.new()
+	var twin_child: SnapshotGraph = SnapshotGraph.new()
+	twin.child = twin_child; twin.alias = twin_child; twin_child._parent = weakref(twin)
+	check(script_state(twin) == before,"Equivalent paired runtimes compare exact state despite differing ObjectIDs")
+	child.counter += 1
+	check(script_state(original) != before,"Cycle-safe enumeration still detects actual defence runtime state changes")
+	original.child = null; original.alias = null; twin.child = null; twin.alias = null
+
 func _initialize() -> void: call_deferred("run")
 func check(value: bool, message: String) -> void:
 	checks += 1
 	if not value and failures.size() < 30: failures.append(message); push_error(message)
 
-func script_state(subject: Object) -> Dictionary:
+func script_state(subject: Object, visited: Variant = null) -> Dictionary:
 	# Enumerate all script variables, including guards/queues omitted from public
-	# telemetry. Exclude only scene/weak/resource references; recurse pure state.
+	# telemetry. A computed weak parent getter can expose the owning runtime.
+	# Track actual object IDs within this snapshot, but return traversal indices:
+	# paired equivalent runtimes have different IDs while sharing alias topology.
+	var references: Dictionary = {} if visited == null else visited
+	var identity: int = subject.get_instance_id()
+	if references.has(identity): return {"runtime_reference":int(references[identity])}
+	references[identity] = references.size()
 	var state: Dictionary = {}
 	for property: Dictionary in subject.get_property_list():
 		if (int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0: continue
@@ -47,7 +76,7 @@ func script_state(subject: Object) -> Dictionary:
 			state[name] = {"seed":value.seed,"state":value.state}
 		elif value is Object:
 			if value is RefCounted and not value is Resource and not value is WeakRef and value.get_script() != null:
-				state[name] = script_state(value)
+				state[name] = script_state(value,references)
 		elif value is Dictionary or value is Array: state[name] = value.duplicate(true)
 		else: state[name] = value
 	return state
@@ -66,7 +95,7 @@ func combat_state(b: Node2D) -> Dictionary:
 	for id: int in b._ai_rngs: ai[id] = b._ai_rngs[id].state
 	state["ai_rngs"] = ai
 	# Contact/input/progression queues and all fixed-tick transition guards.
-	for key: String in ["_accumulator","_countdown","_launch_time","_finish_timer","_result_emitted","_hit_stop","_pair_cooldowns","_burst_was_down","_burst_buffer","_buffered_burst_direction","_progression_queue","_progression_sequence","_progression_eliminated","_progression_contacted","_progression_waves","_combat_needs_release"]:
+	for key: String in ["_accumulator","_countdown","_reentry_remaining","_launch_time","_finish_timer","_result_emitted","_hit_stop","_pair_cooldowns","_burst_was_down","_burst_buffer","_buffered_burst_direction","_progression_queue","_progression_sequence","_progression_eliminated","_progression_contacted","_progression_waves","_combat_needs_release"]:
 		var value: Variant = b.get(key)
 		state[key] = value.duplicate(true) if value is Dictionary or value is Array else value
 	return state
@@ -287,6 +316,7 @@ func test_main_boundaries() -> void:
 	measurements.shell["concurrent_absent_sibling"] = {"fixture":concurrent_path,"result":result,"preserved_original":true}
 
 func run() -> void:
+	test_snapshot_references()
 	var base: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if base.is_empty(): base = ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
 	qa = base.path_join("002C.6"); assert(DirAccess.make_dir_recursive_absolute(qa.path_join("temp")) == OK)

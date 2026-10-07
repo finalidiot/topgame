@@ -7,12 +7,14 @@ new beast family. No raster rotation, resampling, blur or old-asset authoring.
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 import math
 from pathlib import Path
 import subprocess
 import sys
+import uuid
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
@@ -20,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 from build_power_art import read_ase, write_ase, color
 from workspace.workspace import create_task_workspace, find_tool
+from beast_colour_identity import colour_metadata, recolour_native, SPIRIT_PALETTES
 
 SOURCE = ROOT / "assets/source-art/beasts_002c5_2"
 OUT = ROOT / "assets/powers/beasts_002c5_2"
@@ -412,18 +415,21 @@ def author():
             spans.append((tag,start,len(frames)-1)); durations.extend(times)
         write_ase(SOURCE/f"{name}.aseprite",frames,LAYERS,spans,durations,PIVOT,
                   note=f"002C.5.2 / {LABELS[name]} / 20 independent anatomy keys / giant spectral avatar behind opaque equipped rotor / native128 nearest / pivot64,96 / {DESCRIPTIONS[name]}",palette=PALETTE)
+        source = SOURCE/f"{name}.aseprite"
+        source.write_bytes(recolour_native(source.read_bytes(), SPIRIT_PALETTES[name]))
 
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def export_and_validate(aseprite,qa):
+def export_and_validate(aseprite,qa,task="002C.5.2",check_only=False):
     OUT.mkdir(parents=True,exist_ok=True)
-    native_dir=qa/"temp/beast-manifestations-native"
-    native_dir.mkdir(parents=True,exist_ok=True)
-    evidence=qa/"manifests/beast-manifestations"
-    evidence.mkdir(parents=True,exist_ok=True)
-    manifest={"version":1,"task":"002C.5.2","scope":"giant beast manifestations behind actual opaque top",
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ") + "_" + uuid.uuid4().hex[:8]
+    native_dir=qa/"temp/beast-manifestations-native"/run_id
+    native_dir.mkdir(parents=True,exist_ok=False)
+    evidence=qa/"manifests/beast-manifestations"/run_id
+    evidence.mkdir(parents=True,exist_ok=False)
+    manifest={"version":2,"task":task,"scope":"giant coloured translucent beast manifestations behind actual opaque top",
               "filter":"nearest","runtime_top_sprite_included":False,"effects":{}}
     checks=[]
     for name in RENDERERS:
@@ -451,7 +457,8 @@ def export_and_validate(aseprite,qa):
         assert native_meta["slices"][0]["keys"][0]["pivot"]=={"x":64,"y":96}
         assert [x["name"] for x in native_meta["frameTags"]]==list(TIMINGS)
         assert [x["duration"] for x in export["frames"]]==meta["durations_ms"]
-        target=OUT/f"{name}.png";native.save(target)
+        target=OUT/f"{name}.png"
+        if not check_only: native.save(target)
         assert Image.open(target).convert("RGBA").tobytes()==native.tobytes()
         tags={tag:{**span,"duration_ms":sum(meta["durations_ms"][span["from"]:span["to"]+1]),
                    "loop":tag=="guard"} for tag,span in meta["tags"].items()}
@@ -459,7 +466,8 @@ def export_and_validate(aseprite,qa):
               "source":source.relative_to(ROOT).as_posix(),"columns":4,"frame_count":len(frames),
               "tags":tags,"label":LABELS[name],"description":DESCRIPTIONS[name],
               "source_sha256":digest(source),"texture_sha256":digest(target),
-              "native_runtime_rgba_exact":True,"python_compositor_rounding_pixels":rounding}
+              "native_runtime_rgba_exact":True,"python_compositor_rounding_pixels":rounding,
+              **colour_metadata(name,source,native)}
         manifest["effects"][name]=item
         nonempty=[frame.getbbox() is not None for frame in frames]
         distinct=len({hashlib.sha256(frame.tobytes()).hexdigest() for frame in frames})
@@ -469,20 +477,30 @@ def export_and_validate(aseprite,qa):
                "cell":list(CELL),"pivot":list(PIVOT),"named_layers":LAYERS,
                "tags":tags,"source_sha256":digest(source),"texture_sha256":digest(target),
                "native_json_sha256":digest(data),"native_sheet_sha256":digest(png),
-               "native_export_command":command,"stdout":result.stdout,"stderr":result.stderr}
+               "native_export_command":command,"stdout":result.stdout,"stderr":result.stderr,
+               **colour_metadata(name,source,native)}
         (evidence/f"{name}_parity.json").write_text(json.dumps(check,indent=2)+"\n",encoding="utf-8")
         checks.append(check)
-    (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
-    report={"task":"002C.5.2","masters":4,"runtime_sheets":4,"authored_keys":80,
+    if check_only:
+        assert json.loads((OUT/"manifest.json").read_text(encoding="utf-8"))==manifest,"Beast manifest differs from current native export"
+    else:
+        (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
+    report={"task":task,"masters":4,"runtime_sheets":4,"authored_keys":80,
+            "export_id":run_id,"evidence_directory":str(evidence),
+            "native_export_directory":str(native_dir),"check_only":check_only,
             "native_aseprite":subprocess.run([aseprite,"--version"],capture_output=True,text=True,check=True).stdout.strip(),
             "source_runtime_parity":True,"editable_named_layers":True,"tags_pivots_timings":True,
             "runtime_pixels_equal_native_aseprite_rgba":True,"human_visual_acceptance_pending":True,
             "static_review_is_gameplay_evidence":False,"checks":checks}
-    (evidence/"002c5_2_beast_art_report.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
+    prefix="002c5_2" if task=="002C.5.2" else task.lower().replace(".","_")
+    (evidence/f"{prefix}_beast_art_report.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     return manifest,report
 
 
-def review(manifest,qa):
+def review(manifest,qa,run_id):
+    prefix="002c5_2" if manifest["task"]=="002C.5.2" else manifest["task"].lower().replace(".","_")
+    images=qa/"images/beast-manifestations"/run_id
+    images.mkdir(parents=True,exist_ok=False)
     font_path=Path("C:/Windows/Fonts/consola.ttf")
     font=ImageFont.truetype(str(font_path),12) if font_path.exists() else ImageFont.load_default()
     sheet=Image.new("RGBA",(544,20*154+30),(25,27,29,255))
@@ -510,9 +528,9 @@ def review(manifest,qa):
                 s.text((x+4,y+136),str(item["durations_ms"][span["from"]+key])+"ms",font=font,fill=ink("plane"))
             row+=1
         # Individual four-by-five key sheet, enlarged by nearest for review.
-        texture.resize((1024,1280),Image.Resampling.NEAREST).save(qa/f"images/002c5_2_{name}_all_keys_2x.png")
-    sheet.save(qa/"images/002c5_2_beast_native_keys.png")
-    sil.save(qa/"images/002c5_2_beast_grayscale_silhouettes.png")
+        texture.resize((1024,1280),Image.Resampling.NEAREST).save(images/f"{prefix}_{name}_all_keys_2x.png")
+    sheet.save(images/f"{prefix}_beast_native_keys.png")
+    sil.save(images/f"{prefix}_beast_grayscale_silhouettes.png")
     # Native640x360 fit uses existing opaque part art above the apparition.
     fit=Image.new("RGBA",(640,360),(45,48,50,255));draw=ImageDraw.Draw(fit)
     draw.text((8,6),"640x360 static fit / giant spirit behind opaque equipped top / art QA only",font=font,fill=ink("silver"))
@@ -527,8 +545,8 @@ def review(manifest,qa):
             blade=Image.open(ROOT/"assets/top/parts/blades/balance.png").convert("RGBA").crop((0,0,48,48))
             fit.alpha_composite(blade,(x-24,y-38))
             draw.text((x-65,y+17),LABELS[name],font=font,fill=ink("silver"))
-    fit.save(qa/"images/002c5_2_beast_native_top_fit.png")
-    fit.resize((1280,720),Image.Resampling.NEAREST).save(qa/"images/002c5_2_beast_native_top_fit_2x.png")
+    fit.save(images/f"{prefix}_beast_native_top_fit.png")
+    fit.resize((1280,720),Image.Resampling.NEAREST).save(images/f"{prefix}_beast_native_top_fit_2x.png")
 
 
 def main():
@@ -536,10 +554,13 @@ def main():
     parser.add_argument("--author",action="store_true",help="Explicitly reconstruct only these four beast masters")
     parser.add_argument("--aseprite")
     parser.add_argument("--qa-root",type=Path)
-    args=parser.parse_args();qa=create_task_workspace("002C.5.2",args.qa_root)
+    parser.add_argument("--task",default="002C.5.2",help="Milestone for external evidence; historical default is retained")
+    parser.add_argument("--check",action="store_true",help="Verify fresh native exports without rewriting source/runtime assets")
+    args=parser.parse_args();qa=create_task_workspace(args.task,args.qa_root)
+    if args.author and args.check: parser.error("--check cannot reconstruct source masters")
     if args.author:author()
-    manifest,report=export_and_validate(find_tool("aseprite",args.aseprite),qa)
-    review(manifest,qa)
+    manifest,report=export_and_validate(find_tool("aseprite",args.aseprite),qa,args.task,args.check)
+    if not args.check: review(manifest,qa,report["export_id"])
     print(json.dumps({key:value for key,value in report.items() if key!="checks"}))
 
 

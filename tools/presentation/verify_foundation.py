@@ -85,6 +85,7 @@ def main() -> int:
                 command += ["--", "--out=" + str(task / "benchmarks" / (args.stem + "_parts.json"))]
             elif name in ["feedback_drift", "feedback_anchor_contacts", "power_feedback", "feedback_parts_retention", "save_tools", "presentation_flow", "presentation_retention", "music", "music_escalation", "frontend"]:
                 command += ["--", "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json"))]
+                if name == "music_escalation": command += ["--qa-task=" + args.task]
             row = run_suite(command, task / "logs" / (args.stem + "_" + name + ".log"), name, args.timeout)
             evidence["suites"].append(row)
             save()

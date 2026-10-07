@@ -34,7 +34,7 @@ func _test_seed_and_catalogs() -> void:
 		check(not seed_value in streams, "Independent RNG domains have distinct derived seeds")
 		check(seed_value == Seeds.derive(7341, domain), "Derivation does not consume mutable RNG state")
 		streams.append(seed_value)
-	check(Powers.IDS.size() == 18, "Stable historic identities plus the expanded implemented roster exist")
+	check(Powers.IDS.size() == 21, "Stable historic identities plus three new active defensive families exist")
 	var ids: Dictionary = {}
 	for power_id: String in Powers.IDS:
 		var definition: Dictionary = Powers.get_power(power_id)

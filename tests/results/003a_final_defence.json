@@ -1,0 +1,78 @@
+{
+  "scope": "Final 003A three active defence families; temporary Run powers only; new layered native art and mapped controller review",
+  "families": {
+    "gyro_lock": [
+      "keel",
+      "flywheel"
+    ],
+    "impact_sink": [
+      "shock_bleed",
+      "return_spring"
+    ],
+    "anchor_exchange": [
+      "deep_footing",
+      "slip_anchor"
+    ]
+  },
+  "active_families": 16,
+  "catalogue_investment_capacity": 39,
+  "machine_family_cap": 7,
+  "machine_investment_capacity": 21,
+  "native_masters": [
+    "assets/source-art/defence003a/anchor_exchange_cards.aseprite",
+    "assets/source-art/defence003a/anchor_exchange_fx.aseprite",
+    "assets/source-art/defence003a/anchor_exchange_icons.aseprite",
+    "assets/source-art/defence003a/gyro_lock_cards.aseprite",
+    "assets/source-art/defence003a/gyro_lock_fx.aseprite",
+    "assets/source-art/defence003a/gyro_lock_icons.aseprite",
+    "assets/source-art/defence003a/impact_sink_cards.aseprite",
+    "assets/source-art/defence003a/impact_sink_fx.aseprite",
+    "assets/source-art/defence003a/impact_sink_icons.aseprite"
+  ],
+  "checks": {
+    "defence_depth": 432,
+    "escalation_progression": 1445,
+    "original_roster_physics": 30,
+    "expanded_roster_draft": 23705,
+    "run_context": 377,
+    "final_acceptance_imported_package_assets": 479,
+    "package_verifier_rejection_tests": 32,
+    "actual_main_provider_combat": 119,
+    "native_source_runtime_parity": "All nine masters/exports; twelve card keys per state; independent sixteen pixel icons; eight FX keys per tag"
+  },
+  "showcase": {
+    "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\video\\003a_defence_power_showcase.mp4",
+    "video_sha256": "fcd42e2c48394e00eb716696309432b9af99853a5f4b069f4a6d63862419f651",
+    "seconds": 108.0,
+    "controller_events": 19470,
+    "audio_peak": 0.582489013671875,
+    "audio_rms": 0.021986382698251056,
+    "profile_unchanged": true,
+    "source_unchanged": true
+  },
+  "detailed_provenance": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_defence_power_20261006_170826_932503.json",
+  "limits": [
+    "Desktop early Run with explicit opening rank/pose fixtures, followed by real mapped controller input. Natural power draft acquisition and Android performance have separate validation.",
+    "Near full reserve limits actual Sink RPM recovery in this film; dangerous reserve and shared gain budget behaviour are tested separately.",
+    "New families use existing collision/steering SFX; accepted music assets are preserved."
+  ],
+  "instrumentation": {
+    "source": [
+      "tools/android/TouchDriver.java",
+      "tools/android/touch_instrumentation.py"
+    ],
+    "target": "org.spinningmetal.prototype",
+    "driver": "org.spinningmetal.qa003a/org.spinningmetal.qa003a.TouchDriver",
+    "session_bounds": "Fifteen minutes; exact thirty-two lowercase hex QA marker; only game foreground events; 240 steps per command / 5,000 per session",
+    "latest_build_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_android_instrumentation_20261006_171500_709988.json",
+    "real_device_validation": "Parent verified native single/multi-touch on Galaxy A14 Android 14, including independent steering/Burst/Brake owners. Parent owns complete device evidence and final candidate validation."
+  },
+  "additive_asset_verification": {
+    "probe": "scripts/parts_package_probe.gd",
+    "candidate_verifier": "tools/parts/verify_packaged_catalogue.py:verify_final_acceptance_assets",
+    "scope": "Actual candidate probe metadata, alpha/visible RGB pixels, topology and optional packaged-source presence; fifteen saved editable native masters verified against canonical source. All earlier catalogue, economy, packet, music and UI guards remain required.",
+    "editor_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A\\manifests\\003a_final_acceptance_assets_6428_3758801.json",
+    "editor_report_is_packaged_evidence": false,
+    "candidate_probe_validation": "Parent will run the same additive verifier against final exported Windows and Android resources."
+  }
+}

@@ -5,7 +5,8 @@ signal reroll_collected(id: String)
 const Seeds = preload("res://scripts/seed_utils.gd")
 const MAX_PICKUPS: int = 2
 const COLLECT_RADIUS: float = 14.0
-const LIFETIME: float = 180.0
+const LIFETIME: float = 16.0
+const EXPIRY_WARNING: float = 2.5
 const SPRITE: String = "res://assets/powers/feedback_002c5_2/pickup.png"
 var _battle: WeakRef
 var _run: WeakRef
@@ -15,6 +16,11 @@ var _sequence: int = 0
 var _clock: float = 0.0
 var _previous_position: Vector2 = Vector2.ZERO
 var _texture: Texture2D
+# The parent Battle paints the floor pass before complete rigs. A child canvas
+# draws after its parent; that old ordering made a floor chip cover a top.
+var render_in_battle: bool = false
+var reduced_flashing: bool = false
+var expired_count: int = 0
 
 func setup(battle: Node2D, run: RefCounted) -> void:
 	clear()
@@ -30,6 +36,7 @@ func clear() -> void:
 	_receipts.clear()
 	_sequence = 0
 	_clock = 0.0
+	expired_count = 0
 	_battle = null
 	_run = null
 	queue_redraw()
@@ -74,8 +81,9 @@ func update_simulation() -> void:
 	var position_world: Vector2 = Vector2(player.pos)
 	for index: int in range(items.size() - 1, -1, -1):
 		var item: Dictionary = items[index]
-		if now - float(item.born) > LIFETIME:
+		if now - float(item.born) >= LIFETIME:
 			items.remove_at(index)
+			expired_count += 1
 			continue
 		var closest: Vector2 = Geometry2D.get_closest_point_to_segment(Vector2(item.pos), _previous_position, position_world)
 		if closest.distance_to(Vector2(item.pos)) <= COLLECT_RADIUS and run.collect_reroll_pickup(str(item.id)):
@@ -87,16 +95,33 @@ func update_simulation() -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if not render_in_battle: draw_floor(self)
+
+static func expiry_alpha(age: float, reduce_flashing: bool = false) -> float:
+	if age >= LIFETIME: return 0.0
+	if age < LIFETIME - EXPIRY_WARNING: return 1.0
+	var remaining: float = clampf((LIFETIME - age) / EXPIRY_WARNING, 0.0, 1.0)
+	# One soft pulse per second, local to this tiny floor token. Accessible mode
+	# uses a continuous fade and preserves the full readable warning interval.
+	return lerpf(0.35, 0.86, remaining) if reduce_flashing else lerpf(0.42, 0.96, 0.5 + 0.5 * cos(age * TAU))
+
+func presentation_snapshot() -> Dictionary:
+	var presentation: Array[Dictionary] = []
+	for item: Dictionary in items:
+		var age: float = maxf(0.0, _clock - float(item.born))
+		presentation.append({"id":item.id,"pos":item.pos,"age":age,"warning":age >= LIFETIME - EXPIRY_WARNING,"alpha":expiry_alpha(age,reduced_flashing)})
+	return {"active":presentation,"maximum":MAX_PICKUPS,"lifetime":LIFETIME,"warning_seconds":EXPIRY_WARNING,"collect_radius":COLLECT_RADIUS,"expired":expired_count,"draw_before_rigs":render_in_battle}
+
+func draw_floor(canvas: CanvasItem) -> void:
 	var battle: Node2D = _battle.get_ref() if _battle != null else null
 	if battle == null: return
 	for item: Dictionary in items:
 		var floor_position: Vector2 = battle.project(Vector2(item.pos)).round()
-		# Flat footprint, rather than a floating pickup beside the top.
-		var tint: Color = Color("9ddbdd")
-		tint.a = 0.85 if int(_clock * 4.0) % 2 == 0 else 0.6
-		draw_line(floor_position + Vector2(-9, 0), floor_position + Vector2(0, 5), Color("527477"), 1.0)
-		draw_line(floor_position + Vector2(0, 5), floor_position + Vector2(9, 0), Color("527477"), 1.0)
+		var tint: Color = Color.WHITE
+		tint.a = expiry_alpha(maxf(0.0,_clock - float(item.born)),reduced_flashing)
+		# Native asset already includes contact shadow and its 12,10 floor pivot.
+		# No hover offset, UI ring or world-height lift is added here.
 		if _texture != null:
-			draw_texture(_texture, floor_position - Vector2(12, 10), tint)
+			canvas.draw_texture(_texture, floor_position - Vector2(12, 10), tint)
 		else:
-			draw_rect(Rect2(floor_position - Vector2(5, 4), Vector2(10, 6)), tint, false, 1.0)
+			canvas.draw_rect(Rect2(floor_position - Vector2(5, 4), Vector2(10, 6)), tint, false, 1.0)
