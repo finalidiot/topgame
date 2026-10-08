@@ -41,6 +41,14 @@ func run() -> void:
 	await process_frame
 	check(received.size() == 48,"Physical observer's actual Node receives pressed/released joypad dispatch; SceneTree itself never owns _input")
 	check(FrontEnd.controller_profile_for("XInput Controller",{"raw_name":"Xbox 360 Controller","vendor_id":"1118","product_id":"654"}) == "xbox","A Nintendo-layout XInput adapter cannot be identified from Xbox metadata")
+	var wrapped_info: Dictionary = {"raw_name":"Xbox 360 Controller","vendor_id":"1118","product_id":"654"}
+	var wrapped_guid: String = "0300fa675e0400008e02000010017801"
+	check(FrontEnd.controller_profile_for("XInput Controller",wrapped_info,wrapped_guid) == "nintendo","The previously human-verified wrapped Switch identity is Nintendo in AUTO")
+	check(FrontEnd.controller_profile_for("Xbox 360 Controller",wrapped_info,wrapped_guid.to_upper()) == "nintendo","Verified identity comparison is case independent")
+	for unknown_guid: String in ["", "0300fa675e0400008e02000010017800", "0300fa675e0400008e02000010017801-extra", "030000005e0400008e02000000000000"]:
+		check(FrontEnd.controller_profile_for("XInput Controller",wrapped_info,unknown_guid) == "xbox","Other or missing XInput identities preserve Xbox actions")
+	check(Bindings.confirm_button(FrontEnd.controller_profile_for("XInput Controller",wrapped_info,wrapped_guid)) == JOY_BUTTON_B,"AUTO wrapped Switch confirms with printed east A")
+	check(Bindings.back_button(FrontEnd.controller_profile_for("XInput Controller",wrapped_info,wrapped_guid)) == JOY_BUTTON_A,"AUTO wrapped Switch backs with printed south B")
 	Bindings.configure("nintendo")
 	check(Bindings.profile(0) == "nintendo","Explicit controller type resolves an adapter's ambiguous printed layout")
 	check(FrontEnd.prompt("nintendo","confirm") == "A" and FrontEnd.glyph("nintendo","confirm").region == Rect2(32,0,16,16),"Nintendo A action, letter prompt, and authored glyph agree")

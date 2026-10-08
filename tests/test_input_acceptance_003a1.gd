@@ -7,6 +7,7 @@ const Collection = preload("res://scripts/collection_save.gd")
 const Bindings = preload("res://scripts/controller_bindings.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
 const PAD: int = 3
+var joy_device: int = PAD
 var game: Node2D
 var report_path: String = ""
 var profiles_path: String = ""
@@ -70,14 +71,15 @@ func key(code: Key, down: bool, echo: bool = false) -> void:
 	event.keycode = code; event.physical_keycode = code; event.pressed = down; event.echo = echo
 	Input.parse_input_event(event)
 	events.append({"frame":frame(),"input":input_kind,"type":"keyboard","key":code,"pressed":down,"echo":echo,"screen":game.screen})
-func joy(code: JoyButton, down: bool, device: int = PAD) -> void:
+func joy(code: JoyButton, down: bool, device: int = -1) -> void:
 	var event := InputEventJoypadButton.new()
-	event.device = device; event.button_index = code; event.pressed = down
+	var actual_device: int = joy_device if device < 0 else device
+	event.device = actual_device; event.button_index = code; event.pressed = down
 	Input.parse_input_event(event)
-	events.append({"frame":frame(),"input":input_kind,"type":"logical_joypad","device":device,"button":code,"pressed":down,"screen":game.screen})
+	events.append({"frame":frame(),"input":input_kind,"type":"logical_joypad","device":actual_device,"button":code,"pressed":down,"screen":game.screen})
 func tap_key(code: Key) -> void:
 	key(code,true); await wait_frames(2); key(code,false); await wait_frames(3)
-func tap_joy(code: JoyButton, device: int = PAD) -> void:
+func tap_joy(code: JoyButton, device: int = -1) -> void:
 	joy(code,true,device); await wait_frames(2); joy(code,false,device); await wait_frames(3)
 func pointer(target: Control, touch: bool) -> void:
 	check(is_instance_valid(target),"Pointer target exists")
@@ -153,7 +155,7 @@ func boot(profile: String) -> void:
 		for channel: AudioStreamPlayer in game.sounds.channels: channel.stop()
 		game.queue_free(); await wait_frames(3)
 	for action: String in ["ui_accept","ui_cancel","burst","brake","pause"]: Input.action_release(action)
-	input_kind = profile
+	input_kind = "nintendo" if profile == "auto" else profile
 	var path: String = profiles_path.path_join(profile + ".json")
 	check(not FileAccess.file_exists(path),"Every input boots a fresh isolated profile")
 	var fixture := Collection.new(path)
@@ -163,7 +165,10 @@ func boot(profile: String) -> void:
 	state.progression.credits = 500
 	check(fixture._commit(state,"qa_wallet_fixture").ok,"Labelled isolated wallet fixture permits genuine packet purchase")
 	var cfg := ConfigFile.new()
-	cfg.set_value("settings","controller_layout",profile if profile in ["xbox","nintendo","playstation"] else "auto")
+	# The actual AUTO-device regression starts from legacy preferences with no
+	# layout key, matching the user's existing profile without opening it.
+	if profile == "auto": cfg.set_value("settings","muted",true)
+	else: cfg.set_value("settings","controller_layout",profile if profile in ["xbox","nintendo","playstation"] else "auto")
 	check(cfg.save(path + ".preferences.cfg") == OK,"Logical controller layout fixture uses real persisted Options")
 	game = Main.new(); game.collection_path = path
 	root.add_child(game)
@@ -302,6 +307,55 @@ func lifecycle() -> void:
 	key(KEY_SPACE,true); await wait_frames(2); key(KEY_SPACE,false)
 	check(float(game.battle.player_entity().get("burst_time",0.0)) > 0.0,"A fresh combat press really Bursts after READY")
 
+func auto_layout_lifecycle(connected: Array) -> void:
+	var actual: Dictionary = {}
+	for row: Dictionary in connected:
+		if str(row.guid).to_lower() in FrontEnd.NINTENDO_XINPUT_GUID_OVERRIDES:
+			actual = row
+			break
+	if actual.is_empty():
+		outcomes.append({"kind":"known_device_auto","skipped":true,
+			"reason":"No actual known wrapped-Switch device identity is available to this engine. Headless identity coverage is in controller_bindings; normal Main native AUTO review requires a connected device."})
+		if kind == "auto": check(false,"Native AUTO review requires the actual known wrapped-Switch device")
+		return
+	capture_group = "auto"
+	joy_device = int(actual.device)
+	await boot("auto")
+	var path: String = game.collection_path
+	var preferences: String = game.preferences_path
+	var saved := ConfigFile.new()
+	check(saved.load(preferences) == OK and not saved.has_section_key("settings","controller_layout"),"AUTO fixture retains the real legacy missing-layout-key path")
+	check(game.settings.controller_layout == "auto" and Bindings.profile(joy_device) == "nintendo","Normal Main AUTO detects the actual connected known GUID without a saved override")
+	check(game.screen == "title" and game.menus.input_profile() == "nintendo","Logical printed-A event confirms Press Start with immediate Nintendo prompts")
+	await intent("settings")
+	var layout_button: Control = null
+	for node: Node in descendants(game.menus):
+		if node is Button and str(node.get_meta("setting_key","")) == "controller_layout": layout_button = node
+	check(is_instance_valid(layout_button) and layout_button.text == "CONTROLLER: AUTO","Normal Options stays AUTO; no forced Nintendo preference is written")
+	await back()
+	check(game.screen == "title","Logical printed-B event immediately performs Back with AUTO detection")
+	for connected_value: bool in [false,true]:
+		# Exercise the actual production reconnect callback; this fixture does
+		# not claim the human physically unplugged the device.
+		game._controller_connection_changed(joy_device,connected_value)
+		check(game.settings.controller_layout == "auto" and Bindings.profile(joy_device) == "nintendo","Reconnect callback retains AUTO and the known Nintendo identity")
+	var east := InputEventJoypadButton.new(); east.device = joy_device; east.button_index = JOY_BUTTON_B; east.pressed = true
+	var south := InputEventJoypadButton.new(); south.device = joy_device; south.button_index = JOY_BUTTON_A; south.pressed = true
+	check(east.is_action("ui_accept") and not east.is_action("ui_cancel") and south.is_action("ui_cancel") and not south.is_action("ui_accept"),"AUTO reconnect retains east-A Confirm and south-B Back bindings")
+	var preferences_hash: String = FileAccess.get_sha256(preferences)
+	game.sounds.muted = true
+	for channel: AudioStreamPlayer in game.sounds.channels: channel.stop()
+	game.queue_free(); await wait_frames(3)
+	game = Main.new(); game.collection_path = path; root.add_child(game); await wait_frames(5)
+	check(game.screen == "title_gate" and game.settings.controller_layout == "auto" and Bindings.profile(joy_device) == "nintendo","Normal same-profile restart restores AUTO recognition without manufacturing a saved layout")
+	check(FileAccess.get_sha256(preferences) == preferences_hash,"AUTO boot, navigation, callbacks and restart leave the legacy preference bytes unchanged")
+	await intent("enter_frontend")
+	check(game.screen == "title" and game.menus.input_profile() == "nintendo","Logical printed-A Confirm and Nintendo prompts work after the ordinary restart")
+	outcomes.append({"kind":"known_device_auto","passed":game.screen == "title","device":actual,
+		"controller_layout":"auto","preferences_key_missing":true,"preferences_sha256":preferences_hash,
+		"scope":"Actual native device metadata and production Main; controlled logical GUI button events and callback fixtures. These are not new physical button presses or a physical reconnect test."})
+	joy_device = PAD
+
 func refuse_arguments(message: String) -> bool:
 	printerr("DRIVER_ARGUMENTS_REFUSED ", message)
 	quit(2)
@@ -333,7 +387,7 @@ func run() -> void:
 		if arg.begins_with("--images="): images_path = arg.trim_prefix("--images=")
 		if arg.begins_with("--kind="): kind = arg.trim_prefix("--kind=")
 		if unsafe_main_argument(arg): refuse_arguments("Unsafe Main boot override refused before opening any profile."); return
-	if kind not in ["all","flow","mapping"]: refuse_arguments("Unknown input review kind."); return
+	if kind not in ["all","flow","mapping","auto"]: refuse_arguments("Unknown input review kind."); return
 	if not guard_fixture_paths(): return
 	if kind == "all":
 		for suffix: String in ["_mapping","_mapping_lifecycle"]:
@@ -361,9 +415,10 @@ func run() -> void:
 		profiles_path = profiles_path.get_base_dir().path_join(profiles_path.get_file() + "_lifecycle")
 		DirAccess.make_dir_recursive_absolute(profiles_path)
 		await lifecycle()
+	if kind in ["all","auto"]: await auto_layout_lifecycle(connected)
 	var file := FileAccess.open(report_path,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"passed":failures == 0,"kind":kind,"movie_frames":frame(),"nominal_seconds":float(frame())/60.0,
-		"scope":"Normal Main with actual Input.parse_input_event GUI dispatch and real timers/physics. Ownership/wallet, focus notifications, Android back notification, and earned-XP event are explicit QA fixtures. Synthetic logical controller and touch coverage, not physical controller/phone acceptance. No synthetic mouse rescue.",
+		"scope":"Normal Main with actual Input.parse_input_event GUI dispatch and real timers/physics. Ownership/wallet, focus notifications, Android back notification, and earned-XP event are explicit QA fixtures. The optional native AUTO branch reads actual connected metadata and uses logical GUI events plus reconnect callbacks; it is not a new physical press or unplug test. Synthetic logical controller and touch coverage, not physical controller/phone acceptance. No synthetic mouse rescue.",
 		"input_events":events,"rows":rows,"outcomes":outcomes,"connected_devices":connected},"\t")); file.close()
 	print("INPUT_ACCEPTANCE_%s checks=%d failures=%d kind=%s report=%s" % ["PASS" if failures == 0 else "FAIL",checks,failures,kind,report_path])
 	if is_instance_valid(game):

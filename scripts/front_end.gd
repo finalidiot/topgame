@@ -130,10 +130,15 @@ static func make_theme() -> Theme:
 	value.set_stylebox("focus", "HSlider", plate(Color(0, 0, 0, 0), ORANGE, 2))
 	return value
 
-static func controller_profile(device: int) -> String:
-	return controller_profile_for(Input.get_joy_name(device), Input.get_joy_info(device))
+## Human-verified Switch pad wrapped as XInput; shared identity from Snake Task 015.1.
+## Other XInput identities still follow their name/vendor, and explicit choices win.
+const NINTENDO_XINPUT_GUID_OVERRIDES: Array[String] = ["0300fa675e0400008e02000010017801"]
 
-static func controller_profile_for(mapped_name: String, info: Dictionary = {}) -> String:
+static func controller_profile(device: int) -> String:
+	return controller_profile_for(Input.get_joy_name(device), Input.get_joy_info(device), Input.get_joy_guid(device))
+
+static func controller_profile_for(mapped_name: String, info: Dictionary = {}, controller_guid: String = "") -> String:
+	if controller_guid.to_lower() in NINTENDO_XINPUT_GUID_OVERRIDES: return "nintendo"
 	var name: String = (mapped_name + " " + str(info.get("raw_name", ""))).to_lower()
 	var vendor: int = int(info.get("vendor_id", 0))
 	if vendor == 0x054c or "playstation" in name or "dualshock" in name or "dualsense" in name or "ps4" in name or "ps5" in name: return "playstation"
