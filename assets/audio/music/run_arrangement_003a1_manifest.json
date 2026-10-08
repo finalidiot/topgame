@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "title": "Foundry Circuit / Low Gear and Pursuit",
+  "authorship": "Original authored variations using the existing synthesized steel-string/drum voices and accepted harmonic grid. No pitch/time stretching, commercial samples or borrowed music.",
+  "score_sha256": "31c6e02e4395a8e5cfa882cb934f0e0d355f6f3edb7588a5ee9c48fc775ddca2",
+  "generator_sha256": "7e4ed3bad3aa4454a1f45874ed6c330f7a67afa352c6e3ca115e47de4a1f15b0",
+  "grid": {
+    "sample_rate": 32000,
+    "frames": 1428837,
+    "seconds": 44.65115625,
+    "beats": 128,
+    "instrument_events": {
+      "run_opening": {
+        "chug": 144,
+        "bass": 72,
+        "kick": 64,
+        "snare": 32,
+        "hat": 128,
+        "power": 8
+      },
+      "run_motion": {
+        "chug": 160,
+        "bass": 160,
+        "kick": 128,
+        "snare": 24,
+        "power": 12
+      }
+    },
+    "render_gain": 0.3787574768066406,
+    "all_run_stem_cube_peak": 0.8799985959186879
+  },
+  "stems": {
+    "run_opening": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1428837,
+      "peak": 0.17423017059846796,
+      "rms": 0.0247275985911812,
+      "rms_dbfs": -32.13636115780311,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.027375102999969484,
+      "clipped_samples": 0,
+      "sha256": "60a4d75d1ea518fc325cc9e8e257ecd2e7a482e82942e856b6bf7fc246e58b40",
+      "description": "Half-time spacious steel riff and backbeat"
+    },
+    "run_motion": {
+      "sample_rate": 32000,
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "frames": 1428837,
+      "peak": 0.06060975981933042,
+      "rms": 0.01009129394460925,
+      "rms_dbfs": -39.921062865600234,
+      "boundary_step": 0.0,
+      "largest_adjacent_step": 0.00955229346598712,
+      "clipped_samples": 0,
+      "sha256": "16a450569501c68577c2667048c915d3e6e3ff5d70abca857a58bb3b211f84af",
+      "description": "Mid-Run syncopated low riff and rhythmic answer"
+    }
+  },
+  "preserved_music_sha256": {
+    "title": "7829769e72ec39ff0075e927df2f4361d62aaa4792461aea0ce2e3cd0ae35ee1",
+    "workshop": "5f389ddff9f71e39d2afd2ba6647ee4e66ab654d543f057c25cb9f30069aab21",
+    "run_base": "d556305faf1a92b385091647d0b2a01548462002c717b19c5e84eff371848ca6",
+    "run_pressure": "6dfb99156f4e667fcccc82386cdd5681282f1624bf685f6faaf03c5ab4be62b0",
+    "run_boss": "dda2cc7a0af2123a9a1b8955c0a9b3682635d032b381b49e98ffd2bdae5a0384"
+  },
+  "opening_perceived_backbeat_bpm": 86,
+  "transport_bpm": 172,
+  "runtime_arrangements": {
+    "opening": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "drive": [
+      0.2,
+      0.75,
+      0.25
+    ],
+    "lead": [
+      0.6,
+      0.25,
+      0.55
+    ],
+    "anthem": [
+      0.9,
+      0.0,
+      0.25
+    ],
+    "full": [
+      1.0,
+      0.0,
+      0.0
+    ]
+  },
+  "original_music_manifest_sha256": "0824b5f6dd130adfad23b29f6c2893bb77d5ed140f180ecdc1648f4b50285c96",
+  "source": "run_arrangement_003a1.json + tools/audio/compose_run_variety_003a1.py; existing instrument synthesis, original new notes; no pitch/time stretching."
+}

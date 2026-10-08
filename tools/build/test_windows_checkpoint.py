@@ -112,12 +112,13 @@ class PromotionGuards(unittest.TestCase):
             {"category":"ratchet", "id":"kickback", "part_id":"ratchet:kickback", "rarity":"RARE", "new":True, "salvage":0},
             {"category":"bit", "id":"flat", "part_id":"bit:flat", "rarity":"COMMON", "new":False, "salvage":1},
         ]
-        self.shop_state = {"schema_version":2, "starter_selected":"breaker",
+        self.shop_state = {"schema_version":3, "starter_selected":"breaker",
             "owned_part_ids":["blade:smash", "ratchet:high", "bit:flat", "blade:balance", "ratchet:kickback"],
             "equipped_build":{"blade":"balance", "ratchet":"high", "bit":"flat"},
             "progression":{"credits":0, "salvage":1, "packet_serial":1, "pending_packet":{},
                 "last_packet":{"id":"packet-1", "request_nonce":"packet-1", "kind":"standard", "currency":"credits", "cost":48,
-                               "status":"resolved", "rows":rows, "total_salvage":1},
+                               "status":"resolved", "rows":rows, "total_salvage":1,
+                               "quantity":1,"cursor":1,"packets":[{"rows":rows,"total_salvage":1}]},
                 "run_serial":1, "active_run":"", "last_reward":{"id":"run-1", "credits":48, "eligible":True,
                                                            "breakdown":{"threats":48, "elites":0, "bosses":0}}}}
         smoke.update(qa_task="003A", child_environment={"TOPGAME_QA_ROOT":str(self.qa.resolve())},
@@ -248,6 +249,30 @@ class PromotionGuards(unittest.TestCase):
         self.shop_state["progression"]["last_packet"]["cost"] = 60
         self.save_tampered_shop()
         self.reject_shop("resolved paid receipt")
+
+    def test_003a_bulk_quantity_cannot_masquerade_as_single_smoke(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["quantity"] = 3
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_unfinished_single_cursor_is_rejected(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["cursor"] = 0
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_altered_batch_group_is_rejected(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["packets"] = []
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_old_schema_cannot_accept_new_build_smoke(self):
+        self.prepare_shop_candidate()
+        self.shop_state["schema_version"] = 2
+        self.save_tampered_shop()
+        self.reject_shop("schema3")
 
     def test_003a_boolean_wallet_is_not_an_integer_balance(self):
         self.prepare_shop_candidate()

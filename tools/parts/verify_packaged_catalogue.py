@@ -8,15 +8,20 @@ promotion, player-save reset, gameplay injection or existing-file overwrite.
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import hashlib
 from datetime import datetime, timezone
 import json
 import math
 import os
+import struct
+import subprocess
 from pathlib import Path
 import sys
 import uuid
+import tempfile
 import wave
+import zlib
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -51,7 +56,7 @@ def verify_collection(path: Path, expected: set[str]) -> dict:
         raise RuntimeError("The actual package did not create its isolated QA collection")
     saved = json.loads(path.read_text(encoding="utf-8"))
     owned = saved.get("owned_part_ids")
-    if (type(saved.get("schema_version")) is not int or saved.get("schema_version") != 2 or saved.get("starter_selected") != "breaker"
+    if (type(saved.get("schema_version")) is not int or saved.get("schema_version") != 3 or saved.get("starter_selected") != "breaker"
             or not isinstance(owned, list) or not all(isinstance(p, str) for p in owned)
             or len(owned) != len(expected) or set(owned) != expected):
         raise RuntimeError("Packaged QA collection does not own exactly the current 31 qualified part IDs")
@@ -68,7 +73,7 @@ def verify_collection(path: Path, expected: set[str]) -> dict:
             "category_counts": {c: sum(p.startswith(c + ":") for p in owned)
                                 for c in ("blade", "ratchet", "bit")},
             "owned_part_ids": sorted(owned), "equipped_build": build,
-            "schema_version":2,"progression":progression,"qa_economy_empty":True}
+            "schema_version":3,"progression":progression,"qa_economy_empty":True}
 
 
 def _visible_pixels(path: Path) -> tuple[list[int], str]:
@@ -186,7 +191,7 @@ def verify_pickup_assets(assets: dict, source_root: Path = ROOT) -> dict:
 
 def _source_economy_odds(source_root: Path) -> dict:
     """Require source identity for the real GDScript study's versioned odds."""
-    summary_path = source_root / "tests/results/003a_economy_save_summary.json"
+    summary_path = source_root / "tests/results/003a1_bulk_economy_odds.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     required = ("scripts/packet_economy.gd","assets/data/packet_economy.json","assets/data/parts_catalogue.json")
     for path in required:
@@ -393,6 +398,173 @@ def verify_final_acceptance_assets(assets: dict, source_root: Path = ROOT) -> di
             "native_masters_verified": 15, "packaged_native_master_presence": native_presence}
 
 
+def _compiled_metadata(assets, field, path, label):
+    expected=json.loads(path.read_text(encoding="utf-8"))
+    try:actual=json.loads(assets.get(field,"null"))
+    except (TypeError,ValueError) as error:raise RuntimeError(f"Packaged {label} metadata is invalid") from error
+    # These are raw packaged JSON files, so decoded canonical content (including
+    # bool versus number types) agrees even if Git normalizes text newlines.
+    if json.dumps(actual,sort_keys=True,separators=(",",":"))!=json.dumps(expected,sort_keys=True,separators=(",",":")):
+        raise RuntimeError(f"Packaged {label} metadata differs from current source")
+    return expected
+
+def _visible_rgba_bytes(image):
+    data=bytearray(image.convert("RGBA").tobytes())
+    for offset in range(0,len(data),4):
+        if data[offset+3]==0:data[offset:offset+3]=b"\0\0\0"
+    return bytes(data)
+
+def _native_base_layer(native,layer_index):
+    # The venue is one normal RGBA frame. Extract its named actual cel rather
+    # than incorrectly comparing each layer export to the flattened venue.
+    data=native.read_bytes();width,height=struct.unpack_from("<HH",data,8)
+    if struct.unpack_from("<H",data,6)[0]!=1:raise RuntimeError("Venue native master must retain its single authored frame")
+    _,_,old,_,new=struct.unpack_from("<IHHH2xI",data,128);at=144
+    for _ in range(new or old):
+        length,kind=struct.unpack_from("<IH",data,at);payload=data[at+6:at+length]
+        if kind==0x2005:
+            layer,x,y,opacity,cel_type,z=struct.unpack_from("<HhhBHh",payload)
+            if layer==layer_index:
+                if opacity!=255 or cel_type not in (0,2) or z!=0:raise RuntimeError("Venue native cel topology changed")
+                cw,ch=struct.unpack_from("<HH",payload,16);raw=zlib.decompress(payload[20:]) if cel_type==2 else payload[20:]
+                image=Image.new("RGBA",(width,height));image.alpha_composite(Image.frombytes("RGBA",(cw,ch),raw),(x,y));return image
+        at+=length
+    raise RuntimeError("Venue native layer cel is missing")
+
+@lru_cache(maxsize=16)
+def _native_aseprite_pixels(native_path: str,native_hash: str,columns: int):
+    # Native Aseprite is the compositing authority. Fractional-alpha spark
+    # layers differ by one RGB rounding byte from Pillow; no tolerance is used
+    # for the actual imported atlas or its authoritative native exported pixels.
+    native=Path(native_path)
+    if hashlib.sha256(native.read_bytes()).hexdigest()!=native_hash:raise RuntimeError("Native source changed during Aseprite parity inspection")
+    qa=workspace.create_task_workspace("003A.1")
+    with tempfile.TemporaryDirectory(prefix="package-native-parity-",dir=qa/"temp") as folder:
+        out=Path(folder)/"native.png"
+        process=subprocess.run([workspace.find_tool("aseprite"),"--batch",str(native),"--sheet-columns",str(columns),"--sheet",str(out)],capture_output=True,text=True,creationflags=subprocess.CREATE_NO_WINDOW if os.name=="nt" else 0)
+        if process.returncode!=0:raise RuntimeError("Native Aseprite parity export failed: "+process.stderr)
+        return _visible_pixels(out)
+
+def verify_combat_presentation_assets(assets: dict,source_root: Path=ROOT) -> dict:
+    """Actual imported new/changed venue, power/card and contact-spark RGBA.
+
+    Exact native topology and native visible RGBA bind every sheet to its saved
+    editable Aseprite master. Native source inclusion in the package stays an
+    explicit optional fact; the verifier always checks the local source master.
+    """
+    art=_compiled_metadata(assets,"combat_art_json",source_root/"assets/powers/combat_003a1/manifest.json","combat art")
+    identity=_compiled_metadata(assets,"combat_identity_json",source_root/"assets/powers/identity_manifest.json","combat identity")
+    sparks=_compiled_metadata(assets,"combat_spark_json",source_root/"assets/powers/impact_003a1/manifest.json","contact sparks")
+    _compiled_metadata(assets,"combat_arena_geometry_json",source_root/"assets/arena/manifest.json","fixed arena geometry")
+    if art.get("filter")!="nearest" or art.get("presentation_only") is not True or sparks.get("native_runtime_rgba_exact") is not True:
+        raise RuntimeError("Combat art source must retain native nearest pixel/parity metadata")
+    wanted={}
+    for name in ("backdrop","structure","surface","markings","rear_rim","front_rim"):
+        item=deepcopy_metadata(art["base_arena"]);item["texture"]=item["textures"][name]
+        wanted["arena_base/"+name]=(item,"res://assets/powers/combat_003a1/manifest.json",name)
+    for name in ("venue_lights","power_motion","redline_ring"):
+        wanted["combat/"+name]=(art["families"][name],"res://assets/powers/combat_003a1/manifest.json",None)
+    for family in ("redline","afterimage","orbit_drive","predator_line"):
+        wanted["card/"+family]=(identity["families"][family]["cards"],"res://assets/powers/identity_manifest.json",None)
+    wanted["combat/contact_sparks"]=(sparks,"res://assets/powers/impact_003a1/manifest.json",None)
+    rows=assets.get("combat_art_textures")
+    if not isinstance(rows,list) or len(rows)!=14 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=set(wanted):
+        raise RuntimeError("Actual package did not inspect all fourteen combat art sheets exactly once")
+    sys.path.insert(0,str(source_root/"tools"));from build_power_art import read_ase
+    native_presence={};masters={}
+    for row in rows:
+        kind=row["kind"];meta,metadata_path,layer=wanted[kind]
+        if row.get("path")!=meta["texture"] or row.get("metadata_path")!=metadata_path or (layer is not None and row.get("native_layer")!=layer):
+            raise RuntimeError("Actual combat resource/layer path differs: "+kind)
+        png=source_root/meta["texture"].removeprefix("res://");size,digest=_visible_pixels(png)
+        if row.get("valid") is not True or row.get("visible_pixels") is not True or row.get("transparent_rgb_normalized") is not True or row.get("size")!=size or row.get("visible_rgba_sha256")!=digest:
+            raise RuntimeError("Actual imported combat alpha/visible RGBA differs: "+kind)
+        for key in ("cell","pivot","columns","frame_count","tags","durations_ms","layers","source"):
+            if row.get(key)!=meta.get(key):raise RuntimeError("Actual combat native topology differs: "+kind+"/"+key)
+        for key in ("columns","frame_count"):
+            if isinstance(row[key],bool) or not isinstance(row[key],(int,float)) or not math.isfinite(row[key]):raise RuntimeError("Actual combat native topology differs: "+kind+"/"+key)
+        native=source_root/meta["source"]
+        if not native.is_file() or native.suffix!=".aseprite":raise RuntimeError("Combat native editable master is missing: "+kind)
+        native_hash=hashlib.sha256(native.read_bytes()).hexdigest()
+        if "source_sha256" in meta and meta["source_sha256"]!=native_hash:raise RuntimeError("Combat source/master fingerprint differs: "+kind)
+        frames,native_meta=read_ase(native)
+        if len(frames)!=meta["frame_count"]:raise RuntimeError("Combat native frame count differs: "+kind)
+        for key in ("cell","pivot","tags","durations_ms","layers"):
+            if native_meta.get(key)!=meta.get(key):raise RuntimeError("Combat saved native topology differs: "+kind+"/"+key)
+        if layer is not None:derived=_native_base_layer(native,native_meta["layers"].index(layer))
+        else:
+            width,height=meta["cell"];columns=meta["columns"];derived=Image.new("RGBA",(width*columns,height*math.ceil(len(frames)/columns)))
+            for index,frame in enumerate(frames):derived.alpha_composite(frame,(index%columns*width,index//columns*height))
+        derived_size,derived_digest=(list(derived.size),hashlib.sha256(_visible_rgba_bytes(derived)).hexdigest())
+        if kind=="combat/contact_sparks":derived_size,derived_digest=_native_aseprite_pixels(str(native.resolve()),native_hash,int(meta["columns"]))
+        if derived_size!=size or derived_digest!=digest:
+            raise RuntimeError("Combat runtime export differs from saved native RGBA: "+kind)
+        available=row.get("native_source_available")
+        if type(available) is not bool or row.get("native_source_sha256")!=(native_hash if available else ""):
+            raise RuntimeError("Combat optional packaged native-source evidence is inconsistent: "+kind)
+        native_presence[kind]=available;masters[meta["source"]]=native_hash
+    return {"combat_art_sheets_verified":14,"combat_native_master_count":len(masters),"combat_art_metadata_exact":True,"combat_art_visible_rgba_exact":True,"combat_native_runtime_parity_exact":True,"combat_packaged_native_master_presence":native_presence,"combat_native_master_sha256":masters}
+
+def deepcopy_metadata(value):return json.loads(json.dumps(value))
+
+def _pcm_receipt(row,path,source_root,looping,stereo,label):
+    if not isinstance(row,dict):raise RuntimeError(label+" PCM receipt is missing")
+    with wave.open(str(source_root/path.removeprefix("res://")),"rb") as sample:
+        channels=sample.getnchannels();rate=sample.getframerate();frames=sample.getnframes();width=sample.getsampwidth();pcm=sample.readframes(frames)
+    if channels!=(2 if stereo else 1) or rate!=32000 or width!=2:raise RuntimeError(label+" source WAV format differs")
+    duration=row.get("duration_seconds")
+    if row.get("path")!=path or row.get("valid") is not True or row.get("format")!=1 or type(row.get("stereo")) is not bool or row.get("stereo")!=stereo or row.get("channels")!=channels or row.get("mix_rate")!=rate or row.get("pcm_frames")!=frames or row.get("pcm_sha256")!=hashlib.sha256(pcm).hexdigest() or row.get("loop_mode")!=(1 if looping else 0):
+        raise RuntimeError(label+" actual imported PCM/format/loop differs")
+    if type(duration) not in (int,float) or not math.isfinite(duration) or abs(duration-frames/rate)>1e-6:
+        raise RuntimeError(label+" actual imported PCM duration differs")
+    if looping and (row.get("loop_begin")!=0 or row.get("loop_end")!=frames):raise RuntimeError(label+" loop bounds differ")
+    for key in ("format","channels","mix_rate","pcm_frames","loop_mode"):
+        if isinstance(row.get(key),bool):raise RuntimeError(label+" actual imported PCM scalar type differs")
+    return {"frames":frames,"duration_seconds":frames/rate,"pcm_sha256":hashlib.sha256(pcm).hexdigest(),"channels":channels,"sample_rate":rate}
+
+def verify_combat_audio_assets(assets: dict,source_root: Path=ROOT) -> dict:
+    manifest=_compiled_metadata(assets,"combat_audio_json",source_root/"assets/audio/impact_003a1/manifest.json","metal audio")
+    kinds={"metal_light","metal_clang","metal_edge","metal_scrape","metal_massive","metal_wall","metal_takedown"}
+    rows=assets.get("combat_audio")
+    if set(manifest.get("sounds",{}))!=kinds or not isinstance(rows,list) or len(rows)!=7 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=kinds:
+        raise RuntimeError("Actual package did not inspect all seven metal PCM cues exactly once")
+    verified={}
+    for row in rows:
+        kind=row["kind"];path="res://assets/audio/impact_003a1/"+kind+".wav";meta=manifest["sounds"][kind]
+        verified[kind]=_pcm_receipt(row,path,source_root,False,False,"Metal "+kind)
+        if meta.get("file")!=kind+".wav" or meta.get("frames")!=verified[kind]["frames"] or meta.get("pcm_sha256")!=verified[kind]["pcm_sha256"] or meta.get("sha256")!=hashlib.sha256((source_root/path.removeprefix("res://")).read_bytes()).hexdigest():
+            raise RuntimeError("Metal authored source metadata/PCM differs: "+kind)
+    return {"metal_audio_cues_verified":7,"metal_audio_pcm_exact":True,"metal_audio_metadata_exact":True,"metal_audio_receipts":verified}
+
+def _metadata_equal(actual,expected):
+    if isinstance(expected,dict):return isinstance(actual,dict) and set(actual)==set(expected) and all(_metadata_equal(actual[k],v) for k,v in expected.items())
+    if isinstance(expected,list):return isinstance(actual,list) and len(actual)==len(expected) and all(_metadata_equal(a,b) for a,b in zip(actual,expected))
+    if type(expected) in (int,float):return type(actual) in (int,float) and math.isfinite(actual) and math.isclose(actual,expected,rel_tol=1e-13,abs_tol=1e-14)
+    return type(actual) is type(expected) and actual==expected
+
+def verify_music_variation_assets(assets: dict,source_root: Path=ROOT) -> dict:
+    manifest=_compiled_metadata(assets,"music_variation_json",source_root/"assets/audio/music/run_arrangement_003a1_manifest.json","Run music variation")
+    score_path=source_root/"assets/audio/music/run_arrangement_003a1.json"
+    _compiled_metadata(assets,"music_variation_score_json",score_path,"Run music score")
+    if manifest.get("score_sha256")!=hashlib.sha256(score_path.read_bytes()).hexdigest():raise RuntimeError("Run music authored score fingerprint differs")
+    kinds={"run_opening","run_motion"};rows=assets.get("music_variation_stems")
+    if set(manifest.get("stems",{}))!=kinds or not isinstance(rows,list) or len(rows)!=2 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=kinds:
+        raise RuntimeError("Actual package did not inspect both new Run music stems exactly once")
+    verified={}
+    for row in rows:
+        kind=row["kind"];path="res://assets/audio/music/"+kind+".wav";meta=manifest["stems"][kind]
+        verified[kind]=_pcm_receipt(row,path,source_root,False,True,"Run music "+kind)
+        if meta.get("frames")!=verified[kind]["frames"] or meta.get("channels")!=2 or meta.get("sample_rate")!=32000 or meta.get("sample_width_bytes")!=2 or meta.get("sha256")!=hashlib.sha256((source_root/path.removeprefix("res://")).read_bytes()).hexdigest():
+            raise RuntimeError("Run music authored stem metadata differs: "+kind)
+    original_path=source_root/"assets/audio/music/manifest.json";original=json.loads(original_path.read_text())
+    if manifest.get("original_music_manifest_sha256")!=hashlib.sha256(original_path.read_bytes()).hexdigest():raise RuntimeError("Accepted original music manifest fingerprint differs")
+    for kind in ("title","workshop","run_base","run_pressure","run_boss"):
+        if manifest.get("preserved_music_sha256",{}).get(kind)!=hashlib.sha256((source_root/f"assets/audio/music/{kind}.wav").read_bytes()).hexdigest():raise RuntimeError("Accepted original music source bytes changed: "+kind)
+    combined=deepcopy_metadata(original);combined["stems"].update(manifest["stems"]);combined["run_variation"]=manifest
+    if not _metadata_equal(assets.get("music_asset_metadata"),combined):raise RuntimeError("Actual Music.asset_metadata does not expose all seven synchronized original/variation stems")
+    return {"music_variation_stems_verified":2,"music_variation_pcm_exact":True,"music_variation_metadata_exact":True,"music_seven_stem_asset_metadata_verified":True,"original_five_music_bytes_preserved":True,"music_variation_import_loop_mode":0,"music_variation_runtime_loop_owner":"Music._ready sets exact shared PCM bounds on duplicated resources","music_variation_receipts":verified}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", type=Path, required=True, help="Explicit candidate or latest Windows executable")
@@ -501,6 +673,9 @@ def main() -> None:
         report["assets"].update(verify_shop_assets(assets))
         report["assets"].update(verify_ui_polish_assets(assets))
         report["assets"].update(verify_final_acceptance_assets(assets))
+        report["assets"].update(verify_combat_presentation_assets(assets))
+        report["assets"].update(verify_combat_audio_assets(assets))
+        report["assets"].update(verify_music_variation_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

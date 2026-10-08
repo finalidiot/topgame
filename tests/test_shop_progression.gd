@@ -218,8 +218,8 @@ func _reset_unpaid_session() -> void:
 	check(game.screen == "garage" and game.collection.owned_count() == 3 and game.collection.credits == 0 and game.collection.salvage == 0, "After resetting an unpaid session the new starter reaches Workshop without an obsolete nonce")
 
 func _run() -> void:
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	player_before = _fingerprint()
 	await _keyboard_packet()

@@ -11,6 +11,7 @@ const TUNING = {
 	"small_capacity":0.008, "small_rate":0.002, "small_elimination":0.001,
 	"redline_activation_1":0.025, "redline_activation_2":0.045, "redline_drain":0.015, "redline_heat":0.025,
 	"committed_bonus":0.022,
+	"received_contact_scale":0.65, "received_contact_speed":25.0, "committed_contact_speed":65.0,
 	"elimination":0.030, "elite":0.055, "boss":0.090, "credit_seconds":12.0
 }
 var _host: WeakRef
@@ -95,6 +96,12 @@ func credit(target: Dictionary) -> void:
 	# It must not renew an endless RPM income while the controller is untouched.
 	if valid(target) and host().continuous.has_recent_control() and target.team_id == "hostile" and str(target.outcome).is_empty(): credits[int(target.entity_id)] = host().elapsed
 
+static func generic_contact_scale(approach_speed: float) -> float:
+	# Active defensive receptions still earn reserve. Repeated incoming bounces
+	# no longer receive the full committed-strike return before any power gains.
+	var commitment: float = clampf((approach_speed-TUNING.received_contact_speed)/(TUNING.committed_contact_speed-TUNING.received_contact_speed),0.0,1.0)
+	return lerpf(TUNING.received_contact_scale,1.0,smoothstep(0.0,1.0,commitment))
+
 func contact(target: Dictionary, severity: float, damage: float, approach_speed: float, moving_speed: float = -1.0) -> void:
 	var p: Dictionary = host().player_entity()
 	if not valid(target) or target.team_id != "hostile" or not str(target.outcome).is_empty() or target.combatant_type == "small_top": return
@@ -109,7 +116,8 @@ func contact(target: Dictionary, severity: float, damage: float, approach_speed:
 	if now < ready_at or now < float(contacts.get(id,-INF)): return
 	contacts[id] = now+TUNING.target_cooldown
 	ready_at = now+TUNING.global_cooldown
-	gain(p,minf(TUNING.contact_max,damage*TUNING.reclaim_damage+severity*TUNING.reclaim_severity+(TUNING.committed_bonus if approach_speed >= 65.0 else 0.0)),"combat_reclamation")
+	var base_return: float = minf(TUNING.contact_max,damage*TUNING.reclaim_damage+severity*TUNING.reclaim_severity+(TUNING.committed_bonus if approach_speed >= TUNING.committed_contact_speed else 0.0))
+	gain(p,base_return*generic_contact_scale(approach_speed),"combat_reclamation")
 
 func outcomes() -> void:
 	for f: Dictionary in host().fighters:

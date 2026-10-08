@@ -1,11 +1,13 @@
 extends Node
 ## Original synchronized presentation music. Rhythmic pressure and broad hooks
 ## carry escalation; the authored score reserves high leads for brief breaks.
-## First Machine/Results and opening-Run PCM retain their accepted arrangements.
+## The five accepted source loops retain exact PCM. Two additional authored
+## arrangements make early combat breathe, with a separate mid-Run answer.
 ## Inputs are copied scalar values
 ## from existing Run observations; this node has no combat host/RNG/save access.
 const ASSET_ROOT: String = "res://assets/audio/music/"
-const STEM_NAMES: Array[String] = ["title", "workshop", "run_base", "run_pressure", "run_boss"]
+const STEM_NAMES: Array[String] = ["title", "workshop", "run_base", "run_pressure", "run_boss", "run_opening", "run_motion"]
+const VARIATION_MANIFEST: String = ASSET_ROOT + "run_arrangement_003a1_manifest.json"
 const BUS_NAME: StringName = &"Music"
 const BUS_TRIM_DB: float = -8.0
 const SILENCE_DB: float = -80.0
@@ -29,8 +31,8 @@ var _context: String = "silent"
 var _paused: bool = false
 var _music_volume: float = 0.55
 var _music_muted: bool = false
-var _gains: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
-var _targets: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
+var _gains: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+var _targets: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 var _run_targets: Dictionary = {"pressure": 0.0, "boss": 0.0, "reason": "opening"}
 var _stable_run: Dictionary = {"pressure": 0.0, "boss": 0.0, "reason": "opening"}
 var _candidate_key: String = ""
@@ -74,8 +76,7 @@ func _ensure_bus() -> void:
 func _load_stream() -> void:
 	_stream = AudioStreamSynchronized.new()
 	_stream.stream_count = STEM_NAMES.size()
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ASSET_ROOT + "manifest.json"))
-	if parsed is Dictionary: _manifest = parsed
+	_manifest = asset_metadata()
 	var expected: int = int(_manifest.get("grid", {}).get("frames", 0))
 	for index: int in range(STEM_NAMES.size()):
 		var path: String = ASSET_ROOT + STEM_NAMES[index] + ".wav"
@@ -93,6 +94,15 @@ func _load_stream() -> void:
 			_asset_errors.append("Invalid PCM grid: " + path)
 		_stream.set_sync_stream(index, wave)
 		_stream.set_sync_stream_volume(index, SILENCE_DB)
+
+static func asset_metadata() -> Dictionary:
+	var base: Variant = JSON.parse_string(FileAccess.get_file_as_string(ASSET_ROOT + "manifest.json"))
+	if not base is Dictionary: return {}
+	var variation: Variant = JSON.parse_string(FileAccess.get_file_as_string(VARIATION_MANIFEST))
+	if variation is Dictionary:
+		base.stems.merge(variation.get("stems", {}))
+		base["run_variation"] = variation
+	return base
 
 ## Main must explicitly allow native playback. Headless/probe/smoke boot keeps
 ## this false unless an isolated audio review explicitly opts in.
@@ -174,7 +184,9 @@ func _observe_progression(state: Dictionary, player_stats: Dictionary) -> void:
 	_progression = {"stage":stage, "name":str(row.name), "pressure_floor":float(row.pressure), "boss_floor":float(row.boss),
 		"elapsed":maxf(float(_progression.elapsed), float(observed.elapsed)), "tier":maxi(int(_progression.tier), int(observed.tier)),
 		"threats_cleared":maxi(int(_progression.threats_cleared), int(observed.threats_cleared)), "run_seed":_run_seed, "continuous":true}
-	if stage > previous_stage: _record("progression_" + str(row.name))
+	if stage > previous_stage:
+		_record("progression_" + str(row.name))
+		_rebuild_targets()
 
 static func adaptive_targets(state: Dictionary, player_stats: Dictionary = {}, progression: Dictionary = {}) -> Dictionary:
 	var census: Dictionary = state.get("census", {})
@@ -264,13 +276,17 @@ func _settle_adaptive(dt: float) -> void:
 	_rebuild_targets()
 
 func _rebuild_targets() -> void:
-	_targets = [0.0, 0.0, 0.0, 0.0, 0.0]
+	_targets = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 	match _context:
 		"title": _targets[0] = 1.0
 		"workshop": _targets[1] = 1.0
 		"result": _targets[1] = 0.65
 		"run":
-			_targets[2] = 1.0
+			var arrangements: Array[Array] = [[0.0,1.0,0.0],[0.2,0.75,0.25],[0.6,0.25,0.55],[0.9,0.0,0.25],[1.0,0.0,0.0]]
+			var arrangement: Array = arrangements[clampi(int(_progression.stage),0,4)]
+			_targets[2] = float(arrangement[0])
+			_targets[5] = float(arrangement[1])
+			_targets[6] = float(arrangement[2])
 			_targets[3] = float(_stable_run.get("pressure", 0.0))
 			_targets[4] = float(_stable_run.get("boss", 0.0))
 	if _paused and _context == "run":
@@ -296,7 +312,7 @@ func notify_cue(kind: String) -> void:
 		_duck_strength = -12.0
 		_duck_left = maxf(_duck_left, _duck_duration)
 		return
-	if kind in ["heavy", "heavy_impact", "breakneck_impact", "comet_release", "boss_warning", "boss_entry", "boss_payoff", "level_up", "mutation_select"]:
+	if kind in ["metal_clang", "metal_massive", "metal_takedown", "heavy", "heavy_impact", "breakneck_impact", "comet_release", "boss_warning", "boss_entry", "boss_payoff", "level_up", "mutation_select"]:
 		if _duck_left <= 0.0:
 			_duck_duration = DUCK_SECONDS
 			_duck_strength = DUCK_DB

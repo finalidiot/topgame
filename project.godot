@@ -11,10 +11,12 @@ config/description="Modular spinning-top battles in the Foundry Eight."
 config/quit_on_go_back=false
 
 [display]
-window/size/viewport_width=640
-window/size/viewport_height=360
-window/size/window_width_override=1280
-window/size/window_height_override=720
+window/size/viewport_width=800
+window/size/viewport_height=480
+window/size/window_width_override=960
+window/size/window_height_override=600
+window/size/min_width=800
+window/size/min_height=480
 window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
@@ -26,6 +28,11 @@ pointing/emulate_mouse_from_touch=true
 pointing/emulate_touch_from_mouse=false
 
 [input]
+
+draft_reroll={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":82), Object(InputEventJoypadButton,"device":-1,"button_index":10)]
+}
 
 ; Any mapped device can play. Steering uses a circular 0.22 deadzone; menus
 ; use 0.5 so small stick movements do not accidentally change focus.

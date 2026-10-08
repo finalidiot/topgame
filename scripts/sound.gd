@@ -1,6 +1,13 @@
 extends Node
 
 const SOUNDS: Dictionary = {
+	"metal_light": preload("res://assets/audio/impact_003a1/metal_light.wav"),
+	"metal_clang": preload("res://assets/audio/impact_003a1/metal_clang.wav"),
+	"metal_edge": preload("res://assets/audio/impact_003a1/metal_edge.wav"),
+	"metal_scrape": preload("res://assets/audio/impact_003a1/metal_scrape.wav"),
+	"metal_massive": preload("res://assets/audio/impact_003a1/metal_massive.wav"),
+	"metal_wall": preload("res://assets/audio/impact_003a1/metal_wall.wav"),
+	"metal_takedown": preload("res://assets/audio/impact_003a1/metal_takedown.wav"),
 	"pickup_collect": preload("res://assets/audio/pickup_collect.wav"),
 	"packet_land": preload("res://assets/audio/shop_003a/packet_land.wav"),
 	"packet_crinkle": preload("res://assets/audio/shop_003a/packet_crinkle.wav"),
@@ -75,7 +82,7 @@ const PRIORITY: Dictionary = {"pickup_collect":5,"boss_port":6,"boss_payoff":6,"
 	"high_gear_surge":3,"ghost_preview":1,"momentum_release":3,"crash_guard":3,"crosscut":3,
 	"packet_land":5,"packet_crinkle":5,"packet_tear":6,"packet_spill":6,
 	"packet_clink":5,"packet_new":6,"packet_rare":6,"packet_recycle":5}
-const COOLDOWN: Dictionary = {"pickup_collect":0.0,"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
+const COOLDOWN: Dictionary = {"metal_light":0.045,"metal_clang":0.075,"metal_edge":0.055,"metal_scrape":0.10,"metal_massive":0.28,"metal_takedown":0.20,"metal_wall":0.09,"pickup_collect":0.0,"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
 	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
 	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
 	"breakneck_charge": 0.25, "breakneck_impact": 0.20,
@@ -130,12 +137,13 @@ func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
 	var aliases: Dictionary = {"boss_warning":"boss_port","boss_entry":"boss_port","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
-	var sample_key: String = "hit" if key == "small_hit" else key
+	# Legacy callers keep their intent; physical families replace their samples.
+	var sample_key: String = {"hit":"metal_light","small_hit":"metal_light","heavy":"metal_clang","wall":"metal_wall","scrape":"metal_scrape"}.get(key,key)
 	if not SOUNDS.has(sample_key): return
 	if audio_time - float(last_played.get(key, -100.0)) < float(COOLDOWN.get(key, 0.0)):
 		suppressed_count += 1
 		return
-	var priority: int = int(PRIORITY.get(key, 2))
+	var priority: int = int({"metal_light":1,"metal_clang":4,"metal_edge":2,"metal_scrape":1,"metal_massive":6,"metal_takedown":6,"metal_wall":2}.get(key,PRIORITY.get(key, 2)))
 	var slot: int = -1
 	# Use a free channel first; otherwise replace the oldest least-important cue.
 	# Twelve small-top contacts can never steal a recovery or acquisition cue.
@@ -160,7 +168,7 @@ func play_sound(kind: String) -> void:
 	var player: AudioStreamPlayer = channels[slot]
 	player.stop()
 	player.stream = SOUNDS[sample_key]
-	player.pitch_scale = rng.randf_range(0.93,1.08) if key in ["hit","heavy","wall","scrape"] else 1.0
+	player.pitch_scale = rng.randf_range(0.97,1.04) if sample_key.begins_with("metal_") else 1.0
 	player.volume_db = -3.0
 	if key == "small_hit":
 		player.volume_db = -15.0
@@ -203,6 +211,8 @@ func play_sound(kind: String) -> void:
 	if kind == "boss_warning":
 		player.pitch_scale = 0.68
 		player.volume_db = -3.0
+	if sample_key.begins_with("metal_"):
+		player.volume_db = -13.0 if key == "small_hit" else float({"metal_light":-9.0,"metal_clang":-6.0,"metal_edge":-8.0,"metal_scrape":-11.0,"metal_massive":-5.0,"metal_wall":-7.0,"metal_takedown":-5.5}.get(sample_key,-8.0))
 	player.play()
 
 func audio_snapshot() -> Dictionary:

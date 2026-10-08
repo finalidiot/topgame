@@ -147,6 +147,7 @@ static func controller_profile_for(mapped_name: String, info: Dictionary = {}, c
 	return "gamepad"
 
 static func prompt(profile: String, action: String) -> String:
+	if action == "reroll": return {"touch":"TAP", "keyboard":"R", "xbox":"RB", "nintendo":"R", "playstation":"R1"}.get(profile, "RB")
 	if profile == "touch": return {"confirm":"TAP", "back":"ANDROID", "choose":"TAP / SWIPE", "pause":"PAUSE", "steer":"HOLD / DRAG", "burst":"BURST", "brake":"BRAKE"}.get(action,action.to_upper())
 	if profile == "keyboard":
 		return {"confirm":"ENTER / CLICK", "back":"ESC", "choose":"ARROWS / TAB", "pause":"ESC", "steer":"WASD / ARROWS", "burst":"SPACE", "brake":"SHIFT"}.get(action, action.to_upper())
@@ -155,6 +156,9 @@ static func prompt(profile: String, action: String) -> String:
 	return {"confirm":east if profile == "nintendo" else south, "back":south if profile == "nintendo" else east, "choose":"D-PAD / STICK", "pause":"MENU", "steer":"LEFT STICK", "burst":south, "brake":"SHOULDER / TRIGGER"}.get(action, action.to_upper())
 
 static func glyph(profile: String, action: String) -> AtlasTexture:
+	# Shoulder labels are drawn in the dedicated button cap; the old face/D-pad
+	# atlas has no shoulder cells and must never imply the wrong physical input.
+	if action == "reroll": return null
 	if profile == "touch": return null
 	if not ResourceLoader.exists(GLYPH_PATH): return null
 	var tag: String = "key_enter" if action == "confirm" else "key_escape"

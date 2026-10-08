@@ -18,9 +18,10 @@ const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 const TopStatusBars = preload("res://scripts/top_status_bars.gd")
+const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false}
 var top_status_bars: Node2D
 var touch_controls: Node2D
 var _application_suspended: bool = false
@@ -34,6 +35,8 @@ var round_index: int = 0
 var screen: String = "title"
 var last_result: Dictionary = {}
 var battle: Node2D
+var combat_viewport: SubViewport
+var combat_frame: TextureRect
 var menus: Control
 var sounds: Node
 var music: Node
@@ -81,10 +84,12 @@ var _pending_run_payout: Dictionary = {}
 var _packet_purchase_token: int = 0
 var _packet_product: String = ""
 var _packet_request_id: String = ""
+var _packet_quantity: int = 1
 ## In-process deterministic review injection. Refused outside fresh 003A QA paths.
 var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
+	if is_instance_valid(combat_frame) and is_instance_valid(battle): combat_frame.visible = battle.visible
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
 		if _android_qa_clock <= 0.0:
@@ -158,8 +163,24 @@ func _ready() -> void:
 		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
+	combat_viewport = SubViewport.new()
+	combat_viewport.name = "CanonicalCombatViewport"
+	combat_viewport.size = Vector2i(640,360)
+	combat_viewport.transparent_bg = false
+	combat_viewport.gui_disable_input = true
+	combat_viewport.handle_input_locally = false
+	combat_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(combat_viewport)
+	combat_frame = TextureRect.new()
+	combat_frame.name = "NativeArenaFrame"
+	combat_frame.position = CombatLayout.ARENA_ORIGIN
+	combat_frame.size = Vector2(640,360)
+	combat_frame.texture = combat_viewport.get_texture()
+	combat_frame.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	combat_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(combat_frame)
 	battle = BattleScript.new()
-	add_child(battle)
+	combat_viewport.add_child(battle)
 	battle.visible = false
 	battle.set_physics_process(false)
 	battle.round_finished.connect(_round_finished)
@@ -323,11 +344,11 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true}
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false}
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing", "top_status_bars"]:
+	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing", "top_status_bars", "impact_numbers"]:
 		if values.get(key) is bool: result[key] = values[key]
 	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
@@ -346,6 +367,7 @@ func _apply_settings() -> void:
 	battle.screen_shake_enabled = bool(settings.screen_shake)
 	battle.reduced_flashing = bool(settings.reduced_flashing)
 	top_status_bars.set_enabled(bool(settings.top_status_bars))
+	battle.impact_numbers_enabled = bool(settings.impact_numbers)
 	battle.presentation_quality = 0.6 if OS.has_feature("mobile") else 1.0
 	reroll_pickups.reduced_flashing = bool(settings.reduced_flashing)
 	menus.reduced_flashing = bool(settings.reduced_flashing)
@@ -424,20 +446,21 @@ func _request_packet_purchase(kind: String) -> void:
 	if collection.read_only or not collection.pending_packet().is_empty(): return
 	var wallet: Dictionary = collection.wallet()
 	var unit: String = str(PacketEconomy.config().packets[kind].currency)
-	if int(wallet[unit]) < PacketEconomy.packet_cost(kind): return
+	_packet_quantity = menus.selected_shop_quantity()
+	if int(wallet[unit]) < PacketEconomy.packet_cost(kind) * _packet_quantity: return
 	_packet_purchase_token += 1
 	_packet_product = kind
 	_packet_request_id = collection.expected_packet_request_id()
 	screen = "packet_purchase"
-	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token)
+	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token, _packet_quantity)
 
 func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
 	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
 	var source: RandomNumberGenerator = null
-	if packet_rng_override != null and (qa_task_id == "003A" or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
+	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
 		source = packet_rng_override
-	var purchase: Dictionary = collection.purchase_packet(_packet_product, source, _packet_request_id)
+	var purchase: Dictionary = collection.purchase_packet_batch(_packet_product, _packet_quantity, source, _packet_request_id)
 	if not bool(purchase.ok):
 		_shop("Purchase stopped: %s. Your balance was preserved." % str(purchase.status).replace("_", " "))
 		return
@@ -476,6 +499,14 @@ func _leave_packet(route: String, kind: String = "") -> void:
 			_request_packet_purchase(kind)
 		"shop": _shop()
 		_: _title()
+
+func _packet_progress(cursor: Variant) -> void:
+	if screen != "packet_open" or not cursor is int: return
+	var pending: Dictionary = collection.pending_packet()
+	if pending.is_empty(): return
+	var result: Dictionary = collection.advance_packet_presentation(str(pending.id), int(cursor))
+	if not bool(result.ok):
+		_collection_error("Your complete batch is saved. Presentation stopped because its recovery checkpoint could not be saved. Reload to continue.", "packet")
 
 func _practice_garage() -> void:
 	if run_context.is_active(): return
@@ -745,7 +776,7 @@ func _show_mutation(announce: bool = true) -> void:
 	if run_context.pending_mutation_power.is_empty(): return
 	screen = "mutation"
 	battle.set_paused(true)
-	menus.show_mutation(run_context.pending_mutation_power, run_context.pending_mutation_offer, run_context.pending_draft_id, run_context.run_seed, _mutation_focus_id)
+	menus.show_mutation(run_context.pending_mutation_power, run_context.pending_mutation_offer, run_context.pending_draft_id, run_context.run_seed, _mutation_focus_id, run_context.reroll_snapshot())
 	if announce and not smoke_mode: sounds.play_sound("mutation_available")
 
 func _show_acquisition(power_id: String) -> void:
@@ -915,7 +946,7 @@ func _action(name: String, value: Variant = null) -> void:
 	# All build/menu routes respect the lock, including stale UI signals.
 	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "open_shop", "inspect_shop_product", "request_packet_purchase", "confirm_packet_purchase", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
 		if not (name == "settings" and screen == "pause"): return
-	_battle_sound("ui")
+	if name != "packet_progress": _battle_sound("ui")
 	match name:
 		"enter_frontend":
 			if screen == "title_gate": _title()
@@ -943,6 +974,8 @@ func _action(name: String, value: Variant = null) -> void:
 		"inspect_shop_product":
 			if screen == "shop": menus.select_shop_product(str(value))
 		"request_packet_purchase": _request_packet_purchase(str(value))
+		"packet_quantity": menus.select_shop_quantity(value)
+		"packet_progress": _packet_progress(value)
 		"confirm_packet_purchase": _confirm_packet_purchase(value)
 		"cancel_packet_purchase":
 			if screen == "packet_purchase": _shop()
@@ -1027,10 +1060,18 @@ func _action(name: String, value: Variant = null) -> void:
 		"choose_mutation":
 			if mode == "run" and screen == "mutation" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if int(value.get("offer_revision",run_context.reroll_snapshot().revision)) != int(run_context.reroll_snapshot().revision): return
 				var power_id: String = run_context.pending_mutation_power
 				if run_context.choose_mutation(str(value.get("encounter_id", "")), str(value.get("branch_id", ""))):
 					if _draft_resume_origin == "battle": battle.acquire_run_power(power_id, 3, str(run_context.power_mutations.get(power_id, "")))
 					_show_acquisition(power_id)
+		"reroll_mutation":
+			if mode == "run" and screen == "mutation" and value is Dictionary:
+				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if run_context.reroll_pending_mutation(str(value.get("encounter_id", "")), int(value.get("offer_revision", -1))):
+					_mutation_focus_id = ""
+					_reward_focus_id = ""
+					_show_reward()
 		"quick_duel": _start_battle("duel")
 		"start_battle": _start_battle(str(value) if value != null else "duel")
 		"customize": _garage()

@@ -52,7 +52,7 @@ func stage(name: String, hold: int = 0) -> void:
 	if not images_path.is_empty():
 		await RenderingServer.frame_post_draw
 		var pixels: Image = root.get_texture().get_image()
-		check(pixels.get_size() == Vector2i(640,360), "Review pixels are native640x360")
+		check(pixels.get_size() == Vector2i(800,480), "Review pixels show the native800x480 product canvas")
 		var path: String = images_path.path_join(capture_group + "_" + input_kind + "_" + name + ".png")
 		check(not FileAccess.file_exists(path) and pixels.save_png(path) == OK,"Preserved fresh input screenshot")
 	if hold > 0: await wait_frames(hold)
@@ -86,7 +86,8 @@ func pointer(target: Control, touch: bool) -> void:
 	if not is_instance_valid(target): return
 	var point: Vector2 = target.get_global_rect().get_center()
 	var target_intent: String = str(target.get_meta("intent", ""))
-	check(Rect2(0,0,640,360).has_point(point),"Pointer target is on the native surface")
+	check(Rect2(80,60,640,360).encloses(target.get_global_rect()),"Pointer target stays inside the centred native640x360 menu")
+	check(Rect2(0,0,800,480).has_point(point),"Pointer target is on the product surface")
 	if not touch:
 		var motion := InputEventMouseMotion.new()
 		motion.position = point; motion.global_position = point
@@ -394,12 +395,12 @@ func run() -> void:
 			if DirAccess.dir_exists_absolute(profiles_path + suffix): refuse_arguments("Existing derived matrix profiles are preserved."); return
 	DirAccess.make_dir_recursive_absolute(profiles_path)
 	if not images_path.is_empty(): DirAccess.make_dir_recursive_absolute(images_path)
-	root.size = Vector2i(640,360); root.content_scale_size = Vector2i(640,360)
+	root.size = Vector2i(800,480); root.content_scale_size = Vector2i(800,480)
 	Input.use_accumulated_input = false
 	start_frame = Engine.get_process_frames()
 	var layer := CanvasLayer.new(); layer.layer = 100; root.add_child(layer)
 	caption = Label.new(); caption.add_theme_font_override("font",FrontEnd.pixel_font()); caption.add_theme_font_size_override("font_size",10)
-	caption.add_theme_color_override("font_color",Color("ffffcf")); caption.mouse_filter = Control.MOUSE_FILTER_IGNORE; caption.size = Vector2(640,10); caption.position = Vector2.ZERO; layer.add_child(caption)
+	caption.add_theme_color_override("font_color",Color("ffffcf")); caption.mouse_filter = Control.MOUSE_FILTER_IGNORE; caption.size = Vector2(800,10); caption.position = Vector2.ZERO; layer.add_child(caption)
 	var connected: Array = []
 	for device: int in Input.get_connected_joypads(): connected.append({"device":device,"name":Input.get_joy_name(device),"guid":Input.get_joy_guid(device),"info":Input.get_joy_info(device),"known":Input.is_joy_known(device)})
 	check(FrontEnd.controller_profile_for("Adapter",{"vendor_id":0x057e}) == "nintendo","USB Nintendo identity survives database renaming")

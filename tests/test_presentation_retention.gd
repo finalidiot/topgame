@@ -187,7 +187,7 @@ func paired_fixture(label: String, seed_value: int, ticks: int, intense: bool) -
 	if native_sample and allow_audio:
 		shown.event_sfx.connect(func(kind: String) -> void: sound.play_sound(kind); music.notify_cue(kind))
 	var disabled_music: Node = Music.new(); root.add_child(disabled_music); disabled_music.set_process(false)
-	check(music.get_child_count() == 1 and music.synchronized_stream().stream_count == 5,"Five synchronized stems use exactly one MusicPlayer")
+	check(music.get_child_count() == 1 and music.synchronized_stream().stream_count == 7,"Five accepted plus two arrangement stems remain synchronized in exactly one MusicPlayer")
 	check(sound.channels.size() == 8 and sound.get_child_count() == 8,"SFX retains exactly eight pooled channels")
 	var stats: Dictionary = current_hud(hud[0],contexts[0],shown)
 	menus.show_hud(stats)

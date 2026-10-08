@@ -193,8 +193,8 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
     def exact_integer(value, expected: int) -> bool:
         return type(value) in (int, float) and value == expected
 
-    require(isinstance(saved, dict) and exact_integer(saved.get("schema_version"), 2),
-            "requires a schema2 saved collection.")
+    require(isinstance(saved, dict) and exact_integer(saved.get("schema_version"), 3),
+            "requires a schema3 saved collection.")
     require(saved.get("starter_selected") == "breaker", "starter fixture changed.")
     baseline = {"blade:smash", "ratchet:high", "bit:flat"}
     owned = saved.get("owned_part_ids")
@@ -215,6 +215,9 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
             and receipt.get("status") == "resolved", "resolved paid receipt is missing or changed.")
     rows = receipt.get("rows")
     require(isinstance(rows, list) and len(rows) == 3, "receipt must contain all three physical slots.")
+    require(exact_integer(receipt.get("quantity"), 1) and exact_integer(receipt.get("cursor"), 1)
+            and receipt.get("packets") == [{"rows": rows, "total_salvage": receipt.get("total_salvage")}],
+            "single batch receipt lost its exact result group or completed cursor.")
     categories = ("blade", "ratchet", "bit")
     rarities = ("TRASH", "COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY")
     salvage_values = {"TRASH": 1, "COMMON": 1, "UNCOMMON": 2, "RARE": 4, "EPIC": 7, "LEGENDARY": 10}
@@ -255,7 +258,7 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
     require(isinstance(breakdown, dict) and set(breakdown) == {"threats", "elites", "bosses"}
             and exact_integer(breakdown.get("threats"), 48) and exact_integer(breakdown.get("elites"), 0)
             and exact_integer(breakdown.get("bosses"), 0), "saved fixture funding ledger changed.")
-    return {"path": str(collection), "sha256": sha256(collection), "schema_version": 2,
+    return {"path": str(collection), "sha256": sha256(collection), "schema_version": 3,
             "scope": "Actual persisted packaged one-purchase Shop flow; labelled funding/seed fixture, not earned gameplay.",
             "summary": {"owned_count": len(owned), "owned_part_ids": sorted(owned),
                         "credits": 0, "salvage": total_salvage, "packet_serial": 1, "receipt_id": "packet-1",

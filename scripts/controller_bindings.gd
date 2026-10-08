@@ -15,6 +15,9 @@ static func confirm_button(profile_id: String) -> JoyButton:
 static func back_button(profile_id: String) -> JoyButton:
 	return JOY_BUTTON_A if profile_id == "nintendo" else JOY_BUTTON_B
 
+static func reroll_button(_profile_id: String) -> JoyButton:
+	return JOY_BUTTON_RIGHT_SHOULDER
+
 static func configure(requested_layout: String = "auto") -> void:
 	layout = requested_layout if requested_layout in ["auto", "xbox", "nintendo", "playstation"] else "auto"
 	# Godot currently supports sixteen joypad slots. Include any reported slot

@@ -1,12 +1,12 @@
 {
   "family": "redline",
   "grammar": {
-    "silhouette": "Off-centre metal rotor with broken hot plates and an asymmetric torn wake.",
-    "motion": "Ignition, growing splinter density and irregular heat stutter; Breakneck loads, strikes, recoils.",
+    "silhouette": "Preserved off-centre native metal rotor with coherent red heat arcs and restrained star accents.",
+    "motion": "Authored rotor arcs and directional heat streaks; preserved stars and machine; no disconnected rectangular chip blocks.",
     "location": "Rotor edges and actual velocity wake; recoil near the floor.",
     "persistence": "Only real active/overcap/heat states; discrete ignition, commitment, strike and vent events.",
     "palette": "Oxide, hot orange, red and pale key flashes against cold steel.",
-    "feature": "Open machine centre with unequal broken fragment banks; mutations change motion, not just hue."
+    "feature": "Open machine centre, physical rotor heat and tangential streaks; mutations retain their distinct action stories."
   },
   "static_frames": {
     "redline": 6,
@@ -32,10 +32,7 @@
     "runaway": "runaway",
     "breakneck": "breakneck_charge"
   },
-  "notes": [
-    "Successful C.4 fragmented Redline active signatures are intentionally retained by the integrated renderer. Fresh cards/icons and eight-key contact/overcap/heat/commit force-fragment states share their asymmetric hot mechanical grammar. No clean corona ring.",
-    "Runaway card frays after successive successful-contact action beats. Breakneck uses a visible small rival and loaded/strike/recoil poses."
-  ],
+  "notes": "003A.1 human correction retains stars, native main rotor and card timing. Heat blocks are replaced with coherent rotor arcs; gameplay keeps its accepted expanding red ring.",
   "source_direction_contract": "Upright artwork; heading suffix chooses pre-authored screen-direction placement e/ne/n/nw/w/sw/s/se. No runtime rotation of isometric art.",
   "authoring": "Distinct pixel-cluster compositions and deliberate key poses assembled as normal editable native Aseprite layers. Scripted authorship, not manual mouse painting. Saved masters are the editing authority.",
   "review_tier": {

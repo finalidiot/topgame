@@ -5,6 +5,7 @@ extends RefCounted
 const Signature = preload("res://scripts/signature_visuals.gd")
 const Identity = preload("res://scripts/power_identity.gd")
 const Defence = preload("res://scripts/defence_art.gd")
+const MotionArt = preload("res://scripts/combat_motion_art.gd")
 const SMALL: Texture2D = preload("res://assets/powers/small_top.png")
 const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
@@ -87,7 +88,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector
 			var duration: float = maxf(0.01, float(effect.get("duration", 0.3)))
 			var age: float = float(effect.get("age", 0.0))
 			var alpha: float = clampf((1.0 - age / duration) * 2.0, 0.0, 1.0)
-			_cell(canvas, "effects", EFFECTS, _frame("effects", "corona", age, false, duration), position, Color(1.0, 0.62, 0.58, alpha))
+			MotionArt.cel(canvas,"redline_ring","IGNITE",position,age/duration*0.36,alpha)
 		return
 	if Defence.effect(canvas, effect, position): return
 	if Identity.effect(canvas,effect,position): return
@@ -139,17 +140,17 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector
 		_cell(canvas, "effects", EFFECTS, _frame("effects", "contact_arc", age, false, 0.22), position)
 
 static func redline_presentation(kind: String) -> Dictionary:
-	# Keep the saved native ring. Sparse heat/overcap information is now on
-	# the HUD; the former fragment-cloud cels add no useful physical feedback.
+	# Native expanding red ring and directed rotor heat retain Redline identity.
+	# The historical corona's disconnected tooth blocks remain archived art.
 	var handled: bool = kind in ["redline", "redline_ii", "redline_release", "runaway", "runaway_hit", "redline_overcap", "redline_heat"]
-	return {"handled": handled, "ring": handled and kind not in ["redline_overcap", "redline_heat"], "particle_cels": 0, "source": "native effects/corona", "gameplay_writes": 0}
+	return {"handled": handled, "ring": handled and kind not in ["redline_overcap", "redline_heat"], "particle_cels": 0, "source": "native combat_003a1/redline_ring", "gameplay_writes": 0}
 
 static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2, clock: float, quality: float = 1.0) -> void:
 	if not str(fighter.get("outcome", "")).is_empty():
 		return
 	Signature.aura(canvas,fighter,position,clock)
 	Identity.aura(canvas,fighter,position,clock)
-	Defence.aura(canvas, fighter, position)
+	Defence.aura(canvas, fighter, position, clock)
 	_draw_anchor_feedback(canvas, fighter, position + Vector2(0.0, float(fighter.get("height", 0.0))), clock, quality)
 	if float(fighter.get("slipstream_time", 0.0)) > 0.0 and Identity.family_info("afterimage").is_empty():
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
@@ -388,38 +389,30 @@ static func draw_circuit_field(canvas: CanvasItem, trace: Dictionary, points: Pa
 	for point: Vector2 in points:
 		closed.append(point.round())
 	closed.append(points[0].round())
-	canvas.draw_polyline(closed, light, 1.0)
-	_draw_circuit_field(canvas, closed, ink, light)
+	# The actual paid path becomes a metal floor seam; no filled magic field.
+	canvas.draw_polyline(closed, Color(0.13,0.21,0.22,fade*0.90), 3.0)
+	canvas.draw_polyline(closed, ink, 1.0)
 	var age: float = float(trace.get("presentation_circuit_age",1.0))
-	if age < 0.55:
-		var center: Vector2 = Vector2.ZERO
-		for point: Vector2 in points: center += point
-		center /= float(points.size())
-		var contracted: PackedVector2Array = PackedVector2Array()
-		for point: Vector2 in closed: contracted.append(point.lerp(center,age*0.75).round())
-		canvas.draw_polyline(closed,Color(0.8,1.0,0.85,1.0-age),2.0)
-		canvas.draw_polyline(contracted,Color(0.32,0.8,0.67,0.65-age),1.0)
-		Signature.cel(canvas,"afterimage","ghost_closure",points[0],age)
+	var plan: Dictionary = circuit_motion_plan(closed,age)
+	for current: Dictionary in plan.currents:
+		canvas.draw_line(Vector2(current.from).round(),Vector2(current.to).round(),light,2.0)
+		MotionArt.cel(canvas,"power_motion","CIRCUIT_CURRENT",current.to,age,fade*0.68,true)
+	if age<0.55: MotionArt.cel(canvas,"power_motion","CIRCUIT_LATCH",points[0],age,fade)
 
-static func _draw_circuit_field(canvas: CanvasItem, points: PackedVector2Array, ink: Color, light: Color) -> void:
-	# The authored connected line remains the focus. Sparse interior pressure lines
-	# show enclosure without filling the floor or pretending to create more hits.
-	var minimum: Vector2 = points[0]
-	var maximum: Vector2 = points[0]
-	for point: Vector2 in points:
-		minimum = minimum.min(point)
-		maximum = maximum.max(point)
-	ink.a *= 0.30
-	var stripe_count: int = mini(7, int((maximum.y - minimum.y) / 7.0))
-	for stripe: int in range(stripe_count):
-		var y: float = roundf(lerpf(minimum.y, maximum.y, float(stripe + 1) / float(stripe_count + 1)))
-		var intersections: Array[float] = []
-		for index: int in range(points.size()):
-			var a: Vector2 = points[index]
-			var b: Vector2 = points[(index + 1) % points.size()]
-			if (a.y <= y and b.y > y) or (b.y <= y and a.y > y):
-				intersections.append(a.x + (y - a.y) / (b.y - a.y) * (b.x - a.x))
-		intersections.sort()
-		for pair: int in range(0, intersections.size() - 1, 2):
-			canvas.draw_line(Vector2(roundf(intersections[pair]), y), Vector2(roundf(intersections[pair + 1]), y), ink, 1.0)
-	canvas.draw_rect(Rect2(points[0].round() - Vector2(3.0, 2.0), Vector2(6.0, 4.0)), light, false, 1.0)
+static func circuit_motion_plan(points: PackedVector2Array, age: float) -> Dictionary:
+	var currents: Array[Dictionary] = []
+	if points.size()<4:return {"currents":currents,"perimeter":0.0,"points":points.size()}
+	var lengths: Array[float] = []
+	var total: float = 0.0
+	for index: int in range(points.size()-1):
+		var length: float = points[index].distance_to(points[index+1]);lengths.append(length);total+=length
+	if total<1.0:return {"currents":currents,"perimeter":total,"points":points.size()}
+	for bank: int in range(3):
+		var travel: float = fposmod(maxf(0.0,age)*180.0+float(bank)*total/3.0,total)
+		for index: int in range(lengths.size()):
+			if travel<=lengths[index]:
+				var tangent: Vector2 = (points[index+1]-points[index]).normalized()
+				var tip: Vector2 = points[index]+tangent*travel
+				currents.append({"from":tip-tangent*minf(7.0,travel),"to":tip,"segment":index});break
+			travel-=lengths[index]
+	return {"currents":currents,"perimeter":total,"points":points.size(),"nodes_created":0,"gameplay_writes":0}

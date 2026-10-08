@@ -12,7 +12,7 @@ var last_emitted_hud: Dictionary = {}
 func redline_state() -> Dictionary:
 	var player: Dictionary = game.battle.player_entity()
 	if player.is_empty(): return {}
-	return {"owned":game.battle.powers.rank(player,"redline") > 0,"active":game.battle.powers.redline_active(player),
+	return {"owned":game.battle.powers.rank(player,"redline") > 0,"active":game.battle.powers.redline_active(player),"overdrive":game.battle.powers.overdrive_active(player),
 		"remaining":float(player.get("redline_time",0.0)),"heat":float(player.get("redline_heat",0.0)),"rpm":float(player.rpm),
 		"runtime_time":game.battle.powers.time,"active_rank":game.battle.powers.active_redline_rank(player),
 		"owned_rank":game.battle.powers.rank(player,"redline"),"runtime_id":game.battle.powers.get_instance_id()}
@@ -23,11 +23,12 @@ func sample(label: String) -> void:
 	if game.menus.screen == "hud":
 		row["rpm_text"] = str(game.menus._hud.player_rpm.text)
 		row["active_badge"] = row.rpm_text.contains("OVERDRIVE")
-		var display_active: bool = bool(last_emitted_hud.get("redline_active",false)) or float(last_emitted_hud.get("player_rpm",0.0)) > 1.0
+		var display_active: bool = bool(last_emitted_hud.get("overdrive_active",float(last_emitted_hud.get("player_rpm",0.0)) > 1.00001))
+		if legacy: display_active = bool(last_emitted_hud.get("redline_active",false)) or float(last_emitted_hud.get("player_rpm",0.0)) > 1.0
 		row["expected_display_active"] = display_active
 		row["hud_snapshot_age_seconds"] = float(state.get("runtime_time",0.0)) - float(last_emitted_hud.get("lifecycle_runtime_time",state.get("runtime_time",0.0)))
 		if not state.is_empty():
-			check(bool(row.active_badge) == display_active,"Actual OVERDRIVE badge follows the authoritative emitted active/excess state")
+			check(bool(row.active_badge) == display_active,"Actual OVERDRIVE badge follows the authoritative emitted extra reserve state")
 			check(float(row.hud_snapshot_age_seconds) <= 0.067,"The normal HUD refresh stays within its three-to-four fixed-tick cadence")
 		if game.menus._hud.has("state_meters"):
 			var snapshot: Dictionary = game.menus._hud.state_meters.diagnostic_snapshot()
@@ -35,7 +36,10 @@ func sample(label: String) -> void:
 			row["persistent_redline_rows"] = display
 			if not state.is_empty():
 				check(not display.is_empty() if state.owned else display.is_empty(),"Owned REDLINE / HEAT row survives every HUD rebuild and real expiry")
-				if not display.is_empty(): check(bool(display[0].active) == display_active,"State-meter active badge agrees with actual emitted runtime")
+				if not display.is_empty():
+					var redline_paid_or_excess: bool = bool(last_emitted_hud.get("redline_active",false)) or float(last_emitted_hud.get("player_rpm",0.0)) > 1.0
+					check(bool(display[0].active) == redline_paid_or_excess,"Owned state-meter active state follows its paid Redline window independently of reserve badge")
+					check(str(display[0].text).begins_with("REDLINE"),"Owned meter retains REDLINE identity throughout actual lifecycle")
 		elif not legacy: check(false,"Candidate HUD contains its new persistent state display")
 	redline_rows.append(row)
 func fixture_event(run: RefCounted, id: int) -> Dictionary:
@@ -81,7 +85,7 @@ func run() -> void:
 		if unsafe_main_argument(arg): refuse_arguments("Unsafe Main boot override refused before opening any profile."); return
 	if not guard_fixture_paths(): return
 	DirAccess.make_dir_recursive_absolute(profiles_path)
-	root.size = Vector2i(640,360); root.content_scale_size = Vector2i(640,360)
+	root.size = Vector2i(800,480); root.content_scale_size = Vector2i(800,480)
 	Input.use_accumulated_input = false; start_frame = Engine.get_process_frames(); capture_group = "overdrive"
 	await boot("keyboard")
 	game.battle.hud_updated.connect(func(stats: Dictionary) -> void:

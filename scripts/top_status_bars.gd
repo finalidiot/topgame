@@ -42,7 +42,7 @@ static func layout(fighters: Array, player_id: int, mobile: bool = false, visual
 	for fighter: Dictionary in ordered:
 		var world: Vector2 = fighter.pos
 		var contact: Vector2 = Vector2(320.0 + world.x - world.y, 165.0 + (world.x + world.y) * 0.5 - float(fighter.get("height", 0.0))).round() + visual_offset
-		if not Layout.VIEW.has_point(contact): omitted.offscreen += 1; continue
+		if not Layout.ARENA_VIEW.has_point(contact): omitted.offscreen += 1; continue
 		var boss: bool = str(fighter.get("enemy_kind", "")) == "boss"
 		var size: Vector2 = BOSS_SIZE if boss else NORMAL_SIZE
 		var base: float = 53.0 if boss else (46.0 if str(fighter.get("enemy_kind", "")) == "elite" else 33.0)

@@ -8,7 +8,7 @@ class_name CollectionSave
 const Catalog = preload("res://scripts/parts.gd")
 const Starters = preload("res://scripts/starters.gd")
 const Economy = preload("res://scripts/packet_economy.gd")
-const SCHEMA_VERSION: int = 2
+const SCHEMA_VERSION: int = 3
 const MAX_BALANCE: int = 1000000000
 const DEFAULT_PATH: String = "user://collection.json"
 const CATEGORIES: Array[String] = ["blade", "ratchet", "bit"]
@@ -44,9 +44,13 @@ func expected_packet_request_id() -> String:
 	return "packet-%d" % (int(_data.progression.packet_serial) + 1)
 
 func purchase_packet(kind: String, rng: RandomNumberGenerator = null, request_nonce: String = "") -> Dictionary:
+	return purchase_packet_batch(kind, 1, rng, request_nonce)
+
+func purchase_packet_batch(kind: String, quantity: int, rng: RandomNumberGenerator = null, request_nonce: String = "") -> Dictionary:
 	if read_only: return _result(false, "read_only")
 	if not is_initialized(): return _result(false, "not_initialized")
 	if not Economy.validate_config().is_empty(): return _result(false, "invalid_economy")
+	if quantity not in Economy.BATCH_QUANTITIES: return _result(false, "invalid_quantity")
 	var pending: Dictionary = pending_packet()
 	if not pending.is_empty():
 		return {"ok":request_nonce == str(pending.id),"status":"pending_packet","receipt":pending}
@@ -58,10 +62,10 @@ func purchase_packet(kind: String, rng: RandomNumberGenerator = null, request_no
 	if not products.has(kind): return _result(false, "invalid_packet")
 	var product: Dictionary = products[kind]
 	var currency: String = str(product.currency)
-	var cost: int = int(product.cost)
+	var cost: int = int(product.cost) * quantity
 	if int(_data.progression[currency]) < cost: return _result(false, "insufficient_funds")
 	if int(_data.progression.packet_serial) >= MAX_BALANCE: return _result(false, "counter_limit")
-	var roll: Dictionary = Economy.generate(kind, _data.owned_part_ids, rng)
+	var roll: Dictionary = Economy.generate_batch(kind, quantity, _data.owned_part_ids, rng)
 	if not bool(roll.ok): return roll
 	# Fixed NEW/duplicate resolution is part of the paid receipt. Reject grants
 	# during opening so ownership cannot drift under the already purchased rows.
@@ -69,7 +73,8 @@ func purchase_packet(kind: String, rng: RandomNumberGenerator = null, request_no
 	if prospective_salvage > MAX_BALANCE - int(roll.total_salvage): return _result(false, "balance_limit")
 	var candidate: Dictionary = _data.duplicate(true)
 	var receipt: Dictionary = {"id":expected_packet_request_id(),"request_nonce":expected_packet_request_id(),"kind":kind,"cost":cost,"currency":currency,
-		"status":"pending","rows":roll.rows,"total_salvage":int(roll.total_salvage)}
+		"status":"pending","rows":roll.rows,"total_salvage":int(roll.total_salvage),
+		"quantity":quantity,"packets":roll.packets,"cursor":0}
 	candidate.progression[currency] -= cost
 	candidate.progression.packet_serial += 1
 	candidate.progression.pending_packet = receipt
@@ -93,6 +98,7 @@ func finalize_packet(receipt_id: String) -> Dictionary:
 	candidate.owned_part_ids.sort()
 	candidate.progression.salvage += int(receipt.total_salvage)
 	receipt.status = "resolved"
+	if int(receipt.get("quantity", 1)) == 1: receipt.cursor = 1
 	candidate.progression.pending_packet = receipt
 	candidate.progression.last_packet = receipt.duplicate(true)
 	var result: Dictionary = _commit(candidate, "finalized")
@@ -109,6 +115,21 @@ func acknowledge_packet(receipt_id: String) -> Dictionary:
 	var candidate: Dictionary = _data.duplicate(true)
 	candidate.progression.pending_packet = {}
 	return _commit(candidate, "acknowledged")
+
+func advance_packet_presentation(receipt_id: String, cursor: int) -> Dictionary:
+	if read_only: return _result(false, "read_only")
+	var receipt: Dictionary = pending_packet()
+	if receipt.is_empty() or str(receipt.id) != receipt_id: return _result(false, "wrong_receipt")
+	if str(receipt.status) != "resolved": return _result(false, "not_finalized")
+	var current: int = int(receipt.get("cursor", 0))
+	var quantity: int = int(receipt.get("quantity", 1))
+	if cursor < current or cursor > quantity: return _result(false, "invalid_cursor")
+	if cursor == current: return _result(true, "already_presented")
+	var candidate: Dictionary = _data.duplicate(true)
+	receipt.cursor = cursor
+	candidate.progression.pending_packet = receipt
+	candidate.progression.last_packet = receipt.duplicate(true)
+	return _commit(candidate, "presented")
 
 func begin_reward_run() -> Dictionary:
 	if read_only: return _result(false, "read_only")
@@ -489,6 +510,18 @@ static func _sanitize(raw: Dictionary) -> Dictionary:
 				clean.progression[key].cost = int(receipt.cost)
 				clean.progression[key].total_salvage = int(receipt.total_salvage)
 				for row: Dictionary in clean.progression[key].rows: row.salvage = int(row.salvage)
+				if not clean.progression[key].has("quantity"):
+					# Accepted schema-2 single receipts retain every paid row/cost.
+					# A previously resolved single already completed its presentation.
+					clean.progression[key].quantity = 1
+					clean.progression[key].cursor = 1 if str(receipt.status) == "resolved" else 0
+					clean.progression[key].packets = [{"rows":clean.progression[key].rows.duplicate(true),"total_salvage":int(receipt.total_salvage)}]
+				else:
+					clean.progression[key].quantity = int(receipt.quantity)
+					clean.progression[key].cursor = int(receipt.cursor)
+					for packet: Dictionary in clean.progression[key].packets:
+						packet.total_salvage = int(packet.total_salvage)
+						for row: Dictionary in packet.rows: row.salvage = int(row.salvage)
 		var last_reward: Variant = progression.get("last_reward", null)
 		if not last_reward is Dictionary: return {"ok":false,"status":"malformed"}
 		if not last_reward.is_empty():
@@ -530,6 +563,45 @@ static func _serial_id(value: Variant, prefix: String, maximum: int) -> bool:
 	return suffix.is_valid_int() and int(suffix) > 0 and int(suffix) <= maximum and str(int(suffix)) == suffix
 
 static func _valid_receipt(receipt: Dictionary, ownership: Array, serial: int, pending: bool) -> bool:
+	if not receipt.has("quantity"):
+		return _valid_single_receipt(receipt, ownership, serial, pending)
+	if not _serial_id(receipt.get("id", null), "packet-", serial) or receipt.get("request_nonce", null) != receipt.get("id", null): return false
+	if pending and str(receipt.id) != "packet-%d" % serial: return false
+	if not _safe_integer(receipt.get("quantity", null), 5) or int(receipt.quantity) not in Economy.BATCH_QUANTITIES: return false
+	if not _safe_integer(receipt.get("cursor", null), int(receipt.quantity)): return false
+	if str(receipt.get("status", "")) == "pending" and int(receipt.cursor) != 0: return false
+	var packets: Variant = receipt.get("packets", null)
+	var all_rows: Variant = receipt.get("rows", null)
+	if not packets is Array or packets.size() != int(receipt.quantity) or not all_rows is Array or all_rows.size() != packets.size() * 3: return false
+	# Reconstruct the pre-batch ownership from immutable NEW classifications,
+	# then validate each packet against its own sequential ownership state.
+	var prospective: Array = ownership.duplicate()
+	if str(receipt.get("status", "")) == "resolved":
+		for row: Variant in all_rows:
+			if not row is Dictionary: return false
+			if bool(row.get("new", false)):
+				if str(row.get("part_id", "")) not in prospective: return false
+				prospective.erase(str(row.part_id))
+	var flattened: Array = []
+	var total: int = 0
+	for packet: Variant in packets:
+		if not packet is Dictionary: return false
+		var single: Dictionary = receipt.duplicate(true)
+		single.rows = packet.get("rows", null)
+		single.total_salvage = packet.get("total_salvage", null)
+		single.status = "pending"
+		single.id = "packet-%d" % serial
+		single.request_nonce = single.id
+		if not _valid_single_receipt(single, prospective, serial, true): return false
+		flattened.append_array(single.rows)
+		total += int(single.total_salvage)
+		for row: Dictionary in single.rows:
+			if bool(row.new): prospective.append(str(row.part_id))
+	if not _json_equivalent(flattened, all_rows) or not _safe_integer(receipt.get("total_salvage", null), MAX_BALANCE) or total != int(receipt.total_salvage): return false
+	if str(receipt.get("status", "")) not in ["pending", "resolved"] or (not pending and str(receipt.status) != "resolved"): return false
+	return true
+
+static func _valid_single_receipt(receipt: Dictionary, ownership: Array, serial: int, pending: bool) -> bool:
 	if not _serial_id(receipt.get("id", null), "packet-", serial): return false
 	if pending and str(receipt.id) != "packet-%d" % serial: return false
 	if receipt.get("request_nonce", null) != receipt.id: return false

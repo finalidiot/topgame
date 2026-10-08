@@ -23,6 +23,8 @@ import java.nio.charset.StandardCharsets;
  */
 public final class TouchDriver extends Instrumentation {
     private static final String TARGET = "org.spinningmetal.prototype";
+    private static final float NATIVE_WIDTH = 800.0f;
+    private static final float NATIVE_HEIGHT = 480.0f;
     private Bundle arguments;
     private Activity activity;
     private final LinkedHashMap<Integer, float[]> pointers = new LinkedHashMap<>();
@@ -66,7 +68,7 @@ public final class TouchDriver extends Instrumentation {
                 return;
             }
             JSONObject script = new JSONObject(arguments.getString("script", "{}"));
-            configureViewport(script.getJSONArray("viewport"), size);
+            configureViewport(script, size);
             JSONArray steps = script.getJSONArray("steps");
             validateSteps(steps);
             for (int i = 0; i < steps.length(); i++) execute(steps.getJSONObject(i), i);
@@ -90,7 +92,11 @@ public final class TouchDriver extends Instrumentation {
         }
     }
 
-    private void configureViewport(JSONArray rectangle, int[] size) throws Exception {
+    private void configureViewport(JSONObject script, int[] size) throws Exception {
+        JSONArray nativeSize = script.getJSONArray("native_size");
+        if (nativeSize.length() != 2 || nativeSize.getDouble(0) != NATIVE_WIDTH || nativeSize.getDouble(1) != NATIVE_HEIGHT)
+            throw new IllegalArgumentException("Touch commands require the native800x480 product canvas");
+        JSONArray rectangle = script.getJSONArray("viewport");
         if (rectangle.length() != 4) throw new IllegalArgumentException("viewport must contain left,top,width,height");
         for (int i = 0; i < 4; i++) viewport[i] = (float) rectangle.getDouble(i);
         for (float value : viewport) if (!Float.isFinite(value)) throw new IllegalArgumentException("Viewport must be finite");
@@ -173,7 +179,7 @@ public final class TouchDriver extends Instrumentation {
                 if (finished) {
                     if (focused() && !pointers.isEmpty()) send(MotionEvent.ACTION_CANCEL);
                 } else {
-                    configureViewport(request.getJSONArray("viewport"), size);
+                    configureViewport(request, size);
                     JSONArray steps = request.getJSONArray("steps");
                     validateSteps(steps);
                     totalSteps += steps.length();
@@ -213,8 +219,8 @@ public final class TouchDriver extends Instrumentation {
     private float[] point(JSONArray value) throws Exception {
         if (value.length() != 2) throw new IllegalArgumentException("Native point needs x,y");
         float x = (float) value.getDouble(0), y = (float) value.getDouble(1);
-        if (!Float.isFinite(x) || !Float.isFinite(y) || x < 0 || x > 640 || y < 0 || y > 360)
-            throw new IllegalArgumentException("Point is outside the native640x360 game image");
+        if (!Float.isFinite(x) || !Float.isFinite(y) || x < 0 || x > NATIVE_WIDTH || y < 0 || y > NATIVE_HEIGHT)
+            throw new IllegalArgumentException("Point is outside the native800x480 product canvas");
         return new float[]{x, y};
     }
     private int pointerId(JSONObject step) throws Exception {
@@ -290,8 +296,8 @@ public final class TouchDriver extends Instrumentation {
             MotionEvent.PointerProperties property = new MotionEvent.PointerProperties();
             property.id = entry.getKey(); property.toolType = MotionEvent.TOOL_TYPE_FINGER;
             MotionEvent.PointerCoords coordinate = new MotionEvent.PointerCoords();
-            coordinate.x = viewport[0] + entry.getValue()[0] / 640.0f * viewport[2];
-            coordinate.y = viewport[1] + entry.getValue()[1] / 360.0f * viewport[3];
+            coordinate.x = viewport[0] + entry.getValue()[0] / NATIVE_WIDTH * viewport[2];
+            coordinate.y = viewport[1] + entry.getValue()[1] / NATIVE_HEIGHT * viewport[3];
             coordinate.pressure = 1; coordinate.size = 0.02f;
             properties[index] = property; coordinates[index] = coordinate; index++;
         }

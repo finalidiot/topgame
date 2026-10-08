@@ -352,8 +352,8 @@ func _run() -> void:
 			quit(1)
 			return
 	check(true, "No Main boot flags can override the test's isolated profiles")
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
 	var qa_root: String = configured if not configured.is_empty() else ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")

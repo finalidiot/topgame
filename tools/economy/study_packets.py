@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--cohort", type=int, default=3000)
     parser.add_argument("--qa-root", type=Path)
     parser.add_argument("--engine")
+    parser.add_argument("--summary-output", type=Path, help="New compact versioned source-odds evidence; existing history is never replaced")
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z0-9_-]+", args.stem): parser.error("Use a clear evidence stem")
     if not 100 <= args.cohort <= 10000: parser.error("Cohort must be 100..10000")
@@ -60,6 +61,17 @@ def main() -> int:
     evidence["status"] = "passed" if evidence["profile_unchanged"] and all(r["passed"] for r in evidence["suites"]) else "failed"
     evidence["checks"] = sum(r["checks"] for r in evidence["suites"])
     manifest.write_text(json.dumps(evidence,indent=2)+"\n",encoding="utf-8")
+    if args.summary_output is not None:
+        if args.summary_output.exists(): raise FileExistsError(args.summary_output)
+        if evidence["status"] != "passed": raise RuntimeError("Only passing production sampler evidence may become the source-odds proof")
+        economy = json.loads(files[0][2].read_text(encoding="utf-8"))
+        summary = {"task":args.task,"status":"passed","scope":"Current production x1 sampler and durable save regressions; bounded bulk wraps this identical per-packet distribution sequentially",
+                   "source_parent":evidence["source_parent"],"evidence_manifest":str(manifest),"economy_report":str(files[0][2]),
+                   "checks":{row["suite"]:row["checks"] for row in evidence["suites"]},"cohort":args.cohort,
+                   "rarity_odds":economy["standard_odds"]["categories"],"source_hashes":{path:workspace.sha256(ROOT/path) for path in ("scripts/packet_economy.gd","assets/data/packet_economy.json","assets/data/parts_catalogue.json")},
+                   "profile_unchanged":True,"single_packet_distribution_unchanged":True}
+        args.summary_output.parent.mkdir(parents=True,exist_ok=True)
+        args.summary_output.write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"status":evidence["status"],"checks":evidence["checks"],"manifest":str(manifest)}),flush=True)
     return 0 if evidence["status"] == "passed" else 1
 

@@ -29,6 +29,7 @@ static func report(game: Node, request_data: Dictionary) -> void:
 	var data: Dictionary = {"run_id":request_data.run_id,"platform":OS.get_name(), "debug":OS.has_feature("debug"),
 		"isolated_collection":game.collection.save_path,"screen":game.screen,"mode":game.mode,
 		"viewport":[viewport_size.x,viewport_size.y],"physical_screen":[screen_size.x,screen_size.y],
+		"combat_viewport":[game.combat_viewport.size.x,game.combat_viewport.size.y],"arena_origin":[game.combat_frame.position.x,game.combat_frame.position.y],
 		"safe_area":[safe.position.x,safe.position.y,safe.size.x,safe.size.y],
 		"native_surface":[surface.position.x,surface.position.y,surface.size.x,surface.size.y],
 		"fps":Engine.get_frames_per_second(),"process_ms":Performance.get_monitor(Performance.TIME_PROCESS)*1000.0,

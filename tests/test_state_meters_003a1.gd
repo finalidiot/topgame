@@ -7,6 +7,7 @@ const Encounters = preload("res://scripts/encounters.gd")
 const Starters = preload("res://scripts/starters.gd")
 const Arena = preload("res://scripts/arena_presentation.gd")
 const Visuals = preload("res://scripts/power_visuals.gd")
+const Layout = preload("res://scripts/combat_hud_layout.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var measurements: Dictionary = {}
@@ -20,7 +21,7 @@ func check(ok: bool, message: String) -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
-	root.size = Vector2i(640,360); root.content_scale_size = Vector2i(640,360)
+	root.size = Vector2i(800,480); root.content_scale_size = Vector2i(800,480)
 	var meter: Control = Meters.new(); root.add_child(meter)
 	await process_frame
 	for ownership: int in range(16):
@@ -38,9 +39,23 @@ func run() -> void:
 			check(d.rows.left.size()<=2 and d.rows.right.size()<=2,"At most four meaningful owned-state rows")
 			var font: Font = meter.get_theme_default_font()
 			for side: String in ["left","right"]:
-				for row: Dictionary in d.rows[side]:
-					check(font.get_string_size(str(row.text),HORIZONTAL_ALIGNMENT_LEFT,-1,Meters.LABEL_SIZE).x<=Meters.WIDTH-20,"Native state label fits at its actual authored HUD size: "+row.text)
+				for index: int in range(d.rows[side].size()):
+					var row: Dictionary = d.rows[side][index]
+					var origin: Vector2 = Meters.LEFT if side == "left" else Meters.RIGHT
+					var box := Rect2(origin+Vector2(0,index*Meters.ROW_HEIGHT),Vector2(Meters.WIDTH,66))
+					check((Layout.LEFT_EDGE if side == "left" else Layout.RIGHT_EDGE).encloses(box) and not box.intersects(Layout.PLAY_REGION),"Owned row stays wholly inside its actual external margin")
+					var identity: String = {"anchor":"ANCHOR","sink":"FORCE","redline":"REDLINE","orbit":"DRIVE"}[row.id]
+					check(font.get_string_size(identity,HORIZONTAL_ALIGNMENT_LEFT,-1,Meters.LABEL_SIZE).x<=Meters.WIDTH-24,"Visible icon-adjacent identity fits at actual authored size: "+identity)
+					# row.text is the longer semantic/inspection description. The
+					# compact renderer draws identity, value and state on three lines.
+					var compact: Array[String] = ["100%","CARVE","DRIFT"]
+					if row.id == "anchor": compact = ["STRESS100","SET","HOLD","HIGH","RECOVER","VENT"]
+					elif row.id == "sink": compact = ["150 / 150","LOADED","STORE","EMPTY"]
+					elif row.id == "redline": compact = ["HEAT 100%","ACTIVE","COOL"]
+					for text: String in compact:
+						check(font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,Meters.LABEL_SIZE).x<=Meters.WIDTH-10,"Visible compact state/value fits at actual authored size: "+text)
 					for bar: Dictionary in row.bars: check(float(bar.value)>=0.0 and float(bar.value)<=1.0,"Displayed reserve is bounded")
+			check(d.rows.left.size()+d.rows.right.size() == int(bool(ownership&1))+int(bool(ownership&2))+int(bool(ownership&4))+int(bool(ownership&8)),"Only owned powers receive compact state rows")
 			check(d.gameplay_writes==0 and not d.owns_timers and d.reduced_flashing_pulses==0,"Meters own neither combat, clock nor flashing")
 	check(meter.texture_filter==CanvasItem.TEXTURE_FILTER_NEAREST and meter.mouse_filter==Control.MOUSE_FILTER_IGNORE,"Nearest pixels never steal steering or touch")
 	meter.free()
@@ -84,7 +99,7 @@ func live_hud() -> void:
 	check(menus._hud.state_meters.diagnostic_snapshot().state==state,"HUD reads actual runtime snapshot")
 	check(menus._inspection_owned_state.state==state,"Inspector receives the same authoritative state")
 	check(not menus._hud.has("anchor"),"The single authoritative anchor meter has no duplicate lower status/quota label")
-	check(Meters.LEFT.y+2*Meters.ROW_HEIGHT<=86,"All four owned-state meters fit in the upper edge reservation")
+	check(Meters.LEFT.y+2*Meters.ROW_HEIGHT<=Layout.LEFT_EDGE.end.y and Meters.RIGHT.y+2*Meters.ROW_HEIGHT<=Layout.RIGHT_EDGE.end.y,"All four owned-state meters fit in the external side reservations")
 	check(menus._hud.enemy_name.text.begins_with("PRESSURE ") and menus._hud.enemy_bar.visible,"Continuous Run pressure is explicit in upper framing")
 	var census: Dictionary = b.continuous.snapshot().census
 	var budget: float = float(b.continuous.snapshot().limits.budget)

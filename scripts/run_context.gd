@@ -94,16 +94,29 @@ func is_active() -> bool:
 
 func reroll_snapshot() -> Dictionary:
 	return {"charges":reroll_charges, "maximum":MAX_REROLLS, "revision":_draft_revision,
-		"available":can_reroll(), "used":rerolls_used, "collected":rerolls_collected}
+		"available":can_reroll(), "mutation_available":can_reroll_mutation(), "used":rerolls_used, "collected":rerolls_collected}
 
 func can_reroll() -> bool:
 	if not is_active() or reroll_charges <= 0 or _pending_offer.is_empty() or not _pending_mutation_power.is_empty(): return false
+	return _has_reroll_alternative()
+
+func _has_reroll_alternative() -> bool:
 	var eligible: int = 0
 	for id: String in Powers.ACTIVE_IDS:
 		var rank_value: int = int(_power_ranks.get(id, 0))
 		if rank_value == 0 and _owned_power_ids.size() >= Powers.FAMILY_CAP: continue
 		if Powers.can_progress(id, rank_value, str(_power_mutations.get(id, ""))): eligible += 1
 	return eligible > _pending_offer.size()
+
+func can_reroll_mutation() -> bool:
+	return is_active() and reroll_charges > 0 and not _pending_mutation_power.is_empty() and not _pending_offer.is_empty() and _has_reroll_alternative()
+
+## Both canonical mutation branches are already offered. Reroll the uncommitted
+## parent draft, rather than taking payment to merely swap the same two cards.
+func reroll_pending_mutation(draft_id: String, expected_revision: int) -> bool:
+	if draft_id != pending_draft_id or expected_revision != _draft_revision or not can_reroll_mutation(): return false
+	_clear_pending_mutation()
+	return reroll_offer(draft_id, expected_revision)
 
 func reroll_offer(draft_id: String, expected_revision: int) -> bool:
 	# A stale button cannot consume twice or reroll an unrelated later draft.

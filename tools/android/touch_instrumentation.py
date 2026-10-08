@@ -2,7 +2,8 @@
 
 No general device UI automation is exposed. The companion APK targets only
 org.spinningmetal.prototype and verifies window focus before every MotionEvent.
-Native points map through an explicit safe640x360 letterboxed viewport.
+Native points map through the explicit safe800x480 product surface. Menu and
+Battle content each retain640x360 pixels at canvas origin80,60.
 """
 from __future__ import annotations
 import argparse
@@ -83,7 +84,8 @@ def run(args) -> dict:
     else:
         assert args.script is not None,'--script or --session is required'
         script=json.loads(args.script.read_text(encoding='utf-8-sig'))
-        assert set(script)<= {'viewport','steps'} and len(script['viewport'])==4
+        assert set(script)== {'viewport','native_size','steps'} and len(script['viewport'])==4
+        assert script['native_size']==[800,480], 'Explicit current800x480 canvas required; preserve historical640x360 scripts unchanged'
         assert 1<=len(script['steps'])<=240
         assert all(step['type'] in ['down','move','up','cancel','wait'] for step in script['steps'])
     if args.install:

@@ -52,6 +52,19 @@ const ANCHOR_STRESS_VENT_RATE: float = 0.085
 const ANCHOR_STRESS_OUTSIDE_VENT_RATE: float = 0.13
 const CIRCUIT_POINT_LIMIT: int = 224
 const CIRCUIT_TARGET_LIMIT: int = 8
+## Fixed physical loop tolerances. Only closure reach is eased by the measured
+## 003A.1 imperfect-route study; paid trace/speed/area/continuity stay unchanged.
+const GHOST_SPEED: float = 112.0
+const GHOST_CONTINUITY: float = 26.0
+const GHOST_EMIT_GAP: float = 6.0
+const GHOST_PREVIEW: float = 70.0
+const GHOST_CLOSURE: float = 56.0
+const GHOST_AGE: float = 0.85
+const GHOST_PERIMETER: float = 180.0
+const GHOST_AREA: float = 1300.0
+const GHOST_EXTENT: float = 32.0
+const GHOST_GAP_RATIO: float = 0.22
+const GHOST_COOLDOWN: float = 3.5
 
 func setup(battle: Object) -> void:
 	_battle = weakref(battle)
@@ -231,6 +244,11 @@ func begin_tick(dt: float) -> void:
 
 func redline_active(fighter: Dictionary) -> bool:
 	return not _stopped and float(_state(fighter)["redline_until"]) > time
+
+## Redline's paid power window can continue below the reserve cap. The main
+## RPM presentation owns Overdrive only while a live top has real excess spin.
+func overdrive_active(fighter: Dictionary) -> bool:
+	return not _stopped and _live(fighter) and float(fighter.get("rpm", 0.0)) > 1.00001
 
 ## Investment updates ownership immediately. An overload already in progress
 ## retains its paid activation profile until expiry; the next Burst reads the
@@ -1192,7 +1210,7 @@ func public_state(fighter: Dictionary) -> Dictionary:
 		"anchor": {"owned": _has(fighter, "dead_centre"), "charge": float(fighter.get("anchor_charge", 0.0)), "strength": float(fighter.get("anchor_charge", 0.0)) * anchor_efficiency(fighter), "stress": float(fighter.get("anchor_stress", 0.0)), "loaded": float(fighter.get("anchor_load", 0.0)), "venting": bool(fighter.get("anchor_venting", false)), "recovery_remaining": float(fighter.get("anchor_recovery_remaining", 0.0)), "rearm_progress": float(fighter.get("anchor_rearm_progress", 0.0)), "overloaded": bool(_state(fighter).anchor_overloaded), "recovering": bool(_state(fighter).anchor_overloaded), "safe_stress": ANCHOR_STRESS_REENGAGE, "overload_stress": ANCHOR_STRESS_OVERLOAD, "recovery_progress": float(fighter.get("anchor_recovery_progress", 0.0)), "rpm_loss_scale": incoming_rpm_scale(fighter)},
 		"orbit": {"owned": _has(fighter, "orbit_drive"), "drive": clampf(float(fighter.get("orbit_charge", 0.0)), 0.0, 1.0), "drifting": bool(fighter.get("drift_active", false))},
 		"sink": {"owned": _has(fighter, "impact_sink"), "stored": sink_stored, "capacity": sink_capacity, "ratio": clampf(sink_stored / maxf(0.001, sink_capacity), 0.0, 1.0)},
-		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)}
+		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "overdrive": overdrive_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)}
 	}
 
 func _modern_tick(fighter: Dictionary, dt: float) -> void:
@@ -1434,12 +1452,12 @@ func _modern_circuit(owner: Dictionary, trace_emitted: bool) -> void:
 	var state: Dictionary = _state(owner)
 	var was_preview: bool = not owner.get("ghost_preview", {}).is_empty()
 	owner["ghost_preview"] = {}
-	if time < float(state.circuit_ready) or Vector2(owner.vel).length() <= 112.0: return
+	if time < float(state.circuit_ready) or Vector2(owner.vel).length() <= GHOST_SPEED: return
 	var route: Array[Vector2] = []
 	var stamps: Array[float] = []
 	for trace: Dictionary in traces:
 		if int(trace.owner_entity_id) != int(owner.entity_id) or float(trace.created_at) <= float(state.circuit_after): continue
-		if not route.is_empty() and route.back().distance_to(Vector2(trace.points[0])) > 26.0:
+		if not route.is_empty() and route.back().distance_to(Vector2(trace.points[0])) > GHOST_CONTINUITY:
 			route.clear()
 			stamps.clear()
 		for point: Vector2 in trace.points:
@@ -1447,7 +1465,7 @@ func _modern_circuit(owner: Dictionary, trace_emitted: bool) -> void:
 				route.append(point)
 				stamps.append(float(trace.created_at))
 	var current: Array = state.trace_path
-	if route.size() < 8 or current.is_empty() or route.back().distance_to(Vector2(current[0])) > 26.0: return
+	if route.size() < 8 or current.is_empty() or route.back().distance_to(Vector2(current[0])) > GHOST_CONTINUITY: return
 	for point: Vector2 in current:
 		if route.back().distance_to(point) >= 3.0:
 			route.append(point)
@@ -1455,11 +1473,11 @@ func _modern_circuit(owner: Dictionary, trace_emitted: bool) -> void:
 	while route.size() > CIRCUIT_POINT_LIMIT:
 		route.pop_front()
 		stamps.pop_front()
-	if route.size() < 10 or route.back().distance_to(Vector2(owner.pos)) > 6.0: return
+	if route.size() < 10 or route.back().distance_to(Vector2(owner.pos)) > GHOST_EMIT_GAP: return
 	var candidate: Dictionary = {}
-	var best: float = 70.0
+	var best: float = GHOST_PREVIEW
 	for index: int in range(route.size() - 8):
-		if time - stamps[index] < 0.85: continue
+		if time - stamps[index] < GHOST_AGE: continue
 		var socket: Vector2 = Geometry2D.get_closest_point_to_segment(owner.pos, route[index], route[index + 1])
 		var gap: float = socket.distance_to(Vector2(owner.pos))
 		if gap > best: continue
@@ -1475,16 +1493,16 @@ func _modern_circuit(owner: Dictionary, trace_emitted: bool) -> void:
 			signed_area += polygon[vertex].cross(next)
 			bounds = bounds.expand(polygon[vertex])
 			center += polygon[vertex]
-		if perimeter < 180.0 or absf(signed_area) * 0.5 < 1300.0 or bounds.size.x < 32.0 or bounds.size.y < 32.0 or gap / perimeter > 0.22: continue
+		if perimeter < GHOST_PERIMETER or absf(signed_area) * 0.5 < GHOST_AREA or bounds.size.x < GHOST_EXTENT or bounds.size.y < GHOST_EXTENT or gap / perimeter > GHOST_GAP_RATIO: continue
 		best = gap
 		candidate = {"socket": socket, "gap": gap, "polygon": polygon, "stamp": stamps[index], "center": center / float(polygon.size())}
 	if candidate.is_empty(): return
-	owner.ghost_preview = {"a": candidate.socket, "b": Vector2(owner.pos), "strength": clampf(1.0 - float(candidate.gap) / 70.0, 0.0, 1.0), "expires_at": time + 0.2}
+	owner.ghost_preview = {"a": candidate.socket, "b": Vector2(owner.pos), "strength": clampf(1.0 - float(candidate.gap) / GHOST_PREVIEW, 0.0, 1.0), "expires_at": time + 0.2}
 	if not was_preview:
 		_record("ghost_preview", int(owner.entity_id))
 		_fx("ghost_preview", owner.pos, (Vector2(candidate.socket) - Vector2(owner.pos)).normalized())
-	if not trace_emitted or float(candidate.gap) > 38.0: return
-	state.circuit_ready = time + 3.5
+	if not trace_emitted or float(candidate.gap) > GHOST_CLOSURE: return
+	state.circuit_ready = time + GHOST_COOLDOWN
 	state.circuit_after = time
 	state.circuit_surge_until = time + 0.8
 	owner.ghost_preview = {}

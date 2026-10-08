@@ -93,7 +93,7 @@ func _migration() -> void:
 	var archived: Dictionary = save.backup_collection()
 	check(archived.ok and FileAccess.get_sha256(str(archived.backup_directory).path_join(path.get_file())) == FileAccess.get_sha256(path),"Explicit backup preserves accepted bytes before first write")
 	_earn(save)
-	check(int(_disk(path).schema_version) == 2 and save.owned_count() == 4,"First economical mutation persists schema2 without broad ownership")
+	check(int(_disk(path).schema_version) == Collection.SCHEMA_VERSION and save.owned_count() == 4,"First economical mutation persists current schema without broad ownership")
 	evidence.append("accepted-schema-1 migration + exact-byte backup before mutation")
 
 func _rewards() -> void:

@@ -7,6 +7,15 @@ const PICKUP_FLAIR_MANIFEST: String = "res://assets/powers/pickup_003a1/manifest
 const PICKUP_COLLECT_AUDIO: String = "res://assets/audio/pickup_collect.wav"
 const BEAST_MANIFEST: String = "res://assets/powers/beasts_002c5_2/manifest.json"
 const MUSIC_MANIFEST: String = "res://assets/audio/music/manifest.json"
+const Music = preload("res://scripts/music.gd")
+const COMBAT_ART_MANIFEST: String = "res://assets/powers/combat_003a1/manifest.json"
+const COMBAT_IDENTITY_MANIFEST: String = "res://assets/powers/identity_manifest.json"
+const COMBAT_SPARK_MANIFEST: String = "res://assets/powers/impact_003a1/manifest.json"
+const COMBAT_AUDIO_MANIFEST: String = "res://assets/audio/impact_003a1/manifest.json"
+const MUSIC_VARIATION_MANIFEST: String = "res://assets/audio/music/run_arrangement_003a1_manifest.json"
+const MUSIC_VARIATION_SCORE: String = "res://assets/audio/music/run_arrangement_003a1.json"
+const COMBAT_AUDIO_IDS: Array[String] = ["metal_light","metal_clang","metal_edge","metal_scrape","metal_massive","metal_wall","metal_takedown"]
+const COMBAT_CARD_IDS: Array[String] = ["redline","afterimage","orbit_drive","predator_line"]
 const PacketEconomyModel = preload("res://scripts/packet_economy.gd")
 const PACKET_ART_ROOT: String = "res://assets/ui/shop_003a/"
 const PACKET_AUDIO_ROOT: String = "res://assets/audio/shop_003a/"
@@ -187,6 +196,34 @@ static func inspect(output: String) -> Dictionary:
 		var record: Dictionary = _inspect_arena_sheet(kind, parsed if parsed is Dictionary else {})
 		arena_records.append(record)
 		if not bool(record.valid): failures.append(str(record.path))
+	var combat_art_json: String = FileAccess.get_file_as_string(COMBAT_ART_MANIFEST)
+	var combat_identity_json: String = FileAccess.get_file_as_string(COMBAT_IDENTITY_MANIFEST)
+	var combat_spark_json: String = FileAccess.get_file_as_string(COMBAT_SPARK_MANIFEST)
+	var combat_art: Variant = JSON.parse_string(combat_art_json)
+	var combat_identity: Variant = JSON.parse_string(combat_identity_json)
+	var combat_spark: Variant = JSON.parse_string(combat_spark_json)
+	var combat_records: Array[Dictionary] = _inspect_combat_art(combat_art if combat_art is Dictionary else {},combat_identity if combat_identity is Dictionary else {},combat_spark if combat_spark is Dictionary else {})
+	for record: Dictionary in combat_records:
+		if not bool(record.valid): failures.append(str(record.path))
+	var combat_audio_json: String = FileAccess.get_file_as_string(COMBAT_AUDIO_MANIFEST)
+	var combat_audio: Variant = JSON.parse_string(combat_audio_json)
+	var combat_audio_records: Array[Dictionary] = []
+	for kind: String in COMBAT_AUDIO_IDS:
+		var meta: Dictionary = combat_audio.get("sounds",{}).get(kind,{}) if combat_audio is Dictionary else {}
+		var record: Dictionary = _inspect_combat_pcm(kind,"res://assets/audio/impact_003a1/"+kind+".wav",int(meta.get("frames",0)),false,false)
+		record.valid = bool(record.valid) and str(meta.get("file",""))==kind+".wav" and record.pcm_sha256==str(meta.get("pcm_sha256",""))
+		combat_audio_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
+	var variation_json: String = FileAccess.get_file_as_string(MUSIC_VARIATION_MANIFEST)
+	var variation: Variant = JSON.parse_string(variation_json)
+	var variation_records: Array[Dictionary] = []
+	for kind: String in ["run_opening","run_motion"]:
+		var meta: Dictionary = variation.get("stems",{}).get(kind,{}) if variation is Dictionary else {}
+		# WAV imports are unlooped PCM. Music duplicates those resources and sets
+		# exact synchronized runtime loop bounds; this probe reports the import.
+		var record: Dictionary = _inspect_combat_pcm(kind,"res://assets/audio/music/"+kind+".wav",int(meta.get("frames",0)),true,false)
+		variation_records.append(record)
+		if not bool(record.valid): failures.append(str(record.path))
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
@@ -201,6 +238,9 @@ static func inspect(output: String) -> Dictionary:
 		"ui_polish_json":ui_polish_json, "ui_polish_textures":ui_polish_records,
 		"defence_json":defence_json,"defence_textures":defence_records,
 		"arena_json":arena_json,"arena_textures":arena_records,
+		"combat_art_json":combat_art_json,"combat_identity_json":combat_identity_json,"combat_spark_json":combat_spark_json,"combat_art_textures":combat_records,"combat_arena_geometry_json":FileAccess.get_file_as_string("res://assets/arena/manifest.json"),
+		"combat_audio_json":combat_audio_json,"combat_audio":combat_audio_records,
+		"music_variation_json":variation_json,"music_variation_score_json":FileAccess.get_file_as_string(MUSIC_VARIATION_SCORE),"music_variation_stems":variation_records,"music_asset_metadata":Music.asset_metadata(),
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()
@@ -208,6 +248,43 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_combat_art(art: Dictionary, identity: Dictionary, sparks: Dictionary) -> Array[Dictionary]:
+	var records: Array[Dictionary] = []
+	var base: Dictionary = art.get("base_arena",{})
+	for name: String in ["backdrop","structure","surface","markings","rear_rim","front_rim"]:
+		var path: String = "res://assets/arena/"+name+".png"
+		var meta: Dictionary = base.duplicate(true);meta["texture"]=str(base.get("textures",{}).get(name,""))
+		var expected: Dictionary = {"path":path,"source":"assets/source-art/arena_foundry_eight.aseprite","cell":[640,360],"pivot":[320,180],"frames":1,"columns":1,"layers":6,"tags":[],"allow_empty_tags":true}
+		var record: Dictionary = _inspect_final_sheet("arena_base/"+name,meta,expected)
+		record["metadata_path"]=COMBAT_ART_MANIFEST;record["native_layer"]=name;records.append(record)
+	for name: String in ["venue_lights","power_motion","redline_ring"]:
+		var meta: Dictionary = art.get("families",{}).get(name,{})
+		var tags: Array = ["IGNITE"] if name=="redline_ring" else (["EARLY","BUILDING","MID","LATE","EXTREME"] if name=="venue_lights" else ["REDLINE_ROTATION","PREDATOR_FLOW_e","PREDATOR_FLOW_se","PREDATOR_FLOW_s","PREDATOR_FLOW_sw","PREDATOR_FLOW_w","PREDATOR_FLOW_nw","PREDATOR_FLOW_n","PREDATOR_FLOW_ne","CIRCUIT_CURRENT","CIRCUIT_LATCH"])
+		var expected: Dictionary = {"path":"res://assets/powers/combat_003a1/"+name+".png","source":"assets/source-art/combat_003a1/"+name+".aseprite","cell":[640,360] if name=="venue_lights" else ([128,128] if name=="redline_ring" else [48,32]),"pivot":[0,0] if name=="venue_lights" else ([64,64] if name=="redline_ring" else [24,16]),"frames":5 if name=="venue_lights" else (8 if name=="redline_ring" else 88),"columns":5 if name=="venue_lights" else 8,"layers":3,"tags":tags}
+		var record: Dictionary = _inspect_final_sheet("combat/"+name,meta,expected);record["metadata_path"]=COMBAT_ART_MANIFEST;records.append(record)
+	for family: String in COMBAT_CARD_IDS:
+		var meta: Dictionary = identity.get("families",{}).get(family,{}).get("cards",{})
+		var tags: Array[String] = [family,family+"_ii"]
+		if family=="redline":tags.append_array(["runaway","breakneck"])
+		if family=="afterimage":tags.append_array(["ghost_circuit","slipstream"])
+		var expected: Dictionary = {"path":"res://assets/powers/identity/"+family+"_cards.png","source":"assets/source-art/power_identity_002c5/"+family+"_cards.aseprite","cell":[64,64],"pivot":[32,32],"frames":tags.size()*12,"columns":12,"layers":6 if family=="afterimage" else 5,"tags":tags}
+		var record: Dictionary = _inspect_final_sheet("card/"+family,meta,expected);record["metadata_path"]=COMBAT_IDENTITY_MANIFEST;records.append(record)
+	var spark_tags: Array[String] = []
+	for tier: String in ["light","strong","hard","extreme"]:
+		for direction: int in range(8):spark_tags.append(tier+"_"+str(direction))
+	var expected: Dictionary = {"path":"res://assets/powers/impact_003a1/contact_sparks.png","source":"assets/source-art/impact_003a1/contact_sparks.aseprite","cell":[64,48],"pivot":[32,24],"frames":128,"columns":16,"layers":3,"tags":spark_tags}
+	var record: Dictionary = _inspect_final_sheet("combat/contact_sparks",sparks,expected);record["metadata_path"]=COMBAT_SPARK_MANIFEST;records.append(record)
+	return records
+
+static func _inspect_combat_pcm(kind: String, path: String, frames: int, stereo: bool, looping: bool) -> Dictionary:
+	var sample: AudioStreamWAV = (load(path) as AudioStreamWAV) if ResourceLoader.exists(path) else null
+	var pcm: PackedByteArray = sample.data if sample!=null else PackedByteArray()
+	var channels: int = 2 if stereo else 1
+	var valid: bool = sample!=null and frames>0 and sample.format==AudioStreamWAV.FORMAT_16_BITS and sample.stereo==stereo and sample.mix_rate==32000
+	valid = valid and pcm.size()==frames*channels*2
+	if sample!=null:valid=valid and sample.loop_mode==(AudioStreamWAV.LOOP_FORWARD if looping else AudioStreamWAV.LOOP_DISABLED) and (not looping or (sample.loop_begin==0 and sample.loop_end==frames))
+	return {"kind":kind,"path":path,"valid":valid,"format":sample.format if sample!=null else -1,"stereo":sample.stereo if sample!=null else false,"channels":(2 if sample.stereo else 1) if sample!=null else 0,"mix_rate":sample.mix_rate if sample!=null else 0,"loop_mode":sample.loop_mode if sample!=null else -1,"loop_begin":sample.loop_begin if sample!=null else -1,"loop_end":sample.loop_end if sample!=null else -1,"pcm_frames":pcm.size()/(channels*2),"duration_seconds":sample.get_length() if sample!=null else 0.0,"pcm_sha256":_digest(pcm)}
 
 static func _inspect_pickup_flair(meta: Dictionary) -> Dictionary:
 	var expected: Dictionary = {"path":"res://assets/powers/pickup_003a1/collection.png",
@@ -285,7 +362,7 @@ static func _inspect_final_sheet(kind: String, meta: Dictionary, expected: Dicti
 		names[name] = true
 	for duration: Variant in durations: valid = valid and is_finite(float(duration)) and float(duration) > 0.0 and float(duration) <= 10000.0
 	var required: Array = expected.get("tags", [])
-	valid = valid and not required.is_empty() and tags.size() == required.size()
+	valid = valid and (not required.is_empty() or bool(expected.get("allow_empty_tags",false))) and tags.size() == required.size()
 	for tag: String in required: valid = valid and tags.has(tag)
 	for span: Dictionary in tags.values():
 		valid = valid and int(span.get("from", -1)) >= 0 and int(span.get("to", -1)) >= int(span.get("from", -1)) and int(span.get("to", -1)) < count

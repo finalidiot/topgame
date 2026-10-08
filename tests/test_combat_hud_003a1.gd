@@ -36,9 +36,11 @@ func navigate_status_option(app: Node2D, profile_id: String) -> bool:
 	for press: int in range(16):
 		var focused: Control = root.gui_get_focus_owner()
 		if is_instance_valid(focused) and str(focused.get_meta("setting_key", "")) == "top_status_bars":
-			check(Layout.VIEW.encloses(focused.get_global_rect()), "Focused status option stays visible at native scale for " + profile_id)
+			check(Rect2(80,60,640,360).encloses(focused.get_global_rect()), "Focused status option stays visible inside native menu for " + profile_id)
 			return true
-		await joy_tap(JOY_BUTTON_DPAD_DOWN)
+		# The paired comfort row has Impact Numbers directly under the rightward
+		# toggle column; a normal left press reaches Top Status Bars in that row.
+		await joy_tap(JOY_BUTTON_DPAD_LEFT if is_instance_valid(focused) and str(focused.get_meta("setting_key", "")) == "impact_numbers" else JOY_BUTTON_DPAD_DOWN)
 	check(false, "Controller can reach status option with ordinary D-pad traversal for " + profile_id)
 	return false
 
@@ -54,7 +56,7 @@ func controller_options(app: Node2D) -> void:
 			await joy_tap(Bindings.confirm_button(profile_id))
 			check(app.settings.top_status_bars and app.top_status_bars.visible, "Printed Confirm toggles status bars ON for " + profile_id)
 		for node: Node in app.menus._content.get_children():
-			if node is Button or node is HSlider: check(Layout.VIEW.encloses(node.get_global_rect()), "Options control stays within native viewport for " + profile_id)
+			if node is Button or node is HSlider: check(Rect2(80,60,640,360).encloses(node.get_global_rect()), "Options control stays within centred native menu for " + profile_id)
 		await joy_tap(Bindings.back_button(profile_id))
 		check(app.screen == "title", "Printed Back leaves Options without triggering Confirm for " + profile_id)
 		evidence.append({"profile": profile_id, "confirm_button": Bindings.confirm_button(profile_id), "back_button": Bindings.back_button(profile_id), "synthetic_logical_device": 7, "physical_hardware": "Not tested by this fixture"})
@@ -104,7 +106,7 @@ func attachment_and_crowds() -> void:
 	measurements.crowd = d
 
 func edge_layout() -> void:
-	check(not Touch.valid_gameplay_point(Vector2(100, 79)) and not Touch.valid_gameplay_point(Vector2(120, 292)), "Edge HUD cannot acquire a new Android steering finger")
+	check(not Touch.valid_gameplay_point(Vector2(100, 49)) and not Touch.valid_gameplay_point(Vector2(120, 442)), "Edge HUD cannot acquire a new Android steering finger")
 	check(Touch.valid_gameplay_point(Vector2(100, 90)) and Touch.valid_gameplay_point(Vector2(400, 230)), "Hold-and-drag retains the open combat floor")
 	for mobile: bool in [false, true]:
 		var menus: Control = Menus.new(); menus.mobile_hud = mobile; root.add_child(menus)
@@ -178,7 +180,7 @@ func run() -> void:
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
 	var valid: bool = report.is_absolute_path() and report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") and not FileAccess.file_exists(report)
 	if not valid: push_error("Fresh absolute 003A.1 QA report required; no player profile opened"); quit(2); return
-	root.size = Vector2i(640, 360); root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480); root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	attachment_and_crowds(); edge_layout(); await isolated_options()
 	var file: FileAccess = FileAccess.open(report, FileAccess.WRITE)

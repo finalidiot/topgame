@@ -45,12 +45,21 @@ static func effect(canvas: CanvasItem, data: Dictionary, at: Vector2) -> bool:
 	var progress: float = clampf(float(data.get("age", 0.0)) / maxf(0.001, float(data.get("duration", 0.4))), 0.0, 1.0)
 	return draw_cel(canvas, str(definition.family), str(definition.tag), at, progress * duration)
 
-static func aura(canvas: CanvasItem, f: Dictionary, at: Vector2) -> void:
+static func sink_visual_state(f: Dictionary, clock: float) -> Dictionary:
+	var ratio: float = clampf(float(f.get("sink_charge",0.0))/maxf(1.0,float(f.get("sink_capacity",90.0))),0.0,1.0)
+	var base: int = clampi(int(ceilf(ratio*7.0)),1,7)
+	# Existing native fittings compress one discrete key as accumulated force
+	# loads them. Full stays full; lower fittings show staggered breathing.
+	var phase: float = fposmod(maxf(0.0,clock)*(0.8+ratio*0.7),1.0)
+	var key: int = maxi(1,base-(1 if base>=3 and phase<0.20 else 0))
+	return {"state":"EMPTY" if ratio<=0.02 else ("FULL" if ratio>=0.90 else "PARTIAL"),"ratio":ratio,"stage":key,"alpha":0.46+ratio*0.32+sin(phase*TAU)*0.06,"phase":phase}
+
+static func aura(canvas: CanvasItem, f: Dictionary, at: Vector2, clock: float = 0.0) -> void:
 	if not str(f.get("outcome", "")).is_empty(): return
 	var floor_at: Vector2 = at + Vector2(0.0, float(f.get("height", 0.0)))
 	var gyro: float = float(f.get("gyro_charge", 0.0))
 	if gyro > 0.10: draw_cel(canvas, "gyro_lock", "lock", floor_at, 0.0, 0.45 + gyro * 0.40, clampi(int(ceilf(gyro * 7.0)), 1, 7))
-	var sink: float = float(f.get("sink_charge", 0.0)) / maxf(1.0, float(f.get("sink_capacity", 90.0)))
-	if sink > 0.02: draw_cel(canvas, "impact_sink", "stored", floor_at, 0.0, 0.8, clampi(int(ceilf(sink * 7.0)), 1, 7))
+	var sink: Dictionary = sink_visual_state(f,clock)
+	if str(sink.state)!="EMPTY": draw_cel(canvas,"impact_sink","stored",floor_at,0.0,float(sink.alpha),int(sink.stage))
 	var brace: float = maxf(float(f.get("exchange_charge", 0.0)), float(f.get("exchange_carry", 0.0)))
 	if brace > 0.10: draw_cel(canvas, "anchor_exchange", "brace", floor_at, 0.0, 0.45 + brace * 0.45, clampi(int(ceilf(brace * 7.0)), 1, 7))

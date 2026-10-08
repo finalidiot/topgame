@@ -90,6 +90,8 @@ var _packet_wallet: Dictionary = {}
 var _packet_controls: Array[Control] = []
 var _packet_note: Label
 var _shop_kind: String = "standard"
+var _shop_quantity: int = 1
+var _shop_quantity_buttons: Array[Button] = []
 var _shop_snapshot: Dictionary = {}
 var _shop_detail: Control
 var _shop_merchant: Control
@@ -108,6 +110,8 @@ var mobile_hud: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
 var input_suspended: bool = false
+var _reroll_control: Button
+var _reroll_needs_release: bool = false
 
 func _ready() -> void:
 	if OS.has_feature("mobile"): _input_profile = "touch"
@@ -158,15 +162,30 @@ func _input(event: InputEvent) -> void:
 	var local_press: bool = (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed and not event.canceled)
 	if event is InputEventJoypadButton and event.pressed and (_ui_owner_device < 0 or event.device == _ui_owner_device): local_press = true
 	if local_press: input_engaged.emit()
+	if event.is_action_released("draft_reroll"): _reroll_needs_release = false
+	if screen in ["reward", "mutation"] and event.is_action_pressed("draft_reroll"):
+		if event is InputEventKey and event.echo: return
+		if event is InputEventJoypadButton and _ui_owner_device >= 0 and event.device != _ui_owner_device: return
+		if event is InputEventJoypadButton: _note_input_profile(ControllerBindings.profile(event.device))
+		elif event is InputEventKey: _note_input_profile("keyboard")
+		if _reroll_needs_release:
+			get_viewport().set_input_as_handled()
+			return
+		_reroll_needs_release = true
+		if is_instance_valid(_reroll_control) and not _reroll_control.disabled: _reroll_control.pressed.emit()
+		get_viewport().set_input_as_handled()
+		return
+	var local_point: Vector2 = _content.get_global_transform_with_canvas().affine_inverse() * event.position if is_instance_valid(_content) and (event is InputEventScreenTouch or event is InputEventScreenDrag) else Vector2.ZERO
 	if event is InputEventScreenTouch:
 		_note_input_profile("touch")
 		if (not event.pressed or event.canceled) and event.index == _packet_touch_index: _packet_touch_index = -1
 		if screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and _packet_view.phase in ["SEALED", "CRINKLE"]:
-			if event.pressed and Rect2(222, 72, 196, 205).has_point(event.position):
+			var packet_touch_rect: Rect2 = Rect2(100,72,440,205) if _packet_view._quantity>1 else Rect2(222,72,196,205)
+			if event.pressed and packet_touch_rect.has_point(local_point):
 				_packet_touch_index = event.index
-				_packet_touch_origin = event.position
+				_packet_touch_origin = local_point
 	if event is InputEventScreenDrag and screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and event.index == _packet_touch_index:
-		if absf(event.position.x - _packet_touch_origin.x) >= 42.0:
+		if absf(local_point.x - _packet_touch_origin.x) >= 42.0:
 			_packet_touch_index = -1
 			action.emit("packet_tear", null)
 			get_viewport().set_input_as_handled()
@@ -222,6 +241,8 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
+	_reroll_control = null
+	_reroll_needs_release = next_screen in ["reward", "mutation"] and Input.is_action_pressed("draft_reroll")
 	screen = next_screen
 	_packet_touch_index = -1
 	_appearance_elapsed = 0.0
@@ -265,6 +286,10 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_stat_numbers.clear()
 	_content = Control.new()
 	_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if next_screen != "hud":
+		_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+		_content.position = CombatLayout.ARENA_ORIGIN
+		_content.size = Vector2(640,360)
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
 	if dim:
@@ -407,11 +432,17 @@ func input_profile() -> String:
 func _note_input_profile(profile: String) -> void:
 	if profile == _input_profile: return
 	_input_profile = profile
+	_refresh_reroll_prompt()
 	for purpose: String in _prompt_labels:
 		var label: Label = _prompt_labels[purpose]
 		if is_instance_valid(label): label.text = FrontEnd.prompt(profile, purpose) + (" CONFIRM" if purpose == "confirm" else (" BACK" if purpose == "back" else ""))
 		var glyph: TextureRect = _prompt_glyphs.get(purpose)
 		if is_instance_valid(glyph): glyph.texture = FrontEnd.glyph(profile, purpose)
+
+func _refresh_reroll_prompt() -> void:
+	if not is_instance_valid(_reroll_control): return
+	_reroll_control.text = "%s  REROLL / %d LEFT" % [FrontEnd.prompt(_input_profile, "reroll"), int(_reroll_control.get_meta("charges",0))]
+	_reroll_control.tooltip_text = "Right bumper rerolls the current draft. Mutation preview returns to a fresh power draft."
 
 func _input_footer(y: float = 333.0) -> void:
 	for index: int in range(2):
@@ -569,6 +600,15 @@ func _ui_image(parent: Node, path: String, area: Rect2) -> TextureRect:
 func selected_shop_product() -> String:
 	return _shop_kind
 
+func selected_shop_quantity() -> int:
+	return _shop_quantity
+
+func select_shop_quantity(value: Variant) -> void:
+	if screen != "shop" or not value is int or int(value) not in PacketEconomy.BATCH_QUANTITIES: return
+	_shop_quantity = int(value)
+	_build_shop_detail()
+	_shop_focus(_shop_buy)
+
 func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_clear("shop")
 	_shop_snapshot = snapshot.duplicate(true)
@@ -630,6 +670,7 @@ func _shop_focus(first: Control) -> void:
 	var rows: Array = []
 	for row: Button in _shop_rows: rows.append([row])
 	var detail: Array = []
+	for button: Button in _shop_quantity_buttons: detail.append(button)
 	if is_instance_valid(_shop_buy) and not _shop_buy.disabled: detail.append(_shop_buy)
 	if is_instance_valid(_shop_odds): detail.append(_shop_odds)
 	if not detail.is_empty(): rows.append(detail)
@@ -653,15 +694,20 @@ func _build_shop_detail() -> void:
 	_shop_detail.mouse_filter = Control.MOUSE_FILTER_PASS
 	_content.add_child(_shop_detail)
 	_panel(_shop_detail, Rect2(0, 0, 373, 166), Color("18242c"))
-	_label(_shop_detail, PacketEconomy.packet_name(_shop_kind), Rect2(13, 8, 347, 16), 10, TEXT)
+	_shop_quantity_buttons.clear()
+	_label(_shop_detail, PacketEconomy.packet_name(_shop_kind) + " x%d" % _shop_quantity, Rect2(13, 8, 347, 16), 10, TEXT)
 	_packet_image(_shop_detail, _shop_kind, Rect2(6, 27, 96, 96))
 	var product: Dictionary = PacketEconomy.config().packets[_shop_kind]
 	var unit: String = str(product.currency).to_upper()
-	var price: int = PacketEconomy.packet_cost(_shop_kind)
+	var price: int = PacketEconomy.packet_cost(_shop_kind) * _shop_quantity
 	var available: int = int(_shop_snapshot.get(str(product.currency), 0))
 	_label(_shop_detail, "%d %s" % [price, unit], Rect2(111, 28, 247, 25), 20, ORANGE)
-	_label(_shop_detail, "1 BLADE / 1 RATCHET / 1 BIT", Rect2(111, 60, 247, 14), 10)
-	_label(_shop_detail, "Uncommon+ guaranteed.", Rect2(111, 79, 247, 14), 10, BLUE)
+	for index: int in range(3):
+		var quantity: int = PacketEconomy.BATCH_QUANTITIES[index]
+		var button: Button = _button(_shop_detail, "x%d" % quantity, Rect2(111 + index * 82, 56, 76, 24), "packet_quantity", quantity)
+		if quantity == _shop_quantity: button.add_theme_stylebox_override("normal", _box(Color("344853"), ORANGE))
+		_shop_quantity_buttons.append(button)
+	_label(_shop_detail, "3 PARTS EACH / UNCOMMON+ EACH", Rect2(111, 84, 247, 14), 10, BLUE)
 	var missing: bool = false
 	for id: String in PacketEconomy.eligible_ids():
 		if id not in _shop_snapshot.get("owned_part_ids", []): missing = true
@@ -676,9 +722,9 @@ func _build_shop_detail() -> void:
 		var chosen: bool = str(row.get_meta("shop_product", "")) == _shop_kind
 		row.add_theme_stylebox_override("normal", _box(Color("344853") if chosen else Color("263640"), ORANGE if chosen else BORDER))
 
-func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> void:
+func show_packet_purchase(kind: String, snapshot: Dictionary, token: int, quantity: int = 1) -> void:
 	_clear("packet_purchase")
-	_header("BUY A PARTS PACKET", "A sealed hobby pouch. Three permanent component designs.")
+	_header("BUY PARTS PACKETS" if quantity > 1 else "BUY A PARTS PACKET", "Sealed hobby pouches. Three permanent component designs each.")
 	_panel(_content, Rect2(98, 75, 444, 216), Color("18242c"))
 	var attendant: Control = ShopMerchant.new()
 	attendant.position = Vector2(110, 96)
@@ -686,13 +732,13 @@ func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> voi
 	_content.add_child(attendant)
 	attendant.react("PURCHASE")
 	_packet_image(_content, kind, Rect2(176, 157, 48, 48))
-	_label(_content, PacketEconomy.packet_name(kind), Rect2(220, 100, 308, 23), 20, TEXT)
+	_label(_content, PacketEconomy.packet_name(kind) + " x%d" % quantity, Rect2(220, 100, 308, 23), 16, TEXT)
 	var unit: String = "SALVAGE" if kind == "reclaimed" else "CREDITS"
-	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind), unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
+	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind) * quantity, unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
 	_label(_content, "1 Blade + 1 Ratchet + 1 Bit\nDuplicates recycle into SALVAGE.", Rect2(220, 162, 306, 35), 10, TEXT)
 	_label(_content, "Your contents are saved before the seam tears.", Rect2(112, 214, 417, 17), 10, MUTED)
 	var cancel: Button = _button(_content, "CANCEL", Rect2(112, 248, 184, 28), "cancel_packet_purchase")
-	var confirm: Button = _button(_content, "BUY / %d %s" % [PacketEconomy.packet_cost(kind), unit], Rect2(310, 248, 218, 28), "confirm_packet_purchase", token, true)
+	var confirm: Button = _button(_content, "BUY / %d %s" % [PacketEconomy.packet_cost(kind) * quantity, unit], Rect2(310, 248, 218, 28), "confirm_packet_purchase", token, true)
 	_input_footer()
 	_focus_rows([[cancel, confirm]], cancel)
 
@@ -746,10 +792,11 @@ func show_packet_open(receipt: Dictionary, snapshot: Dictionary, recovered: bool
 	_content.add_child(_packet_view)
 	_packet_view.cue.connect(func(kind: String) -> void: focus_sound.emit(kind))
 	_packet_view.settled.connect(_show_packet_summary)
+	_packet_view.presented.connect(func(cursor: int) -> void: action.emit("packet_progress", cursor))
 	_header("PARTS ON THE WORKBENCH", "Your packet is saved. Tear the seam and see what came home.")
 	_packet_note = _label(_content, "CRINKLE / TEAR / SPILL / INSPECT", Rect2(145, 281, 446, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var tear: Button = _button(_content, "TEAR OPEN", Rect2(22, 309, 292, 27), "packet_tear", null, true)
-	var skip: Button = _button(_content, "FAST OPEN", Rect2(326, 309, 292, 27), "packet_skip")
+	var skip: Button = _button(_content, "FAST OPEN ALL" if int(receipt.get("quantity", 1)) > 1 else "FAST OPEN", Rect2(326, 309, 292, 27), "packet_skip")
 	tear.tooltip_text = "Confirm to tear. Hold Confirm to accelerate. Back resolves the saved results immediately."
 	_packet_controls = [tear, skip]
 	_input_footer(339)
@@ -765,6 +812,28 @@ func tear_packet() -> void:
 func skip_packet() -> void:
 	if screen == "packet_open" and is_instance_valid(_packet_view): _packet_view.resolve()
 
+func _show_bulk_part_labels(quantity: int) -> void:
+	var new_count: int = 0
+	for row: Dictionary in _packet_receipt.rows:
+		if bool(row.new): new_count += 1
+	var total: int = _packet_receipt.rows.size()
+	_panel(_content, Rect2(48, 58, 544, 28), Color("18242c"))
+	_label(_content, "%d PACKETS / %d PARTS / %d NEW / %d DUPLICATES / +%d SALVAGE" % [quantity, total, new_count, total - new_count, int(_packet_receipt.total_salvage)], Rect2(54, 65, 532, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var width: float = 596.0 / quantity
+	for index: int in range(total):
+		var row: Dictionary = _packet_receipt.rows[index]
+		var packet: int = index / 3
+		var category: int = index % 3
+		var x: float = 22 + packet * width
+		var y: float = 126 + category * 62
+		var accent: Color = _rarity_color(str(row.rarity))
+		_label(_content, str(PartCatalog.PARTS[row.category][row.id].name), Rect2(x + 2, y, width - 4, 12), 8, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, "NEW / " + str(row.rarity) if bool(row.new) else "DUPLICATE / +%d" % int(row.salvage), Rect2(x + 2, y + 13, width - 4, 12), 8, ORANGE if bool(row.new) else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_rect(_content, Rect2(x + 8, y + 27, width - 16, 1), accent)
+	focus_sound.emit("packet_new" if new_count > 0 else "packet_recycle")
+	if new_count < total: focus_sound.emit("packet_recycle")
+	if _shop_reaction == "RARE": focus_sound.emit("packet_rare")
+
 func _show_packet_summary() -> void:
 	if screen != "packet_open": return
 	for row: Dictionary in _packet_receipt.get("rows", []):
@@ -775,7 +844,9 @@ func _show_packet_summary() -> void:
 			control.queue_free()
 	_packet_controls.clear()
 	if is_instance_valid(_packet_note): _packet_note.visible = false
-	for index: int in range(_packet_receipt.get("rows", []).size()):
+	var quantity: int = int(_packet_receipt.get("quantity", 1))
+	if quantity > 1: _show_bulk_part_labels(quantity)
+	for index: int in range(3 if quantity == 1 else 0):
 		var row: Dictionary = _packet_receipt.rows[index]
 		var x: float = 88 + index * 156
 		var accent: Color = _rarity_color(str(row.rarity))
@@ -1267,7 +1338,7 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 239, false)])
 	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239 if OS.has_feature("mobile") else 263, false)
 	controls.append([reduced])
-	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263 if OS.has_feature("mobile") else 287, true)])
+	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263 if OS.has_feature("mobile") else 287, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263 if OS.has_feature("mobile") else 287,false,336,270)])
 	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
@@ -1285,9 +1356,9 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	controls.append(footer)
 	_focus_rows(controls)
 
-func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> Button:
-	_label(_content, title, Rect2(34, y, 410, 23), 10, TEXT)
-	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(507, y, 99, 23))
+func _toggle_setting(key: String, title: String, y: float, fallback: bool, x: float=34, width: float=572) -> Button:
+	_label(_content,title,Rect2(x,y,width-104,23),10,TEXT)
+	var button: Button = _button(_content,"ON" if bool(_settings.get(key,fallback)) else "OFF",Rect2(x+width-80,y,80,23))
 	button.set_meta("setting_key", key)
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
@@ -1436,8 +1507,11 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		reroll.name = "RerollPower"
 		reroll.add_theme_font_size_override("font_size", 10)
 		reroll.disabled = not bool(rerolls.available)
+		_reroll_control = reroll
+		reroll.set_meta("charges",int(rerolls.charges))
+		_refresh_reroll_prompt()
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "TAP CARD TO CHOOSE / READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE / CONFIRM  DOWN: REROLL  BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
+		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
 		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  BACK: RUN MENU", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
@@ -1445,7 +1519,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 func _power_accent(power_id: String) -> Color:
 	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "dead_centre":Color("e9c67b"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
 
-func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "") -> void:
+func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "", rerolls: Dictionary = {}) -> void:
 	_clear("mutation")
 	var color: Color = _power_accent(power_id)
 	_header("MUTATION AVAILABLE", str(Powers.get_power(power_id).name).to_upper() + " III / CHOOSE HOW YOUR MACHINE CHANGES")
@@ -1456,7 +1530,7 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		var id: String = str(branches[index])
 		if not id in Powers.mutation_choices(power_id): continue
 		var branch: Dictionary = Powers.get_mutation(id)
-		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed})
+		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed, "offer_revision":int(rerolls.get("revision",0))})
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
 		_style_card(card, color)
@@ -1472,8 +1546,17 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		_label(card, "CONFIRM / TRANSFORM", Rect2(10, 220, 172, 14), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "BATTLE PAUSED / TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "BATTLE PAUSED / FOCUS TO INSPECT / CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 10, MUTED)
-	if not cards.is_empty(): _focus_rows([cards], selected)
+	var rows: Array = [cards]
+	if not rerolls.is_empty():
+		_reroll_control = _button(_content,"",Rect2(437,324,179,25),"reroll_mutation",{"encounter_id":draft_id,"run_seed":run_seed,"offer_revision":int(rerolls.revision)})
+		_reroll_control.name = "RerollMutation"
+		_reroll_control.add_theme_font_size_override("font_size",10)
+		_reroll_control.disabled = not bool(rerolls.get("mutation_available",false))
+		_reroll_control.set_meta("charges",int(rerolls.charges))
+		_refresh_reroll_prompt()
+		if not _reroll_control.disabled: rows.append([_reroll_control])
+	_label(_content, "TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(24,334,402,16),10,MUTED)
+	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func focused_power_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -1694,6 +1777,7 @@ func show_hud(stats: Dictionary) -> void:
 	if screen != "hud":
 		_create_hud()
 	_hud["state_meters"].update_state(_inspection_owned_state.state)
+	_hud["impact_confirmation"].text = str(stats.get("impact_confirmation",""))
 	if is_instance_valid(_ability_inspector): _ability_inspector.set_runtime_state(_inspection_owned_state.state)
 	var player_spin: float = float(stats.get("player_rpm", 1.0))
 	var enemy_spin: float = float(stats.get("enemy_rpm", 1.0))
@@ -1704,7 +1788,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["player_name"].text = str(stats.get("player_name", "YOUR TOP"))
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
 	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 9000.0))
-	_rpm_overdrive = bool(stats.get("redline_active", false)) or player_spin > 1.0
+	_rpm_overdrive = bool(stats.get("overdrive_active", player_spin > 1.00001))
 	_rpm_heat = clampf(float(stats.get("redline_heat", 0.0)), 0.0, 1.0)
 	var recovery: float = float(stats.get("rpm_recovery",0.0))
 	if player_spin > 1.0:
@@ -1769,7 +1853,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud.xp_label.text = "LV %d  /  NEXT INVESTMENT" % level if not progression_max else "LV %d  /  FULL BUILD" % level
 	_hud.xp_label.add_theme_color_override("font_color", ORANGE if _xp_near else BLUE)
 	_hud.xp_detail.text = "MAX" if progression_max else ("ALMOST THERE" if _xp_near else "%d / %d XP" % [int(xp), int(threshold)])
-	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
+	_hud["round"].text = str(stats.get("run_label", "DUEL"))
 	if bool(stats.get("continuous_run", false)):
 		var state: Dictionary = stats.run_state
 		_hud["round"].text = "THREAT %d  /  %d CLEARED" % [int(state.threat_number), int(state.threats_cleared)]
@@ -1796,7 +1880,7 @@ func show_hud(stats: Dictionary) -> void:
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
-		var slot_x: float = 320.0-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
+		var slot_x: float = 400.0-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
 		_hud["power_panel_%d" % index].position.x = slot_x
 		icon.position.x = slot_x+2.0
 		_hud["power_rank_%d" % index].position.x = slot_x+18.0
@@ -1821,68 +1905,57 @@ func show_hud(stats: Dictionary) -> void:
 func _create_hud() -> void:
 	_clear("hud", false)
 	_xp_display = 0.0
-	_panel(_content, Rect2(12, 8, 222, 74), Color(0.035, 0.065, 0.095, 0.94), Color("335a70"))
-	_panel(_content, Rect2(406, 8, 222, 74), Color(0.035, 0.065, 0.095, 0.94), Color("73513b"))
-	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 11, 202, 15), 10, BLUE)
-	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 11, 202, 15), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["player_bar"] = _bar(_content, Rect2(22, 28, 202, 7), BLUE)
-	# Normal reserve fills the whole bar. Earned overdrive builds a second
-	# coloured layer over its top edge, without reserving a permanent gap.
-	_hud["player_bar"].tooltip_text = "Full normal reserve: 9000 RPM. Extra RPM builds a pulsing layer over the top."
-	_hud["rpm_overflow"] = _bar(_content, Rect2(22, 28, 202, 3), ORANGE)
+	_panel(_content,Rect2(86,6,248,48),Color("14232e"),Color("335a70"))
+	_panel(_content,Rect2(466,6,248,48),Color("14232e"),Color("73513b"))
+	_hud["player_name"] = _label(_content,"YOUR TOP",Rect2(96,8,228,15),10,BLUE)
+	_hud["enemy_name"] = _label(_content,"RIVAL",Rect2(476,8,228,15),10,ORANGE,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["player_bar"] = _bar(_content,Rect2(96,26,228,7),BLUE)
+	_hud["player_bar"].tooltip_text = "Normal reserve: 9000 RPM. OVERDRIVE means actual extra RPM."
+	_hud["rpm_overflow"] = _bar(_content,Rect2(96,26,228,3),ORANGE)
 	_hud["rpm_overflow"].max_value = 0.24
-	_hud["rpm_overflow"].add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	_hud["rpm_overflow"].add_theme_stylebox_override("background",StyleBoxEmpty.new())
 	_hud["rpm_overflow"].visible = false
-	_hud["enemy_bar"] = _bar(_content, Rect2(416, 28, 202, 7), ORANGE)
-	_hud["player_rpm"] = _label(_content, "", Rect2(22, 37, 202, 12), 9, MUTED)
-	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 37, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["enemy_bar"] = _bar(_content,Rect2(476,26,228,7),ORANGE)
+	_hud["player_rpm"] = _label(_content,"",Rect2(96,36,228,14),10,MUTED)
+	_hud["enemy_rpm"] = _label(_content,"",Rect2(476,36,228,14),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["impact_confirmation"] = _label(_content,"",Rect2(6,248,68,68),10,ORANGE)
+	_hud["impact_confirmation"].autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	_hud["state_meters"] = PowerStateMeters.new()
 	_content.add_child(_hud["state_meters"])
-	_hud["rerolls"] = _label(_content, "", Rect2(22, 304, 128, 13), 9, BLUE)
-	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 26, 202, 11), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
-	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 44, 56, 20), "pause")
-	pause_button.add_theme_font_size_override("font_size", 10)
-	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
-	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
+	_hud["rerolls"] = _label(_content,"",Rect2(6,425,74,24),10,BLUE)
+	_hud["swarm_objective"] = _label(_content,"",Rect2(476,24,228,12),10,TEXT,HORIZONTAL_ALIGNMENT_RIGHT)
+	_panel(_content,Rect2(344,6,112,48),Color("14232e"))
+	_hud["time"] = _label(_content,"01:30",Rect2(346,6,108,25),20,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
+	var pause_button: Button = _button(_content,"PAUSE",Rect2(6,8,68,24),"pause")
+	pause_button.add_theme_font_size_override("font_size",10)
 	pause_button.focus_mode = Control.FOCUS_NONE
-	_hud["round"] = _label(_content, "", Rect2(239, 66, 162, 10), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["director_callout"] = _label(_content, "", Rect2(237, 76, 166, 10), 8, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["power_note"] = _label(_content, "", Rect2(192, 291, 256, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["round"] = _label(_content,"",Rect2(342,31,116,11),9,MUTED,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["director_callout"] = _label(_content,"",Rect2(336,43,128,11),9,ORANGE,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["announcement"] = _label(_content,"",Rect2(225,190,350,64),35,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["power_note"] = _label(_content,"",Rect2(86,424,136,18),10,MUTED)
 	for index: int in range(Powers.ACTIVE_IDS.size()):
-		_hud["power_panel_%d" % index] = _panel(_content, Rect2(192 + index * 32, 303, 28, 20))
-		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
-		_hud["power_rank_%d" % index] = _label(_content, "", Rect2(210 + index * 32, 307, 9, 12), 7, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_hud["power_panel_%d" % index] = _panel(_content,Rect2(272+index*32,424,28,22))
+		var icon: TextureRect = _power_icon(_content,"",Rect2(274+index*32,427,16,16))
+		_hud["power_rank_%d" % index] = _label(_content,"",Rect2(290+index*32,429,9,14),9,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
 		icon.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventScreenTouch and event.pressed:
-				action.emit("pause", null)
+				action.emit("pause",null)
 				get_viewport().set_input_as_handled())
 		_hud["power_%d" % index] = icon
-	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
-	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
-	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)
-	_hud["controls"] = _label(_content, "STEER    /    BURST    /    BRAKE    /    PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["xp_panel"] = _panel(_content, Rect2(252, 324, 376, 28), Color(0.035, 0.065, 0.095, 0.94), Color("477877"))
-	_hud["xp_label"] = _label(_content, "LV 1  /  NEXT POWER", Rect2(261, 327, 232, 13), 9, BLUE)
-	_hud["xp_detail"] = _label(_content, "0 / 1 XP", Rect2(496, 327, 122, 13), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["xp_bar"] = _bar(_content, Rect2(261, 343, 354, 5), Color("83d89a"))
-	_hud["xp_hit"] = _rect(_content, Rect2(252, 324, 376, 28), Color(1, 0.9, 0.6, 0))
-	if mobile_hud:
-		# Opposite-thumb actions own the right edge; all progress remains readable.
-		_hud["xp_panel"].size.x = 286
-		_hud["xp_hit"].size.x = 286
-		_hud["xp_label"].size.x = 148
-		_hud["xp_detail"].position.x = 412
-		_hud["xp_detail"].size.x = 116
-		_hud["xp_bar"].size.x = 264
-		_hud["controls"].visible = false
+	_panel(_content,Rect2(86,450,224,28),Color("14232e"))
+	_hud["burst"] = _label(_content,"BURST READY",Rect2(97,452,203,16),10,BLUE)
+	_hud["burst_bar"] = _bar(_content,Rect2(97,472,203,3),BLUE)
+	_hud["controls"] = _label(_content,"STEER / BURST / BRAKE / PAUSE",Rect2(326,452,388,18),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_panel"] = _panel(_content,Rect2(326,450,388,28),Color("14232e"),Color("477877"))
+	_hud["xp_label"] = _label(_content,"LV 1 / NEXT POWER",Rect2(336,452,230,15),10,BLUE)
+	_hud["xp_detail"] = _label(_content,"0 / 1 XP",Rect2(574,452,130,15),10,TEXT,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_bar"] = _bar(_content,Rect2(336,472,368,4),Color("83d89a"))
+	_hud["xp_hit"] = _rect(_content,Rect2(326,450,388,28),Color(1,.9,.6,0))
+	if mobile_hud: _hud["controls"].visible = false
 	var focus: Control = get_viewport().gui_get_focus_owner()
-	if focus != null:
-		focus.release_focus()
-	_create_power_inspector(Rect2(430, 70, 188, 242))
+	if focus != null: focus.release_focus()
+	_create_power_inspector(Rect2(526,166,188,242))
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: Control = _hud["power_%d" % index]
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -1892,11 +1965,13 @@ func _create_hud() -> void:
 
 func combat_layout_snapshot() -> Dictionary:
 	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
-	result["regions"] = {"player_reserve_and_states": Rect2(12, 8, 222, 74), "pressure_and_states": Rect2(406, 8, 222, 74),
-		"clock_pause_threat": Rect2(237, 8, 166, 78), "powers_rerolls": Rect2(12, 291, 526, 32),
-		"burst": Rect2(12, 324, 224, 28), "progress": Rect2(252, 324, 286 if mobile_hud else 376, 28)}
+	result["regions"] = {"player_reserve":Rect2(86,6,248,48),"pressure":Rect2(466,6,248,48),
+		"clock":Rect2(336,6,128,48),"powers_rerolls":Rect2(6,424,708,22),
+		"burst":Rect2(86,450,224,28),"progress":Rect2(326,450,388,28),
+		"state_left":Rect2(6,76,68,144),"state_right":Rect2(726,76,68,144)}
 	result["duplicate_anchor_label"] = _hud.has("anchor")
 	result["temporary_announcements_live_combat"] = false
+	result["hud_overlaps_arena"] = false
 	return result
 
 func _inspect_hud_power(index: int) -> void:

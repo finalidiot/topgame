@@ -1,11 +1,11 @@
 extends Control
 ## Read-only native-pixel state display. Combat owns every value and timer.
 const FrontEnd = preload("res://scripts/front_end.gd")
-const LEFT: Vector2 = Vector2(12, 51)
-const RIGHT: Vector2 = Vector2(406, 51)
-const WIDTH: float = 222.0
-const ROW_HEIGHT: float = 14.0
-const LABEL_SIZE: int = 8
+const LEFT: Vector2 = Vector2(6, 76)
+const RIGHT: Vector2 = Vector2(726, 76)
+const WIDTH: float = 68.0
+const ROW_HEIGHT: float = 72.0
+const LABEL_SIZE: int = 10
 var _state: Dictionary = {}
 var _rows: Dictionary = {"left": [], "right": []}
 
@@ -13,7 +13,7 @@ func _ready() -> void:
 	theme = FrontEnd.make_theme()
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	size = Vector2(640, 360)
+	size = Vector2(800, 480)
 
 func update_state(state: Dictionary) -> void:
 	_state = state.duplicate(true)
@@ -33,10 +33,10 @@ func update_state(state: Dictionary) -> void:
 		_rows.left.append({"id": "sink", "text": "STORED FORCE  %d / %d" % [roundi(float(sink.get("stored", 0.0))), roundi(float(sink.get("capacity", 0.0)))],
 			"bars": [{"value": clampf(float(sink.get("ratio", 0.0)), 0.0, 1.0), "color": Color("a68cd0")}], "color": Color("c5b4dd")})
 	var redline: Dictionary = state.get("redline", {})
-	if bool(redline.get("owned", false)) or float(redline.get("excess", 0.0)) > 0.0:
+	if bool(redline.get("owned", false)):
 		var active: bool = bool(redline.get("active", false)) or float(redline.get("excess", 0.0)) > 0.0
 		var heat: float = clampf(float(redline.get("heat", 0.0)), 0.0, 1.0)
-		var status: String = "OVERDRIVE" if active else "REDLINE"
+		var status: String = "REDLINE"
 		var suffix: String = " +%d%%" % roundi(float(redline.get("excess", 0.0)) * 100.0) if float(redline.get("excess", 0.0)) > 0.0 else ""
 		_rows.right.append({"id": "redline", "active": active, "text": "%s%s / HEAT %d%%" % [status, suffix, roundi(heat * 100.0)],
 			"bars": [{"value": heat, "color": Color("d87960")}], "color": Color("efb099")})
@@ -49,27 +49,55 @@ func update_state(state: Dictionary) -> void:
 
 func diagnostic_snapshot() -> Dictionary:
 	return {"rows": _rows.duplicate(true), "state": _state.duplicate(true), "left": LEFT, "right": RIGHT,
-		"width": WIDTH, "row_height": ROW_HEIGHT, "native_view": [640, 360], "maximum_rows": 4,
+		"width": WIDTH, "row_height": ROW_HEIGHT, "native_view": [800, 480], "maximum_rows": 4,
 		"label_size": LABEL_SIZE, "gameplay_writes": 0, "owns_timers": false, "reduced_flashing_pulses": 0}
+
+func _icon(id: String) -> Texture2D:
+	var catalogue = preload("res://scripts/run_powers.gd")
+	var family: String = {"anchor":"dead_centre", "sink":"impact_sink", "orbit":"orbit_drive"}.get(id,id)
+	var power: Dictionary = catalogue.get_power(family)
+	var path: String = str(power.get("icon",""))
+	if path.is_empty() or not ResourceLoader.exists(path): return null
+	var atlas := AtlasTexture.new()
+	atlas.atlas = load(path)
+	atlas.region = Rect2(int(power.icon_frame)*16,0,16,16)
+	return atlas
 
 func _draw_column(origin: Vector2, rows: Array) -> void:
 	if rows.is_empty(): return
 	var font: Font = get_theme_default_font()
 	for index: int in range(rows.size()):
 		var row: Dictionary = rows[index]
-		var top: Vector2 = origin + Vector2(10, index * ROW_HEIGHT)
-		draw_string(font, top + Vector2(0, 8), str(row.text), HORIZONTAL_ALIGNMENT_LEFT, WIDTH - 20, LABEL_SIZE, row.color)
-		var bars: Array = row.bars
-		var width: float = (WIDTH - 20.0 - (bars.size() - 1) * 6.0) / bars.size()
-		for bar_index: int in range(bars.size()):
-			var bar: Dictionary = bars[bar_index]
-			var rect: Rect2 = Rect2(top + Vector2(bar_index * (width + 6.0), 10), Vector2(width, 3))
-			draw_rect(rect, Color("263641"))
-			draw_rect(Rect2(rect.position, Vector2(roundf(width * float(bar.value)), 3)), bar.color)
-			if row.id == "anchor":
-				for threshold: float in [float(row.safe_stress), float(row.overload_stress)]:
-					draw_line(rect.position + Vector2(roundf(width * threshold), 0), rect.position + Vector2(roundf(width * threshold), 3), Color("dde0ce"))
+		var top: Vector2 = origin + Vector2(0,index*ROW_HEIGHT)
+		var box := Rect2(top,Vector2(WIDTH,66))
+		draw_rect(box,Color("14222c"))
+		draw_rect(box,Color("435963"),false,1)
+		for corner: Vector2 in [box.position,box.position+Vector2(WIDTH-5,0),box.position+Vector2(0,65),box.position+Vector2(WIDTH-5,65)]:
+			draw_line(corner,corner+Vector2(4,0),row.color)
+		var icon: Texture2D = _icon(row.id)
+		if icon != null: draw_texture(icon,top+Vector2(4,5))
+		var label: String = {"anchor":"ANCHOR", "sink":"FORCE", "redline":"REDLINE", "orbit":"DRIVE"}.get(row.id,row.id.to_upper())
+		draw_string(font,top+Vector2(22,16),label,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-24,LABEL_SIZE,row.color)
+		var value: float = float(row.bars[0].value)
+		var detail: String = "HEAT %d%%" % roundi(value*100.0) if row.id == "redline" else "%d%%" % roundi(value*100.0)
+		if row.id == "anchor": detail = "STRESS%d" % roundi(value*100.0)
+		if row.id == "sink": detail = "%d / %d" % [roundi(float(_state.sink.get("stored",0))),roundi(float(_state.sink.get("capacity",0)))]
+		draw_string(font,top+Vector2(5,31),detail,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-10,LABEL_SIZE,Color("d1d9d7"))
+		var rect := Rect2(top+Vector2(5,38),Vector2(WIDTH-10,7))
+		draw_rect(rect,Color("293943"))
+		draw_rect(Rect2(rect.position,Vector2(roundf(rect.size.x*value),7)),row.bars[0].color)
+		for tick: int in range(1,4):
+			draw_line(rect.position+Vector2(roundf(rect.size.x*tick/4.0),0),rect.position+Vector2(roundf(rect.size.x*tick/4.0),2),Color("a7b7b5"))
+		var status: String = str(row.get("status",""))
+		if row.id == "redline": status = "ACTIVE" if bool(_state.redline.get("active",false)) else "COOL"
+		if row.id == "orbit": status = "DRIFT" if bool(_state.orbit.get("drifting",false)) else "CARVE"
+		if row.id == "sink": status = "LOADED" if value >= .95 else ("STORE" if value > .01 else "EMPTY")
+		if row.id == "anchor":
+			status = {"HIGH LOAD":"HIGH","RECHARGE":"RECOVER"}.get(status,status)
+			for threshold: float in [float(row.safe_stress),float(row.overload_stress)]:
+				draw_line(rect.position+Vector2(roundf(rect.size.x*threshold),0),rect.position+Vector2(roundf(rect.size.x*threshold),7),Color("dde0ce"))
+		draw_string(font,top+Vector2(5,59),status,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-10,LABEL_SIZE,row.color)
 
 func _draw() -> void:
-	_draw_column(LEFT, _rows.left)
-	_draw_column(RIGHT, _rows.right)
+	_draw_column(LEFT,_rows.left)
+	_draw_column(RIGHT,_rows.right)
