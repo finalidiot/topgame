@@ -11,6 +11,7 @@ import argparse
 import hashlib
 from datetime import datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import sys
@@ -128,6 +129,59 @@ def verify_beast_assets(assets: dict, source_root: Path = ROOT) -> dict:
     return {"beast_textures_verified": 4, "beast_manifest_matches_source": True,
             "beast_colour_identity_verified": True, "beast_visible_rgba_exact": True,
             "beast_transparency_alpha_exact": True, "beast_native_palette_metadata": True}
+
+
+def verify_pickup_assets(assets: dict, source_root: Path = ROOT) -> dict:
+    """Read-only package evidence for actual floor receipt pixels and short PCM."""
+    relative = "assets/powers/pickup_003a1/manifest.json"
+    expected = json.loads((source_root / relative).read_text(encoding="utf-8"))
+    try:
+        actual = json.loads(assets.get("pickup_flair_json", "null"))
+    except (TypeError, ValueError) as error:
+        raise RuntimeError("Packaged pickup flair manifest is invalid") from error
+    if actual != expected:
+        raise RuntimeError("Packaged pickup flair manifest differs from current source")
+    row = assets.get("pickup_flair_texture")
+    if not isinstance(row, dict) or row.get("kind") != "collect":
+        raise RuntimeError("Actual package did not inspect the authored pickup flair")
+    if row.get("path") != expected["texture"] or row.get("metadata_path") != "res://"+relative:
+        raise RuntimeError("Packaged pickup flair resource path differs")
+    size, visible = _visible_pixels(source_root / expected["texture"].removeprefix("res://"))
+    if (row.get("valid") is not True or row.get("visible_pixels") is not True
+            or row.get("size") != size or row.get("transparent_rgb_normalized") is not True
+            or row.get("visible_rgba_sha256") != visible):
+        raise RuntimeError("Packaged pickup flair alpha/visible RGB pixels differ")
+    topology = ("cell","pivot","columns","frame_count","durations_ms","tags","layers","source")
+    if any(row.get(key) != expected[key] for key in topology):
+        raise RuntimeError("Packaged pickup flair topology differs")
+    source = source_root / expected["source"]
+    if (pipeline.sha256(source) != expected.get("source_sha256")
+            or pipeline.sha256(source_root / expected["texture"].removeprefix("res://")) != expected.get("texture_sha256")):
+        raise RuntimeError("Pickup native master/export fingerprints differ")
+    present = row.get("native_source_available")
+    native_hash = row.get("native_source_sha256")
+    if (type(present) is not bool or (present and native_hash != expected["source_sha256"])
+            or (not present and native_hash != "")):
+        raise RuntimeError("Packaged pickup flair native-source evidence is inconsistent")
+    audio = assets.get("pickup_collect_audio")
+    if not isinstance(audio, dict) or audio.get("kind") != "pickup_collect":
+        raise RuntimeError("Actual package did not inspect the short pickup collection cue")
+    path = "res://assets/audio/pickup_collect.wav"
+    with wave.open(str(source_root / path.removeprefix("res://")),"rb") as sample:
+        frames, rate, channels, width = sample.getnframes(),sample.getframerate(),sample.getnchannels(),sample.getsampwidth()
+        digest = hashlib.sha256(sample.readframes(frames)).hexdigest()
+    if (frames,rate,channels,width) != (8640,48000,1,2):
+        raise RuntimeError("Source pickup cue is not the authored180ms mono16-bit PCM")
+    if (audio.get("path") != path or audio.get("valid") is not True or audio.get("format") != 1
+            or audio.get("stereo") is not False or audio.get("channels") != channels
+            or audio.get("mix_rate") != rate or audio.get("loop_mode") != 0
+            or audio.get("pcm_frames") != frames or audio.get("pcm_sha256") != digest
+            or not isinstance(audio.get("duration_seconds"),(int,float))
+            or isinstance(audio.get("duration_seconds"),bool) or not math.isfinite(audio["duration_seconds"]) or abs(audio["duration_seconds"]-.18) > .000001):
+        raise RuntimeError("Packaged pickup collection PCM or one-shot timing differs")
+    return {"pickup_flair_texture_verified":True,"pickup_flair_manifest_matches_source":True,"pickup_flair_visible_rgba_exact":True,
+            "pickup_native_master_verified":True,"pickup_packaged_native_master_available":present,
+            "pickup_collection_audio_pcm_exact":True,"pickup_collection_audio_seconds":.18}
 
 
 def _source_economy_odds(source_root: Path) -> dict:
@@ -428,6 +482,7 @@ def main() -> None:
                 raise RuntimeError("Packaged feedback sheet pixels differ: " + row["path"])
         report["assets"]["feedback_textures_verified"] = 3
         report["assets"]["feedback_manifest_matches_source"] = True
+        report["assets"].update(verify_pickup_assets(assets))
         report["assets"].update(verify_beast_assets(assets))
         music_source = json.loads((ROOT / "assets/audio/music/manifest.json").read_text(encoding="utf-8"))
         music_rows = assets.get("music_stems", [])

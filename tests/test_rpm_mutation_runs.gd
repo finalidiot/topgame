@@ -7,7 +7,7 @@ func _run() -> void:
 	for starter: String in Starters.IDS:
 		var result: Dictionary = play(starter,7341)
 		report.runs.append(result)
-		print("RPM_BREAKNECK %s seconds=%.2f reason=%s powers_spent=%.3f mutation=%s" % [starter,result.survival_time,result.reason,result.rpm.losses.powers,result.mutations])
+		print("RPM_BREAKNECK %s seconds=%.2f reason=%s powers_spent=%.3f redline_spent=%.3f mutation=%s" % [starter,result.survival_time,result.reason,result.rpm.losses.powers,result.rpm.losses.redline,result.mutations])
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):
 			var file: FileAccess = FileAccess.open(arg.trim_prefix("--report="),FileAccess.WRITE)

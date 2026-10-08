@@ -39,7 +39,7 @@ func run() -> void:
 			var font: Font = meter.get_theme_default_font()
 			for side: String in ["left","right"]:
 				for row: Dictionary in d.rows[side]:
-					check(font.get_string_size(str(row.text),HORIZONTAL_ALIGNMENT_LEFT,-1,10).x<=Meters.WIDTH-20,"Native10px state label fits: "+row.text)
+					check(font.get_string_size(str(row.text),HORIZONTAL_ALIGNMENT_LEFT,-1,Meters.LABEL_SIZE).x<=Meters.WIDTH-20,"Native state label fits at its actual authored HUD size: "+row.text)
 					for bar: Dictionary in row.bars: check(float(bar.value)>=0.0 and float(bar.value)<=1.0,"Displayed reserve is bounded")
 			check(d.gameplay_writes==0 and not d.owns_timers and d.reduced_flashing_pulses==0,"Meters own neither combat, clock nor flashing")
 	check(meter.texture_filter==CanvasItem.TEXTURE_FILTER_NEAREST and meter.mouse_filter==Control.MOUSE_FILTER_IGNORE,"Nearest pixels never steal steering or touch")
@@ -83,7 +83,8 @@ func live_hud() -> void:
 	var state: Dictionary = b.powers.public_state(p)
 	check(menus._hud.state_meters.diagnostic_snapshot().state==state,"HUD reads actual runtime snapshot")
 	check(menus._inspection_owned_state.state==state,"Inspector receives the same authoritative state")
-	check(menus._hud.anchor.position.y>=Meters.LEFT.y+2*Meters.ROW_HEIGHT+5,"Legacy rearm advice sits beneath state rows")
+	check(not menus._hud.has("anchor"),"The single authoritative anchor meter has no duplicate lower status/quota label")
+	check(Meters.LEFT.y+2*Meters.ROW_HEIGHT<=86,"All four owned-state meters fit in the upper edge reservation")
 	check(menus._hud.enemy_name.text.begins_with("PRESSURE ") and menus._hud.enemy_bar.visible,"Continuous Run pressure is explicit in upper framing")
 	var census: Dictionary = b.continuous.snapshot().census
 	var budget: float = float(b.continuous.snapshot().limits.budget)

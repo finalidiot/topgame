@@ -47,7 +47,7 @@ func _test_load_and_consequence() -> void:
 	for tick: int in range(90): step(h, Vector2.ZERO)
 	check(p.anchor_stress == 1.0 and float(p.anchor_strength) <= 0.151, "Accumulated physical Stress is bounded and visibly weakens the floor connection")
 	check(1.0 / h.runtime.inverse_mass(p) < initial_mass * 0.03, "High Stress relinquishes the enormous added anchor mass")
-	check(h.runtime.incoming_rpm_scale(p) > initial_shock + 0.45, "High Stress stops most of the perfect incoming shock discount")
+	check(h.runtime.incoming_rpm_scale(p) > initial_shock + 0.25, "High Stress stops most of the perfect incoming shock discount")
 	var before_rpm: float = p.rpm
 	var before_losses: float = h.losses
 	for tick: int in range(60): step(h, Vector2.ZERO)
@@ -64,8 +64,8 @@ func _test_vent() -> void:
 		p.pos = Vector2(95, 0) if mode == "outside" else Vector2.ZERO
 		var direction: Vector2 = Vector2.RIGHT * (0.5 if mode in ["active", "outside", "brake"] else 0.20 if mode == "tiny_input" else 0.0)
 		for tick: int in range(120): step(h, direction, mode == "brake")
-		check(float(p.anchor_stress) < 0.60 if mode in ["active", "outside"] else is_equal_approx(p.anchor_stress, 0.8), mode + " has the correct meaningful release-and-movement vent eligibility")
-		if mode == "outside": check(p.anchor_stress < 0.35, "Moving outside the existing recharge socket vents faster without arena laps")
+		check(float(p.anchor_stress) < 0.70 if mode in ["active", "outside"] else is_equal_approx(p.anchor_stress, 0.8), mode + " has the correct meaningful release-and-movement vent eligibility")
+		if mode == "outside": check(p.anchor_stress > 0.50 and p.anchor_overloaded, "Two seconds outside cannot clear the overload recovery window")
 
 func _test_redline_cost() -> void:
 	var a: Host = settled()

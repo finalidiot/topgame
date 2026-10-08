@@ -49,7 +49,7 @@ def validate(data,mode,rendered):
         assert any(row['pickup']['active'] for row in rows)
         assert any(any(item['warning'] for item in row['pickup']['active']) for row in rows)
         assert any(row['pickup']['expired']>0 for row in rows)
-        assert all(row['pickup']['draw_before_rigs'] and row['pickup']['lifetime']==16 and row['pickup']['collect_radius']==14 for row in rows)
+        assert all(row['pickup']['draw_before_rigs'] and row['pickup']['lifetime']==16 and row['pickup']['collect_radius']==18 for row in rows)
         assert max(len(row['pickup']['active']) for row in rows)<=2
         assert any(row['phase']=='leave_centre' and sum(v*v for v in row['position'])>45**2 for row in rows)
         assert any(row['phase']=='hold_centre' and sum(v*v for v in row['position'])<40**2 for row in rows)

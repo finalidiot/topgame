@@ -954,6 +954,10 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
 	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first) * float(a_contact.shock) + float(a_contact.own_cost)
 	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second) * float(b_contact.shock) + float(b_contact.own_cost)
+	# The floor brace still steadies a top. Reserve endurance has its own
+	# weaker, earlier-fatiguing protection and does not change physical wobble.
+	var wobble_a: float = loss_a * powers.incoming_wobble_scale(first)
+	var wobble_b: float = loss_b * powers.incoming_wobble_scale(second)
 	loss_a *= powers.incoming_rpm_scale(first)
 	loss_b *= powers.incoming_rpm_scale(second)
 	var actual_a: float = minf(float(first.rpm),loss_a)
@@ -962,8 +966,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	spend_rpm(second,loss_b,"collisions")
 	first["energy"] = first["rpm"]
 	second["energy"] = second["rpm"]
-	first["wobble"] = minf(1.0, float(first["wobble"]) + loss_a * 3.1)
-	second["wobble"] = minf(1.0, float(second["wobble"]) + loss_b * 3.1)
+	first["wobble"] = minf(1.0, float(first["wobble"]) + wobble_a * 3.1)
+	second["wobble"] = minf(1.0, float(second["wobble"]) + wobble_b * 3.1)
 	PartPhysics.remember_contact(first,int(second.entity_id),elapsed)
 	PartPhysics.remember_contact(second,int(first.entity_id),elapsed)
 	for fighter: Dictionary in [first, second]:
@@ -1133,6 +1137,7 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 		int(second.entity_id): powers.attack_multiplier(second) * (1.43 if float(second.get("burst_time", 0.0)) > 0.0 else 1.0)}
 	var rpm_outputs: Dictionary = {int(first.entity_id): powers.effective_rpm(first), int(second.entity_id): powers.effective_rpm(second)}
 	var incoming_scales: Dictionary = {int(first.entity_id): powers.incoming_rpm_scale(first), int(second.entity_id): powers.incoming_rpm_scale(second)}
+	var wobble_scales: Dictionary = {int(first.entity_id): powers.incoming_wobble_scale(first), int(second.entity_id): powers.incoming_wobble_scale(second)}
 	powers.accepted_contact(first,second,severity,normal,a+normal*float(first.radius),Vector2(first.vel)-va,Vector2(second.vel)-vb,impulse/float(first.mass),impulse/float(second.mass))
 	_progression_contact(first, second, severity)
 	for pair: Array in [[first,second],[second,first]]:
@@ -1157,7 +1162,7 @@ func _resolve_small_pair(first: Dictionary, second: Dictionary) -> void:
 			var response: Dictionary = a_component if int(target.entity_id) == int(first.entity_id) else b_component
 			loss = loss*float(response.shock)+float(response.own_cost)*0.25
 		loss *= float(incoming_scales[int(target.entity_id)])
-		if target.combatant_type == "full_top": target.wobble = minf(1.0,float(target.wobble)+wobble_loss*float(incoming_scales[int(target.entity_id)])*3.1)
+		if target.combatant_type == "full_top": target.wobble = minf(1.0,float(target.wobble)+wobble_loss*float(wobble_scales[int(target.entity_id)])*3.1)
 		spend_rpm(target,loss,"collisions")
 		target.energy = target.rpm
 		target.impact_time = 0.12
@@ -1481,11 +1486,14 @@ func _update_effects(dt: float) -> void:
 		if float(_rings[index]["life"]) <= 0.0:
 			_rings.remove_at(index)
 
-func _draw() -> void:
-	var shake: Vector2 = Vector2.ZERO
+## Read-only attachment offset for child presentation such as top spin bars.
+func presentation_offset() -> Vector2:
 	if screen_shake_enabled and _shake_time > 0.0:
-		shake = Vector2(roundf(sin(_shake_phase) * _shake_strength), roundf(cos(_shake_phase * 1.31) * _shake_strength * 0.5))
-	draw_set_transform(shake)
+		return Vector2(roundf(sin(_shake_phase) * _shake_strength), roundf(cos(_shake_phase * 1.31) * _shake_strength * 0.5))
+	return Vector2.ZERO
+
+func _draw() -> void:
+	draw_set_transform(presentation_offset())
 	for layer: String in ["backdrop", "structure", "surface", "markings", "rear_rim"]:
 		var texture: Texture2D = _textures.get("arena/" + layer)
 		if texture != null:

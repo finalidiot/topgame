@@ -2,20 +2,20 @@ extends RefCounted
 ## Run-only source accounting and earned sustain. No net-loss adjustment.
 ## Values are fractions of a full 9000 RPM reserve. No randomness is consumed.
 const TUNING = {
-	"passive_base":0.0032, "stamina_credit":0.00022, "passive_floor":0.0008,
+	"passive_base":0.0035, "stamina_credit":0.00022, "passive_floor":0.0009,
 	"movement":0.0012, "acceleration":0.0010, "braking":0.0025, "wobble":0.003,
-	"severity":0.32, "target_cooldown":1.4, "global_cooldown":0.35,
-	"reclaim_damage":2.8, "reclaim_severity":0.026, "contact_max":0.095,
-	"bucket_capacity":0.12, "bucket_rate":0.045,
+	"severity":0.32, "target_cooldown":1.8, "global_cooldown":0.45,
+	"reclaim_damage":1.4, "reclaim_severity":0.014, "contact_max":0.060,
+	"bucket_capacity":0.09, "bucket_rate":0.026,
 	"overclock_capacity":0.15, "overclock_rate":0.025,
 	"small_capacity":0.008, "small_rate":0.002, "small_elimination":0.001,
 	"redline_activation_1":0.025, "redline_activation_2":0.045, "redline_drain":0.015, "redline_heat":0.025,
-	"committed_bonus":0.040,
-	"elimination":0.045, "elite":0.075, "boss":0.12, "credit_seconds":12.0
+	"committed_bonus":0.022,
+	"elimination":0.030, "elite":0.055, "boss":0.090, "credit_seconds":12.0
 }
 var _host: WeakRef
-var losses: Dictionary = {"passive":0.0,"movement":0.0,"burst":0.0,"braking":0.0,"powers":0.0,"collisions":0.0,"walls":0.0,"wobble":0.0,"steering":0.0}
-var gains: Dictionary = {"combat_reclamation":0.0,"elimination":0.0,"elite":0.0,"boss":0.0,"second_wind":0.0,"runaway":0.0,"slipstream":0.0,"redline_motion":0.0,"redline_contact":0.0,"clutch":0.0}
+var losses: Dictionary = {"passive":0.0,"movement":0.0,"burst":0.0,"braking":0.0,"powers":0.0,"redline":0.0,"collisions":0.0,"walls":0.0,"wobble":0.0,"steering":0.0}
+var gains: Dictionary = {"combat_reclamation":0.0,"elimination":0.0,"elite":0.0,"boss":0.0,"second_wind":0.0,"runaway":0.0,"slipstream":0.0,"redline_motion":0.0,"redline_contact":0.0,"clutch":0.0,"dead_centre":0.0,"impact_sink":0.0}
 var contacts: Dictionary = {}
 var credits: Dictionary = {}
 var paid: Dictionary = {}

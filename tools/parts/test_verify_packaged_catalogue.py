@@ -445,4 +445,70 @@ class BeastColourPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "manifest is invalid"): verifier.verify_beast_assets(self.report)
 
 
+class PickupPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        meta = json.loads((verifier.ROOT / "assets/powers/pickup_003a1/manifest.json").read_text(encoding="utf-8"))
+        size,digest = verifier._visible_pixels(verifier.ROOT / meta["texture"].removeprefix("res://"))
+        row = {"kind":"collect","path":meta["texture"],"metadata_path":"res://assets/powers/pickup_003a1/manifest.json",
+               "valid":True,"visible_pixels":True,"size":size,"visible_rgba_sha256":digest,"transparent_rgb_normalized":True,
+               "native_source_available":True,"native_source_sha256":meta["source_sha256"]}
+        row.update({key:deepcopy(meta[key]) for key in ("cell","pivot","columns","frame_count","durations_ms","tags","layers","source")})
+        path = "res://assets/audio/pickup_collect.wav"
+        with wave.open(str(verifier.ROOT / path.removeprefix("res://")),"rb") as sample:
+            digest = hashlib.sha256(sample.readframes(sample.getnframes())).hexdigest()
+        cls.fixture = {"pickup_flair_json":json.dumps(meta),"pickup_flair_texture":row,"pickup_collect_audio":{
+            "kind":"pickup_collect","path":path,"valid":True,"format":1,"stereo":False,"channels":1,"mix_rate":48000,
+            "loop_mode":0,"pcm_frames":8640,"duration_seconds":.18,"pcm_sha256":digest}}
+
+    def setUp(self): self.report = deepcopy(self.fixture)
+    def verify(self): return verifier.verify_pickup_assets(self.report)
+
+    def test_actual_source_native_pixels_and_short_pcm_fixture_accepted(self):
+        result = self.verify()
+        self.assertTrue(result["pickup_flair_visible_rgba_exact"])
+        self.assertTrue(result["pickup_collection_audio_pcm_exact"])
+        self.assertEqual(result["pickup_collection_audio_seconds"],.18)
+
+    def test_missing_marker_or_unknown_receipts_rejected(self):
+        for key in ("pickup_flair_texture","pickup_collect_audio"):
+            for row in (None,{},[],{"kind":"unknown"}):
+                self.report = deepcopy(self.fixture);self.report[key]=row
+                with self.subTest(key=key,row=row),self.assertRaisesRegex(RuntimeError,"did not inspect"):self.verify()
+
+    def test_changed_or_invalid_native_manifest_rejected(self):
+        for value in (None,"broken",json.dumps({"duration_ms":310})):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_json"]=value
+            with self.subTest(value=value),self.assertRaisesRegex(RuntimeError,"manifest (is invalid|differs)"):self.verify()
+
+    def test_imported_visible_rgba_alpha_and_path_drift_rejected(self):
+        for key,value,expected in (("path","res://assets/wrong.png","resource path"),("metadata_path","res://assets/wrong.json","resource path"),
+                                   ("valid",False,"alpha/visible"),("visible_pixels",False,"alpha/visible"),("size",[1,1],"alpha/visible"),
+                                   ("visible_rgba_sha256","0"*64,"alpha/visible"),("transparent_rgb_normalized",False,"alpha/visible")):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,expected):self.verify()
+
+    def test_native_animation_topology_and_provenance_drift_rejected(self):
+        for key,value in (("pivot",[0,0]),("cell",[1,1]),("columns",1),("frame_count",1),("durations_ms",[]),
+                          ("tags",{}),("layers",[]),("source","assets/wrong.aseprite")):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,"topology"):self.verify()
+        for key,value in (("native_source_available","true"),("native_source_sha256","0"*64)):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,"native-source evidence"):self.verify()
+
+    def test_audio_pcm_loop_length_format_and_resource_drift_rejected(self):
+        for key,value in (("path","res://assets/audio/card_select.wav"),("valid",False),("format",2),("stereo",True),
+                          ("channels",2),("mix_rate",32000),("loop_mode",1),("pcm_frames",9000),("pcm_sha256","0"*64),
+                          ("duration_seconds",.5),("duration_seconds",True),("duration_seconds",".18"),("duration_seconds",float("nan"))):
+            self.report = deepcopy(self.fixture);self.report["pickup_collect_audio"][key]=value
+            with self.subTest(key=key,value=value),self.assertRaisesRegex(RuntimeError,"PCM or one-shot timing"):self.verify()
+
+    def test_optional_native_master_absence_is_explicit(self):
+        self.report["pickup_flair_texture"].update(native_source_available=False,native_source_sha256="")
+        result = self.verify()
+        self.assertTrue(result["pickup_native_master_verified"])
+        self.assertFalse(result["pickup_packaged_native_master_available"])
+
+
 if __name__ == "__main__": unittest.main(verbosity=2)

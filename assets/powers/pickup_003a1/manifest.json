@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "task": "003A.1",
+  "cell": [
+    40,
+    24
+  ],
+  "pivot": [
+    20,
+    12
+  ],
+  "layers": [
+    "01 broken floor ring",
+    "02 stamped chip glints",
+    "03 short floor sparks"
+  ],
+  "tags": {
+    "collect": {
+      "from": 0,
+      "to": 5
+    }
+  },
+  "durations_ms": [
+    30,
+    35,
+    45,
+    55,
+    65,
+    80
+  ],
+  "columns": 6,
+  "frame_count": 6,
+  "duration_ms": 310,
+  "filter": "nearest",
+  "floor_only": true,
+  "loop": false,
+  "reduced_flashing": "same one-way authored fade; no repeated brightness pulses",
+  "source": "assets/source-art/pickup_003a1/collection.aseprite",
+  "texture": "res://assets/powers/pickup_003a1/collection.png",
+  "source_sha256": "6f687bfecd44b649fd976b380defc62ecc4abae15d9a6aef532a5e82e6234487",
+  "texture_sha256": "97281f269ce1d3a81addbbbf37455a0cfd3aa4d9c463f210827febc020c49d57",
+  "native_runtime_rgba_exact": true
+}

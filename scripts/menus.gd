@@ -18,6 +18,7 @@ const CreditTransfer = preload("res://scripts/credit_transfer.gd")
 const TouchButton = preload("res://scripts/touch_button.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 const PowerStateMeters = preload("res://scripts/power_state_meters.gd")
+const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -102,6 +103,8 @@ var _ability_inspector: Control
 var _credit_transfer: Control
 var _inspection_owned_state: Dictionary = {}
 var reduced_flashing: bool = false
+## Native layout audit may select the production mobile arrangement explicitly.
+var mobile_hud: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
 var input_suspended: bool = false
@@ -1223,7 +1226,7 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	_settings = settings.duplicate()
 	_clear("settings")
 	_header("OPTIONS", "Changes apply immediately. Your collection is independent of these settings.")
-	_panel(_content, Rect2(22, 65, 596, 128))
+	_panel(_content, Rect2(22, 65, 596, 123))
 	_label(_content, "AUDIO", Rect2(34, 71, 116, 15), 10, ORANGE)
 	var controls: Array = []
 	for index: int in range(3):
@@ -1254,17 +1257,18 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		slider.focus_entered.connect(outline.show)
 		slider.focus_exited.connect(outline.hide)
 		controls.append([slider])
-	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 161, false)
+	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 159, false)
 	controls.append([mute])
-	_panel(_content, Rect2(22, 198, 596, 113))
-	_label(_content, "DISPLAY / COMFORT", Rect2(34, 201, 310, 15), 10, ORANGE)
-	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 221, true)
+	_panel(_content, Rect2(22, 193, 596, 122))
+	_label(_content, "DISPLAY / COMFORT", Rect2(34, 196, 310, 15), 10, ORANGE)
+	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 215, true)
 	controls.append([shake])
 	if not OS.has_feature("mobile"):
-		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 249, false)])
-	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 249 if OS.has_feature("mobile") else 277, false)
+		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 239, false)])
+	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239 if OS.has_feature("mobile") else 263, false)
 	controls.append([reduced])
-	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,282,562,20),10,MUTED)
+	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263 if OS.has_feature("mobile") else 287, true)])
+	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
 	var layout_button: Button = _button(_content, "CONTROLLER: " + str(_settings.get("controller_layout", "auto")).to_upper(), Rect2(166, 321, 228, 28))
@@ -1282,8 +1286,8 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	_focus_rows(controls)
 
 func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> Button:
-	_label(_content, title, Rect2(34, y, 410, 24), 10, TEXT)
-	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(507, y, 99, 25))
+	_label(_content, title, Rect2(34, y, 410, 23), 10, TEXT)
+	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(507, y, 99, 23))
 	button.set_meta("setting_key", key)
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
@@ -1714,22 +1718,6 @@ func show_hud(stats: Dictionary) -> void:
 	_animate_rpm_meter()
 	_hud["rerolls"].visible = bool(stats.get("is_run", false))
 	_hud["rerolls"].text = "REROLLS  %d" % int(stats.get("rerolls", 0))
-	_hud["anchor"].visible = bool(stats.get("dead_centre_owned", false))
-	_hud["anchor"].position.y = 65 + _hud["state_meters"].diagnostic_snapshot().rows.left.size() * PowerStateMeters.ROW_HEIGHT + 7
-	if _hud["anchor"].visible:
-		var charge: float = float(stats.get("dead_centre_charge", 0.0))
-		var maturity: float = float(stats.get("dead_centre_maturity", 0.0))
-		var recovering: float = float(stats.get("dead_centre_recovery_rate", 0.0))
-		if float(stats.get("dead_centre_recovery_remaining", 1.0)) <= 0.0:
-			_hud["anchor"].text = "MOVE OUT / REARM  %d%%" % roundi(float(stats.get("dead_centre_rearm_progress", 0.0)) * 100.0)
-		elif not bool(stats.get("dead_centre_central_hold", false)):
-			_hud["anchor"].text = "SEEK CENTRE / HOLD"
-		elif maturity <= 0.0:
-			_hud["anchor"].text = "ATTACHING  %d%%" % roundi(charge * 100.0)
-		elif recovering > 0.0:
-			_hud["anchor"].text = "ANCHORED  +%d RPM/s" % roundi(recovering * 9000.0)
-		else:
-			_hud["anchor"].text = "ANCHORED  %d%%" % roundi(maturity * 100.0)
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
 	var is_swarm: bool = bool(stats.get("is_swarm", false))
 	_hud["enemy_bar"].visible = not is_swarm
@@ -1767,7 +1755,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud.xp_label.visible = _run_active
 	_hud.xp_detail.visible = _run_active
 	_hud.xp_hit.visible = _run_active
-	_hud.controls.visible = not _run_active
+	_hud.controls.visible = not _run_active and not mobile_hud
 	var level: int = int(stats.get("level", 1))
 	var xp: float = float(stats.get("xp", 0))
 	var threshold: float = maxf(1.0, float(stats.get("xp_threshold", 1)))
@@ -1829,43 +1817,40 @@ func show_hud(stats: Dictionary) -> void:
 		_hud["power_rank_%d" % index].text = str(rank) if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
-	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
 
 func _create_hud() -> void:
 	_clear("hud", false)
 	_xp_display = 0.0
-	_panel(_content, Rect2(12, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("335a70"))
-	_panel(_content, Rect2(406, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("73513b"))
-	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 13, 202, 17), 11, BLUE)
-	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 13, 202, 17), 11, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["player_bar"] = _bar(_content, Rect2(22, 34, 202, 8), BLUE)
+	_panel(_content, Rect2(12, 8, 222, 74), Color(0.035, 0.065, 0.095, 0.94), Color("335a70"))
+	_panel(_content, Rect2(406, 8, 222, 74), Color(0.035, 0.065, 0.095, 0.94), Color("73513b"))
+	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 11, 202, 15), 10, BLUE)
+	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 11, 202, 15), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["player_bar"] = _bar(_content, Rect2(22, 28, 202, 7), BLUE)
 	# Normal reserve fills the whole bar. Earned overdrive builds a second
 	# coloured layer over its top edge, without reserving a permanent gap.
 	_hud["player_bar"].tooltip_text = "Full normal reserve: 9000 RPM. Extra RPM builds a pulsing layer over the top."
-	_hud["rpm_overflow"] = _bar(_content, Rect2(22, 34, 202, 4), ORANGE)
+	_hud["rpm_overflow"] = _bar(_content, Rect2(22, 28, 202, 3), ORANGE)
 	_hud["rpm_overflow"].max_value = 0.24
 	_hud["rpm_overflow"].add_theme_stylebox_override("background", StyleBoxEmpty.new())
 	_hud["rpm_overflow"].visible = false
-	_hud["enemy_bar"] = _bar(_content, Rect2(416, 34, 202, 8), ORANGE)
-	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
-	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["anchor"] = _label(_content, "", Rect2(22, 65, 202, 13), 8, Color("dde3df"))
+	_hud["enemy_bar"] = _bar(_content, Rect2(416, 28, 202, 7), ORANGE)
+	_hud["player_rpm"] = _label(_content, "", Rect2(22, 37, 202, 12), 9, MUTED)
+	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 37, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["state_meters"] = PowerStateMeters.new()
 	_content.add_child(_hud["state_meters"])
 	_hud["rerolls"] = _label(_content, "", Rect2(22, 304, 128, 13), 9, BLUE)
-	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 30, 202, 14), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 26, 202, 11), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
 	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause")
+	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 44, 56, 20), "pause")
 	pause_button.add_theme_font_size_override("font_size", 10)
 	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
 	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
 	pause_button.focus_mode = Control.FOCUS_NONE
-	_hud["round"] = _label(_content, "", Rect2(241, 76, 158, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["director_callout"] = _label(_content, "", Rect2(120, 132, 400, 22), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["round"] = _label(_content, "", Rect2(239, 66, 162, 10), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["director_callout"] = _label(_content, "", Rect2(237, 76, 166, 10), 8, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["power_note"] = _label(_content, "", Rect2(192, 291, 256, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		_hud["power_panel_%d" % index] = _panel(_content, Rect2(192 + index * 32, 303, 28, 20))
 		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
@@ -1885,7 +1870,7 @@ func _create_hud() -> void:
 	_hud["xp_detail"] = _label(_content, "0 / 1 XP", Rect2(496, 327, 122, 13), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["xp_bar"] = _bar(_content, Rect2(261, 343, 354, 5), Color("83d89a"))
 	_hud["xp_hit"] = _rect(_content, Rect2(252, 324, 376, 28), Color(1, 0.9, 0.6, 0))
-	if OS.has_feature("mobile"):
+	if mobile_hud:
 		# Opposite-thumb actions own the right edge; all progress remains readable.
 		_hud["xp_panel"].size.x = 286
 		_hud["xp_hit"].size.x = 286
@@ -1904,6 +1889,15 @@ func _create_hud() -> void:
 		icon.mouse_entered.connect(func() -> void: _inspect_hud_power(index))
 		icon.mouse_exited.connect(func() -> void:
 			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
+
+func combat_layout_snapshot() -> Dictionary:
+	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
+	result["regions"] = {"player_reserve_and_states": Rect2(12, 8, 222, 74), "pressure_and_states": Rect2(406, 8, 222, 74),
+		"clock_pause_threat": Rect2(237, 8, 166, 78), "powers_rerolls": Rect2(12, 291, 526, 32),
+		"burst": Rect2(12, 324, 224, 28), "progress": Rect2(252, 324, 286 if mobile_hud else 376, 28)}
+	result["duplicate_anchor_label"] = _hud.has("anchor")
+	result["temporary_announcements_live_combat"] = false
+	return result
 
 func _inspect_hud_power(index: int) -> void:
 	if screen != "hud" or not is_instance_valid(_ability_inspector): return

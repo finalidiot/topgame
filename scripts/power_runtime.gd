@@ -41,12 +41,15 @@ const MODERN_DEEP_TRACE_LIMIT: int = 36
 const ANCHOR_MATURITY_SECONDS: float = 6.0
 const ANCHOR_RECOVERY_RADIUS: float = 58.0
 const ANCHOR_REARM_RADIUS: float = 82.0
-const ANCHOR_REARM_SECONDS: float = 1.25
+const ANCHOR_REARM_SECONDS: float = 6.0
 const ANCHOR_STRESS_SAFE: float = 0.35
+const ANCHOR_STRESS_OVERLOAD: float = 0.80
+const ANCHOR_STRESS_REENGAGE: float = 0.30
+const ANCHOR_OVERLOAD_RECOVERY_SECONDS: float = 5.0
 const ANCHOR_STRESS_FORCE: float = 0.00018
 const ANCHOR_STRESS_LOADED_RATE: float = 0.009
-const ANCHOR_STRESS_VENT_RATE: float = 0.18
-const ANCHOR_STRESS_OUTSIDE_VENT_RATE: float = 0.30
+const ANCHOR_STRESS_VENT_RATE: float = 0.085
+const ANCHOR_STRESS_OUTSIDE_VENT_RATE: float = 0.13
 const CIRCUIT_POINT_LIMIT: int = 224
 const CIRCUIT_TARGET_LIMIT: int = 8
 
@@ -87,6 +90,8 @@ func setup(battle: Object) -> void:
 		fighter["anchor_load"] = 0.0
 		fighter["anchor_strength"] = 0.0
 		fighter["anchor_venting"] = false
+		fighter["anchor_overloaded"] = false
+		fighter["anchor_recovery_progress"] = 0.0
 		fighter["stored_force"] = 0.0
 		fighter["runaway_heat"] = 0.0
 		fighter["slipstream_time"] = 0.0
@@ -124,6 +129,7 @@ func _state(fighter: Dictionary) -> Dictionary:
 			"anchor_gain_left": 0.20, "anchor_gain_capacity": 0.20, "anchor_rearm_seconds": 0.0,
 			"anchor_stress_gained": 0.0, "anchor_stress_vented": 0.0,
 			"anchor_stress_peak": 0.0, "anchor_work": {}, "anchor_vent_sources": {},
+			"anchor_overloaded": false, "anchor_release_seconds": 0.0,
 			"slip_until": 0.0, "slip_ready": 0.0, "slip_inside": false,
 			"circuit_ready": 0.0, "circuit_after": -1.0,
 			"last_primary_cause": {},
@@ -206,7 +212,7 @@ func begin_tick(dt: float) -> void:
 			var heat: float = float(fighter.get("runaway_heat", 0.0))
 			var drain: float = 0.028 + heat * 0.048
 			if _run_player(fighter): drain = float(_host().continuous.economy.TUNING.redline_drain)+heat*float(_host().continuous.economy.TUNING.redline_heat)
-			_spend(fighter,drain*dt)
+			_spend(fighter,drain*dt, "redline")
 			fighter["energy"] = fighter["rpm"]
 			fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + (0.075 + heat * 0.13) * dt)
 			if float(fighter["rpm"]) < 0.13:
@@ -263,7 +269,7 @@ func _end_redline(fighter: Dictionary) -> void:
 	if active_redline_mutation(fighter) == "breakneck" and not bool(state["breakneck_recovered"]):
 		state["breakneck_recovered"] = true
 		fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + 0.32)
-		_spend(fighter,0.025)
+		_spend(fighter,0.025, "redline")
 		fighter["energy"] = fighter["rpm"]
 		fighter["vel"] = Vector2(fighter["vel"]) * 0.72
 		fighter["burst_time"] = 0.0
@@ -303,7 +309,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 		fighter["runaway_heat"] = 0.0
 		var activation_cost: float = 0.04 if level == 1 else 0.075
 		if _run_player(fighter): activation_cost = float(_host().continuous.economy.TUNING.redline_activation_1 if level == 1 else _host().continuous.economy.TUNING.redline_activation_2)
-		_spend(fighter,activation_cost)
+		_spend(fighter,activation_cost, "redline")
 		fighter["energy"] = fighter["rpm"]
 		fighter["wobble"] = minf(1.0, float(fighter["wobble"]) + (0.10 if level == 1 else 0.17))
 		if level >= 2:
@@ -405,10 +411,22 @@ func inverse_mass(fighter: Dictionary) -> float:
 		multiplier = 1.0 + charge * charge * ((5.0 if rank(fighter, "dead_centre") <= 1 else 12.0) + float(fighter.get("anchor_maturity", 0.0)) * 3.0)
 	return 1.0 / (mass * multiplier * defence.mass_multiplier(fighter))
 
-## The brace dissipates collision shock into its physical floor connection.
+## The floor connection primarily preserves position. A modest reserve discount
+## fades before positional hold, so a planted fortress still spends real spin.
 ## Canonical solvers apply this to both full and small body RPM/wobble loss.
-## It never removes contact damage, changes outgoing power or grants immunity.
 func incoming_rpm_scale(fighter: Dictionary) -> float:
+	if not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre"): return 1.0
+	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
+	var maturity: float = clampf(float(fighter.get("anchor_maturity", 0.0)), 0.0, 1.0)
+	var defence: float = (0.14 if rank(fighter, "dead_centre") <= 1 else 0.20) + maturity * 0.04
+	if mutation(fighter, "dead_centre") == "bulwark": defence = 0.24 + maturity * 0.04
+	var reserve_protection: float = 1.0 - clampf((float(fighter.get("anchor_stress", 0.0)) - 0.15) / 0.45, 0.0, 1.0)
+	if bool(_state(fighter).anchor_overloaded): reserve_protection = 0.0
+	return clampf(1.0 - charge * charge * defence * reserve_protection, 0.72, 1.0)
+
+## Reserve attrition must not silently retune the accepted stability fantasy.
+## Incoming wobble keeps the former brace discount and positional Stress curve.
+func incoming_wobble_scale(fighter: Dictionary) -> float:
 	if not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre"): return 1.0
 	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0) * anchor_efficiency(fighter)
 	var maturity: float = clampf(float(fighter.get("anchor_maturity", 0.0)), 0.0, 1.0)
@@ -421,7 +439,10 @@ func incoming_rpm_scale(fighter: Dictionary) -> float:
 func anchor_efficiency(fighter: Dictionary) -> float:
 	if not _modern(fighter): return 1.0
 	var overload: float = clampf((float(fighter.get("anchor_stress", 0.0)) - ANCHOR_STRESS_SAFE) / (1.0 - ANCHOR_STRESS_SAFE), 0.0, 1.0)
-	return lerpf(1.0, 0.15, overload)
+	var strength: float = lerpf(1.0, 0.15, overload)
+	# Cooling below the entry threshold alone cannot restore a loaded socket.
+	# Genuine released movement and the lower safe threshold must both resolve.
+	return minf(strength, 0.35) if bool(_state(fighter).anchor_overloaded) else strength
 
 func _anchor_stress_gain(fighter: Dictionary, amount: float, source: String) -> void:
 	if _stopped or not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre") or float(fighter.get("anchor_charge", 0.0)) < 0.25 or amount <= 0.0: return
@@ -433,7 +454,13 @@ func _anchor_stress_gain(fighter: Dictionary, amount: float, source: String) -> 
 	state.anchor_stress_gained = float(state.anchor_stress_gained) + actual
 	state.anchor_stress_peak = maxf(float(state.anchor_stress_peak), float(fighter.anchor_stress))
 	state.anchor_work[source] = float(state.anchor_work.get(source, 0.0)) + amount
-	if before < 0.80 and float(fighter.anchor_stress) >= 0.80: _record("anchor_overload", int(fighter.entity_id))
+	if float(fighter.anchor_stress) >= ANCHOR_STRESS_OVERLOAD and not bool(state.anchor_overloaded):
+		state.anchor_overloaded = true
+		state.anchor_release_seconds = 0.0
+		fighter.anchor_overloaded = true
+		fighter.anchor_recovery_progress = 0.0
+		fighter.anchor_strength = float(fighter.anchor_charge) * anchor_efficiency(fighter)
+		_record("anchor_overload", int(fighter.entity_id))
 
 func vent_anchor_stress(fighter: Dictionary, amount: float, source: String) -> float:
 	if _stopped or not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre") or amount <= 0.0: return 0.0
@@ -461,6 +488,12 @@ func _anchor_stress_movement(fighter: Dictionary, controlled: bool, dt: float) -
 	if deliberate_release:
 		var outside: bool = Vector2(fighter.pos).length() >= ANCHOR_REARM_RADIUS and float(state.motion_speed) >= 35.0
 		fighter["anchor_venting"] = vent_anchor_stress(fighter, dt * (ANCHOR_STRESS_OUTSIDE_VENT_RATE if outside else ANCHOR_STRESS_VENT_RATE), "reposition" if outside else "controlled_release") > 0.0
+		if bool(state.anchor_overloaded): state.anchor_release_seconds = minf(ANCHOR_OVERLOAD_RECOVERY_SECONDS, float(state.anchor_release_seconds) + dt)
+	if bool(state.anchor_overloaded) and float(state.anchor_release_seconds) >= ANCHOR_OVERLOAD_RECOVERY_SECONDS - 0.000001 and float(fighter.anchor_stress) <= ANCHOR_STRESS_REENGAGE:
+		state.anchor_overloaded = false
+		_record("anchor_safe_reengage", int(fighter.entity_id))
+	fighter.anchor_overloaded = bool(state.anchor_overloaded)
+	fighter.anchor_recovery_progress = float(state.anchor_release_seconds) / ANCHOR_OVERLOAD_RECOVERY_SECONDS if bool(state.anchor_overloaded) else 1.0
 
 ## Observe the delivered, capped velocity change, after recipient bracing.
 ## Presentation, unaccepted offers and stationary enemy proximity cannot load it.
@@ -483,9 +516,9 @@ func _modern_anchor_movement(fighter: Dictionary, controlled: bool, dt: float, m
 	if capacity > float(state.anchor_gain_capacity):
 		state.anchor_gain_left = minf(capacity, float(state.anchor_gain_left) + capacity - float(state.anchor_gain_capacity))
 		state.anchor_gain_capacity = capacity
-	var deliberate_rotation: bool = _live(fighter) and Vector2(fighter.pos).length() >= ANCHOR_REARM_RADIUS and float(state.motion_input) >= 0.35 and float(state.motion_speed) >= 35.0 and not bool(state.motion_braking)
+	var deliberate_rotation: bool = _live(fighter) and Vector2(fighter.pos).length() >= ANCHOR_REARM_RADIUS and float(state.motion_input) >= 0.35 and float(state.motion_speed) >= 35.0 and not bool(state.motion_braking) and float(fighter.get("anchor_charge", 0.0)) <= 0.35 and float(fighter.get("burst_time", 0.0)) <= 0.0
 	state.anchor_rearm_seconds = minf(ANCHOR_REARM_SECONDS, float(state.anchor_rearm_seconds) + dt) if deliberate_rotation and float(state.anchor_gain_left) < capacity - 0.000001 else 0.0
-	if float(state.anchor_rearm_seconds) >= ANCHOR_REARM_SECONDS - 0.000001:
+	if float(state.anchor_rearm_seconds) >= ANCHOR_REARM_SECONDS - 0.000001 and float(fighter.get("anchor_stress", 0.0)) <= ANCHOR_STRESS_REENGAGE and not bool(state.anchor_overloaded):
 		state.anchor_gain_left = capacity
 		state.anchor_rearm_seconds = 0.0
 		_record("anchor_rearm", int(fighter.entity_id))
@@ -493,7 +526,7 @@ func _modern_anchor_movement(fighter: Dictionary, controlled: bool, dt: float, m
 	fighter["anchor_rearm_progress"] = float(state.anchor_rearm_seconds) / ANCHOR_REARM_SECONDS
 	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0)
 	var strength: float = charge * anchor_efficiency(fighter)
-	var full_hold: bool = _live(fighter) and float(fighter.rpm) > 0.045 and controlled and time >= float(state.anchor_lockout) and charge >= 0.70
+	var full_hold: bool = _live(fighter) and float(fighter.rpm) > 0.045 and controlled and time >= float(state.anchor_lockout) and charge >= 0.70 and not bool(state.anchor_overloaded)
 	var hold: float = float(fighter.get("anchor_hold_seconds", 0.0))
 	hold = minf(ANCHOR_MATURITY_SECONDS, hold + dt) if full_hold else maxf(0.0, hold - dt * 3.0)
 	fighter["anchor_hold_seconds"] = hold
@@ -1107,9 +1140,9 @@ func _keep_cause_root(roots: Dictionary, cause: Dictionary) -> void:
 	if not cause.is_empty(): roots[int(cause.get("root_event_id", 0))] = true
 
 # Mock/standalone hosts retain the original power contract.
-func _spend(fighter: Dictionary, amount: float) -> void:
+func _spend(fighter: Dictionary, amount: float, source: String = "powers") -> void:
 	var before: float = float(fighter.rpm)
-	if _host().has_method("spend_rpm"): _host().spend_rpm(fighter,amount,"powers")
+	if _host().has_method("spend_rpm"): _host().spend_rpm(fighter,amount,source)
 	else: fighter.rpm = maxf(0.0,float(fighter.rpm)-amount)
 	if _modern(fighter) and redline_active(fighter): _state(fighter)["diagnostic"]["rpm_spent"] += maxf(0.0, before - float(fighter.rpm))
 
@@ -1156,7 +1189,7 @@ func public_state(fighter: Dictionary) -> Dictionary:
 	var sink_capacity: float = defence.sink_capacity(fighter) if _has(fighter, "impact_sink") else 0.0
 	var sink_stored: float = float(fighter.get("sink_charge", 0.0)) if _has(fighter, "impact_sink") else 0.0
 	return {
-		"anchor": {"owned": _has(fighter, "dead_centre"), "charge": float(fighter.get("anchor_charge", 0.0)), "strength": float(fighter.get("anchor_charge", 0.0)) * anchor_efficiency(fighter), "stress": float(fighter.get("anchor_stress", 0.0)), "loaded": float(fighter.get("anchor_load", 0.0)), "venting": bool(fighter.get("anchor_venting", false)), "recovery_remaining": float(fighter.get("anchor_recovery_remaining", 0.0)), "rearm_progress": float(fighter.get("anchor_rearm_progress", 0.0))},
+		"anchor": {"owned": _has(fighter, "dead_centre"), "charge": float(fighter.get("anchor_charge", 0.0)), "strength": float(fighter.get("anchor_charge", 0.0)) * anchor_efficiency(fighter), "stress": float(fighter.get("anchor_stress", 0.0)), "loaded": float(fighter.get("anchor_load", 0.0)), "venting": bool(fighter.get("anchor_venting", false)), "recovery_remaining": float(fighter.get("anchor_recovery_remaining", 0.0)), "rearm_progress": float(fighter.get("anchor_rearm_progress", 0.0)), "overloaded": bool(_state(fighter).anchor_overloaded), "recovering": bool(_state(fighter).anchor_overloaded), "safe_stress": ANCHOR_STRESS_REENGAGE, "overload_stress": ANCHOR_STRESS_OVERLOAD, "recovery_progress": float(fighter.get("anchor_recovery_progress", 0.0)), "rpm_loss_scale": incoming_rpm_scale(fighter)},
 		"orbit": {"owned": _has(fighter, "orbit_drive"), "drive": clampf(float(fighter.get("orbit_charge", 0.0)), 0.0, 1.0), "drifting": bool(fighter.get("drift_active", false))},
 		"sink": {"owned": _has(fighter, "impact_sink"), "stored": sink_stored, "capacity": sink_capacity, "ratio": clampf(sink_stored / maxf(0.001, sink_capacity), 0.0, 1.0)},
 		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)}
@@ -1180,7 +1213,7 @@ func _modern_tick(fighter: Dictionary, dt: float) -> void:
 		diagnostic.overcap_seconds += dt if excess > 0.00001 else 0.0
 		diagnostic.max_overcap = maxf(float(diagnostic.max_overcap), excess)
 		diagnostic.overcap_integral += excess * dt
-		_spend(fighter, (0.003 + heat * 0.006) * dt)
+		_spend(fighter, (0.003 + heat * 0.006) * dt, "redline")
 		if float(fighter.rpm) <= 0.13:
 			state.redline_until = time
 			fighter.redline_time = 0.0
@@ -1214,7 +1247,7 @@ func _modern_burst(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 		if active_redline_mutation(fighter) == "breakneck" and float(state.redline_commit_until) <= time and (float(fighter.get("redline_heat", 0.0)) >= 0.32 or pre_cost_rpm >= 1.025):
 			var excess: float = maxf(0.0, pre_cost_rpm - 1.0)
 			state.redline_strike = 0.08 + excess * 0.75
-			_spend(fighter, float(state.redline_strike))
+			_spend(fighter, float(state.redline_strike), "redline")
 			state.redline_commit_until = time + 0.48
 			state.redline_until = time + 0.48
 			state.redline_heading = heading.normalized()
@@ -1242,7 +1275,7 @@ func _modern_burst(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 	fighter.redline_heading = heading.normalized()
 	fighter.redline_active_rank = level
 	fighter.redline_active_mutation = branch
-	_spend(fighter, 0.025 if level == 1 else 0.045)
+	_spend(fighter, 0.025 if level == 1 else 0.045, "redline")
 	fighter.wobble = minf(1.0, float(fighter.wobble) + (0.06 if level == 1 else 0.10))
 	_record("redline", int(fighter.entity_id))
 	_fx("runaway" if branch == "runaway" else ("redline_ii" if level >= 2 else "redline"), fighter.pos, heading)
@@ -1255,7 +1288,7 @@ func _modern_end_redline(fighter: Dictionary) -> void:
 	if committed and branch == "breakneck" and not bool(state.breakneck_recovered):
 		state.breakneck_recovered = true
 		var missed: bool = not bool(state.redline_hit)
-		_spend(fighter, 0.035 if missed else 0.015)
+		_spend(fighter, 0.035 if missed else 0.015, "redline")
 		fighter.wobble = minf(1.0, float(fighter.wobble) + (0.42 if missed else 0.28))
 		fighter.vel = Vector2(fighter.vel) * (0.58 if missed else 0.72)
 		fighter.burst_time = 0.0
@@ -1268,7 +1301,7 @@ func _modern_end_redline(fighter: Dictionary) -> void:
 	# The cap changes only here. Never silently discard earned ledger reserve.
 	var vent: float = maxf(0.0, float(fighter.rpm) - 1.0)
 	if vent > 0.0:
-		_spend(fighter, vent)
+		_spend(fighter, vent, "redline")
 	state.diagnostic.rpm_spent += maxf(0.0, before - float(fighter.rpm))
 	state.redline_motion_left = 0.0
 	state.redline_commit_until = 0.0

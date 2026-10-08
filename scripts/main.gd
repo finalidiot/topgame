@@ -17,9 +17,11 @@ const RunRewards = preload("res://scripts/run_rewards.gd")
 const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const TopStatusBars = preload("res://scripts/top_status_bars.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto"}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true}
+var top_status_bars: Node2D
 var touch_controls: Node2D
 var _application_suspended: bool = false
 var _application_backgrounded: bool = false
@@ -171,6 +173,9 @@ func _ready() -> void:
 	battle.floor_pickups = reroll_pickups
 	reroll_pickups.render_in_battle = true
 	reroll_pickups.reroll_collected.connect(_reroll_collected)
+	top_status_bars = TopStatusBars.new()
+	top_status_bars.host = battle
+	battle.add_child(top_status_bars)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
 	add_child(layer)
@@ -318,11 +323,11 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto"}
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true}
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing"]:
+	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing", "top_status_bars"]:
 		if values.get(key) is bool: result[key] = values[key]
 	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
@@ -340,6 +345,7 @@ func _apply_settings() -> void:
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
 	battle.reduced_flashing = bool(settings.reduced_flashing)
+	top_status_bars.set_enabled(bool(settings.top_status_bars))
 	battle.presentation_quality = 0.6 if OS.has_feature("mobile") else 1.0
 	reroll_pickups.reduced_flashing = bool(settings.reduced_flashing)
 	menus.reduced_flashing = bool(settings.reduced_flashing)

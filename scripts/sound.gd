@@ -1,6 +1,7 @@
 extends Node
 
 const SOUNDS: Dictionary = {
+	"pickup_collect": preload("res://assets/audio/pickup_collect.wav"),
 	"packet_land": preload("res://assets/audio/shop_003a/packet_land.wav"),
 	"packet_crinkle": preload("res://assets/audio/shop_003a/packet_crinkle.wav"),
 	"packet_tear": preload("res://assets/audio/shop_003a/packet_tear.wav"),
@@ -63,7 +64,7 @@ const SOUNDS: Dictionary = {
 }
 const MAX_CHANNELS: int = 8
 const SFX_BUS: String = "SFX"
-const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
+const PRIORITY: Dictionary = {"pickup_collect":5,"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
 	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
 	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
 	"breakneck_charge": 5, "breakneck_impact": 5,
@@ -74,7 +75,7 @@ const PRIORITY: Dictionary = {"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low
 	"high_gear_surge":3,"ghost_preview":1,"momentum_release":3,"crash_guard":3,"crosscut":3,
 	"packet_land":5,"packet_crinkle":5,"packet_tear":6,"packet_spill":6,
 	"packet_clink":5,"packet_new":6,"packet_rare":6,"packet_recycle":5}
-const COOLDOWN: Dictionary = {"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
+const COOLDOWN: Dictionary = {"pickup_collect":0.0,"boss_port":1.0,"boss_payoff":1.0,"rpm_reclaim":0.45,"low_rpm":4.0,"breakneck_recovery":0.3,"small_hit": 0.12, "scrape": 0.08, "afterimage": 0.16, "chain": 0.10, "power_wake": 0.06, "ui_focus": 0.055, "card_select": 0.12, "near_level": 0.45, "level_up": 0.25, "resume": 0.20,
 	"rank_up": 0.25, "mutation_available": 0.40, "mutation_select": 0.35,
 	"redline_ii": 0.25, "runaway": 0.55, "runaway_hit": 0.16,
 	"breakneck_charge": 0.25, "breakneck_impact": 0.20,
@@ -194,6 +195,7 @@ func play_sound(kind: String) -> void:
 	if key in ["redline_overcap","clutch_recover","high_gear_surge","momentum_release"]: player.volume_db=-6.0
 	if key in ["redline_heat","clutch_activate","crash_guard","crosscut"]: player.volume_db=-9.0
 	if key=="ghost_preview": player.volume_db=-15.0
+	if key=="pickup_collect": player.volume_db=-7.0
 	if key in ["packet_land", "packet_clink", "packet_new", "packet_recycle"]: player.volume_db = -7.0
 	if key in ["packet_crinkle", "packet_spill"]: player.volume_db = -5.5
 	if key == "packet_tear": player.volume_db = -4.5

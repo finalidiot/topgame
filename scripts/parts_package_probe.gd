@@ -3,6 +3,8 @@ extends RefCounted
 ## the external report destination before calling; existing files are refused.
 const Catalog = preload("res://scripts/parts.gd")
 const FEEDBACK_MANIFEST: String = "res://assets/powers/feedback_002c5_2/manifest.json"
+const PICKUP_FLAIR_MANIFEST: String = "res://assets/powers/pickup_003a1/manifest.json"
+const PICKUP_COLLECT_AUDIO: String = "res://assets/audio/pickup_collect.wav"
 const BEAST_MANIFEST: String = "res://assets/powers/beasts_002c5_2/manifest.json"
 const MUSIC_MANIFEST: String = "res://assets/audio/music/manifest.json"
 const PacketEconomyModel = preload("res://scripts/packet_economy.gd")
@@ -96,6 +98,12 @@ static func inspect(output: String) -> Dictionary:
 			feedback_records.append({"kind":kind,"path":path,"size":[size.x,size.y],"visible_pixels":valid,"valid":valid,
 				"rgba_sha256":fingerprint,"visible_rgba_sha256":visible_fingerprint,"transparent_rgb_normalized":true})
 			if not valid: failures.append(path)
+	var pickup_flair_json: String = FileAccess.get_file_as_string(PICKUP_FLAIR_MANIFEST)
+	var pickup_meta: Variant = JSON.parse_string(pickup_flair_json)
+	var pickup_flair_record: Dictionary = _inspect_pickup_flair(pickup_meta if pickup_meta is Dictionary else {})
+	if not bool(pickup_flair_record.valid): failures.append(PICKUP_FLAIR_MANIFEST)
+	var pickup_audio_record: Dictionary = _inspect_pickup_audio()
+	if not bool(pickup_audio_record.valid): failures.append(PICKUP_COLLECT_AUDIO)
 	var beast_json: String = FileAccess.get_file_as_string(BEAST_MANIFEST)
 	var beasts: Variant = JSON.parse_string(beast_json)
 	var beast_records: Array[Dictionary] = []
@@ -183,6 +191,7 @@ static func inspect(output: String) -> Dictionary:
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
 		"textures":records, "feedback_json":feedback_json, "feedback_textures":feedback_records,
+		"pickup_flair_json":pickup_flair_json,"pickup_flair_texture":pickup_flair_record,"pickup_collect_audio":pickup_audio_record,
 		"beast_json":beast_json, "beast_textures":beast_records,
 		"music_json":music_json, "music_stems":music_records,
 		"packet_json":packet_json, "packet_textures":packet_records,
@@ -199,6 +208,29 @@ static func inspect(output: String) -> Dictionary:
 	if write_error != OK: return {"ok":false, "error":"The external package asset report could not be written completely."}
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
+
+static func _inspect_pickup_flair(meta: Dictionary) -> Dictionary:
+	var expected: Dictionary = {"path":"res://assets/powers/pickup_003a1/collection.png",
+		"source":"assets/source-art/pickup_003a1/collection.aseprite","cell":[40,24],"pivot":[20,12],
+		"frames":6,"columns":6,"layers":3,"tags":["collect"]}
+	var record: Dictionary = _inspect_final_sheet("collect",meta,expected)
+	record.metadata_path=PICKUP_FLAIR_MANIFEST
+	record.valid = bool(record.valid) and str(meta.get("filter",""))=="nearest" and bool(meta.get("floor_only",false)) and not bool(meta.get("loop",true))
+	record.valid = bool(record.valid) and bool(meta.get("native_runtime_rgba_exact",false)) and int(meta.get("duration_ms",0))==310
+	var timings: Array[int] = [30,35,45,55,65,80]
+	if record.valid:
+		for index: int in range(timings.size()): record.valid = bool(record.valid) and float(record.durations_ms[index])==float(timings[index])
+	return record
+
+static func _inspect_pickup_audio(path: String = PICKUP_COLLECT_AUDIO) -> Dictionary:
+	var sample: AudioStreamWAV = (load(path) as AudioStreamWAV) if ResourceLoader.exists(path) else null
+	var pcm: PackedByteArray = sample.data if sample != null else PackedByteArray()
+	var valid: bool = path==PICKUP_COLLECT_AUDIO and sample != null and sample.format==AudioStreamWAV.FORMAT_16_BITS and not sample.stereo and sample.mix_rate==48000 and sample.loop_mode==AudioStreamWAV.LOOP_DISABLED
+	valid = valid and pcm.size()==8640*2
+	return {"kind":"pickup_collect","path":path,"valid":valid,"mix_rate":sample.mix_rate if sample != null else 0,
+		"channels":(2 if sample.stereo else 1) if sample != null else 0,"stereo":sample.stereo if sample != null else false,
+		"format":sample.format if sample != null else -1,"loop_mode":sample.loop_mode if sample != null else -1,
+		"pcm_frames":pcm.size()/2,"duration_seconds":sample.get_length() if sample != null else 0.0,"pcm_sha256":_digest(pcm)}
 
 static func _inspect_defence_sheet(family: String, group: String, meta: Dictionary) -> Dictionary:
 	var expected: Dictionary = {"path":"res://assets/powers/defence003a/" + family + "_" + group + ".png",

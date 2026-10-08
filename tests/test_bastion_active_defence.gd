@@ -1,5 +1,6 @@
 extends "res://tests/observe_dead_centre_stress.gd"
-## Preserve the first Bastion correction and verify the new physical Stress loop.
+## Preserve the accepted fortress physics while verifying shared reserve pressure
+## and the revised physical Stress / deliberate recovery loop.
 ## Mature observations use real fixed ticks/ledgers, with no death deadline.
 const Economy = preload("res://scripts/spin_economy.gd")
 const Runtime = preload("res://scripts/power_runtime.gd")
@@ -29,7 +30,7 @@ func pack(p: Dictionary) -> Dictionary:
 	return {"pos":[p.pos.x,p.pos.y],"vel":[p.vel.x,p.vel.y],"rpm":p.rpm,"wobble":p.wobble,"mass":p.mass,"radius":p.radius}
 
 func identity_and_costs() -> void:
-	check(Starters.HANDLING == EXPECTED_PROFILES,"Only Bastion's running-cost efficiency changes; all physical handling and other starters stay exact")
+	check(Starters.HANDLING == EXPECTED_PROFILES,"Accepted physical handling and starter identities remain exact under shared economy tuning")
 	check(Starters.build_for("bastion") == {"blade":"guard","ratchet":"low","bit":"ball"},"The authored fortress remains Guard / Low / Ball")
 	var b: Node2D = make_battle(421,"bastion","stock")
 	var p: Dictionary = b.player_entity()
@@ -44,7 +45,7 @@ func identity_and_costs() -> void:
 	b.continuous.observe_input(0.4,Vector2(0.24,0))
 	e.running_costs(p,0.0,Vector2(0.24,0),false,1.0,1.0)
 	check(is_equal_approx(float(e.losses.passive)-passive_before,base),"Deliberate control leaves the same passive cost; activity is not a hidden drain switch")
-	check(e.losses.keys() == ["passive","movement","burst","braking","powers","collisions","walls","wobble","steering"],"The existing physical loss ledger has no AFK penalty or new loss source")
+	check(e.losses.keys() == ["passive","movement","burst","braking","powers","redline","collisions","walls","wobble","steering"],"The existing physical loss ledger separates Redline spending and has no AFK penalty")
 	measurements.normal_cost = {"passive_per_second":base,"handling":p.handling.duplicate(true),"assembly":p.build.duplicate(true)}
 	b.free()
 
@@ -111,7 +112,16 @@ func paired_attrition() -> void:
 		var late_gain: float = float(afk.whole_run_economy.gains.get(source,0.0))-float(expired_window.get("gains",{}).get(source,0.0))
 		check(late_gain == 0.0,"No-input physical defence cannot renew %s RPM after the genuine warmup control window" % source)
 	check(float(active.final_rpm) > float(afk.final_rpm)+0.30 and active.mature_seconds >= afk.mature_seconds,"Modest actual defence materially improves reserve/survival against the paired pressure")
-	check(float(active.input_seconds) > 0.0 and float(active.input_seconds) < float(active.mature_seconds)*0.75,"Minimal defence is intermittent deliberate participation")
+	# The newly longer vent/rearm window intentionally requires actual movement.
+	# Keep the original quiet-defence duty cap instead of silently weakening it
+	# to allow near-continuous input; account that active recovery separately.
+	var recovery_seconds: float = 0.0
+	for mode: String in ["short_release_vent","leave_centre","outside_recharge","reestablish_centre"]:
+		recovery_seconds += float(active.control_modes.get(mode,0.0))
+	var holding_seconds: float = maxf(0.0,float(active.mature_seconds)-recovery_seconds)
+	var holding_input_seconds: float = maxf(0.0,float(active.input_seconds)-recovery_seconds)
+	check(float(active.input_seconds) > 0.0 and float(active.input_seconds) < float(active.mature_seconds) and holding_seconds > 0.0 and holding_input_seconds < holding_seconds*0.75,"Minimal centre defence stays intermittent; required vent/rearm motion is accounted separately")
+	measurements.control_duty = {"total_input_seconds":active.input_seconds,"observed_seconds":active.mature_seconds,"recovery_movement_seconds":recovery_seconds,"centre_hold_seconds":holding_seconds,"centre_hold_input_seconds":holding_input_seconds,"centre_hold_input_fraction":holding_input_seconds/holding_seconds,"preserved_nonrecovery_duty_cap":0.75}
 	check(float(active.mature_gains.get("elimination",0.0))+float(active.mature_gains.get("elite",0.0))+float(active.mature_gains.get("boss",0.0)) > 0.30,"Active defence retains existing named and attributed elimination recovery")
 	check(float(active.centre_seconds) > float(active.mature_seconds)*0.65,"Active Bastion spends most of the observed fight holding centre while making meaningful tactical releases")
 	check(float(afk.final_power_diagnostics.anchor_stress_peak) >= 0.80,"Real incoming and outgoing work overloads the unattended anchor")
@@ -120,11 +130,11 @@ func paired_attrition() -> void:
 	measurements.paired = [afk,active]
 
 func preserved_reload_contract() -> void:
-	check(Runtime.ANCHOR_REARM_RADIUS == 82.0 and Runtime.ANCHOR_REARM_SECONDS == 1.25,"Dead Centre's outside radius and sustained reload duration remain unchanged")
+	check(Runtime.ANCHOR_REARM_RADIUS == 82.0 and Runtime.ANCHOR_REARM_SECONDS == 6.0,"Dead Centre preserves its outside radius and requires six seconds of deliberate movement to reload")
 	var description: String = str(Powers.DEFINITIONS.dead_centre.description).to_lower()
-	check(description.contains("stress") and description.contains("vent") and description.contains("reload"),"Player-visible Dead Centre instructions explain physical Stress, deliberate venting and the preserved finite reload")
-	# Semantic quota/contact/rearm mechanics remain exercised by unchanged
-	# test_power_feedback; this contract additionally records the full real pair.
+	check(description.contains("stress") and description.contains("vent") and description.contains("reload"),"Player-visible Dead Centre instructions explain physical Stress, deliberate venting and finite reload")
+	# Semantic quota/contact/rearm mechanics are exercised by current
+	# test_power_feedback and test_anchor_rearm_003a1; this records a real pair.
 
 func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():

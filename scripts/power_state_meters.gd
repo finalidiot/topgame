@@ -1,10 +1,11 @@
 extends Control
 ## Read-only native-pixel state display. Combat owns every value and timer.
 const FrontEnd = preload("res://scripts/front_end.gd")
-const LEFT: Vector2 = Vector2(12, 65)
-const RIGHT: Vector2 = Vector2(406, 65)
+const LEFT: Vector2 = Vector2(12, 51)
+const RIGHT: Vector2 = Vector2(406, 51)
 const WIDTH: float = 222.0
-const ROW_HEIGHT: float = 22.0
+const ROW_HEIGHT: float = 14.0
+const LABEL_SIZE: int = 8
 var _state: Dictionary = {}
 var _rows: Dictionary = {"left": [], "right": []}
 
@@ -21,9 +22,12 @@ func update_state(state: Dictionary) -> void:
 	if bool(anchor.get("owned", false)):
 		var strength: float = clampf(float(anchor.get("strength", 0.0)), 0.0, 1.0)
 		var stress: float = clampf(float(anchor.get("stress", 0.0)), 0.0, 1.0)
-		var status: String = "VENT" if bool(anchor.get("venting", false)) else ("STRAIN" if stress >= 0.70 else ("HOLD" if strength >= 0.70 else "SET"))
-		_rows.left.append({"id": "anchor", "text": "ANCHOR %d%% / STRESS %d%%  %s" % [roundi(strength * 100.0), roundi(stress * 100.0), status],
-			"bars": [{"value": strength, "color": Color("93bd91")}, {"value": stress, "color": Color("e99563") if stress >= 0.35 else Color("baa56c")}], "color": Color("c4d9bd")})
+		var recovering: bool = bool(anchor.get("recovering", false)) or bool(anchor.get("overloaded", false))
+		var status: String = "RECHARGE" if recovering else ("VENT" if bool(anchor.get("venting", false)) else ("HIGH LOAD" if stress >= 0.65 else ("LOAD" if stress >= 0.30 else ("HOLD" if strength >= 0.70 else "SET"))))
+		var color: Color = Color("d97c61") if recovering or stress >= 0.65 else (Color("b7a770") if stress >= 0.30 else Color("93bd91"))
+		_rows.left.append({"id": "anchor", "status": status, "text": "ANCHOR %s / STRESS %d%%" % [status, roundi(stress * 100.0)],
+			"bars": [{"value": stress, "color": color}], "color": Color("c4d9bd"),
+			"strength": strength, "safe_stress": float(anchor.get("safe_stress", 0.30)), "overload_stress": float(anchor.get("overload_stress", 0.80))})
 	var sink: Dictionary = state.get("sink", {})
 	if bool(sink.get("owned", false)):
 		_rows.left.append({"id": "sink", "text": "STORED FORCE  %d / %d" % [roundi(float(sink.get("stored", 0.0))), roundi(float(sink.get("capacity", 0.0)))],
@@ -46,25 +50,25 @@ func update_state(state: Dictionary) -> void:
 func diagnostic_snapshot() -> Dictionary:
 	return {"rows": _rows.duplicate(true), "state": _state.duplicate(true), "left": LEFT, "right": RIGHT,
 		"width": WIDTH, "row_height": ROW_HEIGHT, "native_view": [640, 360], "maximum_rows": 4,
-		"gameplay_writes": 0, "owns_timers": false, "reduced_flashing_pulses": 0}
+		"label_size": LABEL_SIZE, "gameplay_writes": 0, "owns_timers": false, "reduced_flashing_pulses": 0}
 
 func _draw_column(origin: Vector2, rows: Array) -> void:
 	if rows.is_empty(): return
-	draw_style_box(FrontEnd.plate(Color(0.035, 0.065, 0.095, 0.92), Color("3b515c")), Rect2(origin, Vector2(WIDTH, rows.size() * ROW_HEIGHT + 5.0)))
 	var font: Font = get_theme_default_font()
 	for index: int in range(rows.size()):
 		var row: Dictionary = rows[index]
-		var top: Vector2 = origin + Vector2(10, 3 + index * ROW_HEIGHT)
-		draw_string(font, top + Vector2(0, 11), str(row.text), HORIZONTAL_ALIGNMENT_LEFT, WIDTH - 20, 10, row.color)
+		var top: Vector2 = origin + Vector2(10, index * ROW_HEIGHT)
+		draw_string(font, top + Vector2(0, 8), str(row.text), HORIZONTAL_ALIGNMENT_LEFT, WIDTH - 20, LABEL_SIZE, row.color)
 		var bars: Array = row.bars
 		var width: float = (WIDTH - 20.0 - (bars.size() - 1) * 6.0) / bars.size()
 		for bar_index: int in range(bars.size()):
 			var bar: Dictionary = bars[bar_index]
-			var rect: Rect2 = Rect2(top + Vector2(bar_index * (width + 6.0), 15), Vector2(width, 4))
+			var rect: Rect2 = Rect2(top + Vector2(bar_index * (width + 6.0), 10), Vector2(width, 3))
 			draw_rect(rect, Color("263641"))
-			draw_rect(Rect2(rect.position, Vector2(roundf(width * float(bar.value)), 4)), bar.color)
-			if row.id == "anchor" and bar_index == 1:
-				draw_line(rect.position + Vector2(roundf(width * 0.35), 0), rect.position + Vector2(roundf(width * 0.35), 4), Color("dde0ce"))
+			draw_rect(Rect2(rect.position, Vector2(roundf(width * float(bar.value)), 3)), bar.color)
+			if row.id == "anchor":
+				for threshold: float in [float(row.safe_stress), float(row.overload_stress)]:
+					draw_line(rect.position + Vector2(roundf(width * threshold), 0), rect.position + Vector2(roundf(width * threshold), 3), Color("dde0ce"))
 
 func _draw() -> void:
 	_draw_column(LEFT, _rows.left)
