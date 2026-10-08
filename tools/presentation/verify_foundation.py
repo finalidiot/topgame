@@ -28,6 +28,17 @@ ADDED = ["power_identity", "parts_catalogue", "parts_collection", "parts_package
          "feedback_parts_retention", "beast_manifestations", "music", "music_escalation",
          "save_tools", "presentation_flow", "presentation_retention", "frontend"]
 
+PROFILE_DRIVER_SUITES = {"input_acceptance_003a1", "overdrive_lifecycle_003a1"}
+
+
+def driver_profile_paths(task: Path, stem: str, suite: str) -> list[Path]:
+    base = task / "temp" / (stem + "_" + suite + "_profiles")
+    paths = [base]
+    if suite == "input_acceptance_003a1":
+        paths += [base.with_name(base.name + "_mapping"),
+                  base.with_name(base.name + "_mapping_lifecycle")]
+    return paths
+
 
 def asset_fingerprint() -> dict:
     files = {p.relative_to(ROOT).as_posix(): pipeline.sha256(p)
@@ -76,6 +87,8 @@ def main() -> int:
             raise RuntimeError("Preserved suite report already exists; choose another --stem")
         if name == "prototype" and (task / "manifests" / (args.stem + "_prototype_balance.json")).exists():
             raise RuntimeError("Preserved prototype balance report already exists; choose another --stem")
+        if name in PROFILE_DRIVER_SUITES and any(path.exists() for path in driver_profile_paths(task, args.stem, name)):
+            raise RuntimeError("Preserved driver profile directory already exists; choose another --stem")
     if (task / "benchmarks" / (args.stem + "_parts.json")).exists():
         raise RuntimeError("Preserved benchmark already exists; choose another --stem")
     engine = workspace.find_tool("godot", args.engine)
@@ -96,7 +109,12 @@ def main() -> int:
             # Historical fixture roots remain contained for the other suites.
             os.environ["TOPGAME_QA_ROOT"] = str(qa if name == "music_escalation" else fixture_qa)
             command = [engine, "--headless", "--path", str(ROOT), "--script", "res://tests/test_" + name + ".gd"]
-            if name == "parts_catalogue":
+            if name in PROFILE_DRIVER_SUITES:
+                command += ["--fixed-fps", "60", "--",
+                            "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json")),
+                            "--profiles=" + str(driver_profile_paths(task, args.stem, name)[0])]
+                if name == "input_acceptance_003a1": command += ["--kind=all"]
+            elif name == "parts_catalogue":
                 command += ["--", "--out=" + str(task / "benchmarks" / (args.stem + "_parts.json"))]
             elif "--report=" in (ROOT / "tests" / ("test_" + name + ".gd")).read_text(encoding="utf-8"):
                 command += ["--", "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json"))]

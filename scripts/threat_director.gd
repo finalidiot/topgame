@@ -2,12 +2,12 @@ extends RefCounted
 ## Seeded pressure policy. No scene access, physics RNG, player healing or outcomes.
 const Seeds = preload("res://scripts/seed_utils.gd")
 const TUNING: Dictionary = {
-	"tier_seconds":[0.0,35.0,100.0,210.0,360.0], "overdrive_seconds":120.0,
+	"tier_seconds":[0.0,28.0,80.0,170.0,280.0], "overdrive_seconds":120.0,
 	"budgets":[2.8,6.0,10.0,13.0,16.0], "overdrive_budget_step":1.25,
 	"full_caps":[1,2,3,4,5], "elite_cap":2, "small_cap":10, "total_cap":16,
 	"boss_cooldown":78.0, "late_boss_cooldown":56.0, "same_boss_cooldown":180.0, "swarm_cooldown":34.0,
 	"elite_cooldown":18.0, "boss_warning":2.2, "normal_warning":0.65,
-	"breath_min":2.0, "breath_max":4.0, "busy_limit":55.0,
+	"breath_min":1.5, "breath_max":2.75, "busy_limit":55.0, "drain_max":10.0,
 	"cadence_min":[12.0,8.0,7.0,6.0,5.0], "cadence_max":[17.0,12.0,11.0,9.0,8.0]
 }
 const EVENTS: Array[Dictionary] = [
@@ -28,6 +28,7 @@ var next_decision: float = 12.0
 var calm_until: float = 0.0
 var last_breath: float = 0.0
 var draining: bool = false
+var drain_started_at: float = -1.0
 var recent: Array[String] = ["hunter"]
 var last_by_key: Dictionary = {"hunter":0.0}
 var last_by_kind: Dictionary = {"rival":0.0}
@@ -44,7 +45,7 @@ static func tier_at(time: float) -> int:
 	var tier: int = 0
 	for boundary: float in TUNING.tier_seconds:
 		if time >= boundary: tier += 1
-	return maxi(0,tier-1) + maxi(0,floori((time-360.0)/float(TUNING.overdrive_seconds)))
+	return maxi(0,tier-1) + maxi(0,floori((time-float(TUNING.tier_seconds[-1]))/float(TUNING.overdrive_seconds)))
 
 static func limits(time: float, investments: int = 1) -> Dictionary:
 	var tier: int = tier_at(time)
@@ -82,12 +83,19 @@ func candidates(time: float, census: Dictionary, investments: int) -> Array[Dict
 func decide(time: float, census: Dictionary, investments: int = 1) -> Dictionary:
 	if time < calm_until or time < next_decision: return {}
 	var limit: Dictionary = limits(time,investments)
-	if time-last_breath >= float(TUNING.busy_limit): draining = true
+	if not draining and time-last_breath >= float(TUNING.busy_limit):
+		draining = true
+		drain_started_at = time
 	if draining:
-		if float(census.pressure) <= float(limit.budget)*0.45:
-			calm_until = time+rng.randf_range(3.0,5.0)
+		# Rest the admission schedule, not the entire Run until a durable rival
+		# dies. A single 2.8-cost Bulwark could otherwise stall a 6-point tier
+		# indefinitely above its 2.7 drainage threshold. Bodies, warning and all
+		# reservation guards remain; after this bounded lull they can overlap.
+		if float(census.pressure) <= float(limit.budget)*0.45 or time-drain_started_at >= float(TUNING.drain_max):
+			calm_until = time+rng.randf_range(TUNING.breath_min,TUNING.breath_max)
 			last_breath = time
 			draining = false
+			drain_started_at = -1.0
 		return {}
 	next_decision = time+0.75
 	var choices: Array[Dictionary] = candidates(time,census,investments)
@@ -133,4 +141,5 @@ func cleared(event_serial: int, time: float, empty: bool) -> bool:
 		if empty:
 			next_decision = calm_until
 			draining = false
+			drain_started_at = -1.0
 	return true

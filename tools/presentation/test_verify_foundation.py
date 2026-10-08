@@ -105,6 +105,37 @@ class FoundationGuards(unittest.TestCase):
         self.assertEqual(self.invoke(), 0)
         self.assertNotIn("TOPGAME_QA_ROOT", os.environ)
 
+    def test_input_and_overdrive_receive_fixed_fps_and_separate_fresh_profiles(self):
+        self.assertEqual(self.invoke("input_acceptance_003a1,overdrive_lifecycle_003a1"), 0)
+        self.assertEqual(len(self.children), 2)
+        profiles = []
+        for suite, child in zip(["input_acceptance_003a1", "overdrive_lifecycle_003a1"], self.children):
+            command = child["command"]
+            self.assertLess(command.index("--fixed-fps"), command.index("--"))
+            self.assertEqual(command[command.index("--fixed-fps") + 1], "60")
+            expected = self.task / "temp" / ("guard_" + suite + "_profiles")
+            self.assertIn("--profiles=" + str(expected), command)
+            self.assertIn("--report=" + str(self.task / "manifests" / ("guard_" + suite + ".json")), command)
+            self.assertFalse(expected.exists(), "Only the engine driver creates its fresh profile directory")
+            profiles.append(expected)
+        self.assertNotEqual(*profiles)
+        self.assertIn("--kind=all", self.children[0]["command"])
+        self.assertNotIn("--kind=all", self.children[1]["command"])
+        self.assertTrue(self.report()["profile_unchanged"])
+
+    def test_existing_driver_and_derived_profiles_are_preserved_before_any_child(self):
+        for suite, suffix in [("input_acceptance_003a1", ""), ("input_acceptance_003a1", "_mapping"),
+                              ("input_acceptance_003a1", "_mapping_lifecycle"), ("overdrive_lifecycle_003a1", "")]:
+            with self.subTest(suite=suite, suffix=suffix):
+                relative = "temp/guard_" + suite + "_profiles" + suffix + "/preserved.json"
+                sentinel = self.preserved(relative)
+                with self.assertRaisesRegex(RuntimeError, "Preserved driver profile"):
+                    self.invoke(suite)
+                self.assertEqual(sentinel.read_text(), "preserve earlier evidence")
+                sentinel.unlink()
+                sentinel.parent.rmdir()
+        self.runner.assert_not_called()
+
     def test_fresh_fixture_root_routes_historical_children_inside_current_task(self):
         fixture = self.task / "temp" / "isolated-fixtures"
         self.assertEqual(self.invoke("music_escalation,presentation_retention,roster_draft", extra=["--fixture-qa-root", str(fixture)]), 0)

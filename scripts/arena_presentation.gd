@@ -38,7 +38,7 @@ static func presentation_snapshot(run_elapsed: float, boss_pressure: bool = fals
 		"spark_period":[14.0,10.0,7.0,5.0,3.6][stage],
 		"maximum_draw_calls":MOBILE_MAX_DRAW_CALLS if mobile else MAX_DRAW_CALLS,
 		"nodes_created":0,"particles_created":0,"gameplay_writes":0,"floor_hazard_shapes":0,
-		"warning_animation":not reduced_flashing,"peripheral_only":true}
+		"warning_animation":false,"warning_bank_draw_calls":0,"pressure_source":"HUD Director census","peripheral_only":true}
 
 static func _meta(name: String) -> Dictionary:
 	if not _metadata.has(name):
@@ -87,9 +87,8 @@ func draw_background(canvas: CanvasItem, run_elapsed: float, boss_pressure: bool
 		_cell(canvas,"vent","HOT" if stage >= 2 else "IDLE",motion+float(index)*0.44,ANCHORS.vent[index],alpha)
 	for index: int in range(1 if quality < 0.75 else 2):
 		_cell(canvas,"display_panel","LOAD" if stage >= 2 else "IDLE",motion+float(index)*0.39,ANCHORS.display_panel[index],alpha)
-	var bank_tag: String = "SAFE" if stage == 0 else ("BUILDING" if stage < 3 else ("WARNING" if stage == 3 else "ALARM"))
-	for index: int in range(ANCHORS.warning_bank.size()):
-		_cell(canvas,"warning_bank",bank_tag,time+float(index)*0.71,ANCHORS.warning_bank[index],alpha,reduced_flashing)
+	# Clock-driven warning banks resembled walls. Actual pressure belongs in
+	# the existing upper HUD; the saved native masters remain available.
 	if stage >= 1:
 		for index: int in range(ANCHORS.perimeter.size()):
 			_cell(canvas,"perimeter","LEFT" if index in [0,3] else "RIGHT",time+float(index)*0.60,ANCHORS.perimeter[index],alpha * 0.78,reduced_flashing)

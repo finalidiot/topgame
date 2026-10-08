@@ -12,13 +12,15 @@ func _run() -> void:
 		diagnostics.append(sample)
 		sequences[str(sample.sequence)] = true
 		check(sample.bosses > 0 and sample.elites > 0 and sample.swarms > 0,"Long policy sample exercises all event classes")
-		check(sample.first_boss >= 100.0 and sample.longest_empty < 8.0,"Eligibility and empty-gap bounds")
+		check(sample.first_boss >= float(Director.TUNING.tier_seconds[2]) and sample.longest_empty < 8.0,"Boss eligibility follows the authored tier; empty-gap bounds remain")
 		check(sample.max_tier > 4 and sample.events > 30,"Policy continues beyond authored tiers")
 	check(sequences.size() == 8,"Different seeds produce different compositions/timing")
 	check(simulate(421) == diagnostics[0],"Identical seed and census reproduce every decision and pacing statistic")
 	_test_overlap_and_boss()
 	_test_roles()
 	_test_policy_edges()
+	_test_bounded_lull()
+	_test_earlier_questions()
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="):
 			var file: FileAccess = FileAccess.open(argument.trim_prefix("--report="),FileAccess.WRITE)
@@ -208,3 +210,50 @@ func _test_policy_edges() -> void:
 	b.continuous.after_tick(0.0)
 	check(is_same(reaper,b.entity(4)) and reaper.outcome == "" and game.screen == "battle","One boss clear leaves the other boss and Run alive")
 	game.free()
+
+func _test_bounded_lull() -> void:
+	var director = Director.new()
+	director.setup(421)
+	director.next_decision = 55.0
+	var census: Dictionary = {"pressure":2.8,"full":1,"small":0,"total":2,"elites":0,"bosses":0,"swarm":false}
+	check(director.decide(55.0,census,4).is_empty() and director.draining,"A busy schedule still offers a real admission lull")
+	var initial_rng: int = director.rng.state
+	for second: int in range(56,65):
+		check(director.decide(float(second),census,4).is_empty() and director.draining,"Durable surviving rival keeps the bounded admission lull")
+	check(director.rng.state == initial_rng,"Waiting on the bounded lull does not consume decision randomness")
+	check(director.decide(65.0,census,4).is_empty() and not director.draining,"Ten-second lull releases even when one Bulwark remains above the old 45% threshold")
+	check(director.calm_until >= 66.5 and director.calm_until <= 67.75,"A readable short breath follows the bounded lull")
+	var choice: Dictionary = director.decide(director.calm_until + 0.01,census,4)
+	check(not choice.is_empty() and census.pressure + choice.cost <= Director.limits(director.calm_until,4).budget,"Schedule returns to normal budget-guarded admissions, without killing or changing the surviving rival")
+	var twin = Director.new()
+	twin.setup(421)
+	twin.next_decision = 55.0
+	for second: int in range(55,66): twin.decide(float(second),census,4)
+	var replay: Dictionary = twin.decide(twin.calm_until + 0.01,census,4)
+	check(choice == replay and director.rng.state == twin.rng.state,"Identical seed/census reproduces the lull and subsequent choice exactly")
+
+func _test_earlier_questions() -> void:
+	var director = Director.new()
+	director.setup(421)
+	var empty: Dictionary = {"pressure":0.0,"full":0,"small":0,"total":1,"elites":0,"bosses":0,"swarm":false}
+	for time: float in [0.0,19.9,27.99]:
+		for event: Dictionary in director.candidates(time,empty,10):
+			check(event.kind == "rival","Opening remains a single rival question before the 28-second mixed tier")
+	check(Director.limits(20.0,21).full == 1 and Director.limits(20.0,21).budget == 2.8,"Even a declared strong early build cannot cause an instant opening swarm or overlap")
+	var mixed: Array[String] = []
+	for event: Dictionary in director.candidates(28.0,empty,4): mixed.append(str(event.kind))
+	check("specialist" in mixed and "swarm" in mixed and "elite" not in mixed and "boss" not in mixed,"First mixed role questions arrive at 28 seconds, with elites/bosses deferred")
+	var developed: Array[String] = []
+	for event: Dictionary in director.candidates(80.0,empty,4): developed.append(str(event.kind))
+	check("elite" in developed and "boss" in developed,"Developed 80-second budget admits warned elite/boss candidates")
+	for index: int in range(1,5):
+		var boundary: float = Director.TUNING.tier_seconds[index]
+		check(Director.tier_at(boundary - 0.001) == index - 1 and Director.tier_at(boundary) == index,"Every tier switches deterministically at its authored boundary")
+	check(Director.tier_at(399.999) == 4 and Director.tier_at(400.0) == 5,"Endless budget growth is measured from the new final authored tier, not the retired 360-second boundary")
+	var player: Dictionary = {"pos":Vector2.ZERO,"vel":Vector2.ZERO}
+	var f: Dictionary = {"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0,"role_commit_cycle":-1}
+	Roles.direction(f,player,27.99)
+	check(not f.has("role_attack_state"),"Original opening approach remains intact before committed attacks unlock")
+	Roles.direction(f,player,28.0)
+	check(f.get("role_attack_state","") in ["set_up","committed","recover"],"The same telegraphed attack policy unlocks at 28 seconds")
+	check(Roles.COMMIT_MATURITY_SECONDS == 325.0 and Roles.ELITES.ballast.mass == 1.55 and Roles.BOSSES.anvil.mass == 2.0,"Earlier commitments retain original maturity shape and authored enemy stat profiles")

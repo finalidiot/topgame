@@ -497,7 +497,7 @@
         "frame_count": 48,
         "source": "assets/source-art/defence003a/anchor_exchange_cards.aseprite",
         "texture": "res://assets/powers/defence003a/anchor_exchange_cards.png",
-        "source_sha256": "516b63974a6992085364f8e1f96ffa6c5faf6c2907b9f933b21ac8e8486f73c8"
+        "source_sha256": "32c704f1b762530736cf968e5183680342fad87e2c193fb04e5556440bfe0ab1"
       },
       "icons": {
         "cell": [

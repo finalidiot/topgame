@@ -1,6 +1,6 @@
-extends "res://tests/observe_bastion_active_defence.gd"
-## The hotfix removes one starter efficiency discount. Paired mature observations
-## use real fixed ticks and named ledgers; there is no required death deadline.
+extends "res://tests/observe_dead_centre_stress.gd"
+## Preserve the first Bastion correction and verify the new physical Stress loop.
+## Mature observations use real fixed ticks/ledgers, with no death deadline.
 const Economy = preload("res://scripts/spin_economy.gd")
 const Runtime = preload("res://scripts/power_runtime.gd")
 const Powers = preload("res://scripts/run_powers.gd")
@@ -72,7 +72,7 @@ func neutral_parts_retention() -> void:
 	b.free()
 
 func paired_attrition() -> void:
-	warmup = 360.0; horizon = 300.0; opening_time = 0.0
+	warmup = 504.0; horizon = 329.0; opening_time = 0.0
 	var afk: Dictionary = observation(421,"bastion","legacy_bulwark","zero_input")
 	var active: Dictionary = observation(421,"bastion","legacy_bulwark","minimal_active")
 	check(afk.mature_handoff_reached and active.mature_handoff_reached,"Both declared invested fixtures reach mature pressure through every real warmup tick")
@@ -113,12 +113,16 @@ func paired_attrition() -> void:
 	check(float(active.final_rpm) > float(afk.final_rpm)+0.30 and active.mature_seconds >= afk.mature_seconds,"Modest actual defence materially improves reserve/survival against the paired pressure")
 	check(float(active.input_seconds) > 0.0 and float(active.input_seconds) < float(active.mature_seconds)*0.75,"Minimal defence is intermittent deliberate participation")
 	check(float(active.mature_gains.get("elimination",0.0))+float(active.mature_gains.get("elite",0.0))+float(active.mature_gains.get("boss",0.0)) > 0.30,"Active defence retains existing named and attributed elimination recovery")
-	check(float(active.centre_seconds) > float(active.mature_seconds)*0.90,"Active Bastion retains the planted centre-hold fantasy")
+	check(float(active.centre_seconds) > float(active.mature_seconds)*0.65,"Active Bastion spends most of the observed fight holding centre while making meaningful tactical releases")
+	check(float(afk.final_power_diagnostics.anchor_stress_peak) >= 0.80,"Real incoming and outgoing work overloads the unattended anchor")
+	check(float(active.final_power_diagnostics.anchor_stress_vented) > float(active.handoff.power_runtime[1].anchor_stress_vented),"Actual controlled release vents Stress beyond the shared warmup state")
+	check(float(active.final_power_diagnostics.anchor_stress_peak) < float(afk.final_power_diagnostics.anchor_stress_peak),"Managing the same physical mechanism limits active Stress compared with AFK")
 	measurements.paired = [afk,active]
 
 func preserved_reload_contract() -> void:
 	check(Runtime.ANCHOR_REARM_RADIUS == 82.0 and Runtime.ANCHOR_REARM_SECONDS == 1.25,"Dead Centre's outside radius and sustained reload duration remain unchanged")
-	check(str(Powers.DEFINITIONS.dead_centre.description).contains("Move and steer outside the centre to reload recovery"),"The existing player-visible leave / reload instruction stays intact")
+	var description: String = str(Powers.DEFINITIONS.dead_centre.description).to_lower()
+	check(description.contains("stress") and description.contains("vent") and description.contains("reload"),"Player-visible Dead Centre instructions explain physical Stress, deliberate venting and the preserved finite reload")
 	# Semantic quota/contact/rearm mechanics remain exercised by unchanged
 	# test_power_feedback; this contract additionally records the full real pair.
 

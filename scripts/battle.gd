@@ -1027,7 +1027,9 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	powers.incoming_power_impulse(target, braced_velocity, _cause)
 	if float(target.get("anchor_charge", 0.0)) > 0.0 or powers.rank(target, "gyro_lock") > 0 or powers.rank(target, "anchor_exchange") > 0:
 		braced_velocity *= powers.inverse_mass(target) * float(target.mass)
-	target.vel = (Vector2(target.vel) + braced_velocity).limit_length(cap)
+	var before_velocity: Vector2 = target.vel
+	target.vel = (before_velocity + braced_velocity).limit_length(cap)
+	powers.delivered_anchor_work(target, Vector2(target.vel) - before_velocity, _cause)
 	target.impulse_time = maxf(float(target.get("impulse_time",0.0)),0.35)
 
 func present_reclaim(amount: float, source: String) -> void:
@@ -1370,6 +1372,7 @@ func _emit_hud() -> void:
 		"player_stamina": player_rpm, "enemy_stamina": enemy_rpm,
 		"player_rpm_value": int(player_rpm * 9000.0), "enemy_rpm_value": int(enemy_rpm * 9000.0),
 		"redline_active": powers.redline_active(player), "rpm_cap": powers.rpm_cap(player),
+		"power_state": powers.public_state(player),
 		"redline_heat": float(player.get("redline_heat", 0.0)), "redline_excess": maxf(0.0, player_rpm - 1.0),
 		"dead_centre_owned": powers.rank(player, "dead_centre") > 0,
 		"dead_centre_charge": float(player.get("anchor_charge", 0.0)), "dead_centre_strength": 1.0 - powers.incoming_rpm_scale(player),

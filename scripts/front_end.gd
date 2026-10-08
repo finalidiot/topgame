@@ -131,9 +131,13 @@ static func make_theme() -> Theme:
 	return value
 
 static func controller_profile(device: int) -> String:
-	var name: String = Input.get_joy_name(device).to_lower()
-	if "playstation" in name or "dualshock" in name or "dualsense" in name: return "playstation"
-	if "nintendo" in name or "switch" in name: return "nintendo"
+	return controller_profile_for(Input.get_joy_name(device), Input.get_joy_info(device))
+
+static func controller_profile_for(mapped_name: String, info: Dictionary = {}) -> String:
+	var name: String = (mapped_name + " " + str(info.get("raw_name", ""))).to_lower()
+	var vendor: int = int(info.get("vendor_id", 0))
+	if vendor == 0x054c or "playstation" in name or "dualshock" in name or "dualsense" in name or "ps4" in name or "ps5" in name: return "playstation"
+	if vendor == 0x057e or "nintendo" in name or "switch" in name: return "nintendo"
 	if "xbox" in name or "xinput" in name: return "xbox"
 	return "gamepad"
 
@@ -143,7 +147,7 @@ static func prompt(profile: String, action: String) -> String:
 		return {"confirm":"ENTER / CLICK", "back":"ESC", "choose":"ARROWS / TAB", "pause":"ESC", "steer":"WASD / ARROWS", "burst":"SPACE", "brake":"SHIFT"}.get(action, action.to_upper())
 	var south: String = {"playstation":"CROSS", "nintendo":"B", "xbox":"A"}.get(profile, "SOUTH BUTTON")
 	var east: String = {"playstation":"CIRCLE", "nintendo":"A", "xbox":"B"}.get(profile, "EAST BUTTON")
-	return {"confirm":south, "back":east, "choose":"D-PAD / STICK", "pause":"MENU", "steer":"LEFT STICK", "burst":south, "brake":"SHOULDER / TRIGGER"}.get(action, action.to_upper())
+	return {"confirm":east if profile == "nintendo" else south, "back":south if profile == "nintendo" else east, "choose":"D-PAD / STICK", "pause":"MENU", "steer":"LEFT STICK", "burst":south, "brake":"SHOULDER / TRIGGER"}.get(action, action.to_upper())
 
 static func glyph(profile: String, action: String) -> AtlasTexture:
 	if profile == "touch": return null
@@ -151,9 +155,9 @@ static func glyph(profile: String, action: String) -> AtlasTexture:
 	var tag: String = "key_enter" if action == "confirm" else "key_escape"
 	if profile != "keyboard":
 		tag = ("pad_cross" if profile == "playstation" else "pad_south") if action == "confirm" else (("pad_circle" if profile == "playstation" else "pad_east") if action == "back" else "dpad")
-		# The atlas A/B tags describe Xbox positions; mapped Nintendo pads put
-		# B on the physical south button and A on east. Keep letter and prompt true.
-		if profile == "nintendo" and action in ["confirm", "back"]: tag = "pad_east" if action == "confirm" else "pad_south"
+		# These atlas cells are printed letters A/B, rather than Nintendo face
+		# positions. Nintendo A confirms on east; its B backs out on south.
+		if profile == "nintendo" and action in ["confirm", "back"]: tag = "pad_south" if action == "confirm" else "pad_east"
 	var names: Array[String] = ["key_enter", "key_escape", "pad_south", "pad_east", "dpad", "pad_back", "pad_start", "pad_cross", "pad_circle"]
 	var frame: int = names.find(tag)
 	var texture: AtlasTexture = AtlasTexture.new()

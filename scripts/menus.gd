@@ -3,6 +3,7 @@ extends Control
 
 signal action(name: String, value: Variant)
 signal focus_sound(kind: String)
+signal input_engaged
 
 const Preview = preload("res://scripts/top_preview.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
@@ -15,6 +16,8 @@ const ShopMerchant = preload("res://scripts/shop_merchant.gd")
 const AbilityInspection = preload("res://scripts/ability_inspection.gd")
 const CreditTransfer = preload("res://scripts/credit_transfer.gd")
 const TouchButton = preload("res://scripts/touch_button.gd")
+const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const PowerStateMeters = preload("res://scripts/power_state_meters.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -101,6 +104,7 @@ var _inspection_owned_state: Dictionary = {}
 var reduced_flashing: bool = false
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
+var input_suspended: bool = false
 
 func _ready() -> void:
 	if OS.has_feature("mobile"): _input_profile = "touch"
@@ -142,6 +146,15 @@ func _process(_delta: float) -> void:
 		_default_focus.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	if input_suspended:
+		get_viewport().set_input_as_handled()
+		return
+	# A deliberate local interaction also owns the application lifecycle. UI
+	# can receive a pad event after desktop focus loss; its timers must not
+	# remain suspended until a mouse later restores the OS focus notification.
+	var local_press: bool = (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed and not event.canceled)
+	if event is InputEventJoypadButton and event.pressed and (_ui_owner_device < 0 or event.device == _ui_owner_device): local_press = true
+	if local_press: input_engaged.emit()
 	if event is InputEventScreenTouch:
 		_note_input_profile("touch")
 		if (not event.pressed or event.canceled) and event.index == _packet_touch_index: _packet_touch_index = -1
@@ -160,7 +173,7 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
-				_note_input_profile(FrontEnd.controller_profile(event.device))
+				_note_input_profile(ControllerBindings.profile(event.device))
 		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (OS.has_feature("mobile") and event.device == InputEvent.DEVICE_ID_EMULATION)):
 			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
@@ -1254,10 +1267,17 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,282,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
+	var layout_button: Button = _button(_content, "CONTROLLER: " + str(_settings.get("controller_layout", "auto")).to_upper(), Rect2(166, 321, 228, 28))
+	layout_button.set_meta("setting_key", "controller_layout")
+	layout_button.tooltip_text = "AUTO detects the controller. Choose NINTENDO when an adapter reports Xbox but your buttons are labelled A on the right and B below."
+	layout_button.pressed.connect(func() -> void:
+		var layouts: Array[String] = ["auto", "nintendo", "xbox", "playstation"]
+		_settings["controller_layout"] = layouts[(layouts.find(str(_settings.get("controller_layout", "auto"))) + 1) % layouts.size()]
+		layout_button.text = "CONTROLLER: " + str(_settings.controller_layout).to_upper()
+		action.emit("settings_changed", _settings.duplicate()))
+	footer.append(layout_button)
 	if save_tools_allowed:
 		footer.append(_button(_content, "SAVE / TESTING TOOLS", Rect2(405, 321, 213, 28), "save_tools"))
-	else:
-		_label(_content, "SAVE TOOLS LOCKED DURING A RUN", Rect2(237, 325, 381, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	controls.append(footer)
 	_focus_rows(controls)
 
@@ -1349,6 +1369,7 @@ func _create_power_inspector(area: Rect2) -> void:
 	_ability_inspector.size = area.size
 	_ability_inspector.visible = false
 	_content.add_child(_ability_inspector)
+	_ability_inspector.set_runtime_state(_inspection_owned_state.get("state", {}))
 
 func _bind_power_inspection(control: Control, id: String, rank: int, mutation: String = "", branch_preview: bool = false, hide_on_exit: bool = false) -> void:
 	control.tooltip_text = ""
@@ -1664,10 +1685,12 @@ func _show_run_result(result: Dictionary) -> void:
 	_focus_rows(rows, restart)
 
 func show_hud(stats: Dictionary) -> void:
-	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate()}
+	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate(), "state":stats.get("power_state", {}).duplicate(true)}
 
 	if screen != "hud":
 		_create_hud()
+	_hud["state_meters"].update_state(_inspection_owned_state.state)
+	if is_instance_valid(_ability_inspector): _ability_inspector.set_runtime_state(_inspection_owned_state.state)
 	var player_spin: float = float(stats.get("player_rpm", 1.0))
 	var enemy_spin: float = float(stats.get("enemy_rpm", 1.0))
 	_hud["player_bar"].value = clampf(player_spin, 0.0, 1.0)
@@ -1692,6 +1715,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["rerolls"].visible = bool(stats.get("is_run", false))
 	_hud["rerolls"].text = "REROLLS  %d" % int(stats.get("rerolls", 0))
 	_hud["anchor"].visible = bool(stats.get("dead_centre_owned", false))
+	_hud["anchor"].position.y = 65 + _hud["state_meters"].diagnostic_snapshot().rows.left.size() * PowerStateMeters.ROW_HEIGHT + 7
 	if _hud["anchor"].visible:
 		var charge: float = float(stats.get("dead_centre_charge", 0.0))
 		var maturity: float = float(stats.get("dead_centre_maturity", 0.0))
@@ -1770,11 +1794,13 @@ func show_hud(stats: Dictionary) -> void:
 		var state: Dictionary = stats.run_state
 		var c: Dictionary = state.census
 		var live_full: int = int(c.get("active_full",c.full))
-		_hud["round"].text = "TIER %d  /  %d CLEARED  /  PRESSURE %.1f" % [int(state.limits.tier),int(state.threats_cleared),float(c.pressure)]
+		_hud["round"].text = "TIER %d / %d CLEARED" % [int(state.limits.tier),int(state.threats_cleared)]
 		_hud["director_callout"].text = str(state.callout)
-		_hud["enemy_bar"].visible = live_full > 0
+		_hud["enemy_bar"].visible = true
+		_hud["enemy_bar"].value = clampf(float(c.pressure) / maxf(0.001, float(state.limits.budget)), 0.0, 1.0)
+		_hud["enemy_bar"].tooltip_text = "Live threat pressure / Director budget. Includes rivals, small tops and reserved entrances."
 		_hud["swarm_objective"].visible = false
-		_hud["enemy_name"].text = str(stats.enemy_name) if live_full > 0 else ("AMMUNITION WAVES" if bool(c.swarm) else "BREATHING ROOM")
+		_hud["enemy_name"].text = "PRESSURE %.1f / %.1f" % [float(c.pressure), float(state.limits.budget)]
 		_hud["enemy_rpm"].text = "%d RIVALS / %d SMALL" % [live_full,int(c.small)]
 		if bool(state.calm): _hud["enemy_rpm"].text += "  /  EASING"
 	else:
@@ -1824,6 +1850,8 @@ func _create_hud() -> void:
 	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
 	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["anchor"] = _label(_content, "", Rect2(22, 65, 202, 13), 8, Color("dde3df"))
+	_hud["state_meters"] = PowerStateMeters.new()
+	_content.add_child(_hud["state_meters"])
 	_hud["rerolls"] = _label(_content, "", Rect2(22, 304, 128, 13), 9, BLUE)
 	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 30, 202, 14), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
 	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
@@ -1833,8 +1861,8 @@ func _create_hud() -> void:
 	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
 	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
 	pause_button.focus_mode = Control.FOCUS_NONE
-	_hud["round"] = _label(_content, "", Rect2(175, 76, 290, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["director_callout"] = _label(_content, "", Rect2(120, 96, 400, 22), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["round"] = _label(_content, "", Rect2(241, 76, 158, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["director_callout"] = _label(_content, "", Rect2(120, 132, 400, 22), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
 	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)

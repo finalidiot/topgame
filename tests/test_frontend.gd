@@ -121,13 +121,13 @@ func _test_static_profiles() -> void:
 	for profile: String in ["xbox", "nintendo", "playstation", "keyboard", "gamepad"]:
 		check(not FrontEndSkin.prompt(profile, "confirm").is_empty() and not FrontEndSkin.prompt(profile, "back").is_empty(), "Every supported profile has an explicit confirm/back prompt: " + profile)
 	check(FrontEndSkin.prompt("xbox", "confirm") == "A" and FrontEndSkin.prompt("xbox", "back") == "B", "Xbox prompts name the mapped physical south/east face buttons")
-	check(FrontEndSkin.prompt("nintendo", "confirm") == "B" and FrontEndSkin.prompt("nintendo", "back") == "A", "Nintendo prompts name B/A without changing physical south/east bindings")
+	check(FrontEndSkin.prompt("nintendo", "confirm") == "A" and FrontEndSkin.prompt("nintendo", "back") == "B", "Nintendo prompts name the requested physical A Confirm / B Back bindings")
 	check(FrontEndSkin.prompt("playstation", "confirm") == "CROSS" and FrontEndSkin.prompt("playstation", "back") == "CIRCLE", "PlayStation prompts identify Cross and Circle")
 	check(FrontEndSkin.prompt("gamepad", "confirm") == "SOUTH BUTTON", "Unknown gamepads do not make an unsupported letter-label claim")
 	check(FrontEndSkin.glyph("xbox", "confirm").region == Rect2(32, 0, 16, 16), "Xbox Confirm uses the authored A glyph")
 	check(FrontEndSkin.glyph("xbox", "back").region == Rect2(48, 0, 16, 16), "Xbox Back uses the authored B glyph")
-	check(FrontEndSkin.glyph("nintendo", "confirm").region == Rect2(48, 0, 16, 16), "Nintendo Confirm's B glyph agrees with its text")
-	check(FrontEndSkin.glyph("nintendo", "back").region == Rect2(32, 0, 16, 16), "Nintendo Back's A glyph agrees with its text")
+	check(FrontEndSkin.glyph("nintendo", "confirm").region == Rect2(32, 0, 16, 16), "Nintendo Confirm's A glyph agrees with its text")
+	check(FrontEndSkin.glyph("nintendo", "back").region == Rect2(48, 0, 16, 16), "Nintendo Back's B glyph agrees with its text")
 	for screen_id: String in ["title_gate", "collection_title", "play_modes", "collection_workshop", "settings", "save_tools", "reset_confirmation", "starter_ceremony", "starter_confirm", "starter_owned", "collection_error", "help", "reward", "mutation", "acquisition", "level_up", "pause", "result", "hud"]:
 		check(FrontEndSkin.SCREEN_REGISTRY.has(screen_id), "Screen registry covers the existing game flow: " + screen_id)
 	check(str(FrontEndSkin.SCREEN_REGISTRY.hud.scope) == "combat" and int(FrontEndSkin.SCREEN_REGISTRY.hud.background) == -1, "Combat HUD never receives a menu backdrop")
@@ -320,7 +320,22 @@ func _test_pause_options_preserves_run() -> void:
 	expected_snapshot.erase("paused")
 	check(game.battle.battle_status == "battle" and ready_snapshot == expected_snapshot, "Ready buffer ends before live physics while retaining every actual body and simulation field")
 	game.battle.set_physics_process(true)
-	await create_timer(0.08).timeout
+	# Observe the real resumed solver. A process timer is not a guarantee that
+	# an enabled physics node has ticked, and a retained impact hold is finite.
+	var resume_started: int = Time.get_ticks_usec()
+	var resume_before: Dictionary = {"screen":game.screen,"paused":game.battle.paused,
+		"status":game.battle.battle_status,"elapsed":game.battle.elapsed,
+		"physics_frames":Engine.get_physics_frames(),"physics_enabled":game.battle.is_physics_processing(),
+		"hit_stop":game.battle._hit_stop,"application_suspended":game._application_suspended,
+		"application_backgrounded":game._application_backgrounded}
+	while game.screen == "battle" and not game.battle.paused and game.battle.elapsed <= float(battle_before.elapsed) and Time.get_ticks_usec() - resume_started < 2000000:
+		await create_timer(0.01).timeout
+	print("FRONTEND_RESUME_OBSERVATION ", JSON.stringify({"before":resume_before,
+		"after":{"screen":game.screen,"paused":game.battle.paused,"status":game.battle.battle_status,
+			"elapsed":game.battle.elapsed,"physics_frames":Engine.get_physics_frames(),
+			"physics_enabled":game.battle.is_physics_processing(),"hit_stop":game.battle._hit_stop,
+			"application_suspended":game._application_suspended,"application_backgrounded":game._application_backgrounded},
+		"wait_usec":Time.get_ticks_usec()-resume_started,"deadline_usec":2000000}))
 	check(game.screen == "battle" and not game.battle.paused and game.battle.elapsed > float(battle_before.elapsed), "Deliberate Resume restarts the same actual simulation")
 	check(game.run_context.run_seed == int(run_before.seed) and game.run_context.selected_build == run_before.build and game.run_context.owned_power_ids == run_before.owned, "Resume retains the same seed, assembled top and acquired power")
 	check(not bool(game.music.music_snapshot().paused), "Actual resumed combat also resumes its Run music state")
@@ -342,7 +357,11 @@ func _run() -> void:
 	Input.use_accumulated_input = false
 	var configured: String = OS.get_environment("TOPGAME_QA_ROOT")
 	var qa_root: String = configured if not configured.is_empty() else ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-	_qa_profiles = qa_root.replace("\\", "/").simplify_path().path_join("002C.6/temp/front-end-profiles-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()])
+	var qa_task: String = "003A.1"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--qa-task="): qa_task = argument.trim_prefix("--qa-task=")
+	check(not qa_task.is_empty() and not "/" in qa_task and not "\\" in qa_task and not ".." in qa_task,"QA task is a scoped directory identity")
+	_qa_profiles = qa_root.replace("\\", "/").simplify_path().path_join(qa_task + "/temp/front-end-profiles-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()])
 	check(_qa_profiles.is_absolute_path() and not _qa_profiles.begins_with(ProjectSettings.globalize_path("res://")) and not _qa_profiles.begins_with(OS.get_user_data_dir()), "QA profile root is an absolute external folder")
 	if failures > 0:
 		quit(1)

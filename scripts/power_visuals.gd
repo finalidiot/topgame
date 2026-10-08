@@ -81,6 +81,14 @@ static func draw_small(canvas: CanvasItem, fighter: Dictionary, position: Vector
 	_cell(canvas, "small_top", SMALL, frame, position)
 
 static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector2, quality: float = 1.0) -> void:
+	var redline: Dictionary = redline_presentation(str(effect.get("kind", "")))
+	if redline.handled:
+		if redline.ring:
+			var duration: float = maxf(0.01, float(effect.get("duration", 0.3)))
+			var age: float = float(effect.get("age", 0.0))
+			var alpha: float = clampf((1.0 - age / duration) * 2.0, 0.0, 1.0)
+			_cell(canvas, "effects", EFFECTS, _frame("effects", "corona", age, false, duration), position, Color(1.0, 0.62, 0.58, alpha))
+		return
 	if Defence.effect(canvas, effect, position): return
 	if Identity.effect(canvas,effect,position): return
 	if Signature.effect(canvas,effect,position):
@@ -129,6 +137,12 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector
 	# The two-cell ceiling also applies to full quality during a dense chain.
 	if kind in ["impact_wake", "chain_impact"] and age < 0.19:
 		_cell(canvas, "effects", EFFECTS, _frame("effects", "contact_arc", age, false, 0.22), position)
+
+static func redline_presentation(kind: String) -> Dictionary:
+	# Keep the saved native ring. Sparse heat/overcap information is now on
+	# the HUD; the former fragment-cloud cels add no useful physical feedback.
+	var handled: bool = kind in ["redline", "redline_ii", "redline_release", "runaway", "runaway_hit", "redline_overcap", "redline_heat"]
+	return {"handled": handled, "ring": handled and kind not in ["redline_overcap", "redline_heat"], "particle_cels": 0, "source": "native effects/corona", "gameplay_writes": 0}
 
 static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2, clock: float, quality: float = 1.0) -> void:
 	if not str(fighter.get("outcome", "")).is_empty():

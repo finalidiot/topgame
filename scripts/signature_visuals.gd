@@ -58,21 +58,9 @@ static func anchor_tag(f: Dictionary) -> String:
 static func aura(c: CanvasItem, f: Dictionary, at: Vector2, clock: float) -> void:
 	if not str(f.get("outcome","")).is_empty(): return
 	if float(f.get("redline_time",0.0)) > 0.0:
-		var tag: String = redline_tag(f)
-		# A modern Breakneck's first overclock is setup; its next paid Burst commits.
-		if f.has("redline_commit_time") and tag=="breakneck_charge" and float(f.redline_commit_time)<=0.0: tag="rank2_active"
-		cel(c,"redline",tag,at,clock*(1.6 if tag=="runaway_high" else 1.0))
-		var direction: Vector2 = f.get("redline_heading",f.get("vel",Vector2.RIGHT))
-		var forward: Vector2 = Vector2(direction.x-direction.y,(direction.x+direction.y)*0.5).normalized()
-		# Sprite stays in the fixed projection; composition follows true heading.
-		if tag=="breakneck_charge":
-			for i: int in range(3): cel(c,"redline",tag,at-forward*float(8+i*12),clock,0.7-float(i)*0.18)
-		elif tag != "rank1_active": cel(c,"redline",tag,at-forward*17.0,clock+0.1,0.40)
-		var heat: float=clampf(float(f.get("redline_heat",f.get("runaway_heat",0.0))),0.0,1.0)
-		if float(f.get("rpm",0.0))>1.0 and Identity.family_info("redline").is_empty():
-			cel(c,"roster","overcap",at,clock*(1.1+heat),0.65+heat*0.35)
-			rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,heat,Color(1.0,0.64,0.25,0.75))
-		if heat>=0.70 and Identity.family_info("redline").is_empty(): cel(c,"roster","heat_extreme",at,clock*(1.0+heat),heat)
+		# Two short wakes follow actual movement. No floating fragment aura or
+		# looping ignition; paid activation/release keeps its native red ring.
+		rotor_wake(c,at,Vector2(f.get("vel",Vector2.ZERO)),clock,clampf(float(f.get("redline_heat",0.0)),0.0,1.0),Color(0.91,0.40,0.28,0.64))
 	var comet: float=float(f.get("iron_comet_time",0.0))
 	if comet>0.0 and not Identity.has_active("iron_comet","charged"):
 		var span: float=2.8 if int(f.get("power_ranks",{}).get("iron_comet",1))>=2 else 2.0

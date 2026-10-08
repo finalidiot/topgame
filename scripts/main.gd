@@ -16,11 +16,13 @@ const PacketEconomy = preload("res://scripts/packet_economy.gd")
 const RunRewards = preload("res://scripts/run_rewards.gd")
 const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
+const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto"}
 var touch_controls: Node2D
 var _application_suspended: bool = false
+var _application_backgrounded: bool = false
 var _resume_after_foreground: bool = false
 var _android_qa: Dictionary = {}
 var _android_qa_clock: float = 0.0
@@ -176,6 +178,8 @@ func _ready() -> void:
 	layer.add_child(menus)
 	menus.action.connect(_action)
 	menus.focus_sound.connect(_battle_sound)
+	menus.input_engaged.connect(_engage_application_input)
+	Input.joy_connection_changed.connect(_controller_connection_changed)
 	touch_controls = TouchControls.new()
 	layer.add_child(touch_controls)
 	battle.input_provider = touch_controls
@@ -314,12 +318,13 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false}
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto"}
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
 	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing"]:
 		if values.get(key) is bool: result[key] = values[key]
+	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
 
 func _save_preferences() -> void:
@@ -330,6 +335,7 @@ func _save_preferences() -> void:
 	cfg.save(preferences_path)
 
 func _apply_settings() -> void:
+	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
 	sounds.apply_settings(settings)
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
@@ -339,6 +345,9 @@ func _apply_settings() -> void:
 	menus.reduced_flashing = bool(settings.reduced_flashing)
 	if not smoke_mode and not OS.has_feature("mobile"):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if bool(settings.fullscreen) else DisplayServer.WINDOW_MODE_WINDOWED)
+
+func _controller_connection_changed(_device: int, _connected: bool) -> void:
+	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
 
 func _hide_battle() -> void:
 	battle.set_paused(true)
@@ -1089,7 +1098,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F2 and screen == "battle":
 		menus.visible = not menus.visible
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
+	# Nintendo's printed B is both menu Back and the established south-button
+	# Burst. During combat its Burst belongs to physics; MENU pauses instead.
+	elif event.is_action_pressed("pause") or (event.is_action_pressed("ui_cancel") and not (screen == "battle" and event.is_action("burst"))):
 		menus.visible = true
 		_escape()
 		get_viewport().set_input_as_handled()
@@ -1101,6 +1112,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		if screen == "settings": _show_settings()
 		get_viewport().set_input_as_handled()
 
+func _engage_application_input() -> void:
+	# Actual OS background suspension is different from desktop focus loss.
+	# A controller/keyboard/touch that the visible UI accepts can recover the
+	# latter without another device. Android remains stopped until RESUMED.
+	if _application_backgrounded or not _application_suspended: return
+	_resume_application()
+
+func _resume_application() -> void:
+	if not _application_suspended or not is_instance_valid(battle): return
+	_application_suspended = false
+	if _resume_after_foreground and screen == "battle":
+		battle.begin_reentry()
+		music.set_paused(false)
+	_resume_after_foreground = false
+
 func _notification(what: int) -> void:
 	if smoke_mode and what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_FOCUS_IN]: return
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_instance_valid(menus):
@@ -1108,6 +1134,8 @@ func _notification(what: int) -> void:
 		_escape()
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT]:
 		if not is_instance_valid(battle): return
+		if what == NOTIFICATION_APPLICATION_PAUSED: _application_backgrounded = true
+		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
 		_application_suspended = true
 		_resume_after_foreground = screen == "battle"
 		if is_instance_valid(touch_controls): touch_controls.clear()
@@ -1115,12 +1143,9 @@ func _notification(what: int) -> void:
 			battle.set_paused(true)
 			music.set_paused(true)
 	elif what in [NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN]:
-		if not _application_suspended or not is_instance_valid(battle): return
-		_application_suspended = false
-		if _resume_after_foreground and screen == "battle":
-			battle.begin_reentry()
-			music.set_paused(false)
-		_resume_after_foreground = false
+		if what == NOTIFICATION_APPLICATION_RESUMED: _application_backgrounded = false
+		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
+		if not _application_backgrounded: _resume_application()
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Control and not node.is_visible_in_tree(): return null

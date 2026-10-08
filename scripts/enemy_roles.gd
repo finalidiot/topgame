@@ -6,6 +6,8 @@ const BUILDS: Dictionary = {
 	"bulwark":{"blade":"guard","ratchet":"low","bit":"ball"},
 	"harasser":{"blade":"balance","ratchet":"high","bit":"needle"}
 }
+const COMMIT_START_SECONDS: float = 28.0
+const COMMIT_MATURITY_SECONDS: float = 325.0
 const ELITES: Dictionary = {
 	"ballast":{"mass":1.55,"speed":0.76,"acceleration":0.8,"recovery":1.4},
 	"hotwire":{"mass":0.9,"speed":1.17,"acceleration":1.3,"recovery":0.65,"spin_drain":1.15}
@@ -51,7 +53,7 @@ static func direction(f: Dictionary, player: Dictionary, time: float) -> Vector2
 	var desired: Vector2 = toward
 	# The opening keeps its familiar role movement. Threat maturity adds physical
 	# commitment, not damage/HP multipliers or a timer keyed to player inactivity.
-	if time >= 35.0:
+	if time >= COMMIT_START_SECONDS:
 		return _committed_direction(f,player,time)
 	match str(f.role):
 		"hunter": desired = (offset+Vector2(player.vel)*0.16).normalized()
@@ -77,7 +79,7 @@ static func _attack_beat(f: Dictionary, time: float) -> Dictionary:
 	var cycle: float = {"hunter":4.2,"flanker":4.8,"bulwark":5.8,"harasser":3.6}.get(role,4.2)
 	if str(f.archetype) == "anvil": cycle = 6.2
 	elif str(f.archetype) == "reaper": cycle = 4.7
-	var maturity: float = clampf((time-35.0)/325.0,0.0,1.0)
+	var maturity: float = clampf((time-COMMIT_START_SECONDS)/COMMIT_MATURITY_SECONDS,0.0,1.0)
 	cycle *= lerpf(1.0,0.84,maturity)
 	var clock: float = time+float(f.role_phase)
 	return {"cycle":floori(clock/cycle),"phase":fposmod(clock,cycle)/cycle,"maturity":maturity}
@@ -132,7 +134,7 @@ static func _committed_direction(f: Dictionary, player: Dictionary, time: float)
 static func wants_burst(f: Dictionary, target: Dictionary, time: float) -> bool:
 	var distance: float = Vector2(f.pos).distance_to(target.pos)
 	if Vector2(f.pos).length() > 143.0: return false
-	if time >= 35.0:
+	if time >= COMMIT_START_SECONDS:
 		var beat: Dictionary = _attack_beat(f,time)
 		if str(f.get("role_attack_state","")) != "committed": return false
 		var heading: Vector2 = Vector2(f.get("role_commit_heading",Vector2.ZERO))

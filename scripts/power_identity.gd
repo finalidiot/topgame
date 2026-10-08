@@ -185,13 +185,8 @@ static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: fl
 	var floor_at: Vector2 = at+Vector2(0,float(fighter.get("height",0.0)))
 	var velocity: Vector2 = fighter.get("vel",Vector2.ZERO)
 	var ranks: Dictionary = fighter.get("power_ranks",{})
-	if int(ranks.get("redline",0)) > 0:
-		# Retained fragmented C4 signatures carry the sustained wake. One
-		# additional authored state exposes actual unsafe heat or excess spin.
-		var heat: float = clampf(float(fighter.get("redline_heat",0.0)),0.0,1.0)
-		if heat >= 0.70: active(canvas,"redline","heat",fighter,at,clock,heat)
-		elif float(fighter.get("rpm",0.0)) > 1.0:
-			active(canvas,"redline","overcap",fighter,at,clock,0.35+heat*0.45)
+	# Redline heat and overcap are explicit HUD state. The saved fragment-cloud
+	# masters remain editable; they no longer surround a live top with dots.
 	var anchor_charge: float = float(fighter.get("anchor_charge",0.0))
 	if anchor_charge > 0.07 and has_active("dead_centre","anchor"):
 		var semantic: String = "anchor_ii" if int(ranks.get("dead_centre",1)) >= 2 and has_active("dead_centre","anchor_ii") else "anchor"

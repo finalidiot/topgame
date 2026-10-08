@@ -25,6 +25,12 @@ import workspace
 
 EXE = "SpinningMetal.exe"
 DELIVERY_FILES = (EXE, EXE + ".sha256", "README.txt", "build-manifest.json")
+CONTROLLER_GUIDE = (
+    "Controller: left stick steers; south face button bursts; shoulder/trigger brakes;\n"
+    "Menu/Start pauses. In Options choose CONTROLLER: AUTO, XBOX, NINTENDO or PLAYSTATION.\n"
+    "Nintendo: printed A confirms; printed B goes back (B bursts in combat).\n"
+    "Xbox: A confirms; B goes back. PlayStation: Cross confirms; Circle goes back.\n"
+)
 SMOKE_MARKER = "INTEGRATION_SMOKE_PASS"
 ERRORS = re.compile(r"SCRIPT ERROR|(?:^|\n)ERROR:|FAIL:|Assertion failed", re.I)
 REQUIRED_CAPTURES = (
@@ -538,8 +544,7 @@ def build(args: argparse.Namespace) -> dict:
                   f"Human gameplay acceptance: {acceptance}\n\n"
                   "Run SpinningMetal.exe; game data is embedded.\n"
                   "Keyboard: WASD/arrows steer; Space bursts; Shift brakes; Esc pauses.\n"
-                  "Controller: left stick steers; bottom face button bursts/confirms;\n"
-                  "shoulder/trigger brakes; Menu/Start pauses; east face button goes back.\n"
+                  + CONTROLLER_GUIDE +
                   "D-pad/stick navigate menus; mouse and keyboard are also supported.\n\n"
                   "Select and confirm your first owned top when starting a fresh collection.\n"
                   + ("Task 002C.5 remains PENDING HOME HUMAN PLAYTEST.\n"

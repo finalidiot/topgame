@@ -20,9 +20,9 @@
     ],
     "layers": [
       "01 arena floor and contact story",
+      "04 mechanic-specific motion and force",
       "02 accepted native bit and ratchet",
       "03 accepted native blade silhouette",
-      "04 mechanic-specific motion and force",
       "05 physical contact flashes and fragments"
     ],
     "tags": {
