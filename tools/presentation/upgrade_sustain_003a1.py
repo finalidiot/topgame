@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import re
 from pathlib import Path
 import statistics
 import sys
@@ -112,7 +113,9 @@ def compare(args) -> None:
             shared_samples.append(point)
         pairs.append({"key":key(old),"before":old,"after":new,"shared_lifetime":shared,"shared_trace_window":shared_samples})
     qa = workspace.create_task_workspace("003A.1")
-    output = qa / "003a1_upgrade_sustain_curve.json"
+    output_stem = getattr(args, "output_stem", "003a1_upgrade_sustain_curve")
+    assert re.fullmatch(r"[a-z0-9_-]+", output_stem)
+    output = qa / (output_stem + ".json")
     assert not output.exists() and not (qa / "manifests" / output.name).exists()
     result = {"schema":"003a1-upgrade-sustain-curve-v1","scope":"Paired deterministic fixed investment curves in real Run physics/AI/Director; declared legal invested loadouts and pressure investment context, sampled controls only. No spawned QA enemies, reserve changes, outcomes, positioning or clock jumps.",
               "units":"Reserve/loss/gain fractions of9000 RPM; seconds are actual production elapsed excluding ordinary countdown/impact holds", "censoring":"Horizon runs are lower bounds on survival. Terminal means mix natural deaths and censored horizons; shared trace windows retain like-for-like evidence.",
@@ -137,6 +140,7 @@ def main() -> None:
     compare_parser.add_argument("--before",nargs=3,type=Path,required=True)
     compare_parser.add_argument("--after",nargs=3,type=Path,required=True)
     compare_parser.add_argument("--profile-boundary-report",type=Path,help="Explicit human-confirmed save boundary; original failed profile guards stay false")
+    compare_parser.add_argument("--output-stem",default="003a1_upgrade_sustain_curve",help="Fresh evidence name; existing comparisons are never overwritten")
     args = parser.parse_args()
     (observe if args.mode == "observe" else compare)(args)
 

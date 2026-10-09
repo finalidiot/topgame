@@ -455,8 +455,9 @@ def verify_combat_presentation_assets(assets: dict,source_root: Path=ROOT) -> di
     art=_compiled_metadata(assets,"combat_art_json",source_root/"assets/powers/combat_003a1/manifest.json","combat art")
     identity=_compiled_metadata(assets,"combat_identity_json",source_root/"assets/powers/identity_manifest.json","combat identity")
     sparks=_compiled_metadata(assets,"combat_spark_json",source_root/"assets/powers/impact_003a1/manifest.json","contact sparks")
+    cracks=_compiled_metadata(assets,"combat_crack_json",source_root/"assets/powers/impact_003a1/crack_manifest.json","contact crack")
     _compiled_metadata(assets,"combat_arena_geometry_json",source_root/"assets/arena/manifest.json","fixed arena geometry")
-    if art.get("filter")!="nearest" or art.get("presentation_only") is not True or sparks.get("native_runtime_rgba_exact") is not True:
+    if art.get("filter")!="nearest" or art.get("presentation_only") is not True or sparks.get("native_runtime_rgba_exact") is not True or cracks.get("filter")!="nearest" or cracks.get("native_runtime_rgba_exact") is not True:
         raise RuntimeError("Combat art source must retain native nearest pixel/parity metadata")
     wanted={}
     for name in ("backdrop","structure","surface","markings","rear_rim","front_rim"):
@@ -467,9 +468,10 @@ def verify_combat_presentation_assets(assets: dict,source_root: Path=ROOT) -> di
     for family in ("redline","afterimage","orbit_drive","predator_line"):
         wanted["card/"+family]=(identity["families"][family]["cards"],"res://assets/powers/identity_manifest.json",None)
     wanted["combat/contact_sparks"]=(sparks,"res://assets/powers/impact_003a1/manifest.json",None)
+    wanted["combat/contact_crack"]=(cracks,"res://assets/powers/impact_003a1/crack_manifest.json",None)
     rows=assets.get("combat_art_textures")
-    if not isinstance(rows,list) or len(rows)!=14 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=set(wanted):
-        raise RuntimeError("Actual package did not inspect all fourteen combat art sheets exactly once")
+    if not isinstance(rows,list) or len(rows)!=15 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=set(wanted):
+        raise RuntimeError("Actual package did not inspect all fifteen combat art sheets exactly once")
     sys.path.insert(0,str(source_root/"tools"));from build_power_art import read_ase
     native_presence={};masters={}
     for row in rows:
@@ -496,14 +498,14 @@ def verify_combat_presentation_assets(assets: dict,source_root: Path=ROOT) -> di
             width,height=meta["cell"];columns=meta["columns"];derived=Image.new("RGBA",(width*columns,height*math.ceil(len(frames)/columns)))
             for index,frame in enumerate(frames):derived.alpha_composite(frame,(index%columns*width,index//columns*height))
         derived_size,derived_digest=(list(derived.size),hashlib.sha256(_visible_rgba_bytes(derived)).hexdigest())
-        if kind=="combat/contact_sparks":derived_size,derived_digest=_native_aseprite_pixels(str(native.resolve()),native_hash,int(meta["columns"]))
+        if kind in ("combat/contact_sparks","combat/contact_crack"):derived_size,derived_digest=_native_aseprite_pixels(str(native.resolve()),native_hash,int(meta["columns"]))
         if derived_size!=size or derived_digest!=digest:
             raise RuntimeError("Combat runtime export differs from saved native RGBA: "+kind)
         available=row.get("native_source_available")
         if type(available) is not bool or row.get("native_source_sha256")!=(native_hash if available else ""):
             raise RuntimeError("Combat optional packaged native-source evidence is inconsistent: "+kind)
         native_presence[kind]=available;masters[meta["source"]]=native_hash
-    return {"combat_art_sheets_verified":14,"combat_native_master_count":len(masters),"combat_art_metadata_exact":True,"combat_art_visible_rgba_exact":True,"combat_native_runtime_parity_exact":True,"combat_packaged_native_master_presence":native_presence,"combat_native_master_sha256":masters}
+    return {"combat_art_sheets_verified":15,"combat_native_master_count":len(masters),"combat_art_metadata_exact":True,"combat_art_visible_rgba_exact":True,"combat_native_runtime_parity_exact":True,"combat_packaged_native_master_presence":native_presence,"combat_native_master_sha256":masters}
 
 def deepcopy_metadata(value):return json.loads(json.dumps(value))
 
@@ -524,17 +526,17 @@ def _pcm_receipt(row,path,source_root,looping,stereo,label):
 
 def verify_combat_audio_assets(assets: dict,source_root: Path=ROOT) -> dict:
     manifest=_compiled_metadata(assets,"combat_audio_json",source_root/"assets/audio/impact_003a1/manifest.json","metal audio")
-    kinds={"metal_light","metal_clang","metal_edge","metal_scrape","metal_massive","metal_wall","metal_takedown"}
+    kinds={"metal_light","metal_normal","metal_clang","metal_edge","metal_scrape","metal_massive","metal_extreme","metal_crack","metal_grind","metal_wall","metal_takedown"}
     rows=assets.get("combat_audio")
-    if set(manifest.get("sounds",{}))!=kinds or not isinstance(rows,list) or len(rows)!=7 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=kinds:
-        raise RuntimeError("Actual package did not inspect all seven metal PCM cues exactly once")
+    if set(manifest.get("sounds",{}))!=kinds or not isinstance(rows,list) or len(rows)!=11 or not all(isinstance(r,dict) for r in rows) or {r.get("kind") for r in rows}!=kinds:
+        raise RuntimeError("Actual package did not inspect all eleven metal PCM cues exactly once")
     verified={}
     for row in rows:
         kind=row["kind"];path="res://assets/audio/impact_003a1/"+kind+".wav";meta=manifest["sounds"][kind]
         verified[kind]=_pcm_receipt(row,path,source_root,False,False,"Metal "+kind)
         if meta.get("file")!=kind+".wav" or meta.get("frames")!=verified[kind]["frames"] or meta.get("pcm_sha256")!=verified[kind]["pcm_sha256"] or meta.get("sha256")!=hashlib.sha256((source_root/path.removeprefix("res://")).read_bytes()).hexdigest():
             raise RuntimeError("Metal authored source metadata/PCM differs: "+kind)
-    return {"metal_audio_cues_verified":7,"metal_audio_pcm_exact":True,"metal_audio_metadata_exact":True,"metal_audio_receipts":verified}
+    return {"metal_audio_cues_verified":11,"metal_audio_pcm_exact":True,"metal_audio_metadata_exact":True,"metal_audio_receipts":verified}
 
 def _metadata_equal(actual,expected):
     if isinstance(expected,dict):return isinstance(actual,dict) and set(actual)==set(expected) and all(_metadata_equal(actual[k],v) for k,v in expected.items())

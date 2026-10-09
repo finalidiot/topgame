@@ -1,0 +1,209 @@
+{
+  "validation": "passed",
+  "scope": "Native decorated Windows resize/Maximise/Restore presentation. Paused legal rank-II four-power fixture; no balance or Android acceptance claim.",
+  "external_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_review_20261009_113802_507486.json",
+  "external_manifest_sha256": "41a83a9dfd08c842eaca4ac12919e2e47e75416276b4b19a5d4b9c083e417b10",
+  "capture_tool": "tools/capture/native_window_003a1.py",
+  "capture_tool_sha256": "9c90d1781e5f294f56fe5e58698402aef463601e5858b9543790c0158873445c",
+  "native_contracts": [
+    {
+      "checks": 424,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_review_20261009_113802_507486_test_native_window_layout_003a1.json",
+      "sha256": "f310261bcb48dbc75699c6b874cff1679c83245714f349199508fbaf7f37fc2d"
+    },
+    {
+      "checks": 93,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_review_20261009_113802_507486_test_combat_acceptance_hud_003a1.json",
+      "sha256": "1f16cad270101b13ec138fc6c4622fc955b55e8ae8623908fde6ef15158b0622"
+    }
+  ],
+  "checks_total": 517,
+  "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_window_review_20261009_113802_507486_maximise_layout.mp4",
+  "video_sha256": "b37cce9bcec693fbc3e2de7c8791e8ef502ff09ca5aea1b51f4d1c7413391499",
+  "seconds": 24.67,
+  "matrix": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_window_review_20261009_113802_507486_layout_matrix.png",
+  "matrix_sha256": "d9992478b81c3d2053bd917815091b54bfe70ec90d41fe18f3588ea54d0dd791",
+  "real_foreground_frames": 188,
+  "capture_skipped_unfocused": 0,
+  "ordinary_sizes": [
+    [
+      960,
+      600
+    ],
+    [
+      800,
+      480
+    ],
+    [
+      1280,
+      800
+    ]
+  ],
+  "maximised_client_size": [
+    1920,
+    1017
+  ],
+  "restored_client_size": [
+    1280,
+    800
+  ],
+  "restore_bounds_verified": true,
+  "fixed_solver_viewport": [
+    640,
+    360
+  ],
+  "world_unchanged": true,
+  "native_caption_and_buttons_visible": true,
+  "fullscreen_used": false,
+  "human_maximise_confirmed": true,
+  "human_restore_button_acceptance": false,
+  "human_evidence": {
+    "authorization_evidence": "User stated 'I just maximised the window'; parent observed matching native report mode=MAXIMIZED, client=1920x1017, decorated borders retained.",
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_native_buttons_20261009_110812.json",
+    "report_sha256": "bb6af456dd301289b7fbbb90e39331163ce9332417dc82a95b3d7fece05455ef",
+    "provenance": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_native_buttons_20261009_110812_provenance.json",
+    "provenance_sha256": "f77f1000b320dfacbcdf3b42eb3e2e5124c5cab85ac3b2d7a237dc5487ef26ac",
+    "snapshot": {
+      "arena_rect": "[P: (135.0, 60.0), S: (689.7778, 388.0)]",
+      "arena_scale": 1.07777777777778,
+      "borderless": false,
+      "bottom_y": 478.0,
+      "burst_width": 280.0,
+      "canvas_size": "(960.0, 508.0)",
+      "client_size": "(1920, 1017)",
+      "hud": {
+        "arena_native_view": [
+          640,
+          360
+        ],
+        "arena_origin": "(135.0, 60.0)",
+        "arena_scale": 1.07777777777778,
+        "bottom_edge": "[P: (0.0, 420.0), S: (800.0, 60.0)]",
+        "canvas_size": "(960.0, 508.0)",
+        "duplicate_anchor_label": false,
+        "hud_overlaps_arena": false,
+        "left_edge": "[P: (0.0, 60.0), S: (80.0, 360.0)]",
+        "mobile_action_rail": "[P: (0.0, 0.0), S: (0.0, 0.0)]",
+        "mobile_layout": false,
+        "native_view": [
+          800,
+          480
+        ],
+        "play_region": "[P: (135.0, 60.0), S: (689.7778, 388.0)]",
+        "regions": {
+          "burst": "[P: (86.0, 478.0), S: (280.0, 28.0)]",
+          "clock": "[P: (416.0, 6.0), S: (128.0, 48.0)]",
+          "player_reserve": "[P: (86.0, 6.0), S: (328.0, 48.0)]",
+          "powers_rerolls": "[P: (6.0, 452.0), S: (868.0, 22.0)]",
+          "pressure": "[P: (546.0, 6.0), S: (328.0, 48.0)]",
+          "progress": "[P: (382.0, 478.0), S: (492.0, 28.0)]",
+          "state_left": "[P: (6.0, 76.0), S: (123.0, 144.0)]",
+          "state_right": "[P: (831.0, 76.0), S: (123.0, 144.0)]"
+        },
+        "right_edge": "[P: (720.0, 60.0), S: (80.0, 360.0)]",
+        "scope": "Native world viewport, fixed isometric camera and physics; permanent HUD frames the separate 640x360 arena.",
+        "temporary_announcements_live_combat": false,
+        "top_edge": "[P: (0.0, 0.0), S: (800.0, 60.0)]"
+      },
+      "menu_origin": "(160.0, 74.0)",
+      "mobile_layout": false,
+      "nearest_neighbour": true,
+      "powers_y": 452.0,
+      "progress_width": 492.0,
+      "progress_x": 382.0,
+      "regions": {
+        "burst": "[P: (86.0, 478.0), S: (280.0, 28.0)]",
+        "clock": "[P: (416.0, 6.0), S: (128.0, 48.0)]",
+        "player_reserve": "[P: (86.0, 6.0), S: (328.0, 48.0)]",
+        "powers_rerolls": "[P: (6.0, 452.0), S: (868.0, 22.0)]",
+        "pressure": "[P: (546.0, 6.0), S: (328.0, 48.0)]",
+        "progress": "[P: (382.0, 478.0), S: (492.0, 28.0)]",
+        "state_left": "[P: (6.0, 76.0), S: (123.0, 144.0)]",
+        "state_right": "[P: (831.0, 76.0), S: (123.0, 144.0)]"
+      },
+      "right_x": 546.0,
+      "state_left": "(6.0, 76.0)",
+      "state_right": "(831.0, 76.0)",
+      "state_width": 123.0,
+      "time_msec": 918634,
+      "top_width": 328.0,
+      "ui_policy": {
+        "canvas_size": "(960, 508)",
+        "changes_window_mode": false,
+        "client_size": "(1920, 1017)",
+        "native_window_managed_by_os": true,
+        "ui_scale": 2
+      },
+      "window_mode": 2,
+      "window_position": "(0, 23)",
+      "world_dimensions_changed": false,
+      "world_unchanged": true
+    },
+    "world_unchanged": true,
+    "source_differences_from_follow_up": {
+      "assets/audio/impact_003a1/metal_crack.wav.import": {
+        "human_capture": "1d90559fe6805fc5daac3b3e710d9f19ac1094582ce18028b219b7a0c9089eb5",
+        "follow_up": "04c3a012ea85d422f6649eb13a993c101f36df2fc41f7c70c63d30f70083d861"
+      },
+      "assets/audio/impact_003a1/metal_extreme.wav.import": {
+        "human_capture": "65cd7f3e67856e381a51ea3f96cb0c86eb91fa506b2631edb8dc01d019496620",
+        "follow_up": "82a4848817519e0f00b103fa64b99e44d2c5b12f8040d9626f6b8bc055d0c6f0"
+      },
+      "assets/audio/impact_003a1/metal_grind.wav.import": {
+        "human_capture": "9826f963fda6f2bbe5f2ff21cdd1e4c24f483831f2b54bd625fecb4fcc6a89e6",
+        "follow_up": "74bc52be5026b692221c4e4fe4a0d03743ea4142fda7973c4818355e5161b1e9"
+      },
+      "assets/audio/impact_003a1/metal_normal.wav.import": {
+        "human_capture": "edb7bd5c565e0b04f9ba07818f99447324b047d9f0e0da63e8c0e54176658391",
+        "follow_up": "abbc71ef9750e31353f5ca1db0bac4d612f2193c9ad29f0bac3dbaaf6139e206"
+      },
+      "scripts/battle.gd": {
+        "human_capture": "b8886658c04d7c7e7c6708eb50df95da8c1449b4c0e244d9e8b584a545774f6c",
+        "follow_up": "76233401e607fd3f5118f4aeb77e1e6b826eaf0b63e6e62f938281ddc1ed1d4a"
+      },
+      "scripts/continuous_run.gd": {
+        "human_capture": "442719e6e762692fac690b264851501a64f4ebcb3997b4f8c0b0e9fbc89d8824",
+        "follow_up": "57362a717efd0226eec9a3eafe268ddbf71c51baf4b9db6bf779ad0742e25a77"
+      },
+      "scripts/enemy_roles.gd": {
+        "human_capture": "b795f481306f44364e66a11964c0bc8610ecd2fdcb095beb664adf1ce7ecf4ff",
+        "follow_up": "482b156563731f102df9f9ebefa52bd4dc257c0f29e791a14458ecb2cef947fe"
+      },
+      "scripts/menus.gd": {
+        "human_capture": "a0b7670cfcb2e2a6f0cfa936043c326f63a4a8b158e864be35e5dc2a46d97ef4",
+        "follow_up": "f8ab9534bc5008f98fa17359003f58f139ebb4b64bdafac8dc41ae71bfda18e8"
+      },
+      "scripts/parts_package_probe.gd": {
+        "human_capture": "dc4ef50c64d4a290088fb3f3f2e93bdd3945544e25dea036e044bfd66a610a77",
+        "follow_up": "9880df4d67725abecb8022b921424647ddd08c788b60a395d74a8497d7ca63cf"
+      },
+      "scripts/power_runtime.gd": {
+        "human_capture": "d08a3ca957f317c8648870d9e92ef0fdadaf71ecc11259b5a669f67201aa8bd0",
+        "follow_up": "5e5badbc668bdeb46aedd5452088d2b70708c974ceeed9e664a7cbfce4e8f28e"
+      },
+      "scripts/spin_economy.gd": {
+        "human_capture": "6ac1e781081571b74a0e295b346468a714a229033349731d5ce9356a758188ae",
+        "follow_up": "ecf27daa21e3e1b71aa62be75ad583ec33e1dfdde64690e245b958b565128572"
+      },
+      "scripts/threat_director.gd": {
+        "human_capture": "3b0b4eca7413c2a13d4b5b80dc1e7a503e8ef365005884cbe9f6b82e50518ace",
+        "follow_up": "d7193f6c6a06f71fb22665dce209f61711f437dc2c52c0964ea6625fb8826502"
+      }
+    },
+    "limitation": "Earlier synthetic button input timed out twice, click geometry was unavailable, and Alt+Space/X did not maximise. Actual human Maximise is confirmed by the saved native state and screenshot; automated follow-up Restore does not establish human Restore-button acceptance."
+  },
+  "frozen_source_unchanged": true,
+  "canonical_source_unchanged_since_freeze": true,
+  "full_player_profile_unchanged": true,
+  "review_crop_policy": "Old human maximised frames trim only the eight-pixel taskbar strip outside the visible window (1920x1048 to1920x1040). Follow-up captures use actual client width plus native OS caption height, excluding invisible DWM side/bottom margins; no background window/taskbar pixels are included. Real caption/buttons and all game pixels remain unchanged.",
+  "earlier_attempts_preserved": [
+    "003a1_window_review_20261009_113111_934865.json",
+    "003a1_window_review_20261009_113406_227940.json"
+  ],
+  "required_original_named_artifacts_preserved": [
+    "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_window_maximise_layout.mp4",
+    "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_window_layout_matrix.png"
+  ],
+  "visual_review": "All four native representative screenshots inspected; the final version excludes invisible DWM side/bottom margins while retaining the actual OS caption, controls and every game pixel. Earlier images and logs are preserved.",
+  "remaining_human_acceptance": "Real human Restore-button and border-drag acceptance remain pending; OS API Restore and decorated normal resize are verified."
+}

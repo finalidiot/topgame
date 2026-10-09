@@ -526,7 +526,7 @@ class CombatArtPackageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.fixture={}
-        locations={"combat_art_json":"assets/powers/combat_003a1/manifest.json","combat_identity_json":"assets/powers/identity_manifest.json","combat_spark_json":"assets/powers/impact_003a1/manifest.json","combat_arena_geometry_json":"assets/arena/manifest.json"}
+        locations={"combat_art_json":"assets/powers/combat_003a1/manifest.json","combat_identity_json":"assets/powers/identity_manifest.json","combat_spark_json":"assets/powers/impact_003a1/manifest.json","combat_crack_json":"assets/powers/impact_003a1/crack_manifest.json","combat_arena_geometry_json":"assets/arena/manifest.json"}
         for field,path in locations.items():cls.fixture[field]=(verifier.ROOT/path).read_text()
         art=json.loads(cls.fixture['combat_art_json']);identity=json.loads(cls.fixture['combat_identity_json']);sparks=json.loads(cls.fixture['combat_spark_json'])
         rows=[]
@@ -541,13 +541,14 @@ class CombatArtPackageTests(unittest.TestCase):
         for family,meta in art['families'].items():add('combat/'+family,meta,'res://assets/powers/combat_003a1/manifest.json')
         for family in ('redline','afterimage','orbit_drive','predator_line'):add('card/'+family,identity['families'][family]['cards'],'res://assets/powers/identity_manifest.json')
         add('combat/contact_sparks',sparks,'res://assets/powers/impact_003a1/manifest.json')
+        add('combat/contact_crack',json.loads(cls.fixture['combat_crack_json']),'res://assets/powers/impact_003a1/crack_manifest.json')
         cls.fixture['combat_art_textures']=rows
 
     def setUp(self):self.report=deepcopy(self.fixture)
     def verify(self):return verifier.verify_combat_presentation_assets(self.report)
 
     def test_all_compiled_venue_motion_card_and_spark_pixels_accepted(self):
-        result=self.verify();self.assertEqual(result['combat_art_sheets_verified'],14);self.assertEqual(result['combat_native_master_count'],9);self.assertTrue(result['combat_native_runtime_parity_exact'])
+        result=self.verify();self.assertEqual(result['combat_art_sheets_verified'],15);self.assertEqual(result['combat_native_master_count'],10);self.assertTrue(result['combat_native_runtime_parity_exact'])
 
     def test_missing_extra_duplicate_or_unknown_sheet_rejected(self):
         for mode in ('missing','extra','duplicate','unknown'):
@@ -556,10 +557,10 @@ class CombatArtPackageTests(unittest.TestCase):
             elif mode=='extra':rows.append(deepcopy(rows[0]))
             elif mode=='duplicate':rows[0]=deepcopy(rows[1])
             else:rows[0]['kind']='unknown'
-            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'fourteen combat'):self.verify()
+            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'fifteen combat'):self.verify()
 
     def test_wrong_fixed_geometry_or_source_metadata_rejected(self):
-        for key in ('combat_art_json','combat_identity_json','combat_spark_json','combat_arena_geometry_json'):
+        for key in ('combat_art_json','combat_identity_json','combat_spark_json','combat_crack_json','combat_arena_geometry_json'):
             self.report=deepcopy(self.fixture);self.report[key]='{}'
             with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'metadata differs'):self.verify()
 
@@ -595,15 +596,15 @@ class CombatAudioPackageTests(unittest.TestCase):
         cls.fixture={'combat_audio_json':text,'combat_audio':[_combat_pcm_fixture('res://assets/audio/impact_003a1/'+kind+'.wav',kind) for kind in meta['sounds']]}
     def setUp(self):self.report=deepcopy(self.fixture)
     def verify(self):return verifier.verify_combat_audio_assets(self.report)
-    def test_seven_exact_original_pcm_cues_accepted(self):
-        result=self.verify();self.assertEqual(result['metal_audio_cues_verified'],7);self.assertTrue(result['metal_audio_pcm_exact'])
+    def test_eleven_exact_authored_pcm_cues_accepted(self):
+        result=self.verify();self.assertEqual(result['metal_audio_cues_verified'],11);self.assertTrue(result['metal_audio_pcm_exact'])
     def test_missing_duplicate_or_unknown_cue_rejected(self):
         for mode in ('missing','duplicate','unknown'):
             self.report=deepcopy(self.fixture);rows=self.report['combat_audio']
             if mode=='missing':rows.pop()
             elif mode=='duplicate':rows[0]=deepcopy(rows[1])
             else:rows[0]['kind']='unknown'
-            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'seven metal'):self.verify()
+            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'eleven metal'):self.verify()
     def test_format_channels_pcm_length_hash_loop_and_path_drift_rejected(self):
         for key,value in (('valid',False),('path','res://assets/audio/card_select.wav'),('format',2),('format',True),('stereo',True),('channels',2),('mix_rate',48000),('pcm_frames',999),('pcm_sha256','0'*64),('loop_mode',1)):
             self.report=deepcopy(self.fixture);self.report['combat_audio'][0][key]=value

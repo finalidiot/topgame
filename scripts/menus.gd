@@ -91,6 +91,9 @@ var _packet_controls: Array[Control] = []
 var _packet_note: Label
 var _shop_kind: String = "standard"
 var _shop_quantity: int = 1
+var _shop_quantities: Dictionary = {"standard":1, "reclaimed":1}
+var _shop_cards: Dictionary = {}
+var _shop_quantity_hint: Label
 var _shop_quantity_buttons: Array[Button] = []
 var _shop_snapshot: Dictionary = {}
 var _shop_detail: Control
@@ -107,6 +110,8 @@ var _inspection_owned_state: Dictionary = {}
 var reduced_flashing: bool = false
 ## Native layout audit may select the production mobile arrangement explicitly.
 var mobile_hud: bool = OS.has_feature("mobile")
+var _presentation_canvas: Vector2 = Vector2(800,480)
+var _presentation_mobile: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
 var input_suspended: bool = false
@@ -205,6 +210,18 @@ func _input(event: InputEvent) -> void:
 			_accept_needs_release = Input.is_action_pressed("ui_accept")
 		get_viewport().set_input_as_handled()
 		return
+	if screen == "shop" and (event is InputEventKey or event is InputEventJoypadButton):
+		var shop_focus: Control = get_viewport().gui_get_focus_owner()
+		if is_instance_valid(shop_focus) and shop_focus.has_meta("shop_product"):
+			if event is InputEventKey and event.echo: return
+			if str(shop_focus.get_meta("intent", "")) != "packet_odds" and (event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right")):
+				cycle_shop_quantity(-1 if event.is_action_pressed("ui_left") else 1)
+				get_viewport().set_input_as_handled()
+				return
+			if event.is_action_pressed("ui_accept") and str(shop_focus.get_meta("intent", "")) != "packet_odds":
+				action.emit("request_packet_purchase", str(shop_focus.get_meta("shop_product")))
+				get_viewport().set_input_as_handled()
+				return
 	if event is InputEventJoypadMotion and event.axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
 		# Navigate exactly once per excursion. Jitter and a held stick cannot race
 		# across cards, or advance focus when a draft replaces combat under it.
@@ -227,6 +244,9 @@ func _input(event: InputEvent) -> void:
 func _move_analogue_focus(direction: String) -> void:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused == null: return
+	if screen == "shop" and focused.has_meta("shop_product") and str(focused.get_meta("intent", "")) != "packet_odds" and direction in ["left", "right"]:
+		cycle_shop_quantity(-1 if direction == "left" else 1)
+		return
 	if focused is HSlider and direction in ["left", "right"]:
 		focused.value += focused.step * (-1.0 if direction == "left" else 1.0)
 		return
@@ -255,6 +275,9 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_packet_view = null
 	_packet_controls.clear()
 	_shop_detail = null
+	_shop_cards.clear()
+	_shop_quantity_hint = null
+	_shop_quantity_buttons.clear()
 	_shop_merchant = null
 	_shop_rows.clear()
 	_shop_routes.clear()
@@ -288,7 +311,7 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	if next_screen != "hud":
 		_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-		_content.position = CombatLayout.ARENA_ORIGIN
+		_content.position = CombatLayout.responsive(_presentation_canvas,mobile_hud).menu_origin
 		_content.size = Vector2(640,360)
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
@@ -438,6 +461,7 @@ func _note_input_profile(profile: String) -> void:
 		if is_instance_valid(label): label.text = FrontEnd.prompt(profile, purpose) + (" CONFIRM" if purpose == "confirm" else (" BACK" if purpose == "back" else ""))
 		var glyph: TextureRect = _prompt_glyphs.get(purpose)
 		if is_instance_valid(glyph): glyph.texture = FrontEnd.glyph(profile, purpose)
+	_refresh_shop_prompt()
 
 func _refresh_reroll_prompt() -> void:
 	if not is_instance_valid(_reroll_control): return
@@ -600,14 +624,39 @@ func _ui_image(parent: Node, path: String, area: Rect2) -> TextureRect:
 func selected_shop_product() -> String:
 	return _shop_kind
 
-func selected_shop_quantity() -> int:
-	return _shop_quantity
+func selected_shop_quantity(kind: String = "") -> int:
+	return int(_shop_quantities.get(_shop_kind if kind.is_empty() else kind, 1))
 
 func select_shop_quantity(value: Variant) -> void:
-	if screen != "shop" or not value is int or int(value) not in PacketEconomy.BATCH_QUANTITIES: return
-	_shop_quantity = int(value)
-	_build_shop_detail()
-	_shop_focus(_shop_buy)
+	var kind: String = _shop_kind
+	var quantity: Variant = value
+	if value is Dictionary:
+		kind = str(value.get("kind", ""))
+		quantity = value.get("quantity")
+	if screen != "shop" or not _shop_quantities.has(kind) or not quantity is int or int(quantity) not in PacketEconomy.BATCH_QUANTITIES: return
+	select_shop_product(kind)
+	_shop_quantities[kind] = int(quantity)
+	_shop_quantity = int(quantity)
+	_refresh_shop_cards()
+
+func cycle_shop_quantity(direction: int) -> void:
+	if screen != "shop": return
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if not is_instance_valid(focused) or not focused.has_meta("shop_product"): return
+	var kind: String = str(focused.get_meta("shop_product"))
+	var quantities: Array = PacketEconomy.BATCH_QUANTITIES
+	var index: int = (quantities.find(selected_shop_quantity(kind)) + direction + quantities.size()) % quantities.size()
+	select_shop_quantity({"kind":kind,"quantity":quantities[index]})
+	if str(focused.get_meta("intent", "")) == "packet_quantity":
+		_shop_cards[kind].quantities[index].grab_focus()
+
+func _refresh_shop_prompt() -> void:
+	if screen == "shop" and is_instance_valid(_prompt_labels.get("confirm")):
+		var focused: Control = get_viewport().gui_get_focus_owner()
+		var info: bool = is_instance_valid(focused) and str(focused.get_meta("intent", "")) == "packet_odds"
+		_prompt_labels.confirm.text = FrontEnd.prompt(_input_profile, "confirm") + (" INFO" if info else " BUY")
+		if is_instance_valid(_shop_quantity_hint):
+			_shop_quantity_hint.text = "TAP x1 / x3 / x5" if _input_profile == "touch" else ("D-PAD L/R QUANTITY" if _input_profile in ["xbox","nintendo","playstation"] else "LEFT/RIGHT QUANTITY")
 
 func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_clear("shop")
@@ -625,31 +674,13 @@ func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_shop_reaction = "IDLE"
 	_ui_image(_content, "res://assets/ui/human_feedback003a/merchant_fixture.png", Rect2(29, 221, 192, 64))
 	_label(_content, status if not status.is_empty() else "Threats pay CREDITS.", Rect2(34, 278, 184, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_shop_scroll = ScrollContainer.new()
-	_shop_scroll.position = Vector2(245, 65)
-	_shop_scroll.size = Vector2(373, 63)
-	_shop_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_content.add_child(_shop_scroll)
-	var list: VBoxContainer = VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.add_theme_constant_override("separation", 5)
-	_shop_scroll.add_child(list)
 	var products: Dictionary = PacketEconomy.config().packets
 	if not products.has(_shop_kind): _shop_kind = str(products.keys()[0])
-	for kind: String in products:
-		var row: Button = _button(list, PacketEconomy.packet_name(kind), Rect2(0, 0, 355, 27), "inspect_shop_product", kind)
-		row.custom_minimum_size = Vector2(355, 27)
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.set_meta("shop_product", kind)
-		row.focus_entered.connect(func() -> void: select_shop_product(kind); _shop_scroll.ensure_control_visible(row))
-		row.mouse_entered.connect(func() -> void: select_shop_product(kind))
-		row.pressed.connect(func() -> void:
-			if screen == "shop" and is_instance_valid(_shop_buy) and not _shop_buy.disabled:
-				action.emit("request_packet_purchase", kind))
-		_shop_rows.append(row)
 	_shop_routes.append(_button(_content, "WORKSHOP", Rect2(22, 310, 290, 26), "open_workshop"))
-	_shop_routes.append(_button(_content, "WORKBENCH", Rect2(326, 310, 292, 26), "main_menu"))
+	_shop_routes.append(_button(_content, "BACK TO WORKSHOP" if str(snapshot.get("shop_return", "hub")) == "workshop" else "BACK TO HUB", Rect2(326, 310, 292, 26), "back_shop"))
 	_input_footer(339)
+	_shop_quantity_hint = _label(_content, "LEFT/RIGHT QUANTITY", Rect2(454, 339, 164, 14), 10, MUTED)
+	_refresh_shop_prompt()
 	_build_shop_detail()
 	_shop_focus(_selected_shop_row())
 
@@ -660,67 +691,102 @@ func _selected_shop_row() -> Button:
 
 func select_shop_product(kind: String) -> void:
 	if screen != "shop" or not PacketEconomy.config().packets.has(kind): return
-	if kind == _shop_kind and is_instance_valid(_shop_detail): return
+	if kind == _shop_kind and is_instance_valid(_shop_buy): return
 	_shop_kind = kind
+	_shop_quantity = selected_shop_quantity(kind)
 	if is_instance_valid(_shop_merchant): _shop_merchant.react("SELECT")
-	_build_shop_detail()
-	_shop_focus(_selected_shop_row())
+	_refresh_shop_cards()
 
 func _shop_focus(first: Control) -> void:
 	var rows: Array = []
-	for row: Button in _shop_rows: rows.append([row])
-	var detail: Array = []
-	for button: Button in _shop_quantity_buttons: detail.append(button)
-	if is_instance_valid(_shop_buy) and not _shop_buy.disabled: detail.append(_shop_buy)
-	if is_instance_valid(_shop_odds): detail.append(_shop_odds)
-	if not detail.is_empty(): rows.append(detail)
+	for kind: String in ["standard", "reclaimed"]:
+		var card: Dictionary = _shop_cards[kind]
+		rows.append([card.title])
+		rows.append(card.quantities)
+		var controls: Array = []
+		if not card.buy.disabled: controls.append(card.buy)
+		controls.append(card.odds)
+		rows.append(controls)
 	rows.append(_shop_routes)
 	_focus_rows(rows, first)
-	# Right opens the selected product's actions without stepping through another
-	# product first. Down remains the natural scroll-list traversal.
-	if not detail.is_empty():
-		for row: Button in _shop_rows:
-			row.focus_neighbor_right = row.get_path_to(detail[0])
-		for control: Control in detail:
-			control.focus_neighbor_left = control.get_path_to(_selected_shop_row())
+	# These controls consume Left/Right as quantity. Expose their actual focus
+	# behaviour too, so controller traversal never follows a misleading link.
+	for kind: String in _shop_cards:
+		var card: Dictionary = _shop_cards[kind]
+		for control: Button in [card.title,card.buy]:
+			control.focus_neighbor_left = control.get_path_to(control)
+			control.focus_neighbor_right = control.get_path_to(control)
+	_refresh_shop_cards()
 
 func _build_shop_detail() -> void:
-	if is_instance_valid(_shop_detail):
-		_content.remove_child(_shop_detail)
-		_shop_detail.queue_free()
 	_shop_detail = Control.new()
-	_shop_detail.position = Vector2(245, 137)
-	_shop_detail.size = Vector2(373, 166)
+	_shop_detail.position = Vector2(245, 65)
+	_shop_detail.size = Vector2(373, 238)
 	_shop_detail.mouse_filter = Control.MOUSE_FILTER_PASS
 	_content.add_child(_shop_detail)
-	_panel(_shop_detail, Rect2(0, 0, 373, 166), Color("18242c"))
-	_shop_quantity_buttons.clear()
-	_label(_shop_detail, PacketEconomy.packet_name(_shop_kind) + " x%d" % _shop_quantity, Rect2(13, 8, 347, 16), 10, TEXT)
-	_packet_image(_shop_detail, _shop_kind, Rect2(6, 27, 96, 96))
-	var product: Dictionary = PacketEconomy.config().packets[_shop_kind]
-	var unit: String = str(product.currency).to_upper()
-	var price: int = PacketEconomy.packet_cost(_shop_kind) * _shop_quantity
-	var available: int = int(_shop_snapshot.get(str(product.currency), 0))
-	_label(_shop_detail, "%d %s" % [price, unit], Rect2(111, 28, 247, 25), 20, ORANGE)
-	for index: int in range(3):
-		var quantity: int = PacketEconomy.BATCH_QUANTITIES[index]
-		var button: Button = _button(_shop_detail, "x%d" % quantity, Rect2(111 + index * 82, 56, 76, 24), "packet_quantity", quantity)
-		if quantity == _shop_quantity: button.add_theme_stylebox_override("normal", _box(Color("344853"), ORANGE))
-		_shop_quantity_buttons.append(button)
-	_label(_shop_detail, "3 PARTS EACH / UNCOMMON+ EACH", Rect2(111, 84, 247, 14), 10, BLUE)
-	var missing: bool = false
-	for id: String in PacketEconomy.eligible_ids():
-		if id not in _shop_snapshot.get("owned_part_ids", []): missing = true
-	var rule: String = "One missing design while any remain." if missing else "All packet designs already owned."
-	_label(_shop_detail, rule if _shop_kind == "reclaimed" else "Three permanent machine designs.", Rect2(111, 97, 247, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_label(_shop_detail, "Duplicates become SALVAGE.", Rect2(111, 119, 247, 14), 10, MUTED)
-	var enough: bool = available >= price and not bool(_shop_snapshot.get("read_only", false))
-	_shop_buy = _button(_shop_detail, "BUY / %d %s" % [price, unit] if enough else "NEED %d MORE %s" % [maxi(0, price - available), unit], Rect2(13, 138, 236, 27), "request_packet_purchase", _shop_kind, enough)
-	_shop_buy.disabled = not enough
-	_shop_odds = _button(_shop_detail, "INFO / ODDS", Rect2(257, 138, 103, 27), "packet_odds")
-	for row: Button in _shop_rows:
-		var chosen: bool = str(row.get_meta("shop_product", "")) == _shop_kind
-		row.add_theme_stylebox_override("normal", _box(Color("344853") if chosen else Color("263640"), ORANGE if chosen else BORDER))
+	for index: int in range(2):
+		var kind: String = ["standard", "reclaimed"][index]
+		var card: Control = Control.new()
+		card.position = Vector2(0, index * 122)
+		card.size = Vector2(373, 116)
+		_shop_detail.add_child(card)
+		var plate: Panel = _panel(card, Rect2(0, 0, 373, 116), Color("18242c"))
+		_packet_image(card, kind, Rect2(6, 14, 96, 96))
+		var title: Button = _button(card, "", Rect2(110, 3, 249, 21), "inspect_shop_product", kind)
+		var price: Label = _label(card, "", Rect2(110, 26, 249, 24), 20, ORANGE)
+		var quantities: Array[Button] = []
+		for quantity_index: int in range(3):
+			var quantity: int = PacketEconomy.BATCH_QUANTITIES[quantity_index]
+			quantities.append(_button(card, "x%d" % quantity, Rect2(110 + quantity_index * 84, 53, 81, 24), "packet_quantity", {"kind":kind,"quantity":quantity}))
+		var buy: Button = _button(card, "", Rect2(110, 82, 162, 24), "request_packet_purchase", kind)
+		var odds: Button = _button(card, "INFO / ODDS", Rect2(278, 82, 81, 24), "packet_odds")
+		_label(card, "UNOWNED IF ANY / UNCOMMON+ EACH" if kind == "reclaimed" else "3 PARTS / UNCOMMON+ EACH", Rect2(110, 105, 249, 11), 10, BLUE)
+		_shop_cards[kind] = {"plate":plate,"title":title,"price":price,"quantities":quantities,"buy":buy,"odds":odds}
+		_shop_rows.append(title)
+		var controls: Array = quantities.duplicate()
+		controls.append_array([title, buy, odds])
+		for control: Button in controls:
+			control.set_meta("shop_product", kind)
+			control.focus_entered.connect(func() -> void: select_shop_product(kind))
+			control.focus_entered.connect(_refresh_shop_prompt)
+		for quantity_button: Button in quantities:
+			quantity_button.focus_entered.connect(func() -> void: select_shop_quantity(quantity_button.get_meta("payload")))
+		title.pressed.connect(func() -> void:
+			if screen == "shop" and not _shop_cards[kind].buy.disabled: action.emit("request_packet_purchase", kind))
+	_refresh_shop_cards()
+
+func _refresh_shop_cards() -> void:
+	if screen != "shop" or _shop_cards.is_empty(): return
+	var focus_graph_changed: bool = false
+	for kind: String in _shop_cards:
+		var card: Dictionary = _shop_cards[kind]
+		var quantity: int = selected_shop_quantity(kind)
+		var product: Dictionary = PacketEconomy.config().packets[kind]
+		var unit: String = str(product.currency).to_upper()
+		var price: int = PacketEconomy.packet_cost(kind) * quantity
+		var available: int = int(_shop_snapshot.get(str(product.currency), 0))
+		var chosen: bool = kind == _shop_kind
+		var quantity_control: Button = card.quantities[PacketEconomy.BATCH_QUANTITIES.find(quantity)]
+		card.title.focus_neighbor_bottom = card.title.get_path_to(quantity_control)
+		card.buy.focus_neighbor_top = card.buy.get_path_to(quantity_control)
+		card.title.text = ("STANDARD" if kind == "standard" else "RECLAIMED") + " PARTS PACKET x%d" % quantity
+		card.price.text = "%d %s" % [price, unit]
+		card.plate.add_theme_stylebox_override("panel", _box(Color("263640") if chosen else Color("18242c"), ORANGE if chosen else BORDER))
+		for index: int in range(3):
+			card.quantities[index].add_theme_stylebox_override("normal", _box(Color("344853") if PacketEconomy.BATCH_QUANTITIES[index] == quantity else Color("263640"), ORANGE if PacketEconomy.BATCH_QUANTITIES[index] == quantity else BORDER))
+		var enough: bool = available >= price and not bool(_shop_snapshot.get("read_only", false))
+		var disabled: bool = not enough
+		card.buy.text = "BUY / %d %s" % [price, unit] if enough else "NEED %d %s" % [maxi(0, price - available), unit]
+		focus_graph_changed = focus_graph_changed or card.buy.disabled != disabled
+		card.buy.disabled = disabled
+		if chosen:
+			_shop_quantity_buttons.assign(card.quantities)
+			_shop_buy = card.buy
+			_shop_odds = card.odds
+	if focus_graph_changed:
+		var focused: Control = get_viewport().gui_get_focus_owner()
+		if not is_instance_valid(focused) or not _content.is_ancestor_of(focused) or (focused is Button and focused.disabled): focused = _selected_shop_row()
+		_shop_focus(focused)
 
 func show_packet_purchase(kind: String, snapshot: Dictionary, token: int, quantity: int = 1) -> void:
 	_clear("packet_purchase")
@@ -732,7 +798,7 @@ func show_packet_purchase(kind: String, snapshot: Dictionary, token: int, quanti
 	_content.add_child(attendant)
 	attendant.react("PURCHASE")
 	_packet_image(_content, kind, Rect2(176, 157, 48, 48))
-	_label(_content, PacketEconomy.packet_name(kind) + " x%d" % quantity, Rect2(220, 100, 308, 23), 16, TEXT)
+	_label(_content, ("STANDARD PARTS PACKET" if kind == "standard" else "RECLAIMED PARTS PACKET") + " x%d" % quantity, Rect2(220, 100, 308, 23), 16, TEXT)
 	var unit: String = "SALVAGE" if kind == "reclaimed" else "CREDITS"
 	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind) * quantity, unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
 	_label(_content, "1 Blade + 1 Ratchet + 1 Bit\nDuplicates recycle into SALVAGE.", Rect2(220, 162, 306, 35), 10, TEXT)
@@ -902,7 +968,7 @@ func show_play_modes(build: Dictionary) -> void:
 	_label(_content, "PRACTICE GARAGE", Rect2(346, 84, 256, 31), 20, ORANGE)
 	_label(_content, "Try every catalogue component.\nBuild and inspect a different top.\nPractice never grants owned parts.", Rect2(346, 129, 256, 73), 10, TEXT)
 	var garage: Button = _button(_content, "PRACTICE GARAGE", Rect2(346, 250, 256, 32), "practice_garage")
-	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 320, 232, 28), "main_menu")
+	var back: Button = _button(_content, "BACK TO HUB", Rect2(22, 320, 232, 28), "main_menu")
 	_focus_rows([[duel, garage], [back]])
 
 func show_starter_ceremony(focus_id: String = "breaker") -> void:
@@ -998,9 +1064,9 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	for category: String in ["blade", "ratchet", "bit"]: total_owned += _collection_owned(category).size()
 	_label(_content, "%d / 31" % total_owned, Rect2(181, 70, 45, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
 	_create_workshop_catalogue()
-	var back: Button = _button(_content, "WORKBENCH", Rect2(16, 321, 104, 28), "main_menu")
-	var shop: Button = _button(_content, "SHOP", Rect2(128, 321, 88, 28), "open_shop")
-	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(224, 321, 180, 28), "quick_duel")
+	var back: Button = _button(_content, "BACK TO SHOP" if str(snapshot.get("workshop_return", "hub")) == "shop" else "BACK TO HUB", Rect2(16, 321, 142, 28), "back_workshop")
+	var shop: Button = _button(_content, "SHOP", Rect2(166, 321, 72, 28), "open_shop")
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(246, 321, 158, 28), "quick_duel")
 	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(412, 321, 212, 28), "launch_owned_run", null, true)
 	launch.disabled = not _owned_build_is_complete()
 	_catalogue_footer = [back, shop, practice, launch] if not launch.disabled else [back, shop, practice]
@@ -1288,7 +1354,7 @@ func show_help() -> void:
 	var run_copy: Label = _label(_content, "CHOOSE A TOP\nYour three first parts stay owned.\n\nSURVIVE AND INVEST\nCollide with rivals. Earn XP.\nChoose powers, ranks and mutations.\n\nREROLL A DRAFT\nCollect charges on the arena floor.\nSpend a charge for a fresh offer.\n\nKEEP YOUR COLLECTION\nA lost Run ends temporary powers.\nOwned parts and your build remain.", Rect2(329, 106, 273, 165), 10, TEXT)
 	run_copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_label(_content, "DUEL: DRAIN SPIN OR FIND THE GATE.", Rect2(329, 281, 273, 16), 10, MUTED)
-	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 318, 184, 28), "main_menu")
+	var back: Button = _button(_content, "BACK TO HUB", Rect2(22, 318, 184, 28), "main_menu")
 	var workshop: Button = _button(_content, "OWNED WORKSHOP", Rect2(218, 318, 184, 28), "open_workshop")
 	var duel: Button = _button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
 	_focus_rows([[back, workshop, duel]])
@@ -1334,12 +1400,11 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	_label(_content, "DISPLAY / COMFORT", Rect2(34, 196, 310, 15), 10, ORANGE)
 	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 215, true)
 	controls.append([shake])
-	if not OS.has_feature("mobile"):
-		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 239, false)])
-	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239 if OS.has_feature("mobile") else 263, false)
+	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239, false)
 	controls.append([reduced])
-	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263 if OS.has_feature("mobile") else 287, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263 if OS.has_feature("mobile") else 287,false,336,270)])
+	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263,false,336,270)])
 	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
+	else: _label(_content,"WINDOW / USE WINDOWS MAXIMISE AND RESTORE",Rect2(34,291,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
 	var layout_button: Button = _button(_content, "CONTROLLER: " + str(_settings.get("controller_layout", "auto")).to_upper(), Rect2(166, 321, 228, 28))
@@ -1433,7 +1498,7 @@ func show_pause(is_run: bool = false) -> void:
 		_label(_content, "ASSEMBLY LOCKED FOR THIS RUN", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	else:
 		var garage: Button = _button(_content, "WORKSHOP", Rect2(190, 234, 125, 29), "customize")
-		var hub: Button = _button(_content, "WORKBENCH", Rect2(325, 234, 125, 29), "main_menu")
+		var hub: Button = _button(_content, "HUB", Rect2(325, 234, 125, 29), "main_menu")
 		rows.append([garage, hub])
 		_label(_content, "DUEL ASSEMBLY / PRACTICE", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_focus_rows(rows)
@@ -1761,7 +1826,7 @@ func _show_run_result(result: Dictionary) -> void:
 	var restart: Button = _button(_content, "RETRY CREDITS" if pending else "RUN AGAIN", Rect2(22, 321, 186, 28), "retry_run_payout" if pending else "restart_run", null, true)
 	var shop: Button = _button(_content, "SHOP" + (" / READY" if wallet >= PacketEconomy.packet_cost("standard") else ""), Rect2(218, 321, 112, 28), "open_shop")
 	var garage: Button = _button(_content, "WORKSHOP", Rect2(340, 321, 126, 28), "customize")
-	var hub: Button = _button(_content, "WORKBENCH", Rect2(476, 321, 142, 28), "main_menu")
+	var hub: Button = _button(_content, "HUB", Rect2(476, 321, 142, 28), "main_menu")
 	_create_power_inspector(Rect2(269, 65, 349, 242))
 	for index: int in range(investments.size()):
 		var id: String = str(ids[index])
@@ -1880,7 +1945,7 @@ func show_hud(stats: Dictionary) -> void:
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
-		var slot_x: float = 400.0-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
+		var slot_x: float = (400.0 if mobile_hud else _presentation_canvas.x*0.5)-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
 		_hud["power_panel_%d" % index].position.x = slot_x
 		icon.position.x = slot_x+2.0
 		_hud["power_rank_%d" % index].position.x = slot_x+18.0
@@ -1905,8 +1970,8 @@ func show_hud(stats: Dictionary) -> void:
 func _create_hud() -> void:
 	_clear("hud", false)
 	_xp_display = 0.0
-	_panel(_content,Rect2(86,6,248,48),Color("14232e"),Color("335a70"))
-	_panel(_content,Rect2(466,6,248,48),Color("14232e"),Color("73513b"))
+	_hud["player_panel"] = _panel(_content,Rect2(86,6,248,48),Color("14232e"),Color("335a70"))
+	_hud["enemy_panel"] = _panel(_content,Rect2(466,6,248,48),Color("14232e"),Color("73513b"))
 	_hud["player_name"] = _label(_content,"YOUR TOP",Rect2(96,8,228,15),10,BLUE)
 	_hud["enemy_name"] = _label(_content,"RIVAL",Rect2(476,8,228,15),10,ORANGE,HORIZONTAL_ALIGNMENT_RIGHT)
 	_hud["player_bar"] = _bar(_content,Rect2(96,26,228,7),BLUE)
@@ -1924,9 +1989,10 @@ func _create_hud() -> void:
 	_content.add_child(_hud["state_meters"])
 	_hud["rerolls"] = _label(_content,"",Rect2(6,425,74,24),10,BLUE)
 	_hud["swarm_objective"] = _label(_content,"",Rect2(476,24,228,12),10,TEXT,HORIZONTAL_ALIGNMENT_RIGHT)
-	_panel(_content,Rect2(344,6,112,48),Color("14232e"))
+	_hud["clock_panel"] = _panel(_content,Rect2(344,6,112,48),Color("14232e"))
 	_hud["time"] = _label(_content,"01:30",Rect2(346,6,108,25),20,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
 	var pause_button: Button = _button(_content,"PAUSE",Rect2(6,8,68,24),"pause")
+	_hud["pause_button"] = pause_button
 	pause_button.add_theme_font_size_override("font_size",10)
 	pause_button.focus_mode = Control.FOCUS_NONE
 	_hud["round"] = _label(_content,"",Rect2(342,31,116,11),9,MUTED,HORIZONTAL_ALIGNMENT_CENTER)
@@ -1943,7 +2009,7 @@ func _create_hud() -> void:
 				action.emit("pause",null)
 				get_viewport().set_input_as_handled())
 		_hud["power_%d" % index] = icon
-	_panel(_content,Rect2(86,450,224,28),Color("14232e"))
+	_hud["burst_panel"] = _panel(_content,Rect2(86,450,224,28),Color("14232e"))
 	_hud["burst"] = _label(_content,"BURST READY",Rect2(97,452,203,16),10,BLUE)
 	_hud["burst_bar"] = _bar(_content,Rect2(97,472,203,3),BLUE)
 	_hud["controls"] = _label(_content,"STEER / BURST / BRAKE / PAUSE",Rect2(326,452,388,18),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
@@ -1962,13 +2028,73 @@ func _create_hud() -> void:
 		icon.mouse_entered.connect(func() -> void: _inspect_hud_power(index))
 		icon.mouse_exited.connect(func() -> void:
 			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
+	_reflow_hud()
+
+func set_presentation_canvas(canvas_size: Vector2) -> void:
+	if _presentation_canvas == canvas_size and _presentation_mobile == mobile_hud: return
+	_presentation_canvas = canvas_size
+	_presentation_mobile = mobile_hud
+	if not is_instance_valid(_content): return
+	if screen == "hud": _reflow_hud()
+	else: _content.position = CombatLayout.responsive(canvas_size,mobile_hud).menu_origin
+
+func _fit_hud(key: String, rect: Rect2) -> void:
+	if not _hud.has(key): return
+	var control: Control = _hud[key]
+	control.position = rect.position
+	control.size = rect.size
+
+func _reflow_hud() -> void:
+	if screen != "hud" or _hud.is_empty(): return
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var extent: Vector2 = layout.canvas_size
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = Vector2.ZERO
+	_content.size = extent
+	var width: float = layout.top_width
+	var right_x: float = layout.right_x
+	_fit_hud("player_panel",layout.regions.player_reserve)
+	_fit_hud("enemy_panel",layout.regions.pressure)
+	for key: String in ["player_name","player_rpm","player_bar","rpm_overflow"]:
+		var node: Control = _hud[key]
+		node.position.x = 96
+		node.size.x = width-20.0
+	for key: String in ["enemy_name","enemy_rpm","enemy_bar","swarm_objective"]:
+		var node: Control = _hud[key]
+		node.position.x = right_x+10.0
+		node.size.x = width-20.0
+	_fit_hud("clock_panel",Rect2(extent.x*0.5-56.0,6,112,48))
+	_fit_hud("time",Rect2(extent.x*0.5-54.0,6,108,25))
+	_fit_hud("round",Rect2(extent.x*0.5-58.0,31,116,11))
+	_fit_hud("director_callout",Rect2(extent.x*0.5-64.0,43,128,11))
+	_fit_hud("announcement",Rect2(extent.x*0.5-175.0,layout.arena_rect.position.y+layout.arena_rect.size.y*0.36,350,64))
+	_fit_hud("rerolls",Rect2(6,extent.y-55.0,74,24))
+	_fit_hud("power_note",Rect2(86,layout.powers_y,136,18))
+	for index: int in range(Powers.ACTIVE_IDS.size()):
+		for prefix: String in ["power_panel_","power_","power_rank_"]:
+			var node: Control = _hud[prefix+str(index)]
+			var offset_y: float = 3.0 if prefix == "power_" else (5.0 if prefix == "power_rank_" else 0.0)
+			node.position.y = layout.powers_y+offset_y
+	_fit_hud("burst_panel",layout.regions.burst)
+	_fit_hud("burst",Rect2(97,layout.bottom_y+2.0,layout.burst_width-21.0,16))
+	_fit_hud("burst_bar",Rect2(97,layout.bottom_y+22.0,layout.burst_width-21.0,3))
+	_fit_hud("controls",Rect2(layout.progress_x,layout.bottom_y+2.0,layout.progress_width,18))
+	_fit_hud("xp_panel",layout.regions.progress)
+	_fit_hud("xp_hit",layout.regions.progress)
+	_fit_hud("xp_label",Rect2(layout.progress_x+10.0,layout.bottom_y+2.0,layout.progress_width-158.0,15))
+	_fit_hud("xp_detail",Rect2(extent.x-226.0,layout.bottom_y+2.0,130,15))
+	_fit_hud("xp_bar",Rect2(layout.progress_x+10.0,layout.bottom_y+22.0,layout.progress_width-20.0,4))
+	_fit_hud("impact_confirmation",Rect2(6,layout.state_left.y+172.0,layout.state_width,68))
+	_hud.state_meters.set_layout(layout)
 
 func combat_layout_snapshot() -> Dictionary:
 	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
-	result["regions"] = {"player_reserve":Rect2(86,6,248,48),"pressure":Rect2(466,6,248,48),
-		"clock":Rect2(336,6,128,48),"powers_rerolls":Rect2(6,424,708,22),
-		"burst":Rect2(86,450,224,28),"progress":Rect2(326,450,388,28),
-		"state_left":Rect2(6,76,68,144),"state_right":Rect2(726,76,68,144)}
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	result["regions"] = layout.regions
+	result["play_region"] = layout.arena_rect
+	result["canvas_size"] = layout.canvas_size
+	result["arena_scale"] = layout.arena_scale
+	result["arena_origin"] = layout.arena_rect.position
 	result["duplicate_anchor_label"] = _hud.has("anchor")
 	result["temporary_announcements_live_combat"] = false
 	result["hud_overlaps_arena"] = false

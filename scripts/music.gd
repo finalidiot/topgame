@@ -312,7 +312,7 @@ func notify_cue(kind: String) -> void:
 		_duck_strength = -12.0
 		_duck_left = maxf(_duck_left, _duck_duration)
 		return
-	if kind in ["metal_clang", "metal_massive", "metal_takedown", "heavy", "heavy_impact", "breakneck_impact", "comet_release", "boss_warning", "boss_entry", "boss_payoff", "level_up", "mutation_select"]:
+	if kind in ["metal_clang", "metal_massive", "metal_extreme", "metal_takedown", "heavy", "heavy_impact", "breakneck_impact", "comet_release", "boss_warning", "boss_entry", "boss_payoff", "level_up", "mutation_select"]:
 		if _duck_left <= 0.0:
 			_duck_duration = DUCK_SECONDS
 			_duck_strength = DUCK_DB

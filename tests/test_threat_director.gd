@@ -162,7 +162,7 @@ func _test_roles() -> void:
 	check(Director.limits(100000.0).budget > Director.limits(900.0).budget and Director.limits(100000.0).total == 16,"Endless pressure scales without unbounded population")
 	var hunter: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0},player,2.5)
 	var harasser: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"harasser","archetype":"harasser","role_phase":0.0},player,2.5)
-	check(hunter.x < -0.8 and harasser.x > 0.3,"Hunter commits while harasser retreats tangentially between contacts")
+	check(hunter.x < -0.7 and absf(harasser.y)>absf(harasser.x) and not hunter.is_equal_approx(harasser),"Hunter directly pressures while harasser positions tangentially for poke/withdraw")
 	check(Roles.ELITES.ballast.mass > 1.4 and Roles.ELITES.ballast.speed < 1.0 and Roles.ELITES.hotwire.recovery < 1.0,"Elites carry real movement/mass tradeoffs")
 	check(Roles.BOSSES.anvil.mass > Roles.BOSSES.reaper.mass and Roles.BOSSES.anvil.speed < Roles.BOSSES.reaper.speed,"Bosses have contrasting physical identity")
 
@@ -253,7 +253,7 @@ func _test_earlier_questions() -> void:
 	var player: Dictionary = {"pos":Vector2.ZERO,"vel":Vector2.ZERO}
 	var f: Dictionary = {"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0,"role_commit_cycle":-1}
 	Roles.direction(f,player,27.99)
-	check(not f.has("role_attack_state"),"Original opening approach remains intact before committed attacks unlock")
+	check(f.has("pilot") and f.pilot.state in Roles.STATES,"Readable observed-state piloting exists from the first rival")
 	Roles.direction(f,player,28.0)
-	check(f.get("role_attack_state","") in ["set_up","committed","recover"],"The same telegraphed attack policy unlocks at 28 seconds")
-	check(Roles.COMMIT_MATURITY_SECONDS == 325.0 and Roles.ELITES.ballast.mass == 1.55 and Roles.BOSSES.anvil.mass == 2.0,"Earlier commitments retain original maturity shape and authored enemy stat profiles")
+	check(Roles.maturity(27.99)==0.0 and Roles.maturity(28.0)==0.0 and Roles.maturity(29.0)>0.0,"Maturity improves decisions gradually instead of unlocking a periodic attack timer")
+	check(Roles.COMMIT_MATURITY_SECONDS == 325.0 and Roles.ELITES.ballast.mass == 1.55 and Roles.BOSSES.anvil.mass == 2.0,"Decision maturity horizon and authored enemy stat profiles stay exact")

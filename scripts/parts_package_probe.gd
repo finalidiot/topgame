@@ -11,10 +11,11 @@ const Music = preload("res://scripts/music.gd")
 const COMBAT_ART_MANIFEST: String = "res://assets/powers/combat_003a1/manifest.json"
 const COMBAT_IDENTITY_MANIFEST: String = "res://assets/powers/identity_manifest.json"
 const COMBAT_SPARK_MANIFEST: String = "res://assets/powers/impact_003a1/manifest.json"
+const COMBAT_CRACK_MANIFEST: String = "res://assets/powers/impact_003a1/crack_manifest.json"
 const COMBAT_AUDIO_MANIFEST: String = "res://assets/audio/impact_003a1/manifest.json"
 const MUSIC_VARIATION_MANIFEST: String = "res://assets/audio/music/run_arrangement_003a1_manifest.json"
 const MUSIC_VARIATION_SCORE: String = "res://assets/audio/music/run_arrangement_003a1.json"
-const COMBAT_AUDIO_IDS: Array[String] = ["metal_light","metal_clang","metal_edge","metal_scrape","metal_massive","metal_wall","metal_takedown"]
+const COMBAT_AUDIO_IDS: Array[String] = ["metal_light","metal_normal","metal_clang","metal_edge","metal_scrape","metal_massive","metal_extreme","metal_crack","metal_grind","metal_wall","metal_takedown"]
 const COMBAT_CARD_IDS: Array[String] = ["redline","afterimage","orbit_drive","predator_line"]
 const PacketEconomyModel = preload("res://scripts/packet_economy.gd")
 const PACKET_ART_ROOT: String = "res://assets/ui/shop_003a/"
@@ -199,10 +200,12 @@ static func inspect(output: String) -> Dictionary:
 	var combat_art_json: String = FileAccess.get_file_as_string(COMBAT_ART_MANIFEST)
 	var combat_identity_json: String = FileAccess.get_file_as_string(COMBAT_IDENTITY_MANIFEST)
 	var combat_spark_json: String = FileAccess.get_file_as_string(COMBAT_SPARK_MANIFEST)
+	var combat_crack_json: String = FileAccess.get_file_as_string(COMBAT_CRACK_MANIFEST)
 	var combat_art: Variant = JSON.parse_string(combat_art_json)
 	var combat_identity: Variant = JSON.parse_string(combat_identity_json)
 	var combat_spark: Variant = JSON.parse_string(combat_spark_json)
-	var combat_records: Array[Dictionary] = _inspect_combat_art(combat_art if combat_art is Dictionary else {},combat_identity if combat_identity is Dictionary else {},combat_spark if combat_spark is Dictionary else {})
+	var combat_crack: Variant = JSON.parse_string(combat_crack_json)
+	var combat_records: Array[Dictionary] = _inspect_combat_art(combat_art if combat_art is Dictionary else {},combat_identity if combat_identity is Dictionary else {},combat_spark if combat_spark is Dictionary else {},combat_crack if combat_crack is Dictionary else {})
 	for record: Dictionary in combat_records:
 		if not bool(record.valid): failures.append(str(record.path))
 	var combat_audio_json: String = FileAccess.get_file_as_string(COMBAT_AUDIO_MANIFEST)
@@ -238,7 +241,7 @@ static func inspect(output: String) -> Dictionary:
 		"ui_polish_json":ui_polish_json, "ui_polish_textures":ui_polish_records,
 		"defence_json":defence_json,"defence_textures":defence_records,
 		"arena_json":arena_json,"arena_textures":arena_records,
-		"combat_art_json":combat_art_json,"combat_identity_json":combat_identity_json,"combat_spark_json":combat_spark_json,"combat_art_textures":combat_records,"combat_arena_geometry_json":FileAccess.get_file_as_string("res://assets/arena/manifest.json"),
+		"combat_art_json":combat_art_json,"combat_identity_json":combat_identity_json,"combat_spark_json":combat_spark_json,"combat_crack_json":combat_crack_json,"combat_art_textures":combat_records,"combat_arena_geometry_json":FileAccess.get_file_as_string("res://assets/arena/manifest.json"),
 		"combat_audio_json":combat_audio_json,"combat_audio":combat_audio_records,
 		"music_variation_json":variation_json,"music_variation_score_json":FileAccess.get_file_as_string(MUSIC_VARIATION_SCORE),"music_variation_stems":variation_records,"music_asset_metadata":Music.asset_metadata(),
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
@@ -249,7 +252,7 @@ static func inspect(output: String) -> Dictionary:
 	if not failures.is_empty(): return {"ok":false, "error":"Packaged textures failed validation: " + str(failures)}
 	return {"ok":true, "textures":records.size(), "report":output}
 
-static func _inspect_combat_art(art: Dictionary, identity: Dictionary, sparks: Dictionary) -> Array[Dictionary]:
+static func _inspect_combat_art(art: Dictionary, identity: Dictionary, sparks: Dictionary, cracks: Dictionary) -> Array[Dictionary]:
 	var records: Array[Dictionary] = []
 	var base: Dictionary = art.get("base_arena",{})
 	for name: String in ["backdrop","structure","surface","markings","rear_rim","front_rim"]:
@@ -275,6 +278,14 @@ static func _inspect_combat_art(art: Dictionary, identity: Dictionary, sparks: D
 		for direction: int in range(8):spark_tags.append(tier+"_"+str(direction))
 	var expected: Dictionary = {"path":"res://assets/powers/impact_003a1/contact_sparks.png","source":"assets/source-art/impact_003a1/contact_sparks.aseprite","cell":[64,48],"pivot":[32,24],"frames":128,"columns":16,"layers":3,"tags":spark_tags}
 	var record: Dictionary = _inspect_final_sheet("combat/contact_sparks",sparks,expected);record["metadata_path"]=COMBAT_SPARK_MANIFEST;records.append(record)
+	var crack_tags: Array[String] = []
+	for tier: String in ["hard","extreme"]:
+		for direction: int in range(8):crack_tags.append(tier+"_"+str(direction))
+	var crack_expected: Dictionary = {"path":"res://assets/powers/impact_003a1/contact_crack.png","source":"assets/source-art/impact_003a1/contact_crack.aseprite","cell":[64,48],"pivot":[32,24],"frames":64,"columns":16,"layers":3,"tags":crack_tags}
+	var crack_record: Dictionary = _inspect_final_sheet("combat/contact_crack",cracks,crack_expected)
+	crack_record["metadata_path"]=COMBAT_CRACK_MANIFEST
+	crack_record.valid=bool(crack_record.valid) and cracks.get("filter","")=="nearest" and cracks.get("native_runtime_rgba_exact",false)==true and cracks.get("loop",true)==false and int(cracks.get("segments",{}).get("hard",0))==3 and int(cracks.get("segments",{}).get("extreme",0))==5 and float(cracks.get("maximum_lifetime_seconds",1.0))<.2 and int(cracks.get("physical_work_threshold",0))==500000
+	records.append(crack_record)
 	return records
 
 static func _inspect_combat_pcm(kind: String, path: String, frames: int, stereo: bool, looping: bool) -> Dictionary:

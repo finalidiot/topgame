@@ -399,13 +399,22 @@ func test_guard_contact_direction() -> void:
 			check(before == sim_state(b), "Contact art direction and native tag selection never mutate gameplay")
 		b.free()
 
-func pose_battle(family: String, rank: int, seed_value: int) -> Node2D:
+func pose_battle(family: String, rank: int, seed_value: int, solo_driving: bool=false, starter: String="bastion") -> Node2D:
 	var b = B.new(); root.add_child(b); b.set_physics_process(false); b.set_process(false)
 	var descriptor: Dictionary = E.for_run_event(1, seed_value)
-	descriptor.starter_id = "bastion"
+	descriptor.starter_id = starter
 	descriptor.player_power_ids = [family]; descriptor.player_power_ranks = {family: rank}
 	descriptor.ability_rebalance = true
-	b.begin_run(S.build_for("bastion"), descriptor, seed_value); b.battle_status = "battle"
+	b.begin_run(S.build_for(starter), descriptor, seed_value); b.battle_status = "battle"
+	if solo_driving:
+		# Explicit one-top visual-contract venue, configured before driving.
+		# Activation still uses ordinary Run physics and paid controls; opponent
+		# pressure is assessed elsewhere, never a precondition of authored poses.
+		b.fighters.erase(b.entity(2));b._ai_rngs.erase(2)
+		b.continuous.events.clear();b.continuous.director.active.clear()
+		b.continuous.director.next_decision=INF;b.continuous.director.calm_until=INF
+		b.continuous.reward_fixture=true
+		check(b.fighters.size()==1 and b.entity(2).is_empty(),family+" explicitly uses a solo-driving visual fixture without a fabricated enemy defeat")
 	check(float(b.player_entity().rpm) == 1.0, family + " body-pose proof starts at genuine full launch reserve")
 	return b
 
@@ -425,7 +434,9 @@ func test_earned_bank_hold() -> void:
 				var index: int = start+stage
 				var cel: Image = atlas.get_region(Rect2i(index%int(info.fx.columns)*96,floori(float(index)/float(info.fx.columns))*80,96,80))
 				check(cel.is_invisible() if stage==0 else not cel.is_invisible(), "Native Bank "+tag+" has an empty zero / visible earned hold key "+str(stage))
-		var b = pose_battle("momentum_bank",rank,421)
+		# Legal Vane assembly supplies enough actual movement for both Bank
+		# ranks without relying on an opponent's impulse to accelerate Bastion.
+		var b = pose_battle("momentum_bank",rank,421,true,"vane")
 		var player: Dictionary = b.player_entity()
 		check(I.bank_stored_stage(player)==-1, "Full-launch Bank ownership cannot fabricate stored movement at rank "+str(rank))
 		var low_seen: bool = false
@@ -508,16 +519,17 @@ func test_earned_body_poses() -> void:
 		print("POSE_PAID_CLUTCH danger_at=%.3f caught_at=%.3f rpm=%.6f earned_contacts=%d" % [danger_at,clutch.elapsed,player.rpm,clutch.powers.counters.clutch_recover])
 	clutch.free()
 	for rank: int in [1,2]:
-		var comet = pose_battle("iron_comet",rank,421)
+		var comet = pose_battle("iron_comet",rank,421,true)
 		var owner: Dictionary = comet.player_entity()
 		check(P.recovery_pose(owner,[]).is_empty(), "Comet ownership alone cannot compress an unarmed body at rank "+str(rank))
 		var armed: bool = false
 		for tick: int in range(45*60):
 			if tick%6==0:
-				sampled=PoseBot.input(comet,"aggressive",tick)
-				if float(owner.iron_comet_time)<=0.0 and fmod(comet.elapsed,9.0)<3.0:
-					sampled.direction=pose_screen((Vector2(-182,-60)-Vector2(owner.pos)).normalized()*0.95)
-					sampled.brake=false; sampled.burst=float(owner.cooldown)<=0.0
+				# Observe actual wall clearance and current momentum. A late paid
+				# Burst reaches the ordinary110-unit wall-arm gate before expiring;
+				# steering toward the solid left wall cannot enter an open gate.
+				var clearance: float=B.WALL_AXIS-float(owner.radius)*.64+float(owner.pos.x)
+				sampled={"direction":pose_screen(Vector2.LEFT*.95),"brake":false,"burst":clearance<=28.0 and -float(owner.vel.x)>35.0 and float(owner.cooldown)<=0.0}
 			else: sampled.burst=false
 			comet.test_step(B.FIXED_DT,sampled.direction,sampled.burst,sampled.brake)
 			if int(comet.powers.counters.get("comet_charge",0))>0: armed=true; break

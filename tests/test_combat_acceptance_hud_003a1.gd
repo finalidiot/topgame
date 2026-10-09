@@ -115,7 +115,7 @@ func hud_lifecycle() -> void:
 	for display: Vector2i in [Vector2i(960,600),Vector2i(1920,1080),Vector2i(2560,1440),Vector2i(800,480)]:
 		var fit: Dictionary = Layout.integer_fit(display)
 		check(int(fit.scale)>=1 and Vector2i(fit.arena_pixels) == Vector2i(640,360)*int(fit.scale),"Display fit preserves uniform integer world pixels " + str(display))
-	check(Layout.integer_fit(Vector2i(1920,1080)).scale > Layout.integer_fit(Vector2i(960,600)).scale,"Larger fullscreen display grows arena beyond small-window presentation")
+	check(Layout.integer_fit(Vector2i(1920,1080)).scale > Layout.integer_fit(Vector2i(960,600)).scale,"Larger client area supports more native arena pixels")
 	evidence.geometry = layout
 func impact_number_options() -> void:
 	check(not game._validated_settings({}).impact_numbers and not game._validated_settings({"impact_numbers":"on"}).impact_numbers,"Missing or malformed impact-number preference defaults OFF")
@@ -161,31 +161,34 @@ func native_presentation() -> void:
 	game.mode="run"; game._launch_run_encounter(); game.battle.set_physics_process(false)
 	var player: Dictionary=game.battle.player_entity(); player.rpm=.82; player.redline_heat=.6; player.anchor_charge=.8
 	game.battle.battle_status="battle"; game.battle._emit_hud()
-	root.content_scale_mode=Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-	root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_KEEP
-	root.content_scale_stretch=Window.CONTENT_SCALE_STRETCH_INTEGER
 	var directory: String=report.get_base_dir().get_base_dir().path_join("frames/hud_native_%d_%d" % [OS.get_process_id(),Time.get_ticks_usec()])
 	DirAccess.make_dir_recursive_absolute(directory)
 	var observed: Array=[]
-	for mode: int in [DisplayServer.WINDOW_MODE_WINDOWED,DisplayServer.WINDOW_MODE_FULLSCREEN,DisplayServer.WINDOW_MODE_WINDOWED]:
-		DisplayServer.window_set_mode(mode)
-		if mode == DisplayServer.WINDOW_MODE_WINDOWED: DisplayServer.window_set_size(Vector2i(960,600))
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	for extent: Vector2i in [Vector2i(960,600),Vector2i(1280,800),Vector2i(800,480)]:
+		DisplayServer.window_set_size(extent)
 		await settle(); await process_frame; await RenderingServer.frame_post_draw
+		game._refresh_window_presentation()
+		await settle(); await RenderingServer.frame_post_draw
 		var display: Vector2i=DisplayServer.window_get_size()
 		var native_world: Image=game.combat_viewport.get_texture().get_image()
 		var canvas: Image=root.get_texture().get_image()
-		check(native_world.get_size()==Vector2i(640,360),"Actual native world remains640x360 across fullscreen/windowed changes")
-		check(game.combat_frame.scale==Vector2.ONE and game.combat_frame.position==Vector2(80,60),"Real window mode change preserves composition and fixed camera")
-		var fit: Dictionary=Layout.integer_fit(display)
-		var name: String="fullscreen" if mode==DisplayServer.WINDOW_MODE_FULLSCREEN else "windowed_%d" % observed.size()
+		var layout: Dictionary=game.window_presentation_snapshot()
+		check(native_world.get_size()==Vector2i(640,360),"Actual native world remains 640x360 across ordinary decorated client resizes")
+		check(game.combat_frame.scale==Vector2.ONE and is_equal_approx(game.combat_frame.size.x/640.0,game.combat_frame.size.y/360.0),"Real client resize preserves uniform composition and fixed camera")
+		check(DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_WINDOWED and not DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS),"Native resize retains ordinary OS caption and borders")
+		var name: String="normal_resize_%dx%d" % [extent.x,extent.y]
 		var path: String=directory.path_join(name+".png"); canvas.save_png(path)
-		var multiple: int=int(fit.scale)
-		var composed: Image=canvas.get_region(Rect2i(Vector2i(Layout.ARENA_ORIGIN)*multiple,Vector2i(640,360)*multiple))
-		composed.resize(640,360,Image.INTERPOLATE_NEAREST)
-		check(composed.get_data()==native_world.get_data(),"Actual fullscreen/windowed composite has exact native RGBA at integer scale")
-		observed.append({"mode":name,"display_size":display,"root_texture_size":canvas.get_size(),"world_size":native_world.get_size(),"integer_fit":fit,"image":path})
-		print("NATIVE_COMPOSITION ",name," display=",display," texture=",canvas.get_size()," native=",native_world.get_size()," fit=",fit)
-	check(int(observed[1].integer_fit.scale)>=int(observed[0].integer_fit.scale),"Actual fullscreen uses at least the windowed integer scale")
+		var ui_scale: float=float(layout.ui_policy.ui_scale)
+		var physical_scale: float=ui_scale*float(layout.arena_scale)
+		var physical_rect: Rect2=Rect2(layout.arena_rect.position*ui_scale,layout.arena_rect.size*ui_scale)
+		if is_equal_approx(physical_scale,roundf(physical_scale)):
+			var composed: Image=canvas.get_region(Rect2i(physical_rect))
+			composed.resize(640,360,Image.INTERPOLATE_NEAREST)
+			check(composed.get_data()==native_world.get_data(),"Actual integer client composite has exact native RGBA")
+		observed.append({"mode":name,"display_size":display,"root_texture_size":canvas.get_size(),"world_size":native_world.get_size(),"layout":layout,"image":path})
+		print("NATIVE_COMPOSITION ",name," display=",display," texture=",canvas.get_size()," native=",native_world.get_size()," arena=",physical_rect)
+	check(observed[1].layout.arena_rect.size.x>observed[0].layout.arena_rect.size.x,"Actual larger ordinary client spends more space on the arena")
 	evidence.actual_windows_mode_changes=observed
 	evidence.android_device_test=false
 

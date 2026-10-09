@@ -4,7 +4,7 @@ const Seeds = preload("res://scripts/seed_utils.gd")
 const TUNING: Dictionary = {
 	"tier_seconds":[0.0,28.0,80.0,170.0,280.0], "overdrive_seconds":120.0,
 	"budgets":[2.8,6.0,10.0,13.0,16.0], "overdrive_budget_step":1.25,
-	"full_caps":[1,2,3,4,5], "elite_cap":2, "small_cap":10, "total_cap":16,
+	"full_caps":[1,2,3,3,4], "elite_cap":2, "small_cap":10, "total_cap":16,
 	"boss_cooldown":78.0, "late_boss_cooldown":56.0, "same_boss_cooldown":180.0, "swarm_cooldown":34.0,
 	"elite_cooldown":18.0, "boss_warning":2.2, "normal_warning":0.65,
 	"breath_min":1.5, "breath_max":2.75, "busy_limit":55.0, "drain_max":10.0,

@@ -31,7 +31,7 @@ func _run() -> void:
 				setup = setup or f.role_attack_state == "set_up"
 				if f.role_attack_state != "committed": check(not Roles.wants_burst(f,player,time),"No Burst while setting up or recovering")
 			check(committed and recovering and setup,"Every later role has finite setup, committed attack and recovery")
-			check(f.size() <= 9,"Per-enemy commitment state remains fixed size")
+			check(f.size() <= 9 and f.pilot.size()<=36 and f.pilot.history.size()<=Roles.MAX_HISTORY,"Per-enemy decision state and recent history remain bounded")
 	_test_sampled_commitment()
 	_test_entry_ties()
 	print("ENEMY_COMMITMENT_%s checks=%d failures=%d" % ["PASS" if failures == 0 else "FAIL",checks,failures])
@@ -44,8 +44,8 @@ func _test_sampled_commitment() -> void:
 		var time: float = 600.0
 		while time < 610.0:
 			Roles.direction(f,p,time)
-			var phase: float = float(Roles._attack_beat(f,time).phase)
-			if f.role_attack_state == "committed" and phase > 0.4 and phase < 0.5: break
+			# The human-requested observed-state layer supersedes periodic beats.
+			if f.pilot.state == "commit" and time-float(f.pilot.entered)>0.16: break
 			time += 0.01
 		var heading: Vector2 = f.role_commit_heading
 		check(heading.x < -0.95,"Real run-up points through the observed target")
@@ -55,11 +55,11 @@ func _test_sampled_commitment() -> void:
 		check(held.normalized().is_equal_approx(heading),"A committed enemy cannot track a dodge or read future input")
 		f.pos = Vector2(-30,0)
 		p.pos = Vector2.ZERO
-		check(Roles.direction(f,p,time+0.10).x < -0.8,"Committed momentum continues through the player instead of stopping at centre")
+		check(Roles.direction(f,p,time+0.10).normalized().x < -0.95 and f.pilot.state=="follow_through","Committed heading physically follows through after crossing the player")
 		check(not Roles.wants_burst(f,p,time+0.10),"Enemy cannot Burst backward onto a passed target")
 	var heavy: Dictionary = fighter("bulwark",2,"anvil")
 	var opening: Vector2 = Roles.direction(heavy,{"pos":Vector2.ZERO,"vel":Vector2.ZERO},2.5)
-	check(opening.length() <= 0.73,"Opening retains restrained heavy movement before pressure matures")
+	check(opening.length() <= 0.73 and heavy.pilot.state=="position","First heavy rival uses restrained readable positioning")
 	check(Roles.ELITES.ballast.mass == 1.55 and Roles.BOSSES.anvil.mass == 2.0,"Existing physical mass tradeoffs stay exact")
 
 func _test_entry_ties() -> void:

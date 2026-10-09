@@ -13,12 +13,14 @@ from presentation_showcase import movie_metadata
 from combat_art003a1 import frozen_project
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['impacts','music'],required=True);p.add_argument('--diagnostic',action='store_true');p.add_argument('--provisional',action='store_true');p.add_argument('--engine');p.add_argument('--ffmpeg');args=p.parse_args()
-    qa=workspace.create_task_workspace('003A.1');base='003a1_combat_impact_rework' if args.mode=='impacts' else '003a1_music_variety'
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mode',choices=['impacts','music'],required=True);p.add_argument('--diagnostic',action='store_true');p.add_argument('--provisional',action='store_true');p.add_argument('--engine');p.add_argument('--ffmpeg')
+    p.add_argument('--driver',default='tests/capture_impact_music_003a1.gd');p.add_argument('--base');args=p.parse_args()
+    driver_path=Path(args.driver);assert not driver_path.is_absolute() and driver_path.parts[0]=='tests' and '..' not in driver_path.parts
+    qa=workspace.create_task_workspace('003A.1');base=args.base or ('003a1_combat_impact_rework' if args.mode=='impacts' else '003a1_music_variety')
     stem=base+'_'+datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f');report=qa/'manifests'/f'{stem}.json';raw=qa/'temp'/f'{stem}.avi';frames=qa/'frames'/stem;video=qa/'video'/f'{stem if args.provisional else base}.mp4'
     assert args.diagnostic or not video.exists(),'Preserve prior review footage'
-    player=profile();stage,original,frozen=frozen_project(qa,stem);driver=stage/'tests/capture_impact_music_003a1.gd';driver_sha=pipeline.sha256(driver)
-    command=[workspace.find_tool('godot',args.engine),'--path',str(stage),'--script','res://tests/capture_impact_music_003a1.gd','--log-file',str(qa/'logs'/f'{stem}_engine.log')]
+    player=profile();stage,original,frozen=frozen_project(qa,stem);driver=stage/driver_path;driver_sha=pipeline.sha256(driver)
+    command=[workspace.find_tool('godot',args.engine),'--path',str(stage),'--script','res://'+driver_path.as_posix(),'--log-file',str(qa/'logs'/f'{stem}_engine.log')]
     command+=['--headless'] if args.diagnostic else ['--resolution','640x400','--fixed-fps','60','--disable-vsync','--write-movie',str(raw),'--audio-driver','Dummy']
     command+=['--','--mode='+args.mode,'--manifest='+str(report),'--frames='+str(frames)]
     if args.diagnostic:command+=['--diagnostic']

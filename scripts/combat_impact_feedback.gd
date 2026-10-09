@@ -3,6 +3,18 @@ extends RefCounted
 const Beasts = preload("res://scripts/beast_manifestations.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
 const SPARKS = preload("res://assets/powers/impact_003a1/contact_sparks.png")
+const CRACKS = preload("res://assets/powers/impact_003a1/contact_crack.png")
+const CRACK_WORK: float = 500000.0
+const CRACK_CLOSING: float = 140.0
+const CRACK_SEVERITY: float = 0.75
+const CRACK_COOLDOWN: float = 0.22
+const MAX_CRACK_EVENTS: int = 4
+const GRIND_CONTINUITY: float = 0.12
+const GRIND_TANGENT: float = 24.0
+const GRIND_GAP: float = 2.0
+const GRIND_SEPARATION_SPEED: float = 70.0
+const MAX_GRIND_BODIES: int = 16
+const MAX_GRIND_PAIRS: int = 12
 const MAX_SPARK_EVENTS: int = 8
 const MAX_NUMBERS: int = 4
 const NUMBER_MIN_RPM: int = 240
@@ -22,6 +34,11 @@ var _meta: Dictionary = {}
 var _counts: Dictionary = {}
 var _confirmation: String = ""
 var _confirmation_left: float = 0.0
+var _cracks: Array[Dictionary] = []
+var _crack_ready: float = 0.0
+var _crack_meta: Dictionary = {}
+var _grind_pairs: Dictionary = {}
+var _grind_state: Dictionary = {"active":false,"strength":0.0,"pitch":1.0,"pairs":0}
 
 func reset() -> void:
 	_clock = 0.0
@@ -36,6 +53,10 @@ func reset() -> void:
 	_counts.clear()
 	_confirmation = ""
 	_confirmation_left = 0.0
+	_cracks.clear()
+	_crack_ready = 0.0
+	_grind_pairs.clear()
+	_grind_state = {"active":false,"strength":0.0,"pitch":1.0,"pairs":0}
 
 static func tier(event: Dictionary) -> String:
 	if Beasts.qualifies_impact(event): return "extreme"
@@ -44,14 +65,75 @@ static func tier(event: Dictionary) -> String:
 
 static func audio_family(event: Dictionary) -> String:
 	var level: String = tier(event)
-	if level == "extreme": return "metal_massive"
+	if level == "extreme": return "metal_extreme"
+	if qualifies_crack(event): return "metal_massive"
+	if level == "hard": return "metal_clang"
 	var normal: Vector2 = event.get("normal", Vector2.RIGHT)
 	var relative: Vector2 = Vector2(event.get("first_velocity", Vector2.ZERO)) - Vector2(event.get("second_velocity", Vector2.ZERO))
 	var tangent: float = absf(relative.dot(normal.orthogonal()))
 	var closing: float = float(event.get("closing", 0.0))
 	if tangent > maxf(40.0, closing * 1.4): return "metal_scrape"
 	if tangent > maxf(25.0, closing * 0.65): return "metal_edge"
-	return "metal_clang" if level in ["hard", "strong"] else "metal_light"
+	return "metal_normal" if level == "strong" else "metal_light"
+
+static func qualifies_crack(event: Dictionary) -> bool:
+	if Beasts.qualifies_impact(event): return true
+	return float(event.get("severity",0.0)) >= CRACK_SEVERITY and float(event.get("closing",0.0)) >= CRACK_CLOSING and float(event.get("impulse",0.0)) * float(event.get("closing",0.0)) >= CRACK_WORK
+
+func _crack(event: Dictionary, level: String) -> String:
+	if not qualifies_crack(event) or _clock < _crack_ready: return ""
+	_crack_ready = _clock + CRACK_COOLDOWN
+	var normal: Vector2 = event.get("normal",Vector2.RIGHT)
+	var direction: Vector2 = Vector2(normal.x-normal.y,(normal.x+normal.y)*0.5)
+	var facing: int = posmod(roundi(direction.angle()/TAU*8.0),8)
+	var tag: String = "extreme" if level == "extreme" else "hard"
+	if _cracks.size() >= MAX_CRACK_EVENTS: _cracks.pop_front()
+	_cracks.append({"position":event.get("contact_position",event.position),"height":float(event.get("contact_height",12.0)),"tag":tag+"_"+str(facing),"tier":tag,"age":0.0,"duration":0.145 if tag == "extreme" else 0.12,"segments":5 if tag == "extreme" else 3})
+	return "metal_crack"
+
+## Read-only geometry sampled once after the completed fixed physics tick.
+## Surface continuity and tangential sliding are independent of hit cooldowns.
+func observe_grinding(fighters: Array, dt: float) -> void:
+	var tops: Array[Dictionary] = []
+	for fighter: Dictionary in fighters:
+		if fighter.get("combatant_type","") == "full_top" and str(fighter.get("outcome","")).is_empty() and float(fighter.get("rpm",0.0)) > 0.045:
+			tops.append(fighter)
+			if tops.size() >= MAX_GRIND_BODIES: break
+	tops.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return int(a.entity_id)<int(b.entity_id))
+	var seen: Dictionary = {}
+	for first: int in range(tops.size()):
+		for second: int in range(first+1,tops.size()):
+			if seen.size() >= MAX_GRIND_PAIRS: break
+			var a: Dictionary = tops[first]
+			var b: Dictionary = tops[second]
+			var offset: Vector2 = Vector2(b.pos)-Vector2(a.pos)
+			var distance: float = offset.length()
+			if distance <= 0.001 or distance-float(a.get("radius",12.0))-float(b.get("radius",12.0)) > GRIND_GAP or absf(float(a.get("height",0.0))-float(b.get("height",0.0))) > 6.0: continue
+			var normal: Vector2 = offset/distance
+			var relative: Vector2 = Vector2(a.vel)-Vector2(b.vel)
+			var tangent: float = absf(relative.dot(normal.orthogonal()))
+			if tangent < GRIND_TANGENT or absf(relative.dot(normal)) > GRIND_SEPARATION_SPEED: continue
+			var key: String = "%d:%d" % [int(a.entity_id),int(b.entity_id)]
+			var held: float = minf(4.0,float(_grind_pairs.get(key,{}).get("held",0.0))+maxf(0.0,dt))
+			seen[key] = {"held":held,"tangent":tangent,"missing":0.0}
+	# A bounded40ms gap allows a real contact solver's tiny separation jitter;
+	# sustained separation, low slip, retired bodies and reset all end the grind.
+	for key: String in _grind_pairs:
+		if seen.has(key): continue
+		var old: Dictionary = _grind_pairs[key]
+		if float(old.get("missing",0.0))+dt <= 0.04 and seen.size() < MAX_GRIND_PAIRS:
+			seen[key] = {"held":old.held,"tangent":old.tangent,"missing":float(old.get("missing",0.0))+dt}
+	_grind_pairs = seen
+	var strength: float = 0.0
+	var count: int = 0
+	for pair: Dictionary in seen.values():
+		if float(pair.held)+0.000001 < GRIND_CONTINUITY: continue
+		count += 1
+		strength = maxf(strength,clampf((float(pair.tangent)-GRIND_TANGENT)/250.0,0.10,1.0)*(0.65 if float(pair.missing)>0.0 else 1.0))
+	_grind_state = {"active":count>0,"strength":strength,"pitch":0.90+strength*0.18,"pairs":count}
+
+func grind_snapshot() -> Dictionary:
+	return _grind_state.duplicate()
 
 func _record(event: Dictionary) -> void:
 	_events.append(event)
@@ -89,6 +171,7 @@ func accept_impact(event: Dictionary) -> Dictionary:
 	_latest_collision = id
 	var level: String = tier(event)
 	var cue: String = audio_family(event)
+	var crack_cue: String = _crack(event,level)
 	_spark(event.get("contact_position", event.position), event.get("normal", Vector2.RIGHT), level, float(event.get("contact_height", 12.0)))
 	_number(event, "first")
 	_number(event, "second")
@@ -99,10 +182,10 @@ func accept_impact(event: Dictionary) -> Dictionary:
 		shake = {"strong":0.65,"hard":2.5,"extreme":4.0}[level]
 		_theatre_ready = _clock + (0.35 if level == "extreme" else 0.22)
 	_counts[level] = int(_counts.get(level, 0)) + 1
-	_record({"collision_id":id,"tier":level,"cue":cue,"hold":hold,"shake":shake,
+	_record({"collision_id":id,"tier":level,"cue":cue,"crack_cue":crack_cue,"hold":hold,"shake":shake,
 		"score":Beasts.impact_metric(event),"contact":event.get("contact_position", event.position),
 		"first_rpm_loss":float(event.get("first_rpm_loss", 0.0)),"second_rpm_loss":float(event.get("second_rpm_loss", 0.0))})
-	return {"tier":level,"cue":cue,"hold":hold,"shake":shake}
+	return {"tier":level,"cue":cue,"crack_cue":crack_cue,"hold":hold,"shake":shake}
 
 func accept_small(position: Vector2, normal: Vector2) -> void:
 	if _clock < _small_ready: return
@@ -125,14 +208,14 @@ func accept_elimination(fighter: Dictionary) -> Dictionary:
 func update(dt: float) -> void:
 	_clock += maxf(0.0, dt)
 	_confirmation_left = maxf(0.0, _confirmation_left-dt)
-	for list: Array[Dictionary] in [_sparks, _numbers]:
+	for list: Array[Dictionary] in [_sparks, _numbers, _cracks]:
 		for index: int in range(list.size()-1,-1,-1):
 			list[index].age += dt
 			if float(list[index].age) >= float(list[index].duration): list.remove_at(index)
 	if not numbers_enabled: _numbers.clear()
 
 func snapshot() -> Dictionary:
-	return {"tiers":_counts.duplicate(),"events":_events.duplicate(true),"sparks":_sparks.duplicate(true),
+	return {"tiers":_counts.duplicate(),"events":_events.duplicate(true),"sparks":_sparks.duplicate(true),"cracks":_cracks.duplicate(true),"grind":grind_snapshot(),
 		"numbers":_numbers.duplicate(true),"spark_cap":MAX_SPARK_EVENTS,"number_cap":MAX_NUMBERS,
 		"number_min_rpm":NUMBER_MIN_RPM,"number_cooldown":NUMBER_COOLDOWN,"numbers_enabled":numbers_enabled,
 		"confirmation":_confirmation if _confirmation_left > 0.0 else "","gameplay_writes":0}
@@ -149,6 +232,15 @@ func _frame(item: Dictionary) -> int:
 		if remaining < 0.0: return frame
 	return int(span.to)
 
+func _crack_frame(item: Dictionary) -> int:
+	if _crack_meta.is_empty(): _crack_meta = JSON.parse_string(FileAccess.get_file_as_string("res://assets/powers/impact_003a1/crack_manifest.json"))
+	var span: Dictionary = _crack_meta.tags[item.tag]
+	var remaining: float = float(item.age)
+	for frame: int in range(int(span.from),int(span.to)+1):
+		remaining -= float(_crack_meta.durations_ms[frame])/1000.0
+		if remaining < 0.0: return frame
+	return int(span.to)
+
 func draw(canvas: CanvasItem, project: Callable, reduced_flashing: bool, show_sparks: bool = true) -> void:
 	if show_sparks:
 		for item: Dictionary in _sparks:
@@ -156,6 +248,11 @@ func draw(canvas: CanvasItem, project: Callable, reduced_flashing: bool, show_sp
 			var at: Vector2 = project.call(Vector2(item.position)) - Vector2(0,float(item.height))
 			canvas.draw_texture_rect_region(SPARKS,Rect2((at-Vector2(32,24)).round(),Vector2(64,48)),
 				Rect2(Vector2(index%16*64,index/16*48),Vector2(64,48)),Color(1,1,1,0.70 if reduced_flashing else 1.0))
+		for item: Dictionary in _cracks:
+			var index: int = _crack_frame(item)
+			var at: Vector2 = project.call(Vector2(item.position))-Vector2(0,float(item.height))
+			var fade: float = clampf(1.0-float(item.age)/float(item.duration),0.0,1.0)
+			canvas.draw_texture_rect_region(CRACKS,Rect2((at-Vector2(32,24)).round(),Vector2(64,48)),Rect2(Vector2(index%16*64,index/16*48),Vector2(64,48)),Color(1,1,1,fade*(0.35 if reduced_flashing else 1.0)))
 	var font: Font = FrontEnd.pixel_font()
 	if font == null: return
 	for item: Dictionary in _numbers:

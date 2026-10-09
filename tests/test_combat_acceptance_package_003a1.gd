@@ -49,8 +49,9 @@ func run() -> void:
 	var art: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_ART_MANIFEST))
 	var identity: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_IDENTITY_MANIFEST))
 	var sparks: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_SPARK_MANIFEST))
-	var rows: Array[Dictionary] = Probe._inspect_combat_art(art,identity,sparks)
-	check(rows.size()==14,"New compiled probe covers six venue layers, three accents, four card atlases and contact sparks")
+	var cracks: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_CRACK_MANIFEST))
+	var rows: Array[Dictionary] = Probe._inspect_combat_art(art,identity,sparks,cracks)
+	check(rows.size()==15,"Compiled probe covers six venue layers, three accents, four card atlases, sparks and crack")
 	var found: Dictionary = {}
 	for row: Dictionary in rows:
 		check(not found.has(row.kind),"Imported art identity is unique: "+row.kind);found[row.kind]=true
@@ -65,8 +66,18 @@ func run() -> void:
 			"durations_ms","layers":bad[key]=[]
 			"tags":bad[key]={}
 			"source":bad[key]="assets/wrong.aseprite"
-		var altered: Array[Dictionary] = Probe._inspect_combat_art(art,identity,bad)
-		check(not altered.back().valid,"Contact spark native topology drift is rejected: "+key)
+		var altered: Array[Dictionary] = Probe._inspect_combat_art(art,identity,bad,cracks)
+		check(not altered[altered.size()-2].valid,"Contact spark native topology drift is rejected: "+key)
+		bad=cracks.duplicate(true)
+		# Independently corrupt the crack topology using the same explicit value.
+		match key:
+			"cell","pivot":bad[key]=[1,1]
+			"frame_count","columns":bad[key]=1
+			"durations_ms","layers":bad[key]=[]
+			"tags":bad[key]={}
+			"source":bad[key]="assets/wrong.aseprite"
+		altered=Probe._inspect_combat_art(art,identity,sparks,bad)
+		check(not altered.back().valid,"Contact crack native topology drift is rejected: "+key)
 	var cue_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_AUDIO_MANIFEST))
 	for kind: String in Probe.COMBAT_AUDIO_IDS:
 		var path: String = "res://assets/audio/impact_003a1/"+kind+".wav"
@@ -93,7 +104,7 @@ func run() -> void:
 	check(status.get("ok",false),"Full additive production package probe preserves all earlier asset/economy guards")
 	var report: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(output))
 	check(report.failures.is_empty() and report.read_only_asset_inspection,"Actual full asset report is read-only and complete")
-	check(report.combat_art_textures.size()==14 and report.combat_audio.size()==7 and report.music_variation_stems.size()==2,"Actual report contains every new native resource once")
+	check(report.combat_art_textures.size()==15 and report.combat_audio.size()==11 and report.music_variation_stems.size()==2,"Actual report contains every new native resource once")
 	check(report.music_stems.size()==5 and report.music_asset_metadata.stems.size()==7,"Original five PCM receipts remain separate from seven-stem runtime asset metadata")
 	check(report.combat_arena_geometry_json==FileAccess.get_file_as_string("res://assets/arena/manifest.json"),"Compiled proof includes the canonical fixed projection/gate metadata")
 	check(before==fingerprints(profile),"Actual player profile and every recovery backup remain byte-identical")

@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "cell": [
+    64,
+    48
+  ],
+  "pivot": [
+    32,
+    24
+  ],
+  "layers": [
+    "01 contact socket",
+    "02 keyed jagged steel arc",
+    "03 one-way cooling edge"
+  ],
+  "tags": {
+    "hard_0": {
+      "from": 0,
+      "to": 3
+    },
+    "hard_1": {
+      "from": 4,
+      "to": 7
+    },
+    "hard_2": {
+      "from": 8,
+      "to": 11
+    },
+    "hard_3": {
+      "from": 12,
+      "to": 15
+    },
+    "hard_4": {
+      "from": 16,
+      "to": 19
+    },
+    "hard_5": {
+      "from": 20,
+      "to": 23
+    },
+    "hard_6": {
+      "from": 24,
+      "to": 27
+    },
+    "hard_7": {
+      "from": 28,
+      "to": 31
+    },
+    "extreme_0": {
+      "from": 32,
+      "to": 35
+    },
+    "extreme_1": {
+      "from": 36,
+      "to": 39
+    },
+    "extreme_2": {
+      "from": 40,
+      "to": 43
+    },
+    "extreme_3": {
+      "from": 44,
+      "to": 47
+    },
+    "extreme_4": {
+      "from": 48,
+      "to": 51
+    },
+    "extreme_5": {
+      "from": 52,
+      "to": 55
+    },
+    "extreme_6": {
+      "from": 56,
+      "to": 59
+    },
+    "extreme_7": {
+      "from": 60,
+      "to": 63
+    }
+  },
+  "durations_ms": [
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    24,
+    35,
+    45,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57,
+    16,
+    30,
+    42,
+    57
+  ],
+  "columns": 16,
+  "frame_count": 64,
+  "source": "assets/source-art/impact_003a1/contact_crack.aseprite",
+  "texture": "res://assets/powers/impact_003a1/contact_crack.png",
+  "source_sha256": "a2c0c159585983a4e808aadee1284896096e789788835bc2ab427a27ef8120f1",
+  "texture_sha256": "f878fb0471477a33ee4d297b47bd26afecd107c616dab9e1bc83eb0cbf5472e9",
+  "native_runtime_rgba_exact": true,
+  "segments": {
+    "hard": 3,
+    "extreme": 5
+  },
+  "maximum_lifetime_seconds": 0.145,
+  "physical_work_threshold": 500000,
+  "filter": "nearest",
+  "loop": false,
+  "reduced_flashing": "Local nonoscillating cooling at35%opacity; no flash."
+}

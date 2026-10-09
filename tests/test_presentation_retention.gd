@@ -188,7 +188,7 @@ func paired_fixture(label: String, seed_value: int, ticks: int, intense: bool) -
 		shown.event_sfx.connect(func(kind: String) -> void: sound.play_sound(kind); music.notify_cue(kind))
 	var disabled_music: Node = Music.new(); root.add_child(disabled_music); disabled_music.set_process(false)
 	check(music.get_child_count() == 1 and music.synchronized_stream().stream_count == 7,"Five accepted plus two arrangement stems remain synchronized in exactly one MusicPlayer")
-	check(sound.channels.size() == 8 and sound.get_child_count() == 8,"SFX retains exactly eight pooled channels")
+	check(sound.channels.size() == 8 and sound.get_child_count() == 9 and sound._grind_player is AudioStreamPlayer and sound._grind_player.stream.loop_mode == AudioStreamWAV.LOOP_FORWARD,"SFX retains eight pooled one-shots plus exactly one persistent contact-grind loop")
 	var stats: Dictionary = current_hud(hud[0],contexts[0],shown)
 	menus.show_hud(stats)
 	await process_frame # Retire only old HUD shell nodes before retained-ID baseline.

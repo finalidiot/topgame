@@ -35,6 +35,7 @@ var largest: float = 0.0
 var pulse_until: float = 0.0
 var pulse_amount: float = 0.0
 var pulse_source: String = ""
+var enemy_buckets: Dictionary = {}
 
 func setup(battle: Node2D) -> void: _host = weakref(battle)
 func host() -> Node2D: return _host.get_ref()
@@ -48,6 +49,10 @@ func begin_tick(dt: float, input: Vector2) -> void:
 	tokens = minf(TUNING.bucket_capacity,tokens+dt*TUNING.bucket_rate)
 	small_tokens = minf(TUNING.small_capacity,small_tokens+dt*TUNING.small_rate)
 	overclock_tokens = minf(TUNING.overclock_capacity,overclock_tokens+dt*TUNING.overclock_rate)
+	for bucket: Dictionary in enemy_buckets.values():
+		bucket.tokens = minf(TUNING.bucket_capacity,float(bucket.tokens)+dt*TUNING.bucket_rate)
+		bucket.small = minf(TUNING.small_capacity,float(bucket.small)+dt*TUNING.small_rate)
+		bucket.overclock = minf(TUNING.overclock_capacity,float(bucket.overclock)+dt*TUNING.overclock_rate)
 
 func spend(f: Dictionary, amount: float, source: String) -> void:
 	if not valid(f): return
@@ -59,6 +64,7 @@ func spend(f: Dictionary, amount: float, source: String) -> void:
 		minimum = minf(minimum,f.rpm)
 
 func gain(f: Dictionary, amount: float, source: String, small: bool = false) -> float:
+	if valid(f) and not player(f): return _enemy_gain(f,amount,source,small)
 	if not player(f) or not str(f.outcome).is_empty() or host().battle_status != "battle" or host().paused: return 0.0
 	var actual: float = minf(maxf(0.0,amount),maxf(0.0,host().powers.rpm_cap(f)-float(f.rpm)))
 	# All small-body returns, including Runaway, share one sustained budget.
@@ -82,6 +88,21 @@ func gain(f: Dictionary, amount: float, source: String, small: bool = false) -> 
 		pulse_amount = actual
 		pulse_source = source
 	host().present_reclaim(actual,source)
+	return actual
+
+func _enemy_gain(f: Dictionary, amount: float, source: String, small: bool) -> float:
+	if f.get("combatant_type","") != "full_top" or not str(f.outcome).is_empty() or host().battle_status != "battle" or host().paused: return 0.0
+	var id: int = int(f.entity_id)
+	if not enemy_buckets.has(id): enemy_buckets[id] = {"tokens":TUNING.bucket_capacity,"small":TUNING.small_capacity,"overclock":TUNING.overclock_capacity}
+	var bucket: Dictionary = enemy_buckets[id]
+	var actual: float = minf(maxf(0.0,amount),maxf(0.0,host().powers.rpm_cap(f)-float(f.rpm)))
+	if small: actual = minf(actual,float(bucket.small))
+	if source == "redline_motion": actual = minf(actual,float(bucket.overclock))
+	elif source != "second_wind": actual = minf(actual,float(bucket.tokens))
+	if small: bucket.small -= actual
+	if source == "redline_motion": bucket.overclock -= actual
+	elif source != "second_wind": bucket.tokens -= actual
+	f.rpm += actual; f.energy = f.rpm
 	return actual
 
 func running_costs(f: Dictionary, speed: float, input: Vector2, braking: bool, drain: float, dt: float) -> void:
@@ -147,6 +168,7 @@ func end_tick(dt: float) -> void:
 	if rpm < 0.14: near_out += dt
 
 func retire(id: int) -> void:
+	enemy_buckets.erase(id)
 	contacts.erase(id)
 	credits.erase(id)
 	paid.erase(id)

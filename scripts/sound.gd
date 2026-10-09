@@ -2,10 +2,14 @@ extends Node
 
 const SOUNDS: Dictionary = {
 	"metal_light": preload("res://assets/audio/impact_003a1/metal_light.wav"),
+	"metal_normal": preload("res://assets/audio/impact_003a1/metal_normal.wav"),
 	"metal_clang": preload("res://assets/audio/impact_003a1/metal_clang.wav"),
 	"metal_edge": preload("res://assets/audio/impact_003a1/metal_edge.wav"),
 	"metal_scrape": preload("res://assets/audio/impact_003a1/metal_scrape.wav"),
 	"metal_massive": preload("res://assets/audio/impact_003a1/metal_massive.wav"),
+	"metal_extreme": preload("res://assets/audio/impact_003a1/metal_extreme.wav"),
+	"metal_crack": preload("res://assets/audio/impact_003a1/metal_crack.wav"),
+	"metal_grind": preload("res://assets/audio/impact_003a1/metal_grind.wav"),
 	"metal_wall": preload("res://assets/audio/impact_003a1/metal_wall.wav"),
 	"metal_takedown": preload("res://assets/audio/impact_003a1/metal_takedown.wav"),
 	"pickup_collect": preload("res://assets/audio/pickup_collect.wav"),
@@ -71,6 +75,10 @@ const SOUNDS: Dictionary = {
 }
 const MAX_CHANNELS: int = 8
 const SFX_BUS: String = "SFX"
+const MIX_PEAK_BUDGET: float = 0.62
+const GRIND_DB: float = -29.0
+const IMPACT_GAIN: Dictionary = {"metal_light":-22.0,"metal_normal":-16.0,"metal_edge":-19.0,"metal_scrape":-26.0,"metal_clang":-10.0,"metal_massive":-8.0,"metal_extreme":-6.0,"metal_crack":-15.0,"metal_wall":-16.0,"metal_takedown":-7.0}
+const IMPACT_COOLDOWN: Dictionary = {"metal_light":0.08,"metal_normal":0.10,"metal_clang":0.12,"metal_edge":0.08,"metal_scrape":0.16,"metal_massive":0.28,"metal_extreme":0.35,"metal_crack":0.22,"hit":0.08}
 const PRIORITY: Dictionary = {"pickup_collect":5,"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
 	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
 	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
@@ -103,6 +111,17 @@ var channel_priority: Array[int] = []
 var channel_started: Array[float] = []
 var played_counts: Dictionary = {}
 var suppressed_count: int = 0
+var grind_provider: Callable
+var _grind_player: AudioStreamPlayer
+var _grind_target: float = 0.0
+var _grind_level: float = 0.0
+var _grind_pitch: float = 1.0
+var _grind_target_pitch: float = 1.0
+var _grind_starts: int = 0
+var _grind_stops: int = 0
+var _channel_base_db: Array[float] = []
+var _headroom_db: float = 0.0
+var _peak_bound: float = 0.0
 
 func _ready() -> void:
 	rng.randomize()
@@ -119,9 +138,59 @@ func _ready() -> void:
 		channels.append(player)
 		channel_priority.append(-1)
 		channel_started.append(-1.0)
+		_channel_base_db.append(-3.0)
+	_grind_player = AudioStreamPlayer.new()
+	_grind_player.bus = SFX_BUS
+	var loop: AudioStreamWAV = SOUNDS.metal_grind.duplicate()
+	loop.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	loop.loop_begin = 0
+	loop.loop_end = loop.data.size()/2
+	_grind_player.stream = loop
+	_grind_player.volume_db = -80.0
+	add_child(_grind_player)
 
 func _process(delta: float) -> void:
 	audio_time += delta
+	if grind_provider.is_valid():
+		var state: Variant = grind_provider.call()
+		set_grind_state(state if state is Dictionary else {"active":false})
+	elif not grind_provider.is_null(): set_grind_state({"active":false})
+	advance_grind(delta)
+	_apply_headroom(delta)
+
+func set_grind_state(state: Dictionary) -> void:
+	_grind_target = clampf(float(state.get("strength",0.0)),0.0,1.0) if bool(state.get("active",false)) else 0.0
+	_grind_target_pitch = clampf(float(state.get("pitch",1.0)),0.90,1.08)
+
+func advance_grind(delta: float) -> void:
+	if not is_instance_valid(_grind_player): return
+	var target: float = 0.0 if muted else _grind_target
+	var response: float = 0.08 if target>_grind_level else 0.18
+	_grind_level = lerpf(_grind_level,target,1.0-exp(-maxf(0.0,delta)/response))
+	_grind_pitch = lerpf(_grind_pitch,_grind_target_pitch,1.0-exp(-maxf(0.0,delta)/0.12))
+	_grind_player.pitch_scale = _grind_pitch
+	if _grind_level>0.002 and not muted:
+		if not _grind_player.playing:
+			_grind_player.play()
+			_grind_starts += 1
+	elif _grind_player.playing:
+		_grind_player.stop()
+		_grind_stops += 1
+	_grind_player.volume_db = GRIND_DB+linear_to_db(maxf(0.0001,_grind_level))+_headroom_db
+
+## Full-scale worst-case sum, independent of sample phase. Every active SFX
+## (including the single friction loop) shares one finite headroom allowance.
+## Music retains its accepted PCM, synchronized transport and separate trim.
+func _apply_headroom(delta: float, incoming: int = -1) -> void:
+	var bound: float = 0.0
+	for i: int in range(channels.size()):
+		if channels[i].playing or i==incoming: bound += db_to_linear(_channel_base_db[i])
+	if is_instance_valid(_grind_player) and _grind_player.playing: bound += db_to_linear(GRIND_DB)*_grind_level
+	var target: float = linear_to_db(minf(1.0,MIX_PEAK_BUDGET/maxf(0.0001,bound)))
+	_headroom_db = target if target<_headroom_db else move_toward(_headroom_db,target,maxf(0.0,delta)*12.0)
+	_peak_bound = bound*db_to_linear(_headroom_db)
+	for i: int in range(channels.size()): channels[i].volume_db = _channel_base_db[i]+_headroom_db
+	if is_instance_valid(_grind_player): _grind_player.volume_db = GRIND_DB+linear_to_db(maxf(0.0001,_grind_level))+_headroom_db
 
 func apply_settings(settings: Dictionary) -> void:
 	muted = bool(settings.get("muted", false))
@@ -135,15 +204,16 @@ func apply_settings(settings: Dictionary) -> void:
 
 func play_sound(kind: String) -> void:
 	if muted or channels.is_empty(): return
+	if kind == "metal_grind": return # The contact envelope owns its one loop.
 	var aliases: Dictionary = {"boss_warning":"boss_port","boss_entry":"boss_port","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
 	# Legacy callers keep their intent; physical families replace their samples.
 	var sample_key: String = {"hit":"metal_light","small_hit":"metal_light","heavy":"metal_clang","wall":"metal_wall","scrape":"metal_scrape"}.get(key,key)
 	if not SOUNDS.has(sample_key): return
-	if audio_time - float(last_played.get(key, -100.0)) < float(COOLDOWN.get(key, 0.0)):
+	if audio_time - float(last_played.get(key, -100.0)) < float(IMPACT_COOLDOWN.get(key,COOLDOWN.get(key, 0.0))):
 		suppressed_count += 1
 		return
-	var priority: int = int({"metal_light":1,"metal_clang":4,"metal_edge":2,"metal_scrape":1,"metal_massive":6,"metal_takedown":6,"metal_wall":2}.get(key,PRIORITY.get(key, 2)))
+	var priority: int = int({"metal_light":1,"metal_normal":2,"metal_clang":4,"metal_edge":1,"metal_scrape":0,"metal_massive":6,"metal_extreme":7,"metal_crack":5,"metal_takedown":6,"metal_wall":2}.get(key,PRIORITY.get(key, 2)))
 	var slot: int = -1
 	# Use a free channel first; otherwise replace the oldest least-important cue.
 	# Twelve small-top contacts can never steal a recovery or acquisition cue.
@@ -212,7 +282,9 @@ func play_sound(kind: String) -> void:
 		player.pitch_scale = 0.68
 		player.volume_db = -3.0
 	if sample_key.begins_with("metal_"):
-		player.volume_db = -13.0 if key == "small_hit" else float({"metal_light":-9.0,"metal_clang":-6.0,"metal_edge":-8.0,"metal_scrape":-11.0,"metal_massive":-5.0,"metal_wall":-7.0,"metal_takedown":-5.5}.get(sample_key,-8.0))
+		player.volume_db = -26.0 if key == "small_hit" else float(IMPACT_GAIN.get(sample_key,-16.0))
+	_channel_base_db[slot] = player.volume_db
+	_apply_headroom(0.0,slot)
 	player.play()
 
 func audio_snapshot() -> Dictionary:
@@ -220,4 +292,6 @@ func audio_snapshot() -> Dictionary:
 	for channel: AudioStreamPlayer in channels:
 		if channel.playing:
 			active += 1
-	return {"active": active, "cap": MAX_CHANNELS, "played": played_counts.duplicate(), "suppressed": suppressed_count}
+	return {"active": active, "cap": MAX_CHANNELS, "played": played_counts.duplicate(), "suppressed": suppressed_count,
+		"grind_active":is_instance_valid(_grind_player) and _grind_player.playing,"grind_level":_grind_level,"grind_starts":_grind_starts,"grind_stops":_grind_stops,
+		"headroom_db":_headroom_db,"worst_case_sfx_peak":_peak_bound,"peak_budget":MIX_PEAK_BUDGET}

@@ -37,6 +37,9 @@ var last_result: Dictionary = {}
 var battle: Node2D
 var combat_viewport: SubViewport
 var combat_frame: TextureRect
+var _presentation_client_size: Vector2i = Vector2i.ZERO
+var _presentation_canvas_size: Vector2 = Vector2(800,480)
+var _presentation_applied_size: Vector2 = Vector2.ZERO
 var menus: Control
 var sounds: Node
 var music: Node
@@ -85,10 +88,13 @@ var _packet_purchase_token: int = 0
 var _packet_product: String = ""
 var _packet_request_id: String = ""
 var _packet_quantity: int = 1
+var _workshop_return: String = "hub"
+var _shop_return: String = "hub"
 ## In-process deterministic review injection. Refused outside fresh 003A QA paths.
 var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
+	_refresh_window_presentation()
 	if is_instance_valid(combat_frame) and is_instance_valid(battle): combat_frame.visible = battle.visible
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
@@ -211,9 +217,11 @@ func _ready() -> void:
 	battle.input_provider = touch_controls
 	sounds = SoundScript.new()
 	add_child(sounds)
+	sounds.grind_provider = battle.grind_audio_snapshot
 	music = MusicScript.new()
 	music.configure_playback(not qa_assets_report_requested and not smoke_mode and DisplayServer.get_name() != "headless")
 	add_child(music)
+	_refresh_window_presentation()
 	_apply_settings()
 	if smoke_mode or qa_assets_report_requested or qa_catalogue_requested or not practice_request.is_empty(): _title()
 	else: _title_gate()
@@ -230,6 +238,41 @@ func _ready() -> void:
 	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 	if not _android_qa.is_empty(): call_deferred("_inspect_android_assets")
+
+func _refresh_window_presentation() -> void:
+	if not is_instance_valid(combat_frame) or not is_instance_valid(menus): return
+	# The Android shell owns the outer window transform. A hosted native canvas
+	# must remain800x480 even when that same production shell is tested on PC.
+	var mobile: bool = OS.has_feature("mobile") or get_viewport() is SubViewport
+	if not mobile:
+		var client_size: Vector2i = get_window().size
+		if client_size != _presentation_client_size:
+			_presentation_client_size = client_size
+			var policy: Dictionary = CombatLayout.desktop_canvas(client_size)
+			get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+			get_window().content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
+			get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_INTEGER
+			get_window().content_scale_size = policy.canvas_size
+			_presentation_canvas_size = Vector2(policy.canvas_size)
+	else:
+		_presentation_canvas_size = Vector2(800,480)
+	if _presentation_applied_size == _presentation_canvas_size: return
+	_presentation_applied_size = _presentation_canvas_size
+	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile)
+	combat_frame.position = presentation.arena_rect.position
+	combat_frame.size = presentation.arena_rect.size
+	menus.set_presentation_canvas(_presentation_canvas_size)
+	# No window mode, monitor, position or restore-size write occurs here. Native
+	# Maximise/Restore belongs to Windows; only the client presentation reflows.
+
+func window_presentation_snapshot() -> Dictionary:
+	var hosted_native: bool = get_viewport() is SubViewport
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,OS.has_feature("mobile") or hosted_native)
+	layout["client_size"] = get_window().size
+	layout["window_mode"] = DisplayServer.window_get_mode()
+	layout["borderless"] = DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
+	layout["ui_policy"] = {"canvas_size":Vector2i(800,480),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":true} if hosted_native or OS.has_feature("mobile") else CombatLayout.desktop_canvas(get_window().size)
+	return layout
 
 func _inspect_android_assets() -> void:
 	if _android_qa.is_empty(): return
@@ -348,7 +391,7 @@ func _validated_settings(values: Dictionary) -> Dictionary:
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing", "top_status_bars", "impact_numbers"]:
+	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]:
 		if values.get(key) is bool: result[key] = values[key]
 	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
@@ -371,8 +414,9 @@ func _apply_settings() -> void:
 	battle.presentation_quality = 0.6 if OS.has_feature("mobile") else 1.0
 	reroll_pickups.reduced_flashing = bool(settings.reduced_flashing)
 	menus.reduced_flashing = bool(settings.reduced_flashing)
-	if not smoke_mode and not OS.has_feature("mobile"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if bool(settings.fullscreen) else DisplayServer.WINDOW_MODE_WINDOWED)
+	# Retain the legacy preference key for a harmless in-memory migration. It no
+	# longer owns desktop display mode or overrides native Maximise/Restore.
+	settings.fullscreen = false
 
 func _controller_connection_changed(_device: int, _connected: bool) -> void:
 	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
@@ -403,7 +447,7 @@ func _title() -> void:
 		music.set_context("title")
 		music.set_paused(false)
 
-func _garage() -> void:
+func _garage(remember_source: bool = true) -> void:
 	if run_context.is_active(): return
 	if not _pay_pending_run_payout(): return
 	if not collection.pending_packet().is_empty():
@@ -412,6 +456,8 @@ func _garage() -> void:
 	if not collection.is_initialized():
 		_begin_collection()
 		return
+	if remember_source and screen not in ["garage", "collection_error", "settings", "save_tools"]:
+		_workshop_return = "shop" if screen in ["shop", "packet_open", "packet_purchase", "packet_odds"] else "hub"
 	_clear_run()
 	_hide_battle()
 	screen = "garage"
@@ -419,11 +465,12 @@ func _garage() -> void:
 	var snapshot: Dictionary = collection.snapshot()
 	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
 	snapshot["isolated_catalogue_qa"] = qa_catalogue_requested
+	snapshot["workshop_return"] = _workshop_return
 	menus.show_collection_workshop(collection.equipped_build(), snapshot)
 	music.set_context("workshop")
 	music.set_paused(false)
 
-func _shop(status: String = "") -> void:
+func _shop(status: String = "", remember_source: bool = true) -> void:
 	if run_context.is_active(): return
 	if not _pay_pending_run_payout():
 		if str(last_result.get("payout_status", "")) != "balance_limit": return
@@ -436,23 +483,38 @@ func _shop(status: String = "") -> void:
 	if not collection.pending_packet().is_empty():
 		_show_packet(true)
 		return
+	if remember_source and screen in ["title", "title_gate", "garage", "result"]:
+		_shop_return = "workshop" if screen == "garage" else "hub"
 	screen = "shop"
-	menus.show_shop(collection.snapshot(), status)
+	var snapshot: Dictionary = collection.snapshot()
+	snapshot["shop_return"] = _shop_return
+	menus.show_shop(snapshot, status)
 	music.set_context("workshop")
 	music.set_paused(false)
 
 func _request_packet_purchase(kind: String) -> void:
 	if screen != "shop" or run_context.is_active() or kind not in ["standard", "reclaimed"]: return
+	if menus.selected_shop_product() != kind: return
 	if collection.read_only or not collection.pending_packet().is_empty(): return
 	var wallet: Dictionary = collection.wallet()
 	var unit: String = str(PacketEconomy.config().packets[kind].currency)
-	_packet_quantity = menus.selected_shop_quantity()
+	_packet_quantity = menus.selected_shop_quantity(kind)
 	if int(wallet[unit]) < PacketEconomy.packet_cost(kind) * _packet_quantity: return
 	_packet_purchase_token += 1
 	_packet_product = kind
 	_packet_request_id = collection.expected_packet_request_id()
 	screen = "packet_purchase"
 	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token, _packet_quantity)
+
+func _back_workshop() -> void:
+	if screen != "garage" or run_context.is_active(): return
+	if _workshop_return == "shop": _shop("", false)
+	else: _title()
+
+func _back_shop() -> void:
+	if screen != "shop" or run_context.is_active(): return
+	if _shop_return == "workshop": _garage(false)
+	else: _title()
 
 func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
@@ -496,6 +558,7 @@ func _leave_packet(route: String, kind: String = "") -> void:
 		"workshop": _garage()
 		"another":
 			_shop()
+			menus.select_shop_product(kind)
 			_request_packet_purchase(kind)
 		"shop": _shop()
 		_: _title()
@@ -971,6 +1034,8 @@ func _action(name: String, value: Variant = null) -> void:
 		"begin_collection": _begin_collection()
 		"open_workshop": _garage()
 		"open_shop": _shop()
+		"back_workshop": _back_workshop()
+		"back_shop": _back_shop()
 		"inspect_shop_product":
 			if screen == "shop": menus.select_shop_product(str(value))
 		"request_packet_purchase": _request_packet_purchase(str(value))
@@ -1130,7 +1195,8 @@ func _escape() -> void:
 		if is_instance_valid(menus._packet_view) and menus._packet_view.phase == "RESULT": _leave_packet("shop")
 		else: menus.skip_packet()
 	elif screen in ["packet_purchase", "packet_odds"]: _shop()
-	elif screen == "shop": _title()
+	elif screen == "shop": _back_shop()
+	elif screen == "garage": _back_workshop()
 	elif screen == "reset_confirm": _show_save_tools()
 	elif screen in ["save_tools", "settings"]: _back_settings()
 	elif screen == "title_gate": return
@@ -1150,13 +1216,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("pause") or (event.is_action_pressed("ui_cancel") and not (screen == "battle" and event.is_action("burst"))):
 		menus.visible = true
 		_escape()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("toggle_fullscreen"):
-		if screen == "battle": battle.begin_reentry()
-		settings.fullscreen = not bool(settings.fullscreen)
-		_apply_settings()
-		_save_preferences()
-		if screen == "settings": _show_settings()
 		get_viewport().set_input_as_handled()
 
 func _engage_application_input() -> void:

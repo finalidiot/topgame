@@ -254,7 +254,7 @@ func _descendants(parent: Node) -> Array[Node]:
 
 func _button(text: String) -> Button:
 	for node: Node in _descendants(game.menus):
-		if node is Button and (node.text == text or (text == "BEGIN" and node.text == "BEGIN / CHOOSE FIRST TOP") or (text == "QUICK DUEL" and node.text in ["QUICK DUEL / PRACTICE", "LAUNCH QUICK DUEL"]) or (text == "SETTINGS" and node.text == "OPTIONS") or (text == "BACK TO MENU" and node.text in ["BACK", "BACK TO WORKBENCH"]) or (text == "MAIN MENU" and node.text == "WORKBENCH")): return node
+		if node is Button and (node.text == text or (text == "BEGIN" and node.text == "BEGIN / CHOOSE FIRST TOP") or (text == "QUICK DUEL" and node.text in ["QUICK DUEL / PRACTICE", "LAUNCH QUICK DUEL"]) or (text == "SETTINGS" and node.text == "OPTIONS") or (text == "BACK TO MENU" and node.text in ["BACK", "BACK TO HUB"]) or (text == "MAIN MENU" and node.text == "HUB")): return node
 	return null
 
 func _focus_is_visible(context: String) -> void:
@@ -359,7 +359,7 @@ func _test_title_garage_settings() -> void:
 		check(float(game.settings.volume) < volume, "Gamepad changes volume with slider focus")
 		await _tap(JOY_BUTTON_DPAD_RIGHT)
 		check(is_equal_approx(float(game.settings.volume), volume), "Slider supports both horizontal directions")
-	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen", "reduced_flashing", "top_status_bars", "impact_numbers"]
+	var setting_keys: Array[String] = ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]
 	check(toggles.size() == setting_keys.size(), "All settings toggles are present")
 	for index: int in range(mini(toggles.size(), setting_keys.size())):
 		var key: String = str(toggles[index].get_meta("setting_key", ""))

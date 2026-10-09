@@ -31,7 +31,7 @@ func run() -> void:
 	var second: Dictionary = observe(CASES[0], 421)
 	check(first == second,"Same seed, assembly, normal earned offers and controls replay every natural combat/pressure/XP observation exactly")
 	check(first.first_meaningful_contact > 0.0 and first.first_meaningful_contact < 20.0,"Opening meaningful rival pressure remains present before mixed escalation")
-	check(first.first_commit >= 28.0 and first.first_commit < 32.0,"Actual enemy commits begin within the earlier telegraphed opening window")
+	check(first.first_commit >= 0.65 and first.first_commit < 12.0,"First rival visibly positions/sets up before its finite observed-state commitment")
 	check(first.first_overlap >= 28.0 and first.first_overlap < 50.0,"Actual mixed overlap waits through the opening, then arrives promptly")
 	check(first.draft_count > 2 and first.level > 2,"Actual combat XP produces multiple ordinary investments without injected powers")
 	for draft: Dictionary in first.drafts:

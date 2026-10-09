@@ -40,6 +40,8 @@ func _button(intent: String, payload: String = "") -> Button:
 		var button: Button = node
 		if button.has_meta("intent") and str(button.get_meta("intent")) == intent:
 			if payload.is_empty() or str(button.get_meta("payload", "")) == payload: return button
+			var packet_value: Variant = button.get_meta("payload", null)
+			if intent == "packet_quantity" and packet_value is Dictionary and str(packet_value.get("quantity", "")) == payload and str(packet_value.get("kind", "")) == game.menus.selected_shop_product(): return button
 		# Production controls also expose starter IDs; intent metadata is optional.
 		if intent == "select_first_starter" and button.has_meta("starter_id") and str(button.get_meta("starter_id")) == payload: return button
 	return null

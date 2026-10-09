@@ -8,6 +8,16 @@ const ROW_HEIGHT: float = 72.0
 const LABEL_SIZE: int = 10
 var _state: Dictionary = {}
 var _rows: Dictionary = {"left": [], "right": []}
+var _left_origin: Vector2 = LEFT
+var _right_origin: Vector2 = RIGHT
+var _panel_width: float = WIDTH
+
+func set_layout(layout: Dictionary) -> void:
+	_left_origin = layout.get("state_left",LEFT)
+	_right_origin = layout.get("state_right",RIGHT)
+	_panel_width = float(layout.get("state_width",WIDTH))
+	size = layout.get("canvas_size",Vector2(800,480))
+	queue_redraw()
 
 func _ready() -> void:
 	theme = FrontEnd.make_theme()
@@ -48,8 +58,8 @@ func update_state(state: Dictionary) -> void:
 	queue_redraw()
 
 func diagnostic_snapshot() -> Dictionary:
-	return {"rows": _rows.duplicate(true), "state": _state.duplicate(true), "left": LEFT, "right": RIGHT,
-		"width": WIDTH, "row_height": ROW_HEIGHT, "native_view": [800, 480], "maximum_rows": 4,
+	return {"rows": _rows.duplicate(true), "state": _state.duplicate(true), "left": _left_origin, "right": _right_origin,
+		"width": _panel_width, "row_height": ROW_HEIGHT, "native_view": [800, 480], "maximum_rows": 4,
 		"label_size": LABEL_SIZE, "gameplay_writes": 0, "owns_timers": false, "reduced_flashing_pulses": 0}
 
 func _icon(id: String) -> Texture2D:
@@ -69,21 +79,21 @@ func _draw_column(origin: Vector2, rows: Array) -> void:
 	for index: int in range(rows.size()):
 		var row: Dictionary = rows[index]
 		var top: Vector2 = origin + Vector2(0,index*ROW_HEIGHT)
-		var box := Rect2(top,Vector2(WIDTH,66))
+		var box := Rect2(top,Vector2(_panel_width,66))
 		draw_rect(box,Color("14222c"))
 		draw_rect(box,Color("435963"),false,1)
-		for corner: Vector2 in [box.position,box.position+Vector2(WIDTH-5,0),box.position+Vector2(0,65),box.position+Vector2(WIDTH-5,65)]:
+		for corner: Vector2 in [box.position,box.position+Vector2(_panel_width-5,0),box.position+Vector2(0,65),box.position+Vector2(_panel_width-5,65)]:
 			draw_line(corner,corner+Vector2(4,0),row.color)
 		var icon: Texture2D = _icon(row.id)
 		if icon != null: draw_texture(icon,top+Vector2(4,5))
 		var label: String = {"anchor":"ANCHOR", "sink":"FORCE", "redline":"REDLINE", "orbit":"DRIVE"}.get(row.id,row.id.to_upper())
-		draw_string(font,top+Vector2(22,16),label,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-24,LABEL_SIZE,row.color)
+		draw_string(font,top+Vector2(22,16),label,HORIZONTAL_ALIGNMENT_LEFT,_panel_width-24,LABEL_SIZE,row.color)
 		var value: float = float(row.bars[0].value)
 		var detail: String = "HEAT %d%%" % roundi(value*100.0) if row.id == "redline" else "%d%%" % roundi(value*100.0)
 		if row.id == "anchor": detail = "STRESS%d" % roundi(value*100.0)
 		if row.id == "sink": detail = "%d / %d" % [roundi(float(_state.sink.get("stored",0))),roundi(float(_state.sink.get("capacity",0)))]
-		draw_string(font,top+Vector2(5,31),detail,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-10,LABEL_SIZE,Color("d1d9d7"))
-		var rect := Rect2(top+Vector2(5,38),Vector2(WIDTH-10,7))
+		draw_string(font,top+Vector2(5,31),detail,HORIZONTAL_ALIGNMENT_LEFT,_panel_width-10,LABEL_SIZE,Color("d1d9d7"))
+		var rect := Rect2(top+Vector2(5,38),Vector2(_panel_width-10,7))
 		draw_rect(rect,Color("293943"))
 		draw_rect(Rect2(rect.position,Vector2(roundf(rect.size.x*value),7)),row.bars[0].color)
 		for tick: int in range(1,4):
@@ -96,8 +106,8 @@ func _draw_column(origin: Vector2, rows: Array) -> void:
 			status = {"HIGH LOAD":"HIGH","RECHARGE":"RECOVER"}.get(status,status)
 			for threshold: float in [float(row.safe_stress),float(row.overload_stress)]:
 				draw_line(rect.position+Vector2(roundf(rect.size.x*threshold),0),rect.position+Vector2(roundf(rect.size.x*threshold),7),Color("dde0ce"))
-		draw_string(font,top+Vector2(5,59),status,HORIZONTAL_ALIGNMENT_LEFT,WIDTH-10,LABEL_SIZE,row.color)
+		draw_string(font,top+Vector2(5,59),status,HORIZONTAL_ALIGNMENT_LEFT,_panel_width-10,LABEL_SIZE,row.color)
 
 func _draw() -> void:
-	_draw_column(LEFT,_rows.left)
-	_draw_column(RIGHT,_rows.right)
+	_draw_column(_left_origin,_rows.left)
+	_draw_column(_right_origin,_rows.right)

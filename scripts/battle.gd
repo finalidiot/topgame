@@ -506,6 +506,14 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 	_contact_fx_cooldown = maxf(0.0, _contact_fx_cooldown - dt)
 	var player_world_direction: Vector2 = unproject_direction(screen_direction)
 	var ordered: Array[Dictionary] = _ordered_fighters()
+	# One bounded snapshot before any pilot changes intent. Neighbours never
+	# read another pilot's freshly computed decision in this same physics tick.
+	var pilot_context: Dictionary = {"arena":{"axis":WALL_AXIS,"sum":WALL_SUM,"gate":GATE_LIMIT},"neighbors":[]}
+	for other: Dictionary in ordered:
+		if pilot_context.neighbors.size() >= EnemyRoles.MAX_NEIGHBORS: break
+		if not _is_live(other) or not other.has("role"): continue
+		pilot_context.neighbors.append({"entity_id":other.entity_id,"pos":other.pos,"vel":other.vel,"radius":other.radius,
+			"role":other.role,"state":other.get("pilot",{}).get("state","assess"),"commit_heading":other.get("role_commit_heading",Vector2.ZERO)})
 	# Decide all controls before integrating any entity, so array order cannot
 	# make an AI read a target one simulation tick ahead of another AI.
 	for fighter: Dictionary in ordered:
@@ -513,7 +521,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 			swarm.decide(fighter, dt)
 		elif _is_live(fighter) and str(fighter["owner_id"]) != PLAYER_OWNER:
 			fighter["ai_burst_delay"] = float(fighter["ai_burst_delay"]) - dt
-			_update_ai(fighter, dt)
+			_update_ai(fighter, dt, pilot_context)
 	var player: Dictionary = player_entity()
 	if not player.is_empty() and _is_live(player) and _burst_buffer > 0.0 and float(player["cooldown"]) <= 0.0:
 		_attempt_burst(player, unproject_direction(_buffered_burst_direction))
@@ -522,7 +530,7 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 		if not _is_live(fighter) or str(fighter["owner_id"]) == PLAYER_OWNER or str(fighter["combatant_type"]) == "small_top":
 			continue
 		var target: Dictionary = _target_for(fighter)
-		if not target.is_empty() and float(fighter["ai_burst_delay"]) <= 0.0 and float(fighter["cooldown"]) <= 0.0:
+		if not target.is_empty() and (fighter.has("role") or float(fighter["ai_burst_delay"]) <= 0.0) and float(fighter["cooldown"]) <= 0.0:
 			var ai_pos: Vector2 = fighter["pos"]
 			if (EnemyRoles.wants_burst(fighter,target,elapsed) if fighter.has("role") else ai_pos.distance_to(target["pos"]) < 105.0 and absf(ai_pos.x - ai_pos.y) < 195.0):
 				_attempt_burst(fighter, fighter["ai_direction"])
@@ -562,8 +570,12 @@ func _step(dt: float, screen_direction: Vector2, brake: bool) -> void:
 	powers.flush_contact_powers()
 	if continuous != null: continuous.economy.outcomes()
 	powers.recover()
+	impact_feedback.observe_grinding(ordered,dt)
 	swarm.account_outcomes()
 	_check_result()
+	# Collection follows every resolved fixed-tick path, including curved motion
+	# between render frames, before a progression menu can suspend the battle.
+	if is_instance_valid(floor_pickups): floor_pickups.update_simulation()
 	powers.end_tick(battle_status == "finished")
 	if continuous != null: continuous.economy.end_tick(dt)
 	_collect_progression_outcomes()
@@ -633,13 +645,13 @@ static func unproject_direction(screen_direction: Vector2) -> Vector2:
 	var world: Vector2 = Vector2(screen_direction.y + screen_direction.x * 0.5, screen_direction.y - screen_direction.x * 0.5)
 	return world.normalized() * minf(1.0, screen_direction.length())
 
-func _update_ai(rival: Dictionary, dt: float) -> void:
+func _update_ai(rival: Dictionary, dt: float, context: Dictionary = {}) -> void:
 	if rival.has("role"):
 		rival.ai_clock -= dt
 		if float(rival.ai_clock) <= 0.0:
-			rival.ai_clock = 0.22
+			rival.ai_clock = EnemyRoles.decision_interval(rival,elapsed)
 			var target: Dictionary = _target_for(rival)
-			rival.ai_direction = EnemyRoles.direction(rival,target,elapsed) if not target.is_empty() else Vector2.ZERO
+			rival.ai_direction = EnemyRoles.direction(rival,target,elapsed,context) if not target.is_empty() else Vector2.ZERO
 		return
 	rival["ai_clock"] = float(rival["ai_clock"]) - dt
 	if float(rival["ai_clock"]) > 0.0:
@@ -671,9 +683,16 @@ func _update_ai(rival: Dictionary, dt: float) -> void:
 	rival["ai_direction"] = desired.limit_length(0.91 + minf(float(difficulty - 1) * 0.02, 0.08))
 
 func _ai_should_brake(rival: Dictionary) -> bool:
+	if rival.has("role"): return EnemyRoles.wants_brake(rival,_target_for(rival),elapsed)
 	var own_position: Vector2 = rival["pos"]
 	var own_velocity: Vector2 = rival["vel"]
 	return absf(own_position.x - own_position.y) > 212.0 and own_position.dot(own_velocity) > 0.0
+
+func grind_audio_snapshot() -> Dictionary:
+	var player: Dictionary = player_entity()
+	if paused or not visible or battle_status != "battle" or _hit_stop > 0.0 or player.is_empty() or not str(player.outcome).is_empty():
+		return {"active":false,"strength":0.0,"pitch":1.0,"pairs":0}
+	return impact_feedback.grind_snapshot()
 
 ## Source-aware writes. Standalone modes retain their exact previous arithmetic.
 func spend_rpm(fighter: Dictionary, amount: float, source: String) -> void:
@@ -684,7 +703,7 @@ func spend_rpm(fighter: Dictionary, amount: float, source: String) -> void:
 		fighter.energy = fighter.rpm
 
 func gain_rpm(fighter: Dictionary, amount: float, source: String, small: bool = false) -> float:
-	if continuous != null and int(fighter.entity_id) == player_entity_id:
+	if continuous != null:
 		return continuous.economy.gain(fighter,amount,source,small)
 	else:
 		var before: float = fighter.rpm
@@ -803,7 +822,7 @@ func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt:
 	var turning_loss: float = 0.0
 	if component_motion and direction.length_squared() > 0.001 and velocity_world.length() > 1.0:
 		turning_loss = float(physical.turn_cost)*(1.0-clampf(direction.normalized().dot(velocity_world.normalized()),-1.0,1.0))*velocity_world.length()/230.0
-	if continuous != null and int(fighter.entity_id) == player_entity_id:
+	if continuous != null:
 		continuous.economy.running_costs(fighter,velocity_world.length(),direction,braking,float(modifiers.drain),dt)
 		if turning_loss > 0.0: spend_rpm(fighter,turning_loss*dt,"steering")
 		rpm = fighter.rpm
@@ -1006,6 +1025,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		"first_player": first.owner_id == PLAYER_OWNER, "second_player": second.owner_id == PLAYER_OWNER}
 	beasts.accept_impact(beast_impact)
 	full_top_impact_accepted.emit(beast_impact)
+	if first.has("role"): EnemyRoles.observe_contact(first,second,elapsed,severity)
+	if second.has("role"): EnemyRoles.observe_contact(second,first,elapsed,severity)
 	roster.contact(first,second,severity,normal,va,vb)
 	_progression_contact(first, second, severity)
 	contact_accepted.emit(int(first["entity_id"]), int(second["entity_id"]))
@@ -1025,6 +1046,7 @@ func _apply_impact_pulse(pulse: Dictionary) -> void:
 		_shake_time = maxf(_shake_time,0.11)
 		_shake_strength = maxf(_shake_strength,float(pulse.shake))
 	if not str(pulse.get("cue", "")).is_empty(): event_sfx.emit(str(pulse.cue))
+	if not str(pulse.get("crack_cue", "")).is_empty(): event_sfx.emit(str(pulse.crack_cue))
 
 func _present_elimination(fighter: Dictionary) -> void:
 	_apply_impact_pulse(impact_feedback.accept_elimination(fighter))
@@ -1592,16 +1614,12 @@ func _draw_shadow(fighter: Dictionary) -> void:
 			draw_rect(Rect2(grounded+Vector2(-5+index*4,-42),Vector2(3,4)),side_color)
 
 
-func _draw_fighter(fighter: Dictionary) -> void:
-	if fighter.combatant_type == "small_top":
-		PowerVisuals.draw_small(self, fighter, project(fighter.pos,fighter.height), _visual_time)
-		return
-	PowerVisuals.draw_aura(self, fighter, project(fighter.pos,fighter.height), _visual_time)
+func full_top_render_pose(fighter: Dictionary) -> Dictionary:
+	# Rendering and floor pickup overlap share the authored rig's actual pose.
+	# This is presentation geometry; the top collision solver stays unchanged.
 	var position_world: Vector2 = fighter["pos"]
 	var height: float = float(fighter["height"])
 	var contact: Vector2 = project(position_world, height).round()
-	if contact.x < -55.0 or contact.x > 695.0 or contact.y < -55.0 or contact.y > 410.0:
-		return
 	var velocity_world: Vector2 = fighter["vel"]
 	var velocity_screen: Vector2 = Vector2(velocity_world.x - velocity_world.y, (velocity_world.x + velocity_world.y) * 0.5)
 	var lean: Vector2 = (velocity_screen / 78.0).limit_length(3.0)
@@ -1624,6 +1642,25 @@ func _draw_fighter(fighter: Dictionary) -> void:
 		lean = pose.lean
 		stance += float(pose.stance)
 	var body_origin: Vector2 = contact - Vector2(24.0, 40.0)
+	return {"contact":contact,"lean":lean,"stance":stance,"body_origin":body_origin,
+		"blade_origin":body_origin+lean+Vector2(0.0,stance),"phase":phase,
+		"velocity_screen":velocity_screen,"wobble":wobble,"build":build}
+
+func _draw_fighter(fighter: Dictionary) -> void:
+	if fighter.combatant_type == "small_top":
+		PowerVisuals.draw_small(self, fighter, project(fighter.pos,fighter.height), _visual_time)
+		return
+	PowerVisuals.draw_aura(self, fighter, project(fighter.pos,fighter.height), _visual_time)
+	var rig_pose: Dictionary = full_top_render_pose(fighter)
+	var contact: Vector2 = rig_pose.contact
+	if contact.x < -55.0 or contact.x > 695.0 or contact.y < -55.0 or contact.y > 410.0: return
+	var velocity_screen: Vector2 = rig_pose.velocity_screen
+	var lean: Vector2 = rig_pose.lean
+	var wobble: float = rig_pose.wobble
+	var build: Dictionary = rig_pose.build
+	var stance: float = rig_pose.stance
+	var phase: int = rig_pose.phase
+	var body_origin: Vector2 = rig_pose.body_origin
 	var player: bool = str(fighter["team_id"]) == PLAYER_TEAM
 	var tint: Color = Color.WHITE if player else Color(1.0, 0.88, 0.72)
 	if str(fighter["outcome"]) == "spin_out" and str(build["blade"]) == "balance" and str(build["ratchet"]) == "mid" and str(build["bit"]) == "ball":
@@ -1651,7 +1688,7 @@ func _draw_fighter(fighter: Dictionary) -> void:
 	if ratchet_texture != null:
 		draw_texture(ratchet_texture, body_origin + (lean * 0.55).round(), tint)
 	if blade_texture != null:
-		var blade_origin: Vector2 = body_origin + lean + Vector2(0.0, stance)
+		var blade_origin: Vector2 = rig_pose.blade_origin
 		var source: Rect2 = Rect2(float(phase) * 48.0, 0.0, 48.0, 48.0)
 		draw_texture_rect_region(blade_texture, Rect2(blade_origin, Vector2(48.0, 48.0)), source, tint)
 		if float(fighter["burst_time"]) > 0.0:

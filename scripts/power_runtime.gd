@@ -1178,7 +1178,7 @@ func _run_player(fighter: Dictionary) -> bool:
 	return _host().get("continuous") != null and int(fighter.entity_id) == int(_host().player_entity_id)
 
 func _modern(fighter: Dictionary) -> bool:
-	return _run_player(fighter) or _host().get("ability_rebalance") == true
+	return _run_player(fighter) or (_host().get("continuous") != null and fighter.get("combatant_type","") == "full_top" and fighter.has("role")) or _host().get("ability_rebalance") == true
 
 ## The real reserve is also the output. Only a live overclock can hold excess;
 ## expiry vents it through the same source-accounted spending path as heat.

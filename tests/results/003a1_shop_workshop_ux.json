@@ -1,0 +1,123 @@
+{
+  "schema": "003a1-shop-workshop-ux-correction-v1",
+  "starting_sha": "2c06290591371035b5b1c68a0f5b0c565523d80b",
+  "scope": "Parts B/C Shop and Workshop correction only; independent per-product quantities and truthful direct navigation, existing durable batch architecture preserved. Initial wallets/owned component and synthetic input are labelled fixtures. No physical hardware acceptance claim.",
+  "changed_source_sha256": {
+    "scripts/main.gd": "f1a2adda141fdf6140bb6c623dabbf90d91914b7dcbcdcc0914b0d9f91b0cf49",
+    "scripts/menus.gd": "f8ab9534bc5008f98fa17359003f58f139ebb4b64bdafac8dc41ae71bfda18e8",
+    "tests/test_collection_ui.gd": "f8dbad49441334525c7a862661762fb3dce015cbca86a1f13a12ef5e2017e2a3",
+    "tests/test_shop_progression.gd": "a4b2d6b911f89154e2a77b01d3ab04c660e309b96ee050a481c6cbd0dae7d017",
+    "tests/test_shop_ux_003a1.gd": "b1dd89903e240cf91e93ccbf320138c443516c1ea8f9b429c6d1d94a2e2ab151",
+    "tests/test_shop_focus_cost_003a1.gd": "1efa76ef6ebbdd2dc77390d390bc123869c1b29a61df5b62ca8f66ea11225c45",
+    "tools/capture/shop_workshop_003a1.py": "385c186a7091028feb51d324aa5cf9beb9faa4893e87294b43980de7bcdee22f",
+    "docs/design/WORKBENCH_HUB_FUTURE.md": "8a7581d676ac25852079bdaa046999a964a98e828e9c5dccaeb386136f74f856"
+  },
+  "unchanged_packet_core_sha256": {
+    "scripts/packet_economy.gd": "6c5a13871c2bf35c9ddef556c583472a90c2d70134d14b8407f6ba8ec3a643f9",
+    "scripts/collection_save.gd": "6b595cd3c43bcefae156218b91b3917b3ffab10708d223b6e05e61d739ba1daf",
+    "scripts/packet_view.gd": "f84fcf651594b04593093d7275bbd276671123f2e707c6d6299f1c8dfc4f830f"
+  },
+  "regression": {
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_route_regression_20261009_111800_818079.json",
+    "sha256": "e722e493cd87ebe3882df0ee36cda340ebd4b6bd403c4d6e8156d41e4eb9823f",
+    "scripts": [
+      {
+        "script": "test_shop_progression.gd",
+        "checks": 792
+      },
+      {
+        "script": "test_bulk_packet_transactions_003a1.gd",
+        "checks": 299
+      },
+      {
+        "script": "test_packet_transactions.gd",
+        "checks": 174
+      },
+      {
+        "script": "test_collection_save.gd",
+        "checks": 371
+      },
+      {
+        "script": "test_collection_ui.gd",
+        "checks": 2362
+      },
+      {
+        "script": "test_bulk_packet_touch_003a1.gd",
+        "checks": 113
+      },
+      {
+        "script": "test_packet_art_audio.gd",
+        "checks": 170
+      }
+    ],
+    "total_checks": 4281,
+    "player_unchanged": true,
+    "source_unchanged": true
+  },
+  "final_current_ui": {
+    "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_ui_final_20261009_111912_970862.json",
+    "sha256": "4a8735bab74678ec59bfb0b30998f6e48d91ed41c18458b1e6d83ae540b05a7e",
+    "gui_checks": 1754,
+    "constrained_wallet_focus_checks": 21,
+    "player_unchanged": true,
+    "source_unchanged": true
+  },
+  "videos": [
+    {
+      "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_bulk_shop_ux.mp4",
+      "sha256": "6a1aa81ded2c805e89f9eaacf93a50f2fed6d67c91a2f8fefbf3406cc4569ee8",
+      "seconds": 24.73,
+      "native_menu": [
+        640,
+        360
+      ],
+      "nearest_scale": 2,
+      "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_ux_20261009_110318_254121.json",
+      "manifest_sha256": "4adda93038ef83452f03971ae69a9b4898f83b27ce872f9e6435c06efbe775f0",
+      "rendered_checks": 879,
+      "real_player_unchanged": true,
+      "immutable_frozen_source": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\003a1_shop_ux_20261009_110318_254121_source"
+    },
+    {
+      "video": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_workshop_route.mp4",
+      "sha256": "56331fe96636c77e9b5b55340a60ebb5ee55af48752524a135b219c6889380c2",
+      "seconds": 9.95,
+      "native_menu": [
+        640,
+        360
+      ],
+      "nearest_scale": 2,
+      "manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_workshop_ux_20261009_110318_243725.json",
+      "manifest_sha256": "12467309d3015f5970583a6e28a346466a8893715ed4222a93aa1261c850fef3",
+      "rendered_checks": 876,
+      "real_player_unchanged": true,
+      "immutable_frozen_source": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\003a1_workshop_ux_20261009_110318_243725_source"
+    }
+  ],
+  "post_capture_corrections": "Root subsequently added a repeated-size desktop layout guard. A constrained100-CREDIT wallet then exposed focus remaining on disabled Buy after quantity became unaffordable; the narrow live focus-graph correction passes21checks and1754current GUI checks. The positive films remain their original immutable provenance; no source hashes retroactively changed. Both filmed wallets exceed maximum x5 prices throughout their route traces, so the new affordability-change focus branch was never needed in those filmed flows.",
+  "filmed_positive_wallets": {
+    "shop": {
+      "minimum_credits": 856,
+      "minimum_salvage": 401
+    },
+    "workshop": {
+      "minimum_credits": 1000,
+      "minimum_salvage": 500
+    }
+  },
+  "preserved_failure_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_focus_cost_initial_20261009.json",
+  "audio_review": {
+    "shop_mean_db": -40.4,
+    "shop_peak_db": -18.4,
+    "workshop_mean_db": -44.7,
+    "workshop_peak_db": -26.1,
+    "logs": [
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_shop_ux_20261009_110318_audio_mix.log",
+      "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_workshop_ux_20261009_110318_audio_mix.log"
+    ]
+  },
+  "future_design_document": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\design\\WORKBENCH_HUB_FUTURE.md",
+  "builds_commits_push_or_promotion": "None performed by this subtask; root owns final integration and delivery.",
+  "needs_integration": "Generate tests/test_shop_focus_cost_003a1.gd.uid with the final canonical editor import. Run new test_shop_ux_003a1.gd with explicit --mode=all --diagnostic --profile=<new QA save> --report=<new QA JSON>.",
+  "created_utc": "2026-10-09T11:22:24.196370+00:00"
+}
