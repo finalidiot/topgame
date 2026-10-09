@@ -3,7 +3,12 @@ class_name PowerRuntime
 
 const PowerCatalog = preload("res://scripts/run_powers.gd")
 const Defence = preload("res://scripts/defence_runtime.gd")
+const GhostRoutes = preload("res://scripts/ghost_circuit_routes.gd")
 var defence: RefCounted = Defence.new()
+var _ghost_routes: RefCounted = GhostRoutes.new()
+var _ghost_index_time: float = -1.0
+var _ghost_index_builds: int = 0
+var _ghost_searches: int = 0
 
 ## Semantic hooks are called explicitly by battle's fixed tick; presentation
 ## never feeds back into this runtime. Requests cannot recursively emit contacts.
@@ -31,6 +36,7 @@ var _next_tick_pulses: Array[Dictionary] = []
 var _chain_counts: Dictionary = {}
 var _eliminated_ids: Dictionary = {}
 var _stopped: bool = false
+var _tick_dt: float = 0.0
 
 # Task 002C.5 migrates the continuous player; standalone accepted fixtures keep
 # their prior contract. Practice/semantic hosts opt in through ability_rebalance.
@@ -65,6 +71,10 @@ const GHOST_AREA: float = 1300.0
 const GHOST_EXTENT: float = 32.0
 const GHOST_GAP_RATIO: float = 0.22
 const GHOST_COOLDOWN: float = 3.5
+const ORBIT_FULL_REGEN_I: float = 0.009
+const ORBIT_FULL_REGEN_II: float = 0.012
+# CombatImpactFeedback uses this same accepted severity for its hard tier.
+const CHAIN_HARD_SEVERITY: float = 0.75
 
 func setup(battle: Object) -> void:
 	_battle = weakref(battle)
@@ -72,6 +82,11 @@ func setup(battle: Object) -> void:
 	time = 0.0
 	_next_event_id = 0
 	_stopped = false
+	_tick_dt = 0.0
+	_ghost_index_time = -1.0
+	_ghost_index_builds = 0
+	_ghost_searches = 0
+	_ghost_routes.routes.clear()
 	_states.clear()
 	traces.clear()
 	events.clear()
@@ -118,6 +133,7 @@ func setup(battle: Object) -> void:
 		fighter["clutch_active"] = false
 		fighter["clutch_recovery_time"] = 0.0
 		fighter["ghost_preview"] = {}
+		fighter["ghost_route_advice"] = {}
 
 func _host() -> Object:
 	return _battle.get_ref() if _battle != null else null
@@ -155,6 +171,7 @@ func _state(fighter: Dictionary) -> Dictionary:
 			"clutch_targets": {}, "clutch_recovery_until": 0.0,
 			"clutch_gain_left": 0.0,
 			"trace_previous": Vector2(fighter["pos"]),
+			"ghost_previous": Vector2(fighter["pos"]),
 			"diagnostic": {"active_seconds": 0.0, "overcap_seconds": 0.0, "max_overcap": 0.0, "overcap_integral": 0.0, "heat_max": 0.0, "high_speed_contacts": 0, "failed_commitments": 0, "commitments": 0, "rpm_gained": 0.0, "rpm_spent": 0.0, "ring_outs_active": 0, "spin_outs_active": 0}}
 	return _states[id]
 
@@ -202,6 +219,7 @@ func _fx(kind: String, position: Vector2, direction: Vector2 = Vector2.RIGHT, st
 		_host().add_power_fx(kind, position, direction, strength)
 
 func begin_tick(dt: float) -> void:
+	_tick_dt = maxf(0.0,dt)
 	if _stopped:
 		return
 	time += dt
@@ -236,6 +254,7 @@ func begin_tick(dt: float) -> void:
 		traces[index]["life"] = maxf(0.0, float(traces[index]["expires_at"]) - time)
 		if float(traces[index]["life"]) <= 0.0:
 			traces.remove_at(index)
+			_ghost_index_time = -1.0
 	var pulses: Array[Dictionary] = _next_tick_pulses.duplicate(true)
 	_next_tick_pulses.clear()
 	for pulse: Dictionary in pulses:
@@ -773,16 +792,24 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 		_request(target, normal * ((90.0 if _small(target) else 34.0) if rank(owner, "iron_comet") >= 2 else (75.0 if _small(target) else 25.0)), _power_cause(cause, "iron_comet", int(owner["entity_id"])))
 		_record("comet_release", int(owner["entity_id"]), int(target["entity_id"]), event_id)
 		_fx("comet_release", position, normal, 1.0, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
-	if _has(owner, "chain_impact") and not _small(target) and severity >= 0.60 and time >= float(state["chain_ready"]):
+	if _has(owner, "chain_impact") and severity >= CHAIN_HARD_SEVERITY and time >= float(state["chain_ready"]):
 		state["chain_until"] = time + (3.0 if rank(owner, "chain_impact") >= 2 else 2.0)
 		state["chain_ready"] = time + (1.65 if rank(owner, "chain_impact") >= 2 else 2.0)
 		state["chain_target"] = int(target["entity_id"])
 		state["chain_cause"] = cause
 		_record("chain_prime", int(owner["entity_id"]), int(target["entity_id"]), event_id)
+		# Accepted physical work offers one delayed outward pulse, never a
+		# knockout or a recursive synthetic contact callback.
+		var pulse_cause: Dictionary = _power_cause(cause, "chain_impact", int(target.entity_id))
+		pulse_cause.generation = 1
+		_next_tick_pulses.append({"pos":position,"cause":pulse_cause})
 
 func after_movement() -> void:
 	if _stopped:
 		return
+	for fighter: Dictionary in _fighters():
+		_orbit_full_carve(fighter)
+	var ghost_emissions: Dictionary = {}
 	for owner: Dictionary in _fighters():
 		if not _live(owner) or not _has(owner, "afterimage"):
 			continue
@@ -802,7 +829,9 @@ func after_movement() -> void:
 			state["trace_path"] = [position]
 		elif time >= float(state["trace_ready"]) and float(owner["rpm"]) >= (0.002 if level == 1 else 0.003) and (not _modern(owner) or Vector2(path.front()).distance_to(position) >= 6.0):
 			state["trace_ready"] = time + (0.14 if _modern(owner) else 0.18)
+			var paid_before: float = float(owner.rpm)
 			_spend(owner,(0.0008 if level == 1 else 0.0011) if _modern(owner) else (0.002 if level == 1 else 0.003))
+			var paid_rpm: float = maxf(0.0,paid_before-float(owner.rpm))
 			owner["energy"] = owner["rpm"]
 			var start: Vector2 = path.front()
 			var direction: Vector2 = _outward(start, position, Vector2(owner["vel"]).normalized())
@@ -811,8 +840,9 @@ func after_movement() -> void:
 				"owner_entity_id": int(owner["entity_id"]), "owner_id": str(owner["owner_id"]), "team_id": str(owner["team_id"]),
 				"rank": level, "mutation": branch, "energized": false, "extended_route": _modern(owner),
 				"created_at": time, "expires_at": time + lifetime, "life": lifetime, "max_life": lifetime,
-				"cause": _owned_effect_cause(owner, "afterimage")}
+				"cause": _owned_effect_cause(owner, "afterimage"), "paid_rpm":paid_rpm}
 			traces.append(trace)
+			_ghost_index_time = -1.0
 			trace_emitted = true
 			state["trace_origin"] = position
 			state["trace_path"] = [position]
@@ -832,9 +862,15 @@ func after_movement() -> void:
 		# Closure is evaluated only after its closing movement has become a
 		# paid, visible live trace. Low-speed returns cannot draw invisible chords.
 		if branch == "ghost_circuit":
-			if _modern(owner): _modern_circuit(owner, trace_emitted)
+			if _modern(owner): ghost_emissions[int(owner.entity_id)] = trace_emitted
 			elif trace_emitted: _close_circuit(owner)
+		state["ghost_previous"] = state["trace_previous"]
 		state["trace_previous"] = position
+	# All owners have now emitted their actual paid paths. The bounded shared
+	# index is built once, and only rebuilt after a successful consumption.
+	for owner: Dictionary in _fighters():
+		if ghost_emissions.has(int(owner.entity_id)):
+			_modern_circuit(owner,bool(ghost_emissions[int(owner.entity_id)]))
 	for trace: Dictionary in traces:
 		var owner: Dictionary = _host().entity(int(trace["owner_entity_id"]))
 		if not _live(owner):
@@ -1082,10 +1118,7 @@ func eliminated(fighter: Dictionary, reason: String) -> void:
 	var cause: Dictionary = cause_for(fighter)
 	if cause.is_empty() or str(cause.get("owner_id", "")) != "player":
 		return
-	var owner: Dictionary = _host().entity(int(cause["owner_entity_id"]))
-	if not _live(owner) or not _has(owner, "chain_impact"):
-		return
-	_eliminations.append({"pos": Vector2(fighter["pos"]), "source": int(fighter["entity_id"]), "cause": cause})
+	# Credited knockouts retain provenance but do not activate Chain Impact.
 
 ## Called after recovery, terminal evaluation and objective/timeout evaluation.
 func end_tick(terminal: bool) -> void:
@@ -1176,6 +1209,20 @@ func _gain(fighter: Dictionary, amount: float, source: String, small: bool = fal
 
 func _run_player(fighter: Dictionary) -> bool:
 	return _host().get("continuous") != null and int(fighter.entity_id) == int(_host().player_entity_id)
+
+## RosterRuntime has just updated CARVE from actual heading change. At full
+## charge, holding a controlled moving arc earns spin through the same capped
+## player/NPC recovery buckets. No owner receives anything at rest or on decay.
+func _orbit_full_carve(fighter: Dictionary) -> void:
+	if not _live(fighter) or not _has(fighter,"orbit_drive") or _tick_dt <= 0.0: return
+	if _host().get("paused") == true: return
+	var status: Variant = _host().get("battle_status")
+	if status != null and status != "battle": return
+	if float(fighter.get("orbit_charge",0.0)) < 1.0 or Vector2(fighter.vel).length() <= 80.0 or float(_state(fighter).motion_input) <= 0.20: return
+	var gained: float = _gain(fighter,(ORBIT_FULL_REGEN_I if rank(fighter,"orbit_drive") == 1 else ORBIT_FULL_REGEN_II)*_tick_dt,"orbit_drive")
+	if gained > 0.0:
+		fighter.energy = fighter.rpm
+		_record("orbit_full_recovery",int(fighter.entity_id))
 
 func _modern(fighter: Dictionary) -> bool:
 	return _run_player(fighter) or (_host().get("continuous") != null and fighter.get("combatant_type","") == "full_top" and fighter.has("role")) or _host().get("ability_rebalance") == true
@@ -1445,87 +1492,87 @@ func _clutch_contact(owner: Dictionary, target: Dictionary, severity: float, nor
 	_record("clutch_recover", int(owner.entity_id), int(target.entity_id))
 	_fx("clutch_recover", position, normal, gained)
 
-## Only a chronological, spatially connected paid route may offer a bridge.
-## Preview includes its current connected movement buffer; activation waits
-## until that movement is itself emitted as a paid visible trace.
+## Live paid self/hostile route closure. The index never changes trace owner
+## or cause; successful activation consumes only the used paid edge intervals.
 func _modern_circuit(owner: Dictionary, trace_emitted: bool) -> void:
 	var state: Dictionary = _state(owner)
-	var was_preview: bool = not owner.get("ghost_preview", {}).is_empty()
+	var was_preview: bool = not owner.get("ghost_preview",{}).is_empty()
+	var previous_preview: Dictionary = owner.get("ghost_preview",{})
+	var previous_advice: Dictionary = owner.get("ghost_route_advice",{})
 	owner["ghost_preview"] = {}
-	if time < float(state.circuit_ready) or Vector2(owner.vel).length() <= GHOST_SPEED: return
-	var route: Array[Vector2] = []
-	var stamps: Array[float] = []
-	for trace: Dictionary in traces:
-		if int(trace.owner_entity_id) != int(owner.entity_id) or float(trace.created_at) <= float(state.circuit_after): continue
-		if not route.is_empty() and route.back().distance_to(Vector2(trace.points[0])) > GHOST_CONTINUITY:
-			route.clear()
-			stamps.clear()
-		for point: Vector2 in trace.points:
-			if route.is_empty() or route.back().distance_to(point) >= 3.0:
-				route.append(point)
-				stamps.append(float(trace.created_at))
-	var current: Array = state.trace_path
-	if route.size() < 8 or current.is_empty() or route.back().distance_to(Vector2(current[0])) > GHOST_CONTINUITY: return
-	for point: Vector2 in current:
-		if route.back().distance_to(point) >= 3.0:
-			route.append(point)
-			stamps.append(time)
-	while route.size() > CIRCUIT_POINT_LIMIT:
-		route.pop_front()
-		stamps.pop_front()
-	if route.size() < 10 or route.back().distance_to(Vector2(owner.pos)) > GHOST_EMIT_GAP: return
-	var candidate: Dictionary = {}
-	var best: float = GHOST_PREVIEW
-	for index: int in range(route.size() - 8):
-		if time - stamps[index] < GHOST_AGE: continue
-		var socket: Vector2 = Geometry2D.get_closest_point_to_segment(owner.pos, route[index], route[index + 1])
-		var gap: float = socket.distance_to(Vector2(owner.pos))
-		if gap > best: continue
-		var polygon: PackedVector2Array = PackedVector2Array([socket])
-		polygon.append_array(PackedVector2Array(route.slice(index + 1)))
-		var perimeter: float = 0.0
-		var signed_area: float = 0.0
-		var bounds: Rect2 = Rect2(polygon[0], Vector2.ZERO)
-		var center: Vector2 = Vector2.ZERO
-		for vertex: int in range(polygon.size()):
-			var next: Vector2 = polygon[(vertex + 1) % polygon.size()]
-			perimeter += polygon[vertex].distance_to(next)
-			signed_area += polygon[vertex].cross(next)
-			bounds = bounds.expand(polygon[vertex])
-			center += polygon[vertex]
-		if perimeter < GHOST_PERIMETER or absf(signed_area) * 0.5 < GHOST_AREA or bounds.size.x < GHOST_EXTENT or bounds.size.y < GHOST_EXTENT or gap / perimeter > GHOST_GAP_RATIO: continue
-		best = gap
-		candidate = {"socket": socket, "gap": gap, "polygon": polygon, "stamp": stamps[index], "center": center / float(polygon.size())}
+	owner["ghost_route_advice"] = {}
+	if not _live(owner) or mutation(owner,"afterimage") != "ghost_circuit" or time < float(state.circuit_ready) or Vector2(owner.vel).length() <= GHOST_SPEED: return
+	# Activation is checked on every actual paid emission. Between emissions,
+	# preview/advice geometry is sampled at20Hz and only its local endpoint is
+	# refreshed. This avoids rebuilding/searching all routes every fixed frame.
+	if not trace_emitted and time<float(state.get("ghost_search_at",-1.0)):
+		if not previous_preview.is_empty() and time<float(previous_preview.expires_at):
+			previous_preview.b=Vector2(owner.pos)
+			if Vector2(previous_preview.a).distance_to(owner.pos)<=GHOST_PREVIEW:owner.ghost_preview=previous_preview
+		if not previous_advice.is_empty() and time<float(previous_advice.expires_at):owner.ghost_route_advice=previous_advice
+		return
+	state["ghost_search_at"] = time+.05
+	if _ghost_index_time < 0.0:
+		_ghost_routes.rebuild(traces,time)
+		_ghost_index_time = time
+		_ghost_index_builds += 1
+	_ghost_searches += 1
+	_ghost_routes.candidate_edges = 0
+	# One short approach/bridge hint, exposed only to an actual Ghost owner.
+	# The general pilot ignores it outside its safe positioning state.
+	var hint: Dictionary = _ghost_routes.observable_hint(owner,time,72.0)
+	var latch: Dictionary = state.get("ghost_hint_latch",{})
+	if not hint.is_empty():
+		if Vector2(owner.pos).distance_to(hint.tail)<=GhostRoutes.ATTACH:
+			state["ghost_hint_latch"] = {"route_owner_entity_id":hint.route_owner_entity_id,"tail":hint.tail,"socket":hint.socket,"expires_at":time+.65}
+			latch=state.ghost_hint_latch
+		var bridged: bool = not latch.is_empty() and time<float(latch.expires_at) and int(latch.route_owner_entity_id)==int(hint.route_owner_entity_id) and Vector2(latch.tail).distance_to(hint.tail)<8.0
+		owner.ghost_route_advice = {"point":latch.socket if bridged else hint.tail,"expires_at":hint.expires_at,"route_owner_entity_id":hint.route_owner_entity_id,"paid_visible_live":true,"phase":"bridge" if bridged else "approach"}
+	var candidate: Dictionary = _ghost_routes.candidate(owner,Vector2(state.ghost_previous),time,GHOST_PREVIEW,GHOST_AGE,GHOST_PERIMETER,GHOST_AREA,GHOST_EXTENT,GHOST_GAP_RATIO,state.trace_path)
 	if candidate.is_empty(): return
-	owner.ghost_preview = {"a": candidate.socket, "b": Vector2(owner.pos), "strength": clampf(1.0 - float(candidate.gap) / GHOST_PREVIEW, 0.0, 1.0), "expires_at": time + 0.2}
+	var preview_expires: float = time+.2
+	for piece: Dictionary in candidate.source.pieces.slice(int(candidate.piece_index)):
+		preview_expires=minf(preview_expires,float(piece.trace.expires_at))
+	owner.ghost_preview = {"a":candidate.socket,"b":Vector2(owner.pos),"strength":clampf(1.0-float(candidate.gap)/GHOST_PREVIEW,0.0,1.0),"expires_at":preview_expires,"route_owner_entity_id":candidate.route_owner,"hijacked":candidate.hijacked}
 	if not was_preview:
-		_record("ghost_preview", int(owner.entity_id))
-		_fx("ghost_preview", owner.pos, (Vector2(candidate.socket) - Vector2(owner.pos)).normalized())
-	if not trace_emitted or float(candidate.gap) > GHOST_CLOSURE: return
-	state.circuit_ready = time + GHOST_COOLDOWN
+		_record("ghost_preview",int(owner.entity_id))
+		_fx("ghost_preview",owner.pos,(Vector2(candidate.socket)-Vector2(owner.pos)).normalized())
+	if not trace_emitted or float(candidate.gap) > GHOST_CLOSURE or not bool(candidate.physically_closed): return
+	state.circuit_ready = time+GHOST_COOLDOWN
 	state.circuit_after = time
-	state.circuit_surge_until = time + 0.8
+	state.circuit_surge_until = time+0.8
 	owner.ghost_preview = {}
+	var used: Array[Dictionary] = _ghost_routes.consume(candidate)
+	# Any later closer in this same fixed tick must see the consumed geometry.
+	_ghost_index_time = -1.0
 	var assigned: bool = false
-	for trace: Dictionary in traces:
-		if int(trace.owner_entity_id) != int(owner.entity_id): continue
-		trace.erase("circuit_points")
-		if float(trace.created_at) >= float(candidate.stamp):
-			trace.energized = true
-			if not assigned:
-				trace["circuit_points"] = candidate.polygon
-				trace["presentation_circuit_age"] = 0.0
-				assigned = true
+	for piece: Dictionary in used:
+		var trace: Dictionary = piece.trace
+		if int(trace.owner_entity_id) == int(owner.entity_id): trace.energized = true
+		if not assigned:
+			trace["circuit_points"] = candidate.polygon
+			trace["circuit_energized"] = true
+			trace["circuit_owner_entity_id"] = int(owner.entity_id)
+			trace["circuit_team_id"] = str(owner.team_id)
+			trace["circuit_hijacked"] = bool(candidate.hijacked)
+			trace["presentation_circuit_age"] = 0.0
+			assigned = true
 	var affected: int = 0
+	var cause: Dictionary = _owned_effect_cause(owner,"ghost_circuit")
 	for target: Dictionary in _fighters():
 		if affected >= CIRCUIT_TARGET_LIMIT: break
-		if not _live(target) or not _opposes(owner, target) or not Geometry2D.is_point_in_polygon(target.pos, candidate.polygon): continue
+		if not _live(target) or not _opposes(owner,target) or not Geometry2D.is_point_in_polygon(target.pos,candidate.polygon): continue
 		affected += 1
-		_request(target, _outward(candidate.center, target.pos, Vector2(owner.vel).normalized()) * (110.0 if _small(target) else 88.0), _owned_effect_cause(owner, "ghost_circuit"))
-		target.wobble = minf(1.0, float(target.get("wobble", 0.0)) + (0.20 if _small(target) else 0.12))
-		_spend(target, 0.018 if _small(target) else 0.012)
-		state.trace_hits[int(target.entity_id)] = time + 0.8
-		_record("ghost_activation", int(owner.entity_id), int(target.entity_id))
-	_record("ghost_closure", int(owner.entity_id))
-	_fx("ghost_closure", owner.pos, Vector2(owner.vel).normalized())
-	_fx("ghost_activation", candidate.center, Vector2(owner.vel).normalized())
+		_request(target,_outward(candidate.center,target.pos,Vector2(owner.vel).normalized())*(110.0 if _small(target) else 88.0),cause)
+		target.wobble = minf(1.0,float(target.get("wobble",0.0))+(0.20 if _small(target) else 0.12))
+		_spend(target,0.018 if _small(target) else 0.012)
+		state.trace_hits[int(target.entity_id)] = time+0.8
+		_record("ghost_activation",int(owner.entity_id),int(target.entity_id))
+	_record("ghost_closure",int(owner.entity_id))
+	if candidate.hijacked: _record("ghost_hijack",int(owner.entity_id),int(candidate.route_owner))
+	var context: Dictionary = {"owner_entity_id":int(owner.entity_id),"route_owner_entity_id":int(candidate.route_owner),"team_id":str(owner.team_id),"hijacked":bool(candidate.hijacked)}
+	_fx("ghost_closure",candidate.socket,Vector2(owner.vel).normalized(),1.0,context)
+	_fx("ghost_activation",candidate.center,Vector2(owner.vel).normalized(),1.0,context)
+
+func ghost_route_diagnostics() -> Dictionary:
+	return {"index_builds":_ghost_index_builds,"searches":_ghost_searches,"live_traces":traces.size(),"indexed_routes":_ghost_routes.routes.size(),"indexed_edges":_ghost_routes.scanned_edges,"candidate_edges":_ghost_routes.candidate_edges,"trace_cap":MAX_ALL_TRACES,"polygon_point_cap":CIRCUIT_POINT_LIMIT}

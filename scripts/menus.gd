@@ -8,6 +8,7 @@ signal input_engaged
 const Preview = preload("res://scripts/top_preview.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
 const Powers = preload("res://scripts/run_powers.gd")
+const AbilityCardStyle = preload("res://scripts/ability_card_style.gd")
 const Starters = preload("res://scripts/starters.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
 const PacketView = preload("res://scripts/packet_view.gd")
@@ -456,6 +457,7 @@ func _note_input_profile(profile: String) -> void:
 	if profile == _input_profile: return
 	_input_profile = profile
 	_refresh_reroll_prompt()
+	_refresh_ability_prompts()
 	for purpose: String in _prompt_labels:
 		var label: Label = _prompt_labels[purpose]
 		if is_instance_valid(label): label.text = FrontEnd.prompt(profile, purpose) + (" CONFIRM" if purpose == "confirm" else (" BACK" if purpose == "back" else ""))
@@ -1284,12 +1286,55 @@ func focused_starter_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	return str(focused.get_meta("starter_id", "")) if focused != null else ""
 
-func _style_card(card: Button, accent: Color) -> void:
-	card.add_theme_stylebox_override("normal", _box(Color("172737"), Color("385266"), 1))
-	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, 1))
-	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, 2))
-	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, 2))
-	_card_animations.append({"card":card, "position":card.position, "accent":accent, "focused":null})
+func _style_card(card: Button, accent: Color, semantic: Dictionary = {}) -> void:
+	var border: Color = semantic.get("border_color", Color("385266"))
+	var width: int = int(semantic.get("border_width", 1))
+	var focus_width: int = int(semantic.get("focus_width", 2))
+	card.add_theme_stylebox_override("normal", _box(Color("172737"), border, width))
+	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, width))
+	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, maxi(2, width)))
+	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, focus_width))
+	_card_animations.append({"card":card, "position":card.position, "accent":accent, "normal_border":border, "normal_width":width, "focused":null})
+
+func _style_ability_card(card: Button, metadata: Dictionary) -> Dictionary:
+	var style: Dictionary = Powers.get_card_tier_style(int(metadata.get("rank", 1)), str(metadata.get("mutation", "")))
+	_style_card(card, style.accent_color, style)
+	var frame := Panel.new()
+	frame.name = "SemanticCardFrame"
+	frame.size = card.size
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_theme_stylebox_override("panel", AbilityCardStyle.frame_style(style))
+	card.add_child(frame)
+	_card_animations.back()["semantic_frame"] = frame
+	_card_animations.back()["semantic_style"] = style
+	card.set_meta("ability_tier", style.tier)
+	card.set_meta("ability_badge", style.badge)
+	card.set_meta("ability_rank", int(metadata.get("rank", 1)))
+	return style
+
+func _ability_badge(card: Button, style: Dictionary, area: Rect2, alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var badge: Label = _label(card, str(style.badge), area, 10, style.accent_color, alignment)
+	badge.name = "AbilityTierBadge"
+	# One/two/three solid ticks also encode the investment without colour.
+	for index: int in range(int(style.tier_marks)):
+		_rect(card, Rect2(card.size.x - 9 - index * 4, area.position.y + 2, 2, 7), style.accent_color)
+	return badge
+
+func _ability_confirm(card: Button, style: Dictionary, area: Rect2, purpose: String, alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	var prompt: Label = _label(card, _ability_confirm_hint() + " / " + purpose, area, 10, style.accent_color, alignment)
+	prompt.name = "AbilityCardConfirm"
+	prompt.set_meta("confirmation", purpose)
+
+func _ability_confirm_hint() -> String:
+	# The card has one compact action line; the full help retains mouse wording.
+	return FrontEnd.prompt(_input_profile, "confirm").split(" / ")[0].trim_suffix(" BUTTON")
+
+func _refresh_ability_prompts() -> void:
+	for entry: Dictionary in _card_animations:
+		var card: Button = entry.card
+		if not is_instance_valid(card): continue
+		var prompt: Label = card.get_node_or_null("AbilityCardConfirm") as Label
+		if prompt != null: prompt.text = _ability_confirm_hint() + " / " + str(prompt.get_meta("confirmation"))
 
 func _animate_cards() -> void:
 	for entry: Dictionary in _card_animations:
@@ -1299,7 +1344,9 @@ func _animate_cards() -> void:
 		if entry.focused == focused: continue
 		entry.focused = focused
 		card.position = entry.position + Vector2(0, -2 if focused else 0)
-		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else Color("385266"), 1))
+		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else entry.normal_border, int(entry.normal_width)))
+		if entry.has("semantic_frame"):
+			(entry.semantic_frame as Panel).add_theme_stylebox_override("panel", AbilityCardStyle.frame_style(entry.semantic_style, focused))
 
 func _describe_practice_part(category: String, id: String) -> void:
 	if not is_instance_valid(_catalogue_description): return
@@ -1546,11 +1593,11 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		card.set_meta("power_id", id)
 		_bind_power_inspection(card, id, rank, mutation)
 		_touch_info(card, id, rank, mutation)
-		var color: Color = _power_accent(id)
-		_style_card(card, color)
-		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(8, 5, 108, 13), 10, color)
+		var style: Dictionary = _style_ability_card(card, power)
+		_ability_badge(card, style, Rect2(8, 5, 108, 13))
 		_power_art(card, id, Rect2(30, 23, 64, 64), card, power)
-		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, TEXT)
+		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, style.title_color)
+		power_name.name = "AbilityCardTitle"
 		if id == "anchor_exchange":
 			power_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			power_name.add_theme_constant_override("line_spacing", 0)
@@ -1558,10 +1605,11 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 			power_name.size.y = 28
 		var reading: Dictionary = AbilityInspection.describe(id, rank, mutation)
 		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 120 if id=="anchor_exchange" else 116, 108, 57 if id=="anchor_exchange" else 61), 10, TEXT)
+		description.name = "AbilityCardBody"
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.add_theme_constant_override("line_spacing", 0)
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		_label(card, "CONFIRM / CHOOSE" if rank == 2 else "CONFIRM / COLLECT", Rect2(8, 181, 108, 14), 10, color)
+		_ability_confirm(card, style, Rect2(8, 181, 108, 14), "CHOOSE" if rank == 2 else ("UPGRADE" if rank == 1 else "COLLECT"))
 		cards.append(card)
 		if id == focus_id: selected = card
 	if not OS.has_feature("mobile"): _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
@@ -1576,17 +1624,13 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		reroll.set_meta("charges",int(rerolls.charges))
 		_refresh_reroll_prompt()
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
+		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
-		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  BACK: RUN MENU", Rect2(24, 334, 592, 16), 10, MUTED)
+		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  MENU: PAUSE", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
-
-func _power_accent(power_id: String) -> Color:
-	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "dead_centre":Color("e9c67b"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
 
 func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "", rerolls: Dictionary = {}) -> void:
 	_clear("mutation")
-	var color: Color = _power_accent(power_id)
 	_header("MUTATION AVAILABLE", str(Powers.get_power(power_id).name).to_upper() + " III / CHOOSE HOW YOUR MACHINE CHANGES")
 	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
@@ -1598,17 +1642,21 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed, "offer_revision":int(rerolls.get("revision",0))})
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
-		_style_card(card, color)
+		var style: Dictionary = _style_ability_card(card, branch)
 		_bind_power_inspection(card, power_id, 2, id, true)
 		_touch_info(card, power_id, 2, id, true)
-		_label(card, "PERMANENT FOR THIS RUN", Rect2(10, 6, 172, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_ability_badge(card, style, Rect2(10, 6, 172, 15), HORIZONTAL_ALIGNMENT_CENTER)
 		_power_art(card, power_id, Rect2(32, 25, 128, 128), card, branch)
-		_label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		var title_size: int = 20
+		while title_size > 14 and FrontEnd.pixel_font().get_string_size(str(branch.name).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, title_size).x > 172: title_size -= 2
+		var title: Label = _label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), title_size, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
+		title.name = "AbilityCardTitle"
 		var copy: Label = _label(card, str(branch.get("card_copy", branch.description)), Rect2(10, 184, 172, 33), 10, TEXT)
+		copy.name = "AbilityCardBody"
 		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		copy.add_theme_constant_override("line_spacing", 0)
 		copy.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		_label(card, "CONFIRM / TRANSFORM", Rect2(10, 220, 172, 14), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_ability_confirm(card, style, Rect2(10, 220, 172, 14), "TRANSFORM", HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
 		if id == focus_id: selected = card
 	var rows: Array = [cards]
@@ -1703,19 +1751,20 @@ func show_level_up(level: int) -> void:
 
 func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT", rank: int = 1, mutation: String = "") -> void:
 	_clear("acquisition", false)
+	var style: Dictionary = Powers.get_card_tier_style(rank, mutation)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.82))
-	_panel(_content, Rect2(104, 67, 432, 226), PANEL, _power_accent(power_id))
-	_rect(_content, Rect2(106, 69, 428, 2), _power_accent(power_id))
+	_panel(_content, Rect2(104, 67, 432, 226), PANEL, style.border_color)
+	_rect(_content, Rect2(106, 69, 428, 2), style.accent_color)
 	var power: Dictionary = Powers.get_owned_power(power_id, rank, mutation)
 	_acquisition_elapsed = 0.0
 	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128), null, power)
-	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, _power_accent(power_id), HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(style.badge) + "  /  " + ("MACHINE TRANSFORMED" if rank == 3 else ("MECHANISM TUNED" if rank == 2 else "NEW FAMILY")), Rect2(114, 68, 412, 14), 9, style.accent_color, HORIZONTAL_ALIGNMENT_CENTER)
 	if rank > 1:
-		_label(_content, "MACHINE TRANSFORMED" if rank == 3 else "RANK II  /  MECHANISM TUNED", Rect2(114, 68, 412, 14), 9, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-		_rect(_content, Rect2(104, 67, 3, 226), _power_accent(power_id))
-		_rect(_content, Rect2(533, 67, 3, 226), _power_accent(power_id))
+		_rect(_content, Rect2(104, 67, 3, 226), style.accent_color)
+		_rect(_content, Rect2(533, 67, 3, 226), style.accent_color)
 	_label(_content, "LOCKED IN  /  " + resume_label, Rect2(114, 263, 412, 18), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(_power_accent(power_id), 0.18))
+	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(style.accent_color, 0.18))
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused != null: focused.release_focus()
 

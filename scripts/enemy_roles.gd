@@ -314,6 +314,14 @@ static func _steering(f: Dictionary, target: Dictionary, p: Dictionary, time: fl
 			var radial: Vector2=pos-Vector2(p.power_control.orbit_center)
 			if radial.length()<1.0:radial=Vector2.RIGHT
 			desired=radial.normalized().orthogonal()*float(p.side)*0.94-radial.normalized()*clampf((radial.length()-54.0)/42.0,-0.48,0.54)
+			var advice: Dictionary=f.get("ghost_route_advice",{})
+			if bool(advice.get("paid_visible_live",false)) and float(advice.get("expires_at",-1.0))>time and float(p.clearance)>38.0 and float(f.get("rpm",0.0))>.22:
+				# Actual live route advice supplies a reachable tail/socket only.
+				# Ordinary acceleration, edge safety and the locked attack pilot
+				# still govern the movement; no route or activation is fabricated.
+				var hijack_offset: Vector2=Vector2(advice.point)-pos
+				if hijack_offset.length()>3.0 and hijack_offset.length()<90.0:
+					desired=(hijack_offset.normalized()*.92-velocity*.0018).limit_length(.95)
 	if _edge_danger(f,p,time):
 		if p.state in ["commit","follow_through"]:
 			# Keep the locked trajectory while ordinary Brake sheds momentum.

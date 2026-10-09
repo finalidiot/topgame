@@ -19,6 +19,7 @@ const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 const TopStatusBars = preload("res://scripts/top_status_bars.gd")
 const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const IndustrialSurround = preload("res://scripts/industrial_surround.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
 var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false}
@@ -37,6 +38,7 @@ var last_result: Dictionary = {}
 var battle: Node2D
 var combat_viewport: SubViewport
 var combat_frame: TextureRect
+var presentation_surround: Node2D
 var _presentation_client_size: Vector2i = Vector2i.ZERO
 var _presentation_canvas_size: Vector2 = Vector2(800,480)
 var _presentation_applied_size: Vector2 = Vector2.ZERO
@@ -169,6 +171,10 @@ func _ready() -> void:
 		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
+	if not OS.has_feature("mobile") and not get_viewport() is SubViewport:
+		presentation_surround = IndustrialSurround.new()
+		presentation_surround.name = "AuthoredIndustrialSurround"
+		add_child(presentation_surround)
 	combat_viewport = SubViewport.new()
 	combat_viewport.name = "CanonicalCombatViewport"
 	combat_viewport.size = Vector2i(640,360)
@@ -251,7 +257,7 @@ func _refresh_window_presentation() -> void:
 			var policy: Dictionary = CombatLayout.desktop_canvas(client_size)
 			get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 			get_window().content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
-			get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_INTEGER
+			get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_FRACTIONAL
 			get_window().content_scale_size = policy.canvas_size
 			_presentation_canvas_size = Vector2(policy.canvas_size)
 	else:
@@ -261,6 +267,7 @@ func _refresh_window_presentation() -> void:
 	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile)
 	combat_frame.position = presentation.arena_rect.position
 	combat_frame.size = presentation.arena_rect.size
+	if is_instance_valid(presentation_surround): presentation_surround.set_layout(presentation)
 	menus.set_presentation_canvas(_presentation_canvas_size)
 	# No window mode, monitor, position or restore-size write occurs here. Native
 	# Maximise/Restore belongs to Windows; only the client presentation reflows.
@@ -1210,6 +1217,10 @@ func _escape() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F2 and screen == "battle":
 		menus.visible = not menus.visible
+		get_viewport().set_input_as_handled()
+	elif event is InputEventJoypadButton and event.is_action_pressed("ui_cancel") and screen in ["level_up","reward","mutation","acquisition"]:
+		# Printed controller Back cannot eject a newly earned mandatory choice.
+		# The explicit MENU pause action retains the existing suspend/resume flow.
 		get_viewport().set_input_as_handled()
 	# Nintendo's printed B is both menu Back and the established south-button
 	# Burst. During combat its Burst belongs to physics; MENU pauses instead.

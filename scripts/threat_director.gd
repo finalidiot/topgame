@@ -5,6 +5,8 @@ const TUNING: Dictionary = {
 	"tier_seconds":[0.0,28.0,80.0,170.0,280.0], "overdrive_seconds":120.0,
 	"budgets":[2.8,6.0,10.0,13.0,16.0], "overdrive_budget_step":1.25,
 	"full_caps":[1,2,3,3,4], "elite_cap":2, "small_cap":10, "total_cap":16,
+	"late_small_cap":9, "late_total_cap":15, "late_cadence_scale":1.06,
+	"deep_full_tiers":[7,9], "deep_full_caps":[5,6], "deep_boss_cap":1, "deep_boss_support_full":4,
 	"boss_cooldown":78.0, "late_boss_cooldown":56.0, "same_boss_cooldown":180.0, "swarm_cooldown":34.0,
 	"elite_cooldown":18.0, "boss_warning":2.2, "normal_warning":0.65,
 	"breath_min":1.5, "breath_max":2.75, "busy_limit":55.0, "drain_max":10.0,
@@ -50,9 +52,27 @@ static func tier_at(time: float) -> int:
 static func limits(time: float, investments: int = 1) -> Dictionary:
 	var tier: int = tier_at(time)
 	var row: int = mini(4,tier)
+	var full: int=int(TUNING.full_caps[row])
+	for index: int in range(TUNING.deep_full_tiers.size()):
+		if tier>=int(TUNING.deep_full_tiers[index]):full=int(TUNING.deep_full_caps[index])
+	var deep: bool=full>4
 	return {"tier":tier,"budget":float(TUNING.budgets[row])+maxi(0,tier-4)*float(TUNING.overdrive_budget_step)+(minf(0.6,maxi(0,investments-4)*0.07) if tier > 0 else 0.0),
-		"full":int(TUNING.full_caps[row]),"elites":int(TUNING.elite_cap),"bosses":2 if tier >= 4 else 1,
-		"small":int(TUNING.small_cap),"total":int(TUNING.total_cap)}
+		"full":full,"elites":int(TUNING.elite_cap),"bosses":int(TUNING.deep_boss_cap) if deep else (2 if tier>=4 else 1),
+		"small":int(TUNING.late_small_cap) if tier>=4 else int(TUNING.small_cap),
+		"total":int(TUNING.late_total_cap) if tier>=4 else int(TUNING.total_cap),"deep":deep,
+		# Targets govern NEW reservations. Earlier live waves/bosses finish normally;
+		# the policy never removes actors when an admission target falls at a tier.
+		"existing_small_ceiling":int(TUNING.small_cap),"existing_boss_ceiling":2 if tier>=4 else 1,
+		"boss_support_full":int(TUNING.deep_boss_support_full) if deep else full}
+
+static func composition_full_cap(limit: Dictionary, census: Dictionary) -> int:
+	var cap: int=int(limit.full)
+	if bool(limit.get("deep",false)):
+		if int(census.get("bosses",0))>0:cap=mini(cap,int(limit.boss_support_full))
+		# A carried wave may finish with four full tops, but cannot be stacked
+		# beneath a fifth/sixth. Future swarms are suppressed before that state.
+		if bool(census.get("swarm",false)):cap=mini(cap,4)
+	return cap
 
 func candidates(time: float, census: Dictionary, investments: int) -> Array[Dictionary]:
 	var limit: Dictionary = limits(time,investments)
@@ -61,14 +81,16 @@ func candidates(time: float, census: Dictionary, investments: int) -> Array[Dict
 		var event: Dictionary = definition.duplicate(true)
 		if int(event.tier) > int(limit.tier): continue
 		if event.kind == "swarm":
-			event["small_cap"] = 6 if int(limit.tier) == 1 else 10
+			if bool(limit.deep) and (int(census.full)>=4 or int(census.bosses)>0):continue
+			event["small_cap"] = 6 if int(limit.tier) == 1 else int(limit.small)
 			event.cost = float(event.small_cap)*0.5 # Reserve the peak, including unspawned waves.
 			if bool(census.get("swarm",false)) or time-float(last_by_kind.get("swarm",-1000.0)) < float(TUNING.swarm_cooldown): continue
 			if int(census.total)+int(event.small_cap) > int(limit.total): continue
 		else:
-			if int(census.full) >= int(limit.full) or int(census.total)+1 > int(limit.total): continue
+			if int(census.full) >= composition_full_cap(limit,census) or int(census.total)+1 > int(limit.total): continue
 		if event.kind == "elite" and (int(census.elites) >= int(limit.elites) or time-float(last_by_kind.get("elite",-1000.0)) < float(TUNING.elite_cooldown)): continue
 		if event.kind == "boss":
+			if bool(limit.deep) and (bool(census.get("swarm",false)) or int(census.full)+1>int(limit.boss_support_full)):continue
 			if int(census.bosses) >= int(limit.bosses) or time-float(last_by_kind.get("boss",-1000.0)) < (float(TUNING.late_boss_cooldown) if int(limit.tier) >= 4 else float(TUNING.boss_cooldown)): continue
 			if time-float(last_by_key.get(event.key,-1000.0)) < float(TUNING.same_boss_cooldown): continue
 		if float(census.pressure)+float(event.cost) > float(limit.budget)+0.00001: continue
@@ -124,7 +146,8 @@ func decide(time: float, census: Dictionary, investments: int = 1) -> Dictionary
 	var row: int = mini(4,int(limit.tier))
 	var acceleration: float = 1.0-minf(0.2,fast_clears*0.05)
 	var overdrive: float = 0.6+0.4/(1.0+maxi(0,int(limit.tier)-4)*0.05)
-	next_decision = time+rng.randf_range(TUNING.cadence_min[row],TUNING.cadence_max[row])*acceleration*overdrive
+	var breathing: float=float(TUNING.late_cadence_scale) if row==4 else 1.0
+	next_decision = time+rng.randf_range(TUNING.cadence_min[row],TUNING.cadence_max[row])*acceleration*overdrive*breathing
 	if chosen.kind == "boss": next_decision = maxf(next_decision,time+10.0)
 	return chosen
 

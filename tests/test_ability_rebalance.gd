@@ -286,7 +286,7 @@ func _test_support_depth() -> void:
 	for level: int in [1, 2]:
 		var h: Host = host("chain_impact", level)
 		h.entity(2).pos = Vector2(50, 0)
-		contact(h)
+		contact(h,Runtime.CHAIN_HARD_SEVERITY)
 		h.runtime.burst_started(h.entity(1), Vector2.RIGHT, 1.0)
 		h.runtime.flush_contact_powers()
 		check(h.entity(2).vel.x == (0.0 if level == 1 else 24.0), "Chain II extends the deliberate follow-through to more distant physical contact")

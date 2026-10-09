@@ -22,6 +22,7 @@ var restore_size: Vector2i
 var restore_position: Vector2i
 var restore_verified: bool = false
 var capture_skipped_unfocused: int = 0
+var capture_skipped_obscured: int = 0
 const PHASES: Array[String] = ["normal_960x600", "normal_800x480", "larger_1280x800", "os_api_maximise", "os_api_restore", "normal_800x480_final"]
 
 func capture_native_frame() -> void:
@@ -44,9 +45,32 @@ func capture_native_frame() -> void:
 	if not outer.has_area(): return
 	var image: Image = DisplayServer.screen_get_image_rect(outer)
 	if image == null: return
+	# Window focus notifications can lag a newly raised QA window. Accept native
+	# pixels only when this entire client matches our own rendered viewport.
+	# This also prevents unrelated overlaid windows entering the review capture.
+	var client_roi: Rect2i = Rect2i(client_position-outer.position,client_size)
+	if not Rect2i(Vector2i.ZERO,image.get_size()).encloses(client_roi):
+		capture_skipped_obscured += 1; return
+	var visible_client: Image = image.get_region(client_roi)
+	var own_client: Image = root.get_texture().get_image()
+	visible_client.convert(Image.FORMAT_RGB8); own_client.convert(Image.FORMAT_RGB8)
+	if visible_client.get_size() != own_client.get_size():
+		capture_skipped_obscured += 1; return
+	# The user's native cursor includes a measured ~120px halo; hardware cursor
+	# pixels do not exist in the viewport readback. Exclude only its140px box
+	# from comparison, preserving the actual cursor in the saved native image.
+	var pointer: Vector2i = DisplayServer.mouse_get_position()-client_position
+	var cursor_box: Rect2i = Rect2i(pointer-Vector2i(70,70),Vector2i(140,140)).intersection(Rect2i(Vector2i.ZERO,client_size))
+	if cursor_box.has_area(): visible_client.blit_rect(own_client,cursor_box,cursor_box.position)
+	# Native DWM composition rounds some channels by one8-bit level. Every
+	# client pixel must remain within that measured tolerance; this is not an
+	# average similarity gate that could permit an overlaid window.
+	var metrics: Dictionary = visible_client.compute_image_metrics(own_client,false)
+	if float(metrics.max) > 1.0:
+		capture_skipped_obscured += 1; return
 	var path: String = frames_dir.path_join("native_%05d.png" % captured_frames.size())
 	if image.save_png(path) != OK: return
-	captured_frames.append({"path":path,"time_msec":Time.get_ticks_msec(),"decorated_rect":outer,"reported_dwm_bounds":reported_decorations,"capture_bounds_policy":"Client width plus actual OS caption height; invisible DWM resize margins excluded","mode":DisplayServer.window_get_mode(),"client_size":root.size,"phase":PHASES[sequence_phase] if automatic else "manual_native_window","phase_elapsed_msec":Time.get_ticks_msec()-phase_started_msec})
+	captured_frames.append({"path":path,"time_msec":Time.get_ticks_msec(),"decorated_rect":outer,"reported_dwm_bounds":reported_decorations,"capture_bounds_policy":"Client width plus actual OS caption height; invisible DWM resize margins excluded","client_pixel_metrics":metrics,"hardware_cursor_comparison_exclusion":cursor_box,"mode":DisplayServer.window_get_mode(),"client_size":root.size,"phase":PHASES[sequence_phase] if automatic else "manual_native_window","phase_elapsed_msec":Time.get_ticks_msec()-phase_started_msec})
 
 func advance_sequence() -> void:
 	sequence_phase += 1
@@ -80,7 +104,7 @@ func write_report() -> void:
 	file.store_string(JSON.stringify({"scope":"Real decorated Windows client capture; automatic sequence uses OS APIs for resize, Maximise and Restore. Legal initial four-power loadout with paused production world is a presentation fixture. Physical button and Android acceptance are not inferred from API actuation.",
 		"snapshots":snapshots,"current":game.window_presentation_snapshot(),"world_unchanged":JSON.stringify(world_state())==baseline_world,
 		"captured_frames":captured_frames,"capture_method":"Godot DisplayServer.screen_get_image_rect bounded to this foreground QA window including real OS decorations; never capture an unrelated window or desktop region.",
-		"automatic_sequence":automatic,"sequence_events":sequence_events,"restore_size":restore_size,"restore_position":restore_position,"restore_verified":restore_verified,"capture_skipped_unfocused":capture_skipped_unfocused,
+		"automatic_sequence":automatic,"sequence_events":sequence_events,"restore_size":restore_size,"restore_position":restore_position,"restore_verified":restore_verified,"capture_skipped_unfocused":capture_skipped_unfocused,"capture_skipped_obscured":capture_skipped_obscured,"native_client_pixel_guard":{"all_rgb_channels":true,"maximum_allowed_8bit_difference":1,"hardware_cursor_box":140,"reason":"Measured native DWM rounding; all client pixels outside the native cursor box compared with the owning viewport, overlaid windows rejected. Saved screenshots retain original cursor pixels."},
 		"source_fixture_powers":["dead_centre","impact_sink","redline","orbit_drive"],"native_window_title":"Spinning Metal - WINDOW QA 003A.1"},"\t")); file.close()
 func _process(dt: float) -> bool:
 	if not started: return false

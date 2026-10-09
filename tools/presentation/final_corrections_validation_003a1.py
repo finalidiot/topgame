@@ -14,6 +14,12 @@ sys.path[:0] = [str(ROOT / "tools/build"), str(ROOT / "tools/presentation")]
 import windows_checkpoint as pipeline
 from upgrade_sustain_003a1 import source, player
 
+def harness():
+    paths = [p for p in (ROOT / "tests").rglob("*")
+             if p.is_file() and p.suffix in (".gd", ".uid")]
+    paths.append(Path(__file__))
+    return {p.relative_to(ROOT).as_posix():pipeline.sha256(p) for p in sorted(paths)}
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("headless", "python", "native"), required=True)
@@ -22,14 +28,16 @@ def main():
     parser.add_argument("--only", nargs="*")
     args = parser.parse_args()
     qa = ROOT.parent / "GyroBrothers-QA/003A.1"
-    stem = "003a1_enemy_foundation_" + args.mode + "_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
+    stem = "003a1_final_acceptance_" + args.mode + "_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
     output = qa / "manifests" / (stem + ".json")
     baseline = json.loads((ROOT / "tests/results/003a1_combat_acceptance_validation.json").read_text())
     if args.mode == "headless":
         names = [r["name"] for r in baseline["headless"]["suites"]]
-        names += ["pickup_positions_003a1", "shop_ux_003a1", "shop_focus_cost_003a1", "combat_audio_mix_003a1", "native_window_layout_003a1", "enemy_intelligence_003a1", "enemy_power_packages_003a1", "enemy_burst_sampling_003a1"]
+        names += ["pickup_positions_003a1", "shop_ux_003a1", "shop_focus_cost_003a1", "combat_audio_mix_003a1", "native_window_layout_003a1", "enemy_intelligence_003a1", "enemy_power_packages_003a1", "enemy_burst_sampling_003a1",
+                  "ability_card_hierarchy_003a1", "deep_run_density_003a1", "window_client_fill_003a1", "level_up_back_003a1",
+                  "ghost_circuit_hijack_003a1", "ghost_physics_003a1", "orbit_full_carve_003a1", "chain_hard_hits_003a1", "predator_pursuit_visual_003a1"]
     elif args.mode == "native":
-        names = [r["name"] for r in baseline["native"]["suites"]] + ["native_window_layout_003a1"]
+        names = [r["name"] for r in baseline["native"]["suites"]] + ["native_window_layout_003a1", "window_client_fill_003a1", "level_up_back_003a1"]
     else:
         names = sorted({r["category"] for r in json.loads((qa / "manifests/003a1_combat_python_regression.json").read_text())["suites"]} | {"audio","android"})
     if args.only:
@@ -37,7 +45,7 @@ def main():
         names = args.only
     assert len(names) == len(set(names))
     record = {"schema":1,"scope":"Selected current contracts, fresh logs and preserved initial failures", "status":"running",
-              "source_before":source(ROOT),"player_before":player(),"mode":args.mode,"suites":[]}
+              "source_before":source(ROOT),"harness_before":harness(),"player_before":player(),"mode":args.mode,"suites":[]}
     pipeline.write_json(output, record)
     for name in names:
         log = qa / "logs" / (stem + "_" + name + ".log")
@@ -46,16 +54,17 @@ def main():
         else:
             command = [args.engine]
             if args.mode == "headless": command += ["--headless"]
-            if name in ("input_acceptance_003a1", "overdrive_lifecycle_003a1", "shop_ux_003a1"):
+            if name in ("input_acceptance_003a1", "overdrive_lifecycle_003a1", "shop_ux_003a1", "level_up_back_003a1"):
                 command += ["--fixed-fps", "60", "--disable-vsync"]
             command += ["--path",str(ROOT),"--script","res://tests/test_" + name + ".gd"]
             report = qa / "manifests" / (stem + "_" + name + ".json")
             command += ["--","--report=" + str(report)]
             if name == "music_escalation": command += ["--qa-task=003A.1"]
-            if name in ("input_acceptance_003a1","overdrive_lifecycle_003a1"): command += ["--profiles=" + str(qa / "temp" / (stem + "_" + name + "_profiles"))]
+            if name in ("input_acceptance_003a1","overdrive_lifecycle_003a1","level_up_back_003a1"): command += ["--profiles=" + str(qa / "temp" / (stem + "_" + name + "_profiles"))]
+            if name == "level_up_back_003a1": command += ["--kind=flow"]
             if name == "mobile_shell_layout_003a1": command += ["--profile=" + str(qa / "temp" / (stem + "_mobile_profile.json"))]
             if name == "shop_ux_003a1": command += ["--mode=all","--diagnostic","--profile=" + str(qa / "temp" / (stem + "_shop_profile.json"))]
-            if args.mode == "native" and name in ("combat_acceptance_hud_003a1","native_window_layout_003a1","mobile_shell_layout_003a1"):
+            if args.mode == "native" and name in ("combat_acceptance_hud_003a1","native_window_layout_003a1","mobile_shell_layout_003a1","window_client_fill_003a1"):
                 command += ["--native"]
             if args.mode == "native" and name == "music_native":
                 command += ["--allow-native-audio","--recording=" + str(qa / "temp" / (stem + "_music_native.wav"))]
@@ -95,14 +104,15 @@ def main():
         record["suites"].append(row)
         pipeline.write_json(output,record)
         print(json.dumps({k:row[k] for k in ("name","passed","checks","seconds")}),flush=True)
-    record.update(source_after=source(ROOT),player_after=player())
+    record.update(source_after=source(ROOT),harness_after=harness(),player_after=player())
     record["source_unchanged"] = record["source_before"] == record["source_after"]
+    record["harness_unchanged"] = record["harness_before"] == record["harness_after"]
     record["player_unchanged"] = record["player_before"] == record["player_after"]
     record["failed_suites"] = [r["name"] for r in record["suites"] if not r["passed"]]
     record["checks"] = sum(r["checks"] for r in record["suites"] if r["passed"])
-    record["status"] = "passed" if not record["failed_suites"] and record["source_unchanged"] and record["player_unchanged"] else "failed"
+    record["status"] = "passed" if not record["failed_suites"] and record["source_unchanged"] and record["harness_unchanged"] and record["player_unchanged"] else "failed"
     pipeline.write_json(output,record)
-    print(json.dumps({k:record[k] for k in ("status","failed_suites","checks","source_unchanged","player_unchanged")}|{"report":str(output)}),flush=True)
+    print(json.dumps({k:record[k] for k in ("status","failed_suites","checks","source_unchanged","harness_unchanged","player_unchanged")}|{"report":str(output)}),flush=True)
     raise SystemExit(0 if record["status"] == "passed" else 1)
 
 if __name__ == "__main__": main()

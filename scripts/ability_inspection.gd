@@ -9,10 +9,10 @@ const GUIDES: Dictionary = {
 	"iron_comet":["Wall rebounds charge your next hit.", "Rebound hard, then hit a rival.", "A charged hit releases a hard shove.", "Use it quickly or the charge fades.", "Stronger strike; charge lasts longer."],
 	"dead_centre":["Hold centre to brace and recover RPM.", "Settle centrally; steer away to vent.", "Hard hits build Anchor Stress.", "High Stress weakens hold and recovery.", "Stronger brace; more recovery reserve."],
 	"afterimage":["Fast travel lays routes that shove.", "Move fast; draw paths through rivals.", "Live trails push tops crossing them.", "Each trail costs RPM and expires.", "Longer trails; cross yours for speed."],
-	"chain_impact":["Your knockouts chain nearby shoves.", "Hit hard, then Burst into that rival.", "Thrown rivals send more rings.", "Needs credited kills or heavy hits.", "Wider chains; stronger Burst follow-up."],
+	"chain_impact":["Hard hits chain nearby physical shoves.", "Hit hard, then Burst near that rival.", "A shove opens a short Burst window.", "Owner cooldown; knockouts alone do nothing.", "Wider chains; longer Burst follow-up."],
 	"clutch":["Low RPM opens a recovery chance.", "Steer gently; land hits during Clutch.", "CLUTCH signals the low-spin window.", "Finite recovery; no revive after loss.", "Longer window; more earned recovery."],
 	"high_gear":["Accelerate harder and travel faster.", "Steer a line and keep moving.", "Your top reaches a higher speed.", "Hard turns and Brake still cost RPM.", "More thrust, speed and retained motion."],
-	"orbit_drive":["Curved travel builds efficient DRIVE.", "Brake + turn to drift; keep the arc.", "DRIVE grows; your top carves faster.", "Straighten, slow or reverse to lose it.", "Stronger carving, speed and efficiency."],
+	"orbit_drive":["Carve at 100% DRIVE to recover RPM.", "Brake + turn; keep moving and steering.", "Full DRIVE earns capped RPM recovery.", "Idle, slow or reverse: recovery stops.", "Stronger carve; more RPM at 100%."],
 	"crash_guard":["Heavy hits trigger a brief damper.", "Take a hit; use the guarded window.", "A guard flash signals reduced loss.", "Brief protection, then a cooldown.", "Deeper damper; a longer guard window."],
 	"momentum_bank":["Brake stores motion for your Burst.", "Steer + Brake, then Burst a line.", "Stored motion becomes a surge.", "Charge leaks; release costs extra RPM.", "Bank more motion; stronger release."],
 	"predator_line":["Repeated hits strengthen pursuit.", "Keep hitting the same full-size rival.", "Pursuit marks build up to three times.", "Switch or wait to lose pursuit.", "Stronger hits; pursuit lasts longer."],
@@ -32,7 +32,7 @@ const MUTATION_GUIDES: Dictionary = {
 	"breakneck":["Spend overclock on one huge strike.", "Build heat, then Burst again at a rival.", "Your top commits to a brutal charge.", "RPM and recoil cost; misses cost more."],
 	"bulwark":["Full Anchor throws attackers back.", "Plant centrally; receive hard hits.", "Attackers recoil off your hold.", "Counterforce adds Anchor Stress."],
 	"counterweight":["Store anchored hits for a counter.", "Anchor; take force, then aim a Burst.", "Burst releases the stored force.", "Burst spends force and breaks hold."],
-	"ghost_circuit":["Closed routes shove rivals inside.", "Draw a fast live loop and close it.", "A closed circuit pushes rivals.", "Must close a paid live route; RPM cost."],
+	"ghost_circuit":["Close your own or enemy live routes.", "Move across a real paid closure gap.", "The closer's enemies take the pulse.", "Live geometry; 3.5 s closure cooldown."],
 	"slipstream":["Your own old trail boosts motion.", "Cross a live trail you already laid.", "A speed surge carries you onward.", "Needs your paid route; limited repeats."],
 	"terminal_velocity":["Extreme speed trades away control.", "Commit to a fast line; plan turns.", "Huge thrust and a higher speed limit.", "Hard turns and Brake cost extra RPM."],
 	"flow_state":["Smooth travel keeps speed efficiently.", "Move through controlled turns.", "Turns carry your momentum onward.", "Less thrust than Terminal Velocity."]
@@ -40,7 +40,7 @@ const MUTATION_GUIDES: Dictionary = {
 const BRANCH_NEXT: Dictionary = {
 	"redline":"Choose sustained heat or one huge hit.",
 	"dead_centre":"Choose recoil or stored retaliation.",
-	"afterimage":"Choose loop pressure or trail speed.",
+	"afterimage":"Choose route hijack or trail speed.",
 	"high_gear":"Choose raw speed or smoother flow.",
 	"gyro_lock":"Choose heavy footing or wider curves.",
 	"impact_sink":"Choose recovery or a counter pulse.",
@@ -65,6 +65,7 @@ static func describe(id: String, rank: int, mutation: String = "", branch_previe
 	if not id in Powers.IDS or Powers.max_rank(id) == 0: return {}
 	rank = clampi(rank, 0, Powers.max_rank(id))
 	if mutation not in Powers.mutation_choices(id) or (not branch_preview and rank != 3): mutation = ""
+	branch_preview = branch_preview and not mutation.is_empty()
 	var power: Dictionary = Powers.get_owned_power(id, maxi(1, rank), mutation)
 	if power.is_empty(): power = Powers.get_power(id)
 	var guide: Array = GUIDES[id]
@@ -145,9 +146,11 @@ func _render() -> void:
 	_body.add_child(panel)
 	if breakdown.is_empty(): return
 	var width: float = size.x - 24
-	var rank_label: String = "NEW" if current_rank == 0 else "RANK %s" % ["I", "II", "III"][clampi(current_rank - 1, 0, 2)]
-	if bool(breakdown.branch_preview): rank_label = "BRANCH III"
-	_line(str(breakdown.name).to_upper() + " / " + rank_label, Rect2(12, 9, width, 22), FrontEnd.TEXT)
+	var tier_style: Dictionary = Powers.get_card_tier_style(3 if bool(breakdown.branch_preview) else maxi(1, current_rank))
+	var rank_label: String = str(tier_style.badge) + (" / I" if current_rank == 1 else "")
+	if bool(breakdown.branch_preview): rank_label = "MUTATION / PREVIEW"
+	var title: Label = _line(str(breakdown.name).to_upper() + " / " + rank_label, Rect2(12, 9, width, 22), tier_style.title_color)
+	title.name = "AbilityInspectorHeader"
 	var stateful: bool = not str(breakdown.state).is_empty()
 	var fields: Array[String] = ["what", "trigger", "state" if stateful else "notice", "limit", "next"]
 	if not str(breakdown.synergy).is_empty(): fields.append("synergy")
@@ -158,7 +161,7 @@ func _render() -> void:
 		_line(str(breakdown[field]), Rect2(12, y + 10, width, 21), FrontEnd.TEXT)
 		y += 33
 
-func _line(value: String, area: Rect2, color: Color) -> void:
+func _line(value: String, area: Rect2, color: Color) -> Label:
 	var node: Label = Label.new()
 	node.text = value
 	node.add_theme_font_override("font", FrontEnd.pixel_font())
@@ -172,3 +175,4 @@ func _line(value: String, area: Rect2, color: Color) -> void:
 	_body.add_child(node)
 	node.position = area.position
 	node.size = area.size
+	return node

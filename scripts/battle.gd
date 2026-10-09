@@ -1551,6 +1551,9 @@ func _draw() -> void:
 		var path: PackedVector2Array = PackedVector2Array()
 		for point: Vector2 in trace.get("points",[trace.a,trace.b]): path.append(project(point))
 		PowerVisuals.draw_trace_path(self, trace, path)
+	# The closer-owned circuit seam stays above every ordinary paid trail.
+	# Rendering order alone changes; edge ownership, geometry and lifetime do not.
+	for trace: Dictionary in powers.traces:
 		var circuit_path: PackedVector2Array = PackedVector2Array()
 		for point: Vector2 in trace.get("circuit_points", []): circuit_path.append(project(point))
 		if circuit_path.size() >= 4: PowerVisuals.draw_circuit_field(self, trace, circuit_path)

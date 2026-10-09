@@ -1,0 +1,827 @@
+{
+  "status": "passed",
+  "created_utc": "2026-10-09T15:14:34.253692+00:00",
+  "starting_sha": "68669556b253a67212e32c0cbf18d56f0df43f6f",
+  "scope": "Card semantic hierarchy, catalogue/inspector copy and actual Main choice/acquisition. No new rarity, save schema, physics/economy/AI system, authored asset or physical hardware acceptance.",
+  "tiers": {
+    "power": {
+      "badge": "POWER",
+      "title": "e3e8dc",
+      "accent": "bdcbd3",
+      "border": "526776",
+      "border_width": 1,
+      "focus_width": 2,
+      "marks": 1
+    },
+    "rank_ii": {
+      "badge": "RANK II",
+      "title": "64d8ef",
+      "accent": "64d8ef",
+      "border": "64d8ef",
+      "border_width": 2,
+      "focus_width": 3,
+      "marks": 2
+    },
+    "mutation": {
+      "badge": "MUTATION",
+      "title": "d49bf1",
+      "accent": "d49bf1",
+      "border": "d49bf1",
+      "border_width": 2,
+      "focus_width": 3,
+      "marks": 3
+    }
+  },
+  "body_text_colour": "e3e8dc",
+  "style_source": "scripts/ability_card_style.gd",
+  "roster": {
+    "base": 16,
+    "rank_ii": 16,
+    "mutations": 14,
+    "forms": 46,
+    "rows": [
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/impact_wake_cards.png",
+        "art_sha256": "b2962e7889e64947f9720f7555f03521e7956266a37e727167ecb60c059b752b",
+        "badge": "POWER",
+        "body": "Heavy hits shove nearby rivals.",
+        "body_colour": "e3e8dc",
+        "id": "impact_wake",
+        "name": "Impact Wake",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/impact_wake_cards.png",
+        "art_sha256": "b2962e7889e64947f9720f7555f03521e7956266a37e727167ecb60c059b752b",
+        "badge": "RANK II",
+        "body": "Wider, stronger wakes; shorter cooldown.",
+        "body_colour": "e3e8dc",
+        "id": "impact_wake",
+        "name": "Impact Wake II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/redline_cards.png",
+        "art_sha256": "0b50b7fcb050827c7fcda01da19a984077b7dcd2bc4a007a745b6f421a506b68",
+        "badge": "POWER",
+        "body": "Burst opens an unsafe RPM overclock.",
+        "body_colour": "e3e8dc",
+        "id": "redline",
+        "name": "Redline",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/redline_cards.png",
+        "art_sha256": "0b50b7fcb050827c7fcda01da19a984077b7dcd2bc4a007a745b6f421a506b68",
+        "badge": "RANK II",
+        "body": "More thrust and hit power; higher cost.",
+        "body_colour": "e3e8dc",
+        "id": "redline",
+        "name": "Redline II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/redline_cards.png",
+        "art_sha256": "0b50b7fcb050827c7fcda01da19a984077b7dcd2bc4a007a745b6f421a506b68",
+        "badge": "MUTATION",
+        "body": "Hard moving hits sustain heat. Keep attacking.",
+        "body_colour": "e3e8dc",
+        "id": "runaway",
+        "name": "Runaway",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/redline_cards.png",
+        "art_sha256": "0b50b7fcb050827c7fcda01da19a984077b7dcd2bc4a007a745b6f421a506b68",
+        "badge": "MUTATION",
+        "body": "Overclock, then Burst again. One brutal strike.",
+        "body_colour": "e3e8dc",
+        "id": "breakneck",
+        "name": "Breakneck",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/iron_comet_cards.png",
+        "art_sha256": "a4495341ee768b41bc5647df1cf2b0bb5eb5314cea2aa3fba2df068843e5d9f3",
+        "badge": "POWER",
+        "body": "Wall rebounds charge your next hit.",
+        "body_colour": "e3e8dc",
+        "id": "iron_comet",
+        "name": "Iron Comet",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/iron_comet_cards.png",
+        "art_sha256": "a4495341ee768b41bc5647df1cf2b0bb5eb5314cea2aa3fba2df068843e5d9f3",
+        "badge": "RANK II",
+        "body": "Stronger strike; charge lasts longer.",
+        "body_colour": "e3e8dc",
+        "id": "iron_comet",
+        "name": "Iron Comet II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/dead_centre_cards.png",
+        "art_sha256": "821225e2728a59a18960484086fde7e2ba8c1b85750a9580d63bf8621d240559",
+        "badge": "POWER",
+        "body": "Hold centre to brace and recover RPM.",
+        "body_colour": "e3e8dc",
+        "id": "dead_centre",
+        "name": "Dead Centre",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/dead_centre_cards.png",
+        "art_sha256": "821225e2728a59a18960484086fde7e2ba8c1b85750a9580d63bf8621d240559",
+        "badge": "RANK II",
+        "body": "Stronger brace; more recovery reserve.",
+        "body_colour": "e3e8dc",
+        "id": "dead_centre",
+        "name": "Dead Centre II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/dead_centre_cards.png",
+        "art_sha256": "821225e2728a59a18960484086fde7e2ba8c1b85750a9580d63bf8621d240559",
+        "badge": "MUTATION",
+        "body": "Plant fully. Throw attackers back. Vent Stress.",
+        "body_colour": "e3e8dc",
+        "id": "bulwark",
+        "name": "Bulwark",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/dead_centre_cards.png",
+        "art_sha256": "821225e2728a59a18960484086fde7e2ba8c1b85750a9580d63bf8621d240559",
+        "badge": "MUTATION",
+        "body": "Anchor. Store hits. Aim a Burst to strike and vent.",
+        "body_colour": "e3e8dc",
+        "id": "counterweight",
+        "name": "Counterweight",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/afterimage_cards.png",
+        "art_sha256": "78c61bbe907ada6bc9bda728fb7465fb581a899d6386a7cbc776487796875cca",
+        "badge": "POWER",
+        "body": "Fast travel lays routes that shove.",
+        "body_colour": "e3e8dc",
+        "id": "afterimage",
+        "name": "Afterimage",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/afterimage_cards.png",
+        "art_sha256": "78c61bbe907ada6bc9bda728fb7465fb581a899d6386a7cbc776487796875cca",
+        "badge": "RANK II",
+        "body": "Longer trails; cross yours for speed.",
+        "body_colour": "e3e8dc",
+        "id": "afterimage",
+        "name": "Afterimage II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/afterimage_cards.png",
+        "art_sha256": "78c61bbe907ada6bc9bda728fb7465fb581a899d6386a7cbc776487796875cca",
+        "badge": "MUTATION",
+        "body": "Close own or enemy live routes. Hijack against enemies.",
+        "body_colour": "e3e8dc",
+        "id": "ghost_circuit",
+        "name": "Ghost Circuit",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/afterimage_cards.png",
+        "art_sha256": "78c61bbe907ada6bc9bda728fb7465fb581a899d6386a7cbc776487796875cca",
+        "badge": "MUTATION",
+        "body": "Lay a trail. Cross it for speed and efficiency.",
+        "body_colour": "e3e8dc",
+        "id": "slipstream",
+        "name": "Slipstream",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/chain_impact_cards.png",
+        "art_sha256": "14c6428221a47f57c8d10895244bc70fe9323b2d340c3a85be63a0d434cc8f42",
+        "badge": "POWER",
+        "body": "Hard hits chain nearby physical shoves.",
+        "body_colour": "e3e8dc",
+        "id": "chain_impact",
+        "name": "Chain Impact",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/chain_impact_cards.png",
+        "art_sha256": "14c6428221a47f57c8d10895244bc70fe9323b2d340c3a85be63a0d434cc8f42",
+        "badge": "RANK II",
+        "body": "Wider chains; longer Burst follow-up.",
+        "body_colour": "e3e8dc",
+        "id": "chain_impact",
+        "name": "Chain Impact II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/clutch_cards.png",
+        "art_sha256": "365e029cc2657d9366d3d9d17f3fdf4a5e77b43d0be14891de64859637057daf",
+        "badge": "POWER",
+        "body": "Low RPM opens a recovery chance.",
+        "body_colour": "e3e8dc",
+        "id": "clutch",
+        "name": "Clutch",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/clutch_cards.png",
+        "art_sha256": "365e029cc2657d9366d3d9d17f3fdf4a5e77b43d0be14891de64859637057daf",
+        "badge": "RANK II",
+        "body": "Longer window; more earned recovery.",
+        "body_colour": "e3e8dc",
+        "id": "clutch",
+        "name": "Clutch II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/high_gear_cards.png",
+        "art_sha256": "d54584cbe2359e7801c1e61461547b9441112bdaccaad8d0b5472b715cf8734c",
+        "badge": "POWER",
+        "body": "Accelerate harder and travel faster.",
+        "body_colour": "e3e8dc",
+        "id": "high_gear",
+        "name": "High Gear",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/high_gear_cards.png",
+        "art_sha256": "d54584cbe2359e7801c1e61461547b9441112bdaccaad8d0b5472b715cf8734c",
+        "badge": "RANK II",
+        "body": "More thrust, speed and retained motion.",
+        "body_colour": "e3e8dc",
+        "id": "high_gear",
+        "name": "High Gear II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/high_gear_cards.png",
+        "art_sha256": "d54584cbe2359e7801c1e61461547b9441112bdaccaad8d0b5472b715cf8734c",
+        "badge": "MUTATION",
+        "body": "Extreme speed. Expensive corrections.",
+        "body_colour": "e3e8dc",
+        "id": "terminal_velocity",
+        "name": "Terminal Velocity",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/identity/high_gear_cards.png",
+        "art_sha256": "d54584cbe2359e7801c1e61461547b9441112bdaccaad8d0b5472b715cf8734c",
+        "badge": "MUTATION",
+        "body": "Carry speed through turns. Spend less RPM.",
+        "body_colour": "e3e8dc",
+        "id": "flow_state",
+        "name": "Flow State",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/orbit_drive_cards.png",
+        "art_sha256": "3f57c63d40e63b2e18d47771aac347d30f4f4c98cf833f95dafcc3de3942b69f",
+        "badge": "POWER",
+        "body": "Carve at 100% DRIVE to recover RPM.",
+        "body_colour": "e3e8dc",
+        "id": "orbit_drive",
+        "name": "Orbit Drive",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/orbit_drive_cards.png",
+        "art_sha256": "3f57c63d40e63b2e18d47771aac347d30f4f4c98cf833f95dafcc3de3942b69f",
+        "badge": "RANK II",
+        "body": "Stronger carve; more RPM at 100%.",
+        "body_colour": "e3e8dc",
+        "id": "orbit_drive",
+        "name": "Orbit Drive II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/crash_guard_cards.png",
+        "art_sha256": "2182412cfd500ab775dc976ab25691aaf9e1881dfc5874aec71bcc3fdfa09d4c",
+        "badge": "POWER",
+        "body": "Heavy hits trigger a brief damper.",
+        "body_colour": "e3e8dc",
+        "id": "crash_guard",
+        "name": "Crash Guard",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/crash_guard_cards.png",
+        "art_sha256": "2182412cfd500ab775dc976ab25691aaf9e1881dfc5874aec71bcc3fdfa09d4c",
+        "badge": "RANK II",
+        "body": "Deeper damper; a longer guard window.",
+        "body_colour": "e3e8dc",
+        "id": "crash_guard",
+        "name": "Crash Guard II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/momentum_bank_cards.png",
+        "art_sha256": "48d832eec98eefb4559355609f29e1c840b0e6af63d155764080d2c951d0c20b",
+        "badge": "POWER",
+        "body": "Brake stores motion for your Burst.",
+        "body_colour": "e3e8dc",
+        "id": "momentum_bank",
+        "name": "Momentum Bank",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/momentum_bank_cards.png",
+        "art_sha256": "48d832eec98eefb4559355609f29e1c840b0e6af63d155764080d2c951d0c20b",
+        "badge": "RANK II",
+        "body": "Bank more motion; stronger release.",
+        "body_colour": "e3e8dc",
+        "id": "momentum_bank",
+        "name": "Momentum Bank II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/predator_line_cards.png",
+        "art_sha256": "63dc3e7e4bc122b3cd945ca853a3dfa71262ccb3a69815f072c6800f9a07e7fa",
+        "badge": "POWER",
+        "body": "Repeated hits strengthen pursuit.",
+        "body_colour": "e3e8dc",
+        "id": "predator_line",
+        "name": "Predator Line",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/predator_line_cards.png",
+        "art_sha256": "63dc3e7e4bc122b3cd945ca853a3dfa71262ccb3a69815f072c6800f9a07e7fa",
+        "badge": "RANK II",
+        "body": "Stronger hits; pursuit lasts longer.",
+        "body_colour": "e3e8dc",
+        "id": "predator_line",
+        "name": "Predator Line II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/identity/crosscut_cards.png",
+        "art_sha256": "84ddf396875f823ea994a60c95a156787fb9407947048111f822860ded91ecc6",
+        "badge": "POWER",
+        "body": "Glancing hits shove rivals sideways.",
+        "body_colour": "e3e8dc",
+        "id": "crosscut",
+        "name": "Crosscut",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/identity/crosscut_cards.png",
+        "art_sha256": "84ddf396875f823ea994a60c95a156787fb9407947048111f822860ded91ecc6",
+        "badge": "RANK II",
+        "body": "Stronger cuts; shorter cooldown.",
+        "body_colour": "e3e8dc",
+        "id": "crosscut",
+        "name": "Crosscut II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/defence003a/gyro_lock_cards.png",
+        "art_sha256": "840a21041cf9bd98d0034bb268228a3dc10abbd39f796dc58b7ba3a58b6cbb76",
+        "badge": "POWER",
+        "body": "Smooth travel builds a moving brace.",
+        "body_colour": "e3e8dc",
+        "id": "gyro_lock",
+        "name": "Gyro Lock",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/defence003a/gyro_lock_cards.png",
+        "art_sha256": "840a21041cf9bd98d0034bb268228a3dc10abbd39f796dc58b7ba3a58b6cbb76",
+        "badge": "RANK II",
+        "body": "Build a heavier lock sooner.",
+        "body_colour": "e3e8dc",
+        "id": "gyro_lock",
+        "name": "Gyro Lock II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/gyro_lock_cards.png",
+        "art_sha256": "840a21041cf9bd98d0034bb268228a3dc10abbd39f796dc58b7ba3a58b6cbb76",
+        "badge": "MUTATION",
+        "body": "Move smoothly. Heavy ballast trades away speed.",
+        "body_colour": "e3e8dc",
+        "id": "keel",
+        "name": "Keel",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/gyro_lock_cards.png",
+        "art_sha256": "840a21041cf9bd98d0034bb268228a3dc10abbd39f796dc58b7ba3a58b6cbb76",
+        "badge": "MUTATION",
+        "body": "Carry moving defence through wider, faster curves.",
+        "body_colour": "e3e8dc",
+        "id": "flywheel",
+        "name": "Flywheel",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/defence003a/impact_sink_cards.png",
+        "art_sha256": "cddaa0522d90a1eb88d4ba22021844df7242432653f32f92aaf474040ef305ea",
+        "badge": "POWER",
+        "body": "Store part of incoming recoil.",
+        "body_colour": "e3e8dc",
+        "id": "impact_sink",
+        "name": "Impact Sink",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/defence003a/impact_sink_cards.png",
+        "art_sha256": "cddaa0522d90a1eb88d4ba22021844df7242432653f32f92aaf474040ef305ea",
+        "badge": "RANK II",
+        "body": "Catch more recoil; hold more force.",
+        "body_colour": "e3e8dc",
+        "id": "impact_sink",
+        "name": "Impact Sink II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/impact_sink_cards.png",
+        "art_sha256": "cddaa0522d90a1eb88d4ba22021844df7242432653f32f92aaf474040ef305ea",
+        "badge": "MUTATION",
+        "body": "Store recoil. Tap Brake for stronger recovery.",
+        "body_colour": "e3e8dc",
+        "id": "shock_bleed",
+        "name": "Shock Bleed",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/impact_sink_cards.png",
+        "art_sha256": "cddaa0522d90a1eb88d4ba22021844df7242432653f32f92aaf474040ef305ea",
+        "badge": "MUTATION",
+        "body": "Store recoil. Tap Brake for a close counter pulse.",
+        "body_colour": "e3e8dc",
+        "id": "return_spring",
+        "name": "Return Spring",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "bdcbd3",
+        "art": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+        "art_sha256": "726b97fd6285f367ed8da509982110e4f01cd6dce9ea67aafde2fcfd03011a48",
+        "badge": "POWER",
+        "body": "Brake buys heavy portable footing.",
+        "body_colour": "e3e8dc",
+        "id": "anchor_exchange",
+        "name": "Anchor Exchange",
+        "rank": 1,
+        "tier": "power",
+        "title_colour": "e3e8dc",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "64d8ef",
+        "art": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+        "art_sha256": "726b97fd6285f367ed8da509982110e4f01cd6dce9ea67aafde2fcfd03011a48",
+        "badge": "RANK II",
+        "body": "Build heavier footing sooner.",
+        "body_colour": "e3e8dc",
+        "id": "anchor_exchange",
+        "name": "Anchor Exchange II",
+        "rank": 2,
+        "tier": "rank_ii",
+        "title_colour": "64d8ef",
+        "title_font_size": 10
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+        "art_sha256": "726b97fd6285f367ed8da509982110e4f01cd6dce9ea67aafde2fcfd03011a48",
+        "badge": "MUTATION",
+        "body": "Almost stop. Hold Brake. Pay for extreme footing.",
+        "body_colour": "e3e8dc",
+        "id": "deep_footing",
+        "name": "Deep Footing",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      },
+      {
+        "accent_colour": "d49bf1",
+        "art": "res://assets/powers/defence003a/anchor_exchange_cards.png",
+        "art_sha256": "726b97fd6285f367ed8da509982110e4f01cd6dce9ea67aafde2fcfd03011a48",
+        "badge": "MUTATION",
+        "body": "Brace, release and move. Carry brief footing.",
+        "body_colour": "e3e8dc",
+        "id": "slip_anchor",
+        "name": "Slip Anchor",
+        "rank": 3,
+        "tier": "mutation",
+        "title_colour": "d49bf1",
+        "title_font_size": 20
+      }
+    ],
+    "report": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_150715_506468_roster.json",
+      "sha256": "7e8b382c80270afaa93017447e3847f8e8acb5e6b18856054be941fa8443c166"
+    }
+  },
+  "selected_checks": {
+    "headless_card_hierarchy": 1715,
+    "native_main_capture": 34,
+    "failures": 0,
+    "supporting_existing_regressions": [
+      {
+        "suite": "ability_readability",
+        "checks": 3597,
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_regression_20261009_224039_009039_ability_readability.log",
+          "sha256": "c9ab2eb5eee5108b9a7cbb51d19d2ae4e7d0ec792463391a8b1106a127679111"
+        },
+        "scope": "Supporting earlier current-working-source regression. Root final broad run provides final full-runtime-source coverage."
+      },
+      {
+        "suite": "human_feedback_ui",
+        "checks": 8621,
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_regression_20261009_224039_009039_human_feedback_ui.log",
+          "sha256": "56c101c8bba7d32f1665076964398822e4266f23c9399d62f4cabe3ac1868f83"
+        },
+        "scope": "Supporting earlier current-working-source regression. Root final broad run provides final full-runtime-source coverage."
+      }
+    ]
+  },
+  "inputs": "Real Input.parse_input_event dispatch: keyboard focus, hover, mouse, mapped Xbox/Nintendo/PlayStation confirmation and synthetic ScreenTouch. Exactly-once touch claim verified through Main; no physical controller or phone claim.",
+  "reduced_flashing": "All three acquisition tiers keep the existing restrained monotone single fade; no new pulse or fullscreen flash.",
+  "copy": {
+    "ghost": "Fast physical closure of an owned or hostile paid live route; closer-owned hostile pulse, consumed used sections and 3.5-second cooldown. Inspector branch preview must have a valid branch.",
+    "orbit": "Exactly 100% DRIVE with fast active carving earns capped RPM; Rank II earns more at the same charge-growth rate; idle earns nothing.",
+    "chain": "Accepted hard hits send nearby physical shoves and open the short nearby Burst follow-up with owner cooldown. Knockouts alone no longer trigger it."
+  },
+  "future_rarity": "Rare/signature/boss-derived powers remain unimplemented. This palette describes current investment only; distinct future framing/badges/ornaments remain reserved, separate from permanent part rarity.",
+  "evidence": {
+    "capture_manifest": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_150715_506468.json",
+      "sha256": "bb7e0f43b389be2d3ecbeb22f20a8a955b5bf18d86e9d0a5479a603b95e15790"
+    },
+    "runtime_report": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_150715_506468_runtime.json",
+      "sha256": "6b180862a9a68f654f10ef88ab25dcfb9d814816519fea73fb65554a64c30ae0"
+    },
+    "video": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_card_hierarchy_video.mp4",
+      "sha256": "8aec73824aacfa8f1465a96e7be5456edbe739d40f0d0a412bfd8073f01ddddc"
+    },
+    "matrix": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_ability_card_hierarchy.png",
+      "sha256": "b39be269e0bacf8df068821a51dfaf35a552b36e294eb8b174a50a69521f5e22"
+    },
+    "video_seconds": 14.02,
+    "matrix_rows": [
+      "Redline / Redline II / Breakneck",
+      "Dead Centre / Dead Centre II / Bulwark",
+      "Afterimage / Afterimage II / Ghost Circuit"
+    ],
+    "pixel_policy": "Raw MovieWriter 800x480 equals actual viewport; crop native 640x360 menu then 2x nearest. PNG matrix copies whole actual native card crops at 2x nearest. Original art remains untinted.",
+    "native_scope": "Nine representative native cards and four actual Main choices; all 46 production card controls are separately audited headlessly. Explicit initial legal ranks/offers isolate UI; no natural XP/draft/outcome claim."
+  },
+  "preservation": {
+    "baseline": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_acceptance_preservation_start_20261009_135438_784804.json",
+      "sha256": "72efa2c2ecb63adb4ac7f03aea1d7ad2693f3a96669d467be0b80d92705b1281"
+    },
+    "player_files": 24,
+    "player_unchanged": true,
+    "baseline_assets": 695,
+    "all_baseline_asset_bytes_unchanged": true,
+    "frozen_card_source_unchanged": true,
+    "owned_source_sha256": {
+      "scripts/ability_card_style.gd": "8641aba7244685ec364eef098e64a18f67b35f2660615d441383a16f816ef679",
+      "scripts/run_powers.gd": "3ea9ede1452cd6727c6edfa4ae2d182315039cbb1442ed65f8dd1cc0af78b429",
+      "scripts/ability_inspection.gd": "0060e22c2d889d716a0e9507d547c417ba8c9de60cd90bc8aa78713f13e089f7",
+      "scripts/menus.gd": "53783931cc9f94333addd9c49b39d1f8d3fe58f199c3dabc0de293097e7e581c",
+      "tests/test_ability_card_hierarchy_003a1.gd": "0c60bc52c4487cd38b5a035e78477620e5609d044b8cf2931549ac477f97d55d",
+      "tests/capture_card_hierarchy_003a1.gd": "03624208c7d060e91dfadd6ae0040e50824005ee6257db93c134e0aac025019f"
+    }
+  },
+  "declared_later_draw_only_boundary": {
+    "changes": {
+      "scripts/battle.gd": {
+        "before": "76233401e607fd3f5118f4aeb77e1e6b826eaf0b63e6e62f938281ddc1ed1d4a",
+        "after": "5371dd23080af05e9058f527dfd425bb74c309d3b723974c5137a9ba641fdbf8"
+      }
+    },
+    "exact_three_line_delta_verified": true,
+    "scope": "Root moves circuit-field drawing after all ordinary trace drawing. No geometry/ownership/physics changes. Draft-only card evidence is unaffected; current gameplay overlay proof belongs to the later Ghost film."
+  },
+  "preserved_attempts": [
+    {
+      "reason": "Rejected QA driver: typed array fixture assignment; native process safely stopped with exact QA source/script ownership.",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_142002_311353.json",
+        "sha256": "1ec8dc8757ad5b215c1cc5b4ccd216acbc8cb04e9c0c997a4822562712f5cd41"
+      },
+      "capture_log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_hierarchy_20261009_142002_311353_capture.log",
+        "sha256": "862c548a546f10aa9dd96042c0152a23edecbb7e8ac2ea3a92f56f4c5df6c34f"
+      }
+    },
+    {
+      "reason": "Rejected QA cleanup: nonexistent music.muted property; all captures completed but pipeline correctly rejected script error. Writer960x600 also unsuitable for native pixel evidence.",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_142620_911089.json",
+        "sha256": "5e0875a4eec3b1e2646ced2c83289334a440f22c5c0f91281df027939dfaac83"
+      },
+      "capture_log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_hierarchy_20261009_142620_911089_capture.log",
+        "sha256": "3dcd2d5ab0b5a599099c8cb5fe2aba47c08728895d5de80756f7055e1370dd77"
+      }
+    },
+    {
+      "reason": "Passed preliminary33-check Main proof, but final visual review identified a stale independent mouse-hover inspector during the controller segment. Preserved rather than promoted.",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_144502_051124.json",
+        "sha256": "261b1a2a38c8267bdbc418f2d0fad6222b99d5ce557b370f33a57e7f5b7b604a"
+      },
+      "capture_log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_hierarchy_20261009_144502_051124_capture.log",
+        "sha256": "289f5e603f3f25bad1d84c4fdb5c05a64b6d0b0c26863eb7cbfa79e62f0197b2"
+      }
+    },
+    {
+      "reason": "Rejected one QA assertion: grab_focus on an already focused card does not re-emit focus_entered after hover moved away. Fixed fixture release/reacquire; production UI unchanged.",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_card_hierarchy_20261009_150104_061613.json",
+        "sha256": "a3fee89c8f5c3bf2bdb574807969e132f25effc3c9dcf68499bb0eb75ba149d2"
+      },
+      "capture_log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_card_hierarchy_20261009_150104_061613_capture.log",
+        "sha256": "1bce139cc011190f07cde511d90890cb4d33d040965988859b07c52ac9cbe3e1"
+      }
+    }
+  ]
+}

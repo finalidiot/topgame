@@ -36,10 +36,12 @@ static func snapshot(mobile: bool = false) -> Dictionary:
 		"mobile_layout":mobile, "scope":"Native world viewport, fixed isometric camera and physics; permanent HUD frames the separate 640x360 arena."}
 
 static func desktop_canvas(client_size: Vector2i) -> Dictionary:
-	# Text stays at one or two native pixels per authored pixel. Large monitors
+	# Text uses discrete native-pixel scales. Large monitors
 	# spend their additional room on the arena and spacing rather than giant HUD.
-	var ui_scale: int = mini(2,maxi(1,floori(minf(float(client_size.x)/800.0,float(client_size.y)/480.0))))
-	var canvas: Vector2i = Vector2i(maxi(800,client_size.x/ui_scale),maxi(480,client_size.y/ui_scale))
+	# HD clients spend their room on the actual play view. Increase UI scale only
+	# on substantially larger monitors, rather than shrinking a maximised arena.
+	var ui_scale: float = 2.0 if client_size.x >= 3840 and client_size.y >= 2160 else (1.5 if client_size.x >= 2560 and client_size.y >= 1440 else 1.0)
+	var canvas: Vector2i = Vector2i(maxi(800,floori(client_size.x/ui_scale)),maxi(480,floori(client_size.y/ui_scale)))
 	return {"ui_scale":ui_scale,"canvas_size":canvas,"client_size":client_size,
 		"native_window_managed_by_os":true,"changes_window_mode":false}
 

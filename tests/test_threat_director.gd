@@ -159,7 +159,7 @@ func _test_roles() -> void:
 		vectors[str(direction)] = true
 		check(direction.is_finite() and direction.length() <= 0.951,"Movement policy has finite bounded steering")
 	check(vectors.size() == 4,"Identical arena state produces four distinct movement intents")
-	check(Director.limits(100000.0).budget > Director.limits(900.0).budget and Director.limits(100000.0).total == 16,"Endless pressure scales without unbounded population")
+	check(Director.limits(100000.0).budget > Director.limits(900.0).budget and Director.limits(100000.0).total == 15 and Director.limits(100000.0).full == 6,"Endless pressure scales within the human-requested15body/six-full deep ceiling")
 	var hunter: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0},player,2.5)
 	var harasser: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"harasser","archetype":"harasser","role_phase":0.0},player,2.5)
 	check(hunter.x < -0.7 and absf(harasser.y)>absf(harasser.x) and not hunter.is_equal_approx(harasser),"Hunter directly pressures while harasser positions tangentially for poke/withdraw")

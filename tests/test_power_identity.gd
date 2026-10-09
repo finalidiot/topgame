@@ -323,7 +323,7 @@ func test_chain_provenance() -> void:
 	var burst = chain_battle()
 	var owner: Dictionary = burst.player_entity()
 	var target: Dictionary = burst.entity(2)
-	burst.powers.accepted_contact(owner, target, 0.7, Vector2.RIGHT, Vector2(15, 0), Vector2(-100, 0), Vector2(100, 0))
+	burst.powers.accepted_contact(owner, target, Runtime.CHAIN_HARD_SEVERITY, Vector2.RIGHT, Vector2(15, 0), Vector2(-100, 0), Vector2(100, 0))
 	check(int(burst.powers._state(owner).chain_target) == 2, "Meaningful contact primes its real single full-top Chain target")
 	burst.powers.submitted.clear()
 	burst._attempt_burst(owner, Vector2.RIGHT)
@@ -339,14 +339,15 @@ func test_chain_provenance() -> void:
 	var p: Dictionary = pulse.player_entity()
 	p.pos = Vector2(80, 20)
 	var source: Dictionary = pulse.entity(6)
-	var cause: Dictionary = pulse.powers._owned_effect_cause(p, "contact")
-	pulse.powers._tag(source, cause); source.outcome = "impact"
+	pulse.powers.accepted_contact(p, source, Runtime.CHAIN_HARD_SEVERITY, Vector2.RIGHT, Vector2.ZERO)
+	check(pulse.powers._next_tick_pulses.size() == 1 and str(source.outcome).is_empty(), "The pulse is queued by accepted hard physical work before the struck body retires")
+	source.outcome = "impact"
 	pulse.powers.eliminated(source, "impact"); pulse.powers.end_tick(false)
 	pulse.powers.begin_tick(B.FIXED_DT)
 	var pulse_fx: Dictionary = last_chain_fx(pulse)
-	check(pulse.powers.submitted == [2, 3, 4, 5], "Actual elimination pulse submits all live hostile full/small recipients and excludes ally/neutral/retired/far bodies")
+	check(pulse.powers.submitted == [2, 3, 4, 5], "Actual accepted-hard-hit pulse submits all live hostile full/small recipients and excludes ally/neutral/retired/far bodies")
 	check(not pulse_fx.is_empty() and pulse_fx.get("receiver_entity_ids", []) == [2, 3, 4], "Pulse artwork shows a bounded subset of its actual requested recipients")
-	check(int(pulse_fx.get("owner_entity_id", 0)) == 1 and int(pulse_fx.get("rank", 0)) == 2, "Pulse retains actual emitter provenance even away from its elimination origin")
+	check(int(pulse_fx.get("owner_entity_id", 0)) == 1 and int(pulse_fx.get("rank", 0)) == 2, "Pulse retains actual emitter provenance even away from its accepted contact origin")
 	var positions: Array[Vector2] = [Vector2(pulse.entity(2).pos), Vector2(pulse.entity(3).pos), Vector2(pulse.entity(4).pos)]
 	check(pulse_fx.get("receivers", []) == positions, "Bounded pulse links snapshot the same actual recipients")
 	var old_position: Vector2 = pulse.entity(2).pos

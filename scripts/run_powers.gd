@@ -3,6 +3,7 @@ class_name RunPowerCatalog
 
 const IdentityArt = preload("res://scripts/power_identity.gd")
 const DefenceArt = preload("res://scripts/defence_art.gd")
+const CardStyle = preload("res://scripts/ability_card_style.gd")
 
 ## Catalogue identity stays stable as the implemented draft pool grows.
 ## Physical Blade / Ratchet / Bit ratings remain exclusively in parts.gd.
@@ -47,10 +48,10 @@ const CARD_COPY: Dictionary = {
 	"iron_comet": {"category":"RICOCHET", "copy":"Hard wall rebound. Spend the next hit quickly."},
 	"dead_centre": {"category":"ANCHOR", "copy":"Hold centre. Weather hits. Reposition to vent Stress."},
 	"afterimage": {"category":"MOBILITY", "copy":"Fast travel lays paid trails that shove rivals."},
-	"chain_impact": {"category":"CHAIN", "copy":"Your knockouts chain shoves. Hard hit then Burst."},
+	"chain_impact": {"category":"CHAIN", "copy":"Hard hits shove nearby rivals. Burst to follow up."},
 	"clutch": {"category":"COMEBACK", "copy":"Low spin: steer gently and land hits to recover."},
 	"high_gear": {"category":"SPEED", "copy":"More thrust and speed. Plan your line."},
-	"orbit_drive": {"category":"DRIFT", "copy":"Brake + turn. Hold the arc to build DRIVE."},
+	"orbit_drive": {"category":"DRIFT", "copy":"Build DRIVE. Carve at 100% to earn RPM."},
 	"crash_guard": {"category":"BRAWL", "copy":"Weather a heavy hit. Use the brief guarded window."},
 	"momentum_bank": {"category":"BRAKE", "copy":"Steer + Brake to bank. Burst to release."},
 	"predator_line": {"category":"PRESSURE", "copy":"Keep hitting one rival. Chase its growing mark."},
@@ -66,10 +67,10 @@ const CONDITIONS: Dictionary = {
 	"iron_comet":"Hard wall rebound / next contact / charge expires after 2 seconds",
 	"dead_centre":"Settled centre hold / pressure builds Stress / steer away to vent / outside movement reloads finite recovery",
 	"afterimage":"Fast movement / each new trail costs RPM / trails expire",
-	"chain_impact":"Credited knockouts / heavy hit then nearby Burst / short follow-up window",
+	"chain_impact":"Accepted hard hit / nearby physical shove / Burst within the short follow-up window / owner cooldown",
 	"clutch":"Low RPM window / controlled movement and meaningful hits / finite recovery",
 	"high_gear":"Movement / hard turns and braking still cost RPM",
-	"orbit_drive":"Sustained moving curves / Brake + turn builds faster / straightening, slowing and reversal lose DRIVE",
+	"orbit_drive":"Moving curves build DRIVE / Brake + turn builds faster / 100% DRIVE with fast active steering earns capped RPM / straightening, slowing and reversal lose charge",
 	"crash_guard":"Heavy incoming hit / brief damper / cooldown",
 	"momentum_bank":"Controlled braking outside a drift / capped leaking storage / Burst spends store and RPM",
 	"predator_line":"Repeated meaningful hits on one full rival / switching or waiting loses pursuit",
@@ -86,14 +87,14 @@ const DEFINITIONS: Dictionary = {
 	"dead_centre": {"id":"dead_centre", "name":"Dead Centre", "description":"Settle near the middle to brace, recover limited RPM and pull rivals inward. Hits and anchor work build Stress, weakening the hold. Steer away with the anchor released to vent; moving outside reloads recovery.", "short_label":"CENTRE", "tags":["position", "defence"], "icon":"", "active":true},
 	"afterimage": {"id":"afterimage", "name":"Afterimage", "description":"Move fast to leave live trails that push crossing rivals sideways. Every trail spends RPM and expires after a few seconds.", "short_label":"ECHO", "tags":["mobility"], "icon":"", "active":true},
 	"reversal": {"id":"reversal", "name":"Reversal", "description":"Brake after a hard unstable hit to turn recoil into recovery.", "short_label":"REV", "tags":["brake", "recovery"], "icon":"", "active":false},
-	"chain_impact": {"id":"chain_impact", "name":"Chain Impact", "description":"Your credited knockouts send shoves through nearby rivals. A heavy hit on a full-size rival also primes a short Burst follow-up.", "short_label":"CHAIN", "tags":["impact", "burst"], "icon":"", "active":true},
+	"chain_impact": {"id":"chain_impact", "name":"Chain Impact", "description":"An accepted hard hit sends a physical shove through nearby rivals and opens a short Burst follow-up. Burst near the struck rival before the window expires. Each chain has an owner cooldown; knockouts alone do not trigger it.", "short_label":"CHAIN", "tags":["impact", "burst"], "icon":"", "active":true},
 	"slip_gear": {"id":"slip_gear", "name":"Slip Gear", "description":"Brake, turn, then Burst to release stored momentum.", "short_label":"SLIP", "tags":["brake", "mobility"], "icon":"", "active":false},
 	"rim_runner": {"id":"rim_runner", "name":"Rim Runner", "description":"Brake along a solid wall to ride its edge and choose your exit.", "short_label":"RIM", "tags":["brake", "wall"], "icon":"", "active":false},
 	"flywheel_cache": {"id":"flywheel_cache", "name":"Flywheel Cache", "description":"Bank a little early spin and release it when reserve gets low.", "short_label":"CACHE", "tags":["reserve", "recovery"], "icon":"", "active":false},
 	"crosscut": {"id":"crosscut", "name":"Crosscut", "description":"Steer sideways through a moving, glancing hit to shear the rival away. Each cut costs RPM and gives your own top some recoil.", "short_label":"CUT", "tags":["impact", "mobility"], "icon":"", "active":true},
 	"clutch": {"id":"clutch", "name":"Clutch", "description":"Low RPM opens a short recovery window. Gentle controlled movement saves spin; meaningful moving hits reclaim a limited amount. Clutch cannot revive a defeated top.", "short_label":"CLUTCH", "tags":["recovery", "defence"], "icon":"", "active":true},
 	"high_gear": {"id":"high_gear", "name":"High Gear", "description":"Steer to accelerate harder and reach a higher speed. Plan your line: hard steering and braking still spend RPM.", "short_label":"GEAR", "tags":["mobility", "speed"], "icon":"", "active":true},
-	"orbit_drive": {"id":"orbit_drive", "name":"Orbit Drive", "description":"Steer a sustained curve to build DRIVE. Brake and turn while moving to carve a drift and build it faster. DRIVE adds speed, thrust and efficiency; straightening, slowing or reversing loses it.", "short_label":"ORBIT", "tags":["mobility", "efficiency"], "icon":"", "active":true},
+	"orbit_drive": {"id":"orbit_drive", "name":"Orbit Drive", "description":"Steer a sustained curve to build DRIVE. Brake and turn while moving to build it faster. DRIVE adds speed, thrust and efficiency. At exactly 100%, fast active carving earns capped RPM recovery. Straightening, slowing or reversing loses charge; idle movement earns nothing.", "short_label":"ORBIT", "tags":["mobility", "efficiency"], "icon":"", "active":true},
 	"crash_guard": {"id":"crash_guard", "name":"Crash Guard", "description":"A heavy incoming contact triggers a brief damper that reduces collision loss. Use the guarded window before its cooldown.", "short_label":"GUARD", "tags":["defence", "impact"], "icon":"", "active":true},
 	"momentum_bank": {"id":"momentum_bank", "name":"Momentum Bank", "description":"Steer while braking to bank some lost motion. Burst to release it along your chosen line. Storage leaks, is capped, and its release costs extra RPM.", "short_label":"BANK", "tags":["brake", "burst"], "icon":"", "active":true},
 	"predator_line": {"id":"predator_line", "name":"Predator Line", "description":"Keep landing meaningful hits on the same full-size rival to strengthen pursuit and follow-up hits. Switching targets or waiting loses the pressure.", "short_label":"HUNT", "tags":["impact", "pressure"], "icon":"", "active":true},
@@ -108,10 +109,10 @@ const RANK_II: Dictionary = {
 	"afterimage": {"name":"Afterimage II", "description":"Fast travel leaves longer, stronger trails. Cross your own live old trail for a small speed surge. New trails still cost RPM.", "card_copy":"Longer trails. Cross yours for a speed surge.", "category":"LIVE ROUTE", "short_label":"ECHO II", "art_id":"afterimage_ii"},
 	"impact_wake": {"name":"Impact Wake II", "description":"Heavy hits make wider, stronger pressure rings with a shorter cooldown. Small taps still do nothing.", "card_copy":"Wider, stronger wakes. Shorter cooldown.", "category":"IMPACT", "short_label":"WAKE II", "art_id":"impact_wake_ii"},
 	"iron_comet": {"name":"Iron Comet II", "description":"A hard wall rebound holds charge longer. Spend the next contact on a rival for a stronger shove before the charge expires.", "card_copy":"Stronger rebound strike. Charge lasts longer.", "category":"REBOUND STRIKE", "short_label":"COMET II", "art_id":"iron_comet_ii"},
-	"chain_impact": {"name":"Chain Impact II", "description":"Credited knockout chains reach farther and shove harder. A heavy rival hit also primes a stronger, longer Burst follow-up.", "card_copy":"Wider chains. A stronger Burst follow-up.", "category":"CHAIN", "short_label":"CHAIN II", "art_id":"chain_impact_ii"},
+	"chain_impact": {"name":"Chain Impact II", "description":"Accepted hard hits send wider, stronger physical shoves and open a longer, stronger nearby Burst follow-up. The owner cooldown is shorter than Rank I; knockouts alone do not trigger a chain.", "card_copy":"Hard hits: wider chains, stronger Burst follow-up.", "category":"CHAIN", "short_label":"CHAIN II", "art_id":"chain_impact_ii"},
 	"clutch": {"name":"Clutch II", "description":"Low RPM opens a longer recovery chance. Controlled movement conserves more spin; meaningful moving hits earn a larger finite catch.", "card_copy":"Longer Clutch window. More earned recovery.", "category":"COMEBACK", "short_label":"CLUTCH II", "art_id":"clutch_ii"},
 	"high_gear": {"name":"High Gear II", "description":"Gain more thrust and speed than Rank I, with better retained motion on a committed line. Steering and braking still cost RPM.", "card_copy":"More thrust, speed and retained motion.", "category":"HIGH SPEED", "short_label":"GEAR II", "art_id":"high_gear_ii"},
-	"orbit_drive": {"name":"Orbit Drive II", "description":"DRIVE adds more speed and RPM efficiency; Brake-turn drifts carve more strongly. Sustained curves still build charge at the same rate as Rank I.", "card_copy":"Stronger carving, speed and efficiency.", "category":"DRIFT FLOW", "short_label":"ORBIT II", "art_id":"orbit_drive_ii"},
+	"orbit_drive": {"name":"Orbit Drive II", "description":"DRIVE adds more speed and RPM efficiency; Brake-turn drifts carve more strongly. At exactly 100%, fast active carving earns more capped RPM recovery than Rank I. Sustained curves still build charge at the same rate as Rank I; idle movement earns nothing.", "card_copy":"Stronger carve. More RPM at 100% DRIVE.", "category":"DRIFT FLOW", "short_label":"ORBIT II", "art_id":"orbit_drive_ii"},
 	"crash_guard": {"name":"Crash Guard II", "description":"A heavy contact engages a deeper damper for longer than Rank I. Protection remains temporary and has a cooldown.", "card_copy":"Deeper damper. Longer guarded window.", "category":"BRAWL DEFENCE", "short_label":"GUARD II", "art_id":"crash_guard_ii"},
 	"momentum_bank": {"name":"Momentum Bank II", "description":"Controlled braking captures more lost motion and holds a larger bank. Burst releases it on your line; storage still leaks and release costs RPM.", "card_copy":"Store more motion. Release a stronger Burst.", "category":"BRAKE STORAGE", "short_label":"BANK II", "art_id":"momentum_bank_ii"},
 	"predator_line": {"name":"Predator Line II", "description":"Repeated meaningful hits on one full-size rival grant stronger pursuit damage and last longer. Switching or waiting still loses the hunt.", "card_copy":"Stronger pursuit hits. Longer target memory.", "category":"PURSUIT", "short_label":"HUNT II", "art_id":"predator_line_ii"},
@@ -125,7 +126,7 @@ const MUTATIONS: Dictionary = {
 	"breakneck": {"id":"breakneck", "power_id":"redline", "name":"Breakneck", "description":"Build Redline heat or excess RPM, then Burst again to spend it on one committed strike. Recoil costs RPM and wobble; missing is worse.", "card_copy":"Overclock, then Burst again. One brutal strike.", "category":"CATASTROPHIC CHARGE", "short_label":"BREAKNECK", "condition":"Overclock first / Burst again at 32% heat or 2.5% excess RPM"},
 	"bulwark": {"id":"bulwark", "power_id":"dead_centre", "name":"Bulwark", "description":"Fully anchor near centre to resist displacement and throw heavy attackers back. Counterforce builds Anchor Stress, so steer out to vent before your hold weakens.", "card_copy":"Plant fully. Throw attackers back. Vent Stress.", "category":"IMMOVABLE DEFENCE", "short_label":"BULWARK", "condition":"Full Anchor / heavy incoming contacts"},
 	"counterweight": {"id":"counterweight", "power_id":"dead_centre", "name":"Counterweight", "description":"Take incoming force while anchored, then aim a Burst to release stored retaliation. The discharge breaks the anchor and, with steering, vents some Stress.", "card_copy":"Anchor. Store hits. Aim a Burst to strike and vent.", "category":"STORED RETALIATION", "short_label":"COUNTER", "condition":"Incoming force while Anchored / Burst releases storage"},
-	"ghost_circuit": {"id":"ghost_circuit", "power_id":"afterimage", "name":"Ghost Circuit", "description":"Draw and close a fast live Afterimage loop to shove rivals inside it. Closure must use a paid visible route, and every new trail costs RPM.", "card_copy":"Close a fast live loop. Push rivals inside.", "category":"CIRCUIT CLOSURE", "short_label":"CIRCUIT", "condition":"Close a live Afterimage loop / forgiving route closure"},
+	"ghost_circuit": {"id":"ghost_circuit", "power_id":"afterimage", "name":"Ghost Circuit", "description":"Move fast to physically close your own or a hostile live Afterimage route. The route must be paid, visible and geometrically valid. The closer's enemies receive the pulse; used sections are consumed and the closer waits 3.5 seconds.", "card_copy":"Close own or enemy live routes. Hijack against enemies.", "category":"CIRCUIT HIJACK", "short_label":"CIRCUIT", "condition":"Physically close an owned or hostile live paid route / closer cooldown / used sections consumed"},
 	"slipstream": {"id":"slipstream", "power_id":"afterimage", "name":"Slipstream", "description":"Cross your own live old trail for a stronger speed and efficiency surge. The route had to be paid for; repeated crossings have limits.", "card_copy":"Lay a trail. Cross it for speed and efficiency.", "category":"ROUTE ENGINE", "short_label":"STREAM", "condition":"Re-enter or cross your own active Afterimage path"},
 	"terminal_velocity": {"id":"terminal_velocity", "power_id":"high_gear", "name":"Terminal Velocity", "description":"Commit to extreme thrust and speed. Hard steering and braking spend extra RPM, so plan the line before accelerating.", "card_copy":"Extreme speed. Expensive corrections.", "category":"RAW SPEED", "short_label":"TERMINAL", "condition":"High-speed movement / steering and brake expenditure"},
 	"flow_state": {"id":"flow_state", "power_id":"high_gear", "name":"Flow State", "description":"Keep moving through smooth turns to retain speed and spend less RPM. It has less raw thrust than Terminal Velocity but smoother control.", "card_copy":"Carry speed through turns. Spend less RPM.", "category":"MAINTAINED SPEED", "short_label":"FLOW", "condition":"Sustained movement / smooth velocity retention"},
@@ -151,7 +152,16 @@ static func get_power(power_id: String) -> Dictionary:
 		_apply_art(power, power_id)
 		power["category"] = CARD_COPY[power_id].category
 		power["card_copy"] = CARD_COPY[power_id].copy
+	_apply_card_semantics(power)
 	return power
+
+static func get_card_tier_style(rank: int = 1, mutation: String = "") -> Dictionary:
+	return CardStyle.get_card_tier_style(rank, mutation)
+
+static func _apply_card_semantics(power: Dictionary) -> void:
+	var style: Dictionary = get_card_tier_style(int(power.get("rank", 1)), str(power.get("mutation", "")))
+	power["card_tier"] = style.tier
+	power["card_badge"] = style.badge
 
 static func max_rank(power_id: String) -> int:
 	return 3 if power_id in VERTICAL_IDS else (2 if power_id in ACTIVE_IDS else (1 if power_id in LEGACY_OWNED_IDS else 0))
@@ -198,6 +208,7 @@ static func get_offer(power_id: String, rank: int = 0, mutation: String = "") ->
 		var branches: Array[String] = mutation_choices(power_id)
 		power.description = "Choose %s or %s to transform this power." % [MUTATIONS[branches[0]].name, MUTATIONS[branches[1]].name]
 		power.card_copy = "Choose a new behaviour: %s or %s." % [MUTATIONS[branches[0]].name, MUTATIONS[branches[1]].name]
+	_apply_card_semantics(power)
 	return power
 
 static func get_mutation(branch_id: String) -> Dictionary:
@@ -211,6 +222,7 @@ static func get_mutation(branch_id: String) -> Dictionary:
 	branch["offer_label"] = "MUTATION / III"
 	branch["rank_label"] = "RANK III / MUTATION"
 	_apply_art(branch, branch_id)
+	_apply_card_semantics(branch)
 	return branch
 
 ## Current ownership metadata is distinct from the next investment offer.
@@ -223,6 +235,7 @@ static func get_owned_power(power_id: String, rank: int = 1, mutation: String = 
 		power.merge(RANK_II[power_id].duplicate(true), true)
 		_apply_art(power, str(power.art_id))
 	power.rank = rank
+	_apply_card_semantics(power)
 	return power
 
 static func _apply_art(power: Dictionary, art_id: String) -> void:

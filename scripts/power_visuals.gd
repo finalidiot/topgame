@@ -379,12 +379,22 @@ static func _draw_route_nodes(canvas: CanvasItem, points: PackedVector2Array, in
 		carried = fmod(carried + distance, spacing)
 
 static func draw_circuit_field(canvas: CanvasItem, trace: Dictionary, points: PackedVector2Array) -> void:
-	if points.size() < 4 or not bool(trace.get("energized", false)):
+	if points.size() < 4 or not bool(trace.get("circuit_energized",trace.get("energized", false))):
 		return
 	var maximum: float = maxf(0.01, float(trace.get("max_life", 5.0)))
-	var fade: float = clampf(float(trace.get("life", maximum)) / maximum * 2.0, 0.0, 1.0)
+	var age: float = float(trace.get("presentation_circuit_age",1.0))
+	var trace_fade: float = clampf(float(trace.get("life", maximum)) / maximum * 2.0, 0.0, 1.0)
+	# A fresh hijack energises an old paid route. Its original expiry still
+	# bounds the field; activation readability must not inherit its old age.
+	var fresh: float = clampf((0.70-age)/0.30,0.0,1.0)
+	var fade: float = lerpf(trace_fade,1.0,fresh)
 	var ink: Color = Color(0.15, 0.48, 0.41, 0.65 * fade)
 	var light: Color = Color(0.45, 0.86, 0.69, 0.84 * fade)
+	if str(trace.get("circuit_team_id","player")) == "hostile":
+		ink=Color(0.62,0.34,0.18,0.65*fade)
+		light=Color(0.94,0.64,0.40,0.84*fade)
+	if canvas.get("reduced_flashing") == true:
+		ink.a*=0.70;light.a*=0.65
 	var closed: PackedVector2Array = PackedVector2Array()
 	for point: Vector2 in points:
 		closed.append(point.round())
@@ -392,8 +402,7 @@ static func draw_circuit_field(canvas: CanvasItem, trace: Dictionary, points: Pa
 	# The actual paid path becomes a metal floor seam; no filled magic field.
 	canvas.draw_polyline(closed, Color(0.13,0.21,0.22,fade*0.90), 3.0)
 	canvas.draw_polyline(closed, ink, 1.0)
-	var age: float = float(trace.get("presentation_circuit_age",1.0))
-	var plan: Dictionary = circuit_motion_plan(closed,age)
+	var plan: Dictionary = circuit_motion_plan(closed,age*(3.0 if bool(trace.get("circuit_hijacked",false)) else 1.0))
 	for current: Dictionary in plan.currents:
 		canvas.draw_line(Vector2(current.from).round(),Vector2(current.to).round(),light,2.0)
 		MotionArt.cel(canvas,"power_motion","CIRCUIT_CURRENT",current.to,age,fade*0.68,true)

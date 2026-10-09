@@ -287,11 +287,12 @@ static func draw_links(canvas: CanvasItem, fighters: Array[Dictionary], clock: f
 			var tangent: Vector2 = (b-a).normalized()
 			var side: Vector2 = tangent.orthogonal()*2.0
 			var alpha: float = float(plan.alpha)*float(index+1)/float(points.size())
-			canvas.draw_line((a+side).round(),(b+side).round(),Color(0.73,0.37,0.23,alpha),1.0)
-			canvas.draw_line((a-side).round(),(b-side).round(),Color(0.83,0.65,0.38,alpha),1.0)
 			var phase: float = fposmod(float(plan.flow)+float(index)*0.31,1.0)
 			var tip: Vector2 = a.lerp(b,phase)
-			# Short travelling tooth follows each actual recent motion segment.
-			canvas.draw_polyline(PackedVector2Array([(tip-tangent*3.0+side).round(),tip.round(),(tip-tangent*3.0-side).round()]),Color(0.88,0.75,0.52,alpha),1.0)
+			var quiet: float = 0.55 if canvas.get("reduced_flashing") == true else 0.80
+			# Sparse warm pursuit ticks follow actual recent motion. No paired
+			# rails or persistent floor lane can imply a separate trap/attack.
+			if index%2 == 0 and a.distance_to(b)>=4.0:
+				canvas.draw_polyline(PackedVector2Array([(tip-tangent*3.0+side).round(),tip.round(),(tip-tangent*3.0-side).round()]),Color(0.88,0.59,0.31,alpha*quiet),1.0)
 			if index==flowing_segment:
-				MotionArt.cel(canvas,"power_motion","PREDATOR_FLOW_"+heading(points[index+1]-points[index]),tip,clock,float(plan.alpha),true)
+				MotionArt.cel(canvas,"power_motion","PREDATOR_FLOW_"+heading(points[index+1]-points[index]),tip,clock,float(plan.alpha)*quiet,true)

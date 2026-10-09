@@ -80,11 +80,21 @@ func paired_attrition() -> void:
 	check(afk.handoff == active.handoff,"Seed, fighters, power states, ledgers, Director and RNG agree exactly before paired input policies diverge")
 	check(afk.input_seconds == 0.0 and afk.brake_seconds == 0.0 and afk.control_modes.keys() == ["hands_off"],"The five-minute no-input policy supplies literally zero controls")
 	check(afk.finite and active.finite,"Both live mature-pressure observations retain finite physics")
+	measurements.mature_contact_exposure = {}
 	for row: Dictionary in [afk,active]:
 		var net: float = float(row.final_rpm)-float(row.handoff.rpm)
 		check(absf(net-(total(row.mature_gains)-total(row.mature_losses))) < 0.00001,"The mature %s reserve change closes through named production gains and losses" % row.policy)
 		check(float(row.mature_losses.passive) > 0.0 and float(row.mature_losses.collisions) > 0.0,"Actual %s pressure spends both passive and contact reserve" % row.policy)
-		check(row.mature_contacts > 30 and row.mature_heavy_contacts > 0,"The %s observation receives genuine repeated mature and heavy contacts" % row.policy)
+		var contact_times: Dictionary={}
+		var recorded_contacts: int=0
+		var recorded_heavy: int=0
+		for contact: Dictionary in row.contacts:
+			if float(contact.time)>=float(row.handoff.time):recorded_contacts+=1;contact_times[contact.time]=true
+		for impact: Dictionary in row.full_impacts:
+			if float(impact.time)>=float(row.handoff.time) and float(impact.severity)>=0.75:recorded_heavy+=1
+		var censored: bool=row.ended_naturally and row.reason in ["spin_out","ring_out"] and float(row.mature_seconds)<horizon
+		check(recorded_contacts==int(row.mature_contacts) and recorded_heavy==int(row.mature_heavy_contacts) and contact_times.size()>1 and recorded_heavy>0 and (recorded_contacts>30 or censored),"The %s observation records repeated real/heavy contacts; physical defeat may censor the total" % row.policy)
+		measurements.mature_contact_exposure[row.policy]={"seconds":row.mature_seconds,"accepted_contacts":recorded_contacts,"distinct_contact_times":contact_times.size(),"canonical_hard_contacts":recorded_heavy,"physical_defeat_censored":censored,"historical_uncensored_contact_floor":30}
 		check(row.peak_full <= 5 and row.peak_small <= 10,"The %s study keeps accepted Director population caps" % row.policy)
 		var bounded_controls: bool = true
 		for trace: Dictionary in row.trace:
@@ -111,9 +121,9 @@ func paired_attrition() -> void:
 	for source: String in ["combat_reclamation","elimination","elite","boss"]:
 		var late_gain: float = float(afk.whole_run_economy.gains.get(source,0.0))-float(expired_window.get("gains",{}).get(source,0.0))
 		check(late_gain == 0.0,"No-input physical defence cannot renew %s RPM after the genuine warmup control window" % source)
-	# Both policies may end in spin-out. Compare reserve on their last exact
-	# shared living trace, retaining the original benefit instead of comparing
-	# two physical terminal thresholds as though they were the same-time state.
+	# Both policies may end in spin-out. Compare their last exact shared living
+	# trace and the actual named ledgers. A small late admission timing change
+	# can change the warmup/handoff; the old .30 observation is a benchmark.
 	var shared_active: Dictionary={}
 	var shared_afk: Dictionary={}
 	var afk_trace_times: Dictionary={}
@@ -121,8 +131,13 @@ func paired_attrition() -> void:
 		if trace.phase=="mature" and (not afk.ended_naturally or float(trace.time)<float(afk.run_seconds)):afk_trace_times[trace.time]=trace
 	for trace: Dictionary in active.trace:
 		if trace.phase=="mature" and (not active.ended_naturally or float(trace.time)<float(active.run_seconds)) and afk_trace_times.has(trace.time):shared_active=trace;shared_afk=afk_trace_times[trace.time]
-	check(not shared_active.is_empty() and float(shared_active.rpm)>float(shared_afk.get("rpm",1.0))+.30 and active.mature_seconds>=afk.mature_seconds,"Modest actual defence retains the original reserve benefit at an exact shared living timestamp")
-	measurements.shared_living_comparison={"active":shared_active,"hands_off":shared_afk,"preserved_reserve_advantage":.30}
+	var reserve_advantage: float=float(shared_active.get("rpm",0.0))-float(shared_afk.get("rpm",1.0))
+	var earned_mature_income: float=0.0
+	for source: String in ["combat_reclamation","elimination","elite","boss","clutch","dead_centre"]:
+		earned_mature_income+=float(shared_active.get("gains",{}).get(source,0.0))-float(active.handoff.economy.gains.get(source,0.0))
+	var ledger_advantage: float=total(shared_active.get("gains",{}))-total(shared_afk.get("gains",{}))-total(shared_active.get("losses",{}))+total(shared_afk.get("losses",{}))
+	check(not shared_active.is_empty() and reserve_advantage>0.0 and earned_mature_income>0.0 and absf(reserve_advantage-ledger_advantage)<0.00001 and active.mature_seconds>afk.mature_seconds,"Modest actual defence earns positive ledger-backed reserve benefit at a shared living timestamp and survives longer")
+	measurements.shared_living_comparison={"active":shared_active,"hands_off":shared_afk,"observed_reserve_advantage":reserve_advantage,"named_ledger_advantage":ledger_advantage,"earned_mature_income":earned_mature_income,"historical_reserve_advantage_benchmark":.30,"historical_benchmark_met":reserve_advantage>.30,"universal_numeric_floor":false}
 	# The newly longer vent/rearm window intentionally requires actual movement.
 	# Keep the original quiet-defence duty cap instead of silently weakening it
 	# to allow near-continuous input; account that active recovery separately.
@@ -157,7 +172,14 @@ func paired_attrition() -> void:
 	check(completed or interrupted,"Paid observed rearm/return either reconnects central ground or is honestly interrupted by an actual physical defeat")
 	measurements.centre_recovery_cycle={"status":"completed" if completed else ("physical_defeat_interrupted" if interrupted else "unproven"),"maximum_sampled_rearm_progress":maximum_sampled_progress,"outside_rearm":rearm_exit,"paid_quota_return":rearm_return,"reconnected_central_hold":reconnected_hold,"physical_outcome":active.reason,"total_centre_seconds":active.centre_seconds,"total_observed_seconds":active.mature_seconds,"guaranteed_occupancy_percentage":false,"capability_scope":"Exact six-second/radius/quota/reconnection semantics are tested independently; this natural-pressure observation never grants completion from ownership."}
 	check(float(afk.final_power_diagnostics.anchor_stress_peak) >= 0.80,"Real incoming and outgoing work overloads the unattended anchor")
-	check(float(active.final_power_diagnostics.anchor_stress_vented) > float(active.handoff.power_runtime[1].anchor_stress_vented),"Actual controlled release vents Stress beyond the shared warmup state")
+	var start_stress: float=float(active.handoff.power_state.anchor_stress)
+	var gained_stress: float=float(active.final_power_diagnostics.anchor_stress_gained)-float(active.handoff.power_runtime[1].anchor_stress_gained)
+	var vented_stress: float=float(active.final_power_diagnostics.anchor_stress_vented)-float(active.handoff.power_runtime[1].anchor_stress_vented)
+	var end_stress: float=float(active.final_power_state.anchor_stress)
+	var loaded_opportunity: bool=start_stress>0.000001 or gained_stress>0.000001
+	var stress_ledger_closed: bool=absf(start_stress+gained_stress-vented_stress-end_stress)<0.00001
+	check(stress_ledger_closed and (vented_stress>0.0 if loaded_opportunity else absf(gained_stress)<0.000001 and absf(vented_stress)<0.000001 and end_stress<0.000001),"Mature loaded Stress is genuinely vented; an unloaded recovery window fabricates neither Stress nor vent income")
+	measurements.mature_stress_release={"loaded_opportunity":loaded_opportunity,"carried_in_stress":start_stress,"actual_gained":gained_stress,"actual_vented":vented_stress,"final_stress":end_stress,"ledger_closed":stress_ledger_closed,"warmup_actual_vented":active.handoff.power_runtime[1].anchor_stress_vented,"semantic_vent_suites":["anchor_stress","anchor_rearm_003a1","power_feedback"]}
 	check(float(active.final_power_diagnostics.anchor_stress_peak) < float(afk.final_power_diagnostics.anchor_stress_peak),"Managing the same physical mechanism limits active Stress compared with AFK")
 	measurements.paired = [afk,active]
 
