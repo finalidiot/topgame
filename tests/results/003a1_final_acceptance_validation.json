@@ -1,0 +1,928 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "task": "003A.1",
+  "branch": "task-003a1-bastion-active-defence",
+  "starting_sha": "68669556b253a67212e32c0cbf18d56f0df43f6f",
+  "accepted_main_sha": "c4228d446b5ed70a91c2e66c37dca0f8a32e56fc",
+  "runtime_build_sha": "f97d36709fa44ded4a02979231391105fb686996",
+  "runtime_input_digest": "897f071425512e1fd757f04325b8dd111ce0fb931b44a2797ca2ee3e45956f62",
+  "headless_native_python": {
+    "headless": {
+      "report": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_acceptance_headless_20261009_154611_968792.json",
+        "sha256": "d8b55ac34635bccdad29356df51119432f145357527f67661376f23b56776e37",
+        "bytes": 411300
+      },
+      "suite_count": 110,
+      "checks": 234620,
+      "source_harness_player_guards": true,
+      "suites": [
+        {
+          "name": "collection_save",
+          "checks": 371,
+          "passed": true
+        },
+        {
+          "name": "collection_flow",
+          "checks": 575,
+          "passed": true
+        },
+        {
+          "name": "collection_ui",
+          "checks": 2362,
+          "passed": true
+        },
+        {
+          "name": "spin_economy",
+          "checks": 232,
+          "passed": true
+        },
+        {
+          "name": "threat_director",
+          "checks": 115,
+          "passed": true
+        },
+        {
+          "name": "continuous_run",
+          "checks": 200,
+          "passed": true
+        },
+        {
+          "name": "run_context",
+          "checks": 377,
+          "passed": true
+        },
+        {
+          "name": "flow",
+          "checks": 162,
+          "passed": true
+        },
+        {
+          "name": "powers",
+          "checks": 84,
+          "passed": true
+        },
+        {
+          "name": "swarm",
+          "checks": 34,
+          "passed": true
+        },
+        {
+          "name": "presentation",
+          "checks": 78,
+          "passed": true
+        },
+        {
+          "name": "progression",
+          "checks": 190,
+          "passed": true
+        },
+        {
+          "name": "starters",
+          "checks": 17,
+          "passed": true
+        },
+        {
+          "name": "starter_physics",
+          "checks": 38,
+          "passed": true
+        },
+        {
+          "name": "xp_observer",
+          "checks": 30,
+          "passed": true
+        },
+        {
+          "name": "ramp_integration",
+          "checks": 21,
+          "passed": true
+        },
+        {
+          "name": "card_assets",
+          "checks": 132,
+          "passed": true
+        },
+        {
+          "name": "escalation_progression",
+          "checks": 1445,
+          "passed": true
+        },
+        {
+          "name": "escalation_physics",
+          "checks": 103,
+          "passed": true
+        },
+        {
+          "name": "escalation_completion",
+          "checks": 42,
+          "passed": true
+        },
+        {
+          "name": "escalation_assets",
+          "checks": 351,
+          "passed": true
+        },
+        {
+          "name": "rpm_replay",
+          "checks": 0,
+          "passed": true
+        },
+        {
+          "name": "signature_presentation",
+          "checks": 3362,
+          "passed": true
+        },
+        {
+          "name": "roster_draft",
+          "checks": 23705,
+          "passed": true
+        },
+        {
+          "name": "roster_physics",
+          "checks": 30,
+          "passed": true
+        },
+        {
+          "name": "roster_presentation",
+          "checks": 3585,
+          "passed": true
+        },
+        {
+          "name": "ability_rebalance",
+          "checks": 92,
+          "passed": true
+        },
+        {
+          "name": "ability_rebalance_integration",
+          "checks": 32,
+          "passed": true
+        },
+        {
+          "name": "collection_c5_integration",
+          "checks": 207,
+          "passed": true
+        },
+        {
+          "name": "power_identity",
+          "checks": 4589,
+          "passed": true
+        },
+        {
+          "name": "parts_catalogue",
+          "checks": 8945,
+          "passed": true
+        },
+        {
+          "name": "parts_package",
+          "checks": 302,
+          "passed": true
+        },
+        {
+          "name": "packet_package",
+          "checks": 397,
+          "passed": true
+        },
+        {
+          "name": "feedback_drift",
+          "checks": 1409,
+          "passed": true
+        },
+        {
+          "name": "feedback_anchor_contacts",
+          "checks": 65,
+          "passed": true
+        },
+        {
+          "name": "power_feedback",
+          "checks": 2463,
+          "passed": true
+        },
+        {
+          "name": "feedback_rerolls",
+          "checks": 1052,
+          "passed": true
+        },
+        {
+          "name": "feedback_effects",
+          "checks": 14404,
+          "passed": true
+        },
+        {
+          "name": "feedback_live_pickup",
+          "checks": 10,
+          "passed": true
+        },
+        {
+          "name": "feedback_parts_retention",
+          "checks": 148,
+          "passed": true
+        },
+        {
+          "name": "beast_manifestations",
+          "checks": 16489,
+          "passed": true
+        },
+        {
+          "name": "music",
+          "checks": 1834,
+          "passed": true
+        },
+        {
+          "name": "music_escalation",
+          "checks": 651,
+          "passed": true
+        },
+        {
+          "name": "save_tools",
+          "checks": 92,
+          "passed": true
+        },
+        {
+          "name": "presentation_flow",
+          "checks": 49,
+          "passed": true
+        },
+        {
+          "name": "frontend",
+          "checks": 416,
+          "passed": true
+        },
+        {
+          "name": "packet_economy",
+          "checks": 10173,
+          "passed": true
+        },
+        {
+          "name": "packet_transactions",
+          "checks": 175,
+          "passed": true
+        },
+        {
+          "name": "run_rewards",
+          "checks": 31,
+          "passed": true
+        },
+        {
+          "name": "packet_art_audio",
+          "checks": 170,
+          "passed": true
+        },
+        {
+          "name": "shop_progression",
+          "checks": 792,
+          "passed": true
+        },
+        {
+          "name": "human_feedback_ui",
+          "checks": 8621,
+          "passed": true
+        },
+        {
+          "name": "beast_orientation",
+          "checks": 19797,
+          "passed": true
+        },
+        {
+          "name": "music_revision",
+          "checks": 48,
+          "passed": true
+        },
+        {
+          "name": "ui_polish_package",
+          "checks": 199,
+          "passed": true
+        },
+        {
+          "name": "preview_human_feedback",
+          "checks": 7817,
+          "passed": true
+        },
+        {
+          "name": "enemy_commitment",
+          "checks": 25971,
+          "passed": true
+        },
+        {
+          "name": "defence_pressure",
+          "checks": 27,
+          "passed": true
+        },
+        {
+          "name": "defence_depth",
+          "checks": 432,
+          "passed": true
+        },
+        {
+          "name": "grounded_pickups",
+          "checks": 3220,
+          "passed": true
+        },
+        {
+          "name": "arena_escalation",
+          "checks": 7084,
+          "passed": true
+        },
+        {
+          "name": "defence_participation",
+          "checks": 21,
+          "passed": true
+        },
+        {
+          "name": "final_acceptance_package",
+          "checks": 479,
+          "passed": true
+        },
+        {
+          "name": "mobile_combat_input",
+          "checks": 119,
+          "passed": true
+        },
+        {
+          "name": "bastion_active_defence",
+          "checks": 43,
+          "passed": true
+        },
+        {
+          "name": "ability_readability",
+          "checks": 3597,
+          "passed": true
+        },
+        {
+          "name": "anchor_stress",
+          "checks": 36,
+          "passed": true
+        },
+        {
+          "name": "controller_bindings_003a1",
+          "checks": 105,
+          "passed": true
+        },
+        {
+          "name": "run_ramp",
+          "checks": 16,
+          "passed": true
+        },
+        {
+          "name": "public_power_state_003a1",
+          "checks": 22,
+          "passed": true
+        },
+        {
+          "name": "input_acceptance_003a1",
+          "checks": 277,
+          "passed": true
+        },
+        {
+          "name": "rpm_acceptance_003a1",
+          "checks": 30,
+          "passed": true
+        },
+        {
+          "name": "anchor_rearm_003a1",
+          "checks": 101,
+          "passed": true
+        },
+        {
+          "name": "pickup_feel_003a1",
+          "checks": 159,
+          "passed": true
+        },
+        {
+          "name": "combat_acceptance_hud_003a1",
+          "checks": 82,
+          "passed": true
+        },
+        {
+          "name": "combat_art003a1",
+          "checks": 3169,
+          "passed": true
+        },
+        {
+          "name": "combat_impact_rework",
+          "checks": 49,
+          "passed": true
+        },
+        {
+          "name": "bulk_packet_transactions_003a1",
+          "checks": 300,
+          "passed": true
+        },
+        {
+          "name": "ghost_accessibility_003a1",
+          "checks": 32,
+          "passed": true
+        },
+        {
+          "name": "combat_acceptance_package_003a1",
+          "checks": 150,
+          "passed": true
+        },
+        {
+          "name": "combat_architecture",
+          "checks": 35,
+          "passed": true
+        },
+        {
+          "name": "escalation_integration",
+          "checks": 1959,
+          "passed": true
+        },
+        {
+          "name": "parts_collection",
+          "checks": 1217,
+          "passed": true
+        },
+        {
+          "name": "presentation_retention",
+          "checks": 13253,
+          "passed": true
+        },
+        {
+          "name": "android_foundation",
+          "checks": 138,
+          "passed": true
+        },
+        {
+          "name": "contact_reclaim_003a1",
+          "checks": 76,
+          "passed": true
+        },
+        {
+          "name": "bulk_packet_touch_003a1",
+          "checks": 113,
+          "passed": true
+        },
+        {
+          "name": "menus",
+          "checks": 5339,
+          "passed": true
+        },
+        {
+          "name": "controller",
+          "checks": 1114,
+          "passed": true
+        },
+        {
+          "name": "state_meters_003a1",
+          "checks": 1468,
+          "passed": true
+        },
+        {
+          "name": "combat_hud_003a1",
+          "checks": 796,
+          "passed": true
+        },
+        {
+          "name": "overdrive_lifecycle_003a1",
+          "checks": 2008,
+          "passed": true
+        },
+        {
+          "name": "mobile_shell_layout_003a1",
+          "checks": 124,
+          "passed": true
+        },
+        {
+          "name": "pickup_positions_003a1",
+          "checks": 2463,
+          "passed": true
+        },
+        {
+          "name": "shop_ux_003a1",
+          "checks": 1754,
+          "passed": true
+        },
+        {
+          "name": "shop_focus_cost_003a1",
+          "checks": 21,
+          "passed": true
+        },
+        {
+          "name": "combat_audio_mix_003a1",
+          "checks": 42,
+          "passed": true
+        },
+        {
+          "name": "native_window_layout_003a1",
+          "checks": 293,
+          "passed": true
+        },
+        {
+          "name": "enemy_intelligence_003a1",
+          "checks": 14489,
+          "passed": true
+        },
+        {
+          "name": "enemy_power_packages_003a1",
+          "checks": 319,
+          "passed": true
+        },
+        {
+          "name": "enemy_burst_sampling_003a1",
+          "checks": 12,
+          "passed": true
+        },
+        {
+          "name": "ability_card_hierarchy_003a1",
+          "checks": 1715,
+          "passed": true
+        },
+        {
+          "name": "deep_run_density_003a1",
+          "checks": 40,
+          "passed": true
+        },
+        {
+          "name": "window_client_fill_003a1",
+          "checks": 565,
+          "passed": true
+        },
+        {
+          "name": "level_up_back_003a1",
+          "checks": 125,
+          "passed": true
+        },
+        {
+          "name": "ghost_circuit_hijack_003a1",
+          "checks": 393,
+          "passed": true
+        },
+        {
+          "name": "ghost_physics_003a1",
+          "checks": 33,
+          "passed": true
+        },
+        {
+          "name": "orbit_full_carve_003a1",
+          "checks": 38,
+          "passed": true
+        },
+        {
+          "name": "chain_hard_hits_003a1",
+          "checks": 33,
+          "passed": true
+        },
+        {
+          "name": "predator_pursuit_visual_003a1",
+          "checks": 14,
+          "passed": true
+        }
+      ]
+    },
+    "native": {
+      "report": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_acceptance_native_20261009_154611_971377.json",
+        "sha256": "a1524c82c9be48e48613664479d082d76a5eaa4e544ea0b3d940ebc9adbd6c90",
+        "bytes": 301861
+      },
+      "suite_count": 11,
+      "checks": 23552,
+      "source_harness_player_guards": true,
+      "suites": [
+        {
+          "name": "combat_acceptance_hud_003a1",
+          "checks": 93,
+          "passed": true
+        },
+        {
+          "name": "music",
+          "checks": 1834,
+          "passed": true
+        },
+        {
+          "name": "music_native",
+          "checks": 24,
+          "passed": true
+        },
+        {
+          "name": "beast_orientation",
+          "checks": 19797,
+          "passed": true
+        },
+        {
+          "name": "android_foundation",
+          "checks": 138,
+          "passed": true
+        },
+        {
+          "name": "mobile_combat_input",
+          "checks": 119,
+          "passed": true
+        },
+        {
+          "name": "input_acceptance_003a1",
+          "checks": 299,
+          "passed": true
+        },
+        {
+          "name": "mobile_shell_layout_003a1",
+          "checks": 136,
+          "passed": true
+        },
+        {
+          "name": "native_window_layout_003a1",
+          "checks": 422,
+          "passed": true
+        },
+        {
+          "name": "window_client_fill_003a1",
+          "checks": 565,
+          "passed": true
+        },
+        {
+          "name": "level_up_back_003a1",
+          "checks": 125,
+          "passed": true
+        }
+      ]
+    },
+    "python": {
+      "report": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_acceptance_python_20261009_154612_686399.json",
+        "sha256": "d94c4e65cba32f72e7213f3b30dbd0277a7bd97eff099cbce87f5fef08ebabbe",
+        "bytes": 293166
+      },
+      "suite_count": 7,
+      "checks": 239,
+      "source_harness_player_guards": true,
+      "suites": [
+        {
+          "name": "android",
+          "checks": 5,
+          "passed": true
+        },
+        {
+          "name": "art",
+          "checks": 25,
+          "passed": true
+        },
+        {
+          "name": "audio",
+          "checks": 4,
+          "passed": true
+        },
+        {
+          "name": "build",
+          "checks": 93,
+          "passed": true
+        },
+        {
+          "name": "parts",
+          "checks": 71,
+          "passed": true
+        },
+        {
+          "name": "presentation",
+          "checks": 37,
+          "passed": true
+        },
+        {
+          "name": "workspace",
+          "checks": 4,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "additional_native": {
+    "selection": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_card_controller_native_selection_20261009_155735_096441.json",
+      "sha256": "868a93c8730cf849b093d9694e3f24c223c309ec84b40cdaab834bd2b526e46e",
+      "bytes": 7291
+    },
+    "selected_suite_count": 2,
+    "selected_checks": 2887,
+    "controller_checks": 1166,
+    "card_checks": 1721,
+    "scope": "Synthetic controller events in actual Windows rendering. Card slot0 fixture exactly projects onto canonical assertions plus six positive focus/mapping checks. Slot3 corroboration is not counted twice. Earlier concurrent-window failure is preserved and indeterminate. No new physical-controller acceptance."
+  },
+  "totals": {
+    "headless_suites": 110,
+    "headless_reported_checks": 234620,
+    "native_suites": 13,
+    "native_reported_checks": 26439,
+    "python_cases": 239,
+    "counting": "Headless/native repeat some contracts and are reported separately, not as unique assertions."
+  },
+  "presentation": {
+    "window": "Uniform nearest-neighbour larger actual arena; no repeated bricks; native decorated Maximise/Restore; world640x360 unchanged.",
+    "sample_maximised_client": [
+      1920,
+      1017
+    ],
+    "arena_pixels": [
+      1594.6666667,
+      897
+    ],
+    "arena_area_increase_percent_approx": 34,
+    "card_forms": 46,
+    "card_badges": [
+      "POWER",
+      "RANK II",
+      "MUTATION"
+    ],
+    "card_accents": [
+      "#bdcbd3",
+      "#64d8ef",
+      "#d49bf1"
+    ],
+    "ghost": "Paid live own/hostile routes, physical closure bridge, closer attribution, shared consumed edge intervals,3.5s owner cooldown; ordinary traces precede fresh closer-owned overlay.",
+    "predator": "Sparse warm pursuit ticks and original travelling cel replace paired rails/white-current ornament."
+  },
+  "director": {
+    "ordinary_full_caps": [
+      1,
+      2,
+      3,
+      3,
+      4
+    ],
+    "late_swarm_old_new": [
+      10,
+      9
+    ],
+    "late_total_old_new": [
+      16,
+      15
+    ],
+    "late_cadence_multiplier": 1.06,
+    "base_budget_unchanged": 16,
+    "five_unlock_seconds": 640,
+    "six_unlock_seconds": 880,
+    "composition": "Deep new swarms suppressed at four full tops; no fifth/sixth under a carried wave; one new boss and\u22643full supports; elites\u22642; old waves finish naturally.",
+    "study_scope": "12 seeded finite-lifetime census pairs and accelerated initial-clock native examples; not natural15-minute survival acceptance."
+  },
+  "live_steering": {
+    "full_carve": "Actively held100% earns capped shared RPM:0.009/0.012 reserve per second; real solver net gain proved, release/idle/pause/death stop.",
+    "chain": "Canonical physical hard severity\u22650.75, one delayed bounded pulse+Burst follow-up; knockouts alone do not trigger.",
+    "level_up_back": "Printed controller Back preserves mandatory choice/acquisition; MENU/Escape retains pause/resume."
+  },
+  "performance": {
+    "validation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_power_routes_final_clock_sync_validation_20261009.json",
+      "sha256": "7d6d76e5e1227f0c7154e8fff9e61f777731a7d7dfd8cea97cdbb72ec1a09f69",
+      "bytes": 14596
+    },
+    "selected_native_report": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\benchmarks\\003a1_power_routes_native_performance_final_clock_sync.json",
+      "sha256": "8356d6e38e831e3a0f3c4e224812620044c4f674bddb235f3c7a7a04b4de420d",
+      "bytes": 409038
+    },
+    "exact_native_headless_case_replays": 18,
+    "limits": {
+      "traces": 72,
+      "polygon_points": 224,
+      "owner_states": 7,
+      "events": 256
+    },
+    "scope": "Clock-synchronised seeded native640x360 Battle without Main/HUD/music, on i3-10105F/GTX1660. Actual multi-owner paid routes/twoGhost owners. No eligible NPC advice frames occurred; advice-steering is not measured. Five-top raw143.274ms wall spike retained. No guaranteed60FPS, leak-free, natural hijack-rate or Android performance claim."
+  },
+  "windows": {
+    "manifest": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\windows-003a1-786d430e8230.json",
+      "sha256": "91eaa067c56e498d2fc4bb9ecc3bc37d44f2951140894d849acced7525b6e777",
+      "bytes": 167476
+    },
+    "exe": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+      "sha256": "73344ec10ce84c5e5926ab27e19cac9ba5c0c81b6a098c1a26796c575ca92e6b",
+      "bytes": 152150088
+    },
+    "checkpoint": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.1\\SpinningMetal.exe",
+    "validation": "Clean cold import/export, actual packaged rendered smoke, persisted48-credit Shop debit/receipt/ownership/equip, strict31-part42-texture/11metalPCM/15combat-atlas probe and independent native Shop review passed.",
+    "previous_complete_payloads": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1ff781ab60d34e39b95b0ccd9de7051e"
+  },
+  "android": {
+    "manifest": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\android-003a1-f3943a72d987.json",
+      "sha256": "608ff46b1c1c6fee7e95c8f98f8fff6607c0fb1eb671d7a45ad2a734285765ee",
+      "bytes": 302063
+    },
+    "candidate": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\android-003a1-f3943a72d987\\payload\\SpinningMetal-android.apk",
+      "sha256": "c38455b86a17d7d3d71168b2f3d53f761ede04b7fb144d1c06e59f681d2d98dc",
+      "bytes": 89084221
+    },
+    "validation": "Signed debug export and package inspection passed; awaiting exact native smoke. No connected device at15:36UTC on2026-10-09; no final physical-phone acceptance. Not promoted."
+  },
+  "preservation": {
+    "protected_player_files": 24,
+    "accepted_music_files": 18,
+    "existing_asset_files": 695,
+    "prior_compact_records": 90,
+    "historical_qa_files": 12045,
+    "policy": "Byte guards, no restoration over human data. Before-build544 original build files protected; only eight authorised Windows delivery files change at promotion, previous payloads archived."
+  },
+  "qa_artifacts": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_maximized_client_fill_expanded_review.mp4",
+      "sha256": "06dd0e84ebd73b9e4ce9b10ad3a8b8bd2844bdc53b77bfac6cab38c92044adfa",
+      "bytes": 509405
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_window_fill_matrix_expanded_review.png",
+      "sha256": "9d54a59da4a8c90008222de38251635273e2fc331630b4e9344a50c9e6222dff",
+      "bytes": 236973
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_card_hierarchy_video.mp4",
+      "sha256": "8aec73824aacfa8f1465a96e7be5456edbe739d40f0d0a412bfd8073f01ddddc",
+      "bytes": 2578171
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_ability_card_hierarchy.png",
+      "sha256": "b39be269e0bacf8df068821a51dfaf35a552b36e294eb8b174a50a69521f5e22",
+      "bytes": 53562
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_deep_run_escalation.mp4",
+      "sha256": "b70cd94e92cd274fd544e2ab39a2b96ea6f3369b16531417f7bf50f89b20fa6d",
+      "bytes": 11540057
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_deep_run_density.json",
+      "sha256": "41720dab3a13a9a1fd77dc9829470541111c070fb925569e32442d6b6f61e088",
+      "bytes": 22682172
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_ghost_circuit_hijack_v3.mp4",
+      "sha256": "44d41b1a1b30615c2707625281d665ae9f2899882e3f104430e87d2bc95f09e3",
+      "bytes": 5621498
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_ghost_circuit_hijack_v3.json",
+      "sha256": "7fc2b5df66150dfcb0132ddc884bea4d612ac98b365f4c65f941b95214d9718d",
+      "bytes": 28895382
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_predator_pursuit_readability.mp4",
+      "sha256": "ff930d905c5f1de863720f4fc6109503f352994776b8e90030efc5214e737bf1",
+      "bytes": 5419183
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_predator_pursuit_before_after.png",
+      "sha256": "fb425d49a8c4d5330864276b1b81a7b302c31cb23d220e7429ade5fc953ff5f2",
+      "bytes": 37677
+    }
+  ],
+  "supporting_evidence": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_client_fill_20261009_144625_531528.json",
+      "sha256": "18a2f592bd848fe8fce7a5e88338263eba9a2ce4e878ff256c98eb341c008970",
+      "bytes": 256457
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_ghost_predator_final_review_selection_20261009.json",
+      "sha256": "bd8ffffa73fdc68cfc5d6e76c1407aa37eec4a97c803a3a783776ce5224c9eb2",
+      "bytes": 8325
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_ghost_predator_final_performance_addendum_20261009.json",
+      "sha256": "982fc1d553da77790b336863c8a694d556f42615a81c5af5f0b4f004a946b0f8",
+      "bytes": 1387
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_final_acceptance_expectations_audit_20261009.json",
+      "sha256": "606d9805c9727329d357f94548154ea4963eef30196bcd22f1566f5323f8de8e",
+      "bytes": 11316
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_final_acceptance_current_proof_20261009.json",
+      "sha256": "da8883cafee826dea7818a86148f983cc82ebdff2822ffc5fa6883ed1a47b612",
+      "bytes": 3294
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_card_controller_native_selection_20261009_155735_096441.json",
+      "sha256": "868a93c8730cf849b093d9694e3f24c223c309ec84b40cdaab834bd2b526e46e",
+      "bytes": 7291
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_harness_whitespace_scope_20261009.json",
+      "sha256": "8fec344a2a663548069c6c5a39c1b94292de8de9e1f571e96246dc6ed388c593",
+      "bytes": 1025
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_acceptance_final_asset_scope_20261009.json",
+      "sha256": "664dc749a891bb0a06aed7fe58b80bbae4e7b80ef73cb4a5684f06d9842b3356",
+      "bytes": 3341
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_windows_candidate_independent_shop_review_20261009_160345_651885.json",
+      "sha256": "34a318e17fee0242c10984f906a0083c0e7718f2bbb8532179e7f43f525999ed",
+      "bytes": 9339
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_packaged_catalogue_a35d2beebe3f43e79e50cdef69eeddb2.json",
+      "sha256": "996908fae6257f3a90a3dd26011389b540439dd9c69c27a979ea2353e84b44c2",
+      "bytes": 12770
+    }
+  ],
+  "retained_initial_failure": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_acceptance_headless_20261009_150358_185505.json",
+    "sha256": "5a1b4e6089843eeec0371ff11d07804fb04444a2684357fd7ccae77b6005257b",
+    "bytes": 393287
+  },
+  "final_harness_scope": "All110 source/harness/player guards passed before one empty EOF line was removed. Entire test body and all statements remain byte-identical; exact scope proof linked. Production build inputs unchanged.",
+  "human_review": "Pending revised larger arena/HUD readability, card significance, Ghost/Predator effect clarity, natural deep-run enjoyment, native Restore-button/border drag, physical controller and exact current Android device. Stop here; no main merge or003B."
+}

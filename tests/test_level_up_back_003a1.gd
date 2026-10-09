@@ -69,4 +69,3 @@ func flow(profile: String) -> void:
 	check(game.screen == "battle", "Ordinary Pause Back retains its existing resume action")
 	outcomes.append({"input":profile, "kind":"mandatory_choice_back", "passed":game.screen == "battle",
 		"scope":"Real GUI logical events; no new physical-controller acceptance claim"})
-
