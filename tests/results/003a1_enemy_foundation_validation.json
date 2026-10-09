@@ -1,0 +1,1828 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "status": "passed",
+  "created_utc": "2026-10-09T12:54:18.317163+00:00",
+  "scope": "Compact aggregate selecting each distinct suite once per platform from source-guarded broad validation and successful scoped replacements. Raw failures remain evidence. Assertions, Python cases, studies and human acceptance are separate.",
+  "starting_sha": "2c06290591371035b5b1c68a0f5b0c565523d80b",
+  "runtime_boundary": {
+    "v2_pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+    "final_pilot_sha256": "038dfc09d861c04fb829be1640477dc50cb3933c749d108425ac359c64ac8368",
+    "change": "One own-Burst observation comparison >0.04 to >0.0; no other runtime change between final V2 and V3. Existing positive target-vulnerability threshold remains unchanged.",
+    "evidence": [
+      "final_runtime_snapshot",
+      "final_burst_delta_review",
+      "headless_final_8"
+    ],
+    "coverage_note": "Full broad100 suites ran on V2. Final affected AI/economy suites and the new ID4 regression reran after the one-line fix. Earlier native/art/tool proofs retain their source boundaries; they are not labelled new final gameplay runs."
+  },
+  "headless": {
+    "suite_count": 101,
+    "checks": 231555,
+    "passed": true,
+    "suites": [
+      {
+        "name": "collection_save",
+        "checks": 371,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_collection_save.log",
+          "sha256": "3be3c59d7cb9d5c366164002a46e5875a4e65fcfc86fce81768faca3e250dbf7"
+        }
+      },
+      {
+        "name": "collection_flow",
+        "checks": 575,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_collection_flow.log",
+          "sha256": "1c0c700cac0459d4d6157e0b3a3e5a1dd33b97aef50c424bcbc9ff3427db0dbe"
+        }
+      },
+      {
+        "name": "collection_ui",
+        "checks": 2362,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_collection_ui.log",
+          "sha256": "64a40fc885cdc26e2dd31f183b36f5c4914829efae6b42024fa16c30fe7e1da8"
+        }
+      },
+      {
+        "name": "spin_economy",
+        "checks": 232,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_spin_economy.log",
+          "sha256": "59519b6df54e2bfedaad426ac5a9aa06417213458c0611ce3383c16b2c744830"
+        }
+      },
+      {
+        "name": "threat_director",
+        "checks": 115,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_threat_director.log",
+          "sha256": "81b2e1f796ccb8855a6aa5c3656a2f878b4ca766e336d0ba7bb0031659df90e1"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123857_530888_threat_director.json",
+          "sha256": "c9b707958917207bde509438e95cb2e3f7b2c66ea6ba369a4a0a31be0d5479ec"
+        }
+      },
+      {
+        "name": "continuous_run",
+        "checks": 200,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_continuous_run.log",
+          "sha256": "ad357a01829920055db431fb821984b51ef93b5744195e903977a526c5e11315"
+        }
+      },
+      {
+        "name": "run_context",
+        "checks": 377,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_run_context.log",
+          "sha256": "bf7a9aa2b035c321d8afa09eb86d4bb264f91300a124e09c1ad132621bdf17ad"
+        }
+      },
+      {
+        "name": "flow",
+        "checks": 162,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_flow.log",
+          "sha256": "8ad2f1e356d52d2a4601c3d47838ae1979cd3ff7c52fa533bb91a45187e3c1e0"
+        }
+      },
+      {
+        "name": "powers",
+        "checks": 79,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_powers.log",
+          "sha256": "a870376f62edf5d1271647dc5ce34ef3fbeab66cf75a47c40e231f6bac8e2c33"
+        }
+      },
+      {
+        "name": "swarm",
+        "checks": 33,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_swarm.log",
+          "sha256": "6ac3761175d7338df7ebe6a204114a9887a4900022027a92fc1d0ffc8efd37a0"
+        }
+      },
+      {
+        "name": "presentation",
+        "checks": 78,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_presentation.log",
+          "sha256": "61c2e06c1d6c6e7aba0019e3479c7ff98e69d9c4b207fb91fc44503f2c88ee63"
+        }
+      },
+      {
+        "name": "progression",
+        "checks": 190,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_progression.log",
+          "sha256": "4a18ae3ccac78eb171fcf6c0a191a0014e06f8668ef6648fe5d820cf65e68b07"
+        }
+      },
+      {
+        "name": "starters",
+        "checks": 17,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_starters.log",
+          "sha256": "f438338c1a158bb100a2c2959cad6750c19a96b20ca7ee214344d2242ab3a13c"
+        }
+      },
+      {
+        "name": "starter_physics",
+        "checks": 38,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_starter_physics.log",
+          "sha256": "8627b604552f3699711b2e9e23cd8f54124d44f595f5eedde2dd4f4d139f61ff"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_starter_physics.json",
+          "sha256": "1200a8710a49a8e13b4e45354b07b7b92abcdd9b27ca0cd35b9bec29b678dc54"
+        }
+      },
+      {
+        "name": "xp_observer",
+        "checks": 30,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_xp_observer.log",
+          "sha256": "3d1c35065975f40f0de1ac6a147b9e4464886aab2fc797240a8ae9fa0d83e7ff"
+        }
+      },
+      {
+        "name": "ramp_integration",
+        "checks": 21,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ramp_integration.log",
+          "sha256": "8a10c9164ade63e51170bc72fd9c52f9683636b0e81a087fe5387ef15a016294"
+        }
+      },
+      {
+        "name": "card_assets",
+        "checks": 132,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_card_assets.log",
+          "sha256": "d25ea8a468e4e22db286a8e455c88422dda6f84875afc9b1d4ff44fd5bc5ea5d"
+        }
+      },
+      {
+        "name": "escalation_progression",
+        "checks": 1445,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_progression.log",
+          "sha256": "9ace4d8f1a9946824e0cfae54d7842afd0ffd0b789ae2b59c5ce0f5e334b68dc"
+        }
+      },
+      {
+        "name": "escalation_physics",
+        "checks": 103,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_physics.log",
+          "sha256": "1ecfd483c4184ef89a0350da7a49aa9197851f11643e220c207b6e479815d50d"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_physics.json",
+          "sha256": "d2a5d255100f0c07db768be0f178f253f80acad7d02157dd8e6e783caf86f666"
+        }
+      },
+      {
+        "name": "escalation_completion",
+        "checks": 42,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_completion.log",
+          "sha256": "6849e84da7985412965d618d9b86a0d396a54e813c77fa24c8e2578a166fa7d8"
+        }
+      },
+      {
+        "name": "escalation_assets",
+        "checks": 351,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_assets.log",
+          "sha256": "0f15b6a248b2ee3111bd78d50d69b23338ab162b17a9c606962d50ee759f18e5"
+        }
+      },
+      {
+        "name": "rpm_replay",
+        "checks": 0,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_rpm_replay.log",
+          "sha256": "3adf67a6468a817fcc539bd45670505a23be7965101957b612d95e092b4c0a54"
+        }
+      },
+      {
+        "name": "signature_presentation",
+        "checks": 3362,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_signature_presentation.log",
+          "sha256": "f55d44498f23133229b2e67b5087ec9c0e03b8eb0a47b926dfe8a038afd1cdbb"
+        }
+      },
+      {
+        "name": "roster_draft",
+        "checks": 23705,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_roster_draft.log",
+          "sha256": "0e3eeba97f581083f29e846bb462ee203f41ae5ab3bd6df18fe81befa87c4232"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_roster_draft.json",
+          "sha256": "c7d44037bcc85023a53b1abfdef6fbf53e8d2a74b284bc0e5daefae50dc7bb2e"
+        }
+      },
+      {
+        "name": "roster_physics",
+        "checks": 30,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_roster_physics.log",
+          "sha256": "9f1ba83d3430cf03fa0de12657d13f9a24aab26bf665d78e733049f0de093425"
+        }
+      },
+      {
+        "name": "roster_presentation",
+        "checks": 3585,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_roster_presentation.log",
+          "sha256": "4c5ebaf80fb33836986fff6348c823700264d6766194dcadec1b77d20c881a47"
+        }
+      },
+      {
+        "name": "ability_rebalance",
+        "checks": 92,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_rebalance.log",
+          "sha256": "f7720b50a06525ab40f96a4e6e794abebbec9683da511a04543474be421699b9"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_rebalance.json",
+          "sha256": "116925d86ed3862f0a9761fd6fb2eaff7ae8c48f2c9127fb4e9e6c8a4ea3621d"
+        }
+      },
+      {
+        "name": "ability_rebalance_integration",
+        "checks": 32,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_rebalance_integration.log",
+          "sha256": "693dd03ffcca70e812d72f994923adeea104a6031dab5808868423b87b340bc5"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_rebalance_integration.json",
+          "sha256": "bd8daeac0081aaefd0311a6979b5b408f962006605e6f951f0a7f5e396c01dbb"
+        }
+      },
+      {
+        "name": "collection_c5_integration",
+        "checks": 207,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_collection_c5_integration.log",
+          "sha256": "52152a7734860af5a46a41fe5da4ca17159e498ac272b8f7192377d3fa764b29"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_collection_c5_integration.json",
+          "sha256": "29d9c1d419a5d5cf64a3e971a426440b04ee7d4bef7fc71238dcbeb5e07f29f8"
+        }
+      },
+      {
+        "name": "parts_catalogue",
+        "checks": 8945,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_parts_catalogue.log",
+          "sha256": "205ad9e76781dc82685f91a5975b7130e73b4450b7adc1cdbd62ff1ef334516b"
+        }
+      },
+      {
+        "name": "parts_package",
+        "checks": 302,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_parts_package.log",
+          "sha256": "986a34e9c51709d0e68175a797d141e3d0c81e6f6a1e59d8c4210fae365f2365"
+        }
+      },
+      {
+        "name": "packet_package",
+        "checks": 397,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_package.log",
+          "sha256": "b14f706bc27d770cebc49306609854c89c883053e4fb06809ed20801fa00caa0"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_package.json",
+          "sha256": "06d69453869e78ffc8271ba23708593e31257468b77041339724e56f7416ab25"
+        }
+      },
+      {
+        "name": "feedback_drift",
+        "checks": 1409,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_drift.log",
+          "sha256": "979a49b93463d2082cf1bba0558a54d8e2e9fe9475ec461de9a0986f72d3e16a"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_drift.json",
+          "sha256": "b02169017ac4ea2d04c34abe56d10c047238067cbc5ebb8e4675875593c7b207"
+        }
+      },
+      {
+        "name": "feedback_anchor_contacts",
+        "checks": 65,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_anchor_contacts.log",
+          "sha256": "0244a05d2d8f9934797382e4009977beeccb5f9760fef0c5f054488def230838"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_anchor_contacts.json",
+          "sha256": "3845cbdcc073afb33bb3f39202a4961a7124a7bd934582c61cc55c02e8f481ce"
+        }
+      },
+      {
+        "name": "power_feedback",
+        "checks": 2463,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_power_feedback.log",
+          "sha256": "ed524cad9ce4ac82e8ef3b25245e54d21e6c78b400c530ac52a87f392023598e"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_power_feedback.json",
+          "sha256": "5b11d9a8b4af74ee5a6340fe678ee2a0093085596254c65b731f798537f3c8da"
+        }
+      },
+      {
+        "name": "feedback_rerolls",
+        "checks": 1052,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_rerolls.log",
+          "sha256": "ef2277b2ca1c44f46249e459c0adcb82d1f879a08515e91f27fc4e54f48b23e1"
+        }
+      },
+      {
+        "name": "feedback_effects",
+        "checks": 14404,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_effects.log",
+          "sha256": "a0d31f9a8db0bc85d62397edd2b3424bbc60e17f1bc9081b3cab6d1465414a9e"
+        }
+      },
+      {
+        "name": "feedback_live_pickup",
+        "checks": 10,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_live_pickup.log",
+          "sha256": "925886e56a1cb46dac9b5b8e9558f74e774d4a5d123cc9f6ba43334177a17b48"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_live_pickup.json",
+          "sha256": "3989c273fa6673b3d9747432400d4095990db00af7b26d198d309d3b8e7ad4f0"
+        }
+      },
+      {
+        "name": "feedback_parts_retention",
+        "checks": 148,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_parts_retention.log",
+          "sha256": "78f6c9d7e9c4d7e1708ba1851780a1c2a7658c1fd7b54a5e8d4aebcb5cc77490"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_feedback_parts_retention.json",
+          "sha256": "ff6ff3c7c58feddf7cd54b866d8a0fb10055d648344027fff5a23752f5712b52"
+        }
+      },
+      {
+        "name": "beast_manifestations",
+        "checks": 16489,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_beast_manifestations.log",
+          "sha256": "a16fb5fefe52965f131ddd8bdb27a402dd73bae2a49341dd078159975a84fc03"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_beast_manifestations.json",
+          "sha256": "f26747c1decd6b7bb3e0a40c82acdbacdf1cc78473fdfa4b375798b143736d6c"
+        }
+      },
+      {
+        "name": "music",
+        "checks": 1834,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_music.log",
+          "sha256": "a3c323c395207b4b97ba992da22ce84928df1da9da603ab1f77903c457382be6"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_music.json",
+          "sha256": "2e5f37f524f68c417fc66c76ab9ba659ff2b4ee41f24a689effbb599a4589343"
+        }
+      },
+      {
+        "name": "music_escalation",
+        "checks": 651,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_music_escalation.log",
+          "sha256": "fd9ac6381c115c4b0d3043c4b19c53d64c6cdd5d02d1501ea35e93a0c6dacfa6"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_music_escalation.json",
+          "sha256": "d95e65dda56d8fc7e5ebac3c44fc2f16df08fedba09928b9099bc9f0629c8dc3"
+        }
+      },
+      {
+        "name": "save_tools",
+        "checks": 92,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_save_tools.log",
+          "sha256": "48a1699960b6079e77085d171b782acd47963856be70574efcfcbec7d5672b27"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_save_tools.json",
+          "sha256": "e291f1773e6de0577628ecf1f9911820c4520fba80001a31e1e240e9651ad342"
+        }
+      },
+      {
+        "name": "presentation_flow",
+        "checks": 49,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_presentation_flow.log",
+          "sha256": "fc8672351b882d2bf8107a0071d2820c8ba2c174eaef2cac6160d0f18e9f5e55"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_presentation_flow.json",
+          "sha256": "d79a13387717792ead97cf4678c70ebe3136a71fbc63729a0461efd588f16497"
+        }
+      },
+      {
+        "name": "frontend",
+        "checks": 416,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_frontend.log",
+          "sha256": "8c67d72333633df89538ef076cea3c928dcfb782418e4936f6ae241e48aeb0a2"
+        }
+      },
+      {
+        "name": "packet_economy",
+        "checks": 10173,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_economy.log",
+          "sha256": "57218238e82e9d275d9d3b521203831330b8bca41fa0936cd1388fe98a2b258f"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_economy.json",
+          "sha256": "107bf4853e4a85f1e526b32e8dfc452528dbd565e11f655b450a312db285e8bf"
+        }
+      },
+      {
+        "name": "packet_transactions",
+        "checks": 175,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_transactions.log",
+          "sha256": "cf50a589e115ff4e00b65fe946eb7cb07160e91258e9d7e21fd2b77ff5083ac8"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_transactions.json",
+          "sha256": "c901facc69865c60f3f5bab67ad7b137dc096d9293210afffe6c110263d7979a"
+        }
+      },
+      {
+        "name": "run_rewards",
+        "checks": 31,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_run_rewards.log",
+          "sha256": "a3cdfa2a0babe7adfc5659d04648683243c884137d3e46a1c929f237ead8408c"
+        }
+      },
+      {
+        "name": "packet_art_audio",
+        "checks": 170,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_art_audio.log",
+          "sha256": "b2731fd465ac623b32d815a369d20c43e7158d51edaf62ecf10110fee828fb90"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_packet_art_audio.json",
+          "sha256": "a7f30fcb8527e601c5e16dc0aaf18e17aa4ac0c2438c8ab4397596f82741363e"
+        }
+      },
+      {
+        "name": "shop_progression",
+        "checks": 792,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_shop_progression.log",
+          "sha256": "c64c9bf8c6258b05cc06b70ed32c8b391565dd4b9935cc3ad01fa6c398a443a6"
+        }
+      },
+      {
+        "name": "human_feedback_ui",
+        "checks": 8621,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_human_feedback_ui.log",
+          "sha256": "56c101c8bba7d32f1665076964398822e4266f23c9399d62f4cabe3ac1868f83"
+        }
+      },
+      {
+        "name": "beast_orientation",
+        "checks": 19797,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_beast_orientation.log",
+          "sha256": "9e54db6a20e2c02ef18a9cd35b9bd232ff3b34f6c5c2688a3b8c4fc9a3c32e9c"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_beast_orientation.json",
+          "sha256": "6643dade91cc6e0a337aeabf2654bd5c56d791f534d26b74f3ac0f09d5c9d5bf"
+        }
+      },
+      {
+        "name": "music_revision",
+        "checks": 48,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_music_revision.log",
+          "sha256": "2c75207e29decbab9005beaa0b5f1d1a5c7c2f3fb113406046de3abda96a4c03"
+        }
+      },
+      {
+        "name": "ui_polish_package",
+        "checks": 199,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ui_polish_package.log",
+          "sha256": "7bc4fa1144a908f50600979850313b3bb1f44d4add21ffa0a392e4834d71e350"
+        }
+      },
+      {
+        "name": "preview_human_feedback",
+        "checks": 7817,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_preview_human_feedback.log",
+          "sha256": "9d0fbafcb4f736c282ce439bc3eceb5e1a125bba199d4fa65692d64111fad7e8"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_preview_human_feedback.json",
+          "sha256": "c78664d3bf19eb47d489c00b399f6b1373c000ec3d0586305b28bb00d8877bad"
+        }
+      },
+      {
+        "name": "enemy_commitment",
+        "checks": 25971,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_enemy_commitment.log",
+          "sha256": "a28a4af717ade6721d7d96637a566de48cdbbbf7622c0cc086405c618fddd702"
+        }
+      },
+      {
+        "name": "defence_depth",
+        "checks": 432,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_defence_depth.log",
+          "sha256": "5850356af603e5d5ecaf440cdf465c9b1ff61a3b6e6e71fd85fb59b5e695d1a3"
+        }
+      },
+      {
+        "name": "grounded_pickups",
+        "checks": 3220,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_grounded_pickups.log",
+          "sha256": "6447dd5e0576d1701f4e83bfb149ca7d3230fc5d02f954dfc3bbe3bda4292420"
+        }
+      },
+      {
+        "name": "arena_escalation",
+        "checks": 7084,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_arena_escalation.log",
+          "sha256": "be7267497d8cf53a73c14630876dc449098788fc5a0a03fc459f0567fbcad09f"
+        }
+      },
+      {
+        "name": "defence_participation",
+        "checks": 21,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_defence_participation.log",
+          "sha256": "ffdbc2c4dc82afd48a9931e64639ae2dbc344075b65bb444bd726e6d03fd0784"
+        }
+      },
+      {
+        "name": "final_acceptance_package",
+        "checks": 479,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_final_acceptance_package.log",
+          "sha256": "cbeb2d7558617753988b8c2f9bdc2b8d8965861c104e90e11fd37cc09413e317"
+        }
+      },
+      {
+        "name": "mobile_combat_input",
+        "checks": 119,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_mobile_combat_input.log",
+          "sha256": "8ae17e21332661509e0fc693cc437ffcbcd8bd018069ddd87f0d7de5a203a73d"
+        }
+      },
+      {
+        "name": "ability_readability",
+        "checks": 3597,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_readability.log",
+          "sha256": "c9ab2eb5eee5108b9a7cbb51d19d2ae4e7d0ec792463391a8b1106a127679111"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_ability_readability.json",
+          "sha256": "efbc2a5cbbdf121a43ce86d8988aa5af357e6921e2f384b125e9965911d51fdc"
+        }
+      },
+      {
+        "name": "anchor_stress",
+        "checks": 36,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_anchor_stress.log",
+          "sha256": "fd71f6e292b4f8d56323db621a34ab5a7f5edc2d3ee78df289e927b7ec63e7f0"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_anchor_stress.json",
+          "sha256": "82c70b9311d20f61a10b05380a388d9c8f323d9607de38ea835546d686259c1f"
+        }
+      },
+      {
+        "name": "controller_bindings_003a1",
+        "checks": 105,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_controller_bindings_003a1.log",
+          "sha256": "cf20a31b2dea1393bf3f1ba4ddfa41d8dac78de3d7e545b004a1b96128e82c79"
+        }
+      },
+      {
+        "name": "run_ramp",
+        "checks": 16,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_run_ramp.log",
+          "sha256": "3fd2112714699e8910e99fefd87bb33e42dfed8c4b1b863e223490e6e9a170f1"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123857_530888_run_ramp.json",
+          "sha256": "0f0c6db083150135bc7e011d62c84f8300cc89a8dd8f496843f7282bb11b3e49"
+        }
+      },
+      {
+        "name": "public_power_state_003a1",
+        "checks": 22,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_public_power_state_003a1.log",
+          "sha256": "dd5d5a80aa9acac01ac3e7e467d27b61faeb175dfec13398250fc6a86a59140f"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_public_power_state_003a1.json",
+          "sha256": "a1f344c32111d9c6d808d8443ecdc870ecfacde9299b27dc7f626c8c58769e5d"
+        }
+      },
+      {
+        "name": "rpm_acceptance_003a1",
+        "checks": 30,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_rpm_acceptance_003a1.log",
+          "sha256": "6916f32a1d73506b70c11c6cb378335d9c6d74510a18af53e3a3962e47541f57"
+        }
+      },
+      {
+        "name": "anchor_rearm_003a1",
+        "checks": 101,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_anchor_rearm_003a1.log",
+          "sha256": "12b15d4ff4bce62de53c973e50ae32be51e11c6263ef5401699383b38bf16325"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_anchor_rearm_003a1.json",
+          "sha256": "38583902a2bd0717773a1c3f8b0769e733c0650cfdd158342af0fd1655849964"
+        }
+      },
+      {
+        "name": "pickup_feel_003a1",
+        "checks": 159,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_pickup_feel_003a1.log",
+          "sha256": "c856740c30e3c0d5a50758eedeca599b3e20bf55cd8da5743a441f5935521903"
+        }
+      },
+      {
+        "name": "combat_acceptance_hud_003a1",
+        "checks": 82,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_acceptance_hud_003a1.log",
+          "sha256": "17f077326cab569b69714d4f417e3d422daee3448f52844c5be9ac6e48914195"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_acceptance_hud_003a1.json",
+          "sha256": "057145df978a3860aa008cc3e415c85a15a8c31fb682142b75323948f3414e35"
+        }
+      },
+      {
+        "name": "combat_art003a1",
+        "checks": 3169,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_art003a1.log",
+          "sha256": "2b539ca2bdf43e92fb12b30db6d6ad65c861fcd0a53d64c2e3aaf69501dd98e9"
+        }
+      },
+      {
+        "name": "combat_impact_rework",
+        "checks": 49,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_impact_rework.log",
+          "sha256": "b2a0ea56a064c80a51fa83014aceb59dff0410bf31b890f3e1bc6e0b2223dbfa"
+        }
+      },
+      {
+        "name": "bulk_packet_transactions_003a1",
+        "checks": 300,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_bulk_packet_transactions_003a1.log",
+          "sha256": "05db053e36d23cfa5e6befc8464b084cb8f688017c8d8ccab4aead1da919f710"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_bulk_packet_transactions_003a1.json",
+          "sha256": "e2f0baf841854f4fd00a09e0c03de80909e1a8467fde299d5d3d01677554f5c1"
+        }
+      },
+      {
+        "name": "ghost_accessibility_003a1",
+        "checks": 32,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_ghost_accessibility_003a1.log",
+          "sha256": "e1f398116f225ed9725f31e21a8724ff121e12fb7f822d223fe84a7b72371981"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_ghost_accessibility_003a1.json",
+          "sha256": "ca768658fcba42e481a2334fe229bcc360af498adce8ee2bc245be3328866055"
+        }
+      },
+      {
+        "name": "combat_acceptance_package_003a1",
+        "checks": 150,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_acceptance_package_003a1.log",
+          "sha256": "32543e2d56ca28efb292b006298e76c47247b7f4d278477b55b45760ad58355f"
+        }
+      },
+      {
+        "name": "combat_architecture",
+        "checks": 35,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_architecture.log",
+          "sha256": "fc654b88e02a37bc6f5f725162507918e07a67fbd4e2ac1fa786c4e00daf6140"
+        }
+      },
+      {
+        "name": "escalation_integration",
+        "checks": 1959,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_escalation_integration.log",
+          "sha256": "28f200b2145c70a6ba057230e9cde3d301f4f2a74b5680ac4cad953224e825b6"
+        }
+      },
+      {
+        "name": "parts_collection",
+        "checks": 1217,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_parts_collection.log",
+          "sha256": "7a30bc6a7fab5f2004eae923fb25b3b386e8e5a26a688c4afab5281d8261552e"
+        }
+      },
+      {
+        "name": "presentation_retention",
+        "checks": 13253,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_presentation_retention.log",
+          "sha256": "800fa95cd19850083a1565664c331f407d5b622dcd36b672d63ebc24daef53c3"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_presentation_retention.json",
+          "sha256": "f47c509385bbf621b190b05f89390291ee791030f0dd2ce950a3149cbcf7cdd8"
+        }
+      },
+      {
+        "name": "android_foundation",
+        "checks": 138,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_android_foundation.log",
+          "sha256": "3af9ecc6e992d1eae013eebf2960ec0614ab5f090b17beaf3a2f19fb50f30c80"
+        }
+      },
+      {
+        "name": "contact_reclaim_003a1",
+        "checks": 76,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_contact_reclaim_003a1.log",
+          "sha256": "e29112a04c3dc810c6aaa41f7866d31fff502d3e5a15fabdcd894519c7210c4a"
+        }
+      },
+      {
+        "name": "bulk_packet_touch_003a1",
+        "checks": 113,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_bulk_packet_touch_003a1.log",
+          "sha256": "19493f161bcd3e18bc348128c3f4fadd8118eba0ba4e12778319d125bf81be74"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_bulk_packet_touch_003a1.json",
+          "sha256": "9a00ba885c0b6205956f06953545f6ec371333c93652428726913b8305b960d3"
+        }
+      },
+      {
+        "name": "menus",
+        "checks": 5259,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_menus.log",
+          "sha256": "e9901d3fff51ea8d8702dd4d5369bc75da6cfb29cb4c80258eb961f77c3c0938"
+        }
+      },
+      {
+        "name": "controller",
+        "checks": 1093,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_controller.log",
+          "sha256": "d04bf9f7250a4c0a1c10a87dd1b296615e47ade807a1d971ee333f1d6371aed4"
+        }
+      },
+      {
+        "name": "state_meters_003a1",
+        "checks": 1467,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_state_meters_003a1.log",
+          "sha256": "647312a165328ec6687047a8d5688b46c394ef1b46a06f00c8cb55ad95fc29e2"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_state_meters_003a1.json",
+          "sha256": "247642bacf762039ca39767546155072319efd0518dae13325cc0690443bbe69"
+        }
+      },
+      {
+        "name": "combat_hud_003a1",
+        "checks": 796,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_hud_003a1.log",
+          "sha256": "a54f5473764590e79c6bf78cc40b3e658b4796fd3f7c689db36a9642f6321531"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_hud_003a1.json",
+          "sha256": "b8d4693243fc8655bdddda2c5df72eb8cadbcd09d9ebece9b13243b151aaa8e9"
+        }
+      },
+      {
+        "name": "mobile_shell_layout_003a1",
+        "checks": 124,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_mobile_shell_layout_003a1.log",
+          "sha256": "66810f67987d0107956ca7bf2fef134ead4e14c87104f54f1f3addac1de67917"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_mobile_shell_layout_003a1.json",
+          "sha256": "cb7378e8ee4496feec5a0281b89a50f6559677b6b65bb50f4831831259d9ade8"
+        }
+      },
+      {
+        "name": "pickup_positions_003a1",
+        "checks": 2463,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_pickup_positions_003a1.log",
+          "sha256": "282afdf7eb40555ef6a04d440ee5bdd0ce06471619a9e29a1356ab349f2707d0"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_pickup_positions_003a1.json",
+          "sha256": "2e5483abf58b929e324ae791f4237898598cb16bfc5f67d961f487c275170cb8"
+        }
+      },
+      {
+        "name": "shop_focus_cost_003a1",
+        "checks": 21,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_shop_focus_cost_003a1.log",
+          "sha256": "0076070799fabf5f063be50d1ff6efd30759b14ecbfde9817a9f53e1100468bb"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_shop_focus_cost_003a1.json",
+          "sha256": "88fc20dcb760908167dfb9c3c0219e5618f475a73e1af7278fa7bd608433293d"
+        }
+      },
+      {
+        "name": "combat_audio_mix_003a1",
+        "checks": 42,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_audio_mix_003a1.log",
+          "sha256": "04b3cd72c405ee3f28aced25cb5a9b320dca76d09f6b5646b7ac885251d1c815"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_combat_audio_mix_003a1.json",
+          "sha256": "c4f419c2b05a1faf0ac82bca384fb11596020bcf9c4133e8aa80ef2cb4588f53"
+        }
+      },
+      {
+        "name": "native_window_layout_003a1",
+        "checks": 293,
+        "evidence": "headless_v2_100",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_120653_317850_native_window_layout_003a1.log",
+          "sha256": "e4bb993f10384e5755ac49580d318d24e781e8b6d72fa0e732a3c5f2b788fc19"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850_native_window_layout_003a1.json",
+          "sha256": "b717b8d001412c6450be2871fb6f4d8966927d9ba029e5bcd406de18bece3da6"
+        }
+      },
+      {
+        "name": "enemy_intelligence_003a1",
+        "checks": 14489,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_enemy_intelligence_003a1.log",
+          "sha256": "bda6c7f47f88ea0449b45f148fc4d6306535ca5f934b3fa975b3b05424628310"
+        }
+      },
+      {
+        "name": "enemy_power_packages_003a1",
+        "checks": 319,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_enemy_power_packages_003a1.log",
+          "sha256": "bb8e495597c7c05326f10a3dc87f14e38055e85e0db30c29a31767c84e25cc63"
+        }
+      },
+      {
+        "name": "enemy_burst_sampling_003a1",
+        "checks": 12,
+        "evidence": "headless_final_8",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123857_530888_enemy_burst_sampling_003a1.log",
+          "sha256": "b109b0a8141f31ac2abc57928cc38f6f2160cbbaa22a8f222a838d45bda9c24e"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123857_530888_enemy_burst_sampling_003a1.json",
+          "sha256": "f68fa7b9db20e6e464adc1abfa1b927bf18b69841fb687fb085491c39acce0ed"
+        }
+      },
+      {
+        "name": "input_acceptance_003a1",
+        "checks": 277,
+        "evidence": "headless_fixed_clock_input_overdrive",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123446_737123_input_acceptance_003a1.log",
+          "sha256": "48a430666d721eb9c90a4692542abda938a7c3b74d16250ff67bda53232c79e2"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123446_737123_input_acceptance_003a1.json",
+          "sha256": "014a090eaef630f9a9a018935cc5a05f8b1bf0655ee8db38029d0ae4b4460666"
+        }
+      },
+      {
+        "name": "overdrive_lifecycle_003a1",
+        "checks": 2008,
+        "evidence": "headless_fixed_clock_input_overdrive",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123446_737123_overdrive_lifecycle_003a1.log",
+          "sha256": "ed64a5ee4d3984df63872378cc61ad2787a12618a6f6538952787a0cab7b64ca"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123446_737123_overdrive_lifecycle_003a1.json",
+          "sha256": "59d06d637bcf60a9a1cc1bd09b1b4df9cd935e004f81184b99ecf810838813b2"
+        }
+      },
+      {
+        "name": "shop_ux_003a1",
+        "checks": 1754,
+        "evidence": "headless_fixed_clock_shop",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_123636_945091_shop_ux_003a1.log",
+          "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123636_945091_shop_ux_003a1.json",
+          "sha256": "5d4172724f1424b9d4d5855de0540d2f97e404996465f59ee7fdf22cdf55bf44"
+        }
+      },
+      {
+        "name": "power_identity",
+        "checks": 4588,
+        "evidence": "headless_final_power_defence",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_124130_496513_power_identity.log",
+          "sha256": "c793de13700ca5e6cce49f6c32567f7786552c092d4ce7b50961366b825fa1cb"
+        }
+      },
+      {
+        "name": "defence_pressure",
+        "checks": 27,
+        "evidence": "headless_final_power_defence",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_headless_20261009_124130_496513_defence_pressure.log",
+          "sha256": "cd5b0633257a37f181df21e3d5efbd8d48f9f39666a6867ea0f11f7f55a452a9"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_124130_496513_defence_pressure.json",
+          "sha256": "45a36f339536ceea325fa62d73a54d0e935fa9c3e6a60342fd344cf929d06042"
+        }
+      },
+      {
+        "name": "bastion_active_defence",
+        "checks": 43,
+        "evidence": "headless_final_bastion",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_bastion_v2_observation_contract_20261009_123948_308007.log",
+          "sha256": "6a16077fd3e510f6d2940ffe6dc5af16c10c8d2b81d18fde3fe9ae4156098609"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_v2_observation_contract_20261009_123948_308007_raw.json",
+          "sha256": "54fc544fdb3badaf7a5ea8c7847ab44b53a9fb423e500f4b9edb1180366f6d71"
+        }
+      }
+    ]
+  },
+  "native": {
+    "suite_count": 9,
+    "checks": 23058,
+    "passed": true,
+    "suites": [
+      {
+        "name": "combat_acceptance_hud_003a1",
+        "checks": 93,
+        "evidence": "native_final_hud_window",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_121131_429455_combat_acceptance_hud_003a1.log",
+          "sha256": "c19186f9ded3c3a4fdd9a0c3f7f8d192ac3fd8a72ff87488e1338dd07f155d7e"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_121131_429455_combat_acceptance_hud_003a1.json",
+          "sha256": "4967a9336c96b0e725ff25cd99e2f135d7c84db43795c0d19d61004bf2873870"
+        }
+      },
+      {
+        "name": "music",
+        "checks": 1834,
+        "evidence": "native_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_115009_799972_music.log",
+          "sha256": "c60fdcbf2c5d83030cc8307d23a006148e0a3c73ab662a478ac662ecb42fbadb"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115009_799972_music.json",
+          "sha256": "cde0153e6f67332ba1da1512b80494d9e029faac005879bd0c0e856ca272b617"
+        }
+      },
+      {
+        "name": "music_native",
+        "checks": 24,
+        "evidence": "native_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_115009_799972_music_native.log",
+          "sha256": "bc565b953a400f1a1a18a8bc3d3f57d41c61bb86102b259cdb419d67bcf49459"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115009_799972_music_native.json",
+          "sha256": "6838d1f5e0fadce472e832a6f2c5eb421da2dea51f5f4962848bd9923a30446f"
+        }
+      },
+      {
+        "name": "beast_orientation",
+        "checks": 19797,
+        "evidence": "native_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_115009_799972_beast_orientation.log",
+          "sha256": "cac443c3e2f2076024b668e2c298d33aeea9651aa708d66edac053ccf7d1a4bf"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115009_799972_beast_orientation.json",
+          "sha256": "6da93ae1a0b0d85e1e8a0145a1252e46988072b179ce5b91245421dffc0e0192"
+        }
+      },
+      {
+        "name": "android_foundation",
+        "checks": 138,
+        "evidence": "native_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_115009_799972_android_foundation.log",
+          "sha256": "3b36a7b874dde4aa95f2fd41ee613c874503a5f6658b99ab24e5b4d8919009c8"
+        }
+      },
+      {
+        "name": "mobile_combat_input",
+        "checks": 119,
+        "evidence": "native_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_115009_799972_mobile_combat_input.log",
+          "sha256": "c13196471b25411303255b9e146280f37ff63f61424bb8a1ccf025242fa1927e"
+        }
+      },
+      {
+        "name": "native_window_layout_003a1",
+        "checks": 424,
+        "evidence": "native_final_hud_window",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_121131_429455_native_window_layout_003a1.log",
+          "sha256": "a9044a7625d0b16590bde79d49ba69534da7734ff4c3809b0743b95dd789e005"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_121131_429455_native_window_layout_003a1.json",
+          "sha256": "7e389b9f3c290afec8723c179c6d386c6caa4034dbf7f7b4c512712f0ba77d56"
+        }
+      },
+      {
+        "name": "mobile_shell_layout_003a1",
+        "checks": 136,
+        "evidence": "native_final_shell",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_native_20261009_120246_269621_mobile_shell_layout_003a1.log",
+          "sha256": "f7450945fbb2631724e6e3d222654490c5b4af7f0f5dc92681748a8ef6da146d"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_120246_269621_mobile_shell_layout_003a1.json",
+          "sha256": "bdb3984bc9b845fadc16826421558376ddb7c4aec13f0cc6cc854070f5abe732"
+        }
+      },
+      {
+        "name": "input_acceptance_003a1",
+        "checks": 493,
+        "evidence": "native_final_input_controller",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_controller_routes_v2_20261009_120638_436521_input.log",
+          "sha256": "b67f37dab55e818963d5ef9e34f01b9e605eb4a609779581c0dfb05dd18b009b"
+        },
+        "runtime_report": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_routes_v2_20261009_120638_436521_input_runtime.json",
+          "sha256": "94e8a7f0cdfc1e35582bf821c92cbe9205b52ee35bd4a80db8892b6d24dc00fc"
+        }
+      }
+    ]
+  },
+  "additional_native_controller": {
+    "name": "controller",
+    "checks": 1145,
+    "passed": true,
+    "evidence": "native_final_input_controller",
+    "log": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_controller_routes_v2_20261009_120638_436521_controller.log",
+      "sha256": "2348b0bef5e3cc3597acb9636c6810b53f23023891e6c0a43110770970cdea11"
+    },
+    "scope": "Separate native logical controller suite; real connected device metadata was read, but mapped button/reconnect events were synthetic. No fresh physical press/reconnect acceptance."
+  },
+  "python": {
+    "suite_count": 7,
+    "checks": 239,
+    "passed": true,
+    "suites": [
+      {
+        "name": "art",
+        "checks": 25,
+        "evidence": "python_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_112844_807594_art.log",
+          "sha256": "e48758d37c7118196f21a94eaa15a8c72ff852ebbac51b9217c470d4fad0c577"
+        }
+      },
+      {
+        "name": "audio",
+        "checks": 4,
+        "evidence": "python_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_112844_807594_audio.log",
+          "sha256": "5e33befc316e758349f2a56f646e423fe17151dac2b2dadb51d5f538eaa10a55"
+        }
+      },
+      {
+        "name": "build",
+        "checks": 93,
+        "evidence": "python_final_build_guards",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_build_shop_guards_20261009_124240_017667.log",
+          "sha256": "e9bcc9a1dadc87b17e92867e2c045d24df54c541a8d4ebb910d189f58d583eb2"
+        }
+      },
+      {
+        "name": "presentation",
+        "checks": 37,
+        "evidence": "python_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_112844_807594_presentation.log",
+          "sha256": "0bf527c9bcfc79cba5d7c7dcd3e91aeead65f08cffe376ef456f89686efc14d6"
+        }
+      },
+      {
+        "name": "workspace",
+        "checks": 4,
+        "evidence": "python_initial",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_112844_807594_workspace.log",
+          "sha256": "3be64f781d97416c090e40af97af1209b8d7c7bce0de32cef5e6da800e15cfea"
+        }
+      },
+      {
+        "name": "parts",
+        "checks": 71,
+        "evidence": "python_parts_android",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_113503_534337_parts.log",
+          "sha256": "4e2540aa81ff6b85282f00d5813af956c3a3361b61c84ce813a121f1aba569c5"
+        }
+      },
+      {
+        "name": "android",
+        "checks": 5,
+        "evidence": "python_parts_android",
+        "log": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_enemy_foundation_python_20261009_113503_534337_android.log",
+          "sha256": "a7ca094577d5945875acd4115d8a741be27f2a84d5b976c83b76382da1ccc6c6"
+        }
+      }
+    ],
+    "unit": "Python test cases, kept separate from engine assertions"
+  },
+  "selection_policy": "Latest successful scoped row replaces the same named suite in that platform; unsuccessful rows never contribute. Final43 Bastion observations replace old43 failed observations,93 build cases replace old82, and the new12 Burst checks add one distinct engine suite. Native controller1145 remains separate.",
+  "preservation": {
+    "protected_player_files": 24,
+    "current_bytes_equal_start": true,
+    "accepted_music_files": 18,
+    "accepted_music_bytes_equal_start": true,
+    "prior_compact_files": 87,
+    "prior_compact_bytes_equal_start": true,
+    "runtime_graph_files": 797,
+    "runtime_graph_matches_final_v3_snapshot": true,
+    "historical_qa_files_last_guarded": 2609,
+    "historical_qa_guard_evidence": "preservation_after_build",
+    "guard_policy": "Protected player bytes and original87 compact records rehashed by this assembly. Every selected report and log hash verified. Historical2609 evidence preservation uses the linked completed after-build guard; all8 replaced good-build files were independently rehashed in the guarded archive against the start manifest."
+  },
+  "studies": {
+    "roles_and_builds": {
+      "evidence": [
+        "final_role_study",
+        "final_build_study",
+        "v2_v3_id2_replay"
+      ],
+      "matched_cases": 96,
+      "before_cases": 48,
+      "after_cases": 48,
+      "scope": "Fixed one-enemy ID2 legal initial role/build scenarios with actual solver; all48 final AFTER rows and48 BEFORE rows replay V2 exactly. No whole-game or pixel-identity claim."
+    },
+    "upgrade_sustain": {
+      "status": "completed",
+      "evidence": [
+        "final_upgrade_sustain",
+        "v2_v3_final45_replay"
+      ],
+      "cases_per_stage": 45,
+      "seeds": [
+        421,
+        7341,
+        2026
+      ],
+      "investments": [
+        0,
+        3,
+        6,
+        12
+      ],
+      "after_outcomes": {
+        "spin_out": 31,
+        "ring_out": 13,
+        "horizon_censored": 1
+      },
+      "after_policies": {
+        "active": 36,
+        "active_then_hands_off": 9
+      },
+      "handoff_reached": 6,
+      "max_ledger_closure_error": 8.63864535460834e-13,
+      "all_45_final_after_rows_equal_v2": true,
+      "scope": "Declared fixed legal investment fixtures, genuine production Run/AI/Director and sampled controls; no enemy/RPM/outcome injection. Censored horizon is a lower survival bound. Not natural draft history, maximal human performance or enjoyment acceptance."
+    }
+  },
+  "guarded_promotion_archive": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae",
+    "all_eight_files_equal_original_start_bytes": true,
+    "files": [
+      {
+        "original": "builds/latest/build-manifest.json",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\latest\\build-manifest.json",
+        "sha256": "da25a02f0bf9587fadda1b1f00b3b69e6a117cf8fc03fd0692566cbf3b693efe",
+        "bytes": 160496
+      },
+      {
+        "original": "builds/latest/README.txt",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\latest\\README.txt",
+        "sha256": "b965f195dc21e9e780b3ad8d743c20b218341447d53abd76fa18a507a5fc2384",
+        "bytes": 1053
+      },
+      {
+        "original": "builds/latest/SpinningMetal.exe",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\latest\\SpinningMetal.exe",
+        "sha256": "e3792bd8ef0a6a9205c192b725850860da8a32a308525ab2ea976e06013d2292",
+        "bytes": 151994352
+      },
+      {
+        "original": "builds/latest/SpinningMetal.exe.sha256",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\latest\\SpinningMetal.exe.sha256",
+        "sha256": "d95e50a6e0c5f35820db2a2cd12bd6054feccf2a14c12f5621619dbf942b195d",
+        "bytes": 85
+      },
+      {
+        "original": "builds/checkpoints/003A.1/build-manifest.json",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\003A.1\\build-manifest.json",
+        "sha256": "da25a02f0bf9587fadda1b1f00b3b69e6a117cf8fc03fd0692566cbf3b693efe",
+        "bytes": 160496
+      },
+      {
+        "original": "builds/checkpoints/003A.1/README.txt",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\003A.1\\README.txt",
+        "sha256": "b965f195dc21e9e780b3ad8d743c20b218341447d53abd76fa18a507a5fc2384",
+        "bytes": 1053
+      },
+      {
+        "original": "builds/checkpoints/003A.1/SpinningMetal.exe",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\003A.1\\SpinningMetal.exe",
+        "sha256": "e3792bd8ef0a6a9205c192b725850860da8a32a308525ab2ea976e06013d2292",
+        "bytes": 151994352
+      },
+      {
+        "original": "builds/checkpoints/003A.1/SpinningMetal.exe.sha256",
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1405b8d29d514b5697c87ff10ed59dae\\003A.1\\SpinningMetal.exe.sha256",
+        "sha256": "d95e50a6e0c5f35820db2a2cd12bd6054feccf2a14c12f5621619dbf942b195d",
+        "bytes": 85
+      }
+    ],
+    "evidence": [
+      "windows_build_manifest",
+      "windows_independent_shop_review",
+      "windows_promotion_receipt",
+      "preservation_after_build"
+    ]
+  },
+  "package_evidence": {
+    "source_git_sha": "9ca9bbe1488e2586cde54459697e4cbf7f48bed5",
+    "windows": {
+      "status": "Validated actual packaged smoke, strict Shop receipt/captures and independent source/art/PCM review; root guarded promotion completed.",
+      "latest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+        "sha256": "b766d1b5c9cff0dfe84f43cfe74b6163bc3cc334aa2b3210a436a005b5e3265f"
+      },
+      "checkpoint": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.1\\SpinningMetal.exe",
+        "sha256": "b766d1b5c9cff0dfe84f43cfe74b6163bc3cc334aa2b3210a436a005b5e3265f"
+      },
+      "evidence": [
+        "windows_build_manifest",
+        "windows_independent_shop_review",
+        "windows_actual_asset_probe"
+      ]
+    },
+    "android": {
+      "status": "Signed inspected candidate; awaiting Android smoke. No new physical device acceptance; no promoted Android claim.",
+      "candidate": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\android-003a1-ef44f14c2a78\\payload\\SpinningMetal-android.apk",
+        "sha256": "de16706e1375dd13ffcb57ca22268e8ee42b1fbf9170327457b2659122fb8dfa"
+      },
+      "evidence": "android_build_manifest"
+    }
+  },
+  "artifacts": [
+    {
+      "name": "ai_film",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_enemy_intelligence_showcase_v2.mp4",
+      "sha256": "8bd6f100dc6ba53d462966add2beaf84c0483154d15d0cc35ab5601a25a2d428",
+      "evidence": "ai_film",
+      "scope": "V2 native fixed-tick one-enemy legal initial fixtures; Director admissions suspended for isolation. Not natural difficulty/human acceptance. V3 replay covers exact ID2 physics rows, not movie pixels or all multi-enemy owners."
+    },
+    {
+      "name": "power_film",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_enemy_power_showcase_v2.mp4",
+      "sha256": "2bd888c70c46c5c3bfead8071b72beddcd223105b1f8740b5ca41c7a5b817f9c",
+      "evidence": "power_film",
+      "scope": "V2 native fixed-tick one-enemy legal initial fixtures; Director admissions suspended for isolation. Not natural difficulty/human acceptance. V3 replay covers exact ID2 physics rows, not movie pixels or all multi-enemy owners."
+    },
+    {
+      "name": "combat_audio_pcm_final",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_combat_audio_mix_pcm_final.mp4",
+      "sha256": "04ad3e9f409ae15bd39dd9d2d936c1e964844a30336a09ea10b1afe42ec7db4f",
+      "evidence": "pcm_final",
+      "scope": "37 s real native mix using declared impact fixtures; corrected PCM sidecars. No clipped samples; no human speaker/phone claim."
+    },
+    {
+      "name": "breakneck_card",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_breakneck_card.png",
+      "sha256": "d0c40faf1ac7f17a2534d02c5b95f7905a50434ce39bfe527ff046d7d9e2cc51",
+      "evidence": "pcm_final",
+      "scope": "Native Aseprite action-layer edit with final authored topology/parity proof."
+    },
+    {
+      "name": "decorated_window_film",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_window_review_20261009_113802_507486_maximise_layout.mp4",
+      "sha256": "b37cce9bcec693fbc3e2de7c8791e8ef502ff09ca5aea1b51f4d1c7413391499",
+      "evidence": "window_final",
+      "scope": "Retained real human Maximise footage plus separately labelled timed OS API resize/Maximise/Restore. Human Restore and border dragging remain pending."
+    },
+    {
+      "name": "window_matrix",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_window_review_20261009_113802_507486_layout_matrix.png",
+      "sha256": "d9992478b81c3d2053bd917815091b54bfe70ec90d41fe18f3588ea54d0dd791",
+      "evidence": "window_final",
+      "scope": "Bounded actual foreground decorated-window screenshots; fixed physics arena, dynamic presentation margins."
+    },
+    {
+      "name": "003a1_bulk_shop_ux",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_bulk_shop_ux.mp4",
+      "sha256": "6a1aa81ded2c805e89f9eaacf93a50f2fed6d67c91a2f8fefbf3406cc4569ee8",
+      "evidence": "shop_workshop",
+      "scope": "Native Main UI and isolated save, declared legal initial wallet. Pre-focus-fix high-affordability movies preserved; final low-wallet focus and exact fixed-clock Shop tests cover the later narrow corrections."
+    },
+    {
+      "name": "003a1_workshop_route",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_workshop_route.mp4",
+      "sha256": "56331fe96636c77e9b5b55340a60ebb5ee55af48752524a135b219c6889380c2",
+      "evidence": "shop_workshop",
+      "scope": "Native Main UI and isolated save, declared legal initial wallet. Pre-focus-fix high-affordability movies preserved; final low-wallet focus and exact fixed-clock Shop tests cover the later narrow corrections."
+    },
+    {
+      "name": "pickup_collection",
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_pickup_collection_fix.mp4",
+      "sha256": "50f8e051daacc6adacfafb5aff4a34bed44a8470dfc12082d9b40baaddb73a96",
+      "evidence": "pickup_matrix",
+      "scope": "Sixteen actual fixed-solver traversals of declared drop/initial-pose fixtures; native Sound collection cue. Separate headless feedback_live_pickup uses a genuine natural earned threat clear/drop/collection."
+    }
+  ],
+  "raw_attempts_preserved": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_113846_253198.json",
+      "sha256": "e3b2684f3a2647214992bff31485ccf9964fb1fccbbf4ca1a35186c09c9fc7c5",
+      "failed_suites": [
+        "rpm_replay",
+        "feedback_live_pickup",
+        "music_escalation",
+        "defence_pressure",
+        "bastion_active_defence",
+        "input_acceptance_003a1",
+        "controller",
+        "overdrive_lifecycle_003a1",
+        "mobile_shell_layout_003a1",
+        "shop_ux_003a1"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850.json",
+      "sha256": "2150412eadb3bc70fd25393b237f23d3fd325c4d23e9a50571d8b36b437eb5e7",
+      "failed_suites": [
+        "power_identity",
+        "defence_pressure",
+        "bastion_active_defence",
+        "input_acceptance_003a1",
+        "overdrive_lifecycle_003a1",
+        "shop_ux_003a1"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123446_737123.json",
+      "sha256": "e342a9656d9e6ad329737738d49d0ef9f0670e931d482e8d6e5b425e32e8245c",
+      "failed_suites": [
+        "shop_ux_003a1"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115009_799972.json",
+      "sha256": "dbcaf4a8209e6c7db9179a2cccf0b2376080cf12289e658fffc8d145de1de899",
+      "failed_suites": [
+        "input_acceptance_003a1",
+        "mobile_shell_layout_003a1"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115245_960840.json",
+      "sha256": "7fe222fde4289f0fa7b61071509e45b2c2614fe43577da188efd4c596bdbfc29",
+      "failed_suites": [
+        "input_acceptance_003a1",
+        "mobile_shell_layout_003a1"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_python_20261009_112844_807594.json",
+      "sha256": "2f63f00bf8a835dc1751917c6549e5f7a6787ec1fdcb8f0d33c7e4099fe1955e",
+      "failed_suites": [
+        "parts"
+      ]
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_burst_sampling_before_20261009_123615_644457.json",
+      "sha256": "d7e99f1676e7275ff6fd2f758f115bf9007a5a65a1aef38ede1975b7a5b0b5df"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_focus_cost_initial_20261009.json",
+      "sha256": "1fb50c32d8479bb27b8561a47c6d211040e000fe5cda18de7bacd2792eb4b6c1"
+    }
+  ],
+  "human_acceptance": {
+    "actual_human_maximise": "Confirmed matching native mode/client/decorations in retained report and footage.",
+    "restore": "OS API verified; fresh human Restore-button acceptance pending.",
+    "controller": "Connected metadata plus synthetic mapped events. No new physical presses/reconnect acceptance.",
+    "android": "No current physical phone acceptance. Headless/native shell and packaging do not imply hardware acceptance.",
+    "gameplay_art_audio": "Final human review pending."
+  },
+  "delivery": "Root owns exact-code build9ca9bbe and guarded Windows promotion. This aggregate only verifies pointers/hashes to those completed package proofs; it does not perform export/promotion or claim Android hardware acceptance. The final documentation/evidence commit may follow without runtime changes.",
+  "evidence": {
+    "preservation_start": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_preservation_start_20261009_103535.json",
+      "sha256": "53427a4bf61f137c4dd08d3af0275f103a25694adcfa7fe7d2540b175f8fc0b0"
+    },
+    "preservation_before_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_preservation_before_build_20261009_121642_169843.json",
+      "sha256": "ee4702dde481c7b906a975d83f74eaa580110ee8aa8c674727c6e8a79d846527"
+    },
+    "final_runtime_snapshot": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_final_v3_20261009_123956_103061_source.json",
+      "sha256": "6803f8ac629e17ec2336587ed6a30b8c4ca5335f02210ef6aa1fbe7f99843012"
+    },
+    "final_burst_delta_review": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_burst_sampling_final_review_20261009_204210_605757.json",
+      "sha256": "3b736c9bfef4de44cd439432d96124f571511d28bccc157df82c36846e2c62b6"
+    },
+    "headless_v2_100": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_120653_317850.json",
+      "sha256": "2150412eadb3bc70fd25393b237f23d3fd325c4d23e9a50571d8b36b437eb5e7",
+      "status": "failed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+      "source_graph_sha256": "dac2be5fd0f52e8b3b877e7c959ce5985e6604e222de5c6d9d0ea80bb45ae1b6"
+    },
+    "headless_final_8": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123857_530888.json",
+      "sha256": "8acfa4aab5ac2809cadf25b00a833bc15cc214eae6a12e726e5c8ce75c3ec03d",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "038dfc09d861c04fb829be1640477dc50cb3933c749d108425ac359c64ac8368",
+      "source_graph_sha256": "b5b89666bbcbc4570e2ed5c4f257f38ff0bf180755816c3643cc0e3208735dea"
+    },
+    "headless_fixed_clock_input_overdrive": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123446_737123.json",
+      "sha256": "e342a9656d9e6ad329737738d49d0ef9f0670e931d482e8d6e5b425e32e8245c",
+      "status": "failed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+      "source_graph_sha256": "dac2be5fd0f52e8b3b877e7c959ce5985e6604e222de5c6d9d0ea80bb45ae1b6"
+    },
+    "headless_fixed_clock_shop": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_123636_945091.json",
+      "sha256": "c558cfffd3154a03497937e9148f2848330b76e555c6164a1557bec2e155a81a",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+      "source_graph_sha256": "dac2be5fd0f52e8b3b877e7c959ce5985e6604e222de5c6d9d0ea80bb45ae1b6"
+    },
+    "headless_final_power_defence": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_headless_20261009_124130_496513.json",
+      "sha256": "f7a28bc7822aac9f9ebea5eba0e53b3ced071683973e47b083d349007aa60c8f",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "038dfc09d861c04fb829be1640477dc50cb3933c749d108425ac359c64ac8368",
+      "source_graph_sha256": "b5b89666bbcbc4570e2ed5c4f257f38ff0bf180755816c3643cc0e3208735dea"
+    },
+    "headless_final_bastion": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_v2_observation_contract_20261009_123948_308007.json",
+      "sha256": "87beba4522e7be4fc304edab8df64d2fbcf25567048541f8630b3726ac0739b0"
+    },
+    "native_initial": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_115009_799972.json",
+      "sha256": "dbcaf4a8209e6c7db9179a2cccf0b2376080cf12289e658fffc8d145de1de899",
+      "status": "failed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "482b156563731f102df9f9ebefa52bd4dc257c0f29e791a14458ecb2cef947fe",
+      "source_graph_sha256": "d6926666bf2ee5d9c9c4968ab05f88ef3ae0c8234705e9233d99bec255180305"
+    },
+    "native_final_shell": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_120246_269621.json",
+      "sha256": "fd5e9d9269e16dd5b373d8c17f203070fd39f32ffb1a9396f6dbef6eedf7005b",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+      "source_graph_sha256": "dac2be5fd0f52e8b3b877e7c959ce5985e6604e222de5c6d9d0ea80bb45ae1b6"
+    },
+    "native_final_hud_window": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_native_20261009_121131_429455.json",
+      "sha256": "5a5ad28467b8f10188f3820f53c0bbcfd712ffc55b1689f5a7de76f5e5d0699e",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "ba59b852e46846db04d3464b2ce04287d5d20cd26f9056ea7b405b7a74569fbf",
+      "source_graph_sha256": "dac2be5fd0f52e8b3b877e7c959ce5985e6604e222de5c6d9d0ea80bb45ae1b6"
+    },
+    "native_final_input_controller": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_routes_v2_20261009_120638_436521.json",
+      "sha256": "3a92ca051616de2786929e62b085456d51b3614fe0fa51dba1f9bdfb4aa01433"
+    },
+    "python_initial": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_python_20261009_112844_807594.json",
+      "sha256": "2f63f00bf8a835dc1751917c6549e5f7a6787ec1fdcb8f0d33c7e4099fe1955e",
+      "status": "failed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "e78ce6960c9127cf746c01d272e2bad754e1287c4ed96bd163127044a00c340e",
+      "source_graph_sha256": "348ccd79a45331f09bc8de5b81c7d71026555d655bb40c743f6315842f8acbf2"
+    },
+    "python_parts_android": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_python_20261009_113503_534337.json",
+      "sha256": "e28944a81e21ba7e3b95fccf2ae5710006f0ac2d4d6200a805a46510cc5e3f9f",
+      "status": "passed",
+      "source_guard": true,
+      "player_guard": true,
+      "pilot_sha256": "482b156563731f102df9f9ebefa52bd4dc257c0f29e791a14458ecb2cef947fe",
+      "source_graph_sha256": "5e2da13aa2b609ae0e4ef9c5163daa33b4bd440deb1559efac8e42e240a1df5b"
+    },
+    "python_final_build_guards": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_build_shop_guards_20261009_124240_017667.json",
+      "sha256": "3c2ab034c0739938e374cc4b5efae7ba04bbaa9a69f1f972de391ad673bc5e58"
+    },
+    "final_fixture_build_scope": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_final_observation_fixture_shop_scope_20261009_124643_454047.json",
+      "sha256": "a4c452f3e579a96e06c2caf5f77329df07b980eae437549ef9ff56b2fbeaab86"
+    },
+    "ai_film": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_intelligence_showcase_v2_20261009_120758_931028.json",
+      "sha256": "0a4c2f5dd0b3e1b924f4ffb45172dae1e2e0dd6632bacb56ad1342a62e2abd4c"
+    },
+    "power_film": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_power_showcase_v2_20261009_120758_933661.json",
+      "sha256": "4777ff8036ac4dedc75bba4230444dbecd790788e26893fffa599bea4954a1da"
+    },
+    "pcm_final": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_audio_pcm_final_20261009.json",
+      "sha256": "9e80e21f30d53ed2ee7e0e7de732982bf6251439cfc2764fa26ac566e29f96b1"
+    },
+    "breakneck_parity": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_breakneck_native_scope_final2_20261009.json",
+      "sha256": "d42e1cbc594c15b6be19be19aaef9af913e880cea2857066dc3ae22a39e67299"
+    },
+    "window_final": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_window_review_20261009_113802_507486.json",
+      "sha256": "41a83a9dfd08c842eaca4ac12919e2e47e75416276b4b19a5d4b9c083e417b10"
+    },
+    "shop_workshop": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_shop_workshop_ux_final_20261009_112224_196386.json",
+      "sha256": "b430cb5375ee568acb9011dc1f532be2d7cc18891c68fdfce1c5005b9bdd8273"
+    },
+    "pickup_matrix": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_pickup_position_matrix.json",
+      "sha256": "8bf9f4240f873f2e4df7552a2ee2b5bc1b74b7e9e16a5056f34a3fb0b00fb4a4"
+    },
+    "real_clear_pickup": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_feedback_pickup_final_proof_20261009_115827.json",
+      "sha256": "bfc66a847b724adb0296eadd791692be217fda979ffbbfbac65be6fbcecc32d1"
+    },
+    "final_role_study": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_enemy_intelligence_comparison_revision3.json",
+      "sha256": "6d0179324d628ae2531798ed542f71a0a422c8330248382edca813c9a3bcb241"
+    },
+    "final_build_study": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_enemy_build_behaviour_revision3.json",
+      "sha256": "bd3ee095fa13c73777a851904a8463032e87eb4caaa46420c7ac981d5615e03f"
+    },
+    "v2_v3_id2_replay": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_v2_v3_id2_replay_20261009_124436.json",
+      "sha256": "1c5e58dc70ac5d280bef6b06cdba9481801b7e5da0adda08d2d2893b85cbc5bc"
+    },
+    "final_upgrade_sustain": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_upgrade_sustain_after_intelligence_revision3.json",
+      "sha256": "7063703d62913b284a905dcd62212ea58c6e0a945b379a45929be45e15b99a9d"
+    },
+    "v2_v3_final45_replay": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_v2_v3_final45_replay_20261009_125024.json",
+      "sha256": "f9748ebc92f02a375eea8ce050dcc63a37ee82b920377d4e5999c7c6afa6b36c"
+    },
+    "sustain_before_0": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_before_aggressive_20261009_104857_816885.json",
+      "sha256": "74547cceee8be360840dbff5ec315584267c19258aa0198101434af7ac40e11e"
+    },
+    "sustain_before_1": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_before_defensive_20261009_104857_819863.json",
+      "sha256": "d6dd3cc96a1a65756d6f555352d3e811b39f5983e85653bac2dc2cfb8f58b3ef"
+    },
+    "sustain_before_2": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_before_mixed_20261009_104857_832514.json",
+      "sha256": "e0617666865f317b834b712fe006e7d364d9b0674bd809848d94427eb58ae62d"
+    },
+    "sustain_after_0": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_final_v3_after_aggressive_20261009_124025_863794.json",
+      "sha256": "05d77a59b8020de199347363d5cf1b89f6d819990bf8f62fcc21125b81183940"
+    },
+    "sustain_after_1": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_final_v3_after_defensive_20261009_124025_839674.json",
+      "sha256": "ac9044f7d577786cea1d3e1d8ba4f4cd1fde06cfe49d74fb47920fbb7640d705"
+    },
+    "sustain_after_2": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_upgrade_sustain_enemy_foundation_final_v3_after_mixed_20261009_124025_865754.json",
+      "sha256": "f9985e8dc0a704d0c112439f3b7fc2708ba31f3af03cc74de185bee799c88af2"
+    },
+    "windows_independent_shop_review": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_windows_candidate_independent_shop_review_20261009_124948_203109.json",
+      "sha256": "29f5a47d883356584921a97b7ee1b52e4333b87770d69519e304520cb3ebd8ce"
+    },
+    "windows_actual_asset_probe": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_packaged_catalogue_5deca919c71b41099d6340a5f6d1e9d5.json",
+      "sha256": "2bcafdd10ed047e2c65ea8d50d84907f0b224aa8af64628f6068e4b70e5b9f84"
+    },
+    "windows_build_manifest": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\windows-003a1-da504ab4a3e7\\payload\\build-manifest.json",
+      "sha256": "75712afa2dac40ea9a9edf95bd7082b601adde60f4de31f8ed3434ac93530c2c"
+    },
+    "android_build_manifest": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\temp\\android-003a1-ef44f14c2a78\\payload\\android-build-manifest.json",
+      "sha256": "4c67cf1bf6fe03b93f1ac686331936bccab99cc4cbfc9f36e7b3d07789b80deb"
+    },
+    "windows_promotion_receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_windows_promotion.json",
+      "sha256": "dc8299e5707c38dd9c47e64b0b7cdc5a6a62d8e88e696b616961ad4de46217ef"
+    },
+    "preservation_after_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_enemy_foundation_preservation_after_build_20261009_125152_989888.json",
+      "sha256": "690b1e32b1d7a23331697bfb288cf83727ef00139c92fb5513539d40d84f5870"
+    }
+  }
+}
