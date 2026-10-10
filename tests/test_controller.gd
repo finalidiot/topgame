@@ -262,8 +262,10 @@ func _focus_is_visible(context: String) -> void:
 	check(focused != null, context+": an initial control owns focus")
 	if focused == null: return
 	check(focused.is_visible_in_tree() and focused.focus_mode == Control.FOCUS_ALL, context+": focused control is visible and navigable")
-	check(game.menus._content.position == Vector2(80, 60), context+": menu keeps its centred native origin")
-	check(Rect2(80, 60, 640, 360).encloses(focused.get_global_rect()), context+": focused control is inside the native menu")
+	var actual_root: Rect2 = game.menus._content.get_global_rect()
+	var mode: String = str(game.menus.presentation_snapshot().get("presentation_class", ""))
+	check((actual_root.position == Vector2.ZERO and actual_root.size == game.menus._presentation_canvas) if mode == "frontend" else actual_root.get_center().is_equal_approx(game.menus._presentation_canvas*0.5), context+": full-client pages and centred combat modals use their own root policy")
+	check(actual_root.encloses(focused.get_global_rect()), context+": focused control is inside the actual presentation root")
 	var style: StyleBoxTexture = focused.get_theme_stylebox("focus") as StyleBoxTexture
 	check(style != null and style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible(), context+": focus has a visible authored pixel frame")
 

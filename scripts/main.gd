@@ -19,6 +19,7 @@ const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 const TopStatusBars = preload("res://scripts/top_status_bars.gd")
 const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const FrontendLayout = preload("res://scripts/frontend_layout.gd")
 const IndustrialSurround = preload("res://scripts/industrial_surround.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
@@ -101,7 +102,6 @@ var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
 	_refresh_window_presentation()
-	if is_instance_valid(combat_frame) and is_instance_valid(battle): combat_frame.visible = battle.visible
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
 		if _android_qa_clock <= 0.0:
@@ -263,6 +263,11 @@ func _uses_mobile_presentation() -> bool:
 
 func _refresh_window_presentation() -> void:
 	if not is_instance_valid(combat_frame) or not is_instance_valid(menus): return
+	# The accepted arena/casing belongs to combat and its overlays. Front-end
+	# pages own their full-client foundation, even when a paused world is retained.
+	var presentation_class: String = FrontendLayout.presentation_class(menus.screen)
+	combat_frame.visible = battle.visible and presentation_class != "frontend"
+	if is_instance_valid(presentation_surround): presentation_surround.visible = presentation_class != "frontend"
 	var mobile: bool = _uses_mobile_presentation()
 	var safe_rect: Rect2 = Rect2()
 	if not mobile:
@@ -300,6 +305,10 @@ func window_presentation_snapshot() -> Dictionary:
 	layout["client_size"] = get_window().size
 	layout["window_mode"] = DisplayServer.window_get_mode()
 	layout["borderless"] = DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
+	layout["presentation_class"] = FrontendLayout.presentation_class(menus.screen)
+	layout["menu_screen"] = menus.screen
+	layout["combat_frame_visible"] = combat_frame.visible
+	layout["industrial_surround_visible"] = presentation_surround.visible if is_instance_valid(presentation_surround) else false
 	layout["ui_policy"] = {"canvas_size":Vector2i(_presentation_canvas_size),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":hosted_native,"full_canvas_mobile":true} if mobile else CombatLayout.desktop_canvas(get_window().size)
 	return layout
 
@@ -471,7 +480,7 @@ func _title() -> void:
 		_show_packet(true)
 		return
 	screen = "title"
-	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
+	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized(), collection.snapshot())
 	if is_instance_valid(music):
 		music.set_context("title")
 		music.set_paused(false)

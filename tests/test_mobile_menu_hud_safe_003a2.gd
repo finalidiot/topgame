@@ -132,7 +132,7 @@ func menu_inset_change() -> void:
 	menus.set_presentation_canvas(Vector2(800,480))
 	menus.show_settings({})
 	await settle()
-	check(menus._content.position==Vector2(80,60) and menus._content.scale==Vector2.ONE,"Desktop authored menu keeps accepted800×480 geometry")
+	check(menus._content.position==Vector2.ZERO and menus._content.size==Vector2(800,480) and menus._content.scale==Vector2.ONE and menus.presentation_snapshot().presentation_class=="frontend","Desktop Options uses full-client responsive root while mobile safe panels remain unchanged")
 	menus.show_hud(stats())
 	check(menus._hud.player_panel.get_global_rect()==Rect2(86,6,248,48) and menus._hud.xp_panel.get_global_rect()==Rect2(326,450,388,28),"Desktop permanent HUD retains accepted panel positions")
 	check(menus._hud.xp_label.text=="LV 19  /  NEXT INVESTMENT" and menus._hud.burst.text=="BURST RECHARGING   2.7 s","Desktop captions remain unchanged")

@@ -1,5 +1,5 @@
 extends SceneTree
-# Native-resolution UI regression tests use real keyboard input and shaped Label
+# Presentation-class UI regression tests use real keyboard input and shaped Label
 # measurements. Pixel-level visual review remains part of the separate smoke test.
 
 const Menus = preload("res://scripts/menus.gd")
@@ -80,17 +80,18 @@ func _find_label(parent: Node, text: String) -> Label:
 
 func _check_label_fits(label: Label) -> void:
 	var rect: Rect2 = label.get_global_rect()
-	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else MENU_RECT
-	check(menus._content.position == (Vector2.ZERO if menus.screen == "hud" else MENU_RECT.position), "HUD and native menus use their correct product origin")
+	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else menus._content.get_global_rect()
+	var full_client: bool = menus.presentation_mode in ["frontend", "combat"]
+	check(menus._content.position == (Vector2.ZERO if full_client else MENU_RECT.position), "HUD/full-client pages and centered modals use their actual presentation origins")
 	var parent: Node = label.get_parent()
 	var clipped_strip: bool = false
 	while parent != null:
 		if parent is ScrollContainer:
 			clipped_strip = true
-			check(screen_rect.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays inside the native menu")
+			check(screen_rect.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays inside the actual presentation root")
 			break
 		parent = parent.get_parent()
-	if not clipped_strip: check(screen_rect.encloses(rect), "Label stays inside its native menu or product HUD: %s %s" % [label.text, rect])
+	if not clipped_strip: check(screen_rect.encloses(rect), "Label stays inside its actual presentation root or product HUD: %s %s" % [label.text, rect])
 	if label.text.is_empty(): return
 	var font: Font = label.get_theme_font("font")
 	var font_size: int = label.get_theme_font_size("font_size")

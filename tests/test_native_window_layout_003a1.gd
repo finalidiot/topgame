@@ -122,7 +122,8 @@ func run() -> void:
 	for child: Node in game.menus._content.get_children():
 		if child is Button: check(str(child.get_meta("setting_key","")) != "fullscreen","Options has no misleading fullscreen toggle")
 	game._title()
-	check(game.menus._content.position == Vector2(80,60),"Small normal window restores canonical menu composition")
+	var frontend: Dictionary = game.menus.presentation_snapshot()
+	check(frontend.presentation_class == "frontend" and Rect2(frontend.root_rect).is_equal_approx(Rect2(Vector2.ZERO,game.window_presentation_snapshot().canvas_size)) and Vector2(frontend.root_scale).is_equal_approx(Vector2.ONE),"Small normal window restores the full-client frontend without scaling a fixed menu island")
 	var mobile: Dictionary = Layout.responsive(Vector2(1600,960),true)
 	check(mobile.canvas_size == Vector2(1600,960) and float(mobile.arena_scale)>1.0 and is_equal_approx(mobile.arena_rect.size.x/640.0,mobile.arena_rect.size.y/360.0),"Android expands independently while preserving a uniform canonical world")
 	var file: FileAccess = FileAccess.open(report,FileAccess.WRITE)

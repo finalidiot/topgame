@@ -1,0 +1,144 @@
+{
+  "schema": "003a2_frontend_fullscreen_review_v1",
+  "task": "003A.2",
+  "created_utc": "2026-10-10T12:54:15.506426+00:00",
+  "status": "source_validated_guarded_build_pending",
+  "verified_starting_sha": "ed1b73f7328b90a72b6320071564a364350de7ed",
+  "branch": "task-003a2-ability-ecology",
+  "main_unchanged": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "runtime_boundary": {
+    "runtime_files": 838,
+    "fingerprint": "69ec230834ff0b1285d48918ccdfb6ed8b32227a4a8461aa635fc85621c0142d",
+    "menus_sha256": "a827b2df7bcb402cea4dbac5cc0210ddfb5a333fedaa2558ed5207488ad80569",
+    "main_sha256": "022bff754848822ce159a971b085c7bc3e159507b64ac755a408d37b45e2ba90",
+    "same_current_bytes_as_all_selected_capture_stages": true
+  },
+  "presentation": {
+    "helper": "scripts/frontend_layout.gd",
+    "classification": "combat / modal / frontend centralized",
+    "desktop_frontend": "Actual responsive logical client at zero origin and unit root scale; semantic regions reflow independently. Authored Preview/Merchant/PacketView alone retain uniform component transforms.",
+    "combat": "Accepted CombatLayout/IndustrialSurround/HUD/canonical640x360 Battle byte-identical; arena presentation shown for combat/modal only.",
+    "modal": "Pause scale1; desktop draft/acquisition bounded1.5; mobile/reference unchanged",
+    "mobile": "Accepted responsive safe shell, full-display authored background, immersive/edge-to-edge, uniform arena and side touch rails preserved",
+    "windowing": "Decorated normal / native OS API Maximise / true Restore; no exclusive or borderless fullscreen",
+    "reflow": "Constructed Control IDs and focus survive; no idle reconstruction/reflow",
+    "coordinates": "Physical final-transform plus Control-transform mouse/touch ingress through Viewport.push_input(event,false); PacketView native-local subpixel normalization retains exact bounds/42 tear threshold"
+  },
+  "screens": [
+    "title",
+    "hub",
+    "modes",
+    "starter select/confirm/ownership",
+    "Workshop/collection/practice",
+    "Shop",
+    "packet purchase/odds/open/result/salvage",
+    "Options",
+    "Help",
+    "save/testing/reset/error",
+    "Duel/Run results"
+  ],
+  "regressions": {
+    "headless": {
+      "unique_headless_suites": 36,
+      "checks": 47385,
+      "fresh_final_suites": 25,
+      "fresh_final_checks": 29951,
+      "retained_independent_suites": 11,
+      "retained_independent_checks": 17434,
+      "duplicate_suites": 0
+    },
+    "headless_selection": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_selection_20261010_125145_630516.json",
+      "bytes": 176869,
+      "sha256": "f673541af21ea649eb63fc3d7636e624e02d6a8b067edd2fb08c349103a63588"
+    },
+    "native": {
+      "suites": 19,
+      "checks": 29006,
+      "receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_native_20261010_124716_293009.json",
+        "bytes": 240095,
+        "sha256": "86d3dda2e3c444e2792e012bfe4ff17af08fa5d6d7166e06d4e1572caf35bbb4"
+      }
+    },
+    "python": {
+      "tests": 159,
+      "receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_python_20261010_122241_278104.json",
+        "bytes": 217876,
+        "sha256": "57968f3187fc3ae67784f11145a109b8fd52372a2a46299202bede8f46b78d18"
+      },
+      "dependency_retention": "Executed Python dependencies unchanged; later paint-only Menus edit does not enter these Python unit-test imports."
+    },
+    "capture": {
+      "headless": 6425,
+      "native": 6908,
+      "showcase": 1933,
+      "receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_final_capture_integrity_20261010_125038_369741.json",
+        "bytes": 13490,
+        "sha256": "21a3589b00867d3d857435e34c48bc5091a74866ed5238017c938cdf6f80b8c0"
+      }
+    },
+    "count_policy": "Unique suite selection, not sum of repeated passes.25 headless suites rerun on final paint;11 core suites retained only after recursive dependencies exclude Main/Menus and complete source/hash review.19 native suites rerun separately."
+  },
+  "artifacts": {
+    "matrix_json": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_layout_matrix.json",
+      "bytes": 10769600,
+      "sha256": "3ca5e0e83767fb68c920718c8d559916cec6df9141dfe8a4f0d41a242bbae3d6"
+    },
+    "images": {
+      "003a2_frontend_fullscreen_matrix.png": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\003a2_frontend_fullscreen_matrix.png",
+        "bytes": 262015,
+        "sha256": "8987503c688d93ecacef7e2f3da3db5b58e976aa2f03aa92dfaef11c4a239477"
+      },
+      "003a2_presentation_classes.png": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\003a2_presentation_classes.png",
+        "bytes": 49767,
+        "sha256": "df6ee54ac2b8644f4081f2a5d24c8525220a248f021b6a62f2486291eb5ef72a"
+      },
+      "003a2_options_human_repro_before_after.png": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\003a2_options_human_repro_before_after.png",
+        "bytes": 89218,
+        "sha256": "87cebf88ee56a9620bd95ad14d3d55478f160bb2e02c7c7e4c957a5d6a9cd419"
+      }
+    },
+    "video": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_frontend_responsive_showcase.mp4",
+      "bytes": 2626367,
+      "sha256": "057289b8e50315b1034f2810913bf92c699b6abb23889e1f089dc1e1ce057e8f"
+    }
+  },
+  "preservation": {
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_preservation_native_final_preexport_20261010_125300_829305.json",
+      "bytes": 885,
+      "sha256": "7bdcd63d6eea562a7b8319d794ba4a9bdd810054ce7ec05452d4ab9e51ad1bc6"
+    },
+    "real_player_collection_preferences_backups": 24,
+    "assets": 720,
+    "music": 18,
+    "untouched_script_and_uid_files": 112,
+    "previous_delivery_files": 12,
+    "all_before_promotion_byte_identical": true,
+    "historical_qa_preserved": true
+  },
+  "correction_findings": [
+    "Old640x360 front-end root caused tiny centered Options; new full-client semantic layout fixes it",
+    "Integer catalogue scroll sizing removes0.4176-pixel final-row clipping while retaining strict focus enclosure",
+    "Scaled PacketView inverse coordinates round to1/1024native pixel before original bounds/42-pixel tear rules",
+    "New Controls panel had painted over existing selector/note; panel now paints behind controls, all noncompact headings consistent. Rejected first visuals preserved."
+  ],
+  "evidence_limits": [
+    "Synthetic mouse/touch/gamepad/reconnect, not new physical controller acceptance",
+    "Windows mobile-surface/cutout fixtures, not phone or Android system-bar acceptance",
+    "Silent38.066667s UI movie captures whole actual clients plus external labelled caption; not performance/balance evidence"
+  ],
+  "android_physical_acceptance": false,
+  "human_frontend_acceptance": "pending",
+  "branch_merged": false,
+  "003B_started": false,
+  "builds": "Pending clean-source guarded export; final receipt will record exact compiled commit and binary hashes."
+}

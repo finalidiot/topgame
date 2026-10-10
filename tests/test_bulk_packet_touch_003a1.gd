@@ -37,23 +37,23 @@ func fixture(quantity: int) -> void:
 	await settle()
 	actions.clear()
 	settled_count = 0
-	check(menus._content.position == Vector2(80,60), "Packet menu retains centred native origin")
+	check(menus._content.position == Vector2.ZERO and menus._content.scale == Vector2.ONE and menus._content.size == root.get_visible_rect().size, "Packet frontend root fills the current client without scaling the old panel")
 	check(menus._packet_view.phase == "SEALED" and not menus._packet_view.opening, "Declared packet fixture starts sealed")
 
 func touch(local: Vector2, pressed: bool, index: int = 4, canceled: bool = false) -> void:
 	var event := InputEventScreenTouch.new()
 	event.index = index
-	event.position = menus._content.get_global_transform_with_canvas() * local
+	event.position = root.get_final_transform() * menus._packet_view.get_global_transform_with_canvas() * local
 	event.pressed = pressed
 	event.canceled = canceled
-	Input.parse_input_event(event)
+	root.push_input(event,false)
 	await settle()
 
 func drag(local: Vector2, index: int = 4) -> void:
 	var event := InputEventScreenDrag.new()
 	event.index = index
-	event.position = menus._content.get_global_transform_with_canvas() * local
-	Input.parse_input_event(event)
+	event.position = root.get_final_transform() * menus._packet_view.get_global_transform_with_canvas() * local
+	root.push_input(event,false)
 	await settle()
 
 func count_action(name: String) -> int:
@@ -67,7 +67,7 @@ func opening_case(quantity: int, start: Vector2, direction: float, name: String)
 	var receipt_before: Dictionary = menus._packet_receipt.duplicate(true)
 	await touch(start, true)
 	var acquired: bool = menus._packet_touch_index == 4
-	observations.append({"case":name,"quantity":quantity,"local_point":start,"root_point":start+Vector2(80,60),
+	observations.append({"case":name,"quantity":quantity,"local_point":start,"root_point":root.get_final_transform()*menus._packet_view.get_global_transform_with_canvas()*start,
 		"old_seam_contains":OLD_SEAM.has_point(start),"batch_bench_contains":BATCH_BENCH.has_point(start),"acquired":acquired})
 	check(acquired, name+": the visible pouch acquires its own touch")
 	if not acquired:
@@ -153,7 +153,7 @@ func run() -> void:
 	await release_cases()
 	var data: Dictionary = {"status":"passed" if failures.is_empty() else "failed","checks":checks,"failures":failures,"observations":observations,
 		"scope":"Production Menus + PacketView, mapped root-screen touch/drag events. Declared packet receipts are presentation fixtures; no Main, player saves, ownership or wallets opened.",
-		"expected_regions":{"x1":"Rect2(222,72,196,205)","x3_x5":"Rect2(100,72,440,205)","native_threshold":42,"root_origin":[80,60]},
+		"expected_regions":{"x1":"Rect2(222,72,196,205)","x3_x5":"Rect2(100,72,440,205)","native_threshold":42,"root_mapping":"actual PacketView global component transform × viewport final transform"},
 		"physical_android_acceptance":false}
 	if not report.is_empty():
 		var file := FileAccess.open(report,FileAccess.WRITE)
