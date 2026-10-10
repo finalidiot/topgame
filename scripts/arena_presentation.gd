@@ -2,6 +2,7 @@ extends RefCounted
 ## Fixed, peripheral foundry equipment. This object reads the Run clock and
 ## never owns combat state, random streams, timers, particles, sounds or nodes.
 const ROOT: String = "res://assets/arena/escalation003a/"
+const MotionArt = preload("res://scripts/combat_motion_art.gd")
 const STAGES: Array[String] = ["EARLY", "BUILDING", "MID", "LATE", "EXTREME"]
 const THRESHOLDS: Array[float] = [90.0, 210.0, 390.0, 540.0]
 const MAX_DRAW_CALLS: int = 17
@@ -38,7 +39,8 @@ static func presentation_snapshot(run_elapsed: float, boss_pressure: bool = fals
 		"spark_period":[14.0,10.0,7.0,5.0,3.6][stage],
 		"maximum_draw_calls":MOBILE_MAX_DRAW_CALLS if mobile else MAX_DRAW_CALLS,
 		"nodes_created":0,"particles_created":0,"gameplay_writes":0,"floor_hazard_shapes":0,
-		"warning_animation":not reduced_flashing,"peripheral_only":true}
+		"warning_animation":false,"warning_bank_draw_calls":0,"display_panel_draw_calls":0,"pressure_source":"HUD Director census","peripheral_only":true,
+		"venue_identity":"welded Foundry Eight rail / floor sectors / flush socket / fixed gates","lighting_source":"native venue_lights / embedded rim hardware"}
 
 static func _meta(name: String) -> Dictionary:
 	if not _metadata.has(name):
@@ -81,18 +83,15 @@ func draw_background(canvas: CanvasItem, run_elapsed: float, boss_pressure: bool
 	var motion: float = time * float(last_snapshot.motion_rate)
 	var alpha: float = float(last_snapshot.fixture_alpha)
 	var machine_tag: String = "IDLE" if stage < 2 else ("DRIVE" if stage < 4 else "OVERDRIVE")
+	# Same physical hardware heats through five authored states. This is not a
+	# pressure graph, warning panel or floor telegraph, and it never pulses.
+	if MotionArt.cel(canvas,"venue_lights",STAGES[stage],Vector2.ZERO,0.0,0.90): actual_draw_calls += 1
 	for index: int in range(ANCHORS.machinery.size()):
 		_cell(canvas,"machinery",machine_tag,motion+float(index)*0.31,ANCHORS.machinery[index],alpha)
 	for index: int in range(ANCHORS.vent.size()):
 		_cell(canvas,"vent","HOT" if stage >= 2 else "IDLE",motion+float(index)*0.44,ANCHORS.vent[index],alpha)
-	for index: int in range(1 if quality < 0.75 else 2):
-		_cell(canvas,"display_panel","LOAD" if stage >= 2 else "IDLE",motion+float(index)*0.39,ANCHORS.display_panel[index],alpha)
-	var bank_tag: String = "SAFE" if stage == 0 else ("BUILDING" if stage < 3 else ("WARNING" if stage == 3 else "ALARM"))
-	for index: int in range(ANCHORS.warning_bank.size()):
-		_cell(canvas,"warning_bank",bank_tag,time+float(index)*0.71,ANCHORS.warning_bank[index],alpha,reduced_flashing)
-	if stage >= 1:
-		for index: int in range(ANCHORS.perimeter.size()):
-			_cell(canvas,"perimeter","LEFT" if index in [0,3] else "RIGHT",time+float(index)*0.60,ANCHORS.perimeter[index],alpha * 0.78,reduced_flashing)
+	# Former LOAD displays, warning banks and floating rail chips are preserved
+	# as editable historical assets. Director pressure is exclusively real HUD.
 	for index: int in range(int(last_snapshot.spark_fixture_limit)):
 		var age: float = fposmod(time+float(index)*2.91,float(last_snapshot.spark_period))
 		if age < 1.08:

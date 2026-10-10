@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "task": "003A.1 controller AUTO follow-up",
+  "status": "passed_affected_contracts_and_native_auto_detection",
+  "human_review": "PENDING updated build review. No new physical button presses/reconnect are claimed.",
+  "verified_starting_sha": "2590294094687eb2b690a118cacd8c3aa59b124c",
+  "branch": "task-003a1-bastion-active-defence",
+  "production_change": {
+    "path": "scripts/front_end.gd",
+    "known_guid": "0300fa675e0400008e02000010017801",
+    "policy": "Exact knownGUID\u2192Nintendo inAUTO; all old vendor/name fallbacks retained, manualprofile wins. Same humanverified rule as previous Snake.",
+    "before_sha256": "3379fa71343bf23b575f11c47e8b03ca430542c1d9c060ae4e83cd17a221ac71",
+    "after_sha256": "ea3002f124d4802b7255c56516b6130c4841a1eaa569f1286cabbb507f6a1ca3",
+    "all_other_production_bytes_identical": true,
+    "all_642_assets_byte_identical": true,
+    "inverse_scope_proof": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_auto_scope.json"
+  },
+  "tested_source_sha256": "ba4294645b52ed7ecd21f32d7bf7e0b1b29b1eba48166da618bd89dac85e2f05",
+  "tested_assets_sha256": "1fed8bb40c0e535f746e849cfba59131b8d3507a6ae4dfe0778342193ed4a3d7",
+  "headless": {
+    "passed_suites": 7,
+    "checks": 15425,
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_auto_regression.json",
+    "suites": [
+      {
+        "name": "controller_bindings_003a1",
+        "checks": 105,
+        "log_sha256": "cf20a31b2dea1393bf3f1ba4ddfa41d8dac78de3d7e545b004a1b96128e82c79"
+      },
+      {
+        "name": "input_acceptance_003a1",
+        "checks": 266,
+        "log_sha256": "6645a82c1c346174f99d6bbe12624dbe7ffeb80eef5cb881dca9a3b8b79d76cb"
+      },
+      {
+        "name": "controller",
+        "checks": 1017,
+        "log_sha256": "5de794eb188a458a27ee38fb7d387ddbfe0bc79307c875f46317ec0fd3b0a86e"
+      },
+      {
+        "name": "menus",
+        "checks": 4960,
+        "log_sha256": "199e67113a490f9659b218d1fb170ed136633acb96d9bdd1e871987c630c41ee"
+      },
+      {
+        "name": "frontend",
+        "checks": 407,
+        "log_sha256": "07ca3c1d1b20dd1c07bcb73844212d59cae75f3257d15414fbbb82dd8b463629"
+      },
+      {
+        "name": "presentation_flow",
+        "checks": 49,
+        "log_sha256": "fc8672351b882d2bf8107a0071d2820c8ba2c174eaef2cac6160d0f18e9f5e55"
+      },
+      {
+        "name": "human_feedback_ui",
+        "checks": 8621,
+        "log_sha256": "56c101c8bba7d32f1665076964398822e4266f23c9399d62f4cabe3ac1868f83"
+      }
+    ]
+  },
+  "native": {
+    "passed_suites": 1,
+    "checks": 28,
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_auto_fix_input_native_20261008_184650_773724.json",
+    "actual_device_identity": "Native detected connectedGUID matches knownoverride and mapsNintendo inAUTO.",
+    "normal_main": "Legacy isolated preferences omitlayoutkey. Actualnative metadata + logical GUIAConfirm/BBack; simulatedreconnectcallback; sameprofile normalrestart; unchangedQAprefs.",
+    "physical_acceptance": "Previous actualA/B proof binds positions; no new physicalpresses/replug claim."
+  },
+  "current_player_preservation": {
+    "scope": "Human played oldbuild and savedbuild/Nintendo choice after initialhistoricalsnapshot. QA guards the currentphase3files+15backups; currentprogress preserved, never restoredtooldhashes.",
+    "actual_preferences_modified_by_qa": false,
+    "current_phase_unchanged_during_native": true,
+    "native_phase_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_auto_fix_input_native_20261008_184650_773724.json"
+  },
+  "previous_acceptance_compact_preserved": "tests/results/003a1_human_acceptance_validation.json",
+  "delivery_record": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_controller_auto_delivery.json",
+  "installation_boundary": "Validatedcandidate can be built whileacceptedgame isrunning; playableWindowsreplacementwaits forgameclosure. Androidremains a signedstaticcandidate pending exactphonesmoke, no phonepromotion."
+}

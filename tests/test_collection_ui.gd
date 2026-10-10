@@ -40,6 +40,8 @@ func _button(intent: String, payload: String = "") -> Button:
 		var button: Button = node
 		if button.has_meta("intent") and str(button.get_meta("intent")) == intent:
 			if payload.is_empty() or str(button.get_meta("payload", "")) == payload: return button
+			var packet_value: Variant = button.get_meta("payload", null)
+			if intent == "packet_quantity" and packet_value is Dictionary and str(packet_value.get("quantity", "")) == payload and str(packet_value.get("kind", "")) == game.menus.selected_shop_product(): return button
 		# Production controls also expose starter IDs; intent metadata is optional.
 		if intent == "select_first_starter" and button.has_meta("starter_id") and str(button.get_meta("starter_id")) == payload: return button
 	return null
@@ -56,13 +58,14 @@ func _labels() -> Array[Label]:
 	return found
 
 func _check_layout(context: String) -> void:
+	var native_rect: Rect2 = Rect2(game.menus._content.global_position, Vector2(640, 360))
 	for node: Node in _descendants(game.menus):
 		if node is Button and _scroll_ancestor(node) == null:
-			check(NATIVE_RECT.encloses(node.get_global_rect()), context+" button remains on the native screen: "+node.text)
+			check(native_rect.encloses(node.get_global_rect()), context+" button remains on the native screen: "+node.text)
 	for label: Label in _labels():
 		if not label.is_visible_in_tree(): continue
 		if _scroll_ancestor(label) == null:
-			check(NATIVE_RECT.encloses(label.get_global_rect()), context+" label remains on screen: "+label.text)
+			check(native_rect.encloses(label.get_global_rect()), context+" label remains on screen: "+label.text)
 		if label.text.is_empty(): continue
 		var font: Font = label.get_theme_font("font")
 		var size: int = label.get_theme_font_size("font_size")
@@ -89,7 +92,7 @@ func _scroll_ancestor(node: Node) -> ScrollContainer:
 func _focus(context: String) -> void:
 	var focused: Control = root.gui_get_focus_owner()
 	check(focused != null and focused.is_visible_in_tree() and focused.focus_mode != Control.FOCUS_NONE, context+" has an obvious navigable focus target")
-	if focused != null: check(NATIVE_RECT.encloses(focused.get_global_rect()), context+" focus stays on screen")
+	if focused != null: check(Rect2(game.menus._content.global_position, Vector2(640, 360)).encloses(focused.get_global_rect()), context+" focus stays on screen")
 
 func _joy(button: JoyButton, pressed: bool) -> void:
 	var event: InputEventJoypadButton = InputEventJoypadButton.new()
@@ -387,8 +390,8 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
 	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	await _test_controller()
 	await _test_keyboard()

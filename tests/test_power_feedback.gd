@@ -124,7 +124,7 @@ func _test_centre_rearm() -> void:
 		p.pos = Vector2(90, 0); p.vel = Vector2(60, 0)
 		for tick: int in range(45): step(h, Vector2.RIGHT)
 		check(p.anchor_recovery_remaining <= 0.000001 and p.anchor_rearm_progress > 0.0 and p.anchor_rearm_progress < 1.0, "Brief steering outside centre shows rearming progress without premature refill")
-		for tick: int in range(32): step(h, Vector2.RIGHT)
+		for tick: int in range(340): step(h, Vector2.RIGHT)
 		check(is_equal_approx(p.anchor_recovery_remaining, capacity), "A deliberate sustained outside rotation reloads exactly one quota")
 		p.pos = Vector2.ZERO; p.vel = Vector2.ZERO
 		for tick: int in range(540): step(h, Vector2.ZERO)

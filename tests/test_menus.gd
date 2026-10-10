@@ -6,7 +6,8 @@ const Menus = preload("res://scripts/menus.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
 const Starters = preload("res://scripts/starters.gd")
-const NATIVE_RECT: Rect2 = Rect2(0, 0, 640, 360)
+const PRODUCT_RECT: Rect2 = Rect2(0, 0, 800, 480)
+const MENU_RECT: Rect2 = Rect2(80, 60, 640, 360)
 
 var checks: int = 0
 var failures: int = 0
@@ -27,14 +28,14 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
 	if not capture_dir.is_empty(): DirAccess.make_dir_recursive_absolute(capture_dir)
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	menus = Menus.new()
 	root.add_child(menus)
 	menus.action.connect(func(name: String, value: Variant) -> void:
 		actions.append({"name":name, "value":value.duplicate(true) if value is Dictionary else value}))
 	await process_frame
-	check(root.get_visible_rect().size == Vector2(640, 360), "UI tests run in the native 640x360 viewport")
+	check(root.get_visible_rect().size == PRODUCT_RECT.size, "UI tests run in the native 800x480 product viewport")
 	await _test_reward_cards()
 	await _test_starters()
 	await _test_small_offers_and_acquisition()
@@ -79,15 +80,17 @@ func _find_label(parent: Node, text: String) -> Label:
 
 func _check_label_fits(label: Label) -> void:
 	var rect: Rect2 = label.get_global_rect()
+	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else MENU_RECT
+	check(menus._content.position == (Vector2.ZERO if menus.screen == "hud" else MENU_RECT.position), "HUD and native menus use their correct product origin")
 	var parent: Node = label.get_parent()
 	var clipped_strip: bool = false
 	while parent != null:
 		if parent is ScrollContainer:
 			clipped_strip = true
-			check(NATIVE_RECT.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays on screen")
+			check(screen_rect.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays inside the native menu")
 			break
 		parent = parent.get_parent()
-	if not clipped_strip: check(NATIVE_RECT.encloses(rect), "Label stays inside native screen: %s %s" % [label.text, rect])
+	if not clipped_strip: check(screen_rect.encloses(rect), "Label stays inside its native menu or product HUD: %s %s" % [label.text, rect])
 	if label.text.is_empty(): return
 	var font: Font = label.get_theme_font("font")
 	var font_size: int = label.get_theme_font_size("font_size")
@@ -140,7 +143,7 @@ func _test_reward_cards() -> void:
 			check(_find_label(card, str(power.name).to_upper()) != null, "Card shows full power name: "+str(power.name))
 			var expected_copy: String = str(Menus.AbilityInspection.describe(str(power.id), 0).get("what", power.get("card_copy", power.description)))
 			check(_find_label(card, expected_copy) != null, "Card shows the concise mechanism description: "+str(power.name))
-			check(NATIVE_RECT.encloses(card.get_global_rect()), "Reward card remains inside native viewport")
+			check(MENU_RECT.encloses(card.get_global_rect()), "Reward card remains inside the centred native 640x360 menu")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
 			var focus: StyleBoxTexture = card.get_theme_stylebox("focus") as StyleBoxTexture
@@ -199,7 +202,7 @@ func _test_hud_cleanup() -> void:
 	for index: int in range(owned.size()):
 		var icon: TextureRect = menus._hud["power_%d" % index]
 		check(icon.visible and icon.get_meta("power_id") == owned[index] and icon.texture != null, "Run HUD displays authored owned-power icon")
-		check(icon.size == Vector2(16, 16) and NATIVE_RECT.encloses(icon.get_global_rect()), "HUD power stays native, compact, and on screen")
+		check(icon.size == Vector2(16, 16) and PRODUCT_RECT.encloses(icon.get_global_rect()), "HUD power stays native, compact, and on screen")
 	menus.show_hud({"is_run":true, "is_swarm":true, "run_label":"THREAT 3", "owned_power_ids":owned, "swarm_wave":2, "swarm_total_waves":3, "swarm_active":11, "swarm_remaining":18, "starter_id":"breaker", "level":4, "xp":44, "xp_threshold":50})
 	await process_frame
 	check(not menus._hud.enemy_bar.visible and menus._hud.swarm_objective.visible, "Swarm replaces rival RPM bar with objective")

@@ -1,0 +1,1085 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "status": "passed_current_contracts_after_retained_legacy_expectation_repairs",
+  "human_acceptance": "PENDING HUMAN REVIEW; no current APK physical-device acceptance",
+  "branch": "task-003a1-bastion-active-defence",
+  "verified_starting_sha": "9228f4f042e342f507e167bb330cd90fd8090ebc",
+  "accepted_main_sha": "c4228d446b5ed70a91c2e66c37dca0f8a32e56fc",
+  "tested_source_sha256": "ae3fe525acd3723f161c83523b4fea5fbb68204deb0cc9999f9d678525c5909b",
+  "tested_assets_sha256": "f457dfb0ba352465dac724767f86918d988f6b7b6f3b184215ece88e188188e0",
+  "headless": {
+    "passed_suites": 84,
+    "checks": 203903,
+    "suites": [
+      {
+        "name": "collection_save",
+        "checks": 371,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "3be3c59d7cb9d5c366164002a46e5875a4e65fcfc86fce81768faca3e250dbf7"
+      },
+      {
+        "name": "collection_flow",
+        "checks": 575,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "1c0c700cac0459d4d6157e0b3a3e5a1dd33b97aef50c424bcbc9ff3427db0dbe"
+      },
+      {
+        "name": "collection_ui",
+        "checks": 2362,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "64a40fc885cdc26e2dd31f183b36f5c4914829efae6b42024fa16c30fe7e1da8"
+      },
+      {
+        "name": "spin_economy",
+        "checks": 232,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "59519b6df54e2bfedaad426ac5a9aa06417213458c0611ce3383c16b2c744830"
+      },
+      {
+        "name": "threat_director",
+        "checks": 115,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "81b2e1f796ccb8855a6aa5c3656a2f878b4ca766e336d0ba7bb0031659df90e1"
+      },
+      {
+        "name": "continuous_run",
+        "checks": 200,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "ad357a01829920055db431fb821984b51ef93b5744195e903977a526c5e11315"
+      },
+      {
+        "name": "run_context",
+        "checks": 377,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "bf7a9aa2b035c321d8afa09eb86d4bb264f91300a124e09c1ad132621bdf17ad"
+      },
+      {
+        "name": "flow",
+        "checks": 162,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "8ad2f1e356d52d2a4601c3d47838ae1979cd3ff7c52fa533bb91a45187e3c1e0"
+      },
+      {
+        "name": "combat_architecture",
+        "checks": 35,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fc654b88e02a37bc6f5f725162507918e07a67fbd4e2ac1fa786c4e00daf6140"
+      },
+      {
+        "name": "menus",
+        "checks": 4958,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "60fe8672db651f199a1055d9f888aa6c909568d4968554528ef9184dbb92f40f"
+      },
+      {
+        "name": "controller",
+        "checks": 1024,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "6d468122667d1af5e4ec7adbd2bda4822b8ebb677940686ae2156cd9a6071c1a"
+      },
+      {
+        "name": "powers",
+        "checks": 79,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "a870376f62edf5d1271647dc5ce34ef3fbeab66cf75a47c40e231f6bac8e2c33"
+      },
+      {
+        "name": "swarm",
+        "checks": 33,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "538726df3ee8ed4498e936c2d9403da72599a9e55da534152b34d5ea965eb3be"
+      },
+      {
+        "name": "presentation",
+        "checks": 78,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "61c2e06c1d6c6e7aba0019e3479c7ff98e69d9c4b207fb91fc44503f2c88ee63"
+      },
+      {
+        "name": "progression",
+        "checks": 190,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "4a18ae3ccac78eb171fcf6c0a191a0014e06f8668ef6648fe5d820cf65e68b07"
+      },
+      {
+        "name": "starters",
+        "checks": 17,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "f438338c1a158bb100a2c2959cad6750c19a96b20ca7ee214344d2242ab3a13c"
+      },
+      {
+        "name": "starter_physics",
+        "checks": 38,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "ddedbac9e6b575d5921ecc8d7327240c773a7792a73586a7baebed4672749e54"
+      },
+      {
+        "name": "xp_observer",
+        "checks": 30,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "3d1c35065975f40f0de1ac6a147b9e4464886aab2fc797240a8ae9fa0d83e7ff"
+      },
+      {
+        "name": "ramp_integration",
+        "checks": 21,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "8a10c9164ade63e51170bc72fd9c52f9683636b0e81a087fe5387ef15a016294"
+      },
+      {
+        "name": "card_assets",
+        "checks": 132,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "d25ea8a468e4e22db286a8e455c88422dda6f84875afc9b1d4ff44fd5bc5ea5d"
+      },
+      {
+        "name": "escalation_progression",
+        "checks": 1445,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "9ace4d8f1a9946824e0cfae54d7842afd0ffd0b789ae2b59c5ce0f5e334b68dc"
+      },
+      {
+        "name": "escalation_physics",
+        "checks": 103,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "1ecfd483c4184ef89a0350da7a49aa9197851f11643e220c207b6e479815d50d"
+      },
+      {
+        "name": "escalation_integration",
+        "checks": 1943,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "dd7b84398e9e0079b1ddbcfc8bd1a5a310b5c0238e83762f2325a0fbef85f4b4"
+      },
+      {
+        "name": "escalation_completion",
+        "checks": 42,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "6849e84da7985412965d618d9b86a0d396a54e813c77fa24c8e2578a166fa7d8"
+      },
+      {
+        "name": "escalation_assets",
+        "checks": 351,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "0f15b6a248b2ee3111bd78d50d69b23338ab162b17a9c606962d50ee759f18e5"
+      },
+      {
+        "name": "rpm_replay",
+        "checks": 0,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "3adf67a6468a817fcc539bd45670505a23be7965101957b612d95e092b4c0a54"
+      },
+      {
+        "name": "signature_presentation",
+        "checks": 3362,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "f55d44498f23133229b2e67b5087ec9c0e03b8eb0a47b926dfe8a038afd1cdbb"
+      },
+      {
+        "name": "roster_draft",
+        "checks": 23705,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "0e3eeba97f581083f29e846bb462ee203f41ae5ab3bd6df18fe81befa87c4232"
+      },
+      {
+        "name": "roster_physics",
+        "checks": 30,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "9f1ba83d3430cf03fa0de12657d13f9a24aab26bf665d78e733049f0de093425"
+      },
+      {
+        "name": "roster_presentation",
+        "checks": 3585,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "4c5ebaf80fb33836986fff6348c823700264d6766194dcadec1b77d20c881a47"
+      },
+      {
+        "name": "ability_rebalance",
+        "checks": 92,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "f7720b50a06525ab40f96a4e6e794abebbec9683da511a04543474be421699b9"
+      },
+      {
+        "name": "ability_rebalance_integration",
+        "checks": 32,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_rebalance_ledger_final.json",
+        "log_sha256": "693dd03ffcca70e812d72f994923adeea104a6031dab5808868423b87b340bc5"
+      },
+      {
+        "name": "collection_c5_integration",
+        "checks": 207,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "52152a7734860af5a46a41fe5da4ca17159e498ac272b8f7192377d3fa764b29"
+      },
+      {
+        "name": "power_identity",
+        "checks": 4584,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "a6a1a338e2654d776ccde123264fed3f36754f6769a53693429052d513523cde"
+      },
+      {
+        "name": "parts_catalogue",
+        "checks": 8945,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "6fdaaefef32e4d29e6ca3de9fd3da6c696b95ea074eca2bc545c33eaeb50d1d8"
+      },
+      {
+        "name": "parts_collection",
+        "checks": 1217,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "7a30bc6a7fab5f2004eae923fb25b3b386e8e5a26a688c4afab5281d8261552e"
+      },
+      {
+        "name": "parts_package",
+        "checks": 302,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "986a34e9c51709d0e68175a797d141e3d0c81e6f6a1e59d8c4210fae365f2365"
+      },
+      {
+        "name": "packet_package",
+        "checks": 397,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "15c2fa983a5009840dd618a5bbd5c4fc0ce448b1067703cb311f2fceefbe2942"
+      },
+      {
+        "name": "feedback_drift",
+        "checks": 1409,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "979a49b93463d2082cf1bba0558a54d8e2e9fe9475ec461de9a0986f72d3e16a"
+      },
+      {
+        "name": "feedback_anchor_contacts",
+        "checks": 65,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "0244a05d2d8f9934797382e4009977beeccb5f9760fef0c5f054488def230838"
+      },
+      {
+        "name": "power_feedback",
+        "checks": 2463,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "ed524cad9ce4ac82e8ef3b25245e54d21e6c78b400c530ac52a87f392023598e"
+      },
+      {
+        "name": "feedback_rerolls",
+        "checks": 1052,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "ef2277b2ca1c44f46249e459c0adcb82d1f879a08515e91f27fc4e54f48b23e1"
+      },
+      {
+        "name": "feedback_effects",
+        "checks": 14404,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "a0d31f9a8db0bc85d62397edd2b3424bbc60e17f1bc9081b3cab6d1465414a9e"
+      },
+      {
+        "name": "feedback_live_pickup",
+        "checks": 4,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "c3f3f9e0a47c78ab2b5ec332e265f8f15bbdc4c66b826a5e99354af85b6f0bdb"
+      },
+      {
+        "name": "feedback_parts_retention",
+        "checks": 148,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "78f6c9d7e9c4d7e1708ba1851780a1c2a7658c1fd7b54a5e8d4aebcb5cc77490"
+      },
+      {
+        "name": "beast_manifestations",
+        "checks": 16894,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "d4abe3d278fb36093e2ac3f726677133b1f0f0b8b579a578ce521f544c55652f"
+      },
+      {
+        "name": "music",
+        "checks": 1830,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "c753288aea80ca5bfe4b065c35c84a840a7c2a0cd95241705448254c51d73e45"
+      },
+      {
+        "name": "music_escalation",
+        "checks": 407,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "af1658ee6c7ec41608fb70450af6eea0f163e5db87223fb268c8dde82130074c"
+      },
+      {
+        "name": "save_tools",
+        "checks": 92,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "48a1699960b6079e77085d171b782acd47963856be70574efcfcbec7d5672b27"
+      },
+      {
+        "name": "presentation_flow",
+        "checks": 49,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fc8672351b882d2bf8107a0071d2820c8ba2c174eaef2cac6160d0f18e9f5e55"
+      },
+      {
+        "name": "presentation_retention",
+        "checks": 13252,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fba1f5765331b3841d16bdf1d0684a33ea720adb748f91a1644c69b35996b158"
+      },
+      {
+        "name": "frontend",
+        "checks": 412,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "f7a3e7eae5188ac6260692c746299385ee0747bada27e749b9acc32703d2b63f"
+      },
+      {
+        "name": "packet_economy",
+        "checks": 10173,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "57218238e82e9d275d9d3b521203831330b8bca41fa0936cd1388fe98a2b258f"
+      },
+      {
+        "name": "packet_transactions",
+        "checks": 175,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "cf50a589e115ff4e00b65fe946eb7cb07160e91258e9d7e21fd2b77ff5083ac8"
+      },
+      {
+        "name": "run_rewards",
+        "checks": 31,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "a3cdfa2a0babe7adfc5659d04648683243c884137d3e46a1c929f237ead8408c"
+      },
+      {
+        "name": "packet_art_audio",
+        "checks": 170,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "b2731fd465ac623b32d815a369d20c43e7158d51edaf62ecf10110fee828fb90"
+      },
+      {
+        "name": "shop_progression",
+        "checks": 777,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "830bd294f9444710642053b2fbf2a5dc89f981e0b312baad5bdfa89a6689afad"
+      },
+      {
+        "name": "human_feedback_ui",
+        "checks": 8621,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "56c101c8bba7d32f1665076964398822e4266f23c9399d62f4cabe3ac1868f83"
+      },
+      {
+        "name": "beast_orientation",
+        "checks": 19878,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "18e2ea41473e98b2b0a31734ea897118df63f033aca63574364839ce513f2874"
+      },
+      {
+        "name": "music_revision",
+        "checks": 40,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "38ff723df94ff9bcfe7a6a7c6f01fd7c2e05ba32916abda653090324e6a0a452"
+      },
+      {
+        "name": "ui_polish_package",
+        "checks": 199,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "e5bad4050992a2015ea9b808443c301c7465d8fd699c31b0b79adeb82262191f"
+      },
+      {
+        "name": "preview_human_feedback",
+        "checks": 7817,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "9d0fbafcb4f736c282ce439bc3eceb5e1a125bba199d4fa65692d64111fad7e8"
+      },
+      {
+        "name": "enemy_commitment",
+        "checks": 23499,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "b4026cf4873d7d3d4e186b554d525e792e74fe9bd0c5a12e4bdb48b8bde49cb4"
+      },
+      {
+        "name": "defence_pressure",
+        "checks": 15,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_defence_pressure_current.json",
+        "log_sha256": "33a39001c23c3a30b1249bda8e186dbcce8e713b66a17546dde98b729691e2cf"
+      },
+      {
+        "name": "defence_depth",
+        "checks": 432,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "5850356af603e5d5ecaf440cdf465c9b1ff61a3b6e6e71fd85fb59b5e695d1a3"
+      },
+      {
+        "name": "grounded_pickups",
+        "checks": 3220,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "6447dd5e0576d1701f4e83bfb149ca7d3230fc5d02f954dfc3bbe3bda4292420"
+      },
+      {
+        "name": "arena_escalation",
+        "checks": 7084,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "be7267497d8cf53a73c14630876dc449098788fc5a0a03fc459f0567fbcad09f"
+      },
+      {
+        "name": "android_foundation",
+        "checks": 138,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "3af9ecc6e992d1eae013eebf2960ec0614ab5f090b17beaf3a2f19fb50f30c80"
+      },
+      {
+        "name": "defence_participation",
+        "checks": 21,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "ffdbc2c4dc82afd48a9931e64639ae2dbc344075b65bb444bd726e6d03fd0784"
+      },
+      {
+        "name": "final_acceptance_package",
+        "checks": 479,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "3603f4d82c2fa42bde856d6c4a5d6132771d852c02ee5875f261629f8f65dcae"
+      },
+      {
+        "name": "mobile_combat_input",
+        "checks": 119,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "c7bb3d7a1761622c81ff013bfe18ca3cbf19044703e691a5724805a285073fde"
+      },
+      {
+        "name": "bastion_active_defence",
+        "checks": 43,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bastion_shared_economy_contract.json",
+        "log_sha256": "1005aecb8bfba1e9bd558c8ab487c188a5ef1163316b9a6566e2dc7d476ec4e6"
+      },
+      {
+        "name": "ability_readability",
+        "checks": 3597,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "c9ab2eb5eee5108b9a7cbb51d19d2ae4e7d0ec792463391a8b1106a127679111"
+      },
+      {
+        "name": "anchor_stress",
+        "checks": 36,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fd71f6e292b4f8d56323db621a34ab5a7f5edc2d3ee78df289e927b7ec63e7f0"
+      },
+      {
+        "name": "controller_bindings_003a1",
+        "checks": 105,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "cf20a31b2dea1393bf3f1ba4ddfa41d8dac78de3d7e545b004a1b96128e82c79"
+      },
+      {
+        "name": "state_meters_003a1",
+        "checks": 587,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fa71e1513c29a5c22fa99399281805a729bed32d64c7bb9a582a5dd4c70824ed"
+      },
+      {
+        "name": "run_ramp",
+        "checks": 16,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "a539c743812dce7866b07f25670b85b9abfb53efb1bddb227810e004f0a913e4"
+      },
+      {
+        "name": "public_power_state_003a1",
+        "checks": 22,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "dd5d5a80aa9acac01ac3e7e467d27b61faeb175dfec13398250fc6a86a59140f"
+      },
+      {
+        "name": "input_acceptance_003a1",
+        "checks": 266,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "e2495351e3ada04c0f4693d5090ab919b6fdd19920f21c32e2ab01f32128c3a4"
+      },
+      {
+        "name": "overdrive_lifecycle_003a1",
+        "checks": 1612,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fd48efc6ac9def6a297d149aeba2164971585238a81ab09b21d2a6545c56ad3c"
+      },
+      {
+        "name": "rpm_acceptance_003a1",
+        "checks": 30,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "6916f32a1d73506b70c11c6cb378335d9c6d74510a18af53e3a3962e47541f57"
+      },
+      {
+        "name": "anchor_rearm_003a1",
+        "checks": 101,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "12b15d4ff4bce62de53c973e50ae32be51e11c6263ef5401699383b38bf16325"
+      },
+      {
+        "name": "pickup_feel_003a1",
+        "checks": 159,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "c856740c30e3c0d5a50758eedeca599b3e20bf55cd8da5743a441f5935521903"
+      },
+      {
+        "name": "combat_hud_003a1",
+        "checks": 589,
+        "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+        "log_sha256": "fe01c39438dc6f14ab82405b4578efefab6bcd2edaf7975f7b859223280ea416"
+      }
+    ]
+  },
+  "native": {
+    "checks": 421,
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_native_final.json",
+    "report_sha256": "68fa36e9f18e338bd8598e8c949dcd022e4c00fe5d986206750ecfa23593b90c",
+    "source_assets_player_backups_unchanged": true,
+    "physical_scope": "Actual WASAPI capture and connected known GUID inventory; mapped logical events are not new human button/replug/phone acceptance."
+  },
+  "python": {
+    "tests": 168,
+    "suites": [
+      {
+        "directory": "build",
+        "tests": 78,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_rpm_feedback_python_build.log",
+        "sha256": "8026e89091e0d810f86b3f574ec56ab5988a19248a28d86890f517fe309d43bc"
+      },
+      {
+        "directory": "parts",
+        "tests": 50,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_rpm_feedback_python_parts.log",
+        "sha256": "e674df0822daa04c961334eaaeb6b01b199e32a3b04c8c23ff2da845767a42e2"
+      },
+      {
+        "directory": "presentation",
+        "tests": 22,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_rpm_feedback_python_presentation.log",
+        "sha256": "54947b6e5df93960a602fa6c8395491f0203f6c87617f35264989b7c3919fd21"
+      },
+      {
+        "directory": "workspace",
+        "tests": 4,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_rpm_feedback_python_workspace.log",
+        "sha256": "f0be29af815d1a069450ee17f63ae9ebb2b48aec640b4e035ca0f413b464b42b"
+      },
+      {
+        "directory": "art",
+        "tests": 14,
+        "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\logs\\003a1_rpm_feedback_python_art.log",
+        "sha256": "60473a0b638f9e2765f0dc7e3f7211de804d7ca4612c0864bfdc0d96f4ef245c"
+      }
+    ],
+    "retained_discovery_attempt": "Top-level tools discovery found no tests and is excluded; explicit directory discovery runs all ten current modules."
+  },
+  "preservation": {
+    "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_preservation.json",
+    "report_sha256": "6a54672428ceb638a7dfcb6363da090660a78e0252d4c56d53da6907b4c2b39e",
+    "player_files": 21,
+    "recovery_backup_files": 18,
+    "player_collection_preferences_and_backups_byte_identical": true,
+    "accepted_assets_byte_identical": 642,
+    "music_byte_identical": true,
+    "historical_compact_evidence_unchanged": 84,
+    "burst_movement_boundary_ai_methods_byte_identical": true,
+    "observed_battle_physics_methods_identical": true
+  },
+  "rpm_study": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_rpm_economy_comparison.json",
+    "sha256": "a87d297dbcfaec008e3b8431cc7d4e33a67f992628fae46119438001337522ea",
+    "runs": 30,
+    "seeds": [
+      421,
+      7341,
+      2026
+    ],
+    "horizon": 420.0,
+    "max_ledger_closure_error": 2.1227464230833e-12,
+    "summary": {
+      "breaker": {
+        "before": {
+          "survival_seconds": 176.71111111109155,
+          "final_rpm": 1.0346398723430053,
+          "minimum_rpm": 0.8294761277200603,
+          "total_loss": 3.929159513133638,
+          "total_recovered": 3.9637993854769853,
+          "seconds_above_90": 165.59999999998342,
+          "seconds_above_75": 176.71111111109155,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 106.33333333333333,
+          "outcomes": {
+            "horizon_censored": 1,
+            "ring_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.07690769036966764,
+            "burst": 0.5329999999999999,
+            "collisions": 1.599480387499935,
+            "movement": 0.21449843093304463,
+            "passive": 0.4699840628075136,
+            "powers": 0.15733333333333335,
+            "redline": 0.6235068427264933,
+            "steering": 0.050754395262890335,
+            "walls": 0.14449593003511432,
+            "wobble": 0.05919844016564872
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.0056481494423774,
+            "clutch": 0.0,
+            "combat_reclamation": 3.0786197701192917,
+            "dead_centre": 0.0,
+            "elimination": 0.20106464820096331,
+            "elite": 0.05309443694332533,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.097922986782793,
+            "redline_motion": 0.48108333333333664,
+            "runaway": 0.04636606065489767,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        },
+        "after": {
+          "survival_seconds": 166.99999999998107,
+          "final_rpm": 0.7343280246560746,
+          "minimum_rpm": 0.6151817549116957,
+          "total_loss": 3.3283894770802283,
+          "total_recovered": 3.0627175017363,
+          "seconds_above_90": 9.766666666666673,
+          "seconds_above_75": 60.13888888888365,
+          "seconds_below_50": 26.4499999999789,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 109.33333333333333,
+          "outcomes": {
+            "horizon_censored": 1,
+            "ring_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.06676362985881351,
+            "burst": 0.5156666666666667,
+            "collisions": 1.6133868242031633,
+            "movement": 0.1976761393902099,
+            "passive": 0.49750941440039786,
+            "powers": 0.16000000000000034,
+            "redline": 0.149054928976987,
+            "steering": 0.026382513119944634,
+            "walls": 0.07838645584185906,
+            "wobble": 0.023562904622185275
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.0013,
+            "clutch": 0.03666666666666667,
+            "combat_reclamation": 2.461334230252635,
+            "dead_centre": 0.0,
+            "elimination": 0.2650512481363127,
+            "elite": 0.028254177163190466,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.060611179517495666,
+            "redline_motion": 0.20949999999999866,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        }
+      },
+      "bastion": {
+        "before": {
+          "survival_seconds": 420.016666666613,
+          "final_rpm": 0.972218309967443,
+          "minimum_rpm": 0.8756224816920777,
+          "total_loss": 2.0952910007857932,
+          "total_recovered": 2.06750931075511,
+          "seconds_above_90": 409.57222222217,
+          "seconds_above_75": 420.016666666613,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 162,
+          "outcomes": {
+            "horizon_censored": 3
+          },
+          "loss_by_source_mean": {
+            "braking": 0.0008333333333350934,
+            "burst": 0.0,
+            "collisions": 1.4510899392606433,
+            "movement": 0.07997766149570967,
+            "passive": 0.540124690043067,
+            "powers": 0.014805555555555369,
+            "redline": 0.0,
+            "steering": 0.007558908088053766,
+            "walls": 0.0,
+            "wobble": 0.0009009130094312567
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.039017053904311545,
+            "clutch": 0.0,
+            "combat_reclamation": 1.5323561492510223,
+            "dead_centre": 2.9877477111252235e-05,
+            "elimination": 0.41297720578964137,
+            "elite": 0.0787060355061469,
+            "impact_sink": 0.004422988826874767,
+            "pickups": 0.0,
+            "redline_contact": 0.0,
+            "redline_motion": 0.0,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        },
+        "after": {
+          "survival_seconds": 420.016666666613,
+          "final_rpm": 0.7913086210705863,
+          "minimum_rpm": 0.6874355125391436,
+          "total_loss": 2.22187147539027,
+          "total_recovered": 2.01318009646086,
+          "seconds_above_90": 203.32777777777545,
+          "seconds_above_75": 377.06666666664165,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 140,
+          "outcomes": {
+            "horizon_censored": 3
+          },
+          "loss_by_source_mean": {
+            "braking": 0.00016666666666687033,
+            "burst": 0.0,
+            "collisions": 1.4409517126008267,
+            "movement": 0.08668963503599474,
+            "passive": 0.666134059008005,
+            "powers": 0.020000000000000035,
+            "redline": 0.0,
+            "steering": 0.006655394568547433,
+            "walls": 0.00038415936787923995,
+            "wobble": 0.0008898481423510446
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.06033715930977682,
+            "clutch": 0.0,
+            "combat_reclamation": 1.1936826613839877,
+            "dead_centre": 0.12992957803683902,
+            "elimination": 0.425700211433771,
+            "elite": 0.203530486296488,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.0,
+            "redline_motion": 0.0,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        }
+      },
+      "vane": {
+        "before": {
+          "survival_seconds": 331.1277777777707,
+          "final_rpm": 0.9654474504483783,
+          "minimum_rpm": 0.844713519426793,
+          "total_loss": 4.628331834622107,
+          "total_recovered": 4.593779285070464,
+          "seconds_above_90": 324.38333333332935,
+          "seconds_above_75": 331.1277777777707,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 202.33333333333334,
+          "outcomes": {
+            "horizon_censored": 1,
+            "ring_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.08319103869984573,
+            "burst": 0.3423333333333337,
+            "collisions": 2.590757770589487,
+            "movement": 0.24812242524923633,
+            "passive": 0.6352350424162333,
+            "powers": 0.47585702217338466,
+            "redline": 0.0,
+            "steering": 0.15970700132334098,
+            "walls": 0.0883805931766828,
+            "wobble": 0.004747607660563923
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.042616164534566604,
+            "clutch": 0.0,
+            "combat_reclamation": 4.1388305830234,
+            "dead_centre": 0.0,
+            "elimination": 0.29186586798232567,
+            "elite": 0.058135621677782294,
+            "impact_sink": 0.062331047852389666,
+            "pickups": 0.0,
+            "redline_contact": 0.0,
+            "redline_motion": 0.0,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        },
+        "after": {
+          "survival_seconds": 364.6055555555517,
+          "final_rpm": 0.9222638521878354,
+          "minimum_rpm": 0.624868704557114,
+          "total_loss": 5.931115401757097,
+          "total_recovered": 5.85337925394522,
+          "seconds_above_90": 177.83333333332342,
+          "seconds_above_75": 293.727777777783,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 224.33333333333334,
+          "outcomes": {
+            "horizon_censored": 1,
+            "ring_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.1077750083088302,
+            "burst": 0.411666666666667,
+            "collisions": 2.8124059163796566,
+            "movement": 0.2759527968308407,
+            "passive": 0.7822490833045557,
+            "powers": 0.349976749470348,
+            "redline": 0.82506264779326,
+            "steering": 0.22750592276596968,
+            "walls": 0.12144218560854567,
+            "wobble": 0.01707842462842472
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.036551321477747666,
+            "clutch": 0.0,
+            "combat_reclamation": 4.445649384880563,
+            "dead_centre": 0.0,
+            "elimination": 0.390646828350907,
+            "elite": 0.16462526154595533,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.06761733061673333,
+            "redline_motion": 0.5923333333333433,
+            "runaway": 0.155955793739971,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        }
+      },
+      "custom_aggressive": {
+        "before": {
+          "survival_seconds": 191.1388888888688,
+          "final_rpm": 1.0051387353863257,
+          "minimum_rpm": 0.8925699816949324,
+          "total_loss": 3.98075441727855,
+          "total_recovered": 3.98589315266485,
+          "seconds_above_90": 187.6944444444228,
+          "seconds_above_75": 191.1388888888688,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 162.33333333333334,
+          "outcomes": {
+            "horizon_censored": 1,
+            "ring_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.020980826096999854,
+            "burst": 0.5893333333333334,
+            "collisions": 2.2395219351581073,
+            "movement": 0.2101907852156614,
+            "passive": 0.46221636500999463,
+            "powers": 0.21200000000000002,
+            "redline": 0.05544910962216234,
+            "steering": 0.16992066454246446,
+            "walls": 0.006870792380968693,
+            "wobble": 0.014270605918855477
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.0059162097956975,
+            "clutch": 0.0,
+            "combat_reclamation": 3.6985916337816187,
+            "dead_centre": 0.0,
+            "elimination": 0.1947217613833783,
+            "elite": 0.029326372277095867,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.021087175427061133,
+            "redline_motion": 0.03625,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        },
+        "after": {
+          "survival_seconds": 213.45555555557615,
+          "final_rpm": 0.3558975360308188,
+          "minimum_rpm": 0.2674675286037495,
+          "total_loss": 4.81213298102279,
+          "total_recovered": 4.168030517053607,
+          "seconds_above_90": 51.21666666666507,
+          "seconds_above_75": 121.7000000000128,
+          "seconds_below_50": 34.18333333332837,
+          "seconds_below_25": 9.938888888888567,
+          "meaningful_contacts": 179.66666666666666,
+          "outcomes": {
+            "ring_out": 1,
+            "spin_out": 2
+          },
+          "loss_by_source_mean": {
+            "braking": 0.025686215778863132,
+            "burst": 0.6586666666666667,
+            "collisions": 2.5429340215940734,
+            "movement": 0.24380890509776834,
+            "passive": 0.576931613743606,
+            "powers": 0.26000000000000034,
+            "redline": 0.193662847650428,
+            "steering": 0.23050841054107835,
+            "walls": 0.024782317409515434,
+            "wobble": 0.05515198254078743
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.05134793710227287,
+            "clutch": 0.018333333333333333,
+            "combat_reclamation": 3.4877103168494,
+            "dead_centre": 0.0,
+            "elimination": 0.2257752103550789,
+            "elite": 0.04798840893296953,
+            "impact_sink": 0.0,
+            "pickups": 0.0,
+            "redline_contact": 0.07217751413724834,
+            "redline_motion": 0.23449999999999968,
+            "runaway": 0.030197796343301667,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        }
+      },
+      "custom_defensive": {
+        "before": {
+          "survival_seconds": 420.016666666613,
+          "final_rpm": 0.9641723472342066,
+          "minimum_rpm": 0.8130079835051627,
+          "total_loss": 2.5471036045848434,
+          "total_recovered": 2.5112759518174634,
+          "seconds_above_90": 374.71111111106364,
+          "seconds_above_75": 420.016666666613,
+          "seconds_below_50": 0.0,
+          "seconds_below_25": 0.0,
+          "meaningful_contacts": 158,
+          "outcomes": {
+            "horizon_censored": 3
+          },
+          "loss_by_source_mean": {
+            "braking": 0.00100000000000137,
+            "burst": 0.0,
+            "collisions": 1.6081336144300866,
+            "movement": 0.08801389790607564,
+            "passive": 0.8172603447219986,
+            "powers": 0.009161111111110766,
+            "redline": 0.0,
+            "steering": 0.0222620581714552,
+            "walls": 0.0,
+            "wobble": 0.0012725782441151978
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.03887606860786234,
+            "clutch": 0.0,
+            "combat_reclamation": 1.8085518637099867,
+            "dead_centre": 0.0277526858676987,
+            "elimination": 0.47245513676345335,
+            "elite": 0.16343116523178816,
+            "impact_sink": 0.00020903163667211166,
+            "pickups": 0.0,
+            "redline_contact": 0.0,
+            "redline_motion": 0.0,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        },
+        "after": {
+          "survival_seconds": 420.016666666613,
+          "final_rpm": 0.49943680051927264,
+          "minimum_rpm": 0.404498775682262,
+          "total_loss": 3.03448199468248,
+          "total_recovered": 2.53391879520168,
+          "seconds_above_90": 123.57222222220116,
+          "seconds_above_75": 231.84999999998865,
+          "seconds_below_50": 62.638888888831936,
+          "seconds_below_25": 1.1388888888878523,
+          "meaningful_contacts": 164,
+          "outcomes": {
+            "horizon_censored": 3
+          },
+          "loss_by_source_mean": {
+            "braking": 0.0015344514756513,
+            "burst": 0.0,
+            "collisions": 1.93204025836944,
+            "movement": 0.09924163455445437,
+            "passive": 0.9405656820346707,
+            "powers": 0.03469444444444444,
+            "redline": 0.0,
+            "steering": 0.016557734078089366,
+            "walls": 0.00491540382528305,
+            "wobble": 0.004932385900445804
+          },
+          "recovery_by_source_mean": {
+            "boss": 0.06,
+            "clutch": 0.018333333333333333,
+            "combat_reclamation": 1.5597668717570337,
+            "dead_centre": 0.18666666666666668,
+            "elimination": 0.540592242356535,
+            "elite": 0.15609230118633888,
+            "impact_sink": 0.012467379901773667,
+            "pickups": 0.0,
+            "redline_contact": 0.0,
+            "redline_motion": 0.0,
+            "runaway": 0.0,
+            "second_wind": 0.0,
+            "slipstream": 0.0
+          }
+        }
+      }
+    },
+    "censoring_note": "Horizon is a lower bound on survival. Deaths diverge; paired shared-window source ledgers are included to avoid comparing unequal lifetimes as rates. Changed RPM affects natural AI outcomes, XP and offered drafts; all ordinary draft history is retained."
+  },
+  "anchor_study": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_anchor_rearm_timing.json",
+    "sha256": "d10e35fccad5fe0dda99e877cbb9d29e75558e34bbb2d66ea10afb441b04634d",
+    "cycles": 15,
+    "minimum_overload_to_full_safe_replant_seconds": 6.96666666667221,
+    "tuning": {
+      "minimum_meaningful_recovery_seconds": 5.0,
+      "outside_vent_rate": 0.13,
+      "overload_threshold": 0.8,
+      "quota_rearm_seconds": 6.0,
+      "safe_threshold": 0.3,
+      "vent_rate": 0.085
+    }
+  },
+  "media": {
+    "video/003a1_breaker_rpm_risk.mp4": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_breaker_rpm_risk.mp4",
+      "sha256": "97cab9def670d196ac9cdc49b61136758176315b1cc79a41f3a0d700c7df7fb6",
+      "bytes": 8870259
+    },
+    "video/003a1_dead_center_rpm_pressure.mp4": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_dead_center_rpm_pressure.mp4",
+      "sha256": "4509d79813d3ad1fb206ff4cfc8362e6b688bd6ff6e9febe0cef06617e900fc9",
+      "bytes": 12016276
+    },
+    "video/003a1_pickup_feel.mp4": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\video\\003a1_pickup_feel.mp4",
+      "sha256": "65a587550d76355cbc15e9f22ec7ec5e1e95fa2fb4f040f152a148a5429b518d",
+      "bytes": 5145385
+    },
+    "images/003a1_combat_hud_matrix.png": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\images\\003a1_combat_hud_matrix.png",
+      "sha256": "e785cc72e558d542e3c10ad9a0ed111a5367fb3d11aa669f62a3579c7e6751f7",
+      "bytes": 115958
+    },
+    "003a1_rpm_economy_comparison.json": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_rpm_economy_comparison.json",
+      "sha256": "a87d297dbcfaec008e3b8431cc7d4e33a67f992628fae46119438001337522ea",
+      "bytes": 2354905
+    },
+    "003a1_anchor_rearm_timing.json": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\003a1_anchor_rearm_timing.json",
+      "sha256": "d10e35fccad5fe0dda99e877cbb9d29e75558e34bbb2d66ea10afb441b04634d",
+      "bytes": 95939
+    }
+  },
+  "retained_regression_attempt": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_final.json",
+    "failed_legacy_expectations": [
+      "ability_rebalance_integration",
+      "defence_pressure",
+      "bastion_active_defence"
+    ],
+    "repairs": "Dedicated Redline accounting, earlier AFK death/reached Director tier and slower reposition duty, six-second quota rearm, original75%nonrecoverycontrol bound with explicit vent/return accounting. No production workaround or hidden deadline introduced."
+  },
+  "remaining_human_review": "Recovery feel; strong invested defensive fixtures still sustain nearfull with active input; repeated incoming pressure can extend anchor recovery; native HUD/status/pickup readability; exact APK physical-device acceptance.",
+  "delivery_record": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_rpm_feedback_delivery.json",
+  "platform_boundary": "Windows cold committed export, actual packaged smoke and imported asset proof precede guarded promotion. Android signed package remains a candidate without exact native-device smoke."
+}

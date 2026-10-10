@@ -147,7 +147,7 @@ func _insufficient() -> void:
 	await _boot_fixture("empty-wallet", 0)
 	await _click(_button("open_shop"))
 	check(_button("request_packet_purchase", "standard").disabled, "Standard purchase communicates insufficient funds")
-	await _key_tap(KEY_DOWN)
+	await _click(_button("inspect_shop_product", "reclaimed"))
 	check(game.menus.selected_shop_product() == "reclaimed" and _button("request_packet_purchase", "reclaimed").disabled, "Selecting Reclaimed communicates its insufficient funds")
 	_focus("Empty wallet Shop")
 	_check_layout("Empty wallet Shop")
@@ -218,8 +218,8 @@ func _reset_unpaid_session() -> void:
 	check(game.screen == "garage" and game.collection.owned_count() == 3 and game.collection.credits == 0 and game.collection.salvage == 0, "After resetting an unpaid session the new starter reaches Workshop without an obsolete nonce")
 
 func _run() -> void:
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	player_before = _fingerprint()
 	await _keyboard_packet()

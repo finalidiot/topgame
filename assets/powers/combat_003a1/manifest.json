@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "filter": "nearest",
+  "presentation_only": true,
+  "families": {
+    "venue_lights": {
+      "cell": [
+        640,
+        360
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "layers": [
+        "01 embedded rim diode glass",
+        "02 local heated underside seams",
+        "03 port-attached exhaust keys"
+      ],
+      "tags": {
+        "EARLY": {
+          "from": 0,
+          "to": 0
+        },
+        "BUILDING": {
+          "from": 1,
+          "to": 1
+        },
+        "MID": {
+          "from": 2,
+          "to": 2
+        },
+        "LATE": {
+          "from": 3,
+          "to": 3
+        },
+        "EXTREME": {
+          "from": 4,
+          "to": 4
+        }
+      },
+      "durations_ms": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "texture": "res://assets/powers/combat_003a1/venue_lights.png",
+      "source": "assets/source-art/combat_003a1/venue_lights.aseprite",
+      "columns": 5,
+      "frame_count": 5,
+      "source_sha256": "f5f49c3abb6285f00cf231110a9c3c8ae8112e52a9e868c33159bca39af013e3"
+    },
+    "power_motion": {
+      "cell": [
+        48,
+        32
+      ],
+      "pivot": [
+        24,
+        16
+      ],
+      "layers": [
+        "01 floor contact and physical socket",
+        "02 directed force/current key",
+        "03 finite contact glints"
+      ],
+      "tags": {
+        "REDLINE_ROTATION": {
+          "from": 0,
+          "to": 7
+        },
+        "PREDATOR_FLOW_e": {
+          "from": 8,
+          "to": 15
+        },
+        "PREDATOR_FLOW_se": {
+          "from": 16,
+          "to": 23
+        },
+        "PREDATOR_FLOW_s": {
+          "from": 24,
+          "to": 31
+        },
+        "PREDATOR_FLOW_sw": {
+          "from": 32,
+          "to": 39
+        },
+        "PREDATOR_FLOW_w": {
+          "from": 40,
+          "to": 47
+        },
+        "PREDATOR_FLOW_nw": {
+          "from": 48,
+          "to": 55
+        },
+        "PREDATOR_FLOW_n": {
+          "from": 56,
+          "to": 63
+        },
+        "PREDATOR_FLOW_ne": {
+          "from": 64,
+          "to": 71
+        },
+        "CIRCUIT_CURRENT": {
+          "from": 72,
+          "to": 79
+        },
+        "CIRCUIT_LATCH": {
+          "from": 80,
+          "to": 87
+        }
+      },
+      "durations_ms": [
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90,
+        70,
+        60,
+        50,
+        45,
+        50,
+        60,
+        70,
+        90
+      ],
+      "texture": "res://assets/powers/combat_003a1/power_motion.png",
+      "source": "assets/source-art/combat_003a1/power_motion.aseprite",
+      "columns": 8,
+      "frame_count": 88,
+      "source_sha256": "3415ead5f30b42f57e3bc700481490ad760f2c2b5d8339655e622760a50ba458"
+    },
+    "redline_ring": {
+      "cell": [
+        128,
+        128
+      ],
+      "pivot": [
+        64,
+        64
+      ],
+      "layers": [
+        "01 expanding red floor ring",
+        "02 hot turning rim edge",
+        "03 finite tangential streaks"
+      ],
+      "tags": {
+        "IGNITE": {
+          "from": 0,
+          "to": 7
+        }
+      },
+      "durations_ms": [
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45,
+        45
+      ],
+      "texture": "res://assets/powers/combat_003a1/redline_ring.png",
+      "source": "assets/source-art/combat_003a1/redline_ring.aseprite",
+      "columns": 8,
+      "frame_count": 8,
+      "source_sha256": "e6981fdd500a1cc85cf830a6f1d989fadd39d3524634decb0fcdeb6c4cd623c1"
+    }
+  },
+  "base_arena": {
+    "cell": [
+      640,
+      360
+    ],
+    "pivot": [
+      320,
+      180
+    ],
+    "layers": [
+      "backdrop",
+      "structure",
+      "surface",
+      "markings",
+      "rear_rim",
+      "front_rim"
+    ],
+    "tags": {},
+    "durations_ms": [
+      100
+    ],
+    "source": "assets/source-art/arena_foundry_eight.aseprite",
+    "source_sha256": "726763de9b183cd335103dcbbb20b2791cadf89b1ad340479144606973d05029",
+    "frame_count": 1,
+    "columns": 1,
+    "textures": {
+      "backdrop": "res://assets/arena/backdrop.png",
+      "structure": "res://assets/arena/structure.png",
+      "surface": "res://assets/arena/surface.png",
+      "markings": "res://assets/arena/markings.png",
+      "rear_rim": "res://assets/arena/rear_rim.png",
+      "front_rim": "res://assets/arena/front_rim.png"
+    }
+  }
+}

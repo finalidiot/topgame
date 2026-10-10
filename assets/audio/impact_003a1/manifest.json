@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "authorship": "Original struck inharmonic steel modes and friction excitations; authored source parameters and fixed offline noise. No commercial/downloaded samples.",
+  "format": {
+    "sample_rate": 32000,
+    "channels": 1,
+    "sample_bits": 16
+  },
+  "runtime_pitch_range": [
+    0.97,
+    1.04
+  ],
+  "hierarchy": "Quiet tick/edge/friction; moderate normal/rail; body clang; rare massive/extreme; short fracture accent. No pitched cartoon sweeps.",
+  "grind_loop": "One periodic band-limited loop with runtime contact continuity and smooth attack/release; never per-physics-frame retriggered.",
+  "headroom": "Per-cue peak\u2264.76; eight one-shots plus one quiet grind player share a conservative0.62 full-scale SFX peak budget; unchanged music PCM/transport, existing Music trim and rare-event duck. Native mixed-bus capture validates actual headroom.",
+  "sounds": {
+    "metal_light": {
+      "file": "metal_light.wav",
+      "family": "tick",
+      "frames": 2080,
+      "duration_seconds": 0.065,
+      "peak": 0.339996337890625,
+      "rms": 0.03088699866655189,
+      "sha256": "d928118451f001258a61d32b6264d66ae548a10b677224dfc37fc7ab166e3f34",
+      "pcm_sha256": "4ffe6dd6533f2a68a60a1d788be045b898fb15c8488270a0cbbe2d38ff32a40e"
+    },
+    "metal_normal": {
+      "file": "metal_normal.wav",
+      "family": "contact",
+      "frames": 5440,
+      "duration_seconds": 0.17,
+      "peak": 0.47998046875,
+      "rms": 0.04763779378909618,
+      "sha256": "261e80d43731addd849bb19fc8b573f55689a245dfceeb1fb7df573d9be49904",
+      "pcm_sha256": "14a85a7a430c2bf09e0b3a6fe6dae91a6164260d8aafb7a80cbf8c8a21f6623f"
+    },
+    "metal_clang": {
+      "file": "metal_clang.wav",
+      "family": "clang",
+      "frames": 9600,
+      "duration_seconds": 0.3,
+      "peak": 0.649993896484375,
+      "rms": 0.05734430948836838,
+      "sha256": "1e68cfcc021136b37185fabe3f69e6709bff15e564c5f057a47571c6df0a7d86",
+      "pcm_sha256": "73e89abd72e86b97edced2936d3413f303d3e71ed625dbb0fbe9ae9635fd31db"
+    },
+    "metal_edge": {
+      "file": "metal_edge.wav",
+      "family": "edge",
+      "frames": 4160,
+      "duration_seconds": 0.13,
+      "peak": 0.399993896484375,
+      "rms": 0.04476818103153031,
+      "sha256": "0c1d2e4e0da0b462505cbf0a62987a0d2a29b17271036166df8c5da6a9f9d376",
+      "pcm_sha256": "702bf060aa1b99d165aeebffb6d7116f44766510c13a11c092b9622421d9bf26"
+    },
+    "metal_scrape": {
+      "file": "metal_scrape.wav",
+      "family": "scrape",
+      "frames": 6080,
+      "duration_seconds": 0.19,
+      "peak": 0.319976806640625,
+      "rms": 0.03538946929801942,
+      "sha256": "ea340f6a1b17908394335405485ff826715f80821cef3469a01525b1abfb79c5",
+      "pcm_sha256": "0fd2631f811d118c659f9de69e9fb9d170e9dd48351299f27aa63910ae8e1f64"
+    },
+    "metal_massive": {
+      "file": "metal_massive.wav",
+      "family": "slam",
+      "frames": 12480,
+      "duration_seconds": 0.39,
+      "peak": 0.699981689453125,
+      "rms": 0.049746155960863715,
+      "sha256": "385fd94e10491c0c91abbc9a94c89ff35890c201dcf84d8b715655450e3b27ab",
+      "pcm_sha256": "a6bfb47ce51816f31b5adcc25830e31b16db4d327f900ebba4f557d2e9ed8959"
+    },
+    "metal_extreme": {
+      "file": "metal_extreme.wav",
+      "family": "extreme",
+      "frames": 14720,
+      "duration_seconds": 0.46,
+      "peak": 0.759979248046875,
+      "rms": 0.05479409283595319,
+      "sha256": "0dc8b051f6d53c9f90e0b1f6d392d7bdc0f7a82dcec6f2ac96ab464af59df257",
+      "pcm_sha256": "ae636ee0f61625e512b2cdc0378d559325d9fe9767ebf53d79d966f516975fe7"
+    },
+    "metal_crack": {
+      "file": "metal_crack.wav",
+      "family": "crack",
+      "frames": 2304,
+      "duration_seconds": 0.072,
+      "peak": 0.55999755859375,
+      "rms": 0.06393338781622639,
+      "sha256": "f697088941ff9ae8d096e358ba2ebf17466998b69dd36fbbf48ee1f9cc577102",
+      "pcm_sha256": "25de662923c6343e1a55caab995f67382f26c3d3ba6b718bc5807c81fa1628a7"
+    },
+    "metal_grind": {
+      "file": "metal_grind.wav",
+      "family": "grind",
+      "frames": 32000,
+      "duration_seconds": 1.0,
+      "peak": 0.259979248046875,
+      "rms": 0.05205735923907775,
+      "sha256": "4585972ecb29e081e1e55dda9ad8acd2e5b474604290a2ff1f06b36389f770c3",
+      "pcm_sha256": "293e0318e199979e6f96f0c3c26cd4da2b84df3e23a1f7badd4c660a36973cbe"
+    },
+    "metal_wall": {
+      "file": "metal_wall.wav",
+      "family": "rail",
+      "frames": 6080,
+      "duration_seconds": 0.19,
+      "peak": 0.47998046875,
+      "rms": 0.052531172486455564,
+      "sha256": "42126a06ffcd2ee6cd10928ef8dc4e0256868a6b7d6b4545573b9397c58109b6",
+      "pcm_sha256": "95838a7ca355b106e8498c2f3ffcdbd2cb2df1610f8fa2493ff718897e30953b"
+    },
+    "metal_takedown": {
+      "file": "metal_takedown.wav",
+      "family": "defeat",
+      "frames": 15040,
+      "duration_seconds": 0.47,
+      "peak": 0.699981689453125,
+      "rms": 0.03885526854695741,
+      "sha256": "096dde4c8bfcbfd043d7cd97820faab0ca3d6ee979be010baafb0ede22bc08bb",
+      "pcm_sha256": "b051baef084f065f91366ff7807b0a175732ec410be330dacc6ff78d2b4d757d"
+    }
+  }
+}

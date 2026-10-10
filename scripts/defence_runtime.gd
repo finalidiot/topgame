@@ -113,6 +113,10 @@ func movement(f: Dictionary, m: Dictionary, dt: float) -> void:
 		elif not braking and bool(s.braking):
 			if float(s.brace) > 0.20:
 				event("exchange_release", f, direction)
+				# A charged, paid brace becomes a controlled release. Holding
+				# Brake or tapping it without an aimed release cannot cool Stress.
+				if direction.length() >= 0.35 and float(s.brace) >= 0.60:
+					parent.vent_anchor_stress(f, float(s.brace) * (0.14 if branch(f, "anchor_exchange") == "deep_footing" else 0.10), "anchor_exchange")
 				if branch(f, "anchor_exchange") == "slip_anchor":
 					s.carry = float(s.brace) * 0.65
 					s.carry_until = time + 0.35
@@ -175,6 +179,9 @@ func vent(f: Dictionary) -> void:
 	s.vents = int(s.vents) + 1
 	s.vented_force = float(s.vented_force) + stored
 	f["sink_charge"] = 0.0
+	# The reservoir is emptied once by a fresh Brake edge; only accepted
+	# stored force pays for this extra relief, never an empty/held Brake.
+	parent.vent_anchor_stress(f, minf(0.24, stored * 0.0016), "impact_sink")
 	if branch(f, "impact_sink") == "return_spring":
 		var affected: int = 0
 		for target: Dictionary in parent._fighters():

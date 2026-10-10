@@ -1,0 +1,46 @@
+{
+  "task": "003A.1",
+  "status": "passed",
+  "scope": "Current production x1 sampler and durable save regressions; bounded bulk wraps this identical per-packet distribution sequentially",
+  "source_parent": "6a852cf0bedef0a9c8d4b0d7e76a2ee626b7f4e1",
+  "evidence_manifest": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bulk_economy_final.json",
+  "economy_report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.1\\manifests\\003a1_bulk_economy_final_packet_economy.json",
+  "checks": {
+    "packet_economy": 10172,
+    "packet_transactions": 175
+  },
+  "cohort": 3000,
+  "rarity_odds": {
+    "bit": {
+      "COMMON": 0.3584229390681,
+      "EPIC": 0.0596815870634325,
+      "LEGENDARY": 0.0149203967658581,
+      "RARE": 0.149203967658581,
+      "TRASH": 0.0,
+      "UNCOMMON": 0.417771109444028
+    },
+    "blade": {
+      "COMMON": 0.36231884057971,
+      "EPIC": 0.0607315389924085,
+      "LEGENDARY": 0.0,
+      "RARE": 0.151828847481021,
+      "TRASH": 0.0,
+      "UNCOMMON": 0.42512077294686
+    },
+    "ratchet": {
+      "COMMON": 0.336700336700337,
+      "EPIC": 0.0586820586820587,
+      "LEGENDARY": 0.0,
+      "RARE": 0.146705146705147,
+      "TRASH": 0.0471380471380471,
+      "UNCOMMON": 0.410774410774411
+    }
+  },
+  "source_hashes": {
+    "scripts/packet_economy.gd": "6c5a13871c2bf35c9ddef556c583472a90c2d70134d14b8407f6ba8ec3a643f9",
+    "assets/data/packet_economy.json": "88184c5ec42627fa90aa103bedca6f95dfccfddfe053061cbf5e1226bf7e7b6c",
+    "assets/data/parts_catalogue.json": "6ff66e7051e0fd1c2090de9fb563f65852b8b30d9d1310728927b6ceb73f6c81"
+  },
+  "profile_unchanged": true,
+  "single_packet_distribution_unchanged": true
+}

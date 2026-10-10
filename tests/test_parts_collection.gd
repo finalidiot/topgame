@@ -9,7 +9,7 @@ class QuietMain extends "res://scripts/main.gd":
 const Parts = preload("res://scripts/parts.gd")
 const Collection = preload("res://scripts/collection_save.gd")
 const Starters = preload("res://scripts/starters.gd")
-const NATIVE_RECT: Rect2 = Rect2(0, 0, 640, 360)
+const NATIVE_RECT: Rect2 = Rect2(80, 60, 640, 360)
 var checks: int = 0
 var failures: int = 0
 var files: Array[String] = []
@@ -226,8 +226,8 @@ func _test_refused_qa() -> void:
 		await _settle()
 
 func _run() -> void:
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")

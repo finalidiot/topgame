@@ -3,10 +3,12 @@ extends Control
 
 signal action(name: String, value: Variant)
 signal focus_sound(kind: String)
+signal input_engaged
 
 const Preview = preload("res://scripts/top_preview.gd")
 const FrontEnd = preload("res://scripts/front_end.gd")
 const Powers = preload("res://scripts/run_powers.gd")
+const AbilityCardStyle = preload("res://scripts/ability_card_style.gd")
 const Starters = preload("res://scripts/starters.gd")
 const BeastManifestations = preload("res://scripts/beast_manifestations.gd")
 const PacketView = preload("res://scripts/packet_view.gd")
@@ -15,6 +17,9 @@ const ShopMerchant = preload("res://scripts/shop_merchant.gd")
 const AbilityInspection = preload("res://scripts/ability_inspection.gd")
 const CreditTransfer = preload("res://scripts/credit_transfer.gd")
 const TouchButton = preload("res://scripts/touch_button.gd")
+const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const PowerStateMeters = preload("res://scripts/power_state_meters.gd")
+const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -86,6 +91,11 @@ var _packet_wallet: Dictionary = {}
 var _packet_controls: Array[Control] = []
 var _packet_note: Label
 var _shop_kind: String = "standard"
+var _shop_quantity: int = 1
+var _shop_quantities: Dictionary = {"standard":1, "reclaimed":1}
+var _shop_cards: Dictionary = {}
+var _shop_quantity_hint: Label
+var _shop_quantity_buttons: Array[Button] = []
 var _shop_snapshot: Dictionary = {}
 var _shop_detail: Control
 var _shop_merchant: Control
@@ -99,8 +109,15 @@ var _ability_inspector: Control
 var _credit_transfer: Control
 var _inspection_owned_state: Dictionary = {}
 var reduced_flashing: bool = false
+## Native layout audit may select the production mobile arrangement explicitly.
+var mobile_hud: bool = OS.has_feature("mobile")
+var _presentation_canvas: Vector2 = Vector2(800,480)
+var _presentation_mobile: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
+var input_suspended: bool = false
+var _reroll_control: Button
+var _reroll_needs_release: bool = false
 
 func _ready() -> void:
 	if OS.has_feature("mobile"): _input_profile = "touch"
@@ -142,15 +159,39 @@ func _process(_delta: float) -> void:
 		_default_focus.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	if input_suspended:
+		get_viewport().set_input_as_handled()
+		return
+	# A deliberate local interaction also owns the application lifecycle. UI
+	# can receive a pad event after desktop focus loss; its timers must not
+	# remain suspended until a mouse later restores the OS focus notification.
+	var local_press: bool = (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed and not event.canceled)
+	if event is InputEventJoypadButton and event.pressed and (_ui_owner_device < 0 or event.device == _ui_owner_device): local_press = true
+	if local_press: input_engaged.emit()
+	if event.is_action_released("draft_reroll"): _reroll_needs_release = false
+	if screen in ["reward", "mutation"] and event.is_action_pressed("draft_reroll"):
+		if event is InputEventKey and event.echo: return
+		if event is InputEventJoypadButton and _ui_owner_device >= 0 and event.device != _ui_owner_device: return
+		if event is InputEventJoypadButton: _note_input_profile(ControllerBindings.profile(event.device))
+		elif event is InputEventKey: _note_input_profile("keyboard")
+		if _reroll_needs_release:
+			get_viewport().set_input_as_handled()
+			return
+		_reroll_needs_release = true
+		if is_instance_valid(_reroll_control) and not _reroll_control.disabled: _reroll_control.pressed.emit()
+		get_viewport().set_input_as_handled()
+		return
+	var local_point: Vector2 = _content.get_global_transform_with_canvas().affine_inverse() * event.position if is_instance_valid(_content) and (event is InputEventScreenTouch or event is InputEventScreenDrag) else Vector2.ZERO
 	if event is InputEventScreenTouch:
 		_note_input_profile("touch")
 		if (not event.pressed or event.canceled) and event.index == _packet_touch_index: _packet_touch_index = -1
 		if screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and _packet_view.phase in ["SEALED", "CRINKLE"]:
-			if event.pressed and Rect2(222, 72, 196, 205).has_point(event.position):
+			var packet_touch_rect: Rect2 = Rect2(100,72,440,205) if _packet_view._quantity>1 else Rect2(222,72,196,205)
+			if event.pressed and packet_touch_rect.has_point(local_point):
 				_packet_touch_index = event.index
-				_packet_touch_origin = event.position
+				_packet_touch_origin = local_point
 	if event is InputEventScreenDrag and screen == "packet_open" and is_instance_valid(_packet_view) and not _packet_view.opening and event.index == _packet_touch_index:
-		if absf(event.position.x - _packet_touch_origin.x) >= 42.0:
+		if absf(local_point.x - _packet_touch_origin.x) >= 42.0:
 			_packet_touch_index = -1
 			action.emit("packet_tear", null)
 			get_viewport().set_input_as_handled()
@@ -160,7 +201,7 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
-				_note_input_profile(FrontEnd.controller_profile(event.device))
+				_note_input_profile(ControllerBindings.profile(event.device))
 		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (OS.has_feature("mobile") and event.device == InputEvent.DEVICE_ID_EMULATION)):
 			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
@@ -170,6 +211,18 @@ func _input(event: InputEvent) -> void:
 			_accept_needs_release = Input.is_action_pressed("ui_accept")
 		get_viewport().set_input_as_handled()
 		return
+	if screen == "shop" and (event is InputEventKey or event is InputEventJoypadButton):
+		var shop_focus: Control = get_viewport().gui_get_focus_owner()
+		if is_instance_valid(shop_focus) and shop_focus.has_meta("shop_product"):
+			if event is InputEventKey and event.echo: return
+			if str(shop_focus.get_meta("intent", "")) != "packet_odds" and (event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right")):
+				cycle_shop_quantity(-1 if event.is_action_pressed("ui_left") else 1)
+				get_viewport().set_input_as_handled()
+				return
+			if event.is_action_pressed("ui_accept") and str(shop_focus.get_meta("intent", "")) != "packet_odds":
+				action.emit("request_packet_purchase", str(shop_focus.get_meta("shop_product")))
+				get_viewport().set_input_as_handled()
+				return
 	if event is InputEventJoypadMotion and event.axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
 		# Navigate exactly once per excursion. Jitter and a held stick cannot race
 		# across cards, or advance focus when a draft replaces combat under it.
@@ -192,6 +245,9 @@ func _input(event: InputEvent) -> void:
 func _move_analogue_focus(direction: String) -> void:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused == null: return
+	if screen == "shop" and focused.has_meta("shop_product") and str(focused.get_meta("intent", "")) != "packet_odds" and direction in ["left", "right"]:
+		cycle_shop_quantity(-1 if direction == "left" else 1)
+		return
 	if focused is HSlider and direction in ["left", "right"]:
 		focused.value += focused.step * (-1.0 if direction == "left" else 1.0)
 		return
@@ -206,6 +262,8 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
+	_reroll_control = null
+	_reroll_needs_release = next_screen in ["reward", "mutation"] and Input.is_action_pressed("draft_reroll")
 	screen = next_screen
 	_packet_touch_index = -1
 	_appearance_elapsed = 0.0
@@ -218,6 +276,9 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_packet_view = null
 	_packet_controls.clear()
 	_shop_detail = null
+	_shop_cards.clear()
+	_shop_quantity_hint = null
+	_shop_quantity_buttons.clear()
 	_shop_merchant = null
 	_shop_rows.clear()
 	_shop_routes.clear()
@@ -249,6 +310,10 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_stat_numbers.clear()
 	_content = Control.new()
 	_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if next_screen != "hud":
+		_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+		_content.position = CombatLayout.responsive(_presentation_canvas,mobile_hud).menu_origin
+		_content.size = Vector2(640,360)
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
 	if dim:
@@ -391,11 +456,19 @@ func input_profile() -> String:
 func _note_input_profile(profile: String) -> void:
 	if profile == _input_profile: return
 	_input_profile = profile
+	_refresh_reroll_prompt()
+	_refresh_ability_prompts()
 	for purpose: String in _prompt_labels:
 		var label: Label = _prompt_labels[purpose]
 		if is_instance_valid(label): label.text = FrontEnd.prompt(profile, purpose) + (" CONFIRM" if purpose == "confirm" else (" BACK" if purpose == "back" else ""))
 		var glyph: TextureRect = _prompt_glyphs.get(purpose)
 		if is_instance_valid(glyph): glyph.texture = FrontEnd.glyph(profile, purpose)
+	_refresh_shop_prompt()
+
+func _refresh_reroll_prompt() -> void:
+	if not is_instance_valid(_reroll_control): return
+	_reroll_control.text = "%s  REROLL / %d LEFT" % [FrontEnd.prompt(_input_profile, "reroll"), int(_reroll_control.get_meta("charges",0))]
+	_reroll_control.tooltip_text = "Right bumper rerolls the current draft. Mutation preview returns to a fresh power draft."
 
 func _input_footer(y: float = 333.0) -> void:
 	for index: int in range(2):
@@ -553,6 +626,40 @@ func _ui_image(parent: Node, path: String, area: Rect2) -> TextureRect:
 func selected_shop_product() -> String:
 	return _shop_kind
 
+func selected_shop_quantity(kind: String = "") -> int:
+	return int(_shop_quantities.get(_shop_kind if kind.is_empty() else kind, 1))
+
+func select_shop_quantity(value: Variant) -> void:
+	var kind: String = _shop_kind
+	var quantity: Variant = value
+	if value is Dictionary:
+		kind = str(value.get("kind", ""))
+		quantity = value.get("quantity")
+	if screen != "shop" or not _shop_quantities.has(kind) or not quantity is int or int(quantity) not in PacketEconomy.BATCH_QUANTITIES: return
+	select_shop_product(kind)
+	_shop_quantities[kind] = int(quantity)
+	_shop_quantity = int(quantity)
+	_refresh_shop_cards()
+
+func cycle_shop_quantity(direction: int) -> void:
+	if screen != "shop": return
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if not is_instance_valid(focused) or not focused.has_meta("shop_product"): return
+	var kind: String = str(focused.get_meta("shop_product"))
+	var quantities: Array = PacketEconomy.BATCH_QUANTITIES
+	var index: int = (quantities.find(selected_shop_quantity(kind)) + direction + quantities.size()) % quantities.size()
+	select_shop_quantity({"kind":kind,"quantity":quantities[index]})
+	if str(focused.get_meta("intent", "")) == "packet_quantity":
+		_shop_cards[kind].quantities[index].grab_focus()
+
+func _refresh_shop_prompt() -> void:
+	if screen == "shop" and is_instance_valid(_prompt_labels.get("confirm")):
+		var focused: Control = get_viewport().gui_get_focus_owner()
+		var info: bool = is_instance_valid(focused) and str(focused.get_meta("intent", "")) == "packet_odds"
+		_prompt_labels.confirm.text = FrontEnd.prompt(_input_profile, "confirm") + (" INFO" if info else " BUY")
+		if is_instance_valid(_shop_quantity_hint):
+			_shop_quantity_hint.text = "TAP x1 / x3 / x5" if _input_profile == "touch" else ("D-PAD L/R QUANTITY" if _input_profile in ["xbox","nintendo","playstation"] else "LEFT/RIGHT QUANTITY")
+
 func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_clear("shop")
 	_shop_snapshot = snapshot.duplicate(true)
@@ -569,31 +676,13 @@ func show_shop(snapshot: Dictionary, status: String = "") -> void:
 	_shop_reaction = "IDLE"
 	_ui_image(_content, "res://assets/ui/human_feedback003a/merchant_fixture.png", Rect2(29, 221, 192, 64))
 	_label(_content, status if not status.is_empty() else "Threats pay CREDITS.", Rect2(34, 278, 184, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_shop_scroll = ScrollContainer.new()
-	_shop_scroll.position = Vector2(245, 65)
-	_shop_scroll.size = Vector2(373, 63)
-	_shop_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_content.add_child(_shop_scroll)
-	var list: VBoxContainer = VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.add_theme_constant_override("separation", 5)
-	_shop_scroll.add_child(list)
 	var products: Dictionary = PacketEconomy.config().packets
 	if not products.has(_shop_kind): _shop_kind = str(products.keys()[0])
-	for kind: String in products:
-		var row: Button = _button(list, PacketEconomy.packet_name(kind), Rect2(0, 0, 355, 27), "inspect_shop_product", kind)
-		row.custom_minimum_size = Vector2(355, 27)
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.set_meta("shop_product", kind)
-		row.focus_entered.connect(func() -> void: select_shop_product(kind); _shop_scroll.ensure_control_visible(row))
-		row.mouse_entered.connect(func() -> void: select_shop_product(kind))
-		row.pressed.connect(func() -> void:
-			if screen == "shop" and is_instance_valid(_shop_buy) and not _shop_buy.disabled:
-				action.emit("request_packet_purchase", kind))
-		_shop_rows.append(row)
 	_shop_routes.append(_button(_content, "WORKSHOP", Rect2(22, 310, 290, 26), "open_workshop"))
-	_shop_routes.append(_button(_content, "WORKBENCH", Rect2(326, 310, 292, 26), "main_menu"))
+	_shop_routes.append(_button(_content, "BACK TO WORKSHOP" if str(snapshot.get("shop_return", "hub")) == "workshop" else "BACK TO HUB", Rect2(326, 310, 292, 26), "back_shop"))
 	_input_footer(339)
+	_shop_quantity_hint = _label(_content, "LEFT/RIGHT QUANTITY", Rect2(454, 339, 164, 14), 10, MUTED)
+	_refresh_shop_prompt()
 	_build_shop_detail()
 	_shop_focus(_selected_shop_row())
 
@@ -604,65 +693,106 @@ func _selected_shop_row() -> Button:
 
 func select_shop_product(kind: String) -> void:
 	if screen != "shop" or not PacketEconomy.config().packets.has(kind): return
-	if kind == _shop_kind and is_instance_valid(_shop_detail): return
+	if kind == _shop_kind and is_instance_valid(_shop_buy): return
 	_shop_kind = kind
+	_shop_quantity = selected_shop_quantity(kind)
 	if is_instance_valid(_shop_merchant): _shop_merchant.react("SELECT")
-	_build_shop_detail()
-	_shop_focus(_selected_shop_row())
+	_refresh_shop_cards()
 
 func _shop_focus(first: Control) -> void:
 	var rows: Array = []
-	for row: Button in _shop_rows: rows.append([row])
-	var detail: Array = []
-	if is_instance_valid(_shop_buy) and not _shop_buy.disabled: detail.append(_shop_buy)
-	if is_instance_valid(_shop_odds): detail.append(_shop_odds)
-	if not detail.is_empty(): rows.append(detail)
+	for kind: String in ["standard", "reclaimed"]:
+		var card: Dictionary = _shop_cards[kind]
+		rows.append([card.title])
+		rows.append(card.quantities)
+		var controls: Array = []
+		if not card.buy.disabled: controls.append(card.buy)
+		controls.append(card.odds)
+		rows.append(controls)
 	rows.append(_shop_routes)
 	_focus_rows(rows, first)
-	# Right opens the selected product's actions without stepping through another
-	# product first. Down remains the natural scroll-list traversal.
-	if not detail.is_empty():
-		for row: Button in _shop_rows:
-			row.focus_neighbor_right = row.get_path_to(detail[0])
-		for control: Control in detail:
-			control.focus_neighbor_left = control.get_path_to(_selected_shop_row())
+	# These controls consume Left/Right as quantity. Expose their actual focus
+	# behaviour too, so controller traversal never follows a misleading link.
+	for kind: String in _shop_cards:
+		var card: Dictionary = _shop_cards[kind]
+		for control: Button in [card.title,card.buy]:
+			control.focus_neighbor_left = control.get_path_to(control)
+			control.focus_neighbor_right = control.get_path_to(control)
+	_refresh_shop_cards()
 
 func _build_shop_detail() -> void:
-	if is_instance_valid(_shop_detail):
-		_content.remove_child(_shop_detail)
-		_shop_detail.queue_free()
 	_shop_detail = Control.new()
-	_shop_detail.position = Vector2(245, 137)
-	_shop_detail.size = Vector2(373, 166)
+	_shop_detail.position = Vector2(245, 65)
+	_shop_detail.size = Vector2(373, 238)
 	_shop_detail.mouse_filter = Control.MOUSE_FILTER_PASS
 	_content.add_child(_shop_detail)
-	_panel(_shop_detail, Rect2(0, 0, 373, 166), Color("18242c"))
-	_label(_shop_detail, PacketEconomy.packet_name(_shop_kind), Rect2(13, 8, 347, 16), 10, TEXT)
-	_packet_image(_shop_detail, _shop_kind, Rect2(6, 27, 96, 96))
-	var product: Dictionary = PacketEconomy.config().packets[_shop_kind]
-	var unit: String = str(product.currency).to_upper()
-	var price: int = PacketEconomy.packet_cost(_shop_kind)
-	var available: int = int(_shop_snapshot.get(str(product.currency), 0))
-	_label(_shop_detail, "%d %s" % [price, unit], Rect2(111, 28, 247, 25), 20, ORANGE)
-	_label(_shop_detail, "1 BLADE / 1 RATCHET / 1 BIT", Rect2(111, 60, 247, 14), 10)
-	_label(_shop_detail, "Uncommon+ guaranteed.", Rect2(111, 79, 247, 14), 10, BLUE)
-	var missing: bool = false
-	for id: String in PacketEconomy.eligible_ids():
-		if id not in _shop_snapshot.get("owned_part_ids", []): missing = true
-	var rule: String = "One missing design while any remain." if missing else "All packet designs already owned."
-	_label(_shop_detail, rule if _shop_kind == "reclaimed" else "Three permanent machine designs.", Rect2(111, 97, 247, 23), 10, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_label(_shop_detail, "Duplicates become SALVAGE.", Rect2(111, 119, 247, 14), 10, MUTED)
-	var enough: bool = available >= price and not bool(_shop_snapshot.get("read_only", false))
-	_shop_buy = _button(_shop_detail, "BUY / %d %s" % [price, unit] if enough else "NEED %d MORE %s" % [maxi(0, price - available), unit], Rect2(13, 138, 236, 27), "request_packet_purchase", _shop_kind, enough)
-	_shop_buy.disabled = not enough
-	_shop_odds = _button(_shop_detail, "INFO / ODDS", Rect2(257, 138, 103, 27), "packet_odds")
-	for row: Button in _shop_rows:
-		var chosen: bool = str(row.get_meta("shop_product", "")) == _shop_kind
-		row.add_theme_stylebox_override("normal", _box(Color("344853") if chosen else Color("263640"), ORANGE if chosen else BORDER))
+	for index: int in range(2):
+		var kind: String = ["standard", "reclaimed"][index]
+		var card: Control = Control.new()
+		card.position = Vector2(0, index * 122)
+		card.size = Vector2(373, 116)
+		_shop_detail.add_child(card)
+		var plate: Panel = _panel(card, Rect2(0, 0, 373, 116), Color("18242c"))
+		_packet_image(card, kind, Rect2(6, 14, 96, 96))
+		var title: Button = _button(card, "", Rect2(110, 3, 249, 21), "inspect_shop_product", kind)
+		var price: Label = _label(card, "", Rect2(110, 26, 249, 24), 20, ORANGE)
+		var quantities: Array[Button] = []
+		for quantity_index: int in range(3):
+			var quantity: int = PacketEconomy.BATCH_QUANTITIES[quantity_index]
+			quantities.append(_button(card, "x%d" % quantity, Rect2(110 + quantity_index * 84, 53, 81, 24), "packet_quantity", {"kind":kind,"quantity":quantity}))
+		var buy: Button = _button(card, "", Rect2(110, 82, 162, 24), "request_packet_purchase", kind)
+		var odds: Button = _button(card, "INFO / ODDS", Rect2(278, 82, 81, 24), "packet_odds")
+		_label(card, "UNOWNED IF ANY / UNCOMMON+ EACH" if kind == "reclaimed" else "3 PARTS / UNCOMMON+ EACH", Rect2(110, 105, 249, 11), 10, BLUE)
+		_shop_cards[kind] = {"plate":plate,"title":title,"price":price,"quantities":quantities,"buy":buy,"odds":odds}
+		_shop_rows.append(title)
+		var controls: Array = quantities.duplicate()
+		controls.append_array([title, buy, odds])
+		for control: Button in controls:
+			control.set_meta("shop_product", kind)
+			control.focus_entered.connect(func() -> void: select_shop_product(kind))
+			control.focus_entered.connect(_refresh_shop_prompt)
+		for quantity_button: Button in quantities:
+			quantity_button.focus_entered.connect(func() -> void: select_shop_quantity(quantity_button.get_meta("payload")))
+		title.pressed.connect(func() -> void:
+			if screen == "shop" and not _shop_cards[kind].buy.disabled: action.emit("request_packet_purchase", kind))
+	_refresh_shop_cards()
 
-func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> void:
+func _refresh_shop_cards() -> void:
+	if screen != "shop" or _shop_cards.is_empty(): return
+	var focus_graph_changed: bool = false
+	for kind: String in _shop_cards:
+		var card: Dictionary = _shop_cards[kind]
+		var quantity: int = selected_shop_quantity(kind)
+		var product: Dictionary = PacketEconomy.config().packets[kind]
+		var unit: String = str(product.currency).to_upper()
+		var price: int = PacketEconomy.packet_cost(kind) * quantity
+		var available: int = int(_shop_snapshot.get(str(product.currency), 0))
+		var chosen: bool = kind == _shop_kind
+		var quantity_control: Button = card.quantities[PacketEconomy.BATCH_QUANTITIES.find(quantity)]
+		card.title.focus_neighbor_bottom = card.title.get_path_to(quantity_control)
+		card.buy.focus_neighbor_top = card.buy.get_path_to(quantity_control)
+		card.title.text = ("STANDARD" if kind == "standard" else "RECLAIMED") + " PARTS PACKET x%d" % quantity
+		card.price.text = "%d %s" % [price, unit]
+		card.plate.add_theme_stylebox_override("panel", _box(Color("263640") if chosen else Color("18242c"), ORANGE if chosen else BORDER))
+		for index: int in range(3):
+			card.quantities[index].add_theme_stylebox_override("normal", _box(Color("344853") if PacketEconomy.BATCH_QUANTITIES[index] == quantity else Color("263640"), ORANGE if PacketEconomy.BATCH_QUANTITIES[index] == quantity else BORDER))
+		var enough: bool = available >= price and not bool(_shop_snapshot.get("read_only", false))
+		var disabled: bool = not enough
+		card.buy.text = "BUY / %d %s" % [price, unit] if enough else "NEED %d %s" % [maxi(0, price - available), unit]
+		focus_graph_changed = focus_graph_changed or card.buy.disabled != disabled
+		card.buy.disabled = disabled
+		if chosen:
+			_shop_quantity_buttons.assign(card.quantities)
+			_shop_buy = card.buy
+			_shop_odds = card.odds
+	if focus_graph_changed:
+		var focused: Control = get_viewport().gui_get_focus_owner()
+		if not is_instance_valid(focused) or not _content.is_ancestor_of(focused) or (focused is Button and focused.disabled): focused = _selected_shop_row()
+		_shop_focus(focused)
+
+func show_packet_purchase(kind: String, snapshot: Dictionary, token: int, quantity: int = 1) -> void:
 	_clear("packet_purchase")
-	_header("BUY A PARTS PACKET", "A sealed hobby pouch. Three permanent component designs.")
+	_header("BUY PARTS PACKETS" if quantity > 1 else "BUY A PARTS PACKET", "Sealed hobby pouches. Three permanent component designs each.")
 	_panel(_content, Rect2(98, 75, 444, 216), Color("18242c"))
 	var attendant: Control = ShopMerchant.new()
 	attendant.position = Vector2(110, 96)
@@ -670,13 +800,13 @@ func show_packet_purchase(kind: String, snapshot: Dictionary, token: int) -> voi
 	_content.add_child(attendant)
 	attendant.react("PURCHASE")
 	_packet_image(_content, kind, Rect2(176, 157, 48, 48))
-	_label(_content, PacketEconomy.packet_name(kind), Rect2(220, 100, 308, 23), 20, TEXT)
+	_label(_content, ("STANDARD PARTS PACKET" if kind == "standard" else "RECLAIMED PARTS PACKET") + " x%d" % quantity, Rect2(220, 100, 308, 23), 16, TEXT)
 	var unit: String = "SALVAGE" if kind == "reclaimed" else "CREDITS"
-	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind), unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
+	_label(_content, "%d %s / YOU HAVE %d" % [PacketEconomy.packet_cost(kind) * quantity, unit, int(snapshot.get(unit.to_lower(), 0))], Rect2(220, 133, 306, 18), 10, ORANGE)
 	_label(_content, "1 Blade + 1 Ratchet + 1 Bit\nDuplicates recycle into SALVAGE.", Rect2(220, 162, 306, 35), 10, TEXT)
 	_label(_content, "Your contents are saved before the seam tears.", Rect2(112, 214, 417, 17), 10, MUTED)
 	var cancel: Button = _button(_content, "CANCEL", Rect2(112, 248, 184, 28), "cancel_packet_purchase")
-	var confirm: Button = _button(_content, "BUY / %d %s" % [PacketEconomy.packet_cost(kind), unit], Rect2(310, 248, 218, 28), "confirm_packet_purchase", token, true)
+	var confirm: Button = _button(_content, "BUY / %d %s" % [PacketEconomy.packet_cost(kind) * quantity, unit], Rect2(310, 248, 218, 28), "confirm_packet_purchase", token, true)
 	_input_footer()
 	_focus_rows([[cancel, confirm]], cancel)
 
@@ -730,10 +860,11 @@ func show_packet_open(receipt: Dictionary, snapshot: Dictionary, recovered: bool
 	_content.add_child(_packet_view)
 	_packet_view.cue.connect(func(kind: String) -> void: focus_sound.emit(kind))
 	_packet_view.settled.connect(_show_packet_summary)
+	_packet_view.presented.connect(func(cursor: int) -> void: action.emit("packet_progress", cursor))
 	_header("PARTS ON THE WORKBENCH", "Your packet is saved. Tear the seam and see what came home.")
 	_packet_note = _label(_content, "CRINKLE / TEAR / SPILL / INSPECT", Rect2(145, 281, 446, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var tear: Button = _button(_content, "TEAR OPEN", Rect2(22, 309, 292, 27), "packet_tear", null, true)
-	var skip: Button = _button(_content, "FAST OPEN", Rect2(326, 309, 292, 27), "packet_skip")
+	var skip: Button = _button(_content, "FAST OPEN ALL" if int(receipt.get("quantity", 1)) > 1 else "FAST OPEN", Rect2(326, 309, 292, 27), "packet_skip")
 	tear.tooltip_text = "Confirm to tear. Hold Confirm to accelerate. Back resolves the saved results immediately."
 	_packet_controls = [tear, skip]
 	_input_footer(339)
@@ -749,6 +880,28 @@ func tear_packet() -> void:
 func skip_packet() -> void:
 	if screen == "packet_open" and is_instance_valid(_packet_view): _packet_view.resolve()
 
+func _show_bulk_part_labels(quantity: int) -> void:
+	var new_count: int = 0
+	for row: Dictionary in _packet_receipt.rows:
+		if bool(row.new): new_count += 1
+	var total: int = _packet_receipt.rows.size()
+	_panel(_content, Rect2(48, 58, 544, 28), Color("18242c"))
+	_label(_content, "%d PACKETS / %d PARTS / %d NEW / %d DUPLICATES / +%d SALVAGE" % [quantity, total, new_count, total - new_count, int(_packet_receipt.total_salvage)], Rect2(54, 65, 532, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
+	var width: float = 596.0 / quantity
+	for index: int in range(total):
+		var row: Dictionary = _packet_receipt.rows[index]
+		var packet: int = index / 3
+		var category: int = index % 3
+		var x: float = 22 + packet * width
+		var y: float = 126 + category * 62
+		var accent: Color = _rarity_color(str(row.rarity))
+		_label(_content, str(PartCatalog.PARTS[row.category][row.id].name), Rect2(x + 2, y, width - 4, 12), 8, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_label(_content, "NEW / " + str(row.rarity) if bool(row.new) else "DUPLICATE / +%d" % int(row.salvage), Rect2(x + 2, y + 13, width - 4, 12), 8, ORANGE if bool(row.new) else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_rect(_content, Rect2(x + 8, y + 27, width - 16, 1), accent)
+	focus_sound.emit("packet_new" if new_count > 0 else "packet_recycle")
+	if new_count < total: focus_sound.emit("packet_recycle")
+	if _shop_reaction == "RARE": focus_sound.emit("packet_rare")
+
 func _show_packet_summary() -> void:
 	if screen != "packet_open": return
 	for row: Dictionary in _packet_receipt.get("rows", []):
@@ -759,7 +912,9 @@ func _show_packet_summary() -> void:
 			control.queue_free()
 	_packet_controls.clear()
 	if is_instance_valid(_packet_note): _packet_note.visible = false
-	for index: int in range(_packet_receipt.get("rows", []).size()):
+	var quantity: int = int(_packet_receipt.get("quantity", 1))
+	if quantity > 1: _show_bulk_part_labels(quantity)
+	for index: int in range(3 if quantity == 1 else 0):
 		var row: Dictionary = _packet_receipt.rows[index]
 		var x: float = 88 + index * 156
 		var accent: Color = _rarity_color(str(row.rarity))
@@ -815,7 +970,7 @@ func show_play_modes(build: Dictionary) -> void:
 	_label(_content, "PRACTICE GARAGE", Rect2(346, 84, 256, 31), 20, ORANGE)
 	_label(_content, "Try every catalogue component.\nBuild and inspect a different top.\nPractice never grants owned parts.", Rect2(346, 129, 256, 73), 10, TEXT)
 	var garage: Button = _button(_content, "PRACTICE GARAGE", Rect2(346, 250, 256, 32), "practice_garage")
-	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 320, 232, 28), "main_menu")
+	var back: Button = _button(_content, "BACK TO HUB", Rect2(22, 320, 232, 28), "main_menu")
 	_focus_rows([[duel, garage], [back]])
 
 func show_starter_ceremony(focus_id: String = "breaker") -> void:
@@ -911,9 +1066,9 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 	for category: String in ["blade", "ratchet", "bit"]: total_owned += _collection_owned(category).size()
 	_label(_content, "%d / 31" % total_owned, Rect2(181, 70, 45, 16), 10, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
 	_create_workshop_catalogue()
-	var back: Button = _button(_content, "WORKBENCH", Rect2(16, 321, 104, 28), "main_menu")
-	var shop: Button = _button(_content, "SHOP", Rect2(128, 321, 88, 28), "open_shop")
-	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(224, 321, 180, 28), "quick_duel")
+	var back: Button = _button(_content, "BACK TO SHOP" if str(snapshot.get("workshop_return", "hub")) == "shop" else "BACK TO HUB", Rect2(16, 321, 142, 28), "back_workshop")
+	var shop: Button = _button(_content, "SHOP", Rect2(166, 321, 72, 28), "open_shop")
+	var practice: Button = _button(_content, "QUICK DUEL / PRACTICE", Rect2(246, 321, 158, 28), "quick_duel")
 	var launch: Button = _button(_content, "LAUNCH OWNED TOP", Rect2(412, 321, 212, 28), "launch_owned_run", null, true)
 	launch.disabled = not _owned_build_is_complete()
 	_catalogue_footer = [back, shop, practice, launch] if not launch.disabled else [back, shop, practice]
@@ -1131,12 +1286,55 @@ func focused_starter_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	return str(focused.get_meta("starter_id", "")) if focused != null else ""
 
-func _style_card(card: Button, accent: Color) -> void:
-	card.add_theme_stylebox_override("normal", _box(Color("172737"), Color("385266"), 1))
-	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, 1))
-	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, 2))
-	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, 2))
-	_card_animations.append({"card":card, "position":card.position, "accent":accent, "focused":null})
+func _style_card(card: Button, accent: Color, semantic: Dictionary = {}) -> void:
+	var border: Color = semantic.get("border_color", Color("385266"))
+	var width: int = int(semantic.get("border_width", 1))
+	var focus_width: int = int(semantic.get("focus_width", 2))
+	card.add_theme_stylebox_override("normal", _box(Color("172737"), border, width))
+	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, width))
+	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, maxi(2, width)))
+	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, focus_width))
+	_card_animations.append({"card":card, "position":card.position, "accent":accent, "normal_border":border, "normal_width":width, "focused":null})
+
+func _style_ability_card(card: Button, metadata: Dictionary) -> Dictionary:
+	var style: Dictionary = Powers.get_card_tier_style(int(metadata.get("rank", 1)), str(metadata.get("mutation", "")))
+	_style_card(card, style.accent_color, style)
+	var frame := Panel.new()
+	frame.name = "SemanticCardFrame"
+	frame.size = card.size
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_theme_stylebox_override("panel", AbilityCardStyle.frame_style(style))
+	card.add_child(frame)
+	_card_animations.back()["semantic_frame"] = frame
+	_card_animations.back()["semantic_style"] = style
+	card.set_meta("ability_tier", style.tier)
+	card.set_meta("ability_badge", style.badge)
+	card.set_meta("ability_rank", int(metadata.get("rank", 1)))
+	return style
+
+func _ability_badge(card: Button, style: Dictionary, area: Rect2, alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var badge: Label = _label(card, str(style.badge), area, 10, style.accent_color, alignment)
+	badge.name = "AbilityTierBadge"
+	# One/two/three solid ticks also encode the investment without colour.
+	for index: int in range(int(style.tier_marks)):
+		_rect(card, Rect2(card.size.x - 9 - index * 4, area.position.y + 2, 2, 7), style.accent_color)
+	return badge
+
+func _ability_confirm(card: Button, style: Dictionary, area: Rect2, purpose: String, alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	var prompt: Label = _label(card, _ability_confirm_hint() + " / " + purpose, area, 10, style.accent_color, alignment)
+	prompt.name = "AbilityCardConfirm"
+	prompt.set_meta("confirmation", purpose)
+
+func _ability_confirm_hint() -> String:
+	# The card has one compact action line; the full help retains mouse wording.
+	return FrontEnd.prompt(_input_profile, "confirm").split(" / ")[0].trim_suffix(" BUTTON")
+
+func _refresh_ability_prompts() -> void:
+	for entry: Dictionary in _card_animations:
+		var card: Button = entry.card
+		if not is_instance_valid(card): continue
+		var prompt: Label = card.get_node_or_null("AbilityCardConfirm") as Label
+		if prompt != null: prompt.text = _ability_confirm_hint() + " / " + str(prompt.get_meta("confirmation"))
 
 func _animate_cards() -> void:
 	for entry: Dictionary in _card_animations:
@@ -1146,7 +1344,9 @@ func _animate_cards() -> void:
 		if entry.focused == focused: continue
 		entry.focused = focused
 		card.position = entry.position + Vector2(0, -2 if focused else 0)
-		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else Color("385266"), 1))
+		card.add_theme_stylebox_override("normal", _box(Color("243b4d") if focused else Color("172737"), entry.accent if focused else entry.normal_border, int(entry.normal_width)))
+		if entry.has("semantic_frame"):
+			(entry.semantic_frame as Panel).add_theme_stylebox_override("panel", AbilityCardStyle.frame_style(entry.semantic_style, focused))
 
 func _describe_practice_part(category: String, id: String) -> void:
 	if not is_instance_valid(_catalogue_description): return
@@ -1201,7 +1401,7 @@ func show_help() -> void:
 	var run_copy: Label = _label(_content, "CHOOSE A TOP\nYour three first parts stay owned.\n\nSURVIVE AND INVEST\nCollide with rivals. Earn XP.\nChoose powers, ranks and mutations.\n\nREROLL A DRAFT\nCollect charges on the arena floor.\nSpend a charge for a fresh offer.\n\nKEEP YOUR COLLECTION\nA lost Run ends temporary powers.\nOwned parts and your build remain.", Rect2(329, 106, 273, 165), 10, TEXT)
 	run_copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_label(_content, "DUEL: DRAIN SPIN OR FIND THE GATE.", Rect2(329, 281, 273, 16), 10, MUTED)
-	var back: Button = _button(_content, "BACK TO WORKBENCH", Rect2(22, 318, 184, 28), "main_menu")
+	var back: Button = _button(_content, "BACK TO HUB", Rect2(22, 318, 184, 28), "main_menu")
 	var workshop: Button = _button(_content, "OWNED WORKSHOP", Rect2(218, 318, 184, 28), "open_workshop")
 	var duel: Button = _button(_content, "QUICK DUEL", Rect2(414, 318, 204, 28), "quick_duel", null, true)
 	_focus_rows([[back, workshop, duel]])
@@ -1210,7 +1410,7 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	_settings = settings.duplicate()
 	_clear("settings")
 	_header("OPTIONS", "Changes apply immediately. Your collection is independent of these settings.")
-	_panel(_content, Rect2(22, 65, 596, 128))
+	_panel(_content, Rect2(22, 65, 596, 123))
 	_label(_content, "AUDIO", Rect2(34, 71, 116, 15), 10, ORANGE)
 	var controls: Array = []
 	for index: int in range(3):
@@ -1241,29 +1441,36 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		slider.focus_entered.connect(outline.show)
 		slider.focus_exited.connect(outline.hide)
 		controls.append([slider])
-	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 161, false)
+	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 159, false)
 	controls.append([mute])
-	_panel(_content, Rect2(22, 198, 596, 113))
-	_label(_content, "DISPLAY / COMFORT", Rect2(34, 201, 310, 15), 10, ORANGE)
-	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 221, true)
+	_panel(_content, Rect2(22, 193, 596, 122))
+	_label(_content, "DISPLAY / COMFORT", Rect2(34, 196, 310, 15), 10, ORANGE)
+	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 215, true)
 	controls.append([shake])
-	if not OS.has_feature("mobile"):
-		controls.append([_toggle_setting("fullscreen", "FULL SCREEN", 249, false)])
-	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 249 if OS.has_feature("mobile") else 277, false)
+	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239, false)
 	controls.append([reduced])
-	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,282,562,20),10,MUTED)
+	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263,false,336,270)])
+	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
+	else: _label(_content,"WINDOW / USE WINDOWS MAXIMISE AND RESTORE",Rect2(34,291,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
+	var layout_button: Button = _button(_content, "CONTROLLER: " + str(_settings.get("controller_layout", "auto")).to_upper(), Rect2(166, 321, 228, 28))
+	layout_button.set_meta("setting_key", "controller_layout")
+	layout_button.tooltip_text = "AUTO detects the controller. Choose NINTENDO when an adapter reports Xbox but your buttons are labelled A on the right and B below."
+	layout_button.pressed.connect(func() -> void:
+		var layouts: Array[String] = ["auto", "nintendo", "xbox", "playstation"]
+		_settings["controller_layout"] = layouts[(layouts.find(str(_settings.get("controller_layout", "auto"))) + 1) % layouts.size()]
+		layout_button.text = "CONTROLLER: " + str(_settings.controller_layout).to_upper()
+		action.emit("settings_changed", _settings.duplicate()))
+	footer.append(layout_button)
 	if save_tools_allowed:
 		footer.append(_button(_content, "SAVE / TESTING TOOLS", Rect2(405, 321, 213, 28), "save_tools"))
-	else:
-		_label(_content, "SAVE TOOLS LOCKED DURING A RUN", Rect2(237, 325, 381, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
 	controls.append(footer)
 	_focus_rows(controls)
 
-func _toggle_setting(key: String, title: String, y: float, fallback: bool) -> Button:
-	_label(_content, title, Rect2(34, y, 410, 24), 10, TEXT)
-	var button: Button = _button(_content, "ON" if bool(_settings.get(key, fallback)) else "OFF", Rect2(507, y, 99, 25))
+func _toggle_setting(key: String, title: String, y: float, fallback: bool, x: float=34, width: float=572) -> Button:
+	_label(_content,title,Rect2(x,y,width-104,23),10,TEXT)
+	var button: Button = _button(_content,"ON" if bool(_settings.get(key,fallback)) else "OFF",Rect2(x+width-80,y,80,23))
 	button.set_meta("setting_key", key)
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
@@ -1338,7 +1545,7 @@ func show_pause(is_run: bool = false) -> void:
 		_label(_content, "ASSEMBLY LOCKED FOR THIS RUN", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	else:
 		var garage: Button = _button(_content, "WORKSHOP", Rect2(190, 234, 125, 29), "customize")
-		var hub: Button = _button(_content, "WORKBENCH", Rect2(325, 234, 125, 29), "main_menu")
+		var hub: Button = _button(_content, "HUB", Rect2(325, 234, 125, 29), "main_menu")
 		rows.append([garage, hub])
 		_label(_content, "DUEL ASSEMBLY / PRACTICE", Rect2(187, 284, 266, 18), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	_focus_rows(rows)
@@ -1349,6 +1556,7 @@ func _create_power_inspector(area: Rect2) -> void:
 	_ability_inspector.size = area.size
 	_ability_inspector.visible = false
 	_content.add_child(_ability_inspector)
+	_ability_inspector.set_runtime_state(_inspection_owned_state.get("state", {}))
 
 func _bind_power_inspection(control: Control, id: String, rank: int, mutation: String = "", branch_preview: bool = false, hide_on_exit: bool = false) -> void:
 	control.tooltip_text = ""
@@ -1385,11 +1593,11 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		card.set_meta("power_id", id)
 		_bind_power_inspection(card, id, rank, mutation)
 		_touch_info(card, id, rank, mutation)
-		var color: Color = _power_accent(id)
-		_style_card(card, color)
-		_label(card, str(power.get("offer_label", "NEW POWER")), Rect2(8, 5, 108, 13), 10, color)
+		var style: Dictionary = _style_ability_card(card, power)
+		_ability_badge(card, style, Rect2(8, 5, 108, 13))
 		_power_art(card, id, Rect2(30, 23, 64, 64), card, power)
-		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, TEXT)
+		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, style.title_color)
+		power_name.name = "AbilityCardTitle"
 		if id == "anchor_exchange":
 			power_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			power_name.add_theme_constant_override("line_spacing", 0)
@@ -1397,10 +1605,11 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 			power_name.size.y = 28
 		var reading: Dictionary = AbilityInspection.describe(id, rank, mutation)
 		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 120 if id=="anchor_exchange" else 116, 108, 57 if id=="anchor_exchange" else 61), 10, TEXT)
+		description.name = "AbilityCardBody"
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.add_theme_constant_override("line_spacing", 0)
 		description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		_label(card, "CONFIRM / CHOOSE" if rank == 2 else "CONFIRM / COLLECT", Rect2(8, 181, 108, 14), 10, color)
+		_ability_confirm(card, style, Rect2(8, 181, 108, 14), "CHOOSE" if rank == 2 else ("UPGRADE" if rank == 1 else "COLLECT"))
 		cards.append(card)
 		if id == focus_id: selected = card
 	if not OS.has_feature("mobile"): _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
@@ -1411,18 +1620,17 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		reroll.name = "RerollPower"
 		reroll.add_theme_font_size_override("font_size", 10)
 		reroll.disabled = not bool(rerolls.available)
+		_reroll_control = reroll
+		reroll.set_meta("charges",int(rerolls.charges))
+		_refresh_reroll_prompt()
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "TAP CARD TO CHOOSE / READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE / CONFIRM  DOWN: REROLL  BACK: RUN MENU", Rect2(24, 334, 402, 16), 10, MUTED)
+		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
-		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  BACK: RUN MENU", Rect2(24, 334, 592, 16), 10, MUTED)
+		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  MENU: PAUSE", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
 
-func _power_accent(power_id: String) -> Color:
-	return {"impact_wake":Color("f0a15c"), "second_wind":Color("83d89a"), "redline":Color("ef735d"), "iron_comet":Color("f2cc72"), "dead_centre":Color("e9c67b"), "afterimage":Color("67c9e7"), "chain_impact":Color("ce95ee")}.get(power_id, BLUE)
-
-func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "") -> void:
+func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed: int, focus_id: String = "", rerolls: Dictionary = {}) -> void:
 	_clear("mutation")
-	var color: Color = _power_accent(power_id)
 	_header("MUTATION AVAILABLE", str(Powers.get_power(power_id).name).to_upper() + " III / CHOOSE HOW YOUR MACHINE CHANGES")
 	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
@@ -1431,24 +1639,37 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		var id: String = str(branches[index])
 		if not id in Powers.mutation_choices(power_id): continue
 		var branch: Dictionary = Powers.get_mutation(id)
-		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed})
+		var card: Button = _button(_content, "", Rect2(22 + index * 204, 68, 192, 239), "choose_mutation", {"encounter_id":draft_id, "branch_id":id, "run_seed":run_seed, "offer_revision":int(rerolls.get("revision",0))})
 		card.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		card.set_meta("power_id", id)
-		_style_card(card, color)
+		var style: Dictionary = _style_ability_card(card, branch)
 		_bind_power_inspection(card, power_id, 2, id, true)
 		_touch_info(card, power_id, 2, id, true)
-		_label(card, "PERMANENT FOR THIS RUN", Rect2(10, 6, 172, 15), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_ability_badge(card, style, Rect2(10, 6, 172, 15), HORIZONTAL_ALIGNMENT_CENTER)
 		_power_art(card, power_id, Rect2(32, 25, 128, 128), card, branch)
-		_label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		var title_size: int = 20
+		while title_size > 14 and FrontEnd.pixel_font().get_string_size(str(branch.name).to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, title_size).x > 172: title_size -= 2
+		var title: Label = _label(card, str(branch.name).to_upper(), Rect2(10, 157, 172, 23), title_size, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
+		title.name = "AbilityCardTitle"
 		var copy: Label = _label(card, str(branch.get("card_copy", branch.description)), Rect2(10, 184, 172, 33), 10, TEXT)
+		copy.name = "AbilityCardBody"
 		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		copy.add_theme_constant_override("line_spacing", 0)
 		copy.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-		_label(card, "CONFIRM / TRANSFORM", Rect2(10, 220, 172, 14), 10, color, HORIZONTAL_ALIGNMENT_CENTER)
+		_ability_confirm(card, style, Rect2(10, 220, 172, 14), "TRANSFORM", HORIZONTAL_ALIGNMENT_CENTER)
 		cards.append(card)
 		if id == focus_id: selected = card
-	_label(_content, "BATTLE PAUSED / TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "BATTLE PAUSED / FOCUS TO INSPECT / CONFIRM TO COMMIT", Rect2(24, 334, 592, 16), 10, MUTED)
-	if not cards.is_empty(): _focus_rows([cards], selected)
+	var rows: Array = [cards]
+	if not rerolls.is_empty():
+		_reroll_control = _button(_content,"",Rect2(437,324,179,25),"reroll_mutation",{"encounter_id":draft_id,"run_seed":run_seed,"offer_revision":int(rerolls.revision)})
+		_reroll_control.name = "RerollMutation"
+		_reroll_control.add_theme_font_size_override("font_size",10)
+		_reroll_control.disabled = not bool(rerolls.get("mutation_available",false))
+		_reroll_control.set_meta("charges",int(rerolls.charges))
+		_refresh_reroll_prompt()
+		if not _reroll_control.disabled: rows.append([_reroll_control])
+	_label(_content, "TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(24,334,402,16),10,MUTED)
+	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func focused_power_id() -> String:
 	var focused: Control = get_viewport().gui_get_focus_owner()
@@ -1530,19 +1751,20 @@ func show_level_up(level: int) -> void:
 
 func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT", rank: int = 1, mutation: String = "") -> void:
 	_clear("acquisition", false)
+	var style: Dictionary = Powers.get_card_tier_style(rank, mutation)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(INK.r, INK.g, INK.b, 0.82))
-	_panel(_content, Rect2(104, 67, 432, 226), PANEL, _power_accent(power_id))
-	_rect(_content, Rect2(106, 69, 428, 2), _power_accent(power_id))
+	_panel(_content, Rect2(104, 67, 432, 226), PANEL, style.border_color)
+	_rect(_content, Rect2(106, 69, 428, 2), style.accent_color)
 	var power: Dictionary = Powers.get_owned_power(power_id, rank, mutation)
 	_acquisition_elapsed = 0.0
 	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128), null, power)
-	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, _power_accent(power_id), HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
+	_label(_content, str(style.badge) + "  /  " + ("MACHINE TRANSFORMED" if rank == 3 else ("MECHANISM TUNED" if rank == 2 else "NEW FAMILY")), Rect2(114, 68, 412, 14), 9, style.accent_color, HORIZONTAL_ALIGNMENT_CENTER)
 	if rank > 1:
-		_label(_content, "MACHINE TRANSFORMED" if rank == 3 else "RANK II  /  MECHANISM TUNED", Rect2(114, 68, 412, 14), 9, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-		_rect(_content, Rect2(104, 67, 3, 226), _power_accent(power_id))
-		_rect(_content, Rect2(533, 67, 3, 226), _power_accent(power_id))
+		_rect(_content, Rect2(104, 67, 3, 226), style.accent_color)
+		_rect(_content, Rect2(533, 67, 3, 226), style.accent_color)
 	_label(_content, "LOCKED IN  /  " + resume_label, Rect2(114, 263, 412, 18), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(_power_accent(power_id), 0.18))
+	_acquisition_flash = _rect(_content, Rect2(105, 68, 430, 224), Color(style.accent_color, 0.18))
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused != null: focused.release_focus()
 
@@ -1653,7 +1875,7 @@ func _show_run_result(result: Dictionary) -> void:
 	var restart: Button = _button(_content, "RETRY CREDITS" if pending else "RUN AGAIN", Rect2(22, 321, 186, 28), "retry_run_payout" if pending else "restart_run", null, true)
 	var shop: Button = _button(_content, "SHOP" + (" / READY" if wallet >= PacketEconomy.packet_cost("standard") else ""), Rect2(218, 321, 112, 28), "open_shop")
 	var garage: Button = _button(_content, "WORKSHOP", Rect2(340, 321, 126, 28), "customize")
-	var hub: Button = _button(_content, "WORKBENCH", Rect2(476, 321, 142, 28), "main_menu")
+	var hub: Button = _button(_content, "HUB", Rect2(476, 321, 142, 28), "main_menu")
 	_create_power_inspector(Rect2(269, 65, 349, 242))
 	for index: int in range(investments.size()):
 		var id: String = str(ids[index])
@@ -1664,10 +1886,13 @@ func _show_run_result(result: Dictionary) -> void:
 	_focus_rows(rows, restart)
 
 func show_hud(stats: Dictionary) -> void:
-	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate()}
+	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate(), "state":stats.get("power_state", {}).duplicate(true)}
 
 	if screen != "hud":
 		_create_hud()
+	_hud["state_meters"].update_state(_inspection_owned_state.state)
+	_hud["impact_confirmation"].text = str(stats.get("impact_confirmation",""))
+	if is_instance_valid(_ability_inspector): _ability_inspector.set_runtime_state(_inspection_owned_state.state)
 	var player_spin: float = float(stats.get("player_rpm", 1.0))
 	var enemy_spin: float = float(stats.get("enemy_rpm", 1.0))
 	_hud["player_bar"].value = clampf(player_spin, 0.0, 1.0)
@@ -1677,7 +1902,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud["player_name"].text = str(stats.get("player_name", "YOUR TOP"))
 	_hud["enemy_name"].text = str(stats.get("enemy_name", "RIVAL"))
 	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value", player_spin * 9000.0))
-	_rpm_overdrive = bool(stats.get("redline_active", false)) or player_spin > 1.0
+	_rpm_overdrive = bool(stats.get("overdrive_active", player_spin > 1.00001))
 	_rpm_heat = clampf(float(stats.get("redline_heat", 0.0)), 0.0, 1.0)
 	var recovery: float = float(stats.get("rpm_recovery",0.0))
 	if player_spin > 1.0:
@@ -1691,21 +1916,6 @@ func show_hud(stats: Dictionary) -> void:
 	_animate_rpm_meter()
 	_hud["rerolls"].visible = bool(stats.get("is_run", false))
 	_hud["rerolls"].text = "REROLLS  %d" % int(stats.get("rerolls", 0))
-	_hud["anchor"].visible = bool(stats.get("dead_centre_owned", false))
-	if _hud["anchor"].visible:
-		var charge: float = float(stats.get("dead_centre_charge", 0.0))
-		var maturity: float = float(stats.get("dead_centre_maturity", 0.0))
-		var recovering: float = float(stats.get("dead_centre_recovery_rate", 0.0))
-		if float(stats.get("dead_centre_recovery_remaining", 1.0)) <= 0.0:
-			_hud["anchor"].text = "MOVE OUT / REARM  %d%%" % roundi(float(stats.get("dead_centre_rearm_progress", 0.0)) * 100.0)
-		elif not bool(stats.get("dead_centre_central_hold", false)):
-			_hud["anchor"].text = "SEEK CENTRE / HOLD"
-		elif maturity <= 0.0:
-			_hud["anchor"].text = "ATTACHING  %d%%" % roundi(charge * 100.0)
-		elif recovering > 0.0:
-			_hud["anchor"].text = "ANCHORED  +%d RPM/s" % roundi(recovering * 9000.0)
-		else:
-			_hud["anchor"].text = "ANCHORED  %d%%" % roundi(maturity * 100.0)
 	_hud["enemy_rpm"].text = "%d RPM" % int(stats.get("enemy_rpm_value", enemy_spin * 7000.0))
 	var is_swarm: bool = bool(stats.get("is_swarm", false))
 	_hud["enemy_bar"].visible = not is_swarm
@@ -1743,7 +1953,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud.xp_label.visible = _run_active
 	_hud.xp_detail.visible = _run_active
 	_hud.xp_hit.visible = _run_active
-	_hud.controls.visible = not _run_active
+	_hud.controls.visible = not _run_active and not mobile_hud
 	var level: int = int(stats.get("level", 1))
 	var xp: float = float(stats.get("xp", 0))
 	var threshold: float = maxf(1.0, float(stats.get("xp_threshold", 1)))
@@ -1757,7 +1967,7 @@ func show_hud(stats: Dictionary) -> void:
 	_hud.xp_label.text = "LV %d  /  NEXT INVESTMENT" % level if not progression_max else "LV %d  /  FULL BUILD" % level
 	_hud.xp_label.add_theme_color_override("font_color", ORANGE if _xp_near else BLUE)
 	_hud.xp_detail.text = "MAX" if progression_max else ("ALMOST THERE" if _xp_near else "%d / %d XP" % [int(xp), int(threshold)])
-	_hud["round"].text = str(stats.get("run_label", "FOUNDRY EIGHT  /  DUEL"))
+	_hud["round"].text = str(stats.get("run_label", "DUEL"))
 	if bool(stats.get("continuous_run", false)):
 		var state: Dictionary = stats.run_state
 		_hud["round"].text = "THREAT %d  /  %d CLEARED" % [int(state.threat_number), int(state.threats_cleared)]
@@ -1770,11 +1980,13 @@ func show_hud(stats: Dictionary) -> void:
 		var state: Dictionary = stats.run_state
 		var c: Dictionary = state.census
 		var live_full: int = int(c.get("active_full",c.full))
-		_hud["round"].text = "TIER %d  /  %d CLEARED  /  PRESSURE %.1f" % [int(state.limits.tier),int(state.threats_cleared),float(c.pressure)]
+		_hud["round"].text = "TIER %d / %d CLEARED" % [int(state.limits.tier),int(state.threats_cleared)]
 		_hud["director_callout"].text = str(state.callout)
-		_hud["enemy_bar"].visible = live_full > 0
+		_hud["enemy_bar"].visible = true
+		_hud["enemy_bar"].value = clampf(float(c.pressure) / maxf(0.001, float(state.limits.budget)), 0.0, 1.0)
+		_hud["enemy_bar"].tooltip_text = "Live threat pressure / Director budget. Includes rivals, small tops and reserved entrances."
 		_hud["swarm_objective"].visible = false
-		_hud["enemy_name"].text = str(stats.enemy_name) if live_full > 0 else ("AMMUNITION WAVES" if bool(c.swarm) else "BREATHING ROOM")
+		_hud["enemy_name"].text = "PRESSURE %.1f / %.1f" % [float(c.pressure), float(state.limits.budget)]
 		_hud["enemy_rpm"].text = "%d RIVALS / %d SMALL" % [live_full,int(c.small)]
 		if bool(state.calm): _hud["enemy_rpm"].text += "  /  EASING"
 	else:
@@ -1782,7 +1994,7 @@ func show_hud(stats: Dictionary) -> void:
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
-		var slot_x: float = 320.0-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
+		var slot_x: float = (400.0 if mobile_hud else _presentation_canvas.x*0.5)-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
 		_hud["power_panel_%d" % index].position.x = slot_x
 		icon.position.x = slot_x+2.0
 		_hud["power_rank_%d" % index].position.x = slot_x+18.0
@@ -1803,79 +2015,139 @@ func show_hud(stats: Dictionary) -> void:
 		_hud["power_rank_%d" % index].text = str(rank) if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
-	_hud["wobble"].text = "LOW SPIN  /  KEEP CONTROL" if player_spin < 0.25 else ""
 
 func _create_hud() -> void:
 	_clear("hud", false)
 	_xp_display = 0.0
-	_panel(_content, Rect2(12, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("335a70"))
-	_panel(_content, Rect2(406, 8, 222, 55), Color(0.035, 0.065, 0.095, 0.94), Color("73513b"))
-	_hud["player_name"] = _label(_content, "YOUR TOP", Rect2(22, 13, 202, 17), 11, BLUE)
-	_hud["enemy_name"] = _label(_content, "RIVAL", Rect2(416, 13, 202, 17), 11, ORANGE, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["player_bar"] = _bar(_content, Rect2(22, 34, 202, 8), BLUE)
-	# Normal reserve fills the whole bar. Earned overdrive builds a second
-	# coloured layer over its top edge, without reserving a permanent gap.
-	_hud["player_bar"].tooltip_text = "Full normal reserve: 9000 RPM. Extra RPM builds a pulsing layer over the top."
-	_hud["rpm_overflow"] = _bar(_content, Rect2(22, 34, 202, 4), ORANGE)
+	_hud["player_panel"] = _panel(_content,Rect2(86,6,248,48),Color("14232e"),Color("335a70"))
+	_hud["enemy_panel"] = _panel(_content,Rect2(466,6,248,48),Color("14232e"),Color("73513b"))
+	_hud["player_name"] = _label(_content,"YOUR TOP",Rect2(96,8,228,15),10,BLUE)
+	_hud["enemy_name"] = _label(_content,"RIVAL",Rect2(476,8,228,15),10,ORANGE,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["player_bar"] = _bar(_content,Rect2(96,26,228,7),BLUE)
+	_hud["player_bar"].tooltip_text = "Normal reserve: 9000 RPM. OVERDRIVE means actual extra RPM."
+	_hud["rpm_overflow"] = _bar(_content,Rect2(96,26,228,3),ORANGE)
 	_hud["rpm_overflow"].max_value = 0.24
-	_hud["rpm_overflow"].add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	_hud["rpm_overflow"].add_theme_stylebox_override("background",StyleBoxEmpty.new())
 	_hud["rpm_overflow"].visible = false
-	_hud["enemy_bar"] = _bar(_content, Rect2(416, 34, 202, 8), ORANGE)
-	_hud["player_rpm"] = _label(_content, "", Rect2(22, 45, 202, 12), 9, MUTED)
-	_hud["enemy_rpm"] = _label(_content, "", Rect2(416, 45, 202, 12), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["anchor"] = _label(_content, "", Rect2(22, 65, 202, 13), 8, Color("dde3df"))
-	_hud["rerolls"] = _label(_content, "", Rect2(22, 304, 128, 13), 9, BLUE)
-	_hud["swarm_objective"] = _label(_content, "", Rect2(416, 30, 202, 14), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-	_panel(_content, Rect2(268, 8, 104, 36), Color(0.035, 0.065, 0.095, 0.94))
-	_hud["time"] = _label(_content, "01:30", Rect2(270, 11, 100, 28), 21, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	var pause_button: Button = _button(_content, "PAUSE", Rect2(292, 49, 56, 21), "pause")
-	pause_button.add_theme_font_size_override("font_size", 10)
-	# Gameplay actions must never move HUD focus or make Confirm swallow Burst.
-	# Gamepad/keyboard pause use the shared pause action; mouse keeps this button.
+	_hud["enemy_bar"] = _bar(_content,Rect2(476,26,228,7),ORANGE)
+	_hud["player_rpm"] = _label(_content,"",Rect2(96,36,228,14),10,MUTED)
+	_hud["enemy_rpm"] = _label(_content,"",Rect2(476,36,228,14),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["impact_confirmation"] = _label(_content,"",Rect2(6,248,68,68),10,ORANGE)
+	_hud["impact_confirmation"].autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	_hud["state_meters"] = PowerStateMeters.new()
+	_content.add_child(_hud["state_meters"])
+	_hud["rerolls"] = _label(_content,"",Rect2(6,425,74,24),10,BLUE)
+	_hud["swarm_objective"] = _label(_content,"",Rect2(476,24,228,12),10,TEXT,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["clock_panel"] = _panel(_content,Rect2(344,6,112,48),Color("14232e"))
+	_hud["time"] = _label(_content,"01:30",Rect2(346,6,108,25),20,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
+	var pause_button: Button = _button(_content,"PAUSE",Rect2(6,8,68,24),"pause")
+	_hud["pause_button"] = pause_button
+	pause_button.add_theme_font_size_override("font_size",10)
 	pause_button.focus_mode = Control.FOCUS_NONE
-	_hud["round"] = _label(_content, "", Rect2(175, 76, 290, 16), 9, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["director_callout"] = _label(_content, "", Rect2(120, 96, 400, 22), 15, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["announcement"] = _label(_content, "", Rect2(145, 130, 350, 64), 35, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["wobble"] = _label(_content, "", Rect2(185, 273, 270, 19), 11, ORANGE, HORIZONTAL_ALIGNMENT_CENTER)
-	_hud["power_note"] = _label(_content, "", Rect2(22, 291, 594, 12), 8, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["round"] = _label(_content,"",Rect2(342,31,116,11),9,MUTED,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["director_callout"] = _label(_content,"",Rect2(336,43,128,11),9,ORANGE,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["announcement"] = _label(_content,"",Rect2(225,190,350,64),35,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
+	_hud["power_note"] = _label(_content,"",Rect2(86,424,136,18),10,MUTED)
 	for index: int in range(Powers.ACTIVE_IDS.size()):
-		_hud["power_panel_%d" % index] = _panel(_content, Rect2(192 + index * 32, 303, 28, 20))
-		var icon: TextureRect = _power_icon(_content, "", Rect2(194 + index * 32, 305, 16, 16))
-		_hud["power_rank_%d" % index] = _label(_content, "", Rect2(210 + index * 32, 307, 9, 12), 7, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+		_hud["power_panel_%d" % index] = _panel(_content,Rect2(272+index*32,424,28,22))
+		var icon: TextureRect = _power_icon(_content,"",Rect2(274+index*32,427,16,16))
+		_hud["power_rank_%d" % index] = _label(_content,"",Rect2(290+index*32,429,9,14),9,TEXT,HORIZONTAL_ALIGNMENT_CENTER)
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
 		icon.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventScreenTouch and event.pressed:
-				action.emit("pause", null)
+				action.emit("pause",null)
 				get_viewport().set_input_as_handled())
 		_hud["power_%d" % index] = icon
-	_panel(_content, Rect2(12, 324, 224, 28), Color(0.035, 0.065, 0.095, 0.94))
-	_hud["burst"] = _label(_content, "BURST READY", Rect2(23, 327, 203, 15), 10, BLUE)
-	_hud["burst_bar"] = _bar(_content, Rect2(23, 345, 203, 3), BLUE)
-	_hud["controls"] = _label(_content, "STEER    /    BURST    /    BRAKE    /    PAUSE", Rect2(276, 331, 340, 14), 9, MUTED, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["xp_panel"] = _panel(_content, Rect2(252, 324, 376, 28), Color(0.035, 0.065, 0.095, 0.94), Color("477877"))
-	_hud["xp_label"] = _label(_content, "LV 1  /  NEXT POWER", Rect2(261, 327, 232, 13), 9, BLUE)
-	_hud["xp_detail"] = _label(_content, "0 / 1 XP", Rect2(496, 327, 122, 13), 9, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-	_hud["xp_bar"] = _bar(_content, Rect2(261, 343, 354, 5), Color("83d89a"))
-	_hud["xp_hit"] = _rect(_content, Rect2(252, 324, 376, 28), Color(1, 0.9, 0.6, 0))
-	if OS.has_feature("mobile"):
-		# Opposite-thumb actions own the right edge; all progress remains readable.
-		_hud["xp_panel"].size.x = 286
-		_hud["xp_hit"].size.x = 286
-		_hud["xp_label"].size.x = 148
-		_hud["xp_detail"].position.x = 412
-		_hud["xp_detail"].size.x = 116
-		_hud["xp_bar"].size.x = 264
-		_hud["controls"].visible = false
+	_hud["burst_panel"] = _panel(_content,Rect2(86,450,224,28),Color("14232e"))
+	_hud["burst"] = _label(_content,"BURST READY",Rect2(97,452,203,16),10,BLUE)
+	_hud["burst_bar"] = _bar(_content,Rect2(97,472,203,3),BLUE)
+	_hud["controls"] = _label(_content,"STEER / BURST / BRAKE / PAUSE",Rect2(326,452,388,18),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_panel"] = _panel(_content,Rect2(326,450,388,28),Color("14232e"),Color("477877"))
+	_hud["xp_label"] = _label(_content,"LV 1 / NEXT POWER",Rect2(336,452,230,15),10,BLUE)
+	_hud["xp_detail"] = _label(_content,"0 / 1 XP",Rect2(574,452,130,15),10,TEXT,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["xp_bar"] = _bar(_content,Rect2(336,472,368,4),Color("83d89a"))
+	_hud["xp_hit"] = _rect(_content,Rect2(326,450,388,28),Color(1,.9,.6,0))
+	if mobile_hud: _hud["controls"].visible = false
 	var focus: Control = get_viewport().gui_get_focus_owner()
-	if focus != null:
-		focus.release_focus()
-	_create_power_inspector(Rect2(430, 70, 188, 242))
+	if focus != null: focus.release_focus()
+	_create_power_inspector(Rect2(526,166,188,242))
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: Control = _hud["power_%d" % index]
 		icon.mouse_filter = Control.MOUSE_FILTER_PASS
 		icon.mouse_entered.connect(func() -> void: _inspect_hud_power(index))
 		icon.mouse_exited.connect(func() -> void:
 			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
+	_reflow_hud()
+
+func set_presentation_canvas(canvas_size: Vector2) -> void:
+	if _presentation_canvas == canvas_size and _presentation_mobile == mobile_hud: return
+	_presentation_canvas = canvas_size
+	_presentation_mobile = mobile_hud
+	if not is_instance_valid(_content): return
+	if screen == "hud": _reflow_hud()
+	else: _content.position = CombatLayout.responsive(canvas_size,mobile_hud).menu_origin
+
+func _fit_hud(key: String, rect: Rect2) -> void:
+	if not _hud.has(key): return
+	var control: Control = _hud[key]
+	control.position = rect.position
+	control.size = rect.size
+
+func _reflow_hud() -> void:
+	if screen != "hud" or _hud.is_empty(): return
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var extent: Vector2 = layout.canvas_size
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = Vector2.ZERO
+	_content.size = extent
+	var width: float = layout.top_width
+	var right_x: float = layout.right_x
+	_fit_hud("player_panel",layout.regions.player_reserve)
+	_fit_hud("enemy_panel",layout.regions.pressure)
+	for key: String in ["player_name","player_rpm","player_bar","rpm_overflow"]:
+		var node: Control = _hud[key]
+		node.position.x = 96
+		node.size.x = width-20.0
+	for key: String in ["enemy_name","enemy_rpm","enemy_bar","swarm_objective"]:
+		var node: Control = _hud[key]
+		node.position.x = right_x+10.0
+		node.size.x = width-20.0
+	_fit_hud("clock_panel",Rect2(extent.x*0.5-56.0,6,112,48))
+	_fit_hud("time",Rect2(extent.x*0.5-54.0,6,108,25))
+	_fit_hud("round",Rect2(extent.x*0.5-58.0,31,116,11))
+	_fit_hud("director_callout",Rect2(extent.x*0.5-64.0,43,128,11))
+	_fit_hud("announcement",Rect2(extent.x*0.5-175.0,layout.arena_rect.position.y+layout.arena_rect.size.y*0.36,350,64))
+	_fit_hud("rerolls",Rect2(6,extent.y-55.0,74,24))
+	_fit_hud("power_note",Rect2(86,layout.powers_y,136,18))
+	for index: int in range(Powers.ACTIVE_IDS.size()):
+		for prefix: String in ["power_panel_","power_","power_rank_"]:
+			var node: Control = _hud[prefix+str(index)]
+			var offset_y: float = 3.0 if prefix == "power_" else (5.0 if prefix == "power_rank_" else 0.0)
+			node.position.y = layout.powers_y+offset_y
+	_fit_hud("burst_panel",layout.regions.burst)
+	_fit_hud("burst",Rect2(97,layout.bottom_y+2.0,layout.burst_width-21.0,16))
+	_fit_hud("burst_bar",Rect2(97,layout.bottom_y+22.0,layout.burst_width-21.0,3))
+	_fit_hud("controls",Rect2(layout.progress_x,layout.bottom_y+2.0,layout.progress_width,18))
+	_fit_hud("xp_panel",layout.regions.progress)
+	_fit_hud("xp_hit",layout.regions.progress)
+	_fit_hud("xp_label",Rect2(layout.progress_x+10.0,layout.bottom_y+2.0,layout.progress_width-158.0,15))
+	_fit_hud("xp_detail",Rect2(extent.x-226.0,layout.bottom_y+2.0,130,15))
+	_fit_hud("xp_bar",Rect2(layout.progress_x+10.0,layout.bottom_y+22.0,layout.progress_width-20.0,4))
+	_fit_hud("impact_confirmation",Rect2(6,layout.state_left.y+172.0,layout.state_width,68))
+	_hud.state_meters.set_layout(layout)
+
+func combat_layout_snapshot() -> Dictionary:
+	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	result["regions"] = layout.regions
+	result["play_region"] = layout.arena_rect
+	result["canvas_size"] = layout.canvas_size
+	result["arena_scale"] = layout.arena_scale
+	result["arena_origin"] = layout.arena_rect.position
+	result["duplicate_anchor_label"] = _hud.has("anchor")
+	result["temporary_announcements_live_combat"] = false
+	result["hud_overlaps_arena"] = false
+	return result
 
 func _inspect_hud_power(index: int) -> void:
 	if screen != "hud" or not is_instance_valid(_ability_inspector): return

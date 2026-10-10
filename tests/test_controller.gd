@@ -36,8 +36,8 @@ func check(value: bool, message: String) -> void:
 		push_error(message)
 
 func _run() -> void:
-	root.size = Vector2i(640, 360)
-	root.content_scale_size = Vector2i(640, 360)
+	root.size = Vector2i(800, 480)
+	root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="): capture_dir = argument.trim_prefix("--capture-dir=")
@@ -254,7 +254,7 @@ func _descendants(parent: Node) -> Array[Node]:
 
 func _button(text: String) -> Button:
 	for node: Node in _descendants(game.menus):
-		if node is Button and (node.text == text or (text == "BEGIN" and node.text == "BEGIN / CHOOSE FIRST TOP") or (text == "QUICK DUEL" and node.text in ["QUICK DUEL / PRACTICE", "LAUNCH QUICK DUEL"]) or (text == "SETTINGS" and node.text == "OPTIONS") or (text == "BACK TO MENU" and node.text in ["BACK", "BACK TO WORKBENCH"]) or (text == "MAIN MENU" and node.text == "WORKBENCH")): return node
+		if node is Button and (node.text == text or (text == "BEGIN" and node.text == "BEGIN / CHOOSE FIRST TOP") or (text == "QUICK DUEL" and node.text in ["QUICK DUEL / PRACTICE", "LAUNCH QUICK DUEL"]) or (text == "SETTINGS" and node.text == "OPTIONS") or (text == "BACK TO MENU" and node.text in ["BACK", "BACK TO HUB"]) or (text == "MAIN MENU" and node.text == "HUB")): return node
 	return null
 
 func _focus_is_visible(context: String) -> void:
@@ -262,7 +262,8 @@ func _focus_is_visible(context: String) -> void:
 	check(focused != null, context+": an initial control owns focus")
 	if focused == null: return
 	check(focused.is_visible_in_tree() and focused.focus_mode == Control.FOCUS_ALL, context+": focused control is visible and navigable")
-	check(Rect2(Vector2.ZERO, Vector2(640, 360)).encloses(focused.get_global_rect()), context+": focused control is inside the viewport")
+	check(game.menus._content.position == Vector2(80, 60), context+": menu keeps its centred native origin")
+	check(Rect2(80, 60, 640, 360).encloses(focused.get_global_rect()), context+": focused control is inside the native menu")
 	var style: StyleBoxTexture = focused.get_theme_stylebox("focus") as StyleBoxTexture
 	check(style != null and style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible(), context+": focus has a visible authored pixel frame")
 
@@ -358,13 +359,15 @@ func _test_title_garage_settings() -> void:
 		check(float(game.settings.volume) < volume, "Gamepad changes volume with slider focus")
 		await _tap(JOY_BUTTON_DPAD_RIGHT)
 		check(is_equal_approx(float(game.settings.volume), volume), "Slider supports both horizontal directions")
-	var setting_keys: Array[String] = ["muted", "screen_shake", "fullscreen", "reduced_flashing"]
+	var setting_keys: Array[String] = ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]
 	check(toggles.size() == setting_keys.size(), "All settings toggles are present")
 	for index: int in range(mini(toggles.size(), setting_keys.size())):
-		var before: bool = game.settings[setting_keys[index]]
+		var key: String = str(toggles[index].get_meta("setting_key", ""))
+		check(key == setting_keys[index], "Options toggle carries its canonical setting identity")
+		var before: bool = game.settings[key]
 		if await _navigate(toggles[index]): await _tap(JOY_BUTTON_A)
 		check(not slider.get_node("FocusOutline").visible, "Volume focus outline hides when controller focus moves to a toggle")
-		check(bool(game.settings[setting_keys[index]]) != before, "Controller toggles %s" % setting_keys[index])
+		check(bool(game.settings[key]) != before, "Controller toggles %s" % key)
 	await _activate("BACK TO MENU")
 	check(game.screen == "title", "Controller settings Back button returns to title")
 	await _navigate(_button("HOW TO PLAY"))
@@ -519,8 +522,11 @@ func _test_run() -> void:
 	old_seed = game.run_context.run_seed
 	await _activate("RUN AGAIN")
 	check(game.screen == "reward" and game.run_context.slot == 1 and game.run_context.run_seed != old_seed, "Controller restarts a continuous Run at its initial power offer")
+	var restarted_offer: Array=game.run_context.pending_offer.duplicate()
 	await _tap(JOY_BUTTON_B)
-	check(game.screen == "pause", "Back opens restarted Run draft overlay, observed "+game.screen)
+	check(game.screen == "reward" and game.run_context.pending_offer==restarted_offer, "Back preserves the restarted mandatory draft and its stored offer")
+	await _tap(JOY_BUTTON_START)
+	check(game.screen == "pause" and game.pause_origin=="reward", "Explicit MENU opens restarted Run draft overlay, observed "+game.screen)
 	await _activate("END RUN")
 	check(game.screen == "garage" and game.run_context.status == "empty", "Controller ends Run from draft overlay")
 	_focus_is_visible("Garage after End Run")
@@ -599,7 +605,9 @@ func _draft_and_resume(starting: bool) -> void:
 	var chosen_id: String = game.menus.focused_power_id()
 	await _capture("10b-controller-power-focus")
 	await _tap(JOY_BUTTON_B)
-	check(game.screen == "pause" and game.pause_origin == "reward", "Controller Back opens draft pause overlay")
+	check(game.screen == "reward" and game.run_context.pending_offer==offer and game.menus.focused_power_id()==chosen_id, "Controller Back preserves the mandatory draft, offer and focused power")
+	await _tap(JOY_BUTTON_START)
+	check(game.screen == "pause" and game.pause_origin == "reward", "Explicit MENU opens draft pause overlay")
 	_focus_is_visible("Draft pause overlay")
 	check(game.run_context.pending_offer == offer, "Pause retains the deterministic stored offer")
 	await _tap(JOY_BUTTON_B)
@@ -623,7 +631,9 @@ func _draft_and_resume(starting: bool) -> void:
 	await _tap(JOY_BUTTON_A)
 	check(game.run_context.owned_power_ids.size() == expected_owned and game.run_context.slot == slot, "Repeated acquisition Confirm cannot claim or advance twice")
 	await _tap(JOY_BUTTON_B)
-	check(game.screen == "pause" and game.pause_origin == "acquisition", "Acquisition can be paused with the controller")
+	check(game.screen == "acquisition" and game.run_context.owned_power_ids.size()==expected_owned and int(game.run_context.power_ranks.get(chosen_id,0))==rank_before+1, "Controller Back preserves acquisition and its exactly-once investment")
+	await _tap(JOY_BUTTON_START)
+	check(game.screen == "pause" and game.pause_origin == "acquisition", "Explicit MENU pauses the acquisition payoff")
 	await _tap(JOY_BUTTON_B)
 	check(game.screen == "acquisition", "Controller resumes the acquisition payoff")
 	await create_timer(1.11).timeout

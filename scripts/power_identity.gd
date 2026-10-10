@@ -3,6 +3,13 @@ extends RefCounted
 ## This module never advances gameplay timers, writes a fighter, queries physics
 ## or samples RNG. One finite event uses one native cel; active marks are bounded.
 const PATH: String = "res://assets/powers/identity_manifest.json"
+const MotionArt = preload("res://scripts/combat_motion_art.gd")
+const MOTION_SAMPLE: float = 0.06
+const MOTION_LIFETIME: float = 0.48
+const MOTION_POINTS: int = 10
+const MOTION_OWNERS: int = 16
+static var motion_history: Dictionary = {}
+static var motion_clock: float = -1.0
 static var metadata: Dictionary = {}
 static var textures: Dictionary = {}
 static var event_lookup: Dictionary = {}
@@ -185,13 +192,11 @@ static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: fl
 	var floor_at: Vector2 = at+Vector2(0,float(fighter.get("height",0.0)))
 	var velocity: Vector2 = fighter.get("vel",Vector2.ZERO)
 	var ranks: Dictionary = fighter.get("power_ranks",{})
-	if int(ranks.get("redline",0)) > 0:
-		# Retained fragmented C4 signatures carry the sustained wake. One
-		# additional authored state exposes actual unsafe heat or excess spin.
+	if float(fighter.get("redline_time",0.0)) > 0.0:
 		var heat: float = clampf(float(fighter.get("redline_heat",0.0)),0.0,1.0)
-		if heat >= 0.70: active(canvas,"redline","heat",fighter,at,clock,heat)
-		elif float(fighter.get("rpm",0.0)) > 1.0:
-			active(canvas,"redline","overcap",fighter,at,clock,0.35+heat*0.45)
+		MotionArt.cel(canvas,"power_motion","REDLINE_ROTATION",floor_at,clock*(0.80+heat*0.65),0.28+heat*0.28,true)
+	# Redline heat and overcap are explicit HUD state. The saved fragment-cloud
+	# masters remain editable; they no longer surround a live top with dots.
 	var anchor_charge: float = float(fighter.get("anchor_charge",0.0))
 	if anchor_charge > 0.07 and has_active("dead_centre","anchor"):
 		var semantic: String = "anchor_ii" if int(ranks.get("dead_centre",1)) >= 2 and has_active("dead_centre","anchor_ii") else "anchor"
@@ -218,6 +223,51 @@ static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: fl
 	if bank_stage >= 0:
 		active(canvas,"momentum_bank","stored",fighter,floor_at,0.0,0.84,bank_stage)
 
+static func reset_motion() -> void:
+	motion_history.clear()
+	motion_clock = -1.0
+
+static func observe_motion(fighters: Array[Dictionary], clock: float) -> void:
+	# Explicit simulation-presentation observer, called once by Battle update.
+	# Pauses/redraws do not append samples. Actors and gameplay remain read-only.
+	if not is_finite(clock): return
+	if clock < motion_clock: reset_motion()
+	var live: Dictionary = {}
+	for fighter: Dictionary in fighters:
+		var id: int = int(fighter.get("entity_id",0))
+		if not str(fighter.get("outcome","")).is_empty() or int(fighter.get("power_ranks",{}).get("predator_line",0)) <= 0: continue
+		if live.size() >= MOTION_OWNERS: break
+		live[id] = true
+		var position: Vector2 = fighter.get("pos",Vector2.ZERO)
+		if not position.is_finite(): motion_history.erase(id);continue
+		var history: Array = motion_history.get(id,[])
+		if not history.is_empty() and position.distance_to(Vector2(history.back().pos)) > 80.0: history.clear()
+		while not history.is_empty() and clock-float(history[0].time)>MOTION_LIFETIME: history.pop_front()
+		if history.is_empty() or clock-float(history.back().time)>=MOTION_SAMPLE:
+			history.append({"pos":position,"time":clock})
+			while history.size()>MOTION_POINTS: history.pop_front()
+		motion_history[id] = history
+	for id: Variant in motion_history.keys():
+		if not live.has(id): motion_history.erase(id)
+	motion_clock = clock
+
+static func predator_plan(fighter: Dictionary, target: Dictionary, clock: float) -> Dictionary:
+	var stacks: int = clampi(int(fighter.get("hunt_stacks",0)),0,3)
+	var velocity: Vector2 = fighter.get("vel",Vector2.ZERO)
+	var speed: float = velocity.length()
+	var position: Vector2 = fighter.get("pos",Vector2.ZERO)
+	if stacks==0 or speed<20.0 or target.is_empty() or not str(fighter.get("outcome","")).is_empty() or position.distance_squared_to(Vector2(target.get("pos",position)))>25600.0:
+		return {"active":false,"points":PackedVector2Array(),"flow":0.0,"speed":speed,"stacks":stacks}
+	var limit: float = lerpf(16.0,52.0,clampf(speed/260.0,0.0,1.0))
+	var points: PackedVector2Array = PackedVector2Array()
+	var history: Array = motion_history.get(int(fighter.get("entity_id",0)),[])
+	for sample: Dictionary in history:
+		if clock-float(sample.time)<=MOTION_LIFETIME and position.distance_to(Vector2(sample.pos))<=limit: points.append(Vector2(sample.pos))
+	if points.size()<2: points=PackedVector2Array([position-velocity.normalized()*minf(limit,24.0)])
+	if points.is_empty() or points[points.size()-1].distance_squared_to(position)>0.01: points.append(position)
+	if points.size()<2:points=PackedVector2Array([position-velocity.normalized()*minf(limit,24.0),position])
+	return {"active":true,"points":points,"flow":fposmod(clock*(1.8+speed/180.0),1.0),"speed":speed,"stacks":stacks,"alpha":0.32+stacks*0.12}
+
 static func draw_links(canvas: CanvasItem, fighters: Array[Dictionary], clock: float) -> void:
 	if not has_active("predator_line","tracking"): return
 	for fighter: Dictionary in fighters:
@@ -227,12 +277,22 @@ static func draw_links(canvas: CanvasItem, fighters: Array[Dictionary], clock: f
 		for candidate: Dictionary in fighters:
 			if int(candidate.entity_id) == int(fighter.get("hunt_target",0)) and str(candidate.get("outcome","")).is_empty(): target = candidate; break
 		if target.is_empty(): continue
-		var origin: Vector2 = fighter.pos
-		var direction: Vector2 = Vector2(target.pos)-origin
-		if direction.length_squared() > 25600.0: continue
-		var from_screen: Vector2 = canvas.call("project",origin)
-		var info: Dictionary = family_info("predator_line")
-		var tag: String = variant("predator_line",str(info.active_tags.tracking),int(fighter.get("power_ranks",{}).get("predator_line",1)),direction)
-		# Pursuit scuffs start at the hunter's actual floor contact and point
-		# toward its one live rival. No detached midpoint hardware or reticle.
-		cel(canvas,"predator_line",tag,from_screen,clock,0.55+float(stacks)*0.10,stacks*2)
+		var plan: Dictionary = predator_plan(fighter,target,clock)
+		if not bool(plan.active): continue
+		var points: PackedVector2Array = plan.points
+		var flowing_segment: int = clampi(int(float(plan.flow)*float(points.size()-1)),0,points.size()-2)
+		for index: int in range(points.size()-1):
+			var a: Vector2 = canvas.call("project",points[index])
+			var b: Vector2 = canvas.call("project",points[index+1])
+			var tangent: Vector2 = (b-a).normalized()
+			var side: Vector2 = tangent.orthogonal()*2.0
+			var alpha: float = float(plan.alpha)*float(index+1)/float(points.size())
+			var phase: float = fposmod(float(plan.flow)+float(index)*0.31,1.0)
+			var tip: Vector2 = a.lerp(b,phase)
+			var quiet: float = 0.55 if canvas.get("reduced_flashing") == true else 0.80
+			# Sparse warm pursuit ticks follow actual recent motion. No paired
+			# rails or persistent floor lane can imply a separate trap/attack.
+			if index%2 == 0 and a.distance_to(b)>=4.0:
+				canvas.draw_polyline(PackedVector2Array([(tip-tangent*3.0+side).round(),tip.round(),(tip-tangent*3.0-side).round()]),Color(0.88,0.59,0.31,alpha*quiet),1.0)
+			if index==flowing_segment:
+				MotionArt.cel(canvas,"power_motion","PREDATOR_FLOW_"+heading(points[index+1]-points[index]),tip,clock,float(plan.alpha)*quiet,true)

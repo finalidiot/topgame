@@ -87,7 +87,8 @@ func _test_pairs() -> void:
 	var first_rpm: float = battle.entity(1).rpm
 	battle.resolve_pair(19, 8)
 	_check(battle.hits == 2 and battle.entity(8).rpm < 0.95 and battle.entity(19).rpm < 0.95, "Two independent pairs damage both sides on the same tick")
-	_check(accepted == [[1, 2], [8, 19]] and audio.size() == 1, "Cosmetic throttling does not suppress a second accepted gameplay contact")
+	var presentations: Array = battle.impact_feedback.snapshot().events
+	_check(accepted == [[1, 2], [8, 19]] and audio.size() == 2 and presentations.size() == 2 and float(presentations[0].hold) > 0.0 and float(presentations[1].hold) == 0.0, "Every accepted pair gets sparks/audio intent while the secondary theatre cooldown prevents repeated holds")
 	_check(battle.entity(1).rpm == first_rpm, "Second pair does not change the first pair")
 	var prior_rpm: float = battle.entity(8).rpm
 	battle.test_set_entity_state(8, {"pos": Vector2(-10, 65), "vel": Vector2(120, 0)})

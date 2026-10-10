@@ -2,6 +2,7 @@ extends RefCounted
 ## Live event ownership/admission. The independent director chooses pressure.
 const Director = preload("res://scripts/threat_director.gd")
 const Roles = preload("res://scripts/enemy_roles.gd")
+const EnemyPackages = preload("res://scripts/enemy_power_packages.gd")
 const Encounters = preload("res://scripts/encounters.gd")
 const SpinEconomy = preload("res://scripts/spin_economy.gd")
 const TUNING: Dictionary = {"corpse_seconds":0.65}
@@ -45,6 +46,7 @@ func setup(host: Node2D, seed_value: int) -> void:
 	var opening: Dictionary = Director.EVENTS[0].duplicate(true)
 	opening["serial"] = 1
 	Roles.configure(host.entity(2),opening)
+	EnemyPackages.apply(host.entity(2),opening)
 	events[1] = {"ids":[2],"swarm":false,"kind":"rival","key":"hunter","time":0.0}
 	# First threat reserves the IDs already admitted by begin_encounter.
 	for f: Dictionary in host.fighters: next_entity_id = maxi(next_entity_id, int(f.entity_id) + 1)
@@ -219,6 +221,10 @@ func _admit(event: Dictionary, position: Vector2, fixture_descriptor: Dictionary
 		descriptor.behavior_profile = event.role
 		descriptor.opponent_build = Roles.BUILDS.get(event.role,Roles.BUILDS.hunter).duplicate(true)
 		descriptor.swarm_parameters = {"waves":[6,8,10],"wave_times":[0.0,9.0,18.0],"active_cap":int(event.get("small_cap",10)),"cleanup_time":32.0} if event.kind == "swarm" else {}
+		var package: Dictionary = EnemyPackages.for_event(event)
+		descriptor.opponent_power_ids = package.ids
+		descriptor["opponent_power_ranks"] = package.ranks
+		descriptor["opponent_power_mutations"] = package.mutations
 	descriptor["first_entity_id"] = next_entity_id
 	descriptor["director_event"] = event
 	var ids: Array[int] = []

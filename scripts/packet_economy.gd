@@ -4,6 +4,7 @@ class_name PacketEconomy
 const Catalog = preload("res://scripts/parts.gd")
 const DATA_PATH: String = "res://assets/data/packet_economy.json"
 const CATEGORIES: Array[String] = ["blade", "ratchet", "bit"]
+const BATCH_QUANTITIES: Array[int] = [1, 3, 5]
 static var _config: Dictionary = _load_config()
 
 static func _load_config() -> Dictionary:
@@ -149,6 +150,28 @@ static func generate(kind: String, ownership: Array, rng: RandomNumberGenerator 
 		salvage_total += salvage
 		rows.append({"category":category, "id":id, "part_id":qualified, "rarity":rarity, "new":fresh, "salvage":salvage})
 	return {"ok":true, "status":"generated", "rows":rows, "total_salvage":salvage_total}
+
+static func generate_batch(kind: String, quantity: int, ownership: Array, rng: RandomNumberGenerator = null) -> Dictionary:
+	if quantity not in BATCH_QUANTITIES: return {"ok":false,"status":"invalid_quantity"}
+	var source: RandomNumberGenerator = rng
+	if source == null:
+		source = RandomNumberGenerator.new()
+		source.randomize()
+	var prospective: Array = ownership.duplicate()
+	var packets: Array[Dictionary] = []
+	var rows: Array[Dictionary] = []
+	var total: int = 0
+	for index: int in range(quantity):
+		# Every packet sees all permanent designs from the earlier packets. This
+		# applies to duplicate conversion too, not merely the Reclaimed guarantee.
+		var packet: Dictionary = generate(kind, prospective, source)
+		if not bool(packet.ok): return packet
+		packets.append({"rows":packet.rows,"total_salvage":int(packet.total_salvage)})
+		rows.append_array(packet.rows)
+		total += int(packet.total_salvage)
+		for row: Dictionary in packet.rows:
+			if bool(row.new): prospective.append(str(row.part_id))
+	return {"ok":true,"status":"generated","packets":packets,"rows":rows,"total_salvage":total}
 
 static func rarity_odds(kind: String = "standard", ownership: Array = []) -> Dictionary:
 	if not validate_config().is_empty(): return {"kind":kind,"categories":{},"error":"invalid_economy"}

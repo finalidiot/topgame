@@ -30,7 +30,7 @@ func policy(music: Node) -> void:
 	music.set_context("workshop"); tick(music, 6.0)
 	check(music.music_snapshot().gains[1] > 0.99 and music.music_snapshot().gains[0] < 0.09, "Workshop crossfades to its lighter arrangement")
 	music.set_context("run"); music.observe_run(opening); tick(music, 4.0)
-	check(music.music_snapshot().targets[2] == 1.0 and music.music_snapshot().targets[3] == 0.0, "New Run starts with its actual baseline arrangement")
+	check(music.music_snapshot().targets[5] == 1.0 and music.music_snapshot().targets[2] == 0.0 and music.music_snapshot().targets[3] == 0.0, "New Run starts with its authored spacious half-time arrangement")
 	music.observe_run(high); tick(music, 2.0)
 	check(music.music_snapshot().targets[4] == 1.0, "Boss buildup changes gains without replacing playback")
 	var events: int = music.music_snapshot().events.size()
@@ -41,7 +41,7 @@ func policy(music: Node) -> void:
 	music.observe_run(opening); tick(music, 3.0)
 	check(music.music_snapshot().targets[4] == 0.0, "A sustained real release returns to baseline after hysteresis")
 	music.set_paused(true)
-	check(is_equal_approx(music.music_snapshot().targets[2], 0.35), "Pause/draft subdues the Run without stopping its shared chronology")
+	check(is_equal_approx(music.music_snapshot().targets[5], 0.35), "Pause/draft subdues the Run without stopping its shared chronology")
 	music.set_paused(false)
 	var master: float = AudioServer.get_bus_volume_db(0)
 	music.apply_settings({"music_volume": 0.0})
@@ -63,7 +63,7 @@ func mixer(music: Node) -> void:
 	var bytes_per_frame: int = int(grid.get("channels", 0)) * int(grid.get("sample_width_bytes", 0))
 	check(frames > 0 and rate == 32000 and bytes_per_frame == 4 and is_equal_approx(duration, float(frames) / rate), "The declared score grid matches exact native stereo PCM duration")
 	var refs: Array[AudioStreamPlayback] = []
-	for index: int in range(5):
+	for index: int in range(Music.STEM_NAMES.size()):
 		var wav: AudioStreamWAV = stream.get_sync_stream(index)
 		check(wav.loop_mode == AudioStreamWAV.LOOP_FORWARD and wav.loop_begin == 0 and wav.loop_end == frames and wav.mix_rate == rate and wav.stereo and wav.data.size() == frames * bytes_per_frame, "Every imported stem keeps the identical exact manifest sample grid and native loop")
 		var ref: AudioStreamPlayback = wav.instantiate_playback()
@@ -73,17 +73,17 @@ func mixer(music: Node) -> void:
 	playback.start(duration - 0.025)
 	var maximum_error: float = 0.0
 	var energy: float = 0.0
-	for profile: Array in [[1.0,0.0,0.0,0.0,0.0],[0.0,0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.65,1.0]]:
-		for index: int in range(5): stream.set_sync_stream_volume(index, linear_to_db(maxf(0.0001, float(profile[index]))))
+	for profile: Array in [[1.0,0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,1.0,0.0],[0.0,0.0,0.6,0.5,0.25,0.25,0.55],[0.0,0.0,1.0,1.0,1.0,0.0,0.0]]:
+		for index: int in range(Music.STEM_NAMES.size()): stream.set_sync_stream_volume(index, linear_to_db(maxf(0.0001, float(profile[index]))))
 		var actual: PackedVector2Array = playback.mix_audio(1.0, 4096)
 		var separate: Array[PackedVector2Array] = []
 		for ref: AudioStreamPlayback in refs: separate.append(ref.mix_audio(1.0, 4096))
 		for frame: int in range(actual.size()):
 			var expected: Vector2 = Vector2.ZERO
-			for index: int in range(5): expected += separate[index][frame] * maxf(0.0001, float(profile[index]))
+			for index: int in range(Music.STEM_NAMES.size()): expected += separate[index][frame] * maxf(0.0001, float(profile[index]))
 			maximum_error = maxf(maximum_error, actual[frame].distance_to(expected))
 			energy += actual[frame].length_squared()
-	check(maximum_error < 0.00001, "Actual synchronized mixing exactly follows five uninterrupted reference stem cursors while gains change")
+	check(maximum_error < 0.00001, "Actual synchronized mixing exactly follows seven uninterrupted reference stem cursors while gains change")
 	check(energy > 0.01, "Engine mixer produces actual audible non-silent music samples")
 	# WAV's native get_loop_count() intentionally returns zero in Godot. The
 	# real playback cursor wrapping from the declared endpoint to below1s proves
@@ -94,7 +94,7 @@ func mixer(music: Node) -> void:
 		check(absf(ref.get_playback_position() - wrapped_position) < 0.000002, "Every layer wraps to the same actual engine cursor")
 		ref.stop()
 	playback.stop()
-	measurements.engine_mixer = {"maximum_reference_error": maximum_error, "energy": energy, "duration": duration, "native_stems": 5, "mixed_frames": 12288, "wrapped_position": wrapped_position}
+	measurements.engine_mixer = {"maximum_reference_error": maximum_error, "energy": energy, "duration": duration, "native_stems": Music.STEM_NAMES.size(), "mixed_frames": 16384, "wrapped_position": wrapped_position}
 
 func combat_parity(music: Node) -> void:
 	var shown: Node2D = Battle.new(); var control: Node2D = Battle.new()

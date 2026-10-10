@@ -1,8 +1,9 @@
 extends Node2D
 ## Finger ownership is independent of mouse emulation and of menu confirmation.
 const FrontEnd = preload("res://scripts/front_end.gd")
-const BURST_RECT = Rect2(552, 235, 70, 52)
-const BRAKE_RECT = Rect2(552, 294, 70, 52)
+const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const BURST_RECT = Rect2(724, 294, 70, 52)
+const BRAKE_RECT = Rect2(724, 354, 70, 52)
 const MAX_RADIUS: float = 52.0
 const DEADZONE: float = 8.0
 var enabled: bool = false
@@ -45,7 +46,7 @@ func sample() -> Dictionary:
 
 static func valid_gameplay_point(point: Vector2) -> bool:
 	# HUD, margins and the opposite-thumb actions never acquire a steering finger.
-	return Rect2(22, 77, 596, 217).has_point(point) and not BURST_RECT.has_point(point) and not BRAKE_RECT.has_point(point)
+	return CombatLayout.PLAY_REGION.has_point(point) and not BURST_RECT.has_point(point) and not BRAKE_RECT.has_point(point)
 
 func handle_touch(event: InputEvent) -> bool:
 	if event is InputEventScreenTouch:

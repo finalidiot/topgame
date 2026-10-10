@@ -28,6 +28,17 @@ ADDED = ["power_identity", "parts_catalogue", "parts_collection", "parts_package
          "feedback_parts_retention", "beast_manifestations", "music", "music_escalation",
          "save_tools", "presentation_flow", "presentation_retention", "frontend"]
 
+PROFILE_DRIVER_SUITES = {"input_acceptance_003a1", "overdrive_lifecycle_003a1"}
+
+
+def driver_profile_paths(task: Path, stem: str, suite: str) -> list[Path]:
+    base = task / "temp" / (stem + "_" + suite + "_profiles")
+    paths = [base]
+    if suite == "input_acceptance_003a1":
+        paths += [base.with_name(base.name + "_mapping"),
+                  base.with_name(base.name + "_mapping_lifecycle")]
+    return paths
+
 
 def asset_fingerprint() -> dict:
     files = {p.relative_to(ROOT).as_posix(): pipeline.sha256(p)
@@ -40,6 +51,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--task", default="002C.6")
     parser.add_argument("--qa-root", type=Path)
+    parser.add_argument("--fixture-qa-root", type=Path, help="Fresh child QA root beneath this task/temp for fixtures with historical task names")
     parser.add_argument("--engine")
     parser.add_argument("--stem", default="002c6_regression")
     parser.add_argument("--suites", help="Optional comma-separated current suite names")
@@ -52,6 +64,13 @@ def main() -> int:
         user = Path(profile["directory"]).resolve()
         if qa == user or qa.is_relative_to(user): raise ValueError("QA root must not be inside the player profile")
     task = workspace.create_task_workspace(args.task, qa)
+    fixture_qa = qa
+    if args.fixture_qa_root is not None:
+        fixture_qa = args.fixture_qa_root.absolute()
+        resolved = fixture_qa.resolve()
+        if resolved != fixture_qa or resolved == task / "temp" or not resolved.is_relative_to(task / "temp"):
+            raise ValueError("Fixture QA root must be a fresh directory beneath the selected task/temp")
+        if fixture_qa.exists(): raise RuntimeError("Preserved fixture QA root already exists; choose a fresh directory")
     target = task / "manifests" / (args.stem + ".json")
     if target.exists(): raise RuntimeError("Preserved report already exists; choose another --stem")
     prior = json.loads((ROOT / "tests/results/task002c5-integration-regression-results.json").read_text())
@@ -66,26 +85,43 @@ def main() -> int:
             raise RuntimeError("Preserved log already exists; choose another --stem")
         if (task / "manifests" / (args.stem + "_" + name + ".json")).exists():
             raise RuntimeError("Preserved suite report already exists; choose another --stem")
+        if name == "prototype" and (task / "manifests" / (args.stem + "_prototype_balance.json")).exists():
+            raise RuntimeError("Preserved prototype balance report already exists; choose another --stem")
+        if name in PROFILE_DRIVER_SUITES and any(path.exists() for path in driver_profile_paths(task, args.stem, name)):
+            raise RuntimeError("Preserved driver profile directory already exists; choose another --stem")
     if (task / "benchmarks" / (args.stem + "_parts.json")).exists():
         raise RuntimeError("Preserved benchmark already exists; choose another --stem")
     engine = workspace.find_tool("godot", args.engine)
+    if args.fixture_qa_root is not None: fixture_qa.mkdir(parents=True, exist_ok=False)
     evidence = {"status":"running", "branch":pipeline.git(ROOT, "branch", "--show-current"),
                 "head":pipeline.git(ROOT, "rev-parse", "HEAD"), "suites":[],
                 "source_before":source_fingerprint(), "assets_before":asset_fingerprint(),
                 "profile_before":pipeline.production_profile(ROOT),
+                "fixture_qa_root":str(fixture_qa),
                 "historical_contracts_excluded":sorted(excluded),
                 "exclusion_reason":"Accepted C5.2 feedback changed drift/power/RPM trajectories; current behavior and exact accepted-main retention are tested instead."}
     def save(): target.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
     previous_qa = os.environ.get("TOPGAME_QA_ROOT")
-    os.environ["TOPGAME_QA_ROOT"] = str(qa)
+    os.environ["TOPGAME_QA_ROOT"] = str(fixture_qa)
     try:
         for name in suites:
+            # Music validates its explicitly scoped report against this root.
+            # Historical fixture roots remain contained for the other suites.
+            os.environ["TOPGAME_QA_ROOT"] = str(qa if name == "music_escalation" else fixture_qa)
             command = [engine, "--headless", "--path", str(ROOT), "--script", "res://tests/test_" + name + ".gd"]
-            if name == "parts_catalogue":
+            if name in PROFILE_DRIVER_SUITES:
+                command += ["--fixed-fps", "60", "--",
+                            "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json")),
+                            "--profiles=" + str(driver_profile_paths(task, args.stem, name)[0])]
+                if name == "input_acceptance_003a1": command += ["--kind=all"]
+            elif name == "parts_catalogue":
                 command += ["--", "--out=" + str(task / "benchmarks" / (args.stem + "_parts.json"))]
-            elif name in ["feedback_drift", "feedback_anchor_contacts", "power_feedback", "feedback_parts_retention", "save_tools", "presentation_flow", "presentation_retention", "music", "music_escalation", "frontend"]:
+            elif "--report=" in (ROOT / "tests" / ("test_" + name + ".gd")).read_text(encoding="utf-8"):
                 command += ["--", "--report=" + str(task / "manifests" / (args.stem + "_" + name + ".json"))]
-                if name == "music_escalation": command += ["--qa-task=" + args.task]
+                if name in ["music_escalation", "presentation_retention"]: command += ["--qa-task=" + args.task]
+                if name == "prototype": command += ["--balance-report=" + str(task / "manifests" / (args.stem + "_prototype_balance.json"))]
+            elif name == "mobile_combat_input":
+                command += ["--", "--qa-task=" + args.task]
             row = run_suite(command, task / "logs" / (args.stem + "_" + name + ".log"), name, args.timeout)
             evidence["suites"].append(row)
             save()

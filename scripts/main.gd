@@ -16,11 +16,17 @@ const PacketEconomy = preload("res://scripts/packet_economy.gd")
 const RunRewards = preload("res://scripts/run_rewards.gd")
 const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
+const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const TopStatusBars = preload("res://scripts/top_status_bars.gd")
+const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const IndustrialSurround = preload("res://scripts/industrial_surround.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false}
+var top_status_bars: Node2D
 var touch_controls: Node2D
 var _application_suspended: bool = false
+var _application_backgrounded: bool = false
 var _resume_after_foreground: bool = false
 var _android_qa: Dictionary = {}
 var _android_qa_clock: float = 0.0
@@ -30,6 +36,12 @@ var round_index: int = 0
 var screen: String = "title"
 var last_result: Dictionary = {}
 var battle: Node2D
+var combat_viewport: SubViewport
+var combat_frame: TextureRect
+var presentation_surround: Node2D
+var _presentation_client_size: Vector2i = Vector2i.ZERO
+var _presentation_canvas_size: Vector2 = Vector2(800,480)
+var _presentation_applied_size: Vector2 = Vector2.ZERO
 var menus: Control
 var sounds: Node
 var music: Node
@@ -77,10 +89,15 @@ var _pending_run_payout: Dictionary = {}
 var _packet_purchase_token: int = 0
 var _packet_product: String = ""
 var _packet_request_id: String = ""
+var _packet_quantity: int = 1
+var _workshop_return: String = "hub"
+var _shop_return: String = "hub"
 ## In-process deterministic review injection. Refused outside fresh 003A QA paths.
 var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
+	_refresh_window_presentation()
+	if is_instance_valid(combat_frame) and is_instance_valid(battle): combat_frame.visible = battle.visible
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
 		if _android_qa_clock <= 0.0:
@@ -154,8 +171,28 @@ func _ready() -> void:
 		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
+	if not OS.has_feature("mobile") and not get_viewport() is SubViewport:
+		presentation_surround = IndustrialSurround.new()
+		presentation_surround.name = "AuthoredIndustrialSurround"
+		add_child(presentation_surround)
+	combat_viewport = SubViewport.new()
+	combat_viewport.name = "CanonicalCombatViewport"
+	combat_viewport.size = Vector2i(640,360)
+	combat_viewport.transparent_bg = false
+	combat_viewport.gui_disable_input = true
+	combat_viewport.handle_input_locally = false
+	combat_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(combat_viewport)
+	combat_frame = TextureRect.new()
+	combat_frame.name = "NativeArenaFrame"
+	combat_frame.position = CombatLayout.ARENA_ORIGIN
+	combat_frame.size = Vector2(640,360)
+	combat_frame.texture = combat_viewport.get_texture()
+	combat_frame.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	combat_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(combat_frame)
 	battle = BattleScript.new()
-	add_child(battle)
+	combat_viewport.add_child(battle)
 	battle.visible = false
 	battle.set_physics_process(false)
 	battle.round_finished.connect(_round_finished)
@@ -169,6 +206,9 @@ func _ready() -> void:
 	battle.floor_pickups = reroll_pickups
 	reroll_pickups.render_in_battle = true
 	reroll_pickups.reroll_collected.connect(_reroll_collected)
+	top_status_bars = TopStatusBars.new()
+	top_status_bars.host = battle
+	battle.add_child(top_status_bars)
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 10
 	add_child(layer)
@@ -176,14 +216,18 @@ func _ready() -> void:
 	layer.add_child(menus)
 	menus.action.connect(_action)
 	menus.focus_sound.connect(_battle_sound)
+	menus.input_engaged.connect(_engage_application_input)
+	Input.joy_connection_changed.connect(_controller_connection_changed)
 	touch_controls = TouchControls.new()
 	layer.add_child(touch_controls)
 	battle.input_provider = touch_controls
 	sounds = SoundScript.new()
 	add_child(sounds)
+	sounds.grind_provider = battle.grind_audio_snapshot
 	music = MusicScript.new()
 	music.configure_playback(not qa_assets_report_requested and not smoke_mode and DisplayServer.get_name() != "headless")
 	add_child(music)
+	_refresh_window_presentation()
 	_apply_settings()
 	if smoke_mode or qa_assets_report_requested or qa_catalogue_requested or not practice_request.is_empty(): _title()
 	else: _title_gate()
@@ -200,6 +244,42 @@ func _ready() -> void:
 	elif qa_catalogue_requested and qa_catalogue_error.is_empty(): call_deferred("_garage")
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 	if not _android_qa.is_empty(): call_deferred("_inspect_android_assets")
+
+func _refresh_window_presentation() -> void:
+	if not is_instance_valid(combat_frame) or not is_instance_valid(menus): return
+	# The Android shell owns the outer window transform. A hosted native canvas
+	# must remain800x480 even when that same production shell is tested on PC.
+	var mobile: bool = OS.has_feature("mobile") or get_viewport() is SubViewport
+	if not mobile:
+		var client_size: Vector2i = get_window().size
+		if client_size != _presentation_client_size:
+			_presentation_client_size = client_size
+			var policy: Dictionary = CombatLayout.desktop_canvas(client_size)
+			get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+			get_window().content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
+			get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_FRACTIONAL
+			get_window().content_scale_size = policy.canvas_size
+			_presentation_canvas_size = Vector2(policy.canvas_size)
+	else:
+		_presentation_canvas_size = Vector2(800,480)
+	if _presentation_applied_size == _presentation_canvas_size: return
+	_presentation_applied_size = _presentation_canvas_size
+	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile)
+	combat_frame.position = presentation.arena_rect.position
+	combat_frame.size = presentation.arena_rect.size
+	if is_instance_valid(presentation_surround): presentation_surround.set_layout(presentation)
+	menus.set_presentation_canvas(_presentation_canvas_size)
+	# No window mode, monitor, position or restore-size write occurs here. Native
+	# Maximise/Restore belongs to Windows; only the client presentation reflows.
+
+func window_presentation_snapshot() -> Dictionary:
+	var hosted_native: bool = get_viewport() is SubViewport
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,OS.has_feature("mobile") or hosted_native)
+	layout["client_size"] = get_window().size
+	layout["window_mode"] = DisplayServer.window_get_mode()
+	layout["borderless"] = DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
+	layout["ui_policy"] = {"canvas_size":Vector2i(800,480),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":true} if hosted_native or OS.has_feature("mobile") else CombatLayout.desktop_canvas(get_window().size)
+	return layout
 
 func _inspect_android_assets() -> void:
 	if _android_qa.is_empty(): return
@@ -314,12 +394,13 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false}
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false}
 	for key: String in ["volume", "music_volume", "sfx_volume"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "fullscreen", "reduced_flashing"]:
+	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]:
 		if values.get(key) is bool: result[key] = values[key]
+	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
 
 func _save_preferences() -> void:
@@ -330,15 +411,22 @@ func _save_preferences() -> void:
 	cfg.save(preferences_path)
 
 func _apply_settings() -> void:
+	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
 	sounds.apply_settings(settings)
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
 	battle.reduced_flashing = bool(settings.reduced_flashing)
+	top_status_bars.set_enabled(bool(settings.top_status_bars))
+	battle.impact_numbers_enabled = bool(settings.impact_numbers)
 	battle.presentation_quality = 0.6 if OS.has_feature("mobile") else 1.0
 	reroll_pickups.reduced_flashing = bool(settings.reduced_flashing)
 	menus.reduced_flashing = bool(settings.reduced_flashing)
-	if not smoke_mode and not OS.has_feature("mobile"):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if bool(settings.fullscreen) else DisplayServer.WINDOW_MODE_WINDOWED)
+	# Retain the legacy preference key for a harmless in-memory migration. It no
+	# longer owns desktop display mode or overrides native Maximise/Restore.
+	settings.fullscreen = false
+
+func _controller_connection_changed(_device: int, _connected: bool) -> void:
+	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
 
 func _hide_battle() -> void:
 	battle.set_paused(true)
@@ -366,7 +454,7 @@ func _title() -> void:
 		music.set_context("title")
 		music.set_paused(false)
 
-func _garage() -> void:
+func _garage(remember_source: bool = true) -> void:
 	if run_context.is_active(): return
 	if not _pay_pending_run_payout(): return
 	if not collection.pending_packet().is_empty():
@@ -375,6 +463,8 @@ func _garage() -> void:
 	if not collection.is_initialized():
 		_begin_collection()
 		return
+	if remember_source and screen not in ["garage", "collection_error", "settings", "save_tools"]:
+		_workshop_return = "shop" if screen in ["shop", "packet_open", "packet_purchase", "packet_odds"] else "hub"
 	_clear_run()
 	_hide_battle()
 	screen = "garage"
@@ -382,11 +472,12 @@ func _garage() -> void:
 	var snapshot: Dictionary = collection.snapshot()
 	snapshot["build_identity"] = Starters.identity_for_build(collection.equipped_build())
 	snapshot["isolated_catalogue_qa"] = qa_catalogue_requested
+	snapshot["workshop_return"] = _workshop_return
 	menus.show_collection_workshop(collection.equipped_build(), snapshot)
 	music.set_context("workshop")
 	music.set_paused(false)
 
-func _shop(status: String = "") -> void:
+func _shop(status: String = "", remember_source: bool = true) -> void:
 	if run_context.is_active(): return
 	if not _pay_pending_run_payout():
 		if str(last_result.get("payout_status", "")) != "balance_limit": return
@@ -399,30 +490,46 @@ func _shop(status: String = "") -> void:
 	if not collection.pending_packet().is_empty():
 		_show_packet(true)
 		return
+	if remember_source and screen in ["title", "title_gate", "garage", "result"]:
+		_shop_return = "workshop" if screen == "garage" else "hub"
 	screen = "shop"
-	menus.show_shop(collection.snapshot(), status)
+	var snapshot: Dictionary = collection.snapshot()
+	snapshot["shop_return"] = _shop_return
+	menus.show_shop(snapshot, status)
 	music.set_context("workshop")
 	music.set_paused(false)
 
 func _request_packet_purchase(kind: String) -> void:
 	if screen != "shop" or run_context.is_active() or kind not in ["standard", "reclaimed"]: return
+	if menus.selected_shop_product() != kind: return
 	if collection.read_only or not collection.pending_packet().is_empty(): return
 	var wallet: Dictionary = collection.wallet()
 	var unit: String = str(PacketEconomy.config().packets[kind].currency)
-	if int(wallet[unit]) < PacketEconomy.packet_cost(kind): return
+	_packet_quantity = menus.selected_shop_quantity(kind)
+	if int(wallet[unit]) < PacketEconomy.packet_cost(kind) * _packet_quantity: return
 	_packet_purchase_token += 1
 	_packet_product = kind
 	_packet_request_id = collection.expected_packet_request_id()
 	screen = "packet_purchase"
-	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token)
+	menus.show_packet_purchase(kind, collection.snapshot(), _packet_purchase_token, _packet_quantity)
+
+func _back_workshop() -> void:
+	if screen != "garage" or run_context.is_active(): return
+	if _workshop_return == "shop": _shop("", false)
+	else: _title()
+
+func _back_shop() -> void:
+	if screen != "shop" or run_context.is_active(): return
+	if _shop_return == "workshop": _garage(false)
+	else: _title()
 
 func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
 	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
 	var source: RandomNumberGenerator = null
-	if packet_rng_override != null and (qa_task_id == "003A" or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
+	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
 		source = packet_rng_override
-	var purchase: Dictionary = collection.purchase_packet(_packet_product, source, _packet_request_id)
+	var purchase: Dictionary = collection.purchase_packet_batch(_packet_product, _packet_quantity, source, _packet_request_id)
 	if not bool(purchase.ok):
 		_shop("Purchase stopped: %s. Your balance was preserved." % str(purchase.status).replace("_", " "))
 		return
@@ -458,9 +565,18 @@ func _leave_packet(route: String, kind: String = "") -> void:
 		"workshop": _garage()
 		"another":
 			_shop()
+			menus.select_shop_product(kind)
 			_request_packet_purchase(kind)
 		"shop": _shop()
 		_: _title()
+
+func _packet_progress(cursor: Variant) -> void:
+	if screen != "packet_open" or not cursor is int: return
+	var pending: Dictionary = collection.pending_packet()
+	if pending.is_empty(): return
+	var result: Dictionary = collection.advance_packet_presentation(str(pending.id), int(cursor))
+	if not bool(result.ok):
+		_collection_error("Your complete batch is saved. Presentation stopped because its recovery checkpoint could not be saved. Reload to continue.", "packet")
 
 func _practice_garage() -> void:
 	if run_context.is_active(): return
@@ -730,7 +846,7 @@ func _show_mutation(announce: bool = true) -> void:
 	if run_context.pending_mutation_power.is_empty(): return
 	screen = "mutation"
 	battle.set_paused(true)
-	menus.show_mutation(run_context.pending_mutation_power, run_context.pending_mutation_offer, run_context.pending_draft_id, run_context.run_seed, _mutation_focus_id)
+	menus.show_mutation(run_context.pending_mutation_power, run_context.pending_mutation_offer, run_context.pending_draft_id, run_context.run_seed, _mutation_focus_id, run_context.reroll_snapshot())
 	if announce and not smoke_mode: sounds.play_sound("mutation_available")
 
 func _show_acquisition(power_id: String) -> void:
@@ -900,7 +1016,7 @@ func _action(name: String, value: Variant = null) -> void:
 	# All build/menu routes respect the lock, including stale UI signals.
 	if run_context.is_active() and name in ["quick_duel", "start_battle", "start_run", "customize", "build_changed", "help", "settings", "main_menu", "rematch", "begin_collection", "open_workshop", "open_shop", "inspect_shop_product", "request_packet_purchase", "confirm_packet_purchase", "practice_garage", "equip_part", "launch_owned_run", "select_first_starter", "confirm_first_starter", "finish_ownership", "play_modes", "save_tools", "backup_collection", "request_reset_collection", "confirm_reset_collection"]:
 		if not (name == "settings" and screen == "pause"): return
-	_battle_sound("ui")
+	if name != "packet_progress": _battle_sound("ui")
 	match name:
 		"enter_frontend":
 			if screen == "title_gate": _title()
@@ -925,9 +1041,13 @@ func _action(name: String, value: Variant = null) -> void:
 		"begin_collection": _begin_collection()
 		"open_workshop": _garage()
 		"open_shop": _shop()
+		"back_workshop": _back_workshop()
+		"back_shop": _back_shop()
 		"inspect_shop_product":
 			if screen == "shop": menus.select_shop_product(str(value))
 		"request_packet_purchase": _request_packet_purchase(str(value))
+		"packet_quantity": menus.select_shop_quantity(value)
+		"packet_progress": _packet_progress(value)
 		"confirm_packet_purchase": _confirm_packet_purchase(value)
 		"cancel_packet_purchase":
 			if screen == "packet_purchase": _shop()
@@ -1012,10 +1132,18 @@ func _action(name: String, value: Variant = null) -> void:
 		"choose_mutation":
 			if mode == "run" and screen == "mutation" and value is Dictionary:
 				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if int(value.get("offer_revision",run_context.reroll_snapshot().revision)) != int(run_context.reroll_snapshot().revision): return
 				var power_id: String = run_context.pending_mutation_power
 				if run_context.choose_mutation(str(value.get("encounter_id", "")), str(value.get("branch_id", ""))):
 					if _draft_resume_origin == "battle": battle.acquire_run_power(power_id, 3, str(run_context.power_mutations.get(power_id, "")))
 					_show_acquisition(power_id)
+		"reroll_mutation":
+			if mode == "run" and screen == "mutation" and value is Dictionary:
+				if int(value.get("run_seed", -1)) != run_context.run_seed: return
+				if run_context.reroll_pending_mutation(str(value.get("encounter_id", "")), int(value.get("offer_revision", -1))):
+					_mutation_focus_id = ""
+					_reward_focus_id = ""
+					_show_reward()
 		"quick_duel": _start_battle("duel")
 		"start_battle": _start_battle(str(value) if value != null else "duel")
 		"customize": _garage()
@@ -1074,7 +1202,8 @@ func _escape() -> void:
 		if is_instance_valid(menus._packet_view) and menus._packet_view.phase == "RESULT": _leave_packet("shop")
 		else: menus.skip_packet()
 	elif screen in ["packet_purchase", "packet_odds"]: _shop()
-	elif screen == "shop": _title()
+	elif screen == "shop": _back_shop()
+	elif screen == "garage": _back_workshop()
 	elif screen == "reset_confirm": _show_save_tools()
 	elif screen in ["save_tools", "settings"]: _back_settings()
 	elif screen == "title_gate": return
@@ -1089,17 +1218,31 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F2 and screen == "battle":
 		menus.visible = not menus.visible
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
+	elif event is InputEventJoypadButton and event.is_action_pressed("ui_cancel") and screen in ["level_up","reward","mutation","acquisition"]:
+		# Printed controller Back cannot eject a newly earned mandatory choice.
+		# The explicit MENU pause action retains the existing suspend/resume flow.
+		get_viewport().set_input_as_handled()
+	# Nintendo's printed B is both menu Back and the established south-button
+	# Burst. During combat its Burst belongs to physics; MENU pauses instead.
+	elif event.is_action_pressed("pause") or (event.is_action_pressed("ui_cancel") and not (screen == "battle" and event.is_action("burst"))):
 		menus.visible = true
 		_escape()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("toggle_fullscreen"):
-		if screen == "battle": battle.begin_reentry()
-		settings.fullscreen = not bool(settings.fullscreen)
-		_apply_settings()
-		_save_preferences()
-		if screen == "settings": _show_settings()
-		get_viewport().set_input_as_handled()
+
+func _engage_application_input() -> void:
+	# Actual OS background suspension is different from desktop focus loss.
+	# A controller/keyboard/touch that the visible UI accepts can recover the
+	# latter without another device. Android remains stopped until RESUMED.
+	if _application_backgrounded or not _application_suspended: return
+	_resume_application()
+
+func _resume_application() -> void:
+	if not _application_suspended or not is_instance_valid(battle): return
+	_application_suspended = false
+	if _resume_after_foreground and screen == "battle":
+		battle.begin_reentry()
+		music.set_paused(false)
+	_resume_after_foreground = false
 
 func _notification(what: int) -> void:
 	if smoke_mode and what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_FOCUS_IN]: return
@@ -1108,6 +1251,8 @@ func _notification(what: int) -> void:
 		_escape()
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT]:
 		if not is_instance_valid(battle): return
+		if what == NOTIFICATION_APPLICATION_PAUSED: _application_backgrounded = true
+		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
 		_application_suspended = true
 		_resume_after_foreground = screen == "battle"
 		if is_instance_valid(touch_controls): touch_controls.clear()
@@ -1115,12 +1260,9 @@ func _notification(what: int) -> void:
 			battle.set_paused(true)
 			music.set_paused(true)
 	elif what in [NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_APPLICATION_FOCUS_IN]:
-		if not _application_suspended or not is_instance_valid(battle): return
-		_application_suspended = false
-		if _resume_after_foreground and screen == "battle":
-			battle.begin_reentry()
-			music.set_paused(false)
-		_resume_after_foreground = false
+		if what == NOTIFICATION_APPLICATION_RESUMED: _application_backgrounded = false
+		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
+		if not _application_backgrounded: _resume_application()
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Control and not node.is_visible_in_tree(): return null

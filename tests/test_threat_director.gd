@@ -12,13 +12,15 @@ func _run() -> void:
 		diagnostics.append(sample)
 		sequences[str(sample.sequence)] = true
 		check(sample.bosses > 0 and sample.elites > 0 and sample.swarms > 0,"Long policy sample exercises all event classes")
-		check(sample.first_boss >= 100.0 and sample.longest_empty < 8.0,"Eligibility and empty-gap bounds")
+		check(sample.first_boss >= float(Director.TUNING.tier_seconds[2]) and sample.longest_empty < 8.0,"Boss eligibility follows the authored tier; empty-gap bounds remain")
 		check(sample.max_tier > 4 and sample.events > 30,"Policy continues beyond authored tiers")
 	check(sequences.size() == 8,"Different seeds produce different compositions/timing")
 	check(simulate(421) == diagnostics[0],"Identical seed and census reproduce every decision and pacing statistic")
 	_test_overlap_and_boss()
 	_test_roles()
 	_test_policy_edges()
+	_test_bounded_lull()
+	_test_earlier_questions()
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="):
 			var file: FileAccess = FileAccess.open(argument.trim_prefix("--report="),FileAccess.WRITE)
@@ -157,10 +159,10 @@ func _test_roles() -> void:
 		vectors[str(direction)] = true
 		check(direction.is_finite() and direction.length() <= 0.951,"Movement policy has finite bounded steering")
 	check(vectors.size() == 4,"Identical arena state produces four distinct movement intents")
-	check(Director.limits(100000.0).budget > Director.limits(900.0).budget and Director.limits(100000.0).total == 16,"Endless pressure scales without unbounded population")
+	check(Director.limits(100000.0).budget > Director.limits(900.0).budget and Director.limits(100000.0).total == 15 and Director.limits(100000.0).full == 6,"Endless pressure scales within the human-requested15body/six-full deep ceiling")
 	var hunter: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0},player,2.5)
 	var harasser: Vector2 = Roles.direction({"pos":Vector2(65,0),"entity_id":2,"role":"harasser","archetype":"harasser","role_phase":0.0},player,2.5)
-	check(hunter.x < -0.8 and harasser.x > 0.3,"Hunter commits while harasser retreats tangentially between contacts")
+	check(hunter.x < -0.7 and absf(harasser.y)>absf(harasser.x) and not hunter.is_equal_approx(harasser),"Hunter directly pressures while harasser positions tangentially for poke/withdraw")
 	check(Roles.ELITES.ballast.mass > 1.4 and Roles.ELITES.ballast.speed < 1.0 and Roles.ELITES.hotwire.recovery < 1.0,"Elites carry real movement/mass tradeoffs")
 	check(Roles.BOSSES.anvil.mass > Roles.BOSSES.reaper.mass and Roles.BOSSES.anvil.speed < Roles.BOSSES.reaper.speed,"Bosses have contrasting physical identity")
 
@@ -208,3 +210,50 @@ func _test_policy_edges() -> void:
 	b.continuous.after_tick(0.0)
 	check(is_same(reaper,b.entity(4)) and reaper.outcome == "" and game.screen == "battle","One boss clear leaves the other boss and Run alive")
 	game.free()
+
+func _test_bounded_lull() -> void:
+	var director = Director.new()
+	director.setup(421)
+	director.next_decision = 55.0
+	var census: Dictionary = {"pressure":2.8,"full":1,"small":0,"total":2,"elites":0,"bosses":0,"swarm":false}
+	check(director.decide(55.0,census,4).is_empty() and director.draining,"A busy schedule still offers a real admission lull")
+	var initial_rng: int = director.rng.state
+	for second: int in range(56,65):
+		check(director.decide(float(second),census,4).is_empty() and director.draining,"Durable surviving rival keeps the bounded admission lull")
+	check(director.rng.state == initial_rng,"Waiting on the bounded lull does not consume decision randomness")
+	check(director.decide(65.0,census,4).is_empty() and not director.draining,"Ten-second lull releases even when one Bulwark remains above the old 45% threshold")
+	check(director.calm_until >= 66.5 and director.calm_until <= 67.75,"A readable short breath follows the bounded lull")
+	var choice: Dictionary = director.decide(director.calm_until + 0.01,census,4)
+	check(not choice.is_empty() and census.pressure + choice.cost <= Director.limits(director.calm_until,4).budget,"Schedule returns to normal budget-guarded admissions, without killing or changing the surviving rival")
+	var twin = Director.new()
+	twin.setup(421)
+	twin.next_decision = 55.0
+	for second: int in range(55,66): twin.decide(float(second),census,4)
+	var replay: Dictionary = twin.decide(twin.calm_until + 0.01,census,4)
+	check(choice == replay and director.rng.state == twin.rng.state,"Identical seed/census reproduces the lull and subsequent choice exactly")
+
+func _test_earlier_questions() -> void:
+	var director = Director.new()
+	director.setup(421)
+	var empty: Dictionary = {"pressure":0.0,"full":0,"small":0,"total":1,"elites":0,"bosses":0,"swarm":false}
+	for time: float in [0.0,19.9,27.99]:
+		for event: Dictionary in director.candidates(time,empty,10):
+			check(event.kind == "rival","Opening remains a single rival question before the 28-second mixed tier")
+	check(Director.limits(20.0,21).full == 1 and Director.limits(20.0,21).budget == 2.8,"Even a declared strong early build cannot cause an instant opening swarm or overlap")
+	var mixed: Array[String] = []
+	for event: Dictionary in director.candidates(28.0,empty,4): mixed.append(str(event.kind))
+	check("specialist" in mixed and "swarm" in mixed and "elite" not in mixed and "boss" not in mixed,"First mixed role questions arrive at 28 seconds, with elites/bosses deferred")
+	var developed: Array[String] = []
+	for event: Dictionary in director.candidates(80.0,empty,4): developed.append(str(event.kind))
+	check("elite" in developed and "boss" in developed,"Developed 80-second budget admits warned elite/boss candidates")
+	for index: int in range(1,5):
+		var boundary: float = Director.TUNING.tier_seconds[index]
+		check(Director.tier_at(boundary - 0.001) == index - 1 and Director.tier_at(boundary) == index,"Every tier switches deterministically at its authored boundary")
+	check(Director.tier_at(399.999) == 4 and Director.tier_at(400.0) == 5,"Endless budget growth is measured from the new final authored tier, not the retired 360-second boundary")
+	var player: Dictionary = {"pos":Vector2.ZERO,"vel":Vector2.ZERO}
+	var f: Dictionary = {"pos":Vector2(65,0),"entity_id":2,"role":"hunter","archetype":"hunter","role_phase":0.0,"role_commit_cycle":-1}
+	Roles.direction(f,player,27.99)
+	check(f.has("pilot") and f.pilot.state in Roles.STATES,"Readable observed-state piloting exists from the first rival")
+	Roles.direction(f,player,28.0)
+	check(Roles.maturity(27.99)==0.0 and Roles.maturity(28.0)==0.0 and Roles.maturity(29.0)>0.0,"Maturity improves decisions gradually instead of unlocking a periodic attack timer")
+	check(Roles.COMMIT_MATURITY_SECONDS == 325.0 and Roles.ELITES.ballast.mass == 1.55 and Roles.BOSSES.anvil.mass == 2.0,"Decision maturity horizon and authored enemy stat profiles stay exact")

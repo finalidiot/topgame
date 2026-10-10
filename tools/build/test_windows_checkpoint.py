@@ -96,8 +96,8 @@ class PromotionGuards(unittest.TestCase):
             pipeline.verify_candidate(self.candidate)
         self.assert_latest_preserved()
 
-    def prepare_shop_candidate(self, persisted=True):
-        self.manifest.update(checkpoint="003A", qa_task="003A", human_acceptance="PENDING HUMAN PROGRESSION PLAYTEST")
+    def prepare_shop_candidate(self, persisted=True, qa_task="003A"):
+        self.manifest.update(checkpoint=qa_task, qa_task=qa_task, human_acceptance="PENDING HUMAN PROGRESSION PLAYTEST")
         smoke = self.manifest["packaged_smoke"]
         log = Path(smoke["log"])
         log.write_text(pipeline.SMOKE_MARKER + "\n" + pipeline.SHOP_SMOKE_MARKER + " (labelled flow fixture)")
@@ -106,27 +106,28 @@ class PromotionGuards(unittest.TestCase):
             image = self.base / name
             image.write_bytes(b"\x89PNG\r\n\x1a\n" + struct.pack(">I", 13) + b"IHDR" + struct.pack(">II", 640, 360) + b"x" * 1200)
             smoke["captures"].append(pipeline.png_record(image))
-        self.shop_save = self.qa / "003A" / "temp" / "fixture" / "isolated-collection.json"
+        self.shop_save = self.qa / qa_task / "temp" / "fixture" / "isolated-collection.json"
         rows = [
             {"category":"blade", "id":"balance", "part_id":"blade:balance", "rarity":"COMMON", "new":True, "salvage":0},
             {"category":"ratchet", "id":"kickback", "part_id":"ratchet:kickback", "rarity":"RARE", "new":True, "salvage":0},
             {"category":"bit", "id":"flat", "part_id":"bit:flat", "rarity":"COMMON", "new":False, "salvage":1},
         ]
-        self.shop_state = {"schema_version":2, "starter_selected":"breaker",
+        self.shop_state = {"schema_version":3, "starter_selected":"breaker",
             "owned_part_ids":["blade:smash", "ratchet:high", "bit:flat", "blade:balance", "ratchet:kickback"],
             "equipped_build":{"blade":"balance", "ratchet":"high", "bit":"flat"},
             "progression":{"credits":0, "salvage":1, "packet_serial":1, "pending_packet":{},
                 "last_packet":{"id":"packet-1", "request_nonce":"packet-1", "kind":"standard", "currency":"credits", "cost":48,
-                               "status":"resolved", "rows":rows, "total_salvage":1},
+                               "status":"resolved", "rows":rows, "total_salvage":1,
+                               "quantity":1,"cursor":1,"packets":[{"rows":rows,"total_salvage":1}]},
                 "run_serial":1, "active_run":"", "last_reward":{"id":"run-1", "credits":48, "eligible":True,
                                                            "breakdown":{"threats":48, "elites":0, "bosses":0}}}}
-        smoke.update(qa_task="003A", child_environment={"TOPGAME_QA_ROOT":str(self.qa.resolve())},
+        smoke.update(qa_task=qa_task, child_environment={"TOPGAME_QA_ROOT":str(self.qa.resolve())},
                      isolated_collection=str(self.shop_save.resolve()),
-                     command=[str(self.candidate / pipeline.EXE), "--", "--smoke-test", "--qa-task=003A",
+                     command=[str(self.candidate / pipeline.EXE), "--", "--smoke-test", "--qa-task=" + qa_task,
                               "--collection-path=" + str(self.shop_save)])
         if persisted:
             pipeline.write_json(self.shop_save, self.shop_state)
-            smoke["shop_progression"] = pipeline.shop_progression_record(self.shop_save, qa_root=self.qa, qa_task="003A")
+            smoke["shop_progression"] = pipeline.shop_progression_record(self.shop_save, qa_root=self.qa, qa_task=qa_task)
         self.save_manifest()
 
     def save_tampered_shop(self):
@@ -138,9 +139,9 @@ class PromotionGuards(unittest.TestCase):
 
     def reject_shop(self, message):
         with self.assertRaisesRegex(ValueError, message):
-            pipeline.promote_candidate(self.candidate, self.root, self.qa, "003A")
+            pipeline.promote_candidate(self.candidate, self.root, self.qa, self.manifest["checkpoint"])
         self.assert_latest_preserved()
-        self.assertFalse((self.root / "builds/checkpoints/003A").exists())
+        self.assertFalse((self.root / "builds/checkpoints" / self.manifest["checkpoint"]).exists())
 
     def test_003a_markers_and_captures_without_persisted_progress_are_rejected(self):
         self.prepare_shop_candidate(persisted=False)
@@ -249,6 +250,30 @@ class PromotionGuards(unittest.TestCase):
         self.save_tampered_shop()
         self.reject_shop("resolved paid receipt")
 
+    def test_003a_bulk_quantity_cannot_masquerade_as_single_smoke(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["quantity"] = 3
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_unfinished_single_cursor_is_rejected(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["cursor"] = 0
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_altered_batch_group_is_rejected(self):
+        self.prepare_shop_candidate()
+        self.shop_state["progression"]["last_packet"]["packets"] = []
+        self.save_tampered_shop()
+        self.reject_shop("single batch receipt")
+
+    def test_003a_old_schema_cannot_accept_new_build_smoke(self):
+        self.prepare_shop_candidate()
+        self.shop_state["schema_version"] = 2
+        self.save_tampered_shop()
+        self.reject_shop("schema3")
+
     def test_003a_boolean_wallet_is_not_an_integer_balance(self):
         self.prepare_shop_candidate()
         self.shop_state["progression"]["credits"] = False
@@ -285,6 +310,75 @@ class PromotionGuards(unittest.TestCase):
         self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/003A" / pipeline.EXE))
         self.assertEqual(pipeline.sha256(self.latest / pipeline.EXE), self.manifest["delivery_sha256"][pipeline.EXE])
         self.assertEqual((Path(result["preserved_previous"]) / "latest" / pipeline.EXE).read_bytes(), b"known-good human build")
+
+    def test_003a1_valid_persisted_progression_promotes_only_fixture(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        result = pipeline.promote_candidate(self.candidate, self.root, self.qa, "003A.1")
+        self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/003A.1" / pipeline.EXE))
+        self.assertEqual(pipeline.sha256(self.latest / pipeline.EXE), self.manifest["delivery_sha256"][pipeline.EXE])
+        self.assertEqual((Path(result["preserved_previous"]) / "latest" / pipeline.EXE).read_bytes(), b"known-good human build")
+
+    def test_003a1_shop_marker_is_required_even_with_saved_receipt(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        smoke = self.manifest["packaged_smoke"]
+        Path(smoke["log"]).write_text(pipeline.SMOKE_MARKER)
+        smoke["log_sha256"] = smoke["engine_log_sha256"] = pipeline.sha256(Path(smoke["log"]))
+        self.save_manifest()
+        self.reject_shop("Shop flow marker")
+
+    def test_003a1_shop_capture_is_required_even_with_saved_receipt(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        self.manifest["packaged_smoke"]["captures"] = [row for row in self.manifest["packaged_smoke"]["captures"] if Path(row["path"]).name != "003a-packet-result.png"]
+        self.save_manifest()
+        self.reject_shop("Missing packaged smoke capture: 003a-packet-result")
+
+    def test_003a1_markers_and_captures_cannot_replace_persisted_receipt(self):
+        self.prepare_shop_candidate(persisted=False, qa_task="003A.1")
+        self.reject_shop("persisted Shop progression")
+
+    def test_003a1_rehashed_unpaid_wallet_is_rejected(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        self.shop_state["progression"]["credits"] = 48
+        self.save_tampered_shop()
+        self.reject_shop("actual 48-CREDIT debit")
+
+    def test_003a1_changed_valid_receipt_bytes_are_rechecked(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        with self.shop_save.open("a") as stream:
+            stream.write("\n")
+        self.reject_shop("save/hash/summary changed")
+
+    def test_003a1_cannot_relabel_003a_saved_receipt_boundary(self):
+        self.prepare_shop_candidate()
+        smoke = self.manifest["packaged_smoke"]
+        self.manifest.update(checkpoint="003A.1", qa_task="003A.1")
+        smoke["qa_task"] = "003A.1"
+        smoke["command"][-2] = "--qa-task=003A.1"
+        self.save_manifest()
+        self.reject_shop("Path must remain inside")
+
+    def test_003a1_checkpoint_and_qa_task_must_agree(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        self.manifest["qa_task"] = "003A"
+        self.save_manifest()
+        self.reject_shop("checkpoint must match")
+
+    def test_003a1_pending_human_progression_acceptance_is_required(self):
+        self.prepare_shop_candidate(qa_task="003A.1")
+        self.manifest["human_acceptance"] = "accepted"
+        self.save_manifest()
+        self.reject_shop("pending human progression")
+
+    def test_shop_verifier_rejects_nearby_task_ids_before_reading(self):
+        for qa_task in ("003A.10", "003A.1.preview", "003A.2"):
+            with self.subTest(qa_task=qa_task), self.assertRaisesRegex(ValueError, "explicit 003A or 003A.1"):
+                pipeline.shop_progression_record(self.base / "absent.json", qa_root=self.qa, qa_task=qa_task)
+
+    def test_shop_build_rejects_mismatched_task_before_staging(self):
+        from argparse import Namespace
+        with self.assertRaisesRegex(ValueError, "checkpoint must match"):
+            pipeline.build(Namespace(checkpoint="003A.1", task="003A"))
+        self.assert_latest_preserved()
 
     def test_changed_executable_never_replaces_latest(self):
         with (self.candidate / pipeline.EXE).open("ab") as stream:

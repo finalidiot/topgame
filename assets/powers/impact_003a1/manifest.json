@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "task": "003A.1",
+  "cell": [
+    64,
+    48
+  ],
+  "pivot": [
+    32,
+    24
+  ],
+  "layers": [
+    "01 forged contact core",
+    "02 directional steel ribbons",
+    "03 cooling flyaways"
+  ],
+  "tags": {
+    "light_0": {
+      "from": 0,
+      "to": 3
+    },
+    "light_1": {
+      "from": 4,
+      "to": 7
+    },
+    "light_2": {
+      "from": 8,
+      "to": 11
+    },
+    "light_3": {
+      "from": 12,
+      "to": 15
+    },
+    "light_4": {
+      "from": 16,
+      "to": 19
+    },
+    "light_5": {
+      "from": 20,
+      "to": 23
+    },
+    "light_6": {
+      "from": 24,
+      "to": 27
+    },
+    "light_7": {
+      "from": 28,
+      "to": 31
+    },
+    "strong_0": {
+      "from": 32,
+      "to": 35
+    },
+    "strong_1": {
+      "from": 36,
+      "to": 39
+    },
+    "strong_2": {
+      "from": 40,
+      "to": 43
+    },
+    "strong_3": {
+      "from": 44,
+      "to": 47
+    },
+    "strong_4": {
+      "from": 48,
+      "to": 51
+    },
+    "strong_5": {
+      "from": 52,
+      "to": 55
+    },
+    "strong_6": {
+      "from": 56,
+      "to": 59
+    },
+    "strong_7": {
+      "from": 60,
+      "to": 63
+    },
+    "hard_0": {
+      "from": 64,
+      "to": 67
+    },
+    "hard_1": {
+      "from": 68,
+      "to": 71
+    },
+    "hard_2": {
+      "from": 72,
+      "to": 75
+    },
+    "hard_3": {
+      "from": 76,
+      "to": 79
+    },
+    "hard_4": {
+      "from": 80,
+      "to": 83
+    },
+    "hard_5": {
+      "from": 84,
+      "to": 87
+    },
+    "hard_6": {
+      "from": 88,
+      "to": 91
+    },
+    "hard_7": {
+      "from": 92,
+      "to": 95
+    },
+    "extreme_0": {
+      "from": 96,
+      "to": 99
+    },
+    "extreme_1": {
+      "from": 100,
+      "to": 103
+    },
+    "extreme_2": {
+      "from": 104,
+      "to": 107
+    },
+    "extreme_3": {
+      "from": 108,
+      "to": 111
+    },
+    "extreme_4": {
+      "from": 112,
+      "to": 115
+    },
+    "extreme_5": {
+      "from": 116,
+      "to": 119
+    },
+    "extreme_6": {
+      "from": 120,
+      "to": 123
+    },
+    "extreme_7": {
+      "from": 124,
+      "to": 127
+    }
+  },
+  "durations_ms": [
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    18,
+    26,
+    45,
+    80,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    35,
+    60,
+    100,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    20,
+    40,
+    75,
+    130,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155,
+    25,
+    45,
+    90,
+    155
+  ],
+  "columns": 16,
+  "frame_count": 128,
+  "filter": "nearest",
+  "loop": false,
+  "tiers": [
+    "light",
+    "strong",
+    "hard",
+    "extreme"
+  ],
+  "directions": 8,
+  "source": "assets/source-art/impact_003a1/contact_sparks.aseprite",
+  "texture": "res://assets/powers/impact_003a1/contact_sparks.png",
+  "source_sha256": "2c5a8bb4a87f303cac1d93b24c8e962ac3a751de34f689db38ec4e7fcbf9d6b4",
+  "texture_sha256": "ecbb5fa8a4f796c77fa98f0d50c77ed1118f37dc36f20288afb1e4f93c96265d",
+  "native_runtime_rgba_exact": true,
+  "reduced_flashing": "One-way cooling decay; no full-screen flash or oscillating brightness."
+}

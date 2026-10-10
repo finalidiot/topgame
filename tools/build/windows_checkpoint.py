@@ -25,6 +25,12 @@ import workspace
 
 EXE = "SpinningMetal.exe"
 DELIVERY_FILES = (EXE, EXE + ".sha256", "README.txt", "build-manifest.json")
+CONTROLLER_GUIDE = (
+    "Controller: left stick steers; south face button bursts; shoulder/trigger brakes;\n"
+    "Menu/Start pauses. In Options choose CONTROLLER: AUTO, XBOX, NINTENDO or PLAYSTATION.\n"
+    "Nintendo: printed A confirms; printed B goes back (B bursts in combat).\n"
+    "Xbox: A confirms; B goes back. PlayStation: Cross confirms; Circle goes back.\n"
+)
 SMOKE_MARKER = "INTEGRATION_SMOKE_PASS"
 ERRORS = re.compile(r"SCRIPT ERROR|(?:^|\n)ERROR:|FAIL:|Assertion failed", re.I)
 REQUIRED_CAPTURES = (
@@ -34,6 +40,7 @@ REQUIRED_CAPTURES = (
 )
 SHOP_REQUIRED_CAPTURES = ("003a-shop.png", "003a-odds.png", "003a-packet-result.png", "003a-acquired-workshop.png")
 SHOP_SMOKE_MARKER = "SHOP_PROGRESSION_SMOKE_PASS"
+SHOP_TASKS = ("003A", "003A.1")
 NATIVE_IMPORT_EXIT_CODES = (-1073741819, 3221225477)
 
 
@@ -161,14 +168,14 @@ def run_packaged_smoke(executable: Path, engine_log: Path, images: Path,
 
 
 def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) -> dict:
-    """Verify actual persisted 003A smoke progression, independent of markers.
+    """Verify actual persisted Shop smoke progression, independent of markers.
 
     This checks the fixed, explicitly labelled one-purchase smoke fixture. Real
     earned gameplay is different evidence. Rechecking the save before promotion
     prevents a release build with stripped assert-side effects from passing.
     """
-    if qa_task != "003A":
-        raise ValueError("Shop progression requires the explicit 003A QA task.")
+    if qa_task not in SHOP_TASKS:
+        raise ValueError("Shop progression requires the explicit 003A or 003A.1 QA task.")
     collection = collection.absolute()
     if is_reparse(collection):
         raise ValueError("Shop progression save cannot be a reparse point.")
@@ -187,8 +194,8 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
     def exact_integer(value, expected: int) -> bool:
         return type(value) in (int, float) and value == expected
 
-    require(isinstance(saved, dict) and exact_integer(saved.get("schema_version"), 2),
-            "requires a schema2 saved collection.")
+    require(isinstance(saved, dict) and exact_integer(saved.get("schema_version"), 3),
+            "requires a schema3 saved collection.")
     require(saved.get("starter_selected") == "breaker", "starter fixture changed.")
     baseline = {"blade:smash", "ratchet:high", "bit:flat"}
     owned = saved.get("owned_part_ids")
@@ -209,6 +216,9 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
             and receipt.get("status") == "resolved", "resolved paid receipt is missing or changed.")
     rows = receipt.get("rows")
     require(isinstance(rows, list) and len(rows) == 3, "receipt must contain all three physical slots.")
+    require(exact_integer(receipt.get("quantity"), 1) and exact_integer(receipt.get("cursor"), 1)
+            and receipt.get("packets") == [{"rows": rows, "total_salvage": receipt.get("total_salvage")}],
+            "single batch receipt lost its exact result group or completed cursor.")
     categories = ("blade", "ratchet", "bit")
     rarities = ("TRASH", "COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY")
     salvage_values = {"TRASH": 1, "COMMON": 1, "UNCOMMON": 2, "RARE": 4, "EPIC": 7, "LEGENDARY": 10}
@@ -249,7 +259,7 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
     require(isinstance(breakdown, dict) and set(breakdown) == {"threats", "elites", "bosses"}
             and exact_integer(breakdown.get("threats"), 48) and exact_integer(breakdown.get("elites"), 0)
             and exact_integer(breakdown.get("bosses"), 0), "saved fixture funding ledger changed.")
-    return {"path": str(collection), "sha256": sha256(collection), "schema_version": 2,
+    return {"path": str(collection), "sha256": sha256(collection), "schema_version": 3,
             "scope": "Actual persisted packaged one-purchase Shop flow; labelled funding/seed fixture, not earned gameplay.",
             "summary": {"owned_count": len(owned), "owned_part_ids": sorted(owned),
                         "credits": 0, "salvage": total_salvage, "packet_serial": 1, "receipt_id": "packet-1",
@@ -334,8 +344,11 @@ def verify_candidate(candidate: Path) -> dict:
         raise ValueError("Task 002C.5 must retain its pending human gameplay acceptance.")
     if manifest["checkpoint"] == "002C.6" and manifest.get("human_acceptance") != "PENDING HUMAN PRESENTATION PLAYTEST":
         raise ValueError("Task 002C.6 must retain its pending human presentation acceptance.")
-    if manifest["checkpoint"] == "003A" and manifest.get("human_acceptance") != "PENDING HUMAN PROGRESSION PLAYTEST":
-        raise ValueError("Task 003A must retain its pending human progression acceptance.")
+    if manifest["checkpoint"] in SHOP_TASKS:
+        if manifest["qa_task"] != manifest["checkpoint"]:
+            raise ValueError("Shop checkpoint must match its explicit QA task.")
+        if manifest.get("human_acceptance") != "PENDING HUMAN PROGRESSION PLAYTEST":
+            raise ValueError("Shop checkpoint must retain its pending human progression acceptance.")
     if not re.fullmatch(r"[0-9a-f]{40}", manifest.get("source", {}).get("git_sha", "")):
         raise ValueError("Candidate has no exact Git checkpoint.")
     if not manifest["source"].get("tracked_clean"):
@@ -384,8 +397,8 @@ def verify_candidate(candidate: Path) -> dict:
     if SMOKE_MARKER not in engine_content or ERRORS.search(engine_content):
         raise ValueError("Packaged engine log did not independently pass.")
     captures = {Path(c["path"]).name: c for c in smoke.get("captures", [])}
-    required = REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if manifest["checkpoint"] == "003A" else ())
-    if manifest["checkpoint"] == "003A" and SHOP_SMOKE_MARKER not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
+    required = REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if manifest["checkpoint"] in SHOP_TASKS else ())
+    if manifest["checkpoint"] in SHOP_TASKS and SHOP_SMOKE_MARKER not in Path(smoke["log"]).read_text(encoding="utf-8", errors="replace"):
         raise ValueError("Task 003A packaged Shop flow marker is absent.")
     for name in required:
         if name not in captures:
@@ -393,7 +406,7 @@ def verify_candidate(candidate: Path) -> dict:
         capture = captures[name]
         if not Path(capture["path"]).is_file() or sha256(Path(capture["path"])) != capture["sha256"]:
             raise ValueError(f"Packaged smoke capture changed: {name}")
-    if manifest["checkpoint"] == "003A":
+    if manifest["checkpoint"] in SHOP_TASKS:
         shop = smoke.get("shop_progression")
         if not isinstance(shop, dict) or not isinstance(shop.get("path"), str):
             raise ValueError("Task 003A has no verified persisted Shop progression evidence.")
@@ -476,6 +489,8 @@ def promote_candidate(candidate: Path, root: Path, qa: Path, checkpoint: str | N
 
 def build(args: argparse.Namespace) -> dict:
     workspace.valid_task(args.checkpoint)
+    if args.checkpoint in SHOP_TASKS and args.task != args.checkpoint:
+        raise ValueError("Shop checkpoint must match its explicit QA task.")
     root = workspace.repo_root().resolve()
     qa = workspace.qa_root(args.qa_root)
     task = workspace.create_task_workspace(args.task, qa)
@@ -514,9 +529,9 @@ def build(args: argparse.Namespace) -> dict:
                      engine_log=str(engine_log.resolve()), engine_log_sha256=sha256(engine_log),
                      profile_before=before, profile_after=after,
                      fixture_scope="Packaged menu/controller/starter/draft/continuous Run flow; synthetic outcomes are fixtures, not balance evidence.",
-                     captures=[png_record(images / name) for name in REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if args.checkpoint == "003A" else ())])
+                     captures=[png_record(images / name) for name in REQUIRED_CAPTURES + (SHOP_REQUIRED_CAPTURES if args.checkpoint in SHOP_TASKS else ())])
         report["packaged_smoke"] = smoke
-        if args.checkpoint == "003A":
+        if args.checkpoint in SHOP_TASKS:
             smoke["shop_progression"] = shop_progression_record(isolated_collection, qa_root=qa, qa_task=args.task)
         if before != after:
             raise RuntimeError("Real profile changed during isolated smoke; preserve latest and inspect concurrent activity.")
@@ -527,7 +542,7 @@ def build(args: argparse.Namespace) -> dict:
         digest = sha256(payload / EXE)
         (payload / (EXE + ".sha256")).write_text(digest + "  " + EXE + "\n", encoding="ascii")
         provisional_c5 = args.checkpoint == "002C.5" or args.checkpoint.startswith("002C.5.")
-        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "PENDING HUMAN PROGRESSION PLAYTEST" if args.checkpoint == "003A" else "Human acceptance is separate from automated validation."
+        acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "PENDING HUMAN PROGRESSION PLAYTEST" if args.checkpoint in SHOP_TASKS else "Human acceptance is separate from automated validation."
         report["human_acceptance"] = acceptance
         readme = ("Spinning Metal / GyroBrothers\n"
                   f"Task/checkpoint: {args.checkpoint} (workspace/build task {args.task})\n"
@@ -538,8 +553,7 @@ def build(args: argparse.Namespace) -> dict:
                   f"Human gameplay acceptance: {acceptance}\n\n"
                   "Run SpinningMetal.exe; game data is embedded.\n"
                   "Keyboard: WASD/arrows steer; Space bursts; Shift brakes; Esc pauses.\n"
-                  "Controller: left stick steers; bottom face button bursts/confirms;\n"
-                  "shoulder/trigger brakes; Menu/Start pauses; east face button goes back.\n"
+                  + CONTROLLER_GUIDE +
                   "D-pad/stick navigate menus; mouse and keyboard are also supported.\n\n"
                   "Select and confirm your first owned top when starting a fresh collection.\n"
                   + ("Task 002C.5 remains PENDING HOME HUMAN PLAYTEST.\n"

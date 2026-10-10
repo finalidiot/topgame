@@ -142,7 +142,7 @@ func _test_powers() -> void:
 	p.power_mutations = {"redline":"breakneck"}
 	p.rpm = 0.8
 	b._attempt_burst(p,Vector2.RIGHT)
-	check(p.rpm < 0.76 and b.continuous.economy.losses.powers > 0.0,"Expensive Redline activation still spends meaningful reserve")
+	check(p.rpm < 0.76 and b.continuous.economy.losses.redline > 0.0,"Expensive Redline activation still spends separately accounted reserve")
 	p.rpm = 0.13
 	b.powers.recover()
 	check(is_equal_approx(p.rpm,0.31) and p.second_wind_used,"Second Wind retains the emergency 18% rescue")

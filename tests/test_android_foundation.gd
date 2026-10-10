@@ -30,7 +30,10 @@ func run() -> void:
 	for safe: Rect2i in [Rect2i(0,0,1280,720),Rect2i(80,0,1760,1080),Rect2i(90,36,2220,1044),Rect2i(0,0,2560,1440),Rect2i(12,0,788,480)]:
 		var fit: Rect2i = Shell.fit_surface(safe)
 		check(safe.encloses(fit),"Phone native surface fits the complete cutout-safe rectangle")
-		check(fit.size.x%640==0 and fit.size.y%360==0 and fit.size.x/640==fit.size.y/360,"Phone preserves aspect and whole raster scale")
+		if safe.size.x>=800 and safe.size.y>=480:
+			check(fit.size.x%800==0 and fit.size.y%480==0 and fit.size.x/800==fit.size.y/480,"Full outer800x480HUD uses whole raster scale")
+		else:
+			check(fit.size.x*3==fit.size.y*5 and fit.size.x<=safe.size.x and fit.size.y<=safe.size.y,"Undersized cutout-safe fit keeps full5:3frame without croppingHUD")
 	var holder = Control.new(); root.add_child(holder)
 	var first = ButtonScript.new(); first.touch_targets=true; first.size=Vector2(100,28); first.position=Vector2(50,50); holder.add_child(first)
 	var second = ButtonScript.new(); second.touch_targets=true; second.size=Vector2(100,28); second.position=Vector2(50,84); holder.add_child(second)
@@ -97,9 +100,9 @@ func run() -> void:
 	app._clear_run(); app.screen="packet_open"
 	app.menus.show_packet_open({"kind":"standard","rows":[{"category":"blade","id":"guard"},{"category":"ratchet","id":"low"},{"category":"bit","id":"ball"}]},{"credits":0,"salvage":0})
 	app.menus._packet_view.phase="CRINKLE"
-	var seam_down = InputEventScreenTouch.new(); seam_down.index=4; seam_down.position=Vector2(280,180); seam_down.pressed=true
+	var seam_down = InputEventScreenTouch.new(); seam_down.index=4; seam_down.position=app.menus._content.get_global_transform_with_canvas()*Vector2(280,180); seam_down.pressed=true
 	app.menus._input(seam_down)
-	var seam_drag = InputEventScreenDrag.new(); seam_drag.index=4; seam_drag.position=Vector2(330,180)
+	var seam_drag = InputEventScreenDrag.new(); seam_drag.index=4; seam_drag.position=app.menus._content.get_global_transform_with_canvas()*Vector2(330,180)
 	app.menus._input(seam_drag)
 	check(app.menus._packet_view.opening and app.menus._packet_view.phase=="TEAR","A delayed seam gesture opens an already crinkling packet through the production action")
 	check(app.menus._packet_touch_index==-1,"A successful seam owns exactly one tear")

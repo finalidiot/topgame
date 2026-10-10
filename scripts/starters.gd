@@ -7,7 +7,9 @@ const Parts = preload("res://scripts/parts.gd")
 const IDS: Array[String] = ["breaker", "bastion", "vane"]
 const HANDLING: Dictionary = {
 	"breaker":{"acceleration":1.32,"speed":1.20,"mass":1.0,"impact":1.30,"spin_drain":1.0,"orbit":1.5,"bank":0.85,"recovery":1.0},
-	"bastion":{"acceleration":0.72,"speed":0.78,"mass":1.35,"impact":1.0,"spin_drain":0.90,"orbit":0.25,"bank":1.35,"recovery":1.3},
+	# Guard / Low / Ball already provide stamina. Keep fortress weight and
+	# recovery, but spend the normal reserve cost instead of a free 10% discount.
+	"bastion":{"acceleration":0.72,"speed":0.78,"mass":1.35,"impact":1.0,"spin_drain":1.0,"orbit":0.25,"bank":1.35,"recovery":1.3},
 	"vane":{"acceleration":1.18,"speed":1.12,"mass":0.94,"impact":1.05,"spin_drain":0.82,"orbit":1.6,"bank":1.0,"recovery":1.15}
 }
 const DEFINITIONS: Dictionary = {

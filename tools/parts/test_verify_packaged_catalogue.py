@@ -22,7 +22,7 @@ class PackagedEconomyContracts(unittest.TestCase):
         self.path = Path(self.temp.name) / "isolated_collection.json"
         source = json.loads((verifier.ROOT / "assets/data/parts_catalogue.json").read_text(encoding="utf-8"))
         self.expected = {category + ":" + local for category,parts in source["categories"].items() for local in parts}
-        self.saved = {"schema_version":2,"starter_selected":"breaker","owned_part_ids":sorted(self.expected),
+        self.saved = {"schema_version":3,"starter_selected":"breaker","owned_part_ids":sorted(self.expected),
                       "equipped_build":{"blade":"smash","ratchet":"high","bit":"flat"},
                       "progression":{"credits":0,"salvage":0,"packet_serial":0,"pending_packet":{},
                                      "last_packet":{},"run_serial":0,"active_run":"","last_reward":{}}}
@@ -31,15 +31,21 @@ class PackagedEconomyContracts(unittest.TestCase):
 
     def write(self): self.path.write_text(json.dumps(self.saved),encoding="utf-8")
 
-    def test_schema_two_qa_collection_requires_empty_progression(self):
+    def test_schema_three_qa_collection_requires_empty_progression(self):
         self.write()
         result = verifier.verify_collection(self.path,self.expected)
-        self.assertEqual(result["schema_version"],2)
+        self.assertEqual(result["schema_version"],3)
         self.assertTrue(result["qa_economy_empty"])
         self.assertEqual(result["owned_count"],31)
 
     def test_schema_one_fixture_is_rejected(self):
         self.saved["schema_version"] = 1
+        self.write()
+        with self.assertRaisesRegex(RuntimeError,"31 qualified"):
+            verifier.verify_collection(self.path,self.expected)
+
+    def test_old_schema_two_probe_is_rejected(self):
+        self.saved["schema_version"] = 2
         self.write()
         with self.assertRaisesRegex(RuntimeError,"31 qualified"):
             verifier.verify_collection(self.path,self.expected)
@@ -444,5 +450,206 @@ class BeastColourPackageTests(unittest.TestCase):
         self.report["beast_json"] = "broken"
         with self.assertRaisesRegex(RuntimeError, "manifest is invalid"): verifier.verify_beast_assets(self.report)
 
+
+class PickupPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        meta = json.loads((verifier.ROOT / "assets/powers/pickup_003a1/manifest.json").read_text(encoding="utf-8"))
+        size,digest = verifier._visible_pixels(verifier.ROOT / meta["texture"].removeprefix("res://"))
+        row = {"kind":"collect","path":meta["texture"],"metadata_path":"res://assets/powers/pickup_003a1/manifest.json",
+               "valid":True,"visible_pixels":True,"size":size,"visible_rgba_sha256":digest,"transparent_rgb_normalized":True,
+               "native_source_available":True,"native_source_sha256":meta["source_sha256"]}
+        row.update({key:deepcopy(meta[key]) for key in ("cell","pivot","columns","frame_count","durations_ms","tags","layers","source")})
+        path = "res://assets/audio/pickup_collect.wav"
+        with wave.open(str(verifier.ROOT / path.removeprefix("res://")),"rb") as sample:
+            digest = hashlib.sha256(sample.readframes(sample.getnframes())).hexdigest()
+        cls.fixture = {"pickup_flair_json":json.dumps(meta),"pickup_flair_texture":row,"pickup_collect_audio":{
+            "kind":"pickup_collect","path":path,"valid":True,"format":1,"stereo":False,"channels":1,"mix_rate":48000,
+            "loop_mode":0,"pcm_frames":8640,"duration_seconds":.18,"pcm_sha256":digest}}
+
+    def setUp(self): self.report = deepcopy(self.fixture)
+    def verify(self): return verifier.verify_pickup_assets(self.report)
+
+    def test_actual_source_native_pixels_and_short_pcm_fixture_accepted(self):
+        result = self.verify()
+        self.assertTrue(result["pickup_flair_visible_rgba_exact"])
+        self.assertTrue(result["pickup_collection_audio_pcm_exact"])
+        self.assertEqual(result["pickup_collection_audio_seconds"],.18)
+
+    def test_missing_marker_or_unknown_receipts_rejected(self):
+        for key in ("pickup_flair_texture","pickup_collect_audio"):
+            for row in (None,{},[],{"kind":"unknown"}):
+                self.report = deepcopy(self.fixture);self.report[key]=row
+                with self.subTest(key=key,row=row),self.assertRaisesRegex(RuntimeError,"did not inspect"):self.verify()
+
+    def test_changed_or_invalid_native_manifest_rejected(self):
+        for value in (None,"broken",json.dumps({"duration_ms":310})):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_json"]=value
+            with self.subTest(value=value),self.assertRaisesRegex(RuntimeError,"manifest (is invalid|differs)"):self.verify()
+
+    def test_imported_visible_rgba_alpha_and_path_drift_rejected(self):
+        for key,value,expected in (("path","res://assets/wrong.png","resource path"),("metadata_path","res://assets/wrong.json","resource path"),
+                                   ("valid",False,"alpha/visible"),("visible_pixels",False,"alpha/visible"),("size",[1,1],"alpha/visible"),
+                                   ("visible_rgba_sha256","0"*64,"alpha/visible"),("transparent_rgb_normalized",False,"alpha/visible")):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,expected):self.verify()
+
+    def test_native_animation_topology_and_provenance_drift_rejected(self):
+        for key,value in (("pivot",[0,0]),("cell",[1,1]),("columns",1),("frame_count",1),("durations_ms",[]),
+                          ("tags",{}),("layers",[]),("source","assets/wrong.aseprite")):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,"topology"):self.verify()
+        for key,value in (("native_source_available","true"),("native_source_sha256","0"*64)):
+            self.report = deepcopy(self.fixture);self.report["pickup_flair_texture"][key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(RuntimeError,"native-source evidence"):self.verify()
+
+    def test_audio_pcm_loop_length_format_and_resource_drift_rejected(self):
+        for key,value in (("path","res://assets/audio/card_select.wav"),("valid",False),("format",2),("stereo",True),
+                          ("channels",2),("mix_rate",32000),("loop_mode",1),("pcm_frames",9000),("pcm_sha256","0"*64),
+                          ("duration_seconds",.5),("duration_seconds",True),("duration_seconds",".18"),("duration_seconds",float("nan"))):
+            self.report = deepcopy(self.fixture);self.report["pickup_collect_audio"][key]=value
+            with self.subTest(key=key,value=value),self.assertRaisesRegex(RuntimeError,"PCM or one-shot timing"):self.verify()
+
+    def test_optional_native_master_absence_is_explicit(self):
+        self.report["pickup_flair_texture"].update(native_source_available=False,native_source_sha256="")
+        result = self.verify()
+        self.assertTrue(result["pickup_native_master_verified"])
+        self.assertFalse(result["pickup_packaged_native_master_available"])
+
+
+def _combat_pcm_fixture(path,kind,stereo=False):
+    with wave.open(str(verifier.ROOT/path.removeprefix("res://")),"rb") as sample:
+        frames=sample.getnframes();rate=sample.getframerate();channels=sample.getnchannels();pcm=sample.readframes(frames)
+    return {"kind":kind,"path":path,"valid":True,"format":1,"stereo":stereo,"channels":channels,"mix_rate":rate,"loop_mode":0,"loop_begin":0,"loop_end":0,"pcm_frames":frames,"duration_seconds":frames/rate,"pcm_sha256":hashlib.sha256(pcm).hexdigest()}
+
+class CombatArtPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.fixture={}
+        locations={"combat_art_json":"assets/powers/combat_003a1/manifest.json","combat_identity_json":"assets/powers/identity_manifest.json","combat_spark_json":"assets/powers/impact_003a1/manifest.json","combat_crack_json":"assets/powers/impact_003a1/crack_manifest.json","combat_arena_geometry_json":"assets/arena/manifest.json"}
+        for field,path in locations.items():cls.fixture[field]=(verifier.ROOT/path).read_text()
+        art=json.loads(cls.fixture['combat_art_json']);identity=json.loads(cls.fixture['combat_identity_json']);sparks=json.loads(cls.fixture['combat_spark_json'])
+        rows=[]
+        def add(kind,meta,metadata_path,layer=None):
+            size,digest=verifier._visible_pixels(verifier.ROOT/meta['texture'].removeprefix('res://'))
+            row={key:deepcopy(meta[key]) for key in ('cell','pivot','columns','frame_count','tags','durations_ms','layers','source')}
+            row.update(kind=kind,path=meta['texture'],metadata_path=metadata_path,valid=True,visible_pixels=True,size=size,visible_rgba_sha256=digest,transparent_rgb_normalized=True,native_source_available=False,native_source_sha256='')
+            if layer is not None:row['native_layer']=layer
+            rows.append(row)
+        for layer,path in art['base_arena']['textures'].items():
+            meta=deepcopy(art['base_arena']);meta['texture']=path;add('arena_base/'+layer,meta,'res://assets/powers/combat_003a1/manifest.json',layer)
+        for family,meta in art['families'].items():add('combat/'+family,meta,'res://assets/powers/combat_003a1/manifest.json')
+        for family in ('redline','afterimage','orbit_drive','predator_line'):add('card/'+family,identity['families'][family]['cards'],'res://assets/powers/identity_manifest.json')
+        add('combat/contact_sparks',sparks,'res://assets/powers/impact_003a1/manifest.json')
+        add('combat/contact_crack',json.loads(cls.fixture['combat_crack_json']),'res://assets/powers/impact_003a1/crack_manifest.json')
+        cls.fixture['combat_art_textures']=rows
+
+    def setUp(self):self.report=deepcopy(self.fixture)
+    def verify(self):return verifier.verify_combat_presentation_assets(self.report)
+
+    def test_all_compiled_venue_motion_card_and_spark_pixels_accepted(self):
+        result=self.verify();self.assertEqual(result['combat_art_sheets_verified'],15);self.assertEqual(result['combat_native_master_count'],10);self.assertTrue(result['combat_native_runtime_parity_exact'])
+
+    def test_missing_extra_duplicate_or_unknown_sheet_rejected(self):
+        for mode in ('missing','extra','duplicate','unknown'):
+            self.report=deepcopy(self.fixture);rows=self.report['combat_art_textures']
+            if mode=='missing':rows.pop()
+            elif mode=='extra':rows.append(deepcopy(rows[0]))
+            elif mode=='duplicate':rows[0]=deepcopy(rows[1])
+            else:rows[0]['kind']='unknown'
+            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'fifteen combat'):self.verify()
+
+    def test_wrong_fixed_geometry_or_source_metadata_rejected(self):
+        for key in ('combat_art_json','combat_identity_json','combat_spark_json','combat_crack_json','combat_arena_geometry_json'):
+            self.report=deepcopy(self.fixture);self.report[key]='{}'
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'metadata differs'):self.verify()
+
+    def test_invalid_native_metadata_report_rejected(self):
+        for value in (None,'broken',False):
+            self.report=deepcopy(self.fixture);self.report['combat_art_json']=value
+            with self.subTest(value=value),self.assertRaisesRegex(RuntimeError,'metadata is invalid'):self.verify()
+
+    def test_changed_alpha_visible_rgb_or_actual_import_dimensions_rejected(self):
+        for key,value in (('valid',False),('visible_pixels',False),('visible_rgba_sha256','0'*64),('size',[1,1]),('transparent_rgb_normalized',False)):
+            self.report=deepcopy(self.fixture);self.report['combat_art_textures'][0][key]=value
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'alpha/visible RGBA'):self.verify()
+
+    def test_runtime_path_or_wrong_native_layer_rejected(self):
+        for key,value in (('path','res://assets/wrong.png'),('metadata_path','res://assets/wrong.json'),('native_layer','surface')):
+            self.report=deepcopy(self.fixture);self.report['combat_art_textures'][0][key]=value
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'resource/layer path'):self.verify()
+
+    def test_native_tag_timeline_pivot_layer_and_frame_count_drift_rejected(self):
+        for key,value in (('cell',[1,1]),('pivot',[0,0]),('tags',{}),('durations_ms',[]),('layers',[]),('columns',0),('frame_count',0),('source','assets/wrong.aseprite')):
+            self.report=deepcopy(self.fixture);row=next(r for r in self.report['combat_art_textures'] if r['kind']=='combat/contact_sparks');row[key]=value
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'native topology'):self.verify()
+
+    def test_optional_native_master_presence_is_exact_boolean_fact(self):
+        for key,value in (('native_source_available','true'),('native_source_sha256','0'*64)):
+            self.report=deepcopy(self.fixture);self.report['combat_art_textures'][0][key]=value
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'native-source evidence'):self.verify()
+
+class CombatAudioPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        text=(verifier.ROOT/'assets/audio/impact_003a1/manifest.json').read_text();meta=json.loads(text)
+        cls.fixture={'combat_audio_json':text,'combat_audio':[_combat_pcm_fixture('res://assets/audio/impact_003a1/'+kind+'.wav',kind) for kind in meta['sounds']]}
+    def setUp(self):self.report=deepcopy(self.fixture)
+    def verify(self):return verifier.verify_combat_audio_assets(self.report)
+    def test_eleven_exact_authored_pcm_cues_accepted(self):
+        result=self.verify();self.assertEqual(result['metal_audio_cues_verified'],11);self.assertTrue(result['metal_audio_pcm_exact'])
+    def test_missing_duplicate_or_unknown_cue_rejected(self):
+        for mode in ('missing','duplicate','unknown'):
+            self.report=deepcopy(self.fixture);rows=self.report['combat_audio']
+            if mode=='missing':rows.pop()
+            elif mode=='duplicate':rows[0]=deepcopy(rows[1])
+            else:rows[0]['kind']='unknown'
+            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'eleven metal'):self.verify()
+    def test_format_channels_pcm_length_hash_loop_and_path_drift_rejected(self):
+        for key,value in (('valid',False),('path','res://assets/audio/card_select.wav'),('format',2),('format',True),('stereo',True),('channels',2),('mix_rate',48000),('pcm_frames',999),('pcm_sha256','0'*64),('loop_mode',1)):
+            self.report=deepcopy(self.fixture);self.report['combat_audio'][0][key]=value
+            with self.subTest(field=key,value=value),self.assertRaisesRegex(RuntimeError,'actual imported PCM'):self.verify()
+    def test_duration_nan_string_bool_or_wrong_seconds_rejected(self):
+        for value in (float('nan'),True,'.095',.5):
+            self.report=deepcopy(self.fixture);self.report['combat_audio'][0]['duration_seconds']=value
+            with self.subTest(value=value),self.assertRaisesRegex(RuntimeError,'PCM duration'):self.verify()
+    def test_authored_source_metadata_drift_rejected(self):
+        self.report['combat_audio_json']='{}'
+        with self.assertRaisesRegex(RuntimeError,'metadata differs'):self.verify()
+
+class MusicVariationPackageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        folder=verifier.ROOT/'assets/audio/music';text=(folder/'run_arrangement_003a1_manifest.json').read_text();meta=json.loads(text)
+        combined=json.loads((folder/'manifest.json').read_text());combined['stems'].update(meta['stems']);combined['run_variation']=meta
+        cls.fixture={'music_variation_json':text,'music_variation_score_json':(folder/'run_arrangement_003a1.json').read_text(),'music_asset_metadata':combined,'music_variation_stems':[_combat_pcm_fixture('res://assets/audio/music/'+kind+'.wav',kind,True) for kind in meta['stems']]}
+    def setUp(self):self.report=deepcopy(self.fixture)
+    def verify(self):return verifier.verify_music_variation_assets(self.report)
+    def test_two_new_original_pcm_stems_and_seven_stem_metadata_accepted(self):
+        result=self.verify();self.assertEqual(result['music_variation_stems_verified'],2);self.assertTrue(result['original_five_music_bytes_preserved']);self.assertTrue(result['music_seven_stem_asset_metadata_verified'])
+    def test_missing_or_duplicate_new_stem_rejected(self):
+        for mode in ('missing','duplicate'):
+            self.report=deepcopy(self.fixture)
+            if mode=='missing':self.report['music_variation_stems'].pop()
+            else:self.report['music_variation_stems'][0]=deepcopy(self.report['music_variation_stems'][1])
+            with self.subTest(mode=mode),self.assertRaisesRegex(RuntimeError,'both new Run'):self.verify()
+    def test_original_or_new_stem_missing_from_actual_music_metadata_rejected(self):
+        for kind in ('title','run_base','run_opening','run_motion'):
+            self.report=deepcopy(self.fixture);self.report['music_asset_metadata']['stems'].pop(kind)
+            with self.subTest(kind=kind),self.assertRaisesRegex(RuntimeError,'seven synchronized'):self.verify()
+    def test_pcm_rate_stereo_format_hash_and_import_loop_drift_rejected(self):
+        for key,value in (('mix_rate',48000),('stereo',False),('format',2),('pcm_sha256','0'*64),('pcm_frames',100),('loop_mode',1),('duration_seconds',.5)):
+            self.report=deepcopy(self.fixture);self.report['music_variation_stems'][0][key]=value
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'actual imported PCM'):self.verify()
+    def test_authored_score_sidecar_or_metadata_drift_rejected(self):
+        for key in ('music_variation_json','music_variation_score_json'):
+            self.report=deepcopy(self.fixture);self.report[key]='{}'
+            with self.subTest(field=key),self.assertRaisesRegex(RuntimeError,'metadata differs'):self.verify()
+    def test_same_numeric_music_metadata_accepts_godot_json_number_types(self):
+        self.report['music_asset_metadata']['grid']['frames']=float(self.report['music_asset_metadata']['grid']['frames'])
+        self.assertTrue(self.verify()['music_seven_stem_asset_metadata_verified'])
+    def test_boolean_cannot_substitute_for_numeric_music_grid(self):
+        self.report['music_asset_metadata']['grid']['frames']=True
+        with self.assertRaisesRegex(RuntimeError,'seven synchronized'):self.verify()
 
 if __name__ == "__main__": unittest.main(verbosity=2)

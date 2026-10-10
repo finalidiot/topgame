@@ -205,12 +205,12 @@
     "redline": {
       "family": "redline",
       "grammar": {
-        "silhouette": "Off-centre metal rotor with broken hot plates and an asymmetric torn wake.",
-        "motion": "Ignition, growing splinter density and irregular heat stutter; Breakneck loads, strikes, recoils.",
+        "silhouette": "Preserved off-centre native metal rotor with coherent red heat arcs and restrained star accents.",
+        "motion": "Authored rotor arcs and directional heat streaks; preserved stars and machine; no disconnected rectangular chip blocks.",
         "location": "Rotor edges and actual velocity wake; recoil near the floor.",
         "persistence": "Only real active/overcap/heat states; discrete ignition, commitment, strike and vent events.",
         "palette": "Oxide, hot orange, red and pale key flashes against cold steel.",
-        "feature": "Open machine centre with unequal broken fragment banks; mutations change motion, not just hue."
+        "feature": "Open machine centre, physical rotor heat and tangential streaks; mutations retain their distinct action stories."
       },
       "design": "assets/powers/identity/redline_design.json",
       "cards": {
@@ -1358,10 +1358,7 @@
         "runaway": "runaway",
         "breakneck": "breakneck_charge"
       },
-      "notes": [
-        "Successful C.4 fragmented Redline active signatures are intentionally retained by the integrated renderer. Fresh cards/icons and eight-key contact/overcap/heat/commit force-fragment states share their asymmetric hot mechanical grammar. No clean corona ring.",
-        "Runaway card frays after successive successful-contact action beats. Breakneck uses a visible small rival and loaded/strike/recoil poses."
-      ],
+      "notes": "003A.1 human correction retains stars, native main rotor and card timing. Heat blocks are replaced with coherent rotor arcs; gameplay keeps its accepted expanding red ring.",
       "art": {
         "redline": {
           "family": "redline",
@@ -3005,7 +3002,7 @@
     "afterimage": {
       "family": "afterimage",
       "grammar": {
-        "silhouette": "A leading physical machine and environmental scars; Ghost encloses a rival in an irregular latched route",
+        "silhouette": "Accepted native Vane top at core-card scale, sparse actual trail, physical closure socket",
         "motion": "Route is drawn behind motion, aged crossing snaps locally, Ghost sockets meet and the actual path locks",
         "location": "Recorded routes, endpoints and actual crossing points",
         "persistence": "Bounded route history plus finite latch/crossing responses",
@@ -3349,7 +3346,7 @@
       "active_tags": {
         "ghost_preview": "latch_endpoint"
       },
-      "notes": "Retain strong actual-route geometry and native afterimage_fx_002c4 scar/crossing logic; do not substitute a pre-drawn circle for live recorded routes. New endpoint, lock and crossing tiles are local accents. Ghost card shows an enclosed rival and a closing irregular machine path; Slipstream shows a physical top accelerating across an old route. No persistent player aura.",
+      "notes": "003A.1 human correction adopts the quiet core-card framing and accepted native machine anatomy. Ghost route and Slipstream crossing retain distinct identities. Layers/tags/pivots/authored milliseconds preserved.",
       "art": {
         "afterimage": {
           "family": "afterimage",
@@ -4745,9 +4742,9 @@
         ],
         "layers": [
           "01 arena floor and contact story",
+          "04 mechanic-specific motion and force",
           "02 accepted native bit and ratchet",
           "03 accepted native blade silhouette",
-          "04 mechanic-specific motion and force",
           "05 physical contact flashes and fragments"
         ],
         "tags": {

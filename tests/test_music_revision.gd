@@ -17,7 +17,7 @@ func digest(bytes: PackedByteArray) -> String:
 	return hash_context.finish().hex_encode()
 func run() -> void:
 	var score: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Music.ASSET_ROOT + "foundation_score.json"))
-	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Music.ASSET_ROOT + "manifest.json"))
+	var manifest: Dictionary = Music.asset_metadata()
 	var revision: Dictionary = score.human_feedback_revision
 	var music: Node = Music.new(); root.add_child(music)
 	check(music.music_snapshot().asset_errors.is_empty(), "All revised and preserved stems import on the accepted exact grid")
@@ -44,7 +44,7 @@ func run() -> void:
 	for context: String in ["workshop", "result", "run"]:
 		music.set_context(context)
 		var target: Array = music.music_snapshot().targets
-		check(target == ([0.0, 1.0, 0.0, 0.0, 0.0] if context == "workshop" else ([0.0, 0.65, 0.0, 0.0, 0.0] if context == "result" else [0.0, 0.0, 1.0, 0.0, 0.0])), "Human-liked context routing and accepted gain remain exact: " + context)
+		check(target == ([0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0] if context == "workshop" else ([0.0, 0.65, 0.0, 0.0, 0.0, 0.0, 0.0] if context == "result" else [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0])), "Menu routing remains exact; opening uses its new authored half-time arrangement: " + context)
 	check(music.music_snapshot().transport_starts == 0, "Read-only preservation test opens no native audio device")
 	music.free()
 	print("MUSIC_REVISION_TEST checks=", checks, " failures=", failures.size())

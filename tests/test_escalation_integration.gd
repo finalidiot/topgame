@@ -155,7 +155,7 @@ func _nodes(parent: Node) -> Array[Node]:
 func _check_layout() -> void:
 	for node: Node in _nodes(game.menus):
 		if node is Label:
-			check(Rect2(0,0,640,360).encloses(node.get_global_rect()), "Text stays in native viewport: " + node.text)
+			check(game.menus._content.get_global_rect().encloses(node.get_global_rect()), "Text stays in its actual native HUD/menu content: " + node.text)
 			var font: Font = node.get_theme_font("font")
 			var font_size: int = node.get_theme_font_size("font_size")
 			if node.autowrap_mode == TextServer.AUTOWRAP_OFF:
@@ -192,7 +192,7 @@ func _check_mutation_layout(cards: Array[Button]) -> void:
 			check(authored[0].size == Vector2(128,128) and (authored[0].texture as AtlasTexture).region.size == Vector2(64,64), "Mutation illustration keeps its complete native cell at integer2x")
 	check(not cards[0].get_global_rect().intersects(cards[1].get_global_rect()), "Opposing mutation cards do not overlap each other")
 	if is_instance_valid(inspector):
-		check(Rect2(0,0,640,360).encloses(inspector.get_global_rect()), "Fixed reading panel stays inside the native viewport")
+		check(Rect2(80,60,640,360).encloses(inspector.get_global_rect()), "Fixed reading panel stays inside the centred native menu")
 		check(get_root().gui_get_focus_owner() in cards and str(inspector.get("mutation_id")) == game.menus.focused_power_id(), "Native focused branch drives the fixed reading panel")
 
 func _test_branch(power_id: String, branch_id: String) -> void:
@@ -220,7 +220,8 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	check(branches == Powers.mutation_choices(power_id), "Only the two valid branches appear")
 	var cards: Array[Button] = []
 	for node: Node in _nodes(game.menus):
-		if node is Button: cards.append(node)
+		if node is Button and str(node.get_meta("intent", "")) == "choose_mutation": cards.append(node)
+	check(game.menus._content.get_global_rect() == Rect2(80,60,640,360), "Mutation retains exact native menu dimensions in the800x480 product frame")
 	_check_mutation_layout(cards)
 	_check_layout()
 	await _capture("mutation-" + power_id)
@@ -263,13 +264,13 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	# A live impact hold survives a draft just like other exact arena state.
 	# Drain its bounded fixed ticks, then require actual combat advancement.
 	var held_ticks: int = ceili(game.battle._hit_stop / (1.0/60.0))
-	check(held_ticks <= 3, "Retained impact hold is bounded after resume")
+	check(held_ticks <= 4, "Retained extreme impact hold remains bounded to four frames after resume")
 	for tick: int in range(held_ticks + 2): game.battle.test_step(1.0/60.0)
 	check(game.battle.elapsed > float(body.elapsed), "Combat continues with chosen mutation after resume")
 
 func _run() -> void:
-	root.size = Vector2i(640,360)
-	root.content_scale_size = Vector2i(640,360)
+	root.size = Vector2i(800,480)
+	root.content_scale_size = Vector2i(800,480)
 	Input.use_accumulated_input = false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="): captures = argument.trim_prefix("--capture-dir=")

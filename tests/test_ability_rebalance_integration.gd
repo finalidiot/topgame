@@ -50,7 +50,7 @@ func _test_real_overcap_ledger() -> void:
 			b.continuous.economy.end_tick(Battle.FIXED_DT)
 		check(float(p.rpm) > 1.0 and b.powers.effective_rpm(p) == p.rpm, "Real Rank %d input/physics/economy creates stored overcap" % level)
 		var e = b.continuous.economy
-		check(e.gains.redline_motion > 0.0 and e.losses.powers > 0.0 and e.losses.movement > 0.0, "Actual Redline writes retain named gains and costs")
+		check(e.gains.redline_motion > 0.0 and e.losses.redline > 0.0 and e.losses.powers == 0.0 and e.losses.movement > 0.0, "Actual Redline writes retain their dedicated gain/cost sources without double-counting powers")
 		check(is_equal_approx(float(p.rpm), 1.0 + total(e.gains) - total(e.losses)), "Continuous ledger exactly closes above 100% RPM")
 		b.powers.begin_tick(0.3)
 		check(float(p.rpm) <= 1.0 and is_equal_approx(float(p.rpm), 1.0 + total(e.gains) - total(e.losses)), "Expiry vent leaves no unaccounted excess discard")

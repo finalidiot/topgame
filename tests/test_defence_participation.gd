@@ -64,9 +64,9 @@ func _test_active() -> void:
 		check(b.continuous.economy.credits.has(2),"Active defence keeps full pressure-effect recovery eligibility")
 		target.outcome = "impact"
 		b.continuous.economy.outcomes()
-		check(is_equal_approx(p.rpm,0.545),"Active defence earns the original exact45-milli-reserve elimination payoff")
+		check(is_equal_approx(p.rpm,0.530),"Active defence earns the revised exact30-milli-reserve elimination payoff")
 		b.continuous.economy.outcomes()
-		check(is_equal_approx(p.rpm,0.545),"Repeated outcome cannot repay controlled defence")
+		check(is_equal_approx(p.rpm,0.530),"Repeated outcome cannot repay controlled defence")
 		b.free()
 
 func _test_stale_and_pause() -> void:
