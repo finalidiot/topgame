@@ -1,6 +1,6 @@
 {
   "schema": "003a2_levelup_fullclient_v1",
-  "status": "source_validated_build_pending",
+  "status": "built_pushed_ready_for_human_review",
   "starting_sha": "3b9756e418d3a86e6a15a4cafb2de45fea9ce7d3",
   "branch": "task-003a2-ability-ecology",
   "scope": "Desktop reward, mutation, level-up and acquisition reflow across the actual client. Pause and mobile safe modal stay accepted. The combat simulation is unchanged.",
@@ -56,6 +56,38 @@
     "preservation_prebuild": {
       "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_preservation_prebuild_20261010_134109_153952.json",
       "sha256": "46bbfd389a35f0804a64bdb3559d6b13e539520df6117f4b76999c7a1b2455f6"
+    },
+    "windows_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-d6038fa32f0e.json",
+      "sha256": "a31150d9306df44ab23e3e24293ee35f980aa9c3e56fcac4b8999b78479aa03d"
+    },
+    "packaged_catalogue": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_89b16bd97a054f8d87cd8fca61c39a7c.json",
+      "sha256": "071aaa4960710ae5b0948629815b641950889e3e0f5c98c5386b8eaed254b6c9"
+    },
+    "android_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-c29139c01e50.json",
+      "sha256": "10f19e4de77147b304afe12ff8d2e71f31004d02e9ce4d6142a86bd5230d6fcf"
+    },
+    "android_package_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_android_package_audit_20261010_134308_471551.json",
+      "sha256": "ee93549c082520a771f96f943f657f62beb3252472459a40232a399367c5a832"
+    },
+    "promotion_preservation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_promoted_20261010_134508_840304.json",
+      "sha256": "602cf568342162891a519db6f381bdd750ebcfbe2e237170cb438ce05f6d136d"
+    },
+    "device_status": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_device_status_20261010_134603_491145.json",
+      "sha256": "3de86a05f294798a8380a41b6ec2c7aba11da95286864edbc8658ab96a8e0bf5"
+    },
+    "upload": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_download_release_20261010_135007_896512.json",
+      "sha256": "9c5e102d6ce73f290e73685033becdf5b8e0135dcb73aeab78cef9188f40a146"
+    },
+    "public_download": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_public_download_20261010_135047_705680.json",
+      "sha256": "d5cf242a7ca3cfc226c546f1cb9d6dac4e143e4c6e3f4b7470daf1e440d43c1d"
     }
   },
   "media": {
@@ -74,5 +106,27 @@
   "android_physical_acceptance": false,
   "human_acceptance": "pending",
   "merged_to_main": false,
-  "started_003b": false
+  "started_003b": false,
+  "runtime_commit": "f272811819fcbfa9cdeb83111aab7dff9204e89a",
+  "release_url": "https://github.com/finalidiot/topgame/releases/tag/003a2-frontend-review-f272811",
+  "windows": {
+    "status": "passed",
+    "latest": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+    "checkpoint": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+    "sha256": "a504887eab16330685d704a8c5989e04227fea7dac8f8b1dbd97cb339d66125d",
+    "bytes": 152257744
+  },
+  "android": {
+    "status": "awaiting_android_smoke",
+    "checkpoint": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal-android.apk",
+    "sha256": "3dea13bc9b4705e379e85f81463c919ab5044986045c296083d143b6a6674589",
+    "bytes": 89185339,
+    "signed_package_inspection": "passed",
+    "latest_updated": false,
+    "physical_device_connected": false,
+    "physical_acceptance": false
+  },
+  "prior_deliveries_exactly_archived": 12,
+  "accepted_music_files_unchanged": 18,
+  "public_download_verification": "Six server digests, public HEAD sizes, first/middle/last64KiB binary ranges and complete small files pass; specific mobile download completion is not claimed."
 }
