@@ -1,8 +1,8 @@
 {
   "schema": "003a2_frontend_fullscreen_review_v1",
   "task": "003A.2",
-  "created_utc": "2026-10-10T12:54:15.506426+00:00",
-  "status": "source_validated_guarded_build_pending",
+  "created_utc": "2026-10-10T13:06:16.369351+00:00",
+  "status": "windows_validated_promoted_android_package_validated_checkpoint_phone_review_pushed_human_review_pending",
   "verified_starting_sha": "ed1b73f7328b90a72b6320071564a364350de7ed",
   "branch": "task-003a2-ability-ecology",
   "main_unchanged": "b476c6d9240a2c9f03942cda70d43576cc3903da",
@@ -11,7 +11,16 @@
     "fingerprint": "69ec230834ff0b1285d48918ccdfb6ed8b32227a4a8461aa635fc85621c0142d",
     "menus_sha256": "a827b2df7bcb402cea4dbac5cc0210ddfb5a333fedaa2558ed5207488ad80569",
     "main_sha256": "022bff754848822ce159a971b085c7bc3e159507b64ac755a408d37b45e2ba90",
-    "same_current_bytes_as_all_selected_capture_stages": true
+    "same_current_bytes_as_all_selected_capture_stages": true,
+    "compiled_commit": "796207f98fdfe14cefcf6a731ae24834afcf0975",
+    "same_windows_android_clean_source_inputs": 867,
+    "exact_exercised_canonical_export_runtime_files": 838,
+    "package_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_android_package_audit_20261010_125630_037073.json",
+      "bytes": 329347,
+      "sha256": "7705b50f3fa3e0ae92de867d6396dcfa7e5bdb957095136155b788a783468f76"
+    },
+    "documentation_commit": "Separate final documentation/evidence-only commit; no runtime changes."
   },
   "presentation": {
     "helper": "scripts/frontend_layout.gd",
@@ -123,7 +132,12 @@
     "untouched_script_and_uid_files": 112,
     "previous_delivery_files": 12,
     "all_before_promotion_byte_identical": true,
-    "historical_qa_preserved": true
+    "historical_qa_preserved": true,
+    "final_receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_preservation_published_review_final_20261010_130507_809204.json",
+      "bytes": 805,
+      "sha256": "80f4974402d2ccf1453ae94e129258f1c01a320822f7d64b4595af66d9f0c2fc"
+    }
   },
   "correction_findings": [
     "Old640x360 front-end root caused tiny centered Options; new full-client semantic layout fixes it",
@@ -140,5 +154,120 @@
   "human_frontend_acceptance": "pending",
   "branch_merged": false,
   "003B_started": false,
-  "builds": "Pending clean-source guarded export; final receipt will record exact compiled commit and binary hashes."
+  "builds": {
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_builds_delivered_20261010_125913_106955.json",
+      "bytes": 7731,
+      "sha256": "3176101aeb1e6e698447cd0734f340b2acc236f7583208e9235bcc230778f4d4"
+    },
+    "windows": {
+      "latest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+        "bytes": 152252992,
+        "sha256": "2cca878d812b81455242cf13ea7148a6f7f259e61183ed47bd1fc2e16d90156d"
+      },
+      "checkpoint": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+        "bytes": 152252992,
+        "sha256": "2cca878d812b81455242cf13ea7148a6f7f259e61183ed47bd1fc2e16d90156d"
+      },
+      "evidence": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-9599ac8915e5.json",
+        "bytes": 174315,
+        "sha256": "ed7cdfa992713dab9f16caff83c095563c4bc02cee673d270cd1a39a45b802f4"
+      },
+      "packaged_catalogue": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_a14b56673b4d4a9ca13f4231cc879fb9.json",
+        "bytes": 16077,
+        "sha256": "e5a798a3f8ebeced6efb606eb17dfbc7bd6c1efe14864663cd77f8ae676ddff3"
+      },
+      "validation": "passed",
+      "isolated_packaged_smoke": true
+    },
+    "android": {
+      "checkpoint": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal-android.apk",
+        "bytes": 89181243,
+        "sha256": "03118d68c23f9c6a21df39613c929ce2002fb7e04078a146508af42547bbcb92"
+      },
+      "evidence": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-6e4a03e5132a.json",
+        "bytes": 314531,
+        "sha256": "5fe3b17053df836ad9aba73862b2b8011393c1573e8c40e7afa909abd400433b"
+      },
+      "package_audit": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_android_package_audit_20261010_125630_037073.json",
+        "bytes": 329347,
+        "sha256": "7705b50f3fa3e0ae92de867d6396dcfa7e5bdb957095136155b788a783468f76"
+      },
+      "validation": "awaiting_android_smoke",
+      "physical_android_acceptance": false,
+      "latest_promoted": false,
+      "human_acceptance": "AWAITING PHYSICAL ANDROID REVIEW"
+    },
+    "preserved_previous_archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\1ff3c233b0164adeb1f193c235623822",
+    "all12_previous_delivery_hashes_match": true
+  },
+  "release": {
+    "url": "https://github.com/finalidiot/topgame/releases/tag/003a2-frontend-review-796207f",
+    "tag": "003a2-frontend-review-796207f",
+    "compiled_commit": "796207f98fdfe14cefcf6a731ae24834afcf0975",
+    "upload": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_download_release_20261010_130320_554667.json",
+      "bytes": 228953,
+      "sha256": "8ce9432d0c8871592b02b8227337569c7eb14a0263a648756f0a1363973907a8"
+    },
+    "public_verification": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_public_download_20261010_130357_949376.json",
+      "bytes": 10414,
+      "sha256": "8a3f6932859e9da6235496389a9039ab76cafabd48eef57f9df12937f3d95fe7"
+    },
+    "assets": [
+      {
+        "name": "SpinningMetal.exe",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/SpinningMetal.exe",
+        "bytes": 152252992,
+        "sha256": "2cca878d812b81455242cf13ea7148a6f7f259e61183ed47bd1fc2e16d90156d"
+      },
+      {
+        "name": "SpinningMetal.exe.sha256",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/SpinningMetal.exe.sha256",
+        "bytes": 85,
+        "sha256": "16f0bf62e12139f04947dfeb58f6b2fde1f1970e28d30744258ec3c66261d7cf"
+      },
+      {
+        "name": "README.txt",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/README.txt",
+        "bytes": 1025,
+        "sha256": "30db0639eb73b3f71ce9f176235d687822acab8b47aba9dc346b3a6ac91e3f41"
+      },
+      {
+        "name": "SpinningMetal-android.apk",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/SpinningMetal-android.apk",
+        "bytes": 89181243,
+        "sha256": "03118d68c23f9c6a21df39613c929ce2002fb7e04078a146508af42547bbcb92"
+      },
+      {
+        "name": "SpinningMetal-android.apk.sha256",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/SpinningMetal-android.apk.sha256",
+        "bytes": 93,
+        "sha256": "fa89604b525bcc17cee3703d1aedee616deb70676d52015f5cd634e5daf87f85"
+      },
+      {
+        "name": "README-android.txt",
+        "url": "https://github.com/finalidiot/topgame/releases/download/003a2-frontend-review-796207f/README-android.txt",
+        "bytes": 1034,
+        "sha256": "15c546061b47f730982d376494aedd28d27577a4920ebf8b909dbc34e4711fd5"
+      }
+    ],
+    "complete_upload_github_digests_verified": true,
+    "unauthenticated_head_and_bounded_ranges_verified": true,
+    "scope": "Server metadata and byte integrity; no guarantee of completed mobile-network download, phone installation or physical acceptance."
+  },
+  "human_review": [
+    "Judge Title/Hub/Options/Workshop/Shop/Starter composition and text at preferred normal/maximized display size",
+    "Use actual mouse/controller to browse, scroll, adjust options, buy/tear/reveal packets and return across pages",
+    "Confirm accepted combat framing/Pause/draft readability and true native Maximise/Restore",
+    "Install updated APK on a real landscape phone and judge display coverage, safe cutouts, touch rails and background/resume system UI"
+  ]
 }
