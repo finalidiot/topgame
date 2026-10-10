@@ -1,8 +1,8 @@
 {
-  "schema": "003a2_ability_ecology_prebuild_summary_v1",
+  "schema": "003a2_ability_ecology_delivery_summary_v2",
   "task": "003A.2",
   "created_utc": "2026-10-10T07:19:28.743986+00:00",
-  "status": "prebuild_automated_evidence_pass_candidate_and_human_acceptance_pending",
+  "status": "windows_candidate_promoted_automated_evidence_pass_android_awaiting_smoke_human_acceptance_pending",
   "starting_accepted_main": "b476c6d9240a2c9f03942cda70d43576cc3903da",
   "branch": "task-003a2-ability-ecology",
   "runtime_boundary": {
@@ -14,7 +14,9 @@
       "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review_final_prebuild_20261010_071928_743986.json",
       "sha256": "ec41126f9fe8184e565812d5b2169bc1ac7ba7caf4ffbaf8246b7fe3af071f12",
       "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
-    }
+    },
+    "runtime_build_commit": "c06108649ba96d64aeb7697de1dc375837174c45",
+    "documentation_commit": "Separate later documentation commit; does not change the compiled runtime source boundary."
   },
   "catalogue": {
     "active_base_families": 16,
@@ -220,7 +222,12 @@
       "status": "passed",
       "failures": null
     },
-    "compiled_package_probe_pending": true
+    "compiled_package_probe_pending": false,
+    "compiled_package_probe": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_81b551e491a94382b8469843875f889a.json",
+      "sha256": "a5a39de79ba11e855ff558bb7932bcc7401c40ee7204e6bb5b60749ba493fa13",
+      "scope": "Actual packaged31-part/42-texture strict probe; all8 ecology atlases, branches and icons with compiled metadata/RGBA/native-export parity."
+    }
   },
   "movies": [
     {
@@ -381,6 +388,11 @@
       "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_preservation_prebuild_20261010_071338_860490.json",
       "sha256": "30d09860d31daf78e478df49e65c9e65e3e097a80f17f31c4eec3b902c307567",
       "scope": "438 player/18 music/695 accepted assets/8 accepted deliveries byte-exact;836 runtime files match final114."
+    },
+    "postbuild": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_preservation_postbuild_20261010_072605_174296.json",
+      "sha256": "3840f7ee617fa097ec018b905a186ad4d6abb7faa9215eaeb95bf17f2464f899",
+      "scope": "438 player/18 music/695 accepted assets/4 retired checkpoint deliveries exact after authorised Windows promotion; current836 runtime files match final114."
     }
   },
   "retained_attempts": {
@@ -419,11 +431,11 @@
     "offered_shoves": "Actual recipient resistance/100 offer cap/340 recipient velocity cap continue; listed branch offers are not guaranteed resulting velocity."
   },
   "pending_acceptance": [
-    "Windows/Android candidate export, actual packaged catalogue and Shop receipt smoke, and any authorised promotion.",
-    "Emulator/physical Android and human acceptance remain separate; no physical phone acceptance is claimed.",
+    "Android installed-device smoke; APK awaiting_android_smoke and not promoted.",
+    "Human review of Windows progression and eight branch piloting choices; physical phone/controller feel unverified.",
     "Main remains unmerged and003B unstarted."
   ],
-  "delivery_paths": "Build paths and runtime commit will be added only after root export/smoke in a separate documentation update.",
+  "delivery_paths": "Windows checkpoint/latest promoted after actual packaged proof. Android candidate remains external and unpromoted. Both packages compile runtimec061086; later documentation commit does not change their runtime boundary.",
   "android_environment": {
     "status": "unavailable_no_smoke_coverage",
     "evidence": {
@@ -432,5 +444,156 @@
     },
     "attempts": 2,
     "scope": "Bounded software-emulator boots did not produce a booted adb device; no physical phone connected. No APK installation/capture/smoke, and all19 required coverage rows unexercised. Original AVD files and438 Windows player files preserved. APK export remains separate; Android smoke and phone feel pending."
+  },
+  "updated_utc": "2026-10-10T07:28:18.317930+00:00",
+  "preserved_prebuild_documentation": {
+    "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_prebuild_docs_before_delivery_20261010_072818_317930",
+    "files": [
+      {
+        "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\tasks\\003A.2.md",
+        "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_prebuild_docs_before_delivery_20261010_072818_317930\\003A.2.md",
+        "sha256": "41241c3de3723e4ad2d942a3181d3d979787723b2f7a4d2e11e396fbf22f351e",
+        "bytes": 31895
+      },
+      {
+        "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\tests\\results\\003a2_ability_ecology.json",
+        "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_prebuild_docs_before_delivery_20261010_072818_317930\\003a2_ability_ecology.json",
+        "sha256": "cb85bf09089b5dc514157cec8af92076c86316575d2044b0d033c032e9f66367",
+        "bytes": 20295
+      }
+    ]
+  },
+  "delivery": {
+    "runtime_build_commit": "c06108649ba96d64aeb7697de1dc375837174c45",
+    "windows": {
+      "status": "passed_and_promoted",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-09319e433ecf.json",
+        "sha256": "bcaefcd3d8cf2a15ab200616f8116e57036dfddf241ef697be85fff5e55adc2e",
+        "scope": "Clean source/import/release export and actual packaged isolated smoke plus persisted Shop progression."
+      },
+      "exe": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+        "latest": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+        "sha256": "e090cdd9858e0fe0b2537379dd19c561365ccadbda4f9a087c61edd2992c67a4",
+        "bytes": 152218784
+      },
+      "packaged_catalogue": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_81b551e491a94382b8469843875f889a.json",
+        "sha256": "a5a39de79ba11e855ff558bb7932bcc7401c40ee7204e6bb5b60749ba493fa13",
+        "scope": "Strict compiled catalogue and texture/metadata/native source receipt proof; real profile unchanged."
+      },
+      "shop": {
+        "receipt_path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\temp\\windows-003a2-09319e433ecf\\isolated-collection.json",
+        "sha256": "782ab8c784310d6cf3b9f78fe53bc59acfac1e23059244a8e41df3352e719745",
+        "scope": "Actual persisted packaged one-purchase Shop flow; labelled funding/seed fixture, not earned gameplay.",
+        "summary": {
+          "owned_count": 5,
+          "owned_part_ids": [
+            "bit:flat",
+            "bit:skate",
+            "blade:smash",
+            "ratchet:high",
+            "ratchet:kickback"
+          ],
+          "credits": 0,
+          "salvage": 1,
+          "packet_serial": 1,
+          "receipt_id": "packet-1",
+          "receipt_status": "resolved",
+          "receipt_rows": [
+            {
+              "category": "blade",
+              "id": "smash",
+              "new": false,
+              "part_id": "blade:smash",
+              "rarity": "COMMON",
+              "salvage": 1
+            },
+            {
+              "category": "ratchet",
+              "id": "kickback",
+              "new": true,
+              "part_id": "ratchet:kickback",
+              "rarity": "RARE",
+              "salvage": 0
+            },
+            {
+              "category": "bit",
+              "id": "skate",
+              "new": true,
+              "part_id": "bit:skate",
+              "rarity": "UNCOMMON",
+              "salvage": 0
+            }
+          ],
+          "pending_packet_empty": true,
+          "new_part_ids": [
+            "ratchet:kickback",
+            "bit:skate"
+          ],
+          "equipped_build": {
+            "bit": "flat",
+            "blade": "smash",
+            "ratchet": "kickback"
+          },
+          "equipped_new_part_ids": [
+            "ratchet:kickback"
+          ],
+          "run_serial": 1,
+          "active_run_empty": true,
+          "last_reward": {
+            "breakdown": {
+              "bosses": 0,
+              "elites": 0,
+              "threats": 48
+            },
+            "credits": 48,
+            "eligible": true,
+            "id": "run-1"
+          }
+        }
+      },
+      "smoke_exit_code": 0,
+      "smoke_marker": "INTEGRATION_SMOKE_PASS",
+      "captures": 12,
+      "fixture_scope": "Packaged menu/controller/starter/draft/continuous Run flow; synthetic outcomes are fixtures, not balance evidence.",
+      "real_profile_unchanged": true,
+      "old_latest_archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\b8297aafc14e4f58b4e7bbbaf9625b72\\latest",
+      "retired_003A1_checkpoint_unchanged": true,
+      "human_acceptance": "pending"
+    },
+    "android": {
+      "status": "awaiting_android_smoke",
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-d3f39e892268.json",
+        "sha256": "dd4ac5e5fd3c833c0a66dbf0c3673412b40109ce0c5ff7379ec0c81fcdc961e8",
+        "scope": "Signed debug APK export/signature/resource inspection; no installed emulator/device smoke."
+      },
+      "apk": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\temp\\android-003a2-d3f39e892268\\payload\\SpinningMetal-android.apk",
+        "sha256": "09561b58a4c7eae8468017592223735a3e8317a90c7224d0bf84aed57c51985d",
+        "bytes": 89144214
+      },
+      "debug_signed": true,
+      "promoted_to_checkpoint_or_latest": false,
+      "environment": {
+        "status": "unavailable_no_smoke_coverage",
+        "evidence": {
+          "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_android_emulator_unavailable_20261010_071359_863189.json",
+          "sha256": "e01734e8ea5869d312351d61e9c618e6a1e47b13790adb45c40a7d56bb606523"
+        },
+        "attempts": 2,
+        "scope": "Bounded software-emulator boots did not produce a booted adb device; no physical phone connected. No APK installation/capture/smoke, and all19 required coverage rows unexercised. Original AVD files and438 Windows player files preserved. APK export remains separate; Android smoke and phone feel pending."
+      },
+      "unexercised_coverage_rows": 19,
+      "human_phone_feel": "pending",
+      "future_smoke_source_requirement": "Existing Android candidate validation requires exact clean runtimec06108649ba96d64aeb7697de1dc375837174c45 checkout; the later documentation-only HEAD is not the smoke source checkout. Guard unchanged."
+    },
+    "reverification": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_delivery_validation_20261010_072720_816128.json",
+      "sha256": "f5e5714c54e926051016ad9bda3b4b0b737dd5fa2a7fb15fa6bf8e50402df030",
+      "scope": "Final promoted Windows checkpoint/latest guard and sourcec061 hashes; all four archived oldlatest files exact; Android candidate verification without smoke and eight-atlas compiled receipt pass."
+    }
   }
 }
