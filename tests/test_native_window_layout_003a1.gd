@@ -76,7 +76,7 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
 		if arg=="--native": native=true
-	if not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/"):
+	if not report.is_absolute_path() or FileAccess.file_exists(report) or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")):
 		push_error("A fresh isolated003A.1 report is required"); quit(2); return
 	root.size = Vector2i(800,480)
 	game = QuietMain.new()

@@ -17,7 +17,7 @@ func check(ok: bool, label: String) -> void:
 		failures += 1
 		push_error(label)
 func _run() -> void:
-	check(Powers.ACTIVE_IDS.size() == 16 and Powers.investment_capacity() == 39,"Sixteen meaningful families, thirty-nine total investments")
+	check(Powers.ACTIVE_IDS.size() == 16 and Powers.investment_capacity() == 43,"Sixteen meaningful families, forty-three total investments")
 	check(not "second_wind" in Powers.ACTIVE_IDS and "clutch" in Powers.ACTIVE_IDS,"Retired revive is excluded from every normal offer")
 	check(not Powers.get_owned_power("second_wind").is_empty() and not Powers.get_power("second_wind").active and Powers.get_offer("second_wind").is_empty(),"Legacy owned identity remains readable without re-entering drafts")
 	for power: String in Powers.ACTIVE_IDS:

@@ -36,6 +36,10 @@ static func for_event(event: Dictionary) -> Dictionary:
 		ranks["dead_centre"] = 3; mutations["dead_centre"] = "counterweight"
 	elif identity == "reaper":
 		ranks["afterimage"] = 3; mutations["afterimage"] = "ghost_circuit"
+	# Only the fortress specialist receives the new automatic severe-hit
+	# response. Ordinary packages and their accepted piloting stay unchanged.
+	if identity == "anvil" and kind in ["elite","boss"] and "crash_guard" in ids:
+		ranks["crash_guard"] = 3; mutations["crash_guard"] = "sacrificial_damper"
 	return {"ids":ids,"ranks":ranks,"mutations":mutations,"identity":identity}
 
 static func apply(fighter: Dictionary, event: Dictionary) -> void:

@@ -100,7 +100,10 @@ func _draw_column(origin: Vector2, rows: Array) -> void:
 			draw_line(rect.position+Vector2(roundf(rect.size.x*tick/4.0),0),rect.position+Vector2(roundf(rect.size.x*tick/4.0),2),Color("a7b7b5"))
 		var status: String = str(row.get("status",""))
 		if row.id == "redline": status = "ACTIVE" if bool(_state.redline.get("active",false)) else "COOL"
-		if row.id == "orbit": status = "DRIFT" if bool(_state.orbit.get("drifting",false)) else "CARVE"
+		if row.id == "orbit":
+			status = "DRIFT" if bool(_state.orbit.get("drifting",false)) else "CARVE"
+			if value >= 1.0 and bool(_state.orbit.get("flowing",false)):
+				status = "SHEAR" if _state.orbit.get("mutation","") == "centrifuge" else ("FLOW" if _state.orbit.get("mutation","") == "perpetual_orbit" else status)
 		if row.id == "sink": status = "LOADED" if value >= .95 else ("STORE" if value > .01 else "EMPTY")
 		if row.id == "anchor":
 			status = {"HIGH LOAD":"HIGH","RECHARGE":"RECOVER"}.get(status,status)

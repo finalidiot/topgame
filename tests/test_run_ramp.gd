@@ -16,12 +16,16 @@ func player_fingerprint() -> Dictionary:
 	return result
 
 func run() -> void:
+	var qa_task: String = "003A.1"
 	var report: String = ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
+		if arg.begins_with("--qa-task="): qa_task = arg.trim_prefix("--qa-task=")
+	if qa_task not in ["003A.1","003A.2"]: quit(2); return
 	var qa: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if qa.is_empty(): qa = ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-	var base: String = qa.path_join("003A.1/temp/run-ramp-replay-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()])
+	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").simplify_path().to_lower().begins_with(qa.replace("\\","/").simplify_path().path_join(qa_task+"/manifests").to_lower()+"/")): quit(2); return
+	var base: String = qa.path_join(qa_task+"/temp/run-ramp-replay-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()])
 	DirAccess.make_dir_recursive_absolute(base)
 	var before: Dictionary = player_fingerprint()
 	horizon = 85.0

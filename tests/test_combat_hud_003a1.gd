@@ -178,7 +178,7 @@ func isolated_options() -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
-	var valid: bool = report.is_absolute_path() and report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") and not FileAccess.file_exists(report)
+	var valid: bool = report.is_absolute_path() and (report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")) and not FileAccess.file_exists(report)
 	if not valid: push_error("Fresh absolute 003A.1 QA report required; no player profile opened"); quit(2); return
 	root.size = Vector2i(800, 480); root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false

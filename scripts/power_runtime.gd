@@ -363,6 +363,7 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 			_record("chain_burst", int(fighter["entity_id"]), int(target["entity_id"]))
 
 func wall_rebound(fighter: Dictionary, outward_speed: float, normal: Vector2, contact_pos: Vector2) -> void:
+	if not mutation(fighter,"iron_comet").is_empty(): return
 	if _stopped or not _live(fighter) or not _has(fighter, "iron_comet") or outward_speed < 110.0:
 		return
 	var state: Dictionary = _state(fighter)
@@ -785,7 +786,7 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 			_request(target, normal * ((48.0 if _small(target) else 18.0) if rank(owner, "impact_wake") >= 2 else (36.0 if _small(target) else 12.0)), _power_cause(cause, "impact_wake", int(owner["entity_id"])))
 		_record("impact_wake", int(owner["entity_id"]), int(target["entity_id"]), event_id)
 		_fx("impact_wake", position, normal, 1.0, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
-	if _has(owner, "iron_comet") and float(state["comet_until"]) > time:
+	if _has(owner, "iron_comet") and mutation(owner,"iron_comet").is_empty() and float(state["comet_until"]) > time:
 		state["comet_until"] = 0.0
 		owner["iron_comet_time"] = 0.0
 		owner["comet_time"] = 0.0
@@ -1219,7 +1220,12 @@ func _orbit_full_carve(fighter: Dictionary) -> void:
 	var status: Variant = _host().get("battle_status")
 	if status != null and status != "battle": return
 	if float(fighter.get("orbit_charge",0.0)) < 1.0 or Vector2(fighter.vel).length() <= 80.0 or float(_state(fighter).motion_input) <= 0.20: return
-	var gained: float = _gain(fighter,(ORBIT_FULL_REGEN_I if rank(fighter,"orbit_drive") == 1 else ORBIT_FULL_REGEN_II)*_tick_dt,"orbit_drive")
+	var rate: float = ORBIT_FULL_REGEN_I if rank(fighter,"orbit_drive") == 1 else ORBIT_FULL_REGEN_II
+	var branch: String = mutation(fighter,"orbit_drive")
+	if not branch.is_empty():
+		if not bool(fighter.get("orbit_flow",false)): return
+		rate = _host().roster.ecology.PERPETUAL_RECOVERY if branch == "perpetual_orbit" else _host().roster.ecology.CENTRIFUGE_RECOVERY
+	var gained: float = _gain(fighter,rate*_tick_dt,"orbit_drive")
 	if gained > 0.0:
 		fighter.energy = fighter.rpm
 		_record("orbit_full_recovery",int(fighter.entity_id))
@@ -1255,9 +1261,10 @@ func public_state(fighter: Dictionary) -> Dictionary:
 	var sink_stored: float = float(fighter.get("sink_charge", 0.0)) if _has(fighter, "impact_sink") else 0.0
 	return {
 		"anchor": {"owned": _has(fighter, "dead_centre"), "charge": float(fighter.get("anchor_charge", 0.0)), "strength": float(fighter.get("anchor_charge", 0.0)) * anchor_efficiency(fighter), "stress": float(fighter.get("anchor_stress", 0.0)), "loaded": float(fighter.get("anchor_load", 0.0)), "venting": bool(fighter.get("anchor_venting", false)), "recovery_remaining": float(fighter.get("anchor_recovery_remaining", 0.0)), "rearm_progress": float(fighter.get("anchor_rearm_progress", 0.0)), "overloaded": bool(_state(fighter).anchor_overloaded), "recovering": bool(_state(fighter).anchor_overloaded), "safe_stress": ANCHOR_STRESS_REENGAGE, "overload_stress": ANCHOR_STRESS_OVERLOAD, "recovery_progress": float(fighter.get("anchor_recovery_progress", 0.0)), "rpm_loss_scale": incoming_rpm_scale(fighter)},
-		"orbit": {"owned": _has(fighter, "orbit_drive"), "drive": clampf(float(fighter.get("orbit_charge", 0.0)), 0.0, 1.0), "drifting": bool(fighter.get("drift_active", false))},
+		"orbit": {"owned": _has(fighter, "orbit_drive"), "drive": clampf(float(fighter.get("orbit_charge", 0.0)), 0.0, 1.0), "drifting": bool(fighter.get("drift_active", false)), "mutation":mutation(fighter,"orbit_drive"),"flowing":bool(fighter.get("orbit_flow",false))},
 		"sink": {"owned": _has(fighter, "impact_sink"), "stored": sink_stored, "capacity": sink_capacity, "ratio": clampf(sink_stored / maxf(0.001, sink_capacity), 0.0, 1.0)},
-		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "overdrive": overdrive_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)}
+		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "overdrive": overdrive_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)},
+		"ecology": _host().roster.ecology.diagnostics(fighter) if _host().get("roster") != null and _host().roster.ecology.owns(fighter) else {}
 	}
 
 func _modern_tick(fighter: Dictionary, dt: float) -> void:

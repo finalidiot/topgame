@@ -3,6 +3,7 @@ class_name RunPowerCatalog
 
 const IdentityArt = preload("res://scripts/power_identity.gd")
 const DefenceArt = preload("res://scripts/defence_art.gd")
+const EcologyArt = preload("res://scripts/ecology_art.gd")
 const CardStyle = preload("res://scripts/ability_card_style.gd")
 
 ## Catalogue identity stays stable as the implemented draft pool grows.
@@ -14,7 +15,7 @@ const IDS: Array[String] = [
 	"gyro_lock", "impact_sink", "anchor_exchange"
 ]
 const ACTIVE_IDS: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut", "gyro_lock", "impact_sink", "anchor_exchange"]
-const VERTICAL_IDS: Array[String] = ["redline", "dead_centre", "afterimage", "high_gear", "gyro_lock", "impact_sink", "anchor_exchange"]
+const VERTICAL_IDS: Array[String] = ["redline", "dead_centre", "afterimage", "high_gear", "gyro_lock", "impact_sink", "anchor_exchange", "iron_comet", "orbit_drive", "momentum_bank", "crash_guard"]
 const FAMILY_CAP: int = 7
 # Retired IDs remain readable for historical fixtures; normal drafts use ACTIVE_IDS.
 const LEGACY_OWNED_IDS: Array[String] = ["second_wind"]
@@ -36,7 +37,11 @@ const MUTATION_BRANCHES: Dictionary = {
 	"high_gear":["terminal_velocity", "flow_state"],
 	"gyro_lock":["keel", "flywheel"],
 	"impact_sink":["shock_bleed", "return_spring"],
-	"anchor_exchange":["deep_footing", "slip_anchor"]
+	"anchor_exchange":["deep_footing", "slip_anchor"],
+	"iron_comet":["wallbreaker", "ricochet_engine"],
+	"orbit_drive":["centrifuge", "perpetual_orbit"],
+	"momentum_bank":["flywheel_release", "countersteer"],
+	"crash_guard":["reactive_plating", "sacrificial_damper"]
 }
 # Native 64px, six discrete poses per row. Presentation reads source timing.
 const CARD_DURATIONS_MS: Array[int] = [110, 90, 75, 75, 100, 170]
@@ -135,7 +140,15 @@ const MUTATIONS: Dictionary = {
 	"shock_bleed": {"id":"shock_bleed", "power_id":"impact_sink", "name":"Shock Bleed", "description":"Take recoil, then tap Brake slowly to spend stored force on stronger RPM and wobble recovery. Only accepted stored force pays, and recovery remains capped.", "card_copy":"Store recoil. Tap Brake for stronger recovery.", "category":"STORED RECOVERY", "short_label":"BLEED", "condition":"Stored incoming force / fresh Brake / shared recovery budget"},
 	"return_spring": {"id":"return_spring", "power_id":"impact_sink", "name":"Return Spring", "description":"Take recoil, then tap Brake slowly to spend stored force on a physical pulse against nearby rivals. This replaces recovery and spends a little RPM.", "card_copy":"Store recoil. Tap Brake for a close counter pulse.", "category":"ACTIVE COUNTER PULSE", "short_label":"SPRING", "condition":"Stored force / fresh Brake / six nearby targets maximum"},
 	"deep_footing": {"id":"deep_footing", "power_id":"anchor_exchange", "name":"Deep Footing", "description":"Almost stop and hold Brake to build extreme portable footing. It costs more RPM than normal Anchor Exchange and sharply limits movement.", "card_copy":"Almost stop. Hold Brake. Pay for extreme footing.", "category":"PORTABLE FORTRESS", "short_label":"FOOTING", "condition":"Brake below 34 speed / extra spin cost / limited movement"},
-	"slip_anchor": {"id":"slip_anchor", "power_id":"anchor_exchange", "name":"Slip Anchor", "description":"Build a brace, then release Brake to carry some footing into your repositioning. The carry fades in 0.35 seconds; Burst clears it.", "card_copy":"Brace, release and move. Carry brief footing.", "category":"BRACED REPOSITION", "short_label":"SLIP", "condition":"Release a developed brace / 0.35 s carry / Burst clears it"}
+	"slip_anchor": {"id":"slip_anchor", "power_id":"anchor_exchange", "name":"Slip Anchor", "description":"Build a brace, then release Brake to carry some footing into your repositioning. The carry fades in 0.35 seconds; Burst clears it.", "card_copy":"Brace, release and move. Carry brief footing.", "category":"BRACED REPOSITION", "short_label":"SLIP", "condition":"Release a developed brace / 0.35 s carry / Burst clears it"},
+	"wallbreaker": {"id":"wallbreaker", "power_id":"iron_comet", "name":"Wallbreaker", "description":"A hard wall rebound pays RPM to commit your top to its real reflected line for 1.2 seconds. Brake is unavailable and steering is limited. Aim the first hard full-top contact for a huge physical shove and recoil; missing spends more RPM and wobble.", "card_copy":"Hard wall rebound. Commit to one hit.", "category":"COMMITTED REBOUND", "short_label":"WALLBREAK", "condition":"160+ outward wall speed / above 13% RPM / pays 1.8% RPM / aimed full-top hit within 1.2 s / miss penalty / 2 s arm cooldown"},
+	"ricochet_engine": {"id":"ricochet_engine", "power_id":"iron_comet", "name":"Ricochet Engine", "description":"Steer obliquely into real wall rebounds off Brake to pay a little RPM and retain more reflected motion. Chain up to three route beats within three seconds, then spend a beat on a smaller aimed full-top shove. Brake or a hard correction breaks the route; it earns no RPM recovery.", "card_copy":"Steer oblique rebounds. Chain a route.", "category":"CONTROLLED RICOCHET", "short_label":"RICOCHET", "condition":"110+ outward wall speed / deliberate oblique steering / off Brake / pays 0.6% RPM per rebound / 0.3 s cooldown / three route beats maximum"},
+	"centrifuge": {"id":"centrifuge", "power_id":"orbit_drive", "name":"Centrifuge", "description":"Reach exactly full DRIVE while actively carving, then make a fast tangential full-top contact. Spend 70% DRIVE and 1.2% RPM on a strong sideways physical shove, with recoil and wobble. Recovery at full carve is smaller than Rank II; no nearby aura attack is granted.", "card_copy":"Full DRIVE. Carve a rival sideways.", "category":"TANGENTIAL RELEASE", "short_label":"CENTRIFUGE", "condition":"100% DRIVE / fresh same-sign moving curve / fast tangential full-top hit / spends 70% DRIVE and 1.2% RPM / 1.3 s cooldown"},
+	"perpetual_orbit": {"id":"perpetual_orbit", "power_id":"orbit_drive", "name":"Perpetual Orbit", "description":"Keep a smooth same-sign moving curve to maintain full DRIVE and earn stronger capped RPM recovery through the existing Orbit bucket. A hard correction, reversed curve or braking without a carve dumps charge, costs RPM and loses speed. Regain a real curve to rearm; it adds no direct attack.", "card_copy":"Smooth full DRIVE earns RPM. Errors cost.", "category":"SUSTAINED CARVE", "short_label":"ORBIT FLOW", "condition":"Smooth moving same-sign curve / full DRIVE earns capped 1.7% RPM per second / broken flow dumps charge, costs up to 1.2% RPM and loses speed"},
+	"flywheel_release": {"id":"flywheel_release", "power_id":"momentum_bank", "name":"Flywheel Release", "description":"Steer and Brake outside a drift to bank lost physical motion in a larger leaking store. Burst with enough bank to spend it all on a powerful straight launch, paying extra RPM. Steering commits for 0.65 seconds and Brake is unavailable; a hard aimed hit recoils, while a miss spends more RPM and wobble.", "card_copy":"Bank, then Burst straight. Misses cost.", "category":"COMMITTED BANK RELEASE", "short_label":"FLY RELEASE", "condition":"60+ real bank / paid Burst consumes all storage / 0.65 s straight commitment / extra RPM scales with bank / miss penalty / 1.2 s cooldown"},
+	"countersteer": {"id":"countersteer", "power_id":"momentum_bank", "name":"Countersteer", "description":"Bank real steered braking motion outside a drift. Aim Burst at least 60 degrees across your actual incoming velocity to spend the store and RPM on a physical redirection. It carries your existing speed onto the new line with a small bank contribution. A straight Burst keeps storage; there is no prolonged steering lock, teleport or RPM gain.", "card_copy":"Bank, then Burst across your old line.", "category":"BANKED REDIRECTION", "short_label":"COUNTERSTEER", "condition":"35+ real bank / Burst 60 degrees or more from incoming motion / whole bank and extra RPM spent / 0.2 s impulse carry / 0.8 s cooldown"},
+	"reactive_plating": {"id":"reactive_plating", "power_id":"crash_guard", "name":"Reactive Plating", "description":"A genuine hard incoming full-top hit stores a bounded fraction of its solver force for 0.75 seconds and opens a weaker guard than Rank II. Steer into the next distinct full-top contact to spend all stored force and 1% RPM on a physical counter, with recoil. The charge hit cannot counter itself; unused force expires.", "card_copy":"Take force. Aim the next contact to counter.", "category":"STORED CONTACT COUNTER", "short_label":"REACTIVE", "condition":"Hard incoming full-top hit / actual recoil fills bounded stock / next distinct aimed contact within 0.75 s / pays 1% RPM / 3 s charge cooldown"},
+	"sacrificial_damper": {"id":"sacrificial_damper", "power_id":"crash_guard", "name":"Sacrificial Damper", "description":"An exceptional incoming full-top hit can buy one strong reduction to that hit's actual recoil and shock loss. It pays RPM, then buckles movement for 1.4 seconds with reduced acceleration and speed, extra drag and continuing RPM cost. Later ordinary contacts receive no damper protection; the cooldown lasts seven seconds.", "card_copy":"Absorb one huge hit. Buckled motion costs.", "category":"ONE-HIT SACRIFICE", "short_label":"DAMPER", "condition":"Extreme incoming full-top hit / above 13% RPM / pays 0.9% RPM / 1.4 s buckled movement costs 1% RPM per second / 7 s cooldown"}
 }
 
 static func get_power(power_id: String) -> Dictionary:
@@ -239,6 +252,10 @@ static func get_owned_power(power_id: String, rank: int = 1, mutation: String = 
 	return power
 
 static func _apply_art(power: Dictionary, art_id: String) -> void:
+	var ecology_art: Dictionary = EcologyArt.art(art_id)
+	if not ecology_art.is_empty():
+		power.merge(ecology_art, true)
+		return
 	var defence_art: Dictionary = DefenceArt.art(art_id)
 	if not defence_art.is_empty():
 		power.merge(defence_art, true)

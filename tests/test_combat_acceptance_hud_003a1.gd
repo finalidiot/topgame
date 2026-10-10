@@ -196,7 +196,7 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
 		if arg=="--native": native=true
-	if not report.is_absolute_path() or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or FileAccess.file_exists(report):
+	if not report.is_absolute_path() or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")) or FileAccess.file_exists(report):
 		push_error("Fresh external report required; no player data opened"); quit(2); return
 	root.size=Vector2i(800,480); root.content_scale_size=Vector2i(800,480); Input.use_accumulated_input=false
 	game=QuietMain.new(); game.smoke_mode=true

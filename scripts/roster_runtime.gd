@@ -2,6 +2,8 @@ extends RefCounted
 ## Physical build tools. State belongs to one live top and advances only during
 ## battle ticks. The original parts and the Threat Director are never modified.
 const SPEED_CLAMP: float = 480.0
+const Ecology = preload("res://scripts/ecology_runtime.gd")
+var ecology: RefCounted = Ecology.new()
 var _host: WeakRef
 var time: float = 0.0
 var states: Dictionary = {}
@@ -9,6 +11,7 @@ var counters: Dictionary = {}
 
 func setup(battle: Object) -> void:
 	_host = weakref(battle)
+	ecology.setup(battle)
 	time = 0.0
 	states.clear()
 	counters.clear()
@@ -41,7 +44,7 @@ func begin_tick(dt: float) -> void:
 		ids[int(f.entity_id)] = true
 		if not live(f): continue
 		var s: Dictionary = state(f)
-		s.bank = maxf(0.0,float(s.bank)-dt*7.0)
+		s.bank = maxf(0.0,float(s.bank)-dt*ecology.bank_leak(f))
 		if time > float(s.hunt_until): s.hunt_stacks = 0; s.hunt_target = 0
 		f["guard_time"] = maxf(0.0,float(s.guard_until)-time)
 		f["momentum_charge"] = s.bank
@@ -49,6 +52,7 @@ func begin_tick(dt: float) -> void:
 		f["hunt_target"] = s.hunt_target
 	for id: int in states.keys():
 		if not ids.has(id): states.erase(id)
+	ecology.begin_tick(dt)
 
 func movement(f: Dictionary, m: Dictionary, dt: float) -> Dictionary:
 	if not live(f): return m
@@ -79,7 +83,8 @@ func movement(f: Dictionary, m: Dictionary, dt: float) -> Dictionary:
 			if speed > 110.0 and direction.length() > 0.25 and not braking:
 				m.drain = float(m.drain)*0.70
 				# Steering changes the curve without deleting carried velocity.
-				direction = velocity.normalized().lerp(direction.normalized(),0.68)*direction.length()
+				if not m.has("ecology_direction"):
+					direction = velocity.normalized().lerp(direction.normalized(),0.68)*direction.length()
 		m.acceleration = float(m.acceleration)*accel
 		m.speed = float(m.speed)*ceiling
 		m.acceleration_limit = maxf(float(m.acceleration_limit),430.0 if gear == 1 else 580.0)
@@ -106,10 +111,11 @@ func movement(f: Dictionary, m: Dictionary, dt: float) -> Dictionary:
 			var approach: Vector2 = (Vector2(target.pos)-Vector2(f.pos)).normalized()
 			if direction.normalized().dot(approach) > 0.65 and Vector2(target.pos).distance_to(f.pos) < 160.0:
 				m.acceleration = float(m.acceleration)*(1.0+float(s.hunt_stacks)*0.10)
-	return m
+	return ecology.movement(f,m,dt)
 
 func velocity(f: Dictionary, before: Vector2, after: Vector2, dt: float) -> Vector2:
 	var s: Dictionary = state(f)
+	var previous_drive: float = float(s.orbit)
 	var direction: Vector2 = s.input
 	if has(f,"orbit_drive") and bool(s.drift) and after.length() > 30.0:
 		var turn: float = after.normalized().angle_to(direction.normalized())
@@ -134,7 +140,7 @@ func velocity(f: Dictionary, before: Vector2, after: Vector2, dt: float) -> Vect
 		s.orbit_seconds = float(s.orbit_seconds)+(dt if float(s.orbit) >= 0.50 else 0.0)
 	if has(f,"momentum_bank") and bool(s.braking) and not bool(s.drift) and before.length() > 75.0 and float(f.rpm) > 0.13 and direction.length() > 0.08:
 		var lost: float = maxf(0.0,before.length()-after.length())
-		var cap: float = 95.0 if rank(f,"momentum_bank") == 1 else 150.0
+		var cap: float = ecology.bank_capacity(f)
 		s.bank = minf(cap,float(s.bank)+lost*(0.62 if rank(f,"momentum_bank") == 1 else 0.85))
 		f["momentum_charge"] = s.bank
 		if lost > 0.2 and time >= float(s.bank_fx):
@@ -146,11 +152,14 @@ func velocity(f: Dictionary, before: Vector2, after: Vector2, dt: float) -> Vect
 	s.distance = float(s.distance)+after.length()*dt
 	s.speed_sum = float(s.speed_sum)+after.length()
 	s.speed_samples = int(s.speed_samples)+1
+	after = ecology.velocity(f,before,after,dt,previous_drive)
 	return after.limit_length(SPEED_CLAMP) if has(f,"high_gear") or has(f,"orbit_drive") else after
 
-func burst(f: Dictionary, heading: Vector2) -> void:
+func burst(f: Dictionary, heading: Vector2, pre_velocity: Vector2 = Vector2.INF) -> void:
+	if not live(f): return
 	var s: Dictionary = state(f)
-	if has(f,"momentum_bank") and float(s.bank) >= 15.0:
+	var handled: bool = ecology.burst(f,heading,Vector2(f.vel) if not pre_velocity.is_finite() else pre_velocity)
+	if not handled and has(f,"momentum_bank") and float(s.bank) >= 15.0:
 		var bank: float = float(s.bank)
 		s.bank = 0.0; f["momentum_charge"] = 0.0
 		host().spend_rpm(f,0.009+bank*0.000065,"powers")
@@ -160,6 +169,7 @@ func burst(f: Dictionary, heading: Vector2) -> void:
 	if branch(f,"high_gear") == "terminal_velocity": event("high_gear_surge",f,heading)
 
 func collision_cost(f: Dictionary) -> float:
+	if not branch(f,"crash_guard").is_empty(): return ecology.collision_cost(f)
 	if has(f,"crash_guard") and time < float(state(f).guard_until):
 		return 0.68 if rank(f,"crash_guard") == 1 else 0.48
 	return 1.0
@@ -175,7 +185,8 @@ func contact(first: Dictionary, second: Dictionary, severity: float, normal: Vec
 func _contact(f: Dictionary, target: Dictionary, severity: float, normal: Vector2, incoming: Vector2) -> void:
 	if not live(f) or not live(target) or f.team_id == target.team_id or f.combatant_type == "small_top": return
 	var s: Dictionary = state(f)
-	if has(f,"crash_guard") and severity >= 0.45 and time >= float(s.guard_ready):
+	ecology.contact(f,target,severity,normal,incoming)
+	if has(f,"crash_guard") and branch(f,"crash_guard").is_empty() and severity >= 0.45 and time >= float(s.guard_ready):
 		s.guard_ready = time+3.0
 		s.guard_until = time+(1.15 if rank(f,"crash_guard") == 1 else 1.65)
 		f["guard_time"] = float(s.guard_until)-time

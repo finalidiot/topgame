@@ -35,7 +35,7 @@ func valid_paths() -> bool:
 		if arg == "--native": native = true
 		if arg.begins_with("--collection-path=") or arg in ["--smoke-test", "--qa-catalogue", "--reset-collection"]:
 			push_error("Main boot overrides refused before creating a fixture"); return false
-	var qa: String = "gyrobrothers-qa/003a.1/"
+	var qa: String = "gyrobrothers-qa/003a.2/" if report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/") else "gyrobrothers-qa/003a.1/"
 	if not report.is_absolute_path() or not report.replace("\\", "/").to_lower().contains(qa + "manifests/") or FileAccess.file_exists(report):
 		push_error("A fresh external QA report is required"); return false
 	if not profile.is_absolute_path() or not profile.replace("\\", "/").to_lower().contains(qa + "temp/"):

@@ -6,6 +6,8 @@ const Signature = preload("res://scripts/signature_visuals.gd")
 const Identity = preload("res://scripts/power_identity.gd")
 const Defence = preload("res://scripts/defence_art.gd")
 const MotionArt = preload("res://scripts/combat_motion_art.gd")
+const Ecology = preload("res://scripts/ecology_visuals.gd")
+const EcologyCards = preload("res://scripts/ecology_art.gd")
 const SMALL: Texture2D = preload("res://assets/powers/small_top.png")
 const EFFECTS: Texture2D = preload("res://assets/powers/effects.png")
 const ICONS: Texture2D = preload("res://assets/powers/icons.png")
@@ -82,6 +84,7 @@ static func draw_small(canvas: CanvasItem, fighter: Dictionary, position: Vector
 	_cell(canvas, "small_top", SMALL, frame, position)
 
 static func draw_effect(canvas: CanvasItem, effect: Dictionary, position: Vector2, quality: float = 1.0) -> void:
+	if Ecology.effect(canvas,effect,position,quality): return
 	var redline: Dictionary = redline_presentation(str(effect.get("kind", "")))
 	if redline.handled:
 		if redline.ring:
@@ -151,6 +154,7 @@ static func draw_aura(canvas: CanvasItem, fighter: Dictionary, position: Vector2
 	Signature.aura(canvas,fighter,position,clock)
 	Identity.aura(canvas,fighter,position,clock)
 	Defence.aura(canvas, fighter, position, clock)
+	Ecology.aura(canvas,fighter,position,quality)
 	_draw_anchor_feedback(canvas, fighter, position + Vector2(0.0, float(fighter.get("height", 0.0))), clock, quality)
 	if float(fighter.get("slipstream_time", 0.0)) > 0.0 and Identity.family_info("afterimage").is_empty():
 		_cell(canvas, "escalation_effects", ESCALATION_EFFECTS, _frame("escalation_effects", "slipstream_cross", clock, true), position, Color(1.0, 1.0, 1.0, 0.80))
@@ -295,6 +299,8 @@ static func draw_spawn(canvas: CanvasItem, position: Vector2, progress: float) -
 	_cell(canvas, "effects", EFFECTS, _frame("effects", "floor_stamp", age), position, Color(1.0, 0.90, 0.65))
 
 static func icon_region(power_id: String) -> Rect2:
+	var ecology_art: Dictionary = EcologyCards.art(power_id)
+	if not ecology_art.is_empty(): return Rect2(int(ecology_art.icon_frame)*16,0,16,16)
 	var defence_art: Dictionary = Defence.art(power_id)
 	if not defence_art.is_empty(): return Rect2(int(defence_art.icon_frame) * 16, 0, 16, 16)
 	var authored: Dictionary = Identity.art(power_id)
@@ -310,6 +316,8 @@ static func icon_region(power_id: String) -> Rect2:
 	return Rect2(float(frame) * 16.0, 0.0, 16.0, 16.0)
 
 static func icon_texture(power_id: String) -> Texture2D:
+	var ecology_art: Dictionary = EcologyCards.art(power_id)
+	if not ecology_art.is_empty(): return Identity.texture(str(ecology_art.icon))
 	var defence_art: Dictionary = Defence.art(power_id)
 	if not defence_art.is_empty(): return Defence.texture(str(defence_art.icon))
 	var authored: Dictionary = Identity.art(power_id)

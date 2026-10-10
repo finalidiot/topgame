@@ -527,7 +527,7 @@ func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
 	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
 	var source: RandomNumberGenerator = null
-	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
+	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1", "003A.2"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
 		source = packet_rng_override
 	var purchase: Dictionary = collection.purchase_packet_batch(_packet_product, _packet_quantity, source, _packet_request_id)
 	if not bool(purchase.ok):

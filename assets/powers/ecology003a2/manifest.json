@@ -1,0 +1,533 @@
+{
+  "version": 1,
+  "task": "003A.2",
+  "filter": "nearest",
+  "native_pixels": true,
+  "scope": "Eight new Rank III mutation illustrations; accepted art and gameplay remain unchanged.",
+  "families": {
+    "iron_comet": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 sparse arena floor",
+          "02 paid physical travel and shadows",
+          "03 accepted rival native body",
+          "04 accepted owner native body",
+          "05 contact and finite follow-through"
+        ],
+        "tags": {
+          "wallbreaker": {
+            "from": 0,
+            "to": 5
+          },
+          "ricochet_engine": {
+            "from": 6,
+            "to": 11
+          }
+        },
+        "durations_ms": [
+          190,
+          130,
+          70,
+          55,
+          100,
+          210,
+          120,
+          75,
+          100,
+          70,
+          100,
+          180
+        ],
+        "columns": 6,
+        "frame_count": 12,
+        "source": "assets/source-art/ecology003a2/iron_comet_cards.aseprite",
+        "texture": "res://assets/powers/ecology003a2/iron_comet_cards.png",
+        "source_sha256": "29043789c14ab3ee753cb564fc52d41cf6ebb200bfd833cada842ba6cfd684a1",
+        "texture_sha256": "0cd10f6b27df67b2c41c0fa1f8e9356b6fa0b4edcec44dd29c2d9df8dd38387d",
+        "native_runtime_rgba_exact": true
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently authored miniature tops",
+          "02 branch travel and contact"
+        ],
+        "tags": {
+          "wallbreaker": {
+            "from": 0,
+            "to": 0
+          },
+          "ricochet_engine": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/ecology003a2/iron_comet_icons.aseprite",
+        "texture": "res://assets/powers/ecology003a2/iron_comet_icons.png",
+        "source_sha256": "dae0c085d1f06794da5927b7282d26d4f6ca18e7eb6e2cb2bc7dd3372576c840",
+        "texture_sha256": "60c2bb68a78a5c09df5ca9e568146f14cb5cd8a0d138ff91a5937f3054127516",
+        "native_runtime_rgba_exact": true
+      },
+      "stories": {
+        "wallbreaker": "One hard wall rebound commits the intact top to one rival; a single contact and recoil finish the line.",
+        "ricochet_engine": "Two separated real wall faces and successive oblique rebound lanes; no continuous rail or stronger single strike."
+      }
+    },
+    "orbit_drive": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 sparse arena floor",
+          "02 paid physical travel and shadows",
+          "03 accepted rival native body",
+          "04 accepted owner native body",
+          "05 contact and finite follow-through"
+        ],
+        "tags": {
+          "centrifuge": {
+            "from": 0,
+            "to": 5
+          },
+          "perpetual_orbit": {
+            "from": 6,
+            "to": 11
+          }
+        },
+        "durations_ms": [
+          150,
+          110,
+          80,
+          70,
+          120,
+          185,
+          120,
+          120,
+          120,
+          120,
+          120,
+          160
+        ],
+        "columns": 6,
+        "frame_count": 12,
+        "source": "assets/source-art/ecology003a2/orbit_drive_cards.aseprite",
+        "texture": "res://assets/powers/ecology003a2/orbit_drive_cards.png",
+        "source_sha256": "08ad689b2f4d0ec5bb5e080cb49f391dda549f4c0ff136d3d500ced81600192b",
+        "texture_sha256": "01c408f2ce52cdc82c320619159c0073868b1a542f3a6d9d793c02042396da13",
+        "native_runtime_rgba_exact": true
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently authored miniature tops",
+          "02 branch travel and contact"
+        ],
+        "tags": {
+          "centrifuge": {
+            "from": 0,
+            "to": 0
+          },
+          "perpetual_orbit": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/ecology003a2/orbit_drive_icons.aseprite",
+        "texture": "res://assets/powers/ecology003a2/orbit_drive_icons.png",
+        "source_sha256": "d012b27aa50e862c17f60444c3a28886547dcdaa6a85cfed52d4fb94a0839780",
+        "texture_sha256": "f36257d0e975a6a1d28716e68c9b7de367447c63ff8665994e1dca132d653f6a",
+        "native_runtime_rgba_exact": true
+      },
+      "stories": {
+        "centrifuge": "A carved tangential contact pushes the rival out of the curve; a finite spent skid replaces a damage aura.",
+        "perpetual_orbit": "One intact top maintains an open smooth travel curve; continuity and recovery replace an attack composition."
+      }
+    },
+    "momentum_bank": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 sparse arena floor",
+          "02 paid physical travel and shadows",
+          "03 accepted rival native body",
+          "04 accepted owner native body",
+          "05 contact and finite follow-through"
+        ],
+        "tags": {
+          "flywheel_release": {
+            "from": 0,
+            "to": 5
+          },
+          "countersteer": {
+            "from": 6,
+            "to": 11
+          }
+        },
+        "durations_ms": [
+          150,
+          170,
+          220,
+          55,
+          90,
+          195,
+          150,
+          150,
+          160,
+          85,
+          115,
+          185
+        ],
+        "columns": 6,
+        "frame_count": 12,
+        "source": "assets/source-art/ecology003a2/momentum_bank_cards.aseprite",
+        "texture": "res://assets/powers/ecology003a2/momentum_bank_cards.png",
+        "source_sha256": "7c9ecacebe48e276715109c48a60053e830f7a4f3eb75a2bbf84bb8b409514cd",
+        "texture_sha256": "2ebba75d50d01e2cca2ac8cd573f6eb2fb7007f523c39b7d3c4d2f21b510c8b0",
+        "native_runtime_rgba_exact": true
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently authored miniature tops",
+          "02 branch travel and contact"
+        ],
+        "tags": {
+          "flywheel_release": {
+            "from": 0,
+            "to": 0
+          },
+          "countersteer": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/ecology003a2/momentum_bank_icons.aseprite",
+        "texture": "res://assets/powers/ecology003a2/momentum_bank_icons.png",
+        "source_sha256": "b39b6cff9a6153bf2370964de731c64f056d3c841ee85218ea02ec3121ea89ce",
+        "texture_sha256": "04e0745815649fd46cda0e2f7a5fea244d45567f7bcd6889129880ce45241986",
+        "native_runtime_rgba_exact": true
+      },
+      "stories": {
+        "flywheel_release": "The broad top brakes into a compact heel skid, holds, then releases forward on a committed line.",
+        "countersteer": "The same broad top banks braking motion, then redirects across its incoming line into a lateral exit."
+      }
+    },
+    "crash_guard": {
+      "cards": {
+        "cell": [
+          64,
+          64
+        ],
+        "pivot": [
+          32,
+          32
+        ],
+        "layers": [
+          "01 sparse arena floor",
+          "02 paid physical travel and shadows",
+          "03 accepted rival native body",
+          "04 accepted owner native body",
+          "05 contact and finite follow-through"
+        ],
+        "tags": {
+          "reactive_plating": {
+            "from": 0,
+            "to": 5
+          },
+          "sacrificial_damper": {
+            "from": 6,
+            "to": 11
+          }
+        },
+        "durations_ms": [
+          170,
+          100,
+          180,
+          100,
+          90,
+          180,
+          160,
+          100,
+          80,
+          180,
+          160,
+          200
+        ],
+        "columns": 6,
+        "frame_count": 12,
+        "source": "assets/source-art/ecology003a2/crash_guard_cards.aseprite",
+        "texture": "res://assets/powers/ecology003a2/crash_guard_cards.png",
+        "source_sha256": "16ec230dbeb486abb246e171eadf250495f34365f8c7d46f9638e91ceedb09f5",
+        "texture_sha256": "3f360b9e5bcd3307edb9aa6db86be4e4507064cd01ad286e1791de1e48263e6f",
+        "native_runtime_rgba_exact": true
+      },
+      "icons": {
+        "cell": [
+          16,
+          16
+        ],
+        "pivot": [
+          8,
+          8
+        ],
+        "layers": [
+          "01 independently authored miniature tops",
+          "02 branch travel and contact"
+        ],
+        "tags": {
+          "reactive_plating": {
+            "from": 0,
+            "to": 0
+          },
+          "sacrificial_damper": {
+            "from": 1,
+            "to": 1
+          }
+        },
+        "durations_ms": [
+          160,
+          160
+        ],
+        "columns": 2,
+        "frame_count": 2,
+        "source": "assets/source-art/ecology003a2/crash_guard_icons.aseprite",
+        "texture": "res://assets/powers/ecology003a2/crash_guard_icons.png",
+        "source_sha256": "bd56b9c0e8a83ab60b06a06fffc3d8b7d8892440ca1813de5663efe8df75f814",
+        "texture_sha256": "dc154c6836c7b37f4ea5ea30fdcc4ec830e59b622e1e320efcb27a95d0851c05",
+        "native_runtime_rgba_exact": true
+      },
+      "stories": {
+        "reactive_plating": "A genuine incoming top displaces the defender; a later separate aimed contact releases its stored counterforce.",
+        "sacrificial_damper": "One huge incoming hit buckles the defender into a longer skid and sparse spent rim fragments; recovery remains visible."
+      }
+    }
+  },
+  "art": {
+    "wallbreaker": {
+      "family": "iron_comet",
+      "art_id": "wallbreaker",
+      "source_tag": "wallbreaker",
+      "icon": "res://assets/powers/ecology003a2/iron_comet_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/ecology003a2/iron_comet_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        190,
+        130,
+        70,
+        55,
+        100,
+        210
+      ]
+    },
+    "ricochet_engine": {
+      "family": "iron_comet",
+      "art_id": "ricochet_engine",
+      "source_tag": "ricochet_engine",
+      "icon": "res://assets/powers/ecology003a2/iron_comet_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/ecology003a2/iron_comet_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        120,
+        75,
+        100,
+        70,
+        100,
+        180
+      ]
+    },
+    "centrifuge": {
+      "family": "orbit_drive",
+      "art_id": "centrifuge",
+      "source_tag": "centrifuge",
+      "icon": "res://assets/powers/ecology003a2/orbit_drive_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/ecology003a2/orbit_drive_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        150,
+        110,
+        80,
+        70,
+        120,
+        185
+      ]
+    },
+    "perpetual_orbit": {
+      "family": "orbit_drive",
+      "art_id": "perpetual_orbit",
+      "source_tag": "perpetual_orbit",
+      "icon": "res://assets/powers/ecology003a2/orbit_drive_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/ecology003a2/orbit_drive_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 4,
+      "card_durations_ms": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        160
+      ]
+    },
+    "flywheel_release": {
+      "family": "momentum_bank",
+      "art_id": "flywheel_release",
+      "source_tag": "flywheel_release",
+      "icon": "res://assets/powers/ecology003a2/momentum_bank_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/ecology003a2/momentum_bank_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        150,
+        170,
+        220,
+        55,
+        90,
+        195
+      ]
+    },
+    "countersteer": {
+      "family": "momentum_bank",
+      "art_id": "countersteer",
+      "source_tag": "countersteer",
+      "icon": "res://assets/powers/ecology003a2/momentum_bank_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/ecology003a2/momentum_bank_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        150,
+        150,
+        160,
+        85,
+        115,
+        185
+      ]
+    },
+    "reactive_plating": {
+      "family": "crash_guard",
+      "art_id": "reactive_plating",
+      "source_tag": "reactive_plating",
+      "icon": "res://assets/powers/ecology003a2/crash_guard_icons.png",
+      "icon_frame": 0,
+      "card_texture": "res://assets/powers/ecology003a2/crash_guard_cards.png",
+      "card_row": 0,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        170,
+        100,
+        180,
+        100,
+        90,
+        180
+      ]
+    },
+    "sacrificial_damper": {
+      "family": "crash_guard",
+      "art_id": "sacrificial_damper",
+      "source_tag": "sacrificial_damper",
+      "icon": "res://assets/powers/ecology003a2/crash_guard_icons.png",
+      "icon_frame": 1,
+      "card_texture": "res://assets/powers/ecology003a2/crash_guard_cards.png",
+      "card_row": 1,
+      "card_cell": 64,
+      "card_frames": 6,
+      "card_static_frame": 3,
+      "card_durations_ms": [
+        160,
+        100,
+        80,
+        180,
+        160,
+        200
+      ]
+    }
+  },
+  "references": {
+    "assets/source-art/starter_blade_accents_002b1.aseprite": "b30e1f2ee67673d4811126f503d8058273ef9437f1232fd81ba6e5d2bcaefe7f",
+    "assets/top/parts/ratchets/mid.png": "92fae78eef07a0ed837bc494e1c37ccf10df91f8f71b5480e2765d7edfe57fd0",
+    "assets/top/parts/bits/flat.png": "b56c289894f89cc3049f44c716acecd39cfdd052dd068aed81a317fbebd6b7b1",
+    "assets/top/parts/bits/needle.png": "6a9dbdcc261baf007704ecf986b9970e71c69c9de4da98d7a344812617f3c079"
+  }
+}

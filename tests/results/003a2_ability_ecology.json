@@ -1,0 +1,436 @@
+{
+  "schema": "003a2_ability_ecology_prebuild_summary_v1",
+  "task": "003A.2",
+  "created_utc": "2026-10-10T07:19:28.743986+00:00",
+  "status": "prebuild_automated_evidence_pass_candidate_and_human_acceptance_pending",
+  "starting_accepted_main": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "branch": "task-003a2-ability-ecology",
+  "runtime_boundary": {
+    "files": 836,
+    "sorted_compact_json_source_map_sha256": "79ef6be0a13401ba31ea73e575a6ffa2f6ba67f298080db3eeed1954a014edc4",
+    "definition": "SHA256 of final114 source_after map encoded as sorted compact JSON; runtime build commit will be recorded separately.",
+    "production_harness_player_unchanged": true,
+    "scoped_source_review": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review_final_prebuild_20261010_071928_743986.json",
+      "sha256": "ec41126f9fe8184e565812d5b2169bc1ac7ba7caf4ffbaf8246b7fe3af071f12",
+      "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+    }
+  },
+  "catalogue": {
+    "active_base_families": 16,
+    "mutation_families_before": 7,
+    "mutation_families_after": 11,
+    "branches_before": 14,
+    "branches_after": 22,
+    "forms_before": 46,
+    "forms_after": 54,
+    "catalogue_investments_before": 39,
+    "catalogue_investments_after": 43,
+    "family_cap": 7,
+    "maximum_single_run_investments": 21,
+    "new_base_powers": 0,
+    "new_classes": 0,
+    "hidden_combo_bonuses": false,
+    "global_RPM_retune": false,
+    "accepted_definition_rows_unchanged": 21,
+    "accepted_rank_II_rows_unchanged": 16,
+    "accepted_old_mutation_rows_unchanged": 14
+  },
+  "new_branches": [
+    {
+      "family": "Iron Comet",
+      "branches": [
+        "Wallbreaker",
+        "Ricochet Engine"
+      ]
+    },
+    {
+      "family": "Orbit Drive",
+      "branches": [
+        "Centrifuge",
+        "Perpetual Orbit"
+      ]
+    },
+    {
+      "family": "Momentum Bank",
+      "branches": [
+        "Flywheel Release",
+        "Countersteer"
+      ]
+    },
+    {
+      "family": "Crash Guard",
+      "branches": [
+        "Reactive Plating",
+        "Sacrificial Damper"
+      ]
+    }
+  ],
+  "audit": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_power_ecology_audit.json",
+    "sha256": "3a86fe9708f16b49fc3f7fe251e5f7bdcf02fa8c4e20a1a9678951eee29190e4",
+    "scope": "Complete16-family accepted-source/current ecology audit; exact repo copy in tests/results/003a2_power_ecology_audit.json."
+  },
+  "mutation_matrix": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_matrix.json",
+    "sha256": "6dd6499198f60bffd2ef6d11e9cb4375367d3768645666d1e9627679b5cdad4b",
+    "scope": "Complete11-family/22-branch matrix with verified source hooks; exact repo copy in tests/results/003a2_mutation_matrix.json."
+  },
+  "exact_compact_copies": [
+    {
+      "path": "tests/results/003a2_power_ecology_audit.json",
+      "sha256": "3a86fe9708f16b49fc3f7fe251e5f7bdcf02fa8c4e20a1a9678951eee29190e4",
+      "bytes": 101654
+    },
+    {
+      "path": "tests/results/003a2_mutation_matrix.json",
+      "sha256": "6dd6499198f60bffd2ef6d11e9cb4375367d3768645666d1e9627679b5cdad4b",
+      "bytes": 66005
+    }
+  ],
+  "regression": {
+    "headless_suites": 114,
+    "headless_checks": 244052,
+    "native_suites": 13,
+    "native_checks": 25700,
+    "godot_suites_total": 127,
+    "godot_checks_total": 269752,
+    "python_categories": 7,
+    "python_cases": 270,
+    "failed_suites": 0,
+    "counting": "Focused reruns, legal-model/data checks, art/source reviews and performance checks are not added a second time.",
+    "reports": [
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_python_20261010_064638_124089.json",
+        "sha256": "01cc977ccd2739774bdcc89f964b40c107666039d3d4185c609901a4bdc179e7",
+        "scope": "Final current-source7 categories270 cases allPASS, source/harness/player exact.",
+        "checks": 270,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_native_20261010_064638_159717.json",
+        "sha256": "023e7091d60ba2a411ed84b174ece9b5ae3f6bd84fe703598da78c57282b94d2",
+        "scope": "Final current-source13 native suites25700 checks allPASS; Windows renderer/audio/menu/synthetic input, no physical Android claim.",
+        "checks": 25700,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_064638_124479.json",
+        "sha256": "656a602b59a2f4cc0cc69421a9dd4a14a26abb3f4f8fad9fbe139f3690595b3a",
+        "scope": "Final 114 headless suites /244052 checks; zero failures; production, harness and438 real player files unchanged."
+      }
+    ]
+  },
+  "scoped_mechanics": {
+    "acquisition_checks": 281,
+    "physics_checks": 329,
+    "solver_integration_checks": 159,
+    "neutral_host_checks": 1596,
+    "scope": "Included current cases are counted once in final114. Direct-hook declared stock tests are distinct from actual movement-earned sustain; source mocks do not prove natural acquisition.",
+    "coverage": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_coverage_review_20261010_063117_102932.json",
+      "sha256": "c6196646b5b4757b1e745096a04e47ee3f0c36ac68db8907b72e045ba8812e4e",
+      "scope": "Source review and scoped281 acquisition/329 semantic/159 solver integration evidence; its pending Centrifuge scene policy was later resolved; pre-neutral-correction source.",
+      "checks": null,
+      "status": null,
+      "failures": null
+    },
+    "neutral_compatibility": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_neutral_host_compatibility_review_20261010_064429_579710.json",
+      "sha256": "5b3f4ba1ef9ea0e6aeb514361692c1bbf749ed0123d6a6c751c3ae42aad14bf4",
+      "scope": "Current neutral compatibility1596, unchanged old readability4387 and Mobile124 focused proof; exact new-test inverse and old Mobile one-line scope proof.",
+      "checks": null,
+      "status": null,
+      "failures": null
+    }
+  },
+  "legal_diversity": {
+    "required_combined": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_diversity_simulation.json",
+      "sha256": "61f38b673265b171907e602ce3987f179865dcd0cd51f882db073ded522e60a6",
+      "scope": "Final combined legal model and actual eight-scene packages."
+    },
+    "comparison": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_legal_diversity_20261010_064826_637333_comparison.json",
+      "sha256": "56d2b1f165883e4d6abfd33443ff7c7cc1923e280e1cda74ac799e4595634c8b",
+      "scope": "Final legal draft model, current compatibility source."
+    },
+    "matched_seeds": 256,
+    "policies": 5,
+    "cases_per_source": 1280,
+    "starter_label_replays_per_source": 3840,
+    "data_checks_before": 820864,
+    "data_checks_after": 945521,
+    "all_policies_complete_seven_families": true,
+    "all_eight_branches_selected_under_every_policy": true,
+    "mutation_depth_before_after": {
+      "aggression": [
+        2.4140625,
+        4.49609375
+      ],
+      "fortress": [
+        3.8359375,
+        5.7109375
+      ],
+      "technique": [
+        2.72265625,
+        5.63671875
+      ],
+      "endurance": [
+        3.5546875,
+        5.453125
+      ],
+      "hybrid": [
+        3.0703125,
+        4.8125
+      ]
+    },
+    "limits": "Declared analytical preference/attributed-XP model measures availability and breadth/depth. It does not measure natural acquisition, player preference, win/survival balance or universal-pick strength. Starter replays test label-independent access to the same assembly, not equal physics of distinct assemblies."
+  },
+  "native_art": {
+    "matrix": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\003a2_mutation_cards.png",
+      "sha256": "47974726c038908f6fe6f25dc2f8d13f5f4376bdd0f20e93223c8721fb597782",
+      "scope": "Native actual Menus/copy matrix of eight distinct new branch cards."
+    },
+    "master_export_receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_art_20261010_055143_892939.json",
+      "sha256": "2170e24c8ff6e524573a3b08e4b5fc18199c4beacf165013f2d9ca4ae7917ef2",
+      "scope": "13 Python and229 actual native Menus checks; scoped art/copy boundary."
+    },
+    "visual_review": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_art_visual_review_20261010_055322_489259.json",
+      "sha256": "57e7e90937f43b384e2cebd2285448368a5129c82fb5ace8fc434dc42d2e0c33",
+      "scope": "Native legibility review."
+    },
+    "runtime_manifest": {
+      "path": "assets/powers/ecology003a2/manifest.json",
+      "sha256": "68d783ebb0c79eb57b57405a5a6b8971c7863f09539d034e597d9959f5f44936"
+    },
+    "editable_masters": 8,
+    "distinct_64px_poses": 48,
+    "independent_16px_icons": 8,
+    "imported_source_probe": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_package_probe_20261010_062016_199962.json",
+      "sha256": "dc152ffc72e8315ead9c4a65e4ed14cdcfa0c4ead5b0ffdf3b8c87d71d521c70",
+      "scope": "15 strict unit cases plus actual imported source-resource receipt; actual compiled EXE acceptance still pending.",
+      "checks": null,
+      "status": "passed",
+      "failures": null
+    },
+    "compiled_package_probe_pending": true
+  },
+  "movies": [
+    {
+      "video": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_build_ecology_showcase.mp4",
+        "sha256": "cc83f7752fc40acbae1ce334c0e76eac82fd51018e1640653deafbbf62bcc43e",
+        "scope": "Eight actual branch scenes; native640x400 integer2 with declared external footer; Windows qualitative60FPS evidence, not performance/natural tactics."
+      },
+      "provenance": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_ecology_showcase.json",
+        "sha256": "6308457a0b0094a88ab4d306b396b5d2c326cdc5a5c7c3107b8c92b598dd8643",
+        "scope": "Final unique report003a2_build_ecology_showcase_20261010_065335_389710.json; source/profile/driver/decode guards pass."
+      },
+      "seconds": 80.62,
+      "fps": 60,
+      "actual_ticks": 4800,
+      "limits": "Legal initial builds/poses/velocities, declared sampled controls and admissions suspended. No ongoing RPM/DRIVE/bank/force/outcome holds."
+    },
+    {
+      "video": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_mutation_draft_showcase.mp4",
+        "sha256": "4adbbae26e6aefcdf32832f7bdcd04abfdad833c8bbe5779bb3f8e1ba54d89fc",
+        "scope": "Actual Main seed39 Bank Iâ†’IIâ†’attributed-XP level-upâ†’two III siblingsâ†’Flywheelâ†’READYâ†’control-earned release/hit."
+      },
+      "provenance": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_draft_showcase.json",
+        "sha256": "02f8480c66f3258b2b8925464956dae558e58579377172e1730d3520d2c569eb",
+        "scope": "Final unique report003a2_mutation_draft_showcase_20261010_065633_192067.json; source/profile/driver/decode guards pass."
+      },
+      "seconds": 19.85,
+      "fps": 60,
+      "limits": "Declared attributed elimination-XP fixture and one paused initial pose; no ongoing resource/activation holds."
+    }
+  ],
+  "actual_replay": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_native_headless_actual_equality_20261010_070001_290519.json",
+    "sha256": "4cf68bf6e5671d600fffc9a3a6129b5b76a1d4d316582a679256e995136ac6d1",
+    "scope": "All eight scenes/820 actor samples and actual Main progression/events/controls/ledgers/clocks exact; partial earlier070001_234363 file not selected."
+  },
+  "neutral_boundary_equality": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_actual_boundary_equality_20261010_064954_473439.json",
+    "sha256": "2a13d4e3ca7e971885ba8ecb5343cf4d64ab278033464159198ba9b35c0e804f",
+    "scope": "Actual eight-scene actor/event equality across neutral legacy-host compatibility change; distinct hashes disclosed."
+  },
+  "performance": {
+    "ledger": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_performance_validation_20261010_071219_540817.json",
+      "sha256": "5444c2bdd54c75cf97664e0853c68a407ab67dc4dcd82184a0509544c7a8d3f5",
+      "scope": "Final quiet serial native/simulation workload."
+    },
+    "simulation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_simulation_final_neutral.json",
+      "sha256": "057318bb4cb6efc679117bfb878fe9bf852eb5e5a30ac3c201441c7f94cbe186",
+      "scope": "12 baseline+12 current cases."
+    },
+    "native": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_native_final_neutral.json",
+      "sha256": "dea3d98085c5d95008ee67c9f9c10df893abc1c03ecba5a6a5486308b05c85af",
+      "scope": "24 exact native/headless physical/control/clock/power replays."
+    },
+    "total_top_groups": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "NPC_counts": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "seven_total_is_stress": true,
+    "seeds_per_group": 3,
+    "minimum_current_full_density_advancing_ticks": 240,
+    "maximum_horizon_ticks": 720,
+    "checks_each_mode_before_after": [
+      80550,
+      64380
+    ],
+    "actual_proc_workload": [
+      "Wallbreaker",
+      "Reactive Plating",
+      "Flywheel Release",
+      "Sacrificial Damper",
+      "Perpetual Orbit"
+    ],
+    "owned_but_zero_procs_here": [
+      "Ricochet Engine",
+      "Centrifuge",
+      "Countersteer"
+    ],
+    "native_current_ms": {
+      "4_total": {
+        "physics_median": 2.4405,
+        "physics_p95": 4.488,
+        "frame_wall_median": 9.6745,
+        "frame_wall_p95": 13.904
+      },
+      "5_total": {
+        "physics_median": 2.56,
+        "physics_p95": 6.453,
+        "frame_wall_median": 9.054,
+        "frame_wall_p95": 13.163
+      },
+      "6_total": {
+        "physics_median": 3.301,
+        "physics_p95": 5.402,
+        "frame_wall_median": 10.555,
+        "frame_wall_p95": 14.294
+      },
+      "7_total_stress": {
+        "physics_median": 4.888,
+        "physics_p95": 8.921,
+        "frame_wall_median": 13.737,
+        "frame_wall_p95": 18.51,
+        "frame_wall_max": 31.97
+      }
+    },
+    "peaks": {
+      "ecology_owner_states": 7,
+      "new_fields_per_owner": 19,
+      "live_traces": 72,
+      "points_per_trace": 10,
+      "polygon_points": 182,
+      "power_events": 256,
+      "FX": 21,
+      "particles": 22,
+      "target_entries": 8,
+      "pilot_history": 12,
+      "route_owners": 3
+    },
+    "limits": [
+      "Standalone640x360 Battle excludes Main/HUD/music; CPU draw submission excludes GPU completion.",
+      "Different legal II/III trajectories and natural censoring produce unequal durations; not algorithm speedup or survival balance.",
+      "All eight branches owned; three have zero procs here and separate actual showcase gates.",
+      "New module has no queues/scans; inherited Ghost scan/index per-tick counters were not instrumented.",
+      "Windows host timing, not Android FPS guarantee, full-game timing or long-run leak proof."
+    ]
+  },
+  "preservation": {
+    "full": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_full_preservation_20261010_062443_666807.json",
+      "sha256": "5fd65d4129767df8c7cbc9f1f51e5bcb99935bdf8d262254697d18b706a9a87c",
+      "scope": "All protected group entries byte-exact before authorised promotion."
+    },
+    "groups": {
+      "player": 438,
+      "music": 18,
+      "accepted_assets": 695,
+      "prior_compact": 92,
+      "prior_QA": 325524,
+      "builds": 547
+    },
+    "recorded_group_entries_total": 327314,
+    "group_entries_are_not_unique_file_claim": true,
+    "fresh_prebuild": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_preservation_prebuild_20261010_071338_860490.json",
+      "sha256": "30d09860d31daf78e478df49e65c9e65e3e097a80f17f31c4eec3b902c307567",
+      "scope": "438 player/18 music/695 accepted assets/8 accepted deliveries byte-exact;836 runtime files match final114."
+    }
+  },
+  "retained_attempts": {
+    "first_full_112": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_062304_972171.json",
+      "sha256": "9c0a5c665f6fda3511128cddea5564bb9da2047d5789f271128064f79666491c",
+      "scope": "107 suites passed235870 checks;5 strict failures retained, not selected as final pass."
+    },
+    "failure_causes": [
+      "Three intentional legacy positive Main catalogue gates overridden by globalqa-task2; fixed runner excludes flag only for those suites, old test bodies unchanged.",
+      "Actual neutral I/II minimal Host API regression; pure catalogue validation and early neutral ordering fixed; old Host/test unchanged.",
+      "Mobile fresh external report/profile task guard allowed oldtask only; one exact selector line expanded to matching003A.2."
+    ],
+    "earlier_interrupted_64_suites": "Development run retained; incomplete and not final acceptance.",
+    "solver_development_resolution": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_solver_initial_failure_resolution_20261010_063117_102932.json",
+      "sha256": "02bcd7625095b2e3e4c1049d942244d3f1cbf91c61a798cbcd9582e2ef88ac23",
+      "scope": "First solver159 attempt had4 QA tangent-direction failures; preserved exact driver and failure reports, one sampled curve-line corrected."
+    },
+    "neutral_development_resolution": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_neutral_host_compatibility_review_20261010_064429_579710.json",
+      "sha256": "5b3f4ba1ef9ea0e6aeb514361692c1bbf749ed0123d6a6c751c3ae42aad14bf4",
+      "scope": "Current neutral compatibility1596, unchanged old readability4387 and Mobile124 focused proof; exact new-test inverse and old Mobile one-line scope proof.",
+      "checks": null,
+      "status": null,
+      "failures": null
+    }
+  },
+  "reviewed_invariants": {
+    "accepted_ordinary_pilot_and_Director_unchanged": true,
+    "shared_RPM_budgets_unchanged": true,
+    "terminal_sibling_mutual_exclusion": true,
+    "dead_owner_team_safety": true,
+    "new_NPC_package": "Only elite/boss Anvil existing Crash Guard becomes Sacrificial Damper; ordinary packages/pilot unchanged.",
+    "commitment_priority": "Active Flywheel Release >active Wallbreaker >ordinary existing direction; pure early prepared input restores same heading for solver/roster/mounted feedback.",
+    "offered_shoves": "Actual recipient resistance/100 offer cap/340 recipient velocity cap continue; listed branch offers are not guaranteed resulting velocity."
+  },
+  "pending_acceptance": [
+    "Windows/Android candidate export, actual packaged catalogue and Shop receipt smoke, and any authorised promotion.",
+    "Emulator/physical Android and human acceptance remain separate; no physical phone acceptance is claimed.",
+    "Main remains unmerged and003B unstarted."
+  ],
+  "delivery_paths": "Build paths and runtime commit will be added only after root export/smoke in a separate documentation update.",
+  "android_environment": {
+    "status": "unavailable_no_smoke_coverage",
+    "evidence": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_android_emulator_unavailable_20261010_071359_863189.json",
+      "sha256": "e01734e8ea5869d312351d61e9c618e6a1e47b13790adb45c40a7d56bb606523"
+    },
+    "attempts": 2,
+    "scope": "Bounded software-emulator boots did not produce a booted adb device; no physical phone connected. No APK installation/capture/smoke, and all19 required coverage rows unexercised. Original AVD files and438 Windows player files preserved. APK export remains separate; Android smoke and phone feel pending."
+  }
+}

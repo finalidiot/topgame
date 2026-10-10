@@ -567,6 +567,16 @@ def verify_music_variation_assets(assets: dict,source_root: Path=ROOT) -> dict:
     return {"music_variation_stems_verified":2,"music_variation_pcm_exact":True,"music_variation_metadata_exact":True,"music_seven_stem_asset_metadata_verified":True,"original_five_music_bytes_preserved":True,"music_variation_import_loop_mode":0,"music_variation_runtime_loop_owner":"Music._ready sets exact shared PCM bounds on duplicated resources","music_variation_receipts":verified}
 
 
+def verify_optional_ecology_assets(assets: dict, source_root: Path=ROOT) -> dict:
+    # Historical/minimal source fixtures without this new family retain their
+    # existing contracts. Current source requires the actual compiled receipt.
+    if not (source_root / "assets/powers/ecology003a2/manifest.json").is_file():
+        return {}
+    sys.path.insert(0, str(ROOT / "tools/art"))
+    from verify_ecology_package import verify_ecology_assets
+    return verify_ecology_assets(assets, source_root)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", type=Path, required=True, help="Explicit candidate or latest Windows executable")
@@ -678,6 +688,7 @@ def main() -> None:
         report["assets"].update(verify_combat_presentation_assets(assets))
         report["assets"].update(verify_combat_audio_assets(assets))
         report["assets"].update(verify_music_variation_assets(assets))
+        report["assets"].update(verify_optional_ecology_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

@@ -69,7 +69,7 @@ func inspect(client: Vector2i, ui_scale: float) -> Dictionary:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):output=arg.trim_prefix("--report=")
-	if not output.is_absolute_path() or FileAccess.file_exists(output) or not output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/"):
+	if not output.is_absolute_path() or FileAccess.file_exists(output) or not (output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")):
 		push_error("Fresh external003A.1 --report required");quit(2);return
 	root.size=Vector2i(800,480)
 	var native_mode: int=DisplayServer.window_get_mode();var native_borderless: bool=DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)

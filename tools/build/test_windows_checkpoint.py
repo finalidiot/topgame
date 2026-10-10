@@ -318,6 +318,25 @@ class PromotionGuards(unittest.TestCase):
         self.assertEqual(pipeline.sha256(self.latest / pipeline.EXE), self.manifest["delivery_sha256"][pipeline.EXE])
         self.assertEqual((Path(result["preserved_previous"]) / "latest" / pipeline.EXE).read_bytes(), b"known-good human build")
 
+    def test_003a2_valid_persisted_progression_promotes_only_fixture(self):
+        self.prepare_shop_candidate(qa_task="003A.2")
+        result = pipeline.promote_candidate(self.candidate, self.root, self.qa, "003A.2")
+        self.assertEqual(result["checkpoint"], str(self.root / "builds/checkpoints/003A.2" / pipeline.EXE))
+        self.assertEqual(pipeline.sha256(self.latest / pipeline.EXE), self.manifest["delivery_sha256"][pipeline.EXE])
+        self.assertEqual((Path(result["preserved_previous"]) / "latest" / pipeline.EXE).read_bytes(), b"known-good human build")
+
+    def test_003a2_unpaid_wallet_cannot_promote(self):
+        self.prepare_shop_candidate(qa_task="003A.2")
+        self.shop_state["progression"]["credits"] = 48
+        self.save_tampered_shop()
+        self.reject_shop("actual 48-CREDIT debit")
+
+    def test_003a2_requires_actual_shop_captures(self):
+        self.prepare_shop_candidate(qa_task="003A.2")
+        self.manifest["packaged_smoke"]["captures"] = [row for row in self.manifest["packaged_smoke"]["captures"] if Path(row["path"]).name != "003a-packet-result.png"]
+        self.save_manifest()
+        self.reject_shop("Missing packaged smoke capture: 003a-packet-result")
+
     def test_003a1_shop_marker_is_required_even_with_saved_receipt(self):
         self.prepare_shop_candidate(qa_task="003A.1")
         smoke = self.manifest["packaged_smoke"]
@@ -370,8 +389,8 @@ class PromotionGuards(unittest.TestCase):
         self.reject_shop("pending human progression")
 
     def test_shop_verifier_rejects_nearby_task_ids_before_reading(self):
-        for qa_task in ("003A.10", "003A.1.preview", "003A.2"):
-            with self.subTest(qa_task=qa_task), self.assertRaisesRegex(ValueError, "explicit 003A or 003A.1"):
+        for qa_task in ("003A.10", "003A.1.preview", "003A.20"):
+            with self.subTest(qa_task=qa_task), self.assertRaisesRegex(ValueError, "explicit 003A, 003A.1 or 003A.2"):
                 pipeline.shop_progression_record(self.base / "absent.json", qa_root=self.qa, qa_task=qa_task)
 
     def test_shop_build_rejects_mismatched_task_before_staging(self):

@@ -128,7 +128,7 @@ func release_cases() -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
-	if not report.is_empty() and (not report.is_absolute_path() or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/") or FileAccess.file_exists(report)):
+	if not report.is_empty() and (not report.is_absolute_path() or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/")) or FileAccess.file_exists(report)):
 		quit(2); return
 	root.size = Vector2i(800,480)
 	root.content_scale_size = Vector2i(800,480)

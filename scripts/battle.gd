@@ -733,11 +733,21 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	fighter["energy"] = fighter["rpm"]
 	_spawn_ring(project(position_world), _team_color(fighter), 0.30)
 	powers.burst_started(fighter, heading.normalized(), pre_cost_rpm)
-	roster.burst(fighter,heading.normalized())
+	roster.burst(fighter,heading.normalized(),velocity_world)
 	event_sfx.emit("burst")
 
 func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt: float) -> void:
+	# New committed III lines transform physical controls before every existing
+	# power reads them. Raw held Brake cannot enable drift or suppress paid heat
+	# recovery while the actual top is mechanically committed off Brake.
+	var ecology_controls: Dictionary = roster.ecology.controls(fighter,direction,braking)
+	direction = ecology_controls.direction
+	braking = bool(ecology_controls.braking)
 	var modifiers: Dictionary = powers.movement_control(fighter, direction, braking, dt)
+	if bool(ecology_controls.committed):
+		modifiers["ecology_direction"] = ecology_controls.direction
+		modifiers.direction = ecology_controls.direction
+		modifiers.braking = false
 	modifiers = roster.movement(fighter,modifiers,dt)
 	direction = modifiers["direction"]
 	braking = bool(modifiers["braking"])
@@ -978,10 +988,14 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	_pair_cooldowns[pair_key] = minf(float(a_contact.interval),float(b_contact.interval))
 	hits += 1
 	var severity: float = clampf(closing / 220.0, 0.08, 1.30)
+	var ecology_a: Dictionary = roster.ecology.prepare_contact(first,second,severity,normal,va,vb,(Vector2(first.vel)-va).length())
+	var ecology_b: Dictionary = roster.ecology.prepare_contact(second,first,severity,-normal,vb,va,(Vector2(second.vel)-vb).length())
+	if float(ecology_a.recoil) != 1.0: first.vel = va+(Vector2(first.vel)-va)*float(ecology_a.recoil)
+	if float(ecology_b.recoil) != 1.0: second.vel = vb+(Vector2(second.vel)-vb)*float(ecology_b.recoil)
 	var a_defense: float = 0.76 + float(a_stats["stability"]) * 0.055 + float(a_stats["mass"]) * 0.016
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
-	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first) * float(a_contact.shock) + float(a_contact.own_cost)
-	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second) * float(b_contact.shock) + float(b_contact.own_cost)
+	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first) * float(a_contact.shock) * float(ecology_a.shock) + float(a_contact.own_cost)
+	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second) * float(b_contact.shock) * float(ecology_b.shock) + float(b_contact.own_cost)
 	# The floor brace still steadies a top. Reserve endurance has its own
 	# weaker, earlier-fatiguing protection and does not change physical wobble.
 	var wobble_a: float = loss_a * powers.incoming_wobble_scale(first)
@@ -992,6 +1006,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	var actual_b: float = minf(float(second.rpm),loss_b)
 	spend_rpm(first,loss_a,"collisions")
 	spend_rpm(second,loss_b,"collisions")
+	if float(ecology_a.cost) > 0.0: spend_rpm(first,float(ecology_a.cost),"powers")
+	if float(ecology_b.cost) > 0.0: spend_rpm(second,float(ecology_b.cost),"powers")
 	first["energy"] = first["rpm"]
 	second["energy"] = second["rpm"]
 	first["wobble"] = minf(1.0, float(first["wobble"]) + wobble_a * 3.1)
@@ -1098,6 +1114,9 @@ func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO,
 				break
 		_power_fx.remove_at(discard)
 	var effect: Dictionary = {"kind":kind,"pos":pos,"dir":direction,"direction":direction,"strength":strength,"age":0.0,"duration":durations.get(kind,0.4)}
+	if not str(presentation.get("ecology_kind","")).is_empty():
+		effect["ecology_kind"] = presentation.ecology_kind
+		effect["owner_entity_id"] = int(presentation.get("owner_entity_id",0))
 	var art_family: String = PowerVisuals.Identity.event_family(kind)
 	if not art_family.is_empty():
 		# Presentation-only rank provenance; do not change the source fighter.
@@ -1237,6 +1256,7 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 		position_world -= normal * overshoot
 		var outward: float = velocity_world.dot(normal)
 		if outward > 0.0:
+			var before_rebound: Vector2 = velocity_world
 			velocity_world -= normal * outward * (1.0+0.66*float(physical.wall_restitution) if component_boundary else 1.66)
 			velocity_world *= 0.91 * (float(physical.wall_retention) if component_boundary else 1.0)
 			if component_boundary: velocity_world += normal.orthogonal()*outward*float(physical.wall_tangent)
@@ -1245,6 +1265,7 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 			fighter["impact_time"] = 0.12
 			fighter["impact_strength"] = 0.3
 			powers.wall_rebound(fighter, outward, normal, position_world)
+			velocity_world = roster.ecology.wall_velocity(fighter,before_rebound,velocity_world,outward,normal,position_world)
 			if outward > 70.0 and fighter.combatant_type == "full_top":
 				impact_feedback.accept_small(position_world,-normal)
 				event_sfx.emit("wall")

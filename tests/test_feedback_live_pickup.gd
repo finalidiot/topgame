@@ -32,7 +32,7 @@ static func portable(value: Variant) -> Variant:
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
-	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/")):
+	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/"))):
 		push_error("A fresh external QA report is required"); quit(2); return
 	var run = Run.new()
 	run.start(BUILD,421,"bastion")

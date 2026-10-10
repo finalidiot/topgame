@@ -32,7 +32,7 @@ func run() -> void:
 	var report: String=""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="): report=argument.trim_prefix("--report=")
-	if not report.is_absolute_path() or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or FileAccess.file_exists(report): quit(2); return
+	if not report.is_absolute_path() or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")) or FileAccess.file_exists(report): quit(2); return
 	root.size=Vector2i(800,480); root.content_scale_size=Vector2i(800,480)
 	DisplayServer.window_set_title("Spinning Metal — Right Shoulder Check")
 	var observer:=PhysicalObserver.new(); observer.report=report; observer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

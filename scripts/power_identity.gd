@@ -184,7 +184,7 @@ static func bank_stored_stage(fighter: Dictionary) -> int:
 	var rank: int = int(fighter.get("power_ranks",{}).get("momentum_bank",0))
 	var bank: float = float(fighter.get("momentum_charge",0.0))
 	if rank <= 0 or bank <= 3.0 or not str(fighter.get("outcome","")).is_empty(): return -1
-	var cap: float = 150.0 if rank >= 2 else 95.0
+	var cap: float = float(fighter.get("momentum_capacity",150.0 if rank >= 2 else 95.0))
 	return clampi(int(ceilf(bank/cap*7.0)),1,7)
 
 static func aura(canvas: CanvasItem, fighter: Dictionary, at: Vector2, clock: float) -> void:

@@ -81,7 +81,7 @@ func verify_card(card: Button, power: Dictionary, context: String) -> Dictionary
 		"art":str(power.card_texture), "art_sha256":FileAccess.get_sha256(ProjectSettings.globalize_path(str(power.card_texture))), "body":body.text}
 
 func audit_roster() -> void:
-	check(Powers.ACTIVE_IDS.size() == 16 and Powers.MUTATIONS.size() == 14, "The audit covers the actual sixteen families and fourteen mutation choices")
+	check(Powers.ACTIVE_IDS.size() == 16 and Powers.MUTATIONS.size() == 22, "The audit covers the actual sixteen families and twenty-two mutation choices")
 	for id: String in Powers.ACTIVE_IDS:
 		for rank: int in [0,1]:
 			var power: Dictionary = Powers.get_offer(id,rank)
@@ -103,7 +103,7 @@ func audit_roster() -> void:
 			for candidate: Button in cards():
 				if candidate.get_meta("power_id") == branch: card = candidate
 			roster.append(verify_card(card,power,branch))
-	check(roster.size() == 46,"Every active base, Rank II and mutation is actually rendered and audited")
+	check(roster.size() == 54,"Every active base, Rank II and mutation is actually rendered and audited")
 	for row: Dictionary in roster:
 		check(row.body_colour == "e3e8dc",row.name + " body stays neutral")
 		check(row.accent_colour == {1:"bdcbd3",2:"64d8ef",3:"d49bf1"}[row.rank],row.name + " uses the same tier accent as unrelated families")
@@ -193,7 +193,7 @@ func reduced_flashing_hierarchy() -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
-	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/")):
+	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/"))):
 		push_error("Fresh external QA report required");quit(2);return
 	root.size=Vector2i(800,480);root.content_scale_size=Vector2i(800,480)
 	Input.use_accumulated_input=false
@@ -201,6 +201,6 @@ func run() -> void:
 	await settle();await audit_roster();await inspector_hierarchy();await input_hierarchy();await reduced_flashing_hierarchy()
 	if not report.is_empty():
 		var file=FileAccess.open(report,FileAccess.WRITE)
-		file.store_string(JSON.stringify({"checks":checks,"failures":failures,"card_count":roster.size(),"roster":roster,"inputs":actions,"scope":"Actual production menu nodes, font/layout and mapped events; no save opened, no physical controller/phone acceptance. Authored art remains unmodified and untinted. Roster contains16base+16RankII+14mutations; future power rarity is not implemented."},"\t"));file.close()
+		file.store_string(JSON.stringify({"checks":checks,"failures":failures,"card_count":roster.size(),"roster":roster,"inputs":actions,"scope":"Actual production menu nodes, font/layout and mapped events; no save opened, no physical controller/phone acceptance. Authored art remains unmodified and untinted. Roster contains16base+16RankII+22mutations; future power rarity is not implemented."},"\t"));file.close()
 	print("ABILITY_CARD_HIERARCHY_003A1_%s checks=%d failures=%d cards=%d" % ["PASS" if failures.is_empty() else "FAIL",checks,failures.size(),roster.size()])
 	ui.free();quit(0 if failures.is_empty() else 1)

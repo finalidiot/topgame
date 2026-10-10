@@ -37,7 +37,7 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _catalogue() -> void:
-	_check(Catalog.ACTIVE_IDS.size() == 16 and Catalog.investment_capacity() == 39 and Catalog.run_investment_capacity() == 21 and Catalog.FAMILY_CAP == 7, "Three meaningful families add development while keeping seven slots")
+	_check(Catalog.ACTIVE_IDS.size() == 16 and Catalog.investment_capacity() == 43 and Catalog.run_investment_capacity() == 21 and Catalog.FAMILY_CAP == 7, "Developed families retain seven slots and the twenty-one-investment Run ceiling")
 	for id: String in ["gyro_lock", "impact_sink", "anchor_exchange"]:
 		_check(Catalog.get_offer(id).offer_kind == "acquire" and Catalog.get_offer(id, 1).offer_kind == "tune" and Catalog.get_offer(id, 2).offer_kind == "mutation", id + " real acquisition/tune/mutation progression")
 		_check(Catalog.mutation_choices(id).size() == 2 and Catalog.max_rank(id) == 3, id + " two valid specialization decisions")

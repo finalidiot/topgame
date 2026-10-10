@@ -12,10 +12,14 @@ func _run() -> void:
 	root.content_scale_size = Vector2i(800,480)
 	var qa_root: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if qa_root.is_empty(): qa_root = ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-	var profile: String = qa_root.path_join("003A.1/temp/shop-focus-cost-%d-%d.json" % [OS.get_process_id(),Time.get_ticks_usec()])
+	var qa_task: String = "003A.1"
 	var report: String = ""
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--report="): report = argument.trim_prefix("--report=")
+		if argument.begins_with("--qa-task="): qa_task = argument.trim_prefix("--qa-task=")
+	if qa_task not in ["003A.1","003A.2"]: quit(2); return
+	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").simplify_path().to_lower().begins_with(qa_root.replace("\\","/").simplify_path().path_join(qa_task+"/manifests").to_lower()+"/")): quit(2); return
+	var profile: String = qa_root.path_join(qa_task+"/temp/shop-focus-cost-%d-%d.json" % [OS.get_process_id(),Time.get_ticks_usec()])
 	var fixture = Save.new(profile)
 	check(fixture.load_save().ok and fixture.initialize_starter("breaker").ok,"Fresh isolated short-wallet starter")
 	var state: Dictionary = fixture._data.duplicate(true)

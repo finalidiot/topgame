@@ -1,0 +1,1152 @@
+{
+  "task": "003A.2",
+  "revision": "final_prebuild_evidence_4",
+  "created_utc": "2026-10-10T05:45:52.100020+00:00",
+  "starting_git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "branch": "task-003a2-ability-ecology",
+  "scope_baseline": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_scope_baseline.json",
+    "sha256": "9df2c76a3e7e7167e998e207f29424e998a70ba5d18640c405ed1efe4c3bf2ec",
+    "protected_counts": {
+      "player": 438,
+      "music": 18,
+      "assets": 695,
+      "scripts": 106,
+      "protected_deliveries": 8
+    }
+  },
+  "design_contract": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\temp\\mutation_contract.md",
+    "sha256": "cd0c0ff2ef91bfda517cd95e5f3f0a7603b63628b817ba45418eeb9fcb7f470f"
+  },
+  "evidence_scope": "Accepted b476 I/II and existing mutation audit remain immutable in baseline fields. Current16 bases /11 III families /22 branches /54 forms are implemented and source-reviewed; final114 headless,13 native,270 Python, legal study, qualitative movies and serial performance pass. Candidate exports, packaged smoke and human acceptance remain pending.",
+  "accepted_source_fingerprints": {
+    "scripts/run_powers.gd": "3ea9ede1452cd6727c6edfa4ae2d182315039cbb1442ed65f8dd1cc0af78b429",
+    "scripts/power_runtime.gd": "5cc8bc1f77b103be7fcb239c902ea36e32efdb158fe8a4aa3f7a9390f53b63bd",
+    "scripts/roster_runtime.gd": "b68b292428ab325074ac57e63bce5a1916d8376f5ad77318746e4ed0d227bad0",
+    "scripts/defence_runtime.gd": "072ebe5a15b87c6322b46cee420bd34e1db7b8a4320b8f33c6953c70e54e5dc0",
+    "scripts/spin_economy.gd": "72640e95d769a6472729b8445c91b43fa05e683d306747d678a94001cc992fdc",
+    "scripts/run_context.gd": "e436422b1bed7d4bcc6eff543a00c16886cdff7ba5711383e85e60718e75331f",
+    "scripts/run_progression.gd": "f5c6c50191238abe7bd2e1d75c9ec5979424ed654d89469c024a5cce07627d17",
+    "scripts/battle.gd": "f9fb024f672a5d76efcdd98ff111a9432a27c1657fc430a57a27fb4c862c429a",
+    "scripts/enemy_roles.gd": "01988fff367767e2031a5b9fe7a9c1101fb96adca7c1c7c5e2a401700fc1ec63",
+    "scripts/enemy_power_packages.gd": "6a2e0e18167dc8dc30a387b2b244982ddb93a51f24c3cff7fc7d82c15f61195c",
+    "scripts/ghost_circuit_routes.gd": "ab02a63b8ec3db06f5300bfe5ae23add85b005f824144ddab56f1e81f80ae01e"
+  },
+  "implementation_evidence": {
+    "status": "Completed prebuild automated/source/native evidence; candidate and human acceptance pending.",
+    "reports": [
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_coverage_review_20261010_063117_102932.json",
+        "sha256": "c6196646b5b4757b1e745096a04e47ee3f0c36ac68db8907b72e045ba8812e4e",
+        "scope": "Source review and scoped281 acquisition/329 semantic/159 solver integration evidence; its pending Centrifuge scene policy was later resolved; pre-neutral-correction source.",
+        "checks": null,
+        "status": null,
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_neutral_host_compatibility_review_20261010_064429_579710.json",
+        "sha256": "5b3f4ba1ef9ea0e6aeb514361692c1bbf749ed0123d6a6c751c3ae42aad14bf4",
+        "scope": "Current neutral compatibility1596, unchanged old readability4387 and Mobile124 focused proof; exact new-test inverse and old Mobile one-line scope proof.",
+        "checks": null,
+        "status": null,
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_art_20261010_055143_892939.json",
+        "sha256": "2170e24c8ff6e524573a3b08e4b5fc18199c4beacf165013f2d9ca4ae7917ef2",
+        "scope": "13 Python native-master/export cases and229 actual Menus/art checks at captured owned art/copy boundary.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_package_probe_20261010_062016_199962.json",
+        "sha256": "dc152ffc72e8315ead9c4a65e4ed14cdcfa0c4ead5b0ffdf3b8c87d71d521c70",
+        "scope": "15 strict unit cases plus actual imported source-resource receipt; actual compiled EXE acceptance still pending.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_full_preservation_20261010_062443_666807.json",
+        "sha256": "5fd65d4129767df8c7cbc9f1f51e5bcb99935bdf8d262254697d18b706a9a87c",
+        "scope": "327314 recorded protected group entries byte-exact before authorised candidate promotion.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_062304_972171.json",
+        "sha256": "9c0a5c665f6fda3511128cddea5564bb9da2047d5789f271128064f79666491c",
+        "scope": "Retained failed112-suite broad attempt:107 passes235870 selected successful checks and5 strict failures; not final acceptance.",
+        "checks": 235870,
+        "status": "failed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_python_20261010_064638_124089.json",
+        "sha256": "01cc977ccd2739774bdcc89f964b40c107666039d3d4185c609901a4bdc179e7",
+        "scope": "Final current-source7 categories270 cases allPASS, source/harness/player exact.",
+        "checks": 270,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_native_20261010_064638_159717.json",
+        "sha256": "023e7091d60ba2a411ed84b174ece9b5ae3f6bd84fe703598da78c57282b94d2",
+        "scope": "Final current-source13 native suites25700 checks allPASS; Windows renderer/audio/menu/synthetic input, no physical Android claim.",
+        "checks": 25700,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_064638_124479.json",
+        "sha256": "656a602b59a2f4cc0cc69421a9dd4a14a26abb3f4f8fad9fbe139f3690595b3a",
+        "scope": "Final 114 headless suites /244052 checks; zero failures; production, harness and438 real player files unchanged."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_legal_diversity_20261010_064826_637333_comparison.json",
+        "sha256": "56d2b1f165883e4d6abfd33443ff7c7cc1923e280e1cda74ac799e4595634c8b",
+        "scope": "Final256 matched seeds x5 declared analytical policies;1280 cases and3840 starter-label replays per source. Legal availability/depth, not natural acquisition or survival balance."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_diversity_simulation.json",
+        "sha256": "61f38b673265b171907e602ce3987f179865dcd0cd51f882db073ded522e60a6",
+        "scope": "Required combined final legal study and all eight actual runtime scene packages, controls, events, ledgers and clock evidence."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_actual_boundary_equality_20261010_064954_473439.json",
+        "sha256": "2a13d4e3ca7e971885ba8ecb5343cf4d64ab278033464159198ba9b35c0e804f",
+        "scope": "All eight scenes /820 actor samples exact across the neutral legacy-host compatibility correction."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_ecology_showcase.json",
+        "sha256": "6308457a0b0094a88ab4d306b396b5d2c326cdc5a5c7c3107b8c92b598dd8643",
+        "scope": "Final native fixed60 Windows eight-scene movie provenance: actual paid procs; declared initial loadouts/poses/velocities and sampled controls; no live resource or state holds."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_draft_showcase.json",
+        "sha256": "02f8480c66f3258b2b8925464956dae558e58579377172e1730d3520d2c569eb",
+        "scope": "Final actual Main seed39 draft-to-Flywheel movie provenance; declared attributed-XP and one paused pose fixture; normal READY then control-earned release."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_native_headless_actual_equality_20261010_070001_290519.json",
+        "sha256": "4cf68bf6e5671d600fffc9a3a6129b5b76a1d4d316582a679256e995136ac6d1",
+        "scope": "Complete native/headless equality for all eight scenes /820 actor samples and actual Main progression, events, controls, ledgers and clocks."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_simulation_final_neutral.json",
+        "sha256": "057318bb4cb6efc679117bfb878fe9bf852eb5e5a30ac3c201441c7f94cbe186",
+        "scope": "12 baseline and12 current seeded cases at4/5/6 total tops plus7-top stress; simulation workload and censoring, separate from regression totals."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_native_final_neutral.json",
+        "sha256": "dea3d98085c5d95008ee67c9f9c10df893abc1c03ecba5a6a5486308b05c85af",
+        "scope": "Serial native24-case workload; exact24 simulation replays; host timing and bounded workload evidence, excluding full Main/HUD/music and Android."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_performance_validation_20261010_071219_540817.json",
+        "sha256": "5444c2bdd54c75cf97664e0853c68a407ab67dc4dcd82184a0509544c7a8d3f5",
+        "scope": "Compact final performance ledger: group metrics, bounds, actual procs, replay, censoring and explicit scope limits."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_preservation_prebuild_20261010_071338_860490.json",
+        "sha256": "30d09860d31daf78e478df49e65c9e65e3e097a80f17f31c4eec3b902c307567",
+        "scope": "Fresh prebuild438 player /18 music /695 accepted assets /8 accepted delivery files byte-exact;836 current runtime files match final114 source boundary."
+      }
+    ],
+    "regression": {
+      "headless_suites": 114,
+      "headless_checks": 244052,
+      "native_suites": 13,
+      "native_checks": 25700,
+      "godot_suites_total": 127,
+      "godot_checks_total": 269752,
+      "python_categories": 7,
+      "python_cases": 270,
+      "failed_suites": 0,
+      "counting": "Focused reruns, legal-model/data checks, art/source reviews and performance checks are not added a second time."
+    },
+    "counting": "Focused reruns, legal-model/data checks, art/source reviews and performance checks are not added a second time."
+  },
+  "family_count": 11,
+  "branch_count": 22,
+  "existing_family_count": 7,
+  "new_family_count": 4,
+  "families": [
+    {
+      "family_id": "redline",
+      "family_name": "Redline",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Sustain moving contact pressure and heat, or prepare then spend it on one locked strike.",
+      "branches": [
+        {
+          "id": "runaway",
+          "name": "Runaway",
+          "trigger": "Paid active Redline plus moving accepted contact>=.35 and target/global cooldown.",
+          "physical_payoff": "Adds18+heat*25 physical shove, extends window up to3.2s ahead and refills only finite motion quota.",
+          "rpm_cost": "Existing paid activation/drain; heat and ordinary Burst/collision costs.",
+          "rpm_recovery": "Same existing bounded moving/contact returns; .14 motion quota and shared/small budgets.",
+          "downside": "More heat and control risk; misses stop extension.",
+          "runtime_hooks": [
+            "PowerRuntime._modern_burst",
+            "PowerRuntime._modern_contact",
+            "PowerRuntime._modern_movement"
+          ],
+          "agency": "Paid active Redline plus moving accepted contact>=.35 and target/global cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "breakneck",
+          "name": "Breakneck",
+          "trigger": "Prepare paid Redline, then second paid Burst at heat>=.32 or pre-cost RPM>=1.025.",
+          "physical_payoff": "A .48s locked line adds160 velocity, attack2.35 and one actual target shove with real own recoil.",
+          "rpm_cost": ".08+excess*.75 commitment cost plus ordinary Burst; miss .035/hit .015 expiry loss.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Brake disabled, limited correction, own wobble .42 miss/.28 hit and speed reduction .58/.72.",
+          "runtime_hooks": [
+            "PowerRuntime._modern_burst",
+            "PowerRuntime._modern_contact",
+            "PowerRuntime._modern_end_redline"
+          ],
+          "agency": "Prepare paid Redline, then second paid Burst at heat>=.32 or pre-cost RPM>=1.025.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_burst",
+          "line": 1309,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_contact",
+          "line": 1422,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_end_redline",
+          "line": 1348,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "dead_centre",
+      "family_name": "Dead Centre",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Maintain a very heavy centre socket and reflect attacks, or take force then release it along an aimed Burst line.",
+      "branches": [
+        {
+          "id": "bulwark",
+          "name": "Bulwark",
+          "trigger": "Charged Anchor>=.70, accepted opposing contact>=.35 and .24s effect cooldown.",
+          "physical_payoff": "Mass1+charge^4*80; bounded outward min85,incoming*.34 counter scaled by true Stress efficiency.",
+          "rpm_cost": "Ordinary costs, finite recovery quota; delivered counter work adds Stress.",
+          "rpm_recovery": "Existing finite central recovery ceiling .90, same bucket/quota.",
+          "downside": "Strong counters load connection; real movement/Stress vent/rearm needed.",
+          "runtime_hooks": [
+            "PowerRuntime.inverse_mass",
+            "PowerRuntime._anchor_contact",
+            "PowerRuntime.delivered_anchor_work"
+          ],
+          "agency": "Charged Anchor>=.70, accepted opposing contact>=.35 and .24s effect cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "counterweight",
+          "name": "Counterweight",
+          "trigger": "Actual force while charge>=.25 stores up to150; paid Burst stock>=12 releases.",
+          "physical_payoff": "Owner velocity+heading*stock; opposing targets within72 and forward cone receive min100,stock*.85.",
+          "rpm_cost": "Consumes whole actual store and ordinary Burst; breaks Anchor.",
+          "rpm_recovery": "No stock-to-RPM grant; controlled paid release can vent Stress up to .38.",
+          "downside": "Must take incoming force, aim release and recover/rearm before returning.",
+          "runtime_hooks": [
+            "PowerRuntime._anchor_contact",
+            "PowerRuntime._release_counterweight",
+            "PowerRuntime.burst_started"
+          ],
+          "agency": "Actual force while charge>=.25 stores up to150; paid Burst stock>=12 releases.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "inverse_mass",
+          "line": 442,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_anchor_contact",
+          "line": 647,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_release_counterweight",
+          "line": 681,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "afterimage",
+      "family_name": "Afterimage",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Physically close paid self/hostile geometry for a closer-owned pulse, or repeatedly route through owned old paths for motion.",
+      "branches": [
+        {
+          "id": "ghost_circuit",
+          "name": "Ghost Circuit",
+          "trigger": "Speed>112 and real paid visible closure: age>=.85, perimeter>=180, area>=1300, extents>=32, remaining gap<=56, gap/perimeter<=.22; hostile bridge actually attaches/crosses or advances enough.",
+          "physical_payoff": "Closer-hostile enclosed max8targets get full88/small110 outward velocity, wobble .12/.20 and target RPM spend .012/.018.",
+          "rpm_cost": "Own normal paid emission .0011 each; consumes exact used edge intervals.",
+          "rpm_recovery": "Only brief drain .75 for .8s; no new free RPM source.",
+          "downside": "3.5s closer cooldown; expiry and geometry; original route owner/team/cause stay unchanged.",
+          "runtime_hooks": [
+            "PowerRuntime._modern_circuit",
+            "GhostCircuitRoutes.candidate",
+            "GhostCircuitRoutes.consume"
+          ],
+          "agency": "Speed>112 and real paid visible closure: age>=.85, perimeter>=180, area>=1300, extents>=32, remaining gap<=56, gap/perimeter<=.22; hostile bridge actually attaches/crosses or advances enough.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "slipstream",
+          "name": "Slipstream",
+          "trigger": "Cross/re-enter own live trace aged>=.30, speed>=70, fresh crossing and .9s cooldown.",
+          "physical_payoff": "Real+90 along velocity, .75s speed/thrust/efficiency surge and wobble-.16.",
+          "rpm_cost": "Route was actually paid; own crossing eligibility and trace-life cap remain.",
+          "rpm_recovery": ".004 per qualified crossing through existing shared bucket; paid trace costs remain.",
+          "downside": "Cannot farm held proximity or hostile routes; bounded repeated entry.",
+          "runtime_hooks": [
+            "PowerRuntime._cross_slipstream",
+            "PowerRuntime.movement_control"
+          ],
+          "agency": "Cross/re-enter own live trace aged>=.30, speed>=70, fresh crossing and .9s cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_circuit",
+          "line": 1497,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_cross_slipstream",
+          "line": 920,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "high_gear",
+      "family_name": "High Gear",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Commit to high raw straight speed, or retain motion through controlled turns.",
+      "branches": [
+        {
+          "id": "terminal_velocity",
+          "name": "Terminal Velocity",
+          "trigger": "Owned movement; speed>90 and input>.2 incurs steering cost above .50rad.",
+          "physical_payoff": "Acceleration1.95, ceiling1.82; bounded physical speed480.",
+          "rpm_cost": "Extra turn max0,angle-.5*speed/230*.004/s; braking .006*speed/230/s.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Corrections and braking expensive; no gate rescue.",
+          "runtime_hooks": [
+            "RosterRuntime.movement",
+            "RosterRuntime.velocity"
+          ],
+          "agency": "Owned movement; speed>90 and input>.2 incurs steering cost above .50rad.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "flow_state",
+          "name": "Flow State",
+          "trigger": "Sustained motion speed>110,input>.25 and off Brake for efficiency.",
+          "physical_payoff": "Accel1.52, ceiling1.49, drag-.30, heading blended with carried velocity and drain*.70.",
+          "rpm_cost": "Normal movement/Brake/collision costs.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Lower raw thrust than Terminal; no direct attack or RPM return.",
+          "runtime_hooks": [
+            "RosterRuntime.movement"
+          ],
+          "agency": "Sustained motion speed>110,input>.25 and off Brake for efficiency.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "movement",
+          "line": 53,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "gyro_lock",
+      "family_name": "Gyro Lock",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Heavier strict low-angle moving ballast, or lighter ballast through wider faster curves.",
+      "branches": [
+        {
+          "id": "keel",
+          "name": "Keel",
+          "trigger": "Smooth moving off-Brake/non-Burst steering rate<=1.25, speed16–205.",
+          "physical_payoff": "Mass1+gyro²*6 with lock build1.25s.",
+          "rpm_cost": "Normal travelling costs, no RPM mint.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Up to24% slower and12% less acceleration; stricter turns break lock.",
+          "runtime_hooks": [
+            "DefenceRuntime.movement",
+            "DefenceRuntime.mass_multiplier"
+          ],
+          "agency": "Smooth moving off-Brake/non-Burst steering rate<=1.25, speed16–205.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "flywheel",
+          "name": "Flywheel",
+          "trigger": "Smooth moving off-Brake/non-Burst steering rate<=2.8, speed16–260.",
+          "physical_payoff": "Maintains accepted II moving ballast across wider/faster curves.",
+          "rpm_cost": "Normal travelling costs.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Less footing than Keel; idle/Brake/Burst still break it.",
+          "runtime_hooks": [
+            "DefenceRuntime.movement",
+            "DefenceRuntime.mass_multiplier"
+          ],
+          "agency": "Smooth moving off-Brake/non-Burst steering rate<=2.8, speed16–260.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "movement",
+          "line": 71,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "mass_multiplier",
+          "line": 128,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "impact_sink",
+      "family_name": "Impact Sink",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Exchange accepted incoming recoil for more recovery, or consume it in a close physical counter instead.",
+      "branches": [
+        {
+          "id": "shock_bleed",
+          "name": "Shock Bleed",
+          "trigger": "Real accepted-force reservoir>=15, fresh non-Burst Brake at speed<=120,1.5s cooldown.",
+          "physical_payoff": "Empties stock for RPM and wobble relief; actual stock also eases Anchor Stress.",
+          "rpm_cost": "Stock consumed once; normal Brake cost.",
+          "rpm_recovery": "min .045,stored*.00035 via shared recovery bucket.",
+          "downside": "No store means no return; held Brake/unused leaking stock cannot farm.",
+          "runtime_hooks": [
+            "DefenceRuntime.contact",
+            "DefenceRuntime.vent"
+          ],
+          "agency": "Real accepted-force reservoir>=15, fresh non-Burst Brake at speed<=120,1.5s cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "return_spring",
+          "name": "Return Spring",
+          "trigger": "Same real reservoir and fresh slow Brake gate.",
+          "physical_payoff": "Max6 nearby opposing recipients within64 receive outward min95,25+store*.45 physical velocity.",
+          "rpm_cost": ".008 RPM and whole stored force.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Replaces recovery; needs targets in limited radius and consumes stock once.",
+          "runtime_hooks": [
+            "DefenceRuntime.vent",
+            "PowerRuntime._request"
+          ],
+          "agency": "Same real reservoir and fresh slow Brake gate.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "contact",
+          "line": 154,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "vent",
+          "line": 173,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "anchor_exchange",
+      "family_name": "Anchor Exchange",
+      "status": "accepted_existing",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Pay for very heavy nearly-stationary footing, or carry part of a developed brace through the first repositioning step.",
+      "branches": [
+        {
+          "id": "deep_footing",
+          "name": "Deep Footing",
+          "trigger": "Held Brake, speed<34, RPM>.08 and no Burst.",
+          "physical_payoff": "Mass1+brace*20, developed paid release can vent up to .14 Anchor Stress.",
+          "rpm_cost": ".010*brace RPM/s plus normal Brake cost.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Near stop and sharply limited travel; ongoing spin payment.",
+          "runtime_hooks": [
+            "DefenceRuntime.movement",
+            "DefenceRuntime.mass_multiplier"
+          ],
+          "agency": "Held Brake, speed<34, RPM>.08 and no Burst.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        },
+        {
+          "id": "slip_anchor",
+          "name": "Slip Anchor",
+          "trigger": "Release developed paid brace>.20; no ongoing Brake.",
+          "physical_payoff": "Carries65% brace on ordinary movement for .35s fading physical mass.",
+          "rpm_cost": "Existing paid brace and normal movement costs.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Brief carry expires; Burst clears it.",
+          "runtime_hooks": [
+            "DefenceRuntime.movement",
+            "DefenceRuntime.mass_multiplier",
+            "DefenceRuntime.burst"
+          ],
+          "agency": "Release developed paid brace>.20; no ongoing Brake.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "movement",
+          "line": 71,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "mass_multiplier",
+          "line": 128,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "burst",
+          "line": 143,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "iron_comet",
+      "family_name": "Iron Comet",
+      "status": "implemented_source_reviewed_actual_gates_and_final_prebuild_validation_pass_candidate_acceptance_pending",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "One costly strong reflected-line strike with miss exposure, or lower-force controlled oblique wall-route beats.",
+      "branches": [
+        {
+          "id": "wallbreaker",
+          "name": "Wallbreaker",
+          "trigger": "Real solid-wall outward>=160, RPM>.13; actual reflected line,1.2s commitment,2s arm cooldown. First aimed opposing full contact>=.45, own approach>=45 and heading dot normal>=.55.",
+          "physical_payoff": "Adds100 normal velocity to enemy and45 recoil to owner, .07 wobble; first qualifying contact spends charge.",
+          "rpm_cost": ".018 on arm; miss .025 RPM/.10 wobble; normal wall/Burst/contact cost.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Blend input .12 with reflected heading, no Brake during commitment; miss/expiry cost and real gates.",
+          "runtime_hooks": [
+            "Battle._resolve_boundary",
+            "EcologyRuntime wall rebound/commit/contact hooks",
+            "PowerRuntime.wall_rebound"
+          ],
+          "agency": "Real solid-wall outward>=160, RPM>.13; actual reflected line,1.2s commitment,2s arm cooldown. First aimed opposing full contact>=.45, own approach>=45 and heading dot normal>=.55.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "controls",
+              "line": 109,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "wall_velocity",
+              "line": 217,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "contact",
+              "line": 274,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "begin_tick",
+              "line": 65,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Armed velocity has floor .85 of actual pre-wall speed, bounded480. Committed movement minimum speed1.6/acceleration1.4 factors. Normal shove100 is an offer, subject to resistance/caps."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        },
+        {
+          "id": "ricochet_engine",
+          "name": "Ricochet Engine",
+          "trigger": "Real wall outward>=110, oblique incidence .20–.85, steer>.20, tangent input abs>=.25, off Brake, RPM>.13; .30s cooldown.",
+          "physical_payoff": "Retains reflected velocity <=1.24x and <=.94 actual pre-wall speed; max3 beats/3s. Aimed contact>=.30, own approach>=25 adds18+4*beats shove and spends one beat.",
+          "rpm_cost": ".006 RPM per qualified rebound, no recovery.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Hard correction/Brake breaks route; weaker single hit than II/Wallbreaker, no gate protection.",
+          "runtime_hooks": [
+            "Battle._resolve_boundary",
+            "EcologyRuntime wall route/contact hooks"
+          ],
+          "agency": "Real wall outward>=110, oblique incidence .20–.85, steer>.20, tangent input abs>=.25, off Brake, RPM>.13; .30s cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "wall_velocity",
+              "line": 217,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "movement",
+              "line": 122,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "contact",
+              "line": 274,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "begin_tick",
+              "line": 65,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Aimed contact additionally requires stored reflected heading dot contact normal>=.55. Hard correction is velocity/input dot<-.20. Each successful rebound refreshes the3s finite route window."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "wall_rebound",
+          "line": 365,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_resolve_boundary",
+          "line": 1214,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "orbit_drive",
+      "family_name": "Orbit Drive",
+      "status": "implemented_source_reviewed_actual_gates_and_final_prebuild_validation_pass_candidate_acceptance_pending",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Spend full fresh DRIVE on a moving tangent shear, or preserve it for more efficient sustained curves with costly correction.",
+      "branches": [
+        {
+          "id": "centrifuge",
+          "name": "Centrifuge",
+          "trigger": "Exactly1.0 DRIVE, fresh same-sign actual curve, speed>80/input>.20; tangential opposing full contact>=.45, |precontact tangent speed|>=70 and lateral input>=.20.",
+          "physical_payoff": "Velocity-derived sideways shove<=95 from .45*tangent speed; owner .30 recoil/.04 wobble.",
+          "rpm_cost": "Spends .70 DRIVE and .012 RPM;1.3s cooldown.",
+          "rpm_recovery": ".007/s full-carve via existing shared bucket, lower than II .012.",
+          "downside": "Sacrifices full-DRIVE sustain; requires actual curve/contact geometry and pays recoil.",
+          "runtime_hooks": [
+            "RosterRuntime.velocity",
+            "EcologyRuntime accepted-contact hook",
+            "PowerRuntime._orbit_full_carve"
+          ],
+          "agency": "Exactly1.0 DRIVE, fresh same-sign actual curve, speed>80/input>.20; tangential opposing full contact>=.45, |precontact tangent speed|>=70 and lateral input>=.20.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "velocity",
+              "line": 159,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "contact",
+              "line": 274,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/power_runtime.gd",
+              "function": "_orbit_full_carve",
+              "line": 1217,
+              "sha256": "2083424007ea81509698b5d57651cb473c2d3b3827c2a0fb1fbf1ad2bcadf337",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Contact lateral input sign must match precontact tangential speed sign; RPM>.05. Full-DRIVE price sets actual charge to .30; full same-sign curve flag must come from real preceding movement."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        },
+        {
+          "id": "perpetual_orbit",
+          "name": "Perpetual Orbit",
+          "trigger": "Actual smooth same-sign heading curve .12–2.4rad/s; full DRIVE, actual speed>80/input>.20.",
+          "physical_payoff": "Stronger full-charge moving efficiency and .017/s bounded active recovery; no attack proc.",
+          "rpm_cost": "Hard correction/reverse/non-carving Brake costs .012*previousDrive once per broken-state entry.",
+          "rpm_recovery": ".017/s SAME capped player/NPC orbit_drive source; no idle/paused/dead return.",
+          "downside": "Dumps DRIVE, loses10% velocity and must regain a real curve before another break cost; requires consistent route.",
+          "runtime_hooks": [
+            "RosterRuntime.velocity",
+            "EcologyRuntime curve-break/flow hooks",
+            "PowerRuntime._orbit_full_carve"
+          ],
+          "agency": "Actual smooth same-sign heading curve .12–2.4rad/s; full DRIVE, actual speed>80/input>.20.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "velocity",
+              "line": 159,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "movement",
+              "line": 122,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/power_runtime.gd",
+              "function": "_orbit_full_carve",
+              "line": 1217,
+              "sha256": "2083424007ea81509698b5d57651cb473c2d3b3827c2a0fb1fbf1ad2bcadf337",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Extra full-flow drain factor .73 stacks only with existing moving full-DRIVE factor. Broken gate includes reverse sign, rate>2.4, non-carving Brake or input/heading dot<-.20. Entry price/speed loss requires previous DRIVE>.05; charge is dumped even below that."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_orbit_full_carve",
+          "line": 1216,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "momentum_bank",
+      "family_name": "Momentum Bank",
+      "status": "implemented_source_reviewed_actual_gates_and_final_prebuild_validation_pass_candidate_acceptance_pending",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Commit a larger whole motion bank to a straight paid release, or use a smaller bank only to redirect carried velocity on an angled Burst.",
+      "branches": [
+        {
+          "id": "flywheel_release",
+          "name": "Flywheel Release",
+          "trigger": "Real steered Brake captures speed loss, cap240/leak9/s. Accepted ordinary Burst bank>=60;1.2s release cooldown.",
+          "physical_payoff": "Adds heading*bank*1.15 actual velocity capped480; .65s straight commitment. First aimed hard full contact>=.60/approach70 returns bank*.18 recoil to owner, not extra magic damage.",
+          "rpm_cost": ".014+bank*.00010 additional RPM plus ordinary Burst .013; all stock spent. Miss .016 RPM/.10 wobble.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "No Brake, locked line, own contact recoil/.05 wobble; larger leak and missed release exposure.",
+          "runtime_hooks": [
+            "RosterRuntime.velocity",
+            "RosterRuntime.burst",
+            "EcologyRuntime commitment/contact hooks"
+          ],
+          "agency": "Real steered Brake captures speed loss, cap240/leak9/s. Accepted ordinary Burst bank>=60;1.2s release cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "bank_capacity",
+              "line": 104,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "bank_leak",
+              "line": 107,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "burst",
+              "line": 187,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "controls",
+              "line": 109,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "contact",
+              "line": 274,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "begin_tick",
+              "line": 65,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Aimed contact additionally requires release heading dot normal>=.55. Locked movement minimum speed1.6/acceleration1.4, physical additional velocity and own recoil; no new enemy damage multiplier."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        },
+        {
+          "id": "countersteer",
+          "name": "Countersteer",
+          "trigger": "Accepted ordinary Burst bank>=35 and >=1.0472rad from actual PRE-Burst velocity; cap150/leak7 and .8s cooldown.",
+          "physical_payoff": "Redirects actual carried velocity to aimed line, speed<=original speed+bank*.22, .2s carry, no prolonged lock.",
+          "rpm_cost": ".010+bank*.00006 additional RPM plus ordinary Burst; whole stock spent.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Straight Burst does not discharge; less direct thrust than sibling. No position teleport or RPM gain.",
+          "runtime_hooks": [
+            "Battle._attempt_burst pre-velocity",
+            "RosterRuntime.burst",
+            "EcologyRuntime countersteer hook"
+          ],
+          "agency": "Accepted ordinary Burst bank>=35 and >=1.0472rad from actual PRE-Burst velocity; cap150/leak7 and .8s cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "burst",
+              "line": 187,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/battle.gd",
+              "function": "_attempt_burst",
+              "line": 714,
+              "sha256": "1e6e896883867366adc94eb5bd69a8c55e4e9b683f863c2a3813bedf5e2e50cb",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Actual pre-Burst speed must also be>=40. A straight accepted Burst does not discharge, but canonical Burst still pays its own cost."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "burst",
+          "line": 151,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_attempt_burst",
+          "line": 714,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "family_id": "crash_guard",
+      "family_name": "Crash Guard",
+      "status": "implemented_source_reviewed_actual_gates_and_final_prebuild_validation_pass_candidate_acceptance_pending",
+      "mutually_exclusive": true,
+      "terminal_rank": 3,
+      "tactical_difference": "Turn a genuine received hit into a brief NEXT aimed single counter, or sacrifice mobility to damp THIS one very hard received collision.",
+      "branches": [
+        {
+          "id": "reactive_plating",
+          "name": "Reactive Plating",
+          "trigger": "Actual rival approach>=45, accepted full contact>=.60 and incoming solver delta>=55 loads .32 force cap100 for .75s;3s charge cooldown. NEXT distinct full contact>=.25, own approach>=25 and input toward contact>=.20 spends stock.",
+          "physical_payoff": "Brief guard loss scale .65; next aimed contact spends stock on normal physical shove and .18 own recoil.",
+          "rpm_cost": ".010 RPM on counter; actual paid stock is consumed or expires.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Weaker guard than accepted II .48; cannot counter on charging hit, stock expires quickly, no free pulse/RPM return.",
+          "runtime_hooks": [
+            "Battle accepted incoming velocities/delta",
+            "EcologyRuntime reception/counter hook",
+            "RosterRuntime.collision_cost"
+          ],
+          "agency": "Actual rival approach>=45, accepted full contact>=.60 and incoming solver delta>=55 loads .32 force cap100 for .75s;3s charge cooldown. NEXT distinct full contact>=.25, own approach>=25 and input toward contact>=.20 spends stock.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "prepare_contact",
+              "line": 247,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "collision_cost",
+              "line": 269,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "contact",
+              "line": 274,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "begin_tick",
+              "line": 65,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/battle.gd",
+              "function": "_resolve_pair_records",
+              "line": 927,
+              "sha256": "1e6e896883867366adc94eb5bd69a8c55e4e9b683f863c2a3813bedf5e2e50cb",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Brief .65 loss guard is armed before loss calculation and can apply to the incoming charge hit itself; this is a NEW III behaviour, distinct from accepted I/II later-contact-only guard. Counter requires RPM>.05 and consumes force while the timed guard may remain briefly."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        },
+        {
+          "id": "sacrificial_damper",
+          "name": "Sacrificial Damper",
+          "trigger": "THIS accepted opposing full collision>=.85, incoming solver delta>=80, actual rival approach>=45, RPM>.13;7s cooldown.",
+          "physical_payoff": "THIS hit receives recoil factor .40 and shock loss .28 before loss is applied, retaining existing carried velocity; afterward owner is buckled1.4s.",
+          "rpm_cost": ".009 trigger RPM plus .010/s while buckled, .04 wobble.",
+          "rpm_recovery": "No new RPM recovery.",
+          "downside": "Buckled accel*.45/speed*.65/drag+1.2; no ordinary always-on guard, no small/allied trigger or post-hit blanket reduction.",
+          "runtime_hooks": [
+            "Battle accepted collision before RPM loss",
+            "EcologyRuntime damper qualification/movement",
+            "RosterRuntime collision response"
+          ],
+          "agency": "THIS accepted opposing full collision>=.85, incoming solver delta>=80, actual rival approach>=45, RPM>.13;7s cooldown.",
+          "owner_team_terminal_contract": "Live owner only, opposing recipients, canonical paid fixed-tick hooks and original cause; no automatic revival or synthetic contact recursion.",
+          "current_source_evidence": [
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "prepare_contact",
+              "line": 247,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "movement",
+              "line": 122,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/ecology_runtime.gd",
+              "function": "begin_tick",
+              "line": 65,
+              "sha256": "19ba1c87ed06a040b7e6cb2ce27e8e32c37b054b0a1baab909848443977ac73d",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            },
+            {
+              "path": "scripts/battle.gd",
+              "function": "_resolve_pair_records",
+              "line": 927,
+              "sha256": "1e6e896883867366adc94eb5bd69a8c55e4e9b683f863c2a3813bedf5e2e50cb",
+              "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+            }
+          ],
+          "exact_landed_source_details": [
+            "Physical incoming delta is actual post-solver velocity minus precontact velocity, measured before damper; not nominal attack force or power-state severity. The7s cooldown suppresses repeated absorb, while ordinary subsequent collisions get neutral scale."
+          ],
+          "source_review_status": "Exact implemented gates/costs/physical consequences independently reviewed. Scoped semantic/acquisition/solver/API fixtures and actual earned diagnostic procs pass; final native/performance/build evidence pending.",
+          "contract_evidence_scope": "Direct semantic/player-NPC boundaries plus legal claimed acquisition; separately actual earned8-scene diagnostic after declared initial assembly/pose/velocity. Replay equality alone is not activation proof."
+        }
+      ],
+      "baseline_source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "_contact",
+          "line": 175,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "collision_cost",
+          "line": 162,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_resolve_pair_records",
+          "line": 917,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    }
+  ],
+  "state_conservation": "Ranks I/II remain accepted behaviour; each III replaces one family progression terminally, cannot own both siblings, cannot create a new eighth family slot or mint hidden RPM.",
+  "pending_evidence": [
+    "Windows/Android candidate export, actual packaged catalogue and Shop receipt smoke, and any authorised promotion.",
+    "Emulator/physical Android and human acceptance remain separate; no physical phone acceptance is claimed.",
+    "Main remains unmerged and003B unstarted."
+  ],
+  "updated_utc": "2026-10-10T07:19:28.743986+00:00",
+  "prior_design_artifacts": [
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_power_ecology_audit.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_power_ecology_audit.json",
+      "bytes": 91161,
+      "sha256": "68a81d58d996a2d6a28b7953312510b74c2bab2969640223b0e40da34b9ead77"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_matrix.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_mutation_matrix.json",
+      "bytes": 52781,
+      "sha256": "b1dd714c31d6d1a882afb946b407bd45723c18e8128c7059a65d35c2ace4c495"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_ecology_source_review.json",
+      "bytes": 8828,
+      "sha256": "58c30dc7ebb051cb59aaf227431bd6dd2a84f45a5633365ecfb3114a863d916f"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\tasks\\003A.2.md",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003A.2.md",
+      "bytes": 19891,
+      "sha256": "9300f1e6ee3e2dee4e36a34171db920f5e96491e308549f7638363759d998d49"
+    },
+    {
+      "revision": "before_final_prebuild_4",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986",
+      "files": [
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_power_ecology_audit.json",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003a2_power_ecology_audit.json",
+          "bytes": 99526,
+          "sha256": "048e74b71be20090ab61a6494f41c708c3730a9ef7565c8d0551a4e3ca99b1f3"
+        },
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_matrix.json",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003a2_mutation_matrix.json",
+          "bytes": 63117,
+          "sha256": "6fa553e7dfa1867cfe4138e2faef5a6365dab46ca0ba9271b7e34502667d1c5d"
+        },
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\tasks\\003A.2.md",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003A.2.md",
+          "bytes": 29574,
+          "sha256": "7048800bf3aabe5383ea7d1da20e531f186e3e2b63461d58a2c70499f9afca5a"
+        }
+      ]
+    }
+  ],
+  "landed_source_review": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review_final_prebuild_20261010_071928_743986.json",
+    "sha256": "ec41126f9fe8184e565812d5b2169bc1ac7ba7caf4ffbaf8246b7fe3af071f12",
+    "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+  },
+  "canonical_impulse_contract": "Listed target shove values are offered deltas. Canonical apply_power_impulse caps offers100, applies actual target Anchor/Gyro/Exchange resistance, then full velocity cap340; measured delivery can be smaller.",
+  "committed_control_priority": "Live Bank release >live Wallbreaker reflected line >ordinary existing power direction; same prepared line before power/roster eligibility and after direction modifiers. Noncommits unchanged."
+}

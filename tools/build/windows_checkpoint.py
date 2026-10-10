@@ -40,7 +40,7 @@ REQUIRED_CAPTURES = (
 )
 SHOP_REQUIRED_CAPTURES = ("003a-shop.png", "003a-odds.png", "003a-packet-result.png", "003a-acquired-workshop.png")
 SHOP_SMOKE_MARKER = "SHOP_PROGRESSION_SMOKE_PASS"
-SHOP_TASKS = ("003A", "003A.1")
+SHOP_TASKS = ("003A", "003A.1", "003A.2")
 NATIVE_IMPORT_EXIT_CODES = (-1073741819, 3221225477)
 
 
@@ -175,7 +175,7 @@ def shop_progression_record(collection: Path, *, qa_root: Path, qa_task: str) ->
     prevents a release build with stripped assert-side effects from passing.
     """
     if qa_task not in SHOP_TASKS:
-        raise ValueError("Shop progression requires the explicit 003A or 003A.1 QA task.")
+        raise ValueError("Shop progression requires an explicit 003A, 003A.1 or 003A.2 QA task.")
     collection = collection.absolute()
     if is_reparse(collection):
         raise ValueError("Shop progression save cannot be a reparse point.")

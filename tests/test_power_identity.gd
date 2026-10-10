@@ -564,7 +564,7 @@ func run() -> void:
 	for family: String in FAMILIES:
 		expected.append(family); expected.append(family + "_ii")
 		for branch: String in C.MUTATION_BRANCHES.get(family, []): expected.append(branch)
-	check(expected.size() == 34 and not I.art("second_wind").size(), "Complete current roster owns new art while Second Wind is explicitly historical")
+	check(expected.size() == 42 and not I.art("second_wind").size(), "Complete current roster owns new art while Second Wind is explicitly historical")
 	check(not I.has_active("crash_guard", "guarded") and I.family_info("crash_guard").event_tags.get("crash_guard", "") == "damper_contact", "Crash Guard art is a contact response without a persistent orbiting shield")
 	for family: String in FAMILIES:
 		var info: Dictionary = I.family_info(family)
@@ -584,7 +584,7 @@ func run() -> void:
 	for family: String in FAMILIES:
 		await test_draw(family, 1); await test_draw(family, 2)
 		for branch: String in C.MUTATION_BRANCHES.get(family, []): await test_draw(family, 3, branch)
-	check(draw_states == 34, "Every card state reached an actual draw-isolation fixture")
+	check(draw_states == 42, "Every card state reached an actual draw-isolation fixture")
 	check(paid_preview_draws == 1, "Production-paid Ghost endpoints reached an actual native preview draw")
-	print("POWER_IDENTITY_TEST_%s checks=%d failures=%d states=34 draw_states=%d paid_preview_draws=%d" % ["PASS" if failures == 0 else "FAIL", checks, failures, draw_states, paid_preview_draws])
+	print("POWER_IDENTITY_TEST_%s checks=%d failures=%d states=42 draw_states=%d paid_preview_draws=%d" % ["PASS" if failures == 0 else "FAIL", checks, failures, draw_states, paid_preview_draws])
 	quit(1 if failures else 0)

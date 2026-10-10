@@ -22,6 +22,14 @@ const GUIDES: Dictionary = {
 	"anchor_exchange":["Brake buys heavy portable footing.", "Hold Brake near rest; release to move.", "Braces plant; shoves move you less.", "Brace costs RPM and slows travel.", "Build heavier footing sooner."]
 }
 const MUTATION_GUIDES: Dictionary = {
+	"wallbreaker":["A wall rebound commits one huge strike.","Rebound hard; plan the rival line first.","A fixed flight mark follows your launch.","Restricted steering; misses cost RPM."],
+	"ricochet_engine":["Oblique rebounds become a movement route.","Steer controlled angles into solid walls.","Up to three rebound marks track the route.","Brake or reverse loses it; no gate rescue."],
+	"centrifuge":["A full carve spends DRIVE on a side hit.","Reach full DRIVE; glance across a rival.","A sideways shove spends most DRIVE.","Costs RPM, recoils and needs a new carve."],
+	"perpetual_orbit":["Smooth full curves earn efficient spin.","Hold the same moving curve at full DRIVE.","Full DRIVE sustains capped RPM recovery.","Hard correction dumps DRIVE and RPM."],
+	"flywheel_release":["Bank more motion for a committed launch.","Brake to bank; aim Burst with sixty stored.","Your release holds its straight line.","Costs RPM; recoil or missed-line penalty."],
+	"countersteer":["Stored motion becomes a sharp new line.","Bank thirty-five; Burst across your heading.","Carried velocity redirects immediately.","Spends bank and RPM; less forward force."],
+	"reactive_plating":["Receive force; aim a brief physical counter.","Take a heavy incoming hit, then push back.","Loaded plating lasts three-quarters second.","Aimed next contact costs RPM; store expires."],
+	"sacrificial_damper":["Cushion one severe incoming collision.","Receive a huge hit while the damper is ready.","Your recoil shrinks; the damper buckles.","Paid RPM; slow afterwards; seven-second wait."],
 	"keel":["A steady line builds extreme ballast.", "Move with very smooth steering.", "A heavy lock steadies your line.", "Less speed; tight turns break lock."],
 	"flywheel":["Carry ballast through wider curves.", "Steer smoothly while moving.", "Lock survives faster, wider turns.", "Idle, Brake or Burst still lose lock."],
 	"shock_bleed":["Stored force buys stronger recovery.", "Take recoil, then tap Brake slowly.", "The vent restores RPM and steadies you.", "Stored force pays; recovery capped."],
@@ -38,6 +46,10 @@ const MUTATION_GUIDES: Dictionary = {
 	"flow_state":["Smooth travel keeps speed efficiently.", "Move through controlled turns.", "Turns carry your momentum onward.", "Less thrust than Terminal Velocity."]
 }
 const BRANCH_NEXT: Dictionary = {
+	"iron_comet":"Choose a committed strike or ricochet routes.",
+	"orbit_drive":"Choose a sideways weapon or sustained curves.",
+	"momentum_bank":"Choose a committed launch or redirection.",
+	"crash_guard":"Choose a brief counter or severe-hit damper.",
 	"redline":"Choose sustained heat or one huge hit.",
 	"dead_centre":"Choose recoil or stored retaliation.",
 	"afterimage":"Choose route hijack or trail speed.",
