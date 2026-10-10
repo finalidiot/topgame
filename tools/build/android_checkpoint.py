@@ -3,6 +3,8 @@
 build --no-promote exports an exact committed source snapshot and validates the
 signed debug APK. validate links native adb smoke evidence to that exact APK.
 promote rechecks every hash and adds Android files beside the Windows checkpoint.
+phone-review stages a package-validated pending APK only at its named checkpoint;
+it never updates latest or claims native Android acceptance.
 Debug signing is intentional for isolated run-as phone/emulator QA, not Store
 distribution. Physical phone feel remains a separate human-review checkpoint.
 """
@@ -229,7 +231,7 @@ def current_source(root: Path, manifest: dict) -> None:
 def write_delivery(candidate: Path, manifest: dict) -> None:
     digest = windows.sha256(candidate / APK)
     (candidate / (APK + ".sha256")).write_text(digest + "  " + APK + "\n", encoding="ascii")
-    status = "Native APK installation/boot/isolated Android smoke PASSED." if manifest["validation"] == "passed" else "Native Android smoke is pending; candidate is not promotable."
+    status = "Native APK installation/boot/isolated Android smoke PASSED." if manifest["validation"] == "passed" else "AWAITING PHYSICAL ANDROID REVIEW. Native Android smoke is pending; candidate is not promotable to latest."
     (candidate / README).write_text("Spinning Metal / Android milestone\n" + f"Task/checkpoint: {manifest['checkpoint']}\nGit SHA: {manifest['source']['git_sha']}\nBranch: {manifest['source']['branch']}\nBuilt UTC: {manifest['build_date_utc']}\n" + status + "\n" + HUMAN_REVIEW + "\n\nSigned debug APK for phone testing; arm64 phones/tablets and x86_64 emulator.\nLandscape. Hold anywhere in the arena and drag to steer; release is neutral.\nUse the explicit Burst/Brake controls with the other thumb.\nCountdowns allow placing the steering thumb before live danger resumes.\nTap/scroll menus. Collection data persists across normal installs/resume.\n\n" + windows.CONTROLLER_GUIDE, encoding="utf-8")
     manifest["delivery_sha256"] = {name: windows.sha256(candidate / name) for name in DELIVERY_FILES[:-1]}
     windows.write_json(candidate / MANIFEST, manifest)
@@ -247,8 +249,10 @@ def validate(candidate: Path, smoke_report: Path, root: Path) -> dict:
     return {"candidate": str(candidate), "evidence": manifest["evidence"], "validation": "passed", "sha256": windows.sha256(candidate / APK)}
 
 
-def promote(candidate: Path, root: Path, qa: Path, checkpoint: str | None) -> dict:
-    manifest = verify_candidate(candidate)
+def promote(candidate: Path, root: Path, qa: Path, checkpoint: str | None, *, phone_review: bool = False) -> dict:
+    manifest = verify_candidate(candidate, require_smoke=not phone_review)
+    if phone_review and (not checkpoint or Path(manifest["qa_root"]).resolve() != qa.resolve()):
+        raise ValueError("Phone-review candidate requires its explicit checkpoint and original QA root.")
     current_source(root, manifest)
     if checkpoint and workspace.valid_task(checkpoint) != manifest["checkpoint"]:
         raise ValueError("Requested Android checkpoint differs from validated candidate.")
@@ -262,7 +266,7 @@ def promote(candidate: Path, root: Path, qa: Path, checkpoint: str | None) -> di
     replaced: list[Path] = []
     try:
         os.write(descriptor, str(os.getpid()).encode("ascii"))
-        destinations = [windows.build_destination(builds / "latest", builds)]
+        destinations = [] if phone_review else [windows.build_destination(builds / "latest", builds)]
         if checkpoint:
             destinations.append(windows.build_destination(builds / "checkpoints" / checkpoint, builds))
         prepared: list[Path] = []
@@ -273,11 +277,15 @@ def promote(candidate: Path, root: Path, qa: Path, checkpoint: str | None) -> di
             windows_manifest = destination / "build-manifest.json"
             if not windows_manifest.is_file() or json.loads(windows_manifest.read_text(encoding="utf-8")).get("source", {}).get("git_sha") != manifest["source"]["git_sha"]:
                 raise ValueError("Promote the matching Windows checkpoint before Android.")
+            if phone_review and json.loads(windows_manifest.read_text(encoding="utf-8")).get("validation") != "passed":
+                raise ValueError("Phone-review candidate requires a validated matching Windows checkpoint.")
+            if phone_review:
+                windows.verify_candidate(destination)
             staging = windows.build_destination(builds / (".android-promotion-" + token + "-" + str(index)), builds)
             staging.mkdir()
             for name in DELIVERY_FILES:
                 shutil.copy2(candidate / name, staging / name)
-            verify_candidate(staging)
+            verify_candidate(staging, require_smoke=not phone_review)
             prepared.append(staging)
         for staging, destination in zip(prepared, destinations):
             for name in DELIVERY_FILES:
@@ -291,8 +299,8 @@ def promote(candidate: Path, root: Path, qa: Path, checkpoint: str | None) -> di
                     backups.append((target, backup))
                 (staging / name).rename(target)
                 replaced.append(target)
-            verify_candidate(destination)
-        return {"latest": str(builds / "latest" / APK), "checkpoint": str(builds / "checkpoints" / checkpoint / APK) if checkpoint else None, "preserved_previous": str(archive) if backups else None, "git_sha": manifest["source"]["git_sha"], "sha256": windows.sha256(candidate / APK)}
+            verify_candidate(destination, require_smoke=not phone_review)
+        return {"latest": None if phone_review else str(builds / "latest" / APK), "validation": manifest["validation"], "physical_android_acceptance": False, "delivery": "checkpoint_phone_review_candidate" if phone_review else "native_smoke_validated", "checkpoint": str(builds / "checkpoints" / checkpoint / APK) if checkpoint else None, "preserved_previous": str(archive) if backups else None, "git_sha": manifest["source"]["git_sha"], "sha256": windows.sha256(candidate / APK)}
     except Exception:
         for target in reversed(replaced):
             if target.exists():
@@ -365,6 +373,10 @@ def main() -> None:
     publish.add_argument("--candidate", type=Path, required=True)
     publish.add_argument("--checkpoint")
     publish.add_argument("--qa-root", type=Path)
+    review = sub.add_parser("phone-review", help="Stage a package-validated candidate at its checkpoint only; no phone acceptance or latest promotion.")
+    review.add_argument("--candidate", type=Path, required=True)
+    review.add_argument("--checkpoint", required=True)
+    review.add_argument("--qa-root", type=Path)
     args = parser.parse_args()
     try:
         if args.command == "build":
@@ -372,7 +384,7 @@ def main() -> None:
         elif args.command == "validate":
             result = validate(args.candidate.resolve(), args.smoke_report.resolve(), workspace.repo_root())
         else:
-            result = promote(args.candidate.resolve(), workspace.repo_root(), workspace.qa_root(args.qa_root), args.checkpoint)
+            result = promote(args.candidate.resolve(), workspace.repo_root(), workspace.qa_root(args.qa_root), args.checkpoint, phone_review=args.command == "phone-review")
         print(json.dumps(result, indent=2))
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         print("ANDROID_NOT_PROMOTED: " + str(error), file=sys.stderr)

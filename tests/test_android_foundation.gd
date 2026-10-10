@@ -6,6 +6,7 @@ const Main = preload("res://scripts/main.gd")
 const Shell = preload("res://scripts/mobile_shell.gd")
 const ButtonScript = preload("res://scripts/touch_button.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
+const Layout = preload("res://scripts/combat_hud_layout.gd")
 class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void: pass
 var checks: int = 0
@@ -29,11 +30,14 @@ func run() -> void:
 	for invalid: Variant in [421.5,INF,NAN,-1,"421",2147483648]: check(AndroidQA.request_seed(invalid)==0,"Malformed QA seed cannot alter the normal random Run")
 	for safe: Rect2i in [Rect2i(0,0,1280,720),Rect2i(80,0,1760,1080),Rect2i(90,36,2220,1044),Rect2i(0,0,2560,1440),Rect2i(12,0,788,480)]:
 		var fit: Rect2i = Shell.fit_surface(safe)
-		check(safe.encloses(fit),"Phone native surface fits the complete cutout-safe rectangle")
-		if safe.size.x>=800 and safe.size.y>=480:
-			check(fit.size.x%800==0 and fit.size.y%480==0 and fit.size.x/800==fit.size.y/480,"Full outer800x480HUD uses whole raster scale")
-		else:
-			check(fit.size.x*3==fit.size.y*5 and fit.size.x<=safe.size.x and fit.size.y<=safe.size.y,"Undersized cutout-safe fit keeps full5:3frame without croppingHUD")
+		# Human003A.2 fullscreen correction supersedes only the fixed5:3 fit;
+		# cutouts restrict interactive UI while presentation covers the client.
+		check(fit==safe,"Legacy fit accessor covers its complete available rectangle")
+		var expanded: Dictionary=Layout.mobile_canvas(safe.end,safe)
+		check(expanded.presentation_pixels.position==Vector2.ZERO and expanded.presentation_pixels.size.x>=safe.end.x and expanded.presentation_pixels.size.y>=safe.end.y,"Full uniform Android projection covers all physical client pixels")
+		check(expanded.clipped_overscan_pixels.x<float(expanded.ui_scale)+0.001 and expanded.clipped_overscan_pixels.y<float(expanded.ui_scale)+0.001,"Fractional EXPAND clips less than one logical raster pixel")
+		var interactive: Dictionary=Layout.responsive(Vector2(expanded.canvas_size),true,expanded.safe_rect)
+		check(Rect2(expanded.safe_rect).encloses(interactive.burst_rect) and Rect2(expanded.safe_rect).encloses(interactive.brake_rect) and Rect2(expanded.safe_rect).encloses(interactive.steering_rect),"Safe area contains current actions and steering bounds")
 	var holder = Control.new(); root.add_child(holder)
 	var first = ButtonScript.new(); first.touch_targets=true; first.size=Vector2(100,28); first.position=Vector2(50,50); holder.add_child(first)
 	var second = ButtonScript.new(); second.touch_targets=true; second.size=Vector2(100,28); second.position=Vector2(50,84); holder.add_child(second)

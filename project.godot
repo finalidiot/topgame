@@ -19,8 +19,8 @@ window/size/min_width=800
 window/size/min_height=480
 window/size/resizable=true
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
-window/stretch/scale_mode="integer"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="fractional"
 window/handheld/orientation=0
 
 [input_devices]

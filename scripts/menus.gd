@@ -112,15 +112,35 @@ var reduced_flashing: bool = false
 ## Native layout audit may select the production mobile arrangement explicitly.
 var mobile_hud: bool = OS.has_feature("mobile")
 var _presentation_canvas: Vector2 = Vector2(800,480)
+var _presentation_safe: Rect2 = Rect2()
+var _presentation_background: Control
+var _presentation_dimmed: bool = true
+var _hud_layout: Dictionary = {}
 var _presentation_mobile: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
-var input_suspended: bool = false
+var input_suspended: bool = false:
+	set(value):
+		input_suspended = value
+		if value:
+			_menu_touch_fingers.clear()
+			_touch_transition_fingers.clear()
+			_touch_mouse_continuation_blocked = false
+			_last_ui_event_was_touch = false
+			_last_ui_event_was_emulated_mouse = false
+			_touch_transition_awaits_raw_contact = false
 var _reroll_control: Button
 var _reroll_needs_release: bool = false
+var _menu_touch_fingers: Dictionary = {}
+var _touch_transition_fingers: Dictionary = {}
+var _touch_mouse_continuation_blocked: bool = false
+var _last_ui_event_was_touch: bool = false
+var _last_ui_event_was_emulated_mouse: bool = false
+var _last_emulated_mouse_pressed: bool = false
+var _touch_transition_awaits_raw_contact: bool = false
 
 func _ready() -> void:
-	if OS.has_feature("mobile"): _input_profile = "touch"
+	if mobile_hud: _input_profile = "touch"
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -168,6 +188,9 @@ func _input(event: InputEvent) -> void:
 	var local_press: bool = (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed and not event.canceled)
 	if event is InputEventJoypadButton and event.pressed and (_ui_owner_device < 0 or event.device == _ui_owner_device): local_press = true
 	if local_press: input_engaged.emit()
+	if mobile_hud and _fence_mobile_touch_continuation(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_released("draft_reroll"): _reroll_needs_release = false
 	if screen in ["reward", "mutation"] and event.is_action_pressed("draft_reroll"):
 		if event is InputEventKey and event.echo: return
@@ -202,7 +225,7 @@ func _input(event: InputEvent) -> void:
 				return
 			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
 				_note_input_profile(ControllerBindings.profile(event.device))
-		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (OS.has_feature("mobile") and event.device == InputEvent.DEVICE_ID_EMULATION)):
+		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (mobile_hud and event.device == InputEvent.DEVICE_ID_EMULATION)):
 			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
 	# before any new screen can accept it, including keyboard echo events.
@@ -255,6 +278,48 @@ func _move_analogue_focus(direction: String) -> void:
 	var target: Control = focused.get_node_or_null(path) as Control
 	if target != null: target.grab_focus()
 
+func _fence_mobile_touch_continuation(event: InputEvent) -> bool:
+	# A press may replace its own screen before the corresponding emulated
+	# mouse/release finishes. That contact cannot act on the replacement screen.
+	if event is InputEventScreenTouch:
+		_last_ui_event_was_touch = true
+		_last_ui_event_was_emulated_mouse = false
+		if not event.pressed or event.canceled:
+			_menu_touch_fingers.erase(event.index)
+			_touch_transition_fingers.erase(event.index)
+			_touch_transition_awaits_raw_contact = false
+			return false
+		# Godot may dispatch the emulated mouse press before its raw touch.
+		# If that mouse already replaced the screen, this is the same contact.
+		if _touch_transition_awaits_raw_contact:
+			_touch_transition_awaits_raw_contact = false
+			_menu_touch_fingers[event.index] = true
+			_touch_transition_fingers[event.index] = true
+			return true
+		var inherited: bool = _menu_touch_fingers.has(event.index) or _touch_transition_fingers.has(event.index)
+		if not inherited and _touch_transition_fingers.is_empty(): _touch_mouse_continuation_blocked = false
+		_menu_touch_fingers[event.index] = true
+		if inherited or not _touch_transition_fingers.is_empty():
+			_touch_transition_fingers[event.index] = true
+			return true
+	elif event is InputEventScreenDrag:
+		_last_ui_event_was_touch = true
+		_last_ui_event_was_emulated_mouse = false
+		return _touch_transition_fingers.has(event.index)
+	elif event is InputEventMouseButton or event is InputEventMouseMotion:
+		_last_ui_event_was_touch = event.device == InputEvent.DEVICE_ID_EMULATION
+		_last_ui_event_was_emulated_mouse = _last_ui_event_was_touch
+		_last_emulated_mouse_pressed = event is InputEventMouseButton and event.pressed
+		return _last_ui_event_was_touch and _touch_mouse_continuation_blocked
+	elif event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		_last_ui_event_was_touch = false
+		_last_ui_event_was_emulated_mouse = false
+	return false
+
+func _emit_menu_intent(intent: String, payload: Variant) -> void:
+	if mobile_hud and _last_ui_event_was_touch and _touch_mouse_continuation_blocked: return
+	action.emit(intent,payload)
+
 func _make_theme() -> Theme:
 	return FrontEnd.make_theme()
 
@@ -262,6 +327,10 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
+	if mobile_hud and (_last_ui_event_was_touch or not _menu_touch_fingers.is_empty()):
+		_touch_transition_fingers = _menu_touch_fingers.duplicate()
+		_touch_mouse_continuation_blocked = true
+		_touch_transition_awaits_raw_contact = _last_ui_event_was_emulated_mouse and _last_emulated_mouse_pressed and _menu_touch_fingers.is_empty()
 	_reroll_control = null
 	_reroll_needs_release = next_screen in ["reward", "mutation"] and Input.is_action_pressed("draft_reroll")
 	screen = next_screen
@@ -274,6 +343,8 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_catalogue_footer.clear()
 	_equipped_slot_labels.clear()
 	_packet_view = null
+	_presentation_background = null
+	_presentation_dimmed = dim
 	_packet_controls.clear()
 	_shop_detail = null
 	_shop_cards.clear()
@@ -312,14 +383,18 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	if next_screen != "hud":
 		_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-		_content.position = CombatLayout.responsive(_presentation_canvas,mobile_hud).menu_origin
+		var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+		_content.position = layout.menu_origin
+		_content.scale = Vector2.ONE*float(layout.get("menu_scale",1.0)) if mobile_hud else Vector2.ONE
 		_content.size = Vector2(640,360)
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
 	if dim:
-		var backdrop: Control = FrontEnd.new()
-		backdrop.screen_id = next_screen
-		_content.add_child(backdrop)
+		if mobile_hud: _create_mobile_background()
+		else:
+			var backdrop: Control = FrontEnd.new()
+			backdrop.screen_id = next_screen
+			_content.add_child(backdrop)
 
 func _focus_rows(rows: Array, first: Control = null) -> void:
 	# Explicit links make every control reachable even across the workshop's
@@ -363,6 +438,9 @@ func _rect(parent: Node, area: Rect2, color: Color) -> ColorRect:
 	node.color = color
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(node)
+	if mobile_hud and parent == _content and screen != "hud" and area == Rect2(0,0,640,360):
+		node.set_meta("mobile_full_canvas_overlay",true)
+		_fit_mobile_overlay(node)
 	return node
 
 func _panel(parent: Node, area: Rect2, fill: Color = PANEL, border: Color = BORDER) -> Panel:
@@ -397,6 +475,7 @@ func _label(parent: Node, value: String, area: Rect2, font_size: int = 12, color
 
 func _button(parent: Node, value: String, area: Rect2, intent: String = "", payload: Variant = null, primary: bool = false) -> Button:
 	var node: Button = TouchButton.new()
+	node.touch_targets = mobile_hud
 	node.text = value
 	node.focus_mode = Control.FOCUS_ALL
 	node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -407,7 +486,7 @@ func _button(parent: Node, value: String, area: Rect2, intent: String = "", payl
 	if intent != "":
 		node.set_meta("intent", intent)
 		if payload != null: node.set_meta("payload", payload)
-		node.pressed.connect(func() -> void: action.emit(intent, payload))
+		node.pressed.connect(func() -> void: _emit_menu_intent(intent,payload))
 	parent.add_child(node)
 	node.position = area.position
 	node.size = area.size
@@ -1450,7 +1529,7 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239, false)
 	controls.append([reduced])
 	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263,false,336,270)])
-	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
+	if mobile_hud: _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
 	else: _label(_content,"WINDOW / USE WINDOWS MAXIMISE AND RESTORE",Rect2(34,291,562,20),10,MUTED)
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
 	var footer: Array = [back]
@@ -1575,7 +1654,7 @@ func _bind_power_inspection(control: Control, id: String, rank: int, mutation: S
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
 	_header(str(context.get("title", "VICTORY / PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one for the Run." % slot)))
-	_label(_content, "CHOOSE ONE / TAP READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
+	_label(_content, "CHOOSE ONE / TAP READ FOR DETAILS" if mobile_hud else "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
 	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
 	var selected: Control
@@ -1612,7 +1691,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		_ability_confirm(card, style, Rect2(8, 181, 108, 14), "CHOOSE" if rank == 2 else ("UPGRADE" if rank == 1 else "COLLECT"))
 		cards.append(card)
 		if id == focus_id: selected = card
-	if not OS.has_feature("mobile"): _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
+	if not mobile_hud: _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
 	var rows: Array = [cards]
 	if context.has("rerolls"):
 		var rerolls: Dictionary = context.rerolls
@@ -1624,7 +1703,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		reroll.set_meta("charges",int(rerolls.charges))
 		_refresh_reroll_prompt()
 		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
+		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if mobile_hud else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
 		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  MENU: PAUSE", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
@@ -1668,7 +1747,7 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		_reroll_control.set_meta("charges",int(rerolls.charges))
 		_refresh_reroll_prompt()
 		if not _reroll_control.disabled: rows.append([_reroll_control])
-	_label(_content, "TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(24,334,402,16),10,MUTED)
+	_label(_content, "READ / CARD: COMMIT" if mobile_hud else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(437,309,179,14) if mobile_hud else Rect2(24,334,402,16),10,MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func focused_power_id() -> String:
@@ -1676,9 +1755,9 @@ func focused_power_id() -> String:
 	return str(focused.get_meta("power_id", "")) if focused != null else ""
 
 func _touch_info(card: Button, id: String, rank: int, mutation: String, branch_preview: bool = false) -> void:
-	if not OS.has_feature("mobile"): return
+	if not mobile_hud: return
 	# A separate tap reads the complete guide without accepting a permanent choice.
-	var info: Button = _button(_content, "READ", Rect2(card.position.x, 290, card.size.x, 44))
+	var info: Button = _button(_content, "READ", Rect2(card.position.x, 310 if branch_preview else 290, card.size.x, 44))
 	info.name = "ReadPower_" + id
 	info.pressed.connect(func() -> void:
 		card.grab_focus()
@@ -1994,10 +2073,6 @@ func show_hud(stats: Dictionary) -> void:
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
-		var slot_x: float = (400.0 if mobile_hud else _presentation_canvas.x*0.5)-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
-		_hud["power_panel_%d" % index].position.x = slot_x
-		icon.position.x = slot_x+2.0
-		_hud["power_rank_%d" % index].position.x = slot_x+18.0
 		var id: String = str(ids[index]) if index < ids.size() else ""
 		icon.visible = not id.is_empty()
 		_hud["power_panel_%d" % index].visible = not id.is_empty()
@@ -2015,6 +2090,28 @@ func show_hud(stats: Dictionary) -> void:
 		_hud["power_rank_%d" % index].text = str(rank) if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
+	_place_hud_power_slots(ids)
+	_compact_mobile_hud_text(stats)
+
+func _compact_mobile_hud_text(stats: Dictionary) -> void:
+	var wide: bool = mobile_hud and bool(_hud_layout.get("mobile_wide",false))
+	_hud["pressure_counts"].visible = wide and bool(stats.get("continuous_run",false)) and bool(stats.get("run_state",{}).get("director",false))
+	if mobile_hud and bool(stats.get("continuous_run",false)) and bool(stats.get("run_state",{}).get("director",false)):
+		_hud["round"].text = "T%d / %d CLEARED" % [int(stats.run_state.limits.tier),int(stats.run_state.threats_cleared)]
+	if not wide: return
+	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value",float(stats.get("player_rpm",1.0))*9000.0))
+	var cooldown: float = float(stats.get("burst_cooldown",0.0))
+	var ready: bool = bool(stats.get("burst_ready",cooldown <= 0.0))
+	_hud["burst"].text = "BURST READY" if ready else ("LOW SPIN" if cooldown <= 0.0 else "BURST %.1fs" % cooldown)
+	if _run_active:
+		var level: int = int(stats.get("level",1))
+		_hud["xp_label"].text = "LV %d / %s" % [level,"MAX" if bool(stats.get("progression_max",false)) else "NEXT"]
+	if _hud["pressure_counts"].visible:
+		var state: Dictionary = stats.run_state
+		var census: Dictionary = state.census
+		_hud["enemy_name"].text = "PRESSURE"
+		_hud["enemy_rpm"].text = "%.1f / %.1f" % [float(census.pressure),float(state.limits.budget)]
+		_hud["pressure_counts"].text = "%dRIVALS/%dSMALL" % [int(census.get("active_full",census.full)),int(census.small)]
 
 func _create_hud() -> void:
 	_clear("hud", false)
@@ -2032,6 +2129,8 @@ func _create_hud() -> void:
 	_hud["enemy_bar"] = _bar(_content,Rect2(476,26,228,7),ORANGE)
 	_hud["player_rpm"] = _label(_content,"",Rect2(96,36,228,14),10,MUTED)
 	_hud["enemy_rpm"] = _label(_content,"",Rect2(476,36,228,14),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["pressure_counts"] = _label(_content,"",Rect2(466,56,248,10),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["pressure_counts"].visible = false
 	_hud["impact_confirmation"] = _label(_content,"",Rect2(6,248,68,68),10,ORANGE)
 	_hud["impact_confirmation"].autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	_hud["state_meters"] = PowerStateMeters.new()
@@ -2079,13 +2178,83 @@ func _create_hud() -> void:
 			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
 	_reflow_hud()
 
-func set_presentation_canvas(canvas_size: Vector2) -> void:
-	if _presentation_canvas == canvas_size and _presentation_mobile == mobile_hud: return
+func set_presentation_canvas(canvas_size: Vector2, safe_rect: Rect2 = Rect2()) -> void:
+	if _presentation_canvas == canvas_size and _presentation_safe == safe_rect and _presentation_mobile == mobile_hud: return
+	var changed_mobile: bool = _presentation_mobile != mobile_hud
 	_presentation_canvas = canvas_size
+	_presentation_safe = safe_rect
 	_presentation_mobile = mobile_hud
+	if changed_mobile and mobile_hud: _note_input_profile("touch")
 	if not is_instance_valid(_content): return
+	if changed_mobile:
+		for child: Node in _content.find_children("*","Button",true,false):
+			if child.get_script() == TouchButton: child.touch_targets = mobile_hud
 	if screen == "hud": _reflow_hud()
-	else: _content.position = CombatLayout.responsive(canvas_size,mobile_hud).menu_origin
+	else: _reflow_menu()
+
+func _create_mobile_background() -> void:
+	if not mobile_hud or not _presentation_dimmed or screen == "hud": return
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = load(FrontEnd.BACKGROUND_PATH)
+	var frame: int = int(FrontEnd.SCREEN_REGISTRY.get(screen,{}).get("background",1))
+	atlas.region = Rect2(maxi(0,frame)*640,0,640,360)
+	var backdrop: TextureRect = TextureRect.new()
+	backdrop.name = "FullCanvasMobileMenuBackground"
+	backdrop.texture = atlas
+	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.size = _presentation_canvas
+	add_child(backdrop)
+	move_child(backdrop,0)
+	_presentation_background = backdrop
+
+func _fit_mobile_overlay(node: Control) -> void:
+	# The existing dim rectangle covers the whole mobile canvas while the
+	# authored interactive panel remains uniformly centred inside safe bounds.
+	node.position = -_content.position / _content.scale
+	node.size = _presentation_canvas / _content.scale
+
+func _reflow_menu() -> void:
+	if not is_instance_valid(_content) or screen == "hud": return
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = layout.menu_origin
+	_content.scale = Vector2.ONE*float(layout.get("menu_scale",1.0)) if mobile_hud else Vector2.ONE
+	_content.size = Vector2(640,360)
+	var native_background: Control = null
+	for child: Node in _content.get_children():
+		if child.get_script() == FrontEnd:
+			native_background = child
+			child.visible = not mobile_hud
+		if child is Control and child.has_meta("mobile_full_canvas_overlay"):
+			_fit_mobile_overlay(child)
+	if mobile_hud and _presentation_dimmed and not is_instance_valid(_presentation_background): _create_mobile_background()
+	if is_instance_valid(_presentation_background):
+		_presentation_background.visible = mobile_hud
+		_presentation_background.position = Vector2.ZERO
+		_presentation_background.size = _presentation_canvas
+	if not mobile_hud and _presentation_dimmed and not is_instance_valid(native_background):
+		var backdrop: Control = FrontEnd.new()
+		backdrop.screen_id = screen
+		_content.add_child(backdrop)
+		_content.move_child(backdrop,0)
+
+func _place_hud_power_slots(ids: Array) -> void:
+	if _hud.is_empty(): return
+	var layout: Dictionary = _hud_layout
+	var wide: bool = mobile_hud and bool(layout.get("mobile_wide",false))
+	var power_area: Rect2 = layout.get("regions",{}).get("powers",Rect2(0,float(layout.get("powers_y",424)),640,22))
+	var columns: int = maxi(1,int(layout.get("powers_columns",1)))
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,_presentation_canvas))
+	var centre: float = safe.get_center().x if mobile_hud else _presentation_canvas.x*0.5
+	for index: int in range(Powers.ACTIVE_IDS.size()):
+		var slot: Vector2 = Vector2(centre-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0,float(layout.get("powers_y",424)))
+		if wide: slot = power_area.position+Vector2((index%columns)*32,(index/columns)*24)
+		_hud["power_panel_%d" % index].position = slot
+		_hud["power_%d" % index].position = slot+Vector2(2,3)
+		_hud["power_rank_%d" % index].position = slot+Vector2(18,5)
 
 func _fit_hud(key: String, rect: Rect2) -> void:
 	if not _hud.has(key): return
@@ -2095,10 +2264,15 @@ func _fit_hud(key: String, rect: Rect2) -> void:
 
 func _reflow_hud() -> void:
 	if screen != "hud" or _hud.is_empty(): return
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+	_hud_layout = layout
+	if mobile_hud:
+		_reflow_mobile_hud(layout)
+		return
 	var extent: Vector2 = layout.canvas_size
 	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	_content.position = Vector2.ZERO
+	_content.scale = Vector2.ONE
 	_content.size = extent
 	var width: float = layout.top_width
 	var right_x: float = layout.right_x
@@ -2136,14 +2310,76 @@ func _reflow_hud() -> void:
 	_fit_hud("impact_confirmation",Rect2(6,layout.state_left.y+172.0,layout.state_width,68))
 	_hud.state_meters.set_layout(layout)
 
+func _reflow_mobile_hud(presentation: Dictionary) -> void:
+	var layout: Dictionary = presentation.get("hud_layout",presentation)
+	_hud_layout = layout
+	var regions: Dictionary = layout.regions
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,layout.canvas_size))
+	var wide: bool = bool(layout.get("mobile_wide",false))
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = presentation.get("hud_origin",Vector2.ZERO)
+	_content.scale = Vector2.ONE*float(presentation.get("hud_scale",1.0))
+	_content.size = layout.canvas_size
+	_content.clip_contents = true
+	for pair: Array in [["player_panel","player_reserve"],["enemy_panel","pressure"],["burst_panel","burst"],["xp_panel","progress"],["xp_hit","progress"]]:
+		_fit_hud(pair[0],regions[pair[1]])
+	for column: Array in [["player","player_reserve"],["enemy","pressure"]]:
+		var area: Rect2 = regions[column[1]]
+		var inner: float = maxf(1.0,area.size.x-20.0)
+		_fit_hud(column[0]+"_name",Rect2(area.position+Vector2(10,2),Vector2(inner,15)))
+		_fit_hud(column[0]+"_bar",Rect2(area.position+Vector2(10,20),Vector2(inner,7)))
+		_fit_hud(column[0]+"_rpm",Rect2(area.position+Vector2(10,30),Vector2(inner,14)))
+	var player: Rect2 = regions.player_reserve
+	_fit_hud("rpm_overflow",Rect2(player.position+Vector2(10,20),Vector2(maxf(1.0,player.size.x-20.0),3)))
+	var pressure: Rect2 = regions.pressure
+	_fit_hud("swarm_objective",Rect2(pressure.position+Vector2(10,18),Vector2(maxf(1.0,pressure.size.x-20.0),12)))
+	_fit_hud("pressure_counts",Rect2(Vector2(pressure.position.x,pressure.end.y+2.0),Vector2(pressure.size.x,10)))
+	var clock: Rect2 = regions.clock
+	var clock_width: float = minf(112.0,clock.size.x)
+	_fit_hud("clock_panel",Rect2(Vector2(clock.get_center().x-clock_width*0.5,clock.position.y),Vector2(clock_width,48)))
+	_fit_hud("time",Rect2(Vector2(clock.get_center().x-minf(108.0,clock.size.x)*0.5,clock.position.y),Vector2(minf(108.0,clock.size.x),25)))
+	_fit_hud("round",Rect2(Vector2(clock.get_center().x-minf(116.0,clock.size.x)*0.5,clock.position.y+25),Vector2(minf(116.0,clock.size.x),11)))
+	_fit_hud("director_callout",Rect2(Vector2(clock.get_center().x-clock.size.x*0.5,clock.position.y+37),Vector2(clock.size.x,11)))
+	_fit_hud("pause_button",regions.get("pause",Rect2(safe.position+Vector2(6,8),Vector2(68,24))))
+	_fit_hud("announcement",regions.get("announcement",Rect2(layout.arena_rect.get_center()-Vector2(175,32),Vector2(350,64))))
+	_fit_hud("rerolls",regions.get("rerolls",Rect2(safe.position+Vector2(6,safe.size.y-55),Vector2(74,24))))
+	_fit_hud("power_note",regions.get("power_note",Rect2(safe.position+Vector2(86,float(layout.powers_y)-safe.position.y),Vector2(136,18))))
+	_place_hud_power_slots(_inspection_owned_state.get("ids",[]))
+	var burst: Rect2 = regions.burst
+	_fit_hud("burst",Rect2(burst.position+Vector2(11,2),Vector2(maxf(1.0,burst.size.x-21.0),16)))
+	_fit_hud("burst_bar",Rect2(burst.position+Vector2(11,burst.size.y-6.0),Vector2(maxf(1.0,burst.size.x-21.0),3)))
+	var progress: Rect2 = regions.progress
+	if wide:
+		_fit_hud("xp_label",Rect2(progress.position+Vector2(6,1),Vector2(maxf(1.0,progress.size.x-12.0),12)))
+		_fit_hud("xp_detail",Rect2(progress.position+Vector2(6,13),Vector2(maxf(1.0,progress.size.x-12.0),10)))
+	else:
+		_fit_hud("xp_label",Rect2(progress.position+Vector2(10,2),Vector2(maxf(1.0,progress.size.x-158.0),15)))
+		_fit_hud("xp_detail",Rect2(Vector2(progress.end.x-140.0,progress.position.y+2),Vector2(130,15)))
+	_fit_hud("xp_bar",Rect2(progress.position+Vector2(10,progress.size.y-6.0),Vector2(maxf(1.0,progress.size.x-20.0),4)))
+	_hud.controls.visible = false
+	_fit_hud("impact_confirmation",regions.get("impact",Rect2(layout.state_left+Vector2(0,172),Vector2(layout.state_width,68))))
+	_hud.state_meters.set_layout(layout)
+	if is_instance_valid(_ability_inspector):
+		_ability_inspector.position = Vector2(clampf(layout.arena_rect.end.x-194.0,safe.position.x,safe.end.x-188.0),clampf(safe.get_center().y-121.0,safe.position.y,safe.end.y-242.0))
+
+
 func combat_layout_snapshot() -> Dictionary:
 	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
 	result["regions"] = layout.regions
 	result["play_region"] = layout.arena_rect
 	result["canvas_size"] = layout.canvas_size
 	result["arena_scale"] = layout.arena_scale
 	result["arena_origin"] = layout.arena_rect.position
+	result["safe_rect"] = layout.get("safe_rect",Rect2(Vector2.ZERO,layout.canvas_size))
+	result["menu_origin"] = layout.menu_origin
+	result["menu_scale"] = layout.get("menu_scale",1.0)
+	result["mobile_wide"] = layout.get("mobile_wide",false)
+	if mobile_hud:
+		result["native_view"] = [layout.canvas_size.x,layout.canvas_size.y]
+		result["mobile_action_rail"] = layout.burst_rect.merge(layout.brake_rect)
+		result["left_edge"] = Rect2(0,layout.arena_rect.position.y,layout.arena_rect.position.x,layout.arena_rect.size.y)
+		result["right_edge"] = Rect2(layout.arena_rect.end.x,layout.arena_rect.position.y,layout.canvas_size.x-layout.arena_rect.end.x,layout.arena_rect.size.y)
 	result["duplicate_anchor_label"] = _hud.has("anchor")
 	result["temporary_announcements_live_combat"] = false
 	result["hud_overlaps_arena"] = false

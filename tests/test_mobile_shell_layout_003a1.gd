@@ -6,6 +6,7 @@ const Battle = preload("res://scripts/battle.gd")
 const Touch = preload("res://scripts/touch_controls.gd")
 const Save = preload("res://scripts/collection_save.gd")
 const Economy = preload("res://scripts/packet_economy.gd")
+const Layout = preload("res://scripts/combat_hud_layout.gd")
 class IsolatedShell extends "res://scripts/mobile_shell.gd":
 	func _ready() -> void: pass
 class QuietMain extends "res://scripts/main.gd":
@@ -45,19 +46,20 @@ func valid_paths() -> bool:
 	return true
 
 func fit_contracts() -> void:
-	check(Shell.NATIVE == Vector2i(800, 480), "Mobile outer canvas contains the complete800x480 HUD")
+	# Human003A.2 fullscreen correction supersedes the old fixed5:3 island.
+	# Retain the actual input/solver/packet and reference native RGBA contracts.
+	check(Shell.NATIVE == Vector2i(800, 480), "Mobile reference minimum remains800x480")
 	for available: Rect2i in [Rect2i(0,0,1280,720), Rect2i(80,0,1760,1080), Rect2i(90,36,2220,1044),
 		Rect2i(0,0,2560,1440), Rect2i(12,0,788,480), Rect2i(10,20,600,360), Rect2i(3,4,479,271),
 		Rect2i(0,0,5,3), Rect2i(0,0,0,0)]:
 		var fit: Rect2i = Shell.fit_surface(available)
-		check(available.encloses(fit), "Cutout-safe fit never crops the canvas: " + str(available))
-		check(fit.size.x * 3 == fit.size.y * 5, "Canvas preserves exact5:3 aspect even below native extent")
-		if available.size.x >= 800 and available.size.y >= 480:
-			check(fit.size.x % 800 == 0 and fit.size.y % 480 == 0, "Fitting surfaces retain whole authored pixels")
-			check(fit.size.x / 800 == mini(available.size.x / 800, available.size.y / 480), "Largest bounded integer multiple is selected")
-		else:
-			check(fit.size.x <= 800 and fit.size.y <= 480, "Undersized fit is uniformly bounded instead of forced native clipping")
-		fits.append({"available":available,"fit":fit,"integer_native_fit":available.size.x >= 800 and available.size.y >= 480})
+		check(fit==available, "Compatibility fit now covers the full available rectangle rather than a5:3 island")
+		if available.size.x>0 and available.size.y>0:
+			var expand: Dictionary=Layout.mobile_canvas(available.size,Rect2i(Vector2i.ZERO,available.size))
+			check(expand.canvas_size.x>=800 and expand.canvas_size.y>=480,"EXPAND keeps the readable minimum logical canvas")
+			check(expand.presentation_pixels.size.x>=available.size.x and expand.presentation_pixels.size.y>=available.size.y,"One uniform surface covers every physical pixel")
+			check(expand.clipped_overscan_pixels.x<float(expand.ui_scale)+0.001 and expand.clipped_overscan_pixels.y<float(expand.ui_scale)+0.001,"Ceil raster overscan remains below one logical pixel")
+		fits.append({"available":available,"fit":fit,"policy":"fullscreen uniform EXPAND; safe UI is separate"})
 
 func root_point(point: Vector2) -> Vector2:
 	return shell.surface.get_global_transform_with_canvas() * point
@@ -90,7 +92,7 @@ func tap_menu(intent: String) -> void:
 	check(is_instance_valid(button), "Actual centred menu target exists: " + intent)
 	if not is_instance_valid(button): return
 	var point: Vector2 = button.get_global_rect().get_center()
-	check(Rect2(Vector2.ZERO,Vector2(Shell.NATIVE)).has_point(point), "Menu target remains inside complete native canvas")
+	check(Rect2(Vector2.ZERO,Vector2(shell.game_view.size)).has_point(point), "Menu target remains inside the current full logical canvas")
 	await root_touch(point, true, 4); await root_touch(point, false, 4)
 
 func resize_surface(dimensions: Vector2i) -> void:
@@ -98,23 +100,26 @@ func resize_surface(dimensions: Vector2i) -> void:
 	await settle()
 	shell._fit()
 	await settle()
-	check(shell.game_view.size == Vector2i(800,480), "Outer native SubViewport does not change with physical surface size")
+	var expected: Dictionary=Layout.mobile_canvas(root.size,Rect2i(Vector2i.ZERO,root.size))
+	check(shell.game_view.size == expected.canvas_size, "Outer logical SubViewport expands to the actual client aspect")
 	check(game.get_viewport() == shell.game_view and game.combat_viewport.size == Vector2i(640,360), "Actual nested Main hosts a separate canonical640x360 Battle")
-	check(game.combat_frame.position == Vector2(80,60) and game.combat_frame.size == Vector2(640,360), "Arena projection is placed in the complete HUD canvas at80,60")
+	var presentation: Dictionary=game.window_presentation_snapshot()
+	check(game.combat_frame.position.is_equal_approx(presentation.arena_rect.position) and game.combat_frame.size.is_equal_approx(presentation.arena_rect.size), "Actual arena placement matches responsive safe presentation")
 	check(shell.surface.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST and game.combat_frame.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "Both nested texture surfaces retain nearest-neighbour presentation")
 	var actual: Rect2 = shell.surface.get_global_rect()
-	check(Rect2(Vector2.ZERO,Vector2(root.size)).encloses(actual), "Actual scaled container stays within the available window")
+	check(actual.position==Vector2.ZERO and actual.size.x>=root.size.x and actual.size.y>=root.size.y,"Actual container covers the entire client without outer black bars")
+	check(actual.size.x-root.size.x<float(expected.ui_scale)+0.001 and actual.size.y-root.size.y<float(expected.ui_scale)+0.001,"Actual uniform projection clips less than one logical raster pixel")
 	check(is_equal_approx(shell.surface.scale.x, shell.surface.scale.y), "Nested surface scales uniformly")
-	if dimensions.x >= 800 and dimensions.y >= 480:
-		check(is_equal_approx(shell.surface.scale.x, floorf(shell.surface.scale.x)), "Available native extent uses a whole scale")
-	else: check(shell.surface.scale.x < 1.0 and shell.surface.scale.x > 0.0, "Actual declared undersized window retains the complete HUD")
+	check(is_equal_approx(shell.surface.scale.x,float(expected.ui_scale)),"Actual renderer uses the declared single EXPAND scalar")
 	observations.append({"requested_window":dimensions, "actual_window":root.size, "surface_rect":actual,
 		"surface_scale":shell.surface.scale, "outer_native":shell.game_view.size, "combat_native":game.combat_viewport.size,
 		"arena_origin":game.combat_frame.position,"menu_origin":game.menus._content.position,"renderer":DisplayServer.get_name()})
 
 func menu_contracts() -> void:
 	game._title(); await settle()
-	check(game.menus._content.position == Vector2(80,60), "Actual menu keeps its centred native origin in the nested canvas")
+	var presentation: Dictionary=game.window_presentation_snapshot()
+	check(game.menus._content.position.is_equal_approx(presentation.menu_origin), "Actual menu keeps its safe responsive authored origin")
+	check(game.menus._content.scale.is_equal_approx(Vector2.ONE*float(presentation.menu_scale)),"Actual menu uses its own uniform authored scale")
 	await tap_menu("settings")
 	check(game.screen == "settings", "Root-screen touch passes through the scaled container to the actual Options button")
 	await tap_menu("back_settings")
@@ -130,23 +135,25 @@ func gameplay_contracts() -> void:
 	# live ticks so the native parity check does not compare a held LAUNCH label
 	# from an artificially stopped fixture against the completed battle raster.
 	for tick: int in range(8): game.battle._physics_process(Battle.FIXED_DT)
-	await root_touch(Vector2(200,180), true)
-	check(game.touch_controls.steering_finger == 0 and game.touch_controls.origin.is_equal_approx(Vector2(200,180)), "Root-screen touch is forwarded into the real Main touch provider in native coordinates")
-	await root_drag(Vector2(230,192))
+	var touch_layout: Dictionary=game.touch_controls.layout_snapshot()
+	var start: Vector2=Rect2(touch_layout.steering_rect).get_center()
+	await root_touch(start, true)
+	check(game.touch_controls.steering_finger == 0 and game.touch_controls.origin.is_equal_approx(start), "Root-screen touch is forwarded into the real Main touch provider in configured coordinates")
+	await root_drag(start+Vector2(30,12))
 	var prepared: Vector2 = game.touch_controls.direction
 	check(prepared.x > 0.0 and prepared.y > 0.0 and prepared.length() < 1.0, "Scaled root-screen drag retains analogue direction and magnitude")
-	await root_touch(Touch.BURST_RECT.get_center(), true, 1)
-	await root_touch(Touch.BRAKE_RECT.get_center(), true, 2)
+	await root_touch(touch_layout.burst_rect.get_center(), true, 1)
+	await root_touch(touch_layout.brake_rect.get_center(), true, 2)
 	var sample: Dictionary = game.touch_controls.sample()
 	check(game.touch_controls.owners.size() == 3 and sample.direction == prepared and sample.burst and sample.brake, "Steering and both margin actions arrive as three independent actual viewport fingers")
 	var player: Dictionary = game.battle.player_entity()
 	var rpm: float = player.rpm
 	game.battle._physics_process(Battle.FIXED_DT)
 	check(float(player.cooldown) > 3.9 and float(player.rpm) < rpm - 0.01, "Forwarded Burst is consumed by the real solver once and spends RPM")
-	await root_touch(Touch.BURST_RECT.get_center(), false, 1)
+	await root_touch(touch_layout.burst_rect.get_center(), false, 1)
 	check(game.touch_controls.action_down("brake") and game.touch_controls.direction == prepared, "Releasing one forwarded action preserves both other fingers")
-	await root_touch(Touch.BRAKE_RECT.get_center(), false, 2)
-	await root_touch(Vector2(230,192), false)
+	await root_touch(touch_layout.brake_rect.get_center(), false, 2)
+	await root_touch(start+Vector2(30,12), false)
 	check(game.touch_controls.owners.is_empty() and game.touch_controls.direction == Vector2.ZERO, "Forwarded releases cleanly neutralise real ownership")
 	await root_touch(Vector2(20,180), true, 3)
 	check(game.touch_controls.owners.is_empty(), "Actual side HUD margin cannot acquire a steering finger")
@@ -167,11 +174,12 @@ func packet_contract(quantity: int, local: Vector2, direction: float) -> void:
 	await root_touch(point, true, 4)
 	check(game.menus._packet_touch_index == 4, "Scaled touch on the visible x%d outer pouch acquires the actual gesture" % quantity)
 	check(game.menus._packet_touch_origin.is_equal_approx(local), "Nested viewport and centred menu transforms recover exact native pouch coordinates")
-	await root_drag(point + Vector2(41.5 * direction,0), 4)
+	var gesture_scale: float=float(game.window_presentation_snapshot().menu_scale)
+	await root_drag(point + Vector2(41.5 * direction * gesture_scale,0), 4)
 	check(not game.menus._packet_view.opening, "Scaled fan gesture below42nativepixels does not tear")
-	await root_drag(point + Vector2(42.0 * direction,0), 4)
+	await root_drag(point + Vector2(42.0 * direction * gesture_scale,0), 4)
 	check(game.menus._packet_view.opening and game.menus._packet_touch_index == -1, "Exactly42nativepixels tears the actual batch once")
-	await root_touch(point + Vector2(42.0 * direction,0), false, 4)
+	await root_touch(point + Vector2(42.0 * direction * gesture_scale,0), false, 4)
 	game.menus._packet_view._process(8.0); await settle()
 	check(game.menus._packet_view.phase == "RESULT", "Actual batch timeline reaches its terminal result")
 	check(game.collection.pending_packet().rows == fixed_rows and game.collection.wallet().credits == wallet - Economy.packet_cost("standard") * quantity, "Nested fan gesture preserves all paid rows and never spends twice")
@@ -184,9 +192,23 @@ func capture_native(label: String) -> void:
 	await settle(); await RenderingServer.frame_post_draw
 	var outer: Image = shell.game_view.get_texture().get_image()
 	var combat: Image = game.combat_viewport.get_texture().get_image()
-	check(outer.get_size() == Vector2i(800,480) and combat.get_size() == Vector2i(640,360), "Actual nested native textures include the complete HUD and original combat raster")
-	var crop: Image = outer.get_region(Rect2i(80,60,640,360))
-	check(crop.get_data() == combat.get_data(), "Nested native composite retains exact canonical combat RGBA")
+	check(outer.get_size() == shell.game_view.size and combat.get_size() == Vector2i(640,360), "Actual full logical texture includes the HUD and original canonical combat raster")
+	var arena: Rect2=Rect2(game.combat_frame.position,game.combat_frame.size)
+	if arena.size==Vector2(640,360) and arena.position==arena.position.round():
+		var crop: Image=outer.get_region(Rect2i(arena))
+		check(crop.get_data()==combat.get_data(),"Reference1x native composite retains exact full canonical combat RGBA")
+	else:
+		# Fractional nearest projection may choose an adjacent source texel at a
+		# raster boundary. Each actual sample must remain an unblended source
+		# texel at that mapped location; no broad palette or interpolation claim.
+		for point: Vector2i in [Vector2i(100,80),Vector2i(250,90),Vector2i(480,110),Vector2i(200,240),Vector2i(390,260),Vector2i(560,280)]:
+			var pixel: Vector2i=Vector2i((arena.position+(Vector2(point)+Vector2(0.5,0.5))*(arena.size/Vector2(640,360))).floor())
+			var actual: Color=outer.get_pixelv(pixel)
+			var found: bool=false
+			for y: int in range(point.y-1,point.y+2):
+				for x: int in range(point.x-1,point.x+2):
+					if actual==combat.get_pixel(x,y):found=true
+			check(found,"Scaled native world sample is an exact nearby mapped nearest source texel")
 	var folder: String = report.get_base_dir().get_base_dir().path_join("frames/" + report.get_file().get_basename())
 	check(DirAccess.make_dir_recursive_absolute(folder) == OK, "Unique native nested-surface evidence folder")
 	var path: String = folder.path_join(label + ".png")
@@ -209,7 +231,7 @@ func run() -> void:
 	root.min_size = Vector2i(160,96) # QA undersize fixture, not a product project change.
 	shell.mount_mobile_surface(game); await settle()
 	check(game.collection.save_path == profile and game.preferences_path == profile + ".preferences.cfg", "Native shell mounts only the supplied isolated Main and its preference path")
-	for dimensions: Vector2i in [Vector2i(800,480),Vector2i(1600,960),Vector2i(600,360)]:
+	for dimensions: Vector2i in [Vector2i(800,480),Vector2i(1600,960),Vector2i(600,360),Vector2i(1920,1080),Vector2i(2408,1080),Vector2i(1600,1200)]:
 		await resize_surface(dimensions)
 		await menu_contracts(); await gameplay_contracts()
 		await capture_native("surface_%dx%d" % [dimensions.x,dimensions.y])
@@ -218,7 +240,7 @@ func run() -> void:
 	await packet_contract(5,Vector2(484,190),1.0)
 	var file := FileAccess.open(report,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"renderer":DisplayServer.get_name(),"native":native,"fits":fits,"observations":observations,"input_events":events,"packet_cases":packet_cases,
-		"scope":"Production mount_mobile_surface with isolated QuietMain, actual nested800x480-to640x360 viewport composition and root Input.parse_input_event forwarding. Starter/wallet/Duel/small-window/packet-clock fixtures are explicit. Logical touch events are not physical phone acceptance.",
+		"scope":"Production fullscreen EXPAND mount_mobile_surface with isolated QuietMain, dynamic outer canvas and canonical640x360 world, actual root Input.parse_input_event forwarding. The human003A.2 correction supersedes only fixed5:3 fitting expectations; input/solver/packet/neutralization and reference whole native RGBA proof remain. Fractional cases verify mapped nearest source samples. Starter/wallet/Duel/small-window/packet-clock fixtures are explicit. Windows logical touch events are not physical phone acceptance.",
 		"profile":profile,"physical_android_acceptance":false,"direct_router_input_calls":0},"\t")); file.close()
 	shell.free()
 	print("MOBILE_SHELL_LAYOUT_003A1_%s checks=%d failures=%d native=%s" % ["PASS" if failures.is_empty() else "FAIL",checks,failures.size(),native])

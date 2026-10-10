@@ -1,0 +1,456 @@
+{
+  "schema": "003a2_android_fullscreen_delivery_v1",
+  "task": "003A.2",
+  "created_utc": "2026-10-10T11:21:34.295418+00:00",
+  "status": "automated_layout_regression_pass_exports_pending_human_android_review_pending",
+  "verified_starting_sha": "60325a6d89c3e9ef3e0b0372369dde4dd24f50cb",
+  "branch": "task-003a2-ability-ecology",
+  "main_unchanged": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "runtime_boundary": {
+    "files": 836,
+    "working_runtime_source_map_sha256": "1717d6218bf8d9a2596f272ea67c59c58ab9e8942767a31f887077a2bc1c2323",
+    "runtime_build_commit": null,
+    "definition": "Raw exercised working bytes, guarded by receipts; exact committed export source is recorded after build."
+  },
+  "presentation": {
+    "policy": "expand_fractional_uniform",
+    "edge_to_edge": true,
+    "immersive": true,
+    "canonical_world": [
+      640,
+      360
+    ],
+    "no_nonuniform_stretch": true,
+    "no_simulation_changes": true,
+    "safe_area": "Physical DisplayServer safe rectangle through the same outer scalar; safe menus/HUD/touch inside full-client background.",
+    "legacy_reference": [
+      800,
+      480
+    ],
+    "full_physical_coverage": true,
+    "unused_physical_area": 0,
+    "physical_android_acceptance": false
+  },
+  "layout_qa": {
+    "selection": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_final_selection_20261010_111649_741567.json",
+      "sha256": "03f79db019cebabfd973ef6a6bccd32e8f7bf569c41cfa37d9b16d1483655bee",
+      "bytes": 7551
+    },
+    "checks": {
+      "headless": 6570,
+      "native": 6750,
+      "movie": 390
+    },
+    "physics": {
+      "world": [
+        640,
+        360
+      ],
+      "shapes": 5,
+      "fixed_ticks_per_shape": 1200,
+      "seed": 421,
+      "exact_cross_aspect": true,
+      "exact_headless_native_movie": true,
+      "compared": "All1200 complete physical tick hashes/control hashes,41 immutable sample snapshots and final state; actor positions/velocities/RPM/cooldowns/outcomes/collisions/powers/pilot RNG/Roster/Ecology/Defence states and clocks. Legal invested Duel fixture is disclosed by every runtime descriptor.",
+      "hits": 36,
+      "power_events": 27,
+      "final_status": "battle",
+      "final_result": {}
+    },
+    "layout": {
+      "full_display_shapes": [
+        [
+          1280,
+          720
+        ],
+        [
+          2160,
+          1080
+        ],
+        [
+          2340,
+          1080
+        ],
+        [
+          2400,
+          1080
+        ]
+      ],
+      "cutout": [
+        84,
+        24,
+        2208,
+        1032
+      ],
+      "screens_per_shape": 18,
+      "native_complete_physical_images": 90,
+      "unused_physical_area": 0,
+      "uniform_nearest_arena": true,
+      "safe_hud_controls_and_touch_regions": true,
+      "explicit_case_geometry": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_layout_matrix.json",
+        "bytes": 33457,
+        "sha256": "78bdba708ba2f162de841adff1edcd0eaccc752c9ec22e747ad897c9d3bfd01c"
+      }
+    },
+    "scope_limits": [
+      "Windows mobile-surface simulation, not a phone",
+      "Declared cutout fixture, not physical notch/OS bar validation",
+      "Exact1200-tick invested Duel replay, not natural Run survival or performance measurement",
+      "Actual whole native viewport pixels, not decorated OS desktop screenshots"
+    ]
+  },
+  "artifacts": {
+    "matrix_json": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_layout_matrix.json",
+      "bytes": 33457,
+      "sha256": "78bdba708ba2f162de841adff1edcd0eaccc752c9ec22e747ad897c9d3bfd01c"
+    },
+    "matrix_root_mirror": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\android_fullscreen_layout_matrix.json",
+      "bytes": 33457,
+      "sha256": "78bdba708ba2f162de841adff1edcd0eaccc752c9ec22e747ad897c9d3bfd01c"
+    },
+    "matrix_png": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\android_fullscreen_layout_matrix.png",
+      "bytes": 250370,
+      "sha256": "39178b89d2277257e10ff46ee99a2d1258c1a54d85ad4cb50c0e3d537a633227"
+    },
+    "navigation_video": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\android_fullscreen_navigation.mp4",
+      "bytes": 3746772,
+      "sha256": "b4c79686cd3ca9bf255f850e28d239387fe9942b4df229ab5a138fa335718c1d"
+    }
+  },
+  "regressions": {
+    "headless": {
+      "status": "passed",
+      "contracts": 32,
+      "checks": 26944,
+      "base_receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_110644_345147.json",
+        "sha256": "857ecff045659e29d9b0e1a912464f7f421d2e6bfacabf9e1ced285c3359ae1e",
+        "bytes": 260841
+      },
+      "responsive_input_recheck": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_111939_144700.json",
+        "sha256": "77671a67f6839a753b857181f95c36342dbf15f0d25b4f4156dacdd48dce6362",
+        "bytes": 206819
+      },
+      "selected": [
+        {
+          "name": "collection_flow",
+          "checks": 575,
+          "log_sha256": "1c0c700cac0459d4d6157e0b3a3e5a1dd33b97aef50c424bcbc9ff3427db0dbe"
+        },
+        {
+          "name": "collection_ui",
+          "checks": 2362,
+          "log_sha256": "64a40fc885cdc26e2dd31f183b36f5c4914829efae6b42024fa16c30fe7e1da8"
+        },
+        {
+          "name": "run_context",
+          "checks": 377,
+          "log_sha256": "bf7a9aa2b035c321d8afa09eb86d4bb264f91300a124e09c1ad132621bdf17ad"
+        },
+        {
+          "name": "flow",
+          "checks": 162,
+          "log_sha256": "8ad2f1e356d52d2a4601c3d47838ae1979cd3ff7c52fa533bb91a45187e3c1e0"
+        },
+        {
+          "name": "progression",
+          "checks": 199,
+          "log_sha256": "4caa16c54f2e74c3ab8f90db995d90501fea0e784c19f4ec2ae8d28c4468a0e9"
+        },
+        {
+          "name": "signature_presentation",
+          "checks": 3362,
+          "log_sha256": "f55d44498f23133229b2e67b5087ec9c0e03b8eb0a47b926dfe8a038afd1cdbb"
+        },
+        {
+          "name": "frontend",
+          "checks": 416,
+          "log_sha256": "427ccd40c024cf01acbbc52bc3dc9294de7183542caa85d859f5c8b75caf903e"
+        },
+        {
+          "name": "presentation_flow",
+          "checks": 49,
+          "log_sha256": "fc8672351b882d2bf8107a0071d2820c8ba2c174eaef2cac6160d0f18e9f5e55"
+        },
+        {
+          "name": "packet_transactions",
+          "checks": 175,
+          "log_sha256": "cf50a589e115ff4e00b65fe946eb7cb07160e91258e9d7e21fd2b77ff5083ac8"
+        },
+        {
+          "name": "bulk_packet_transactions_003a1",
+          "checks": 300,
+          "log_sha256": "05db053e36d23cfa5e6befc8464b084cb8f688017c8d8ccab4aead1da919f710"
+        },
+        {
+          "name": "bulk_packet_touch_003a1",
+          "checks": 113,
+          "log_sha256": "19493f161bcd3e18bc348128c3f4fadd8118eba0ba4e12778319d125bf81be74"
+        },
+        {
+          "name": "menus",
+          "checks": 5341,
+          "log_sha256": "93c5f1f9a2e9ca5fbba7b206c6b8e6729c9d588fb8aaf3314bc2acedf892e7dd"
+        },
+        {
+          "name": "controller",
+          "checks": 1114,
+          "log_sha256": "db22a38230f7d6b46d964259535c4de700874e311dd2e2007d97499c47ded241"
+        },
+        {
+          "name": "state_meters_003a1",
+          "checks": 1468,
+          "log_sha256": "647312a165328ec6687047a8d5688b46c394ef1b46a06f00c8cb55ad95fc29e2"
+        },
+        {
+          "name": "combat_hud_003a1",
+          "checks": 820,
+          "log_sha256": "5d3d400b4f8df980d20aff95ec1de4425914f627d2df6820aecd8949a38fe6fa"
+        },
+        {
+          "name": "combat_acceptance_hud_003a1",
+          "checks": 82,
+          "log_sha256": "17f077326cab569b69714d4f417e3d422daee3448f52844c5be9ac6e48914195"
+        },
+        {
+          "name": "android_foundation",
+          "checks": 148,
+          "log_sha256": "6d7a9eed0e4e153097a9c4b10c3ba4d3489f91aec2863e4bfb082e995da847f3"
+        },
+        {
+          "name": "input_acceptance_003a1",
+          "checks": 277,
+          "log_sha256": "02731610bc41057bf2db306b631df1f5f94e9cffb08eae1a138e71b53cf0fcda"
+        },
+        {
+          "name": "overdrive_lifecycle_003a1",
+          "checks": 2008,
+          "log_sha256": "6474fc392b6eac00eae572834825e8bee892b5628a425870991371f6fddd38fb"
+        },
+        {
+          "name": "mobile_shell_layout_003a1",
+          "checks": 205,
+          "log_sha256": "6548a1ce20bd3f2c6889069684a037041ad15aef8b66e792bc99bee680b73446"
+        },
+        {
+          "name": "shop_ux_003a1",
+          "checks": 1754,
+          "log_sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+        },
+        {
+          "name": "shop_focus_cost_003a1",
+          "checks": 21,
+          "log_sha256": "0076070799fabf5f063be50d1ff6efd30759b14ecbfde9817a9f53e1100468bb"
+        },
+        {
+          "name": "native_window_layout_003a1",
+          "checks": 293,
+          "log_sha256": "e4bb993f10384e5755ac49580d318d24e781e8b6d72fa0e732a3c5f2b788fc19"
+        },
+        {
+          "name": "window_client_fill_003a1",
+          "checks": 565,
+          "log_sha256": "440ffd82abe4704a15addf121a65da9548ad998effbbe5f9f5badc0bcf5270f8"
+        },
+        {
+          "name": "controller_bindings_003a1",
+          "checks": 105,
+          "log_sha256": "cf20a31b2dea1393bf3f1ba4ddfa41d8dac78de3d7e545b004a1b96128e82c79"
+        },
+        {
+          "name": "ability_card_hierarchy_003a1",
+          "checks": 2043,
+          "log_sha256": "9777dd93523035c740e041f2e753013a31ac4809d34f82f02f099bff4c85675b"
+        },
+        {
+          "name": "level_up_back_003a1",
+          "checks": 125,
+          "log_sha256": "9efe8d52eb4bbc3dfd98b71ba7e476cc6cf299b6d715fb599918d5c4e0b1d1bf"
+        },
+        {
+          "name": "mutation_acquisition_003a2",
+          "checks": 281,
+          "log_sha256": "bb317197c8daa2b38d6fc9cfa65d7b62a9f50e0fc94668774143e92e505962da"
+        },
+        {
+          "name": "mutation_physics_003a2",
+          "checks": 329,
+          "log_sha256": "8580359424ba0bba14e691604f00ef4466c2e1cb28b4bd6af8b1772195a7dd50"
+        },
+        {
+          "name": "mutation_solver_contract_003a2",
+          "checks": 159,
+          "log_sha256": "399921d1d434c03cd935256ffb75facb6442f4b9d3358d1228daafcf6a1aac3b"
+        },
+        {
+          "name": "ecology_neutral_hosts_003a2",
+          "checks": 1596,
+          "log_sha256": "a29e478922b5ec1d62acc79bbc4483906619e8b83e8b13f2dedaef82db10b69c"
+        },
+        {
+          "name": "mobile_combat_input",
+          "checks": 120,
+          "log_sha256": "0b411092d0714b8311f9a1acb5eccf956e51a7028c07559e6f1f60d37a73fb1f"
+        }
+      ],
+      "selection_note": "All passing base contracts plus the migrated actual-layout mobile input test. The initial native fixed-coordinate failure is preserved, not rewritten."
+    },
+    "native": {
+      "status": "passed",
+      "contracts": 13,
+      "checks": 25814,
+      "base_receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_native_20261010_111541_135776.json",
+        "sha256": "10198a440b586947fdbe144cafd7d4b69b76f8e13d0c72167294db794ea03cc3",
+        "bytes": 229201
+      },
+      "responsive_input_recheck": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_native_20261010_111948_750270.json",
+        "sha256": "04f55ce2d0f6dcbd410997e59370ad68b64af2e42a2872d7ba4a194f40742352",
+        "bytes": 206790
+      },
+      "selected": [
+        {
+          "name": "combat_acceptance_hud_003a1",
+          "checks": 93,
+          "log_sha256": "c19186f9ded3c3a4fdd9a0c3f7f8d192ac3fd8a72ff87488e1338dd07f155d7e"
+        },
+        {
+          "name": "music",
+          "checks": 1834,
+          "log_sha256": "c60fdcbf2c5d83030cc8307d23a006148e0a3c73ab662a478ac662ecb42fbadb"
+        },
+        {
+          "name": "music_native",
+          "checks": 24,
+          "log_sha256": "bc565b953a400f1a1a18a8bc3d3f57d41c61bb86102b259cdb419d67bcf49459"
+        },
+        {
+          "name": "beast_orientation",
+          "checks": 19797,
+          "log_sha256": "cac443c3e2f2076024b668e2c298d33aeea9651aa708d66edac053ccf7d1a4bf"
+        },
+        {
+          "name": "android_foundation",
+          "checks": 148,
+          "log_sha256": "d7c24edb390788c42b8af064002b130100fd3763b2b7e927f5f9fede83d622f1"
+        },
+        {
+          "name": "input_acceptance_003a1",
+          "checks": 299,
+          "log_sha256": "96900909b058a45178abe62f98b388cbd153f96ed48e809ee59826e12f868ce3"
+        },
+        {
+          "name": "mobile_shell_layout_003a1",
+          "checks": 239,
+          "log_sha256": "bfb9d7d03570a91f873058335dd505c11eba905ebe1925180303407779e178f4"
+        },
+        {
+          "name": "native_window_layout_003a1",
+          "checks": 422,
+          "log_sha256": "03899323cf1ab859d156f7909fbae77204d7b105470b311804ee93958bc05bc8"
+        },
+        {
+          "name": "window_client_fill_003a1",
+          "checks": 565,
+          "log_sha256": "5c9d2fdb31d16f8ea122fc7b59dc6efde116ac766d427e2e84567d02b9b94782"
+        },
+        {
+          "name": "level_up_back_003a1",
+          "checks": 125,
+          "log_sha256": "c2943932d7c13133cfa5c59bf585bb806adc75914260d8d5a0ab874cc95599bd"
+        },
+        {
+          "name": "controller_bindings_003a1",
+          "checks": 105,
+          "log_sha256": "c4fe00e0fc554df0dfee964b987818e1dd1bcc1d196703ecb08ed09423fe60be"
+        },
+        {
+          "name": "ability_card_hierarchy_003a1",
+          "checks": 2043,
+          "log_sha256": "6ab2cc2f2fdccf85f5f3e9ac945c9a46d022d4b0b70db5db83d12908e369dd7d"
+        },
+        {
+          "name": "mobile_combat_input",
+          "checks": 120,
+          "log_sha256": "8b2582494badb8c2d96bdcc6a68fa5c95fe01649591d5394d529e99998cab33c"
+        }
+      ],
+      "selection_note": "All passing base contracts plus the migrated actual-layout mobile input test. The initial native fixed-coordinate failure is preserved, not rewritten."
+    }
+  },
+  "python_tools": {
+    "tests": 118,
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_python_20261010_105754_528912.json",
+      "sha256": "f4451fb49b6c3d53591bcb0105adbcd2381d5d38cd758d16f82b7f4e6cb59f4d",
+      "bytes": 208266
+    },
+    "scope": "Android coordinates/instrumentation and Windows/Android guarded build/promotion contracts."
+  },
+  "focused_safe_menu_hud": {
+    "checks": 404,
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mobile_menu_hud_read_row_20261010_190436_5525394.json",
+      "sha256": "f82c3b9eae95658800b1f766d114541b134bc5d2cb1d62f96b48152771f993f5",
+      "bytes": 16647
+    }
+  },
+  "focused_screen_contact": {
+    "checks": 72,
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mobile_choice_contact_read_row_20261010_190451_4153149.json",
+      "sha256": "99864dd53324cb9661ddf33d0021ea4158f8411cd7849ede55e47e0ed7a86d1a",
+      "bytes": 4985
+    }
+  },
+  "focused_touch_projection": {
+    "checks": 501,
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_fullscreen_input_final_20261010_103443_363659_guard.json",
+      "sha256": "028e7896703117342ba82fb50fa21d112f993b0d34f7b6f963c11b1133ac89fe",
+      "bytes": 247527
+    }
+  },
+  "preservation": {
+    "receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_prebuild_preservation_20261010_111805_002187.json",
+      "sha256": "dd229fffd0aa8ee8bda1a3ece2dfd1f133b5f12847af6106ca45817c00cf865a",
+      "bytes": 205732
+    },
+    "counts": {
+      "player_files": 24,
+      "assets": 720,
+      "music": 18,
+      "locked_scripts": 51,
+      "protected_builds": 4
+    },
+    "prebuild_all_unchanged": true,
+    "historical_protected_profiles": 438,
+    "engine_log_rotation_guard_explanation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_touch_trace_log_guard_explanation_20261010.json",
+      "sha256": "e81eda8def220aac754e3bf35eaedb29dda29fad4cc11bd0f2630d0554b8acaa",
+      "bytes": 1010673
+    }
+  },
+  "builds": {
+    "windows": "pending",
+    "android": "pending",
+    "android_candidate_policy": "Package validated candidate at003A.2 only; no Android latest/native-smoke acceptance."
+  },
+  "human_review": [
+    "Install updated APK on actual wide landscape phone.",
+    "Check full display/large uniform arena and authored menu coverage.",
+    "Check cutout/rounded/gesture safe UI and reachable Burst/Brake.",
+    "Check background/resume and temporary system-bar restoration."
+  ],
+  "no_merge": true,
+  "no_003b": true
+}

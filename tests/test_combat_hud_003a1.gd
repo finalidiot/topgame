@@ -116,10 +116,23 @@ func edge_layout() -> void:
 			"redline": {"owned": true, "active": true, "heat": 1, "excess": 0.24},
 			"orbit": {"owned": true, "drive": 1, "drifting": true}}})
 		var geometry: Dictionary = menus.combat_layout_snapshot()
-		for rect: Rect2 in geometry.regions.values():
-			check(not rect.intersects(geometry.play_region), "Permanent Windows/mobile HUD does not cut through reserved gameplay rectangle")
-			check(Layout.VIEW.encloses(rect), "Permanent HUD stays in native viewport")
-			if mobile: check(not rect.intersects(Layout.MOBILE_ACTION_RAIL), "Mobile HUD leaves accepted Burst/Brake rail unobstructed")
+		#003A.2 exposes the actual responsive thumb targets and temporary READY
+		# rectangle alongside permanent HUD panels. Classify them truthfully;
+		# permanent panels still cannot cover the world or action buttons.
+		var action_rail: Rect2 = geometry.mobile_action_rail if mobile else Rect2()
+		for key: String in geometry.regions:
+			var rect: Rect2 = geometry.regions[key]
+			check(Rect2(Vector2.ZERO,geometry.canvas_size).encloses(rect), "HUD and controls stay in their actual presentation canvas")
+			if key == "announcement":
+				check(not geometry.temporary_announcements_live_combat and Rect2(geometry.play_region).encloses(rect), "Only temporary countdown/reentry can use the reserved arena overlay")
+				continue
+			check(not rect.intersects(geometry.play_region), "Permanent Windows/mobile HUD and thumb buttons cannot cut through gameplay")
+			if mobile and key in ["burst_button","brake_button"]:
+				check(action_rail.encloses(rect), "Actual thumb button occupies its declared responsive action rail")
+			elif mobile:
+				check(not rect.intersects(action_rail), "Permanent mobile HUD leaves actual Burst/Brake controls unobstructed")
+		if mobile:
+			check(not Rect2(geometry.regions.burst_button).intersects(geometry.regions.brake_button), "Responsive thumb actions remain distinct")
 		check(not geometry.duplicate_anchor_label and not menus._hud.has("anchor"), "Anchor has one danger/recharge meter")
 		var anchor: Dictionary = menus._hud.state_meters.diagnostic_snapshot().rows.left[0]
 		check(anchor.status == "RECHARGE" and anchor.bars.size() == 1 and anchor.bars[0].value == 0.84, "Main Anchor bar communicates real overload/recharge through stress")

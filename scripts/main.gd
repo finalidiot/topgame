@@ -42,6 +42,10 @@ var presentation_surround: Node2D
 var _presentation_client_size: Vector2i = Vector2i.ZERO
 var _presentation_canvas_size: Vector2 = Vector2(800,480)
 var _presentation_applied_size: Vector2 = Vector2.ZERO
+var _presentation_applied_safe: Rect2 = Rect2()
+var _presentation_applied_mobile: bool = false
+var _mobile_canvas_override: Vector2 = Vector2.ZERO
+var _mobile_safe_override: Rect2 = Rect2()
 var menus: Control
 var sounds: Node
 var music: Node
@@ -171,10 +175,9 @@ func _ready() -> void:
 		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
-	if not OS.has_feature("mobile") and not get_viewport() is SubViewport:
-		presentation_surround = IndustrialSurround.new()
-		presentation_surround.name = "AuthoredIndustrialSurround"
-		add_child(presentation_surround)
+	presentation_surround = IndustrialSurround.new()
+	presentation_surround.name = "AuthoredIndustrialSurround"
+	add_child(presentation_surround)
 	combat_viewport = SubViewport.new()
 	combat_viewport.name = "CanonicalCombatViewport"
 	combat_viewport.size = Vector2i(640,360)
@@ -213,12 +216,14 @@ func _ready() -> void:
 	layer.layer = 10
 	add_child(layer)
 	menus = MenuScript.new()
+	menus.mobile_hud = _uses_mobile_presentation()
 	layer.add_child(menus)
 	menus.action.connect(_action)
 	menus.focus_sound.connect(_battle_sound)
 	menus.input_engaged.connect(_engage_application_input)
 	Input.joy_connection_changed.connect(_controller_connection_changed)
 	touch_controls = TouchControls.new()
+	touch_controls.show_controls = _uses_mobile_presentation()
 	layer.add_child(touch_controls)
 	battle.input_provider = touch_controls
 	sounds = SoundScript.new()
@@ -245,11 +250,21 @@ func _ready() -> void:
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 	if not _android_qa.is_empty(): call_deferred("_inspect_android_assets")
 
+## Shell supplies the full logical canvas and cutout-safe bounds before Ready,
+## then updates them together after resize. Geometry never changes world pixels.
+func set_mobile_presentation(canvas_size: Vector2, safe_rect: Rect2) -> void:
+	if canvas_size.x <= 0.0 or canvas_size.y <= 0.0: return
+	_mobile_canvas_override = canvas_size
+	_mobile_safe_override = safe_rect
+	_refresh_window_presentation()
+
+func _uses_mobile_presentation() -> bool:
+	return OS.has_feature("mobile") or get_viewport() is SubViewport or _mobile_canvas_override != Vector2.ZERO
+
 func _refresh_window_presentation() -> void:
 	if not is_instance_valid(combat_frame) or not is_instance_valid(menus): return
-	# The Android shell owns the outer window transform. A hosted native canvas
-	# must remain800x480 even when that same production shell is tested on PC.
-	var mobile: bool = OS.has_feature("mobile") or get_viewport() is SubViewport
+	var mobile: bool = _uses_mobile_presentation()
+	var safe_rect: Rect2 = Rect2()
 	if not mobile:
 		var client_size: Vector2i = get_window().size
 		if client_size != _presentation_client_size:
@@ -261,24 +276,31 @@ func _refresh_window_presentation() -> void:
 			get_window().content_scale_size = policy.canvas_size
 			_presentation_canvas_size = Vector2(policy.canvas_size)
 	else:
-		_presentation_canvas_size = Vector2(800,480)
-	if _presentation_applied_size == _presentation_canvas_size: return
+		_presentation_canvas_size = _mobile_canvas_override if _mobile_canvas_override != Vector2.ZERO else get_viewport().get_visible_rect().size
+		safe_rect = _mobile_safe_override if _mobile_canvas_override != Vector2.ZERO else Rect2(Vector2.ZERO,_presentation_canvas_size)
+	if _presentation_applied_size == _presentation_canvas_size and _presentation_applied_safe == safe_rect and _presentation_applied_mobile == mobile: return
 	_presentation_applied_size = _presentation_canvas_size
-	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile)
+	_presentation_applied_safe = safe_rect
+	_presentation_applied_mobile = mobile
+	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile,safe_rect)
 	combat_frame.position = presentation.arena_rect.position
 	combat_frame.size = presentation.arena_rect.size
 	if is_instance_valid(presentation_surround): presentation_surround.set_layout(presentation)
-	menus.set_presentation_canvas(_presentation_canvas_size)
+	menus.mobile_hud = mobile
+	menus.set_presentation_canvas(_presentation_canvas_size,presentation.get("safe_rect",safe_rect))
+	if is_instance_valid(touch_controls) and touch_controls.has_method("configure_layout"):
+		touch_controls.configure_layout(presentation)
 	# No window mode, monitor, position or restore-size write occurs here. Native
 	# Maximise/Restore belongs to Windows; only the client presentation reflows.
 
 func window_presentation_snapshot() -> Dictionary:
 	var hosted_native: bool = get_viewport() is SubViewport
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,OS.has_feature("mobile") or hosted_native)
+	var mobile: bool = _uses_mobile_presentation()
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile,_presentation_applied_safe)
 	layout["client_size"] = get_window().size
 	layout["window_mode"] = DisplayServer.window_get_mode()
 	layout["borderless"] = DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
-	layout["ui_policy"] = {"canvas_size":Vector2i(800,480),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":true} if hosted_native or OS.has_feature("mobile") else CombatLayout.desktop_canvas(get_window().size)
+	layout["ui_policy"] = {"canvas_size":Vector2i(_presentation_canvas_size),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":hosted_native,"full_canvas_mobile":true} if mobile else CombatLayout.desktop_canvas(get_window().size)
 	return layout
 
 func _inspect_android_assets() -> void:

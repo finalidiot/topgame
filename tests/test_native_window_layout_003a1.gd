@@ -124,7 +124,7 @@ func run() -> void:
 	game._title()
 	check(game.menus._content.position == Vector2(80,60),"Small normal window restores canonical menu composition")
 	var mobile: Dictionary = Layout.responsive(Vector2(1600,960),true)
-	check(mobile.arena_rect == Layout.PLAY_REGION and mobile.canvas_size == Vector2(800,480),"Android's accepted native layout remains separate")
+	check(mobile.canvas_size == Vector2(1600,960) and float(mobile.arena_scale)>1.0 and is_equal_approx(mobile.arena_rect.size.x/640.0,mobile.arena_rect.size.y/360.0),"Android expands independently while preserving a uniform canonical world")
 	var file: FileAccess = FileAccess.open(report,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"native":native,"observed":observed,"scope":"Client reflow and actual rendered/native OS API window contracts. Legal initial four-power loadout and paused world are disclosed presentation fixtures, not balance acceptance. Retained real human Maximise evidence is separate; automated Restore is OS API actuation."},"\t")); file.close()
 	game.queue_free(); await settle()

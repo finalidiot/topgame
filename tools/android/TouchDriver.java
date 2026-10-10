@@ -25,6 +25,8 @@ public final class TouchDriver extends Instrumentation {
     private static final String TARGET = "org.spinningmetal.prototype";
     private static final float NATIVE_WIDTH = 800.0f;
     private static final float NATIVE_HEIGHT = 480.0f;
+    private float nativeWidth = NATIVE_WIDTH;
+    private float nativeHeight = NATIVE_HEIGHT;
     private Bundle arguments;
     private Activity activity;
     private final LinkedHashMap<Integer, float[]> pointers = new LinkedHashMap<>();
@@ -94,15 +96,26 @@ public final class TouchDriver extends Instrumentation {
 
     private void configureViewport(JSONObject script, int[] size) throws Exception {
         JSONArray nativeSize = script.getJSONArray("native_size");
-        if (nativeSize.length() != 2 || nativeSize.getDouble(0) != NATIVE_WIDTH || nativeSize.getDouble(1) != NATIVE_HEIGHT)
-            throw new IllegalArgumentException("Touch commands require the native800x480 product canvas");
+        if (nativeSize.length() != 2)
+            throw new IllegalArgumentException("Touch commands require the reported native canvas size");
+        float width = (float) nativeSize.getDouble(0), height = (float) nativeSize.getDouble(1);
+        if (!Float.isFinite(width) || !Float.isFinite(height) || width <= 0 || height <= 0 || width > 8192 || height > 8192)
+            throw new IllegalArgumentException("Reported native canvas must be finite, positive and bounded");
+        nativeWidth = width; nativeHeight = height;
+        runOnMainSync(() -> {
+            size[0] = activity.getWindow().getDecorView().getWidth();
+            size[1] = activity.getWindow().getDecorView().getHeight();
+        });
         JSONArray rectangle = script.getJSONArray("viewport");
         if (rectangle.length() != 4) throw new IllegalArgumentException("viewport must contain left,top,width,height");
         for (int i = 0; i < 4; i++) viewport[i] = (float) rectangle.getDouble(i);
         for (float value : viewport) if (!Float.isFinite(value)) throw new IllegalArgumentException("Viewport must be finite");
         if (viewport[0] < 0 || viewport[1] < 0 || viewport[2] <= 0 || viewport[3] <= 0 || viewport[2] > 8192 || viewport[3] > 8192)
             throw new IllegalArgumentException("Invalid letterboxed gameplay viewport");
-        if (viewport[0] + viewport[2] > size[0] + 2 || viewport[1] + viewport[3] > size[1] + 2)
+        // Ceil-sized EXPAND canvases may overscan by less than one logical
+        // pixel, uniformly mapped to the actual display by the shell.
+        float pixelTolerance = Math.max(viewport[2] / nativeWidth, viewport[3] / nativeHeight) + 0.001f;
+        if (viewport[0] + viewport[2] > size[0] + pixelTolerance || viewport[1] + viewport[3] > size[1] + pixelTolerance)
             throw new IllegalArgumentException("Viewport extends beyond this game window");
     }
 
@@ -219,8 +232,8 @@ public final class TouchDriver extends Instrumentation {
     private float[] point(JSONArray value) throws Exception {
         if (value.length() != 2) throw new IllegalArgumentException("Native point needs x,y");
         float x = (float) value.getDouble(0), y = (float) value.getDouble(1);
-        if (!Float.isFinite(x) || !Float.isFinite(y) || x < 0 || x > NATIVE_WIDTH || y < 0 || y > NATIVE_HEIGHT)
-            throw new IllegalArgumentException("Point is outside the native800x480 product canvas");
+        if (!Float.isFinite(x) || !Float.isFinite(y) || x < 0 || x > nativeWidth || y < 0 || y > nativeHeight)
+            throw new IllegalArgumentException("Point is outside the reported native product canvas");
         return new float[]{x, y};
     }
     private int pointerId(JSONObject step) throws Exception {
@@ -296,8 +309,8 @@ public final class TouchDriver extends Instrumentation {
             MotionEvent.PointerProperties property = new MotionEvent.PointerProperties();
             property.id = entry.getKey(); property.toolType = MotionEvent.TOOL_TYPE_FINGER;
             MotionEvent.PointerCoords coordinate = new MotionEvent.PointerCoords();
-            coordinate.x = viewport[0] + entry.getValue()[0] / NATIVE_WIDTH * viewport[2];
-            coordinate.y = viewport[1] + entry.getValue()[1] / NATIVE_HEIGHT * viewport[3];
+            coordinate.x = viewport[0] + entry.getValue()[0] / nativeWidth * viewport[2];
+            coordinate.y = viewport[1] + entry.getValue()[1] / nativeHeight * viewport[3];
             coordinate.pressure = 1; coordinate.size = 0.02f;
             properties[index] = property; coordinates[index] = coordinate; index++;
         }

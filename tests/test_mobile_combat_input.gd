@@ -4,7 +4,6 @@ extends SceneTree
 class QuietMain extends "res://scripts/main.gd":
 	func _smoke_test() -> void: pass
 const Battle = preload("res://scripts/battle.gd")
-const Touch = preload("res://scripts/touch_controls.gd")
 const BUILD: Dictionary = {"blade":"guard","ratchet":"low","bit":"ball"}
 const PAD: int = 5
 var checks: int = 0
@@ -39,6 +38,13 @@ func drag(game: QuietMain, finger: int, point: Vector2) -> void:
 	var event: InputEventScreenDrag = InputEventScreenDrag.new()
 	event.index = finger; event.position = point
 	game.touch_controls.handle_touch(event)
+func action_point(game: QuietMain, action: String) -> Vector2:
+	var layout: Dictionary = game.touch_controls.layout_snapshot()
+	return Rect2(layout[action+"_rect"]).get_center()
+func steering_point(game: QuietMain) -> Vector2:
+	var play: Rect2 = game.touch_controls.layout_snapshot().steering_rect
+	# Retain the reference test's relative starting point and exact drag deltas.
+	return play.position+play.size*Vector2(5.0/32.0,1.0/3.0)
 func neutral() -> void:
 	for code: Key in [KEY_SPACE,KEY_SHIFT,KEY_A,KEY_D,KEY_W,KEY_S]: key(code,false)
 	for button: JoyButton in [JOY_BUTTON_A,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]: pad(button,false)
@@ -112,12 +118,12 @@ func check_hold_and_fresh(game: QuietMain, kind: String) -> void:
 	check(unexpected == 0 and float(player.cooldown) <= 0.0,"Held " + kind + " never repeats after the full four-second cooldown")
 	if kind == "keyboard": key(KEY_SPACE,false)
 	elif kind == "gamepad": pad(JOY_BUTTON_A,false)
-	else: touch(game,1,Touch.BURST_RECT.get_center(),false)
+	else: touch(game,1,action_point(game,"burst"),false)
 	ticks(game,1)
 	check(float(player.cooldown) <= 0.0,"Releasing " + kind + " does not Burst")
 	if kind == "keyboard": key(KEY_SPACE,true)
 	elif kind == "gamepad": pad(JOY_BUTTON_A,true)
-	else: touch(game,1,Touch.BURST_RECT.get_center(),true)
+	else: touch(game,1,action_point(game,"burst"),true)
 	ticks(game,1)
 	check(float(player.cooldown) > 3.9,"A new " + kind + " activation after release starts exactly one fresh Burst")
 
@@ -130,7 +136,9 @@ func run() -> void:
 		launch(game)
 		if kind == "keyboard": key(KEY_SPACE,true)
 		elif kind == "gamepad": pad(JOY_BUTTON_A,true)
-		else: touch(game,1,Touch.BURST_RECT.get_center(),true)
+		else:
+			touch(game,1,action_point(game,"burst"),true)
+			check(game.touch_controls.owners.get(1,"")=="burst","Fresh touch acquires the actual configured Burst rail")
 		check_fresh_burst(game,"Fresh " + kind + " through Main's touch provider")
 		check_hold_and_fresh(game,kind)
 	# Provider preserves keyboard/pad steering and Brake fallback, then switches
@@ -142,15 +150,16 @@ func run() -> void:
 	var analog: Vector2 = game.touch_controls.sample().direction
 	check(analog.x > 0.0 and analog.y < 0.0 and analog.length() < 0.8 and is_equal_approx(analog.x/-analog.y,2.0),"Main provider preserves noncardinal analogue gamepad steering")
 	neutral()
-	touch(game,0,Vector2(180,180),true); drag(game,0,Vector2(206,193))
+	var start: Vector2 = steering_point(game)
+	touch(game,0,start,true); drag(game,0,start+Vector2(26,13))
 	var prepared: Vector2 = game.touch_controls.direction
-	touch(game,1,Touch.BURST_RECT.get_center(),true); touch(game,2,Touch.BRAKE_RECT.get_center(),true)
+	touch(game,1,action_point(game,"burst"),true); touch(game,2,action_point(game,"brake"),true)
 	var controls: Dictionary = game.touch_controls.sample()
 	check(controls.direction == prepared and controls.burst and controls.brake and game.touch_controls.owners.size() == 3,"Main provider simultaneously owns analogue steering, Burst and Brake")
 	check_fresh_burst(game,"Simultaneous touch Burst and Brake")
-	touch(game,1,Touch.BURST_RECT.get_center(),false)
+	touch(game,1,action_point(game,"burst"),false)
 	check(game.touch_controls.action_down("brake") and game.touch_controls.direction == prepared,"Releasing Burst preserves the other two owned fingers")
-	touch(game,2,Touch.BRAKE_RECT.get_center(),false)
+	touch(game,2,action_point(game,"brake"),false)
 	key(KEY_SHIFT,true)
 	check(bool(game.touch_controls.sample().brake),"Keyboard Brake remains available through Main provider")
 	key(KEY_SHIFT,false); pad(JOY_BUTTON_RIGHT_SHOULDER,true)
@@ -163,8 +172,9 @@ func run() -> void:
 	touch(game,0,Vector2.ZERO,false)
 	game._resume(); game._process(0.0)
 	check(game.screen == "battle" and game.battle.battle_status == "reentry" and game.touch_controls.enabled,"Actual Main resume enables preparation during its real countdown")
-	touch(game,0,Vector2(180,180),true); drag(game,0,Vector2(210,190))
-	touch(game,1,Touch.BURST_RECT.get_center(),true); touch(game,2,Touch.BRAKE_RECT.get_center(),true)
+	start = steering_point(game)
+	touch(game,0,start,true); drag(game,0,start+Vector2(30,10))
+	touch(game,1,action_point(game,"burst"),true); touch(game,2,action_point(game,"brake"),true)
 	var player: Dictionary = game.battle.player_entity()
 	var frozen: Dictionary = {"pos":player.pos,"vel":player.vel,"rpm":player.rpm,"elapsed":game.battle.elapsed,"power_time":game.battle.powers.time,"cooldown":player.cooldown}
 	for tick: int in range(74):
@@ -176,7 +186,7 @@ func run() -> void:
 	var cooldown_before: float = player.cooldown
 	ticks(game,1)
 	check(float(player.cooldown) <= cooldown_before and game.battle.elapsed > frozen.elapsed,"Held countdown actions cannot create a new Burst on the first live tick")
-	touch(game,1,Touch.BURST_RECT.get_center(),false); touch(game,2,Touch.BRAKE_RECT.get_center(),false)
+	touch(game,1,action_point(game,"burst"),false); touch(game,2,action_point(game,"brake"),false)
 	ticks(game,1)
 	check(not game.battle._combat_needs_release,"Releasing both countdown actions arms the next real activation")
 	# Cleanup releases all mapped synthetic input and only isolated fixture apps.
