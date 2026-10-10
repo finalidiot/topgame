@@ -2,15 +2,22 @@
   "schema": "003a2_android_fullscreen_delivery_v1",
   "task": "003A.2",
   "created_utc": "2026-10-10T11:21:34.295418+00:00",
-  "status": "automated_layout_regression_pass_exports_pending_human_android_review_pending",
+  "status": "windows_validated_promoted_android_package_validated_checkpoint_candidate_pushed_human_phone_review_pending",
   "verified_starting_sha": "60325a6d89c3e9ef3e0b0372369dde4dd24f50cb",
   "branch": "task-003a2-ability-ecology",
   "main_unchanged": "b476c6d9240a2c9f03942cda70d43576cc3903da",
   "runtime_boundary": {
     "files": 836,
     "working_runtime_source_map_sha256": "1717d6218bf8d9a2596f272ea67c59c58ab9e8942767a31f887077a2bc1c2323",
-    "runtime_build_commit": null,
-    "definition": "Raw exercised working bytes, guarded by receipts; exact committed export source is recorded after build."
+    "runtime_build_commit": "0ded50f18ccdd8c347ea41442c76a3778cc387b9",
+    "definition": "Raw exercised working bytes, guarded by receipts; exact committed export source is recorded after build.",
+    "exact_canonical_export_exercised_source_files": 836,
+    "package_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_package_audit_20261010_113157_078102.json",
+      "bytes": 328718,
+      "sha256": "172c60e8f47278718e41af12eec239689115e0d3bfb033d5e7ca0d93b57f4e3f"
+    },
+    "documentation_commit": "Separate final documentation-only commit; does not change the compiled runtime boundary."
   },
   "presentation": {
     "policy": "expand_fractional_uniform",
@@ -438,12 +445,112 @@
       "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_touch_trace_log_guard_explanation_20261010.json",
       "sha256": "e81eda8def220aac754e3bf35eaedb29dda29fad4cc11bd0f2630d0554b8acaa",
       "bytes": 1010673
-    }
+    },
+    "postbuild_all_unchanged": true,
+    "postbuild_receipt": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_postbuild_delivery_20261010_113107_015100.json",
+      "bytes": 5167,
+      "sha256": "8607a69f8dfd8da5dc28c29720d28b52d6deaf8dc2b0b15c45afaa8e6b2f0791"
+    },
+    "previous_windows_archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\archive\\builds\\299cbf2698dc4551983f6575f9047e84",
+    "previous_checkpoint_delivery_files_preserved": 4
   },
   "builds": {
-    "windows": "pending",
-    "android": "pending",
-    "android_candidate_policy": "Package validated candidate at003A.2 only; no Android latest/native-smoke acceptance."
+    "windows": {
+      "status": "passed",
+      "delivery": {
+        "latest": {
+          "manifest": {
+            "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\build-manifest.json",
+            "sha256": "e98d06b083fe0e188fbb8fc280f3fdb38ca00ad388ec75e91ebfa41605ff9158",
+            "bytes": 173961
+          },
+          "binary": {
+            "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+            "sha256": "1526b7ccdcfbc5aad40ea6a8d3b6a18acabf2e3a80d3a31b072013b8b6c19893",
+            "bytes": 152235664
+          },
+          "runtime_commit": "0ded50f18ccdd8c347ea41442c76a3778cc387b9"
+        },
+        "checkpoint": {
+          "manifest": {
+            "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\build-manifest.json",
+            "sha256": "e98d06b083fe0e188fbb8fc280f3fdb38ca00ad388ec75e91ebfa41605ff9158",
+            "bytes": 173961
+          },
+          "binary": {
+            "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+            "sha256": "1526b7ccdcfbc5aad40ea6a8d3b6a18acabf2e3a80d3a31b072013b8b6c19893",
+            "bytes": 152235664
+          },
+          "runtime_commit": "0ded50f18ccdd8c347ea41442c76a3778cc387b9"
+        }
+      },
+      "export_receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-b594c8391ddb.json",
+        "bytes": 173961,
+        "sha256": "e98d06b083fe0e188fbb8fc280f3fdb38ca00ad388ec75e91ebfa41605ff9158"
+      },
+      "compiled_resources": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_c7e4c2c888c4449dbbbb84a8ecd38594.json",
+        "sha256": "4fb0f217670974b2fe803f129357e211f1d510bc76ab2000f0c6cf68b5b1904c",
+        "bytes": 16077
+      }
+    },
+    "android": {
+      "manifest": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\android-build-manifest.json",
+        "sha256": "a485f8f88bcf990a0fbcd5d6cd35b3c36d8285fae26cb538a7e0949a9871fdc7",
+        "bytes": 313804
+      },
+      "apk": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal-android.apk",
+        "sha256": "ffbe070cd2e313cb550ed69e018e32128638730fa78fd0b6d3284d700ce0d709",
+        "bytes": 89160598
+      },
+      "validation": "awaiting_android_smoke",
+      "physical_android_acceptance": false,
+      "native_smoke": "pending",
+      "checkpoint_only": true,
+      "latest_apk_present": false,
+      "status": "package_validated_awaiting_native_smoke_and_physical_review",
+      "export_receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-92ec1a7d8b39.json",
+        "bytes": 313804,
+        "sha256": "a485f8f88bcf990a0fbcd5d6cd35b3c36d8285fae26cb538a7e0949a9871fdc7"
+      },
+      "package_audit": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_package_audit_20261010_113157_078102.json",
+        "bytes": 328718,
+        "sha256": "172c60e8f47278718e41af12eec239689115e0d3bfb033d5e7ca0d93b57f4e3f"
+      }
+    },
+    "postbuild_delivery": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android_fullscreen_postbuild_delivery_20261010_113107_015100.json",
+      "bytes": 5167,
+      "sha256": "8607a69f8dfd8da5dc28c29720d28b52d6deaf8dc2b0b15c45afaa8e6b2f0791"
+    },
+    "failed_first_windows_candidate": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-5952eccfb610.json",
+      "sha256": "62c97c1d2e9f957a40d2b354207b8971391e2b817855f03ef451454d2038f955",
+      "bytes": 165222
+    },
+    "public_android_candidate": {
+      "release_url": "https://github.com/finalidiot/topgame/releases/tag/003a2-android-fullscreen-0ded50f",
+      "apk_url": "https://github.com/finalidiot/topgame/releases/download/003a2-android-fullscreen-0ded50f/SpinningMetal-android.apk",
+      "bytes": 89160598,
+      "sha256": "ffbe070cd2e313cb550ed69e018e32128638730fa78fd0b6d3284d700ce0d709",
+      "release_receipt": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_android_fullscreen_download_release_20261010_113136_252169.json",
+        "bytes": 1780,
+        "sha256": "32ce128fd3bc08bb588dbea3bfa6f6aa6f6381d75e8220d7a24efbb65fbd33fd"
+      },
+      "public_integrity_check": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_android_fullscreen_public_download_20261010_113219_622405.json",
+        "bytes": 1334,
+        "sha256": "6818dc635083b5fe6c63c2a510bf83085c6f6f1b730e78cc81fb7731fad9dcb0"
+      }
+    }
   },
   "human_review": [
     "Install updated APK on actual wide landscape phone.",
@@ -452,5 +559,6 @@
     "Check background/resume and temporary system-bar restoration."
   ],
   "no_merge": true,
-  "no_003b": true
+  "no_003b": true,
+  "completed_utc": "2026-10-10T11:34:53.512674+00:00"
 }
