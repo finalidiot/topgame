@@ -48,6 +48,25 @@ func inspect(page:String,canvas:Vector2)->void:
 			for line:int in range(node.get_line_count()):height+=node.get_line_height(line)
 			check(height<=node.size.y+1,page+": shaped text height fits: "+node.text.left(52))
 	observations.append({"page":page,"canvas":canvas,"presentation":actual})
+func inspect_run_overlay(label:String,canvas:Vector2)->void:
+	await settle()
+	var actual:Dictionary=menus.presentation_snapshot()
+	check(actual.presentation_class=="modal" and actual.get("presentation_policy","")=="run_overlay",label+": expanded Run screen retains combat-modal ownership")
+	check(Rect2(actual.root_rect).is_equal_approx(Rect2(Vector2.ZERO,canvas)) and actual.root_scale==Vector2.ONE,label+": actual root stretches across the whole client")
+	for node:Node in menus._content.find_children("*","Control",true,false):
+		if not node.is_visible_in_tree():continue
+		if node is BaseButton or node is Label:
+			check(Rect2(actual.safe_rect).encloses(node.get_global_rect()),label+": real control/text remains inside the safe overlay")
+		if node is Label and not node.text.is_empty():
+			check(node.get_visible_line_count()==node.get_line_count(),label+": every shaped line remains visible: "+node.text.left(52))
+			var height:float=0
+			for line:int in range(node.get_line_count()):height+=node.get_line_height(line)
+			check(height<=node.size.y+1,label+": shaped text height fits: "+node.text.left(52))
+			if node.autowrap_mode==TextServer.AUTOWRAP_OFF:
+				var widest:float=0
+				for line:String in node.text.split("\n"):widest=maxf(widest,node.get_theme_font("font").get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,node.get_theme_font_size("font_size")).x)
+				check(widest<=node.size.x+1,label+": unwrapped full text fits its real label")
+	observations.append({"page":label,"canvas":canvas,"presentation":actual})
 func run()->void:
 	for arg:String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):report=arg.trim_prefix("--report=")
@@ -74,6 +93,10 @@ func run()->void:
 		menus.show_reset_confirmation();await inspect("Reset confirmation",canvas)
 		menus.show_result({"won":true,"duration":48,"hits":32,"player_remaining":.7});await inspect("Duel result",canvas)
 		menus.show_result({"continuous_run":true,"duration":100,"level":8,"power_ids":["orbit_drive"],"power_ranks":{"orbit_drive":2}});await inspect("Run result",canvas)
+		menus.show_reward(["orbit_drive","momentum_bank","crash_guard"],[],1,"overlay-fixture",39);await inspect_run_overlay("Reward",canvas)
+		menus.show_mutation("orbit_drive",["centrifuge","perpetual_orbit"],"overlay-fixture",39);await inspect_run_overlay("Mutation",canvas)
+		menus.show_level_up(8);await inspect_run_overlay("Level up",canvas)
+		menus.show_acquisition("orbit_drive","RETURN TO COMBAT",3,"centrifuge");await inspect_run_overlay("Acquisition",canvas)
 	menus.set_presentation_canvas(Vector2(1280,720));menus.show_settings({"volume":.45});await settle()
 	var slider:HSlider=menus._frontend_settings_nodes.volume_slider
 	slider.grab_focus();slider.value=.8
@@ -86,7 +109,7 @@ func run()->void:
 	menus.show_pause(true);await settle()
 	check(menus._content.scale==Vector2.ONE and menus._content.get_global_rect().get_center().is_equal_approx(Vector2(960,540)),"Pause retains accepted centered native modality")
 	menus.show_reward(["orbit_drive","momentum_bank","crash_guard"],[],1,"fixture",39);await settle()
-	check(menus._content.scale==Vector2(1.5,1.5),"Draft scale applied on construction at unchanged large display")
+	check(menus._content.scale==Vector2.ONE and menus._content.get_global_rect()==Rect2(0,0,1920,1080),"Draft stretches across the current client on construction at unchanged large display")
 	menus.mobile_hud=true
 	var canvas:Vector2=Vector2(1200,480);var safe:Rect2=Rect2(56,18,1088,444)
 	menus.set_presentation_canvas(canvas,safe);menus.show_settings({});await settle()

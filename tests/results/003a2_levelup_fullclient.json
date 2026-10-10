@@ -1,0 +1,78 @@
+{
+  "schema": "003a2_levelup_fullclient_v1",
+  "status": "source_validated_build_pending",
+  "starting_sha": "3b9756e418d3a86e6a15a4cafb2de45fea9ce7d3",
+  "branch": "task-003a2-ability-ecology",
+  "scope": "Desktop reward, mutation, level-up and acquisition reflow across the actual client. Pause and mobile safe modal stay accepted. The combat simulation is unchanged.",
+  "production_files": [
+    "scripts/frontend_layout.gd",
+    "scripts/menus.gd"
+  ],
+  "unchanged_runtime_files": 836,
+  "unchanged_assets": 720,
+  "source_boundary": {
+    "scripts/frontend_layout.gd": "9df93cc1f1b7079efac5d9e25bd22f72145d2361823bd715dccaf70f9805100e",
+    "scripts/menus.gd": "3bd4373c379848f904b4495118033bb30e97d05395250589b2dc670af1edf104"
+  },
+  "focused_headless_suites": 12,
+  "focused_headless_checks": 18044,
+  "additional_actual_main_capture_checks": {
+    "headless": 527,
+    "native": 709,
+    "movie": 373
+  },
+  "actual_native_maximize_restore": true,
+  "physical_pointer_projection": "Synthetic events at current transformed physical coordinates; actual native Window geometry. Hardware playtest remains human.",
+  "animation": "Existing focused card lift and acquisition timeline retain reflowed home positions. No animation reset.",
+  "paused_simulation_exact": true,
+  "isolated_profiles": true,
+  "player_and_recovery_backups_identical": true,
+  "prior_builds_preserved_before_promotion": true,
+  "evidence": {
+    "five_suites": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_run_overlay_final_five_validation_20261010_133304_634047.json",
+      "sha256": "f5f22697f634dbbb20b0d2b6dfc6090d4987e8d692e85677e803ceeb991b8dfb"
+    },
+    "seven_suites": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_headless_20261010_133111_308793.json",
+      "sha256": "a806823c7305e32cff638d99d3ab18ad5562cc3ba9714b76a01cba03ced3b081"
+    },
+    "headless_capture": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_headless_focus_lift_final_20261010_133106_270154.json",
+      "sha256": "4f52fcd9a5d203835b5db87bdaa8a86861f20e44d57c960f382538cfa65ec0d2"
+    },
+    "native_capture": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_native_focus_lift_final_20261010_133153_957100.json",
+      "sha256": "6e9fbc8eba30be8f80b10c351dab39605b10e690911472493ebaffde5d2be381"
+    },
+    "movie_capture": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_movie_typed_array_final_20261010_133551_467538.json",
+      "sha256": "370e9f901800bcbcd5f6e594f83d13dc102253bddaab264cc3dd05bf9dcf755e"
+    },
+    "capture_integrity": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_capture_integrity_20261010_133923_207813.json",
+      "sha256": "b2d4dbff3d3dd21a33df58f7b986486c73fea963f7c8975d709ad9d55c46b005"
+    },
+    "preservation_prebuild": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_levelup_fullclient_preservation_prebuild_20261010_134109_153952.json",
+      "sha256": "46bbfd389a35f0804a64bdb3559d6b13e539520df6117f4b76999c7a1b2455f6"
+    }
+  },
+  "media": {
+    "003a2_levelup_fullclient.png": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\images\\003a2_levelup_fullclient.png",
+      "sha256": "32e6205f1cf1e7b279b93660bbf71ecd719ab189c64f027adebc6e98148b9f1c",
+      "bytes": 410891
+    },
+    "003a2_levelup_fullclient.mp4": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_levelup_fullclient.mp4",
+      "sha256": "ca3edb6a53615046baf811f7caad69be6b40f53cc1af3475d6ea1e7ffc62ffcb",
+      "bytes": 1218918
+    }
+  },
+  "harness_history": "Native/headless ran the preceding driver. The subsequent movie-only typed-array initializer correction has exact inverse proof; every assertion/control/geometry/physics/capture byte stays identical. Preserved failing QA attempts are not successful tests.",
+  "android_physical_acceptance": false,
+  "human_acceptance": "pending",
+  "merged_to_main": false,
+  "started_003b": false
+}

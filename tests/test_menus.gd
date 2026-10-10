@@ -6,6 +6,7 @@ const Menus = preload("res://scripts/menus.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
 const Starters = preload("res://scripts/starters.gd")
+const Presentation = preload("res://scripts/frontend_layout.gd")
 const PRODUCT_RECT: Rect2 = Rect2(0, 0, 800, 480)
 const MENU_RECT: Rect2 = Rect2(80, 60, 640, 360)
 
@@ -81,7 +82,7 @@ func _find_label(parent: Node, text: String) -> Label:
 func _check_label_fits(label: Label) -> void:
 	var rect: Rect2 = label.get_global_rect()
 	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else menus._content.get_global_rect()
-	var full_client: bool = menus.presentation_mode in ["frontend", "combat"]
+	var full_client: bool = menus.presentation_mode in ["frontend", "combat"] or (not menus.mobile_hud and Presentation.uses_run_overlay(menus.screen))
 	check(menus._content.position == (Vector2.ZERO if full_client else MENU_RECT.position), "HUD/full-client pages and centered modals use their actual presentation origins")
 	var parent: Node = label.get_parent()
 	var clipped_strip: bool = false
@@ -144,7 +145,7 @@ func _test_reward_cards() -> void:
 			check(_find_label(card, str(power.name).to_upper()) != null, "Card shows full power name: "+str(power.name))
 			var expected_copy: String = str(Menus.AbilityInspection.describe(str(power.id), 0).get("what", power.get("card_copy", power.description)))
 			check(_find_label(card, expected_copy) != null, "Card shows the concise mechanism description: "+str(power.name))
-			check(MENU_RECT.encloses(card.get_global_rect()), "Reward card remains inside the centred native 640x360 menu")
+			check(menus.presentation_snapshot().safe_rect.encloses(card.get_global_rect()), "Reward card remains inside the actual full-client safe overlay")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
 			var focus: StyleBoxTexture = card.get_theme_stylebox("focus") as StyleBoxTexture

@@ -67,6 +67,11 @@ func inspect(expected: String, label: String) -> Dictionary:
 		if expected == "modal":
 			var modal: Rect2 = actual.root_rect
 			check(modal.get_center().distance_to(Vector2(presentation.canvas_size)*0.5) < 1.0,label+": modal remains centered above the retained arena")
+			if FrontendLayout.uses_run_overlay(game.menus.screen):
+				check(modal.is_equal_approx(Rect2(Vector2.ZERO,presentation.canvas_size)) and Vector2(actual.root_scale)==Vector2.ONE,label+": Run overlay uses the whole current client")
+				check(actual.get("presentation_policy","")=="run_overlay",label+": visible Run overlay exposes its responsive policy")
+			else:
+				check(modal.size.is_equal_approx(Vector2(640,360)) and Vector2(actual.root_scale)==Vector2.ONE,label+": accepted Pause remains the centered native component")
 	observations.append({"label":label,"client_size":root.size,"menus":actual,"main":presentation})
 	return actual
 func stable_layout(label: String) -> void:

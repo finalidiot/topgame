@@ -57,6 +57,8 @@ var _run_active: bool = false
 var _default_focus: Control
 var _accept_needs_release: bool = false
 var _acquisition_elapsed: float = 0.0
+var _acquisition_home_y: float = 83.0
+var _run_overlay_shade: ColorRect
 var _acquisition_icon: TextureRect
 var _acquisition_flash: ColorRect
 var _card_animations: Array[Dictionary] = []
@@ -169,7 +171,7 @@ func _process(_delta: float) -> void:
 	if screen == "acquisition" and is_instance_valid(_acquisition_icon):
 		_acquisition_elapsed += _delta
 		_acquisition_icon.modulate.a = minf(1.0, 0.6 + _acquisition_elapsed * 5.0)
-		_acquisition_icon.position.y = 83.0 - roundf(minf(2.0, _acquisition_elapsed * 15.0))
+		_acquisition_icon.position.y = _acquisition_home_y - roundf(minf(2.0, _acquisition_elapsed * 15.0))
 		if is_instance_valid(_acquisition_flash): _acquisition_flash.color.a = maxf(0.0, 0.18 - _acquisition_elapsed * 1.1)
 	if screen == "hud" and _run_active:
 		_xp_display = move_toward(_xp_display, _xp_target, _delta * 1.6)
@@ -342,6 +344,8 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 		_touch_mouse_continuation_blocked = true
 		_touch_transition_awaits_raw_contact = _last_ui_event_was_emulated_mouse and _last_emulated_mouse_pressed and _menu_touch_fingers.is_empty()
 	_reroll_control = null
+	_run_overlay_shade = null
+	_acquisition_home_y = 83.0
 	_reroll_needs_release = next_screen in ["reward", "mutation"] and Input.is_action_pressed("draft_reroll")
 	screen = next_screen
 	presentation_mode = FrontendLayout.presentation_class(next_screen)
@@ -1877,6 +1881,7 @@ func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT
 	var power: Dictionary = Powers.get_owned_power(power_id, rank, mutation)
 	_acquisition_elapsed = 0.0
 	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128), null, power)
+	_acquisition_icon.set_meta("frontend_reference",Rect2(256,83,128,128))
 	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, str(style.badge) + "  /  " + ("MACHINE TRANSFORMED" if rank == 3 else ("MECHANISM TUNED" if rank == 2 else "NEW FAMILY")), Rect2(114, 68, 412, 14), 9, style.accent_color, HORIZONTAL_ALIGNMENT_CENTER)
 	if rank > 1:
@@ -2262,6 +2267,11 @@ func _reflow_menu() -> void:
 	if presentation_mode=="frontend":
 		_reflow_frontend()
 		return
+	if not mobile_hud and FrontendLayout.uses_run_overlay(screen):
+		_reflow_run_overlay()
+		return
+	if FrontendLayout.uses_run_overlay(screen): _restore_run_overlay_reference()
+	_frontend_layout.clear()
 	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
 	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	_content.position = layout.menu_origin
@@ -2288,6 +2298,97 @@ func _reflow_menu() -> void:
 		backdrop.screen_id = screen
 		_content.add_child(backdrop)
 		_content.move_child(backdrop,0)
+
+func _restore_run_overlay_reference() -> void:
+	if is_instance_valid(_run_overlay_shade): _run_overlay_shade.visible=false
+	for child: Node in _content.get_children():
+		if not child is Control or not child.has_meta("run_overlay_transformed"): continue
+		var reference: Rect2=child.get_meta("frontend_reference")
+		child.position=reference.position
+		child.size=reference.size
+		child.scale=Vector2.ONE
+		if child is Label or child is BaseButton: child.add_theme_font_size_override("font_size",int(child.get_meta("frontend_font",10)))
+	for entry: Dictionary in _card_animations:
+		if is_instance_valid(entry.card):
+			entry.position=entry.card.position
+			entry.card.position=entry.position+Vector2(0,-2 if entry.card.has_focus() else 0)
+	_acquisition_home_y=83.0
+
+func _reflow_run_overlay() -> void:
+	_frontend_layout=FrontendLayout.run_overlay(_presentation_canvas,screen,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position=Vector2.ZERO
+	_content.scale=Vector2.ONE
+	_content.size=_presentation_canvas
+	var regions: Dictionary=_frontend_layout.regions
+	var text_scale: float=float(_frontend_layout.text_scale)
+	if _presentation_dimmed:
+		if not is_instance_valid(_run_overlay_shade):
+			_run_overlay_shade=ColorRect.new()
+			_run_overlay_shade.name="RunOverlayShade"
+			_run_overlay_shade.color=Color(INK.r,INK.g,INK.b,.80)
+			_run_overlay_shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			_content.add_child(_run_overlay_shade)
+			_content.move_child(_run_overlay_shade,0)
+		_run_overlay_shade.visible=true
+		_run_overlay_shade.size=_presentation_canvas
+	var cards: Array[Control]=[]
+	for child: Node in _content.get_children():
+		if child is Button and str(child.get_meta("intent","")) in ["choose_power","choose_mutation"]: cards.append(child)
+	var gap: float=float(_frontend_layout.gap)
+	var choices: Rect2=regions.choices
+	var note_height: float=28 if not mobile_hud else 20
+	var card_area: Rect2=Rect2(choices.position,Vector2(choices.size.x,maxf(1,choices.size.y-note_height)))
+	var cell_width: float=(card_area.size.x-gap*maxi(0,cards.size()-1))/maxi(1,cards.size())
+	for index: int in range(cards.size()):
+		var card: Control=cards[index]
+		var native: Rect2=_frontend_reference(card)
+		var destination: Rect2=Rect2(card_area.position+Vector2(index*(cell_width+gap),0),Vector2(cell_width,card_area.size.y))
+		var scalar: float=minf(destination.size.x/native.size.x,destination.size.y/native.size.y)
+		card.position=destination.position+(destination.size-native.size*scalar)*.5
+		card.size=native.size
+		card.scale=Vector2.ONE*scalar
+		card.set_meta("run_overlay_transformed",true)
+	for child: Node in _content.get_children():
+		if not child is Control or child==_run_overlay_shade or child in cards: continue
+		if child.get_script()==FrontEnd:
+			child.visible=false
+			continue
+		var reference: Rect2=_frontend_reference(child)
+		var destination: Rect2=reference
+		if reference.size.x>=639 and reference.size.y>=359:
+			destination=Rect2(Vector2.ZERO,_presentation_canvas)
+		elif screen=="level_up":
+			var band: Rect2=regions.banner
+			if child is Label:
+				destination=Rect2(_frontend_layout.frame_rect.position.x,band.position.y+band.size.y*(.12 if reference.position.y<180 else .65),_frontend_layout.frame_rect.size.x,band.size.y*(.48 if reference.position.y<180 else .24))
+			elif reference.size.y<=2: destination=Rect2(0,band.position.y-2 if reference.position.y<180 else band.end.y,_presentation_canvas.x,2)
+			else: destination=band
+		elif screen=="acquisition":
+			destination=FrontendLayout.map_rect(reference,Rect2(104,67,432,226),regions.acquisition)
+			if child==_acquisition_icon:
+				var edge: float=minf(destination.size.x,destination.size.y)
+				destination=Rect2(destination.position+(destination.size-Vector2.ONE*edge)*.5,Vector2.ONE*edge)
+		elif child==_ability_inspector:
+			destination=regions.inspector
+		elif child==_reroll_control:
+			destination=Rect2(regions.footer.end.x-minf(360,regions.footer.size.x*.29),regions.footer.position.y,minf(360,regions.footer.size.x*.29),regions.footer.size.y)
+		elif reference.position.y>=309:
+			destination=Rect2(regions.footer.position,Vector2(regions.footer.size.x*(.67 if is_instance_valid(_reroll_control) else 1.0),regions.footer.size.y))
+		elif reference.position.y>=290:
+			destination=Rect2(choices.position.x,choices.end.y-note_height,choices.size.x,note_height)
+		elif reference.position.y<60:
+			destination=Rect2(regions.header.position+Vector2(0,0 if reference.position.y<30 else regions.header.size.y*.60),Vector2(regions.header.size.x,regions.header.size.y*(.55 if reference.position.y<30 else .35)))
+		else:
+			destination=Rect2(choices.position.x,regions.header.end.y+2,choices.size.x,18)
+		_frontend_fit_control(child,destination,text_scale)
+		child.set_meta("run_overlay_transformed",true)
+	if is_instance_valid(_acquisition_icon): _acquisition_home_y=_acquisition_icon.position.y
+	for entry: Dictionary in _card_animations:
+		if is_instance_valid(entry.card):
+			entry.position=entry.card.position
+			entry.card.position=entry.position+Vector2(0,-2 if entry.card.has_focus() else 0)
+	_frontend_layout_revision+=1
 
 func _schedule_frontend_reflow(_node: Node = null) -> void:
 	if presentation_mode!="frontend" or _frontend_reflow_pending: return
@@ -2488,7 +2589,7 @@ func presentation_snapshot() -> Dictionary:
 		for node: Node in _content.get_children():
 			if node is Panel and node.is_visible_in_tree(): panels.append({"name":str(node.name),"rect":node.get_global_rect()})
 	var focused: Control=get_viewport().gui_get_focus_owner() if is_inside_tree() else null
-	return {"screen_id":screen,"presentation_class":presentation_mode,"canvas_size":_presentation_canvas,
+	return {"screen_id":screen,"presentation_class":presentation_mode,"presentation_policy":"run_overlay" if not mobile_hud and FrontendLayout.uses_run_overlay(screen) else presentation_mode,"canvas_size":_presentation_canvas,
 		"safe_rect":_frontend_layout.get("safe_rect",_presentation_safe),"root_rect":_content.get_global_rect() if is_instance_valid(_content) else Rect2(),
 		"root_scale":_content.scale if is_instance_valid(_content) else Vector2.ONE,
 		"frame_rect":_frontend_layout.get("frame_rect",_content.get_global_rect() if is_instance_valid(_content) else Rect2()),

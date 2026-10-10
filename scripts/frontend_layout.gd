@@ -113,3 +113,27 @@ static func map_rect(area: Rect2, reference: Rect2, destination: Rect2) -> Rect2
 static func modal_scale(canvas_size: Vector2, screen_id: String) -> float:
 	if screen_id=="pause": return 1.0
 	return minf(1.5,minf(maxf(1,canvas_size.x-160)/640,maxf(1,canvas_size.y-120)/360))
+
+
+const RUN_OVERLAYS: Array[String] = ["reward","mutation","level_up","acquisition"]
+
+static func uses_run_overlay(screen_id: String) -> bool:
+	return screen_id in RUN_OVERLAYS
+
+static func run_overlay(canvas_size: Vector2, screen_id: String, requested_safe: Rect2 = Rect2()) -> Dictionary:
+	var layout: Dictionary = desktop(canvas_size,screen_id,requested_safe)
+	var frame: Rect2 = layout.frame_rect
+	var gap: float = float(layout.gap)
+	var header: Rect2 = Rect2(frame.position,Vector2(frame.size.x,clampf(frame.size.y*.10,56,110)))
+	var footer: Rect2 = Rect2(Vector2(frame.position.x,frame.end.y-clampf(frame.size.y*.075,38,74)),Vector2(frame.size.x,clampf(frame.size.y*.075,38,74)))
+	var body: Rect2 = Rect2(Vector2(frame.position.x,header.end.y+gap),Vector2(frame.size.x,maxf(1,footer.position.y-header.end.y-gap*2)))
+	var inspector_width: float = minf(body.size.x*.27,body.size.y*188.0/242.0)
+	var inspector: Rect2 = Rect2(Vector2(body.end.x-inspector_width,body.position.y),Vector2(inspector_width,body.size.y))
+	var choices: Rect2 = Rect2(body.position,Vector2(body.size.x-inspector_width-gap,body.size.y))
+	var band_height: float = clampf(frame.size.y*.28,108,260)
+	layout.regions = {"header":header,"footer":footer,"body":body,"choices":choices,"inspector":inspector,
+		"banner":Rect2(0,canvas_size.y*.5-band_height*.5,canvas_size.x,band_height),
+		"acquisition":Rect2(frame.position+Vector2(0,frame.size.y*.08),Vector2(frame.size.x,frame.size.y*.84))}
+	layout.presentation_class = "modal"
+	layout.presentation_policy = "run_overlay"
+	return layout
