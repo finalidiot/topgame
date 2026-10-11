@@ -19,17 +19,15 @@ const GUIDES: Dictionary = {
 	"crosscut":["Glancing hits shove rivals sideways.", "Steer across a moving rival on contact.", "A sideways cut deflects the rival.", "Each cut spends RPM and recoils on you.", "Stronger cuts; shorter cooldown."],
 	"gyro_lock":["Smooth travel builds a moving brace.", "Steer smoothly; move off Brake.", "A lock forms; shoves move you less.", "Idle, hard turns or Burst break lock.", "Build a heavier lock sooner."],
 	"impact_sink":["Store part of incoming recoil.", "Take hits; tap Brake at low speed.", "STORED FORCE fills, then vents.", "Finite store; unused force leaks away.", "Catch more recoil; hold more force."],
-	"anchor_exchange":["Brake buys heavy portable footing.", "Hold Brake near rest; release to move.", "Braces plant; shoves move you less.", "Brace costs RPM and slows travel.", "Build heavier footing sooner."]
+	"anchor_exchange":["Brake buys heavy portable footing.", "Hold Brake near rest; release to move.", "Braces plant; shoves move you less.", "Brace costs RPM and slows travel.", "Build heavier footing sooner."],
+	"crimson_impact": ["Outgoing impact power +8%.","Always active while owned.","Red rim chevrons mark impact power.","Seven build slots; no recovery.","Outgoing impact power +14%."],
+	"azure_stability": ["Reduce incoming wobble and displacement.","Always active while owned.","Blue segments mark stable footing.","Heavy hits still damage and move you.","Stronger wobble and shove resistance."],
+	"emerald_endurance": ["Continuous running drain -6%.","Always active; normal passive floor.","Green paired arcs mark efficiency.","No collision or Burst discount; no refill.","Continuous running drain -10%."],
+	"true_bearing": ["Wobble recovery +16%.","Always active while owned.","Lavender crown marks wobble recovery.","Low-spin floor stays; no RPM refill.","Wobble recovery +28%."],
+	"last_stand": ["Low RPM: incoming wobble -14%.","Active below 35% reserve.","Amber brace brightens while active.","No refill or damage immunity.","Low RPM: incoming wobble -24%."],
+	"prismatic_current": ["One stat emphasis changes every 8s.","Automatic; no immediate repeated state.","Colour and state label show the bonus.","One bonus at a time; no RPM refill.","Stronger bonuses. Same 8s period."],
 }
 const MUTATION_GUIDES: Dictionary = {
-	"wallbreaker":["A wall rebound commits one huge strike.","Rebound hard; plan the rival line first.","A fixed flight mark follows your launch.","Restricted steering; misses cost RPM."],
-	"ricochet_engine":["Oblique rebounds become a movement route.","Steer controlled angles into solid walls.","Up to three rebound marks track the route.","Brake or reverse loses it; no gate rescue."],
-	"centrifuge":["A full carve spends DRIVE on a side hit.","Reach full DRIVE; glance across a rival.","A sideways shove spends most DRIVE.","Costs RPM, recoils and needs a new carve."],
-	"perpetual_orbit":["Smooth full curves earn efficient spin.","Hold the same moving curve at full DRIVE.","Full DRIVE sustains capped RPM recovery.","Hard correction dumps DRIVE and RPM."],
-	"flywheel_release":["Bank more motion for a committed launch.","Brake to bank; aim Burst with sixty stored.","Your release holds its straight line.","Costs RPM; recoil or missed-line penalty."],
-	"countersteer":["Stored motion becomes a sharp new line.","Bank thirty-five; Burst across your heading.","Carried velocity redirects immediately.","Spends bank and RPM; less forward force."],
-	"reactive_plating":["Receive force; aim a brief physical counter.","Take a heavy incoming hit, then push back.","Loaded plating lasts three-quarters second.","Aimed next contact costs RPM; store expires."],
-	"sacrificial_damper":["Cushion one severe incoming collision.","Receive a huge hit while the damper is ready.","Your recoil shrinks; the damper buckles.","Paid RPM; slow afterwards; seven-second wait."],
 	"keel":["A steady line builds extreme ballast.", "Move with very smooth steering.", "A heavy lock steadies your line.", "Less speed; tight turns break lock."],
 	"flywheel":["Carry ballast through wider curves.", "Steer smoothly while moving.", "Lock survives faster, wider turns.", "Idle, Brake or Burst still lose lock."],
 	"shock_bleed":["Stored force buys stronger recovery.", "Take recoil, then tap Brake slowly.", "The vent restores RPM and steadies you.", "Stored force pays; recovery capped."],
@@ -46,10 +44,6 @@ const MUTATION_GUIDES: Dictionary = {
 	"flow_state":["Smooth travel keeps speed efficiently.", "Move through controlled turns.", "Turns carry your momentum onward.", "Less thrust than Terminal Velocity."]
 }
 const BRANCH_NEXT: Dictionary = {
-	"iron_comet":"Choose a committed strike or ricochet routes.",
-	"orbit_drive":"Choose a sideways weapon or sustained curves.",
-	"momentum_bank":"Choose a committed launch or redirection.",
-	"crash_guard":"Choose a brief counter or severe-hit damper.",
 	"redline":"Choose sustained heat or one huge hit.",
 	"dead_centre":"Choose recoil or stored retaliation.",
 	"afterimage":"Choose route hijack or trail speed.",
@@ -64,7 +58,13 @@ const SYNERGIES: Dictionary = {
 	"impact_sink":"Dead Centre: a paid vent eases Stress.",
 	"anchor_exchange":"Dead Centre: steer on release to vent.",
 	"gyro_lock":"Dead Centre: brace while repositioning.",
-	"momentum_bank":"Counterweight: Burst spends both stores."
+	"momentum_bank":"Counterweight: Burst spends both stores.",
+	"crimson_impact": "Wake / Chain / Comet.",
+	"azure_stability": "Centre / Gyro / Exchange.",
+	"emerald_endurance": "Orbit / Clutch / High Gear.",
+	"true_bearing": "Gyro / Sink / Crash Guard.",
+	"last_stand": "Clutch / Centre / Exchange.",
+	"prismatic_current": "Adapt to the current emphasis."
 }
 var power_id: String = ""
 var current_rank: int = 0
@@ -85,6 +85,13 @@ static func describe(id: String, rank: int, mutation: String = "", branch_previe
 	var trigger: String = guide[1]
 	var notice: String = guide[2]
 	var limit: String = guide[3]
+	# Current investment values come from the live ownership rank. These concise
+	# statements fit the native inspection slots; full definitions remain saved.
+	if id == "crimson_impact": what = "Outgoing impact +%d%%." % (14 if rank >= 2 else 8)
+	if id == "azure_stability": what = "Incoming wobble -%d%%; firmer footing." % (18 if rank >= 2 else 10)
+	if id == "emerald_endurance": what = "Running drain -%d%%. No RPM refill." % (10 if rank >= 2 else 6)
+	if id == "true_bearing": what = "Wobble recovery +%d%%. No RPM refill." % (28 if rank >= 2 else 16)
+	if id == "last_stand": what = "Below 35%% RPM: incoming wobble -%d%%." % (24 if rank >= 2 else 14)
 	if mutation in MUTATION_GUIDES:
 		what = MUTATION_GUIDES[mutation][0]
 		trigger = MUTATION_GUIDES[mutation][1]
@@ -107,6 +114,11 @@ static func describe(id: String, rank: int, mutation: String = "", branch_previe
 		"limit":limit, "next":next, "mutations":mutations, "synergy":str(SYNERGIES.get(id, ""))}
 
 static func current_state(id: String, state: Dictionary) -> String:
+	if id == "prismatic_current" and bool(state.get("base_powers", {}).get("owned", false)):
+		var prism: Dictionary = state.base_powers
+		return "%s / %s%% / CHANGE IN %.1fs" % [str(prism.emphasis), str(prism.bonus_label), float(prism.remaining)]
+	if id == "last_stand" and state.has("base_powers"):
+		return "ACTIVE BELOW 35%" if bool(state.base_powers.last_stand_active) else "WAITING FOR LOW RESERVE"
 	# Snapshot from PowerRuntime.public_state(); never invented gameplay values.
 	var key: String = {"dead_centre":"anchor", "orbit_drive":"orbit", "impact_sink":"sink", "redline":"redline"}.get(id, "")
 	if key.is_empty() or not state.has(key) or not bool(state[key].get("owned", false)): return ""

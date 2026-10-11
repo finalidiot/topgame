@@ -8,6 +8,8 @@ signal hud_updated(stats: Dictionary)
 signal event_sfx(kind: String)
 signal contact_accepted(first_entity_id: int, second_entity_id: int)
 signal full_top_impact_accepted(impact: Dictionary)
+signal controller_feedback(event: Dictionary)
+signal feedback_lifecycle(reason: String)
 signal progression_events(events: Array)
 signal threat_cleared(summary: Dictionary)
 signal threat_started(summary: Dictionary)
@@ -115,6 +117,10 @@ var _progression_queue: Array[Dictionary] = []
 var _progression_sequence: int = 0
 var _progression_eliminated: Dictionary = {}
 var _progression_contacted: Dictionary = {}
+var _feedback_sequence: int = 0
+## Bounded presentation attribution, separate from lifetime XP assist credit.
+var _feedback_credits: Dictionary = {}
+const FEEDBACK_CREDIT_SECONDS: float = 6.0
 var _progression_waves: Dictionary = {}
 var _combat_needs_release: bool = false
 
@@ -155,6 +161,9 @@ func begin(player_build: Dictionary, enemy_build: Dictionary, level: int = 1, re
 	begin_encounter(player_build, {"opponent_build": enemy_build, "difficulty": level, "seed": requested_seed, "live_time_limit": ROUND_LIMIT})
 
 func begin_encounter(player_build: Dictionary, descriptor: Dictionary) -> void:
+	feedback_lifecycle.emit("run_reset")
+	_feedback_sequence = 0
+	_feedback_credits.clear()
 	continuous = null
 	impact_feedback.reset()
 	PowerVisuals.Identity.reset_motion()
@@ -269,6 +278,7 @@ func remove_retired_enemy(id: int) -> void:
 	_ai_rngs.erase(id)
 	_progression_eliminated.erase(id)
 	_progression_contacted.erase(id)
+	_feedback_credits.erase(id)
 	for key: String in _pair_cooldowns.keys():
 		if str(id) in key.split(":"): _pair_cooldowns.erase(key)
 
@@ -346,6 +356,7 @@ func _team_color(fighter: Dictionary) -> Color:
 
 func set_paused(value: bool) -> void:
 	paused = value
+	if value: feedback_lifecycle.emit("pause")
 	if value and is_instance_valid(input_provider): input_provider.set_enabled(false)
 	# The same face button confirms menus and bursts. A held confirmation must
 	# be released before it can become a new combat press after launch/resume.
@@ -358,6 +369,7 @@ func set_paused(value: bool) -> void:
 	queue_redraw()
 
 func begin_reentry(duration: float = 1.25) -> void:
+	feedback_lifecycle.emit("reentry")
 	# Preserve the entire live solver and threat schedule while the player prepares.
 	if battle_status not in ["battle", "reentry"]:
 		set_paused(false)
@@ -396,6 +408,7 @@ func acquire_run_power(power_id: String, rank_value: int = 1, mutation_value: St
 	encounter["player_power_ids"] = player["powers"].duplicate()
 	encounter["player_power_ranks"] = player["power_ranks"].duplicate(true)
 	encounter["player_power_mutations"] = player["power_mutations"].duplicate(true)
+	powers.base_powers.register(player)
 	# Cosmetic previews change no reserve, force, cooldown or semantic runtime.
 	if rank_value >= 2:
 		var preview: String = {"redline": "redline_ii", "dead_centre": "anchor", "afterimage": "afterimage_ii"}.get(power_id, "")
@@ -694,6 +707,10 @@ func grind_audio_snapshot() -> Dictionary:
 		return {"active":false,"strength":0.0,"pitch":1.0,"pairs":0}
 	return impact_feedback.grind_snapshot()
 
+func player_grind_snapshot() -> Dictionary:
+	if paused or battle_status != "battle" or not _is_live(player_entity()): return {"active":false,"strength":0.0,"pairs":0}
+	return impact_feedback.grind_snapshot_for(player_entity_id)
+
 ## Source-aware writes. Standalone modes retain their exact previous arithmetic.
 func spend_rpm(fighter: Dictionary, amount: float, source: String) -> void:
 	if continuous != null:
@@ -735,19 +752,12 @@ func _attempt_burst(fighter: Dictionary, direction: Vector2) -> void:
 	powers.burst_started(fighter, heading.normalized(), pre_cost_rpm)
 	roster.burst(fighter,heading.normalized(),velocity_world)
 	event_sfx.emit("burst")
+	if int(fighter.entity_id) == player_entity_id and str(fighter.owner_id) == PLAYER_OWNER:
+		_feedback_sequence += 1
+		controller_feedback.emit({"kind":"burst","event_id":_feedback_sequence,"entity_id":player_entity_id,"player_attributed":true})
 
 func _update_fighter(fighter: Dictionary, direction: Vector2, braking: bool, dt: float) -> void:
-	# New committed III lines transform physical controls before every existing
-	# power reads them. Raw held Brake cannot enable drift or suppress paid heat
-	# recovery while the actual top is mechanically committed off Brake.
-	var ecology_controls: Dictionary = roster.ecology.controls(fighter,direction,braking)
-	direction = ecology_controls.direction
-	braking = bool(ecology_controls.braking)
 	var modifiers: Dictionary = powers.movement_control(fighter, direction, braking, dt)
-	if bool(ecology_controls.committed):
-		modifiers["ecology_direction"] = ecology_controls.direction
-		modifiers.direction = ecology_controls.direction
-		modifiers.braking = false
 	modifiers = roster.movement(fighter,modifiers,dt)
 	direction = modifiers["direction"]
 	braking = bool(modifiers["braking"])
@@ -988,26 +998,26 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	_pair_cooldowns[pair_key] = minf(float(a_contact.interval),float(b_contact.interval))
 	hits += 1
 	var severity: float = clampf(closing / 220.0, 0.08, 1.30)
-	var ecology_a: Dictionary = roster.ecology.prepare_contact(first,second,severity,normal,va,vb,(Vector2(first.vel)-va).length())
-	var ecology_b: Dictionary = roster.ecology.prepare_contact(second,first,severity,-normal,vb,va,(Vector2(second.vel)-vb).length())
-	if float(ecology_a.recoil) != 1.0: first.vel = va+(Vector2(first.vel)-va)*float(ecology_a.recoil)
-	if float(ecology_b.recoil) != 1.0: second.vel = vb+(Vector2(second.vel)-vb)*float(ecology_b.recoil)
 	var a_defense: float = 0.76 + float(a_stats["stability"]) * 0.055 + float(a_stats["mass"]) * 0.016
 	var b_defense: float = 0.76 + float(b_stats["stability"]) * 0.055 + float(b_stats["mass"]) * 0.016
-	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * roster.collision_cost(first) * float(a_contact.shock) * float(ecology_a.shock) + float(a_contact.own_cost)
-	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * roster.collision_cost(second) * float(b_contact.shock) * float(ecology_b.shock) + float(b_contact.own_cost)
+	var a_collision_scale: float = roster.collision_cost(first)
+	var b_collision_scale: float = roster.collision_cost(second)
+	var loss_a: float = (0.004 + severity * 0.012) * b_attack / a_defense * a_collision_scale * float(a_contact.shock) + float(a_contact.own_cost)
+	var loss_b: float = (0.004 + severity * 0.012) * a_attack / b_defense * b_collision_scale * float(b_contact.shock) + float(b_contact.own_cost)
 	# The floor brace still steadies a top. Reserve endurance has its own
 	# weaker, earlier-fatiguing protection and does not change physical wobble.
-	var wobble_a: float = loss_a * powers.incoming_wobble_scale(first)
-	var wobble_b: float = loss_b * powers.incoming_wobble_scale(second)
-	loss_a *= powers.incoming_rpm_scale(first)
-	loss_b *= powers.incoming_rpm_scale(second)
+	var a_wobble_scale: float = powers.incoming_wobble_scale(first)
+	var b_wobble_scale: float = powers.incoming_wobble_scale(second)
+	var wobble_a: float = loss_a * a_wobble_scale
+	var wobble_b: float = loss_b * b_wobble_scale
+	var a_rpm_scale: float = powers.incoming_rpm_scale(first)
+	var b_rpm_scale: float = powers.incoming_rpm_scale(second)
+	loss_a *= a_rpm_scale
+	loss_b *= b_rpm_scale
 	var actual_a: float = minf(float(first.rpm),loss_a)
 	var actual_b: float = minf(float(second.rpm),loss_b)
 	spend_rpm(first,loss_a,"collisions")
 	spend_rpm(second,loss_b,"collisions")
-	if float(ecology_a.cost) > 0.0: spend_rpm(first,float(ecology_a.cost),"powers")
-	if float(ecology_b.cost) > 0.0: spend_rpm(second,float(ecology_b.cost),"powers")
 	first["energy"] = first["rpm"]
 	second["energy"] = second["rpm"]
 	first["wobble"] = minf(1.0, float(first["wobble"]) + wobble_a * 3.1)
@@ -1022,6 +1032,8 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 	if continuous != null:
 		if int(first.entity_id) == player_entity_id: continuous.economy.contact(second,severity,actual_b,va.dot(normal),va.length())
 		elif int(second.entity_id) == player_entity_id: continuous.economy.contact(first,severity,actual_a,-vb.dot(normal),vb.length())
+	var feedback_recoil_a: float = (Vector2(first.vel)-va).length()
+	var feedback_recoil_b: float = (Vector2(second.vel)-vb).length()
 	_presentation_full_contact = true
 	powers.accepted_contact(first, second, severity, normal, a + normal * float(first.radius), Vector2(first.vel)-va, Vector2(second.vel)-vb, impulse / float(first.mass) * (1.0 - attack_bias), impulse / float(second.mass) * (1.0 + attack_bias))
 	_presentation_full_contact = false
@@ -1037,9 +1049,14 @@ func _resolve_pair_records(first: Dictionary, second: Dictionary) -> void:
 		"contact_position": (Vector2(first.pos)+normal*PartPhysics.contact_radius(first,normal)+Vector2(second.pos)-normal*PartPhysics.contact_radius(second,-normal))*0.5,
 		"contact_height": (float(first.height)+float(second.height))*0.5+12.0,
 		"first_rpm_loss": actual_a, "second_rpm_loss": actual_b,
+		"first_absorption":maxf(1.0-minf(minf(a_collision_scale*a_rpm_scale,a_wobble_scale),inv_a*float(first.mass)),clampf(1.0-(Vector2(first.vel)-va).length()/maxf(0.0001,feedback_recoil_a),0.0,1.0)),
+		"second_absorption":maxf(1.0-minf(minf(b_collision_scale*b_rpm_scale,b_wobble_scale),inv_b*float(second.mass)),clampf(1.0-(Vector2(second.vel)-vb).length()/maxf(0.0001,feedback_recoil_b),0.0,1.0)),
 		"first_position": Vector2(first.pos), "second_position": Vector2(second.pos),
 		"first_player": first.owner_id == PLAYER_OWNER, "second_player": second.owner_id == PLAYER_OWNER}
 	beasts.accept_impact(beast_impact)
+	if _opposes(first,second):
+		if int(first.entity_id) == player_entity_id: _feedback_credit(second)
+		elif int(second.entity_id) == player_entity_id: _feedback_credit(first)
 	full_top_impact_accepted.emit(beast_impact)
 	if first.has("role"): EnemyRoles.observe_contact(first,second,elapsed,severity)
 	if second.has("role"): EnemyRoles.observe_contact(second,first,elapsed,severity)
@@ -1065,7 +1082,20 @@ func _apply_impact_pulse(pulse: Dictionary) -> void:
 	if not str(pulse.get("crack_cue", "")).is_empty(): event_sfx.emit(str(pulse.crack_cue))
 
 func _present_elimination(fighter: Dictionary) -> void:
-	_apply_impact_pulse(impact_feedback.accept_elimination(fighter))
+	var pulse: Dictionary = impact_feedback.accept_elimination(fighter)
+	_apply_impact_pulse(pulse)
+	if pulse.is_empty(): return
+	var id: int = int(fighter.entity_id)
+	var attributed: bool = str(fighter.get("team_id","")) == HOSTILE_TEAM and elapsed-float(_feedback_credits.get(id,-INF)) <= FEEDBACK_CREDIT_SECONDS
+	_feedback_credits.erase(id)
+	controller_feedback.emit({"kind":"takedown","entity_id":int(fighter.entity_id),"enemy_kind":str(fighter.get("enemy_kind","rival")),"player_attributed":attributed})
+
+func _feedback_credit(target: Dictionary) -> void:
+	if target.get("combatant_type","") != "full_top" or target.get("team_id","") != HOSTILE_TEAM: return
+	_feedback_credits[int(target.entity_id)] = elapsed
+	for id: int in _feedback_credits.keys():
+		if elapsed-float(_feedback_credits[id]) > FEEDBACK_CREDIT_SECONDS: _feedback_credits.erase(id)
+	while _feedback_credits.size() > 32: _feedback_credits.erase(_feedback_credits.keys()[0])
 
 func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Dictionary) -> void:
 	if continuous != null and not is_same(entity(int(target.entity_id)), target): return
@@ -1074,12 +1104,13 @@ func apply_power_impulse(target: Dictionary, delta_velocity: Vector2, _cause: Di
 	# propagation tag, but a live player-owned pressure effect still earns
 	# credit if its physical impulse knocks a rival out before direct contact.
 	if target.combatant_type == "full_top" and target.team_id == HOSTILE_TEAM and str(_cause.get("owner_id", "")) == PLAYER_OWNER and int(_cause.get("owner_entity_id", -1)) == player_entity_id and float(_cause.get("expires_at", -1.0)) >= powers.time and delta_velocity.length_squared() > 0.0001:
+		_feedback_credit(target)
 		_progression_contacted[int(target.entity_id)] = true
 		if continuous != null: continuous.economy.credit(target)
 	var cap: float = 400.0 if target.combatant_type == "small_top" else 340.0
 	var braced_velocity: Vector2 = delta_velocity.limit_length(100.0)
 	powers.incoming_power_impulse(target, braced_velocity, _cause)
-	if float(target.get("anchor_charge", 0.0)) > 0.0 or powers.rank(target, "gyro_lock") > 0 or powers.rank(target, "anchor_exchange") > 0:
+	if float(target.get("anchor_charge", 0.0)) > 0.0 or powers.rank(target, "gyro_lock") > 0 or powers.rank(target, "anchor_exchange") > 0 or powers.rank(target, "azure_stability") > 0:
 		braced_velocity *= powers.inverse_mass(target) * float(target.mass)
 	var before_velocity: Vector2 = target.vel
 	target.vel = (before_velocity + braced_velocity).limit_length(cap)
@@ -1114,9 +1145,6 @@ func add_power_fx(kind: String, pos: Vector2, direction: Vector2 = Vector2.ZERO,
 				break
 		_power_fx.remove_at(discard)
 	var effect: Dictionary = {"kind":kind,"pos":pos,"dir":direction,"direction":direction,"strength":strength,"age":0.0,"duration":durations.get(kind,0.4)}
-	if not str(presentation.get("ecology_kind","")).is_empty():
-		effect["ecology_kind"] = presentation.ecology_kind
-		effect["owner_entity_id"] = int(presentation.get("owner_entity_id",0))
 	var art_family: String = PowerVisuals.Identity.event_family(kind)
 	if not art_family.is_empty():
 		# Presentation-only rank provenance; do not change the source fighter.
@@ -1256,7 +1284,6 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 		position_world -= normal * overshoot
 		var outward: float = velocity_world.dot(normal)
 		if outward > 0.0:
-			var before_rebound: Vector2 = velocity_world
 			velocity_world -= normal * outward * (1.0+0.66*float(physical.wall_restitution) if component_boundary else 1.66)
 			velocity_world *= 0.91 * (float(physical.wall_retention) if component_boundary else 1.0)
 			if component_boundary: velocity_world += normal.orthogonal()*outward*float(physical.wall_tangent)
@@ -1265,7 +1292,6 @@ func _resolve_boundary(fighter: Dictionary) -> void:
 			fighter["impact_time"] = 0.12
 			fighter["impact_strength"] = 0.3
 			powers.wall_rebound(fighter, outward, normal, position_world)
-			velocity_world = roster.ecology.wall_velocity(fighter,before_rebound,velocity_world,outward,normal,position_world)
 			if outward > 70.0 and fighter.combatant_type == "full_top":
 				impact_feedback.accept_small(position_world,-normal)
 				event_sfx.emit("wall")
@@ -1365,6 +1391,7 @@ func _finish(winner_entity_id: int, reason: String) -> void:
 		if (swarm.enabled or continuous != null) and winner_entity_id == 0: winner = {"team_id":HOSTILE_TEAM}
 		else: return
 	battle_status = "finished"
+	feedback_lifecycle.emit("finished")
 	powers.finish()
 	beasts.finish()
 	PowerVisuals.Identity.reset_motion()
@@ -1720,6 +1747,7 @@ func _draw_fighter(fighter: Dictionary) -> void:
 			smear_tint.a = 0.17
 			var smear_source: Rect2 = Rect2(float((phase + 7) % 8) * 48.0, 0.0, 48.0, 48.0)
 			draw_texture_rect_region(blade_texture, Rect2(blade_origin - velocity_screen.normalized().round() * 2.0, Vector2(48.0, 48.0)), smear_source, smear_tint)
+	PowerVisuals.BaseArt.aura(self,fighter,rig_pose.blade_origin+Vector2(24,24),_visual_time)
 	if float(fighter["impact_time"]) > 0.0:
 		var heavy: bool = float(fighter["impact_strength"]) > 0.50
 		var duration: float = 0.30 if heavy else 0.18

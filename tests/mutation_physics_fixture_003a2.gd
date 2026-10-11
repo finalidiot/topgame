@@ -1,16 +1,15 @@
 extends "res://scripts/battle.gd"
 ## Legal initial loadout/pose fixtures with sampled ordinary controls afterward.
-const Draft003A2 = preload("res://tests/mutation_draft_policy_003a2.gd")
 var fixture_controls: Dictionary={}
 var fixture_owner: int=1
 
-static func create(parent: Node, family: String, mutation_id: String, owner: int=1, seed_value: int=421) -> Node2D:
+static func create(parent: Node, family: String, mutation_id: String, owner: int=1, seed_value: int=421, rank_value: int=3) -> Node2D:
 	var b: Node2D=load("res://tests/mutation_physics_fixture_003a2.gd").new()
 	parent.add_child(b);b.set_process(false);b.set_physics_process(false);b.visible=false
 	var d: Dictionary=preload("res://scripts/encounters.gd").for_run_event(1,seed_value)
 	var starters=preload("res://scripts/starters.gd")
 	d.starter_id="vane";d.opponent_build=starters.build_for("vane");d.ability_rebalance=true
-	d.player_power_ids=[family] if owner==1 else [];d.player_power_ranks={family:3} if owner==1 else {};d.player_power_mutations={family:mutation_id} if owner==1 else {}
+	d.player_power_ids=[family] if owner==1 else [];d.player_power_ranks={family:rank_value} if owner==1 else {};d.player_power_mutations={family:mutation_id} if owner==1 and not mutation_id.is_empty() else {}
 	b.begin_run(starters.build_for("vane"),d,seed_value)
 	for ready: int in range(300):
 		if b.battle_status=="battle":break
@@ -19,13 +18,13 @@ static func create(parent: Node, family: String, mutation_id: String, owner: int
 	b.continuous.reward_fixture=true;b.continuous.director.next_decision=99999.;b.continuous.director.calm_until=99999.
 	for id: int in [1,2]:
 		var f: Dictionary=b.entity(id)
-		f.powers=[family] if id==owner else [];f.power_ranks={family:3} if id==owner else {};f.power_mutations={family:mutation_id} if id==owner else {}
+		f.powers=[family] if id==owner else [];f.power_ranks={family:rank_value} if id==owner else {};f.power_mutations={family:mutation_id} if id==owner and not mutation_id.is_empty() else {}
 		f.ai_burst_delay=99999.;f.erase("role");f.erase("pilot")
 		f.pos=Vector2.ZERO if id==owner else Vector2(100,45);f.vel=Vector2.ZERO
 	b.powers.setup(b);b.roster.setup(b)
 	# Drain READY before applying any mature-clock fixture. All clocks share an
 	# epoch, including the new helper; later time comes only from fixed steps.
-	b.elapsed=0.0;b.powers.time=0.0;b.roster.time=0.0;b.roster.ecology.time=0.0
+	b.elapsed=0.0;b.powers.time=0.0;b.roster.time=0.0
 	return b
 
 func _update_ai(rival: Dictionary, _dt: float, _context: Dictionary={}) -> void:
@@ -44,6 +43,6 @@ func fixture_snapshot() -> Dictionary:
 	for f: Dictionary in fighters:
 		actors.append({"id":f.entity_id,"pos":f.pos,"vel":f.vel,"rpm":f.rpm,"wobble":f.wobble,"outcome":f.outcome,
 			"powers":f.powers.duplicate(),"ranks":f.power_ranks.duplicate(true),"branches":f.power_mutations.duplicate(true)})
-	return {"elapsed":elapsed,"power_time":powers.time,"roster_time":roster.time,"ecology_time":roster.ecology.time,
-		"actors":actors,"counters":roster.ecology.counters.duplicate(true),"ecology":roster.ecology.states.duplicate(true),
+	return {"elapsed":elapsed,"power_time":powers.time,"roster_time":roster.time,
+		"actors":actors,
 		"roster":roster.states.duplicate(true),"power_events":powers.events.duplicate(true),"economy":continuous.economy.snapshot(),"status":battle_status}

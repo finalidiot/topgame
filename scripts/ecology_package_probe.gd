@@ -1,5 +1,6 @@
 extends RefCounted
-## Read-only packaged resource inspection. Does not create gameplay/save state.
+## Historical native assets remain inspectable, but never register live powers.
+const Catalog = preload("res://scripts/run_powers.gd")
 const MANIFEST: String = "res://assets/powers/ecology003a2/manifest.json"
 const FAMILIES: Dictionary = {
 	"iron_comet":["wallbreaker","ricochet_engine"],
@@ -64,4 +65,7 @@ static func inspect() -> Dictionary:
 			for key: String in ["cell","pivot","layers","tags","durations_ms","columns","frame_count","source","source_sha256","texture_sha256","native_runtime_rgba_exact"]:row[key]=meta.get(key)
 			rows.append(row)
 			if not valid:failures.append(path)
-	return {"json":text,"textures":rows,"failures":failures}
+	for family: String in FAMILIES:
+		for retired_id: String in FAMILIES[family]:
+			if retired_id in Catalog.mutation_choices(family): failures.append("Retired branch remains live: "+retired_id)
+	return {"json":text,"textures":rows,"failures":failures,"archived_assets_only":true}

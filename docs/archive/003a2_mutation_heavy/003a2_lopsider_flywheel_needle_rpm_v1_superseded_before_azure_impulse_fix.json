@@ -1,0 +1,167 @@
+{
+  "schema": "003a2-lopsider-flywheel-needle-rpm-v1",
+  "assembly": {
+    "blade": "lopsider",
+    "ratchet": "flywheel",
+    "bit": "needle"
+  },
+  "ratings": {
+    "grip": 1.7,
+    "mass": 9.2,
+    "power": 7.4,
+    "speed": 2.6,
+    "stability": 2.7,
+    "stamina": 5.9
+  },
+  "seeds": [
+    421,
+    7341,
+    2026
+  ],
+  "horizon_seconds": 480,
+  "run_count": 42,
+  "maximum_ledger_closure_error": 6.45913877939108e-13,
+  "sources": {
+    "baseline": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_exact_build_baseline.json",
+      "sha256": "53b0b0267f32ad44fbbf41669d4037c9436607bcac7e3921359a2a1b8af58fbf"
+    },
+    "corrected": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_exact_build_corrected_attempt02.json",
+      "sha256": "8649dde9838a6ae3e3f06445ee9bfd4a984ee7dc2b623a0ad2c4a441b21382cc"
+    },
+    "stage_verification": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_rpm_stage_source_verification.json",
+      "sha256": "e67a45f83532e0c970d737f56fc83b9eddbd8fe61a31d69e777b49b82147559b"
+    },
+    "baseline_starting_commit": "9bb45e4b8c2d92a37edb45514e14f6e16c536124",
+    "corrected_source_fingerprint": "147182c04cbe37b738ee972a8c0964974b48a0ef7a67253690deecada63f6291",
+    "baseline_runtime_files": 838,
+    "corrected_runtime_files": 710,
+    "corrected_snapshot_omissions": "Exactly136 assets/source-art/** editable master/workflow files excluded from simulation stage; baseline retained them. Six retired ecology module/UID files removed and14 new runtime assets/scripts/UIDs added. No physics or runtime presentation asset is missing. Later package-probe, Prism HUD and rumble-credit presentation fixes postdate this study and require candidate regression separately.",
+    "withdrawn_snapshot": "Corrected attempt01 preserved but not observed; attempt02 captures latest typed Prism snapshot fix before studies."
+  },
+  "tuning": {
+    "part_stats_changed": false,
+    "global_rpm_changed": false,
+    "clutch_changed": false,
+    "new_power_scalar_changed_after_initial_design": false,
+    "decision": "No targeted recovery nerf is supported by this three-seed study. Clutch recovery remains earned and bounded; new powers create no gain source. Existing combat reclamation/eliminations and accepted defensive recoveries are separately counted. Censored endpoints do not establish infinite sustain."
+  },
+  "outstanding": "Exact human playstyle/original screenshot seed and cropped effect still unavailable. Native Windows/Android human feel and physical controller confirmation remain separate from scripted source checks.",
+  "summary": {
+    "A_no_powers_active": {
+      "survival_seconds": 123.35000000001004,
+      "seconds_above_90": 28.483333333333,
+      "maximum_wobble": 0.9627300039703477,
+      "total_loss": 1.5519985741815463,
+      "total_gain": 0.791839113450923,
+      "censored_seeds": []
+    },
+    "A_no_powers_low_input": {
+      "survival_seconds": 247.98888888896866,
+      "seconds_above_90": 80.26666666666347,
+      "maximum_wobble": 0.9921056035466294,
+      "total_loss": 1.6086537105425367,
+      "total_gain": 0.6508453988005753,
+      "censored_seeds": []
+    },
+    "B_retained_equivalent_active": {
+      "survival_seconds": 146.511111111121,
+      "seconds_above_90": 26.899999999999768,
+      "maximum_wobble": 1.0,
+      "total_loss": 3.242239693013133,
+      "total_gain": 2.28422946296521,
+      "censored_seeds": []
+    },
+    "B_retained_equivalent_low_input": {
+      "survival_seconds": 227.57222222229566,
+      "seconds_above_90": 51.3055555555539,
+      "maximum_wobble": 0.9515401158957567,
+      "total_loss": 1.6341960144057734,
+      "total_gain": 0.67814498342665,
+      "censored_seeds": []
+    },
+    "C_historical_screenshot_active": {
+      "survival_seconds": 196.41666666669266,
+      "seconds_above_90": 39.77222222222066,
+      "maximum_wobble": 1.0,
+      "total_loss": 4.4005570336316095,
+      "total_gain": 3.44552441271559,
+      "censored_seeds": []
+    },
+    "C_historical_screenshot_low_input": {
+      "survival_seconds": 234.34444444452333,
+      "seconds_above_90": 53.783333333331534,
+      "maximum_wobble": 0.9515401158957567,
+      "total_loss": 1.6484123665825334,
+      "total_gain": 0.692358348456945,
+      "censored_seeds": []
+    },
+    "D_corrected_equivalent_active": {
+      "survival_seconds": 146.511111111121,
+      "seconds_above_90": 26.899999999999768,
+      "maximum_wobble": 1.0,
+      "total_loss": 3.242239693013133,
+      "total_gain": 2.28422946296521,
+      "censored_seeds": []
+    },
+    "D_corrected_equivalent_low_input": {
+      "survival_seconds": 227.57222222229566,
+      "seconds_above_90": 51.3055555555539,
+      "maximum_wobble": 0.9515401158957567,
+      "total_loss": 1.6341960144057734,
+      "total_gain": 0.67814498342665,
+      "censored_seeds": []
+    },
+    "E_clutch_II_active": {
+      "survival_seconds": 136.60555555557335,
+      "seconds_above_90": 28.483333333333,
+      "maximum_wobble": 0.9627300039703477,
+      "total_loss": 1.6904339761959597,
+      "total_gain": 0.9299627731461464,
+      "censored_seeds": []
+    },
+    "E_clutch_II_low_input": {
+      "survival_seconds": 259.488888888971,
+      "seconds_above_90": 80.26666666666347,
+      "maximum_wobble": 0.9224541039154903,
+      "total_loss": 1.6551467235594266,
+      "total_gain": 0.7001112427713314,
+      "censored_seeds": []
+    },
+    "F_defence_complements_active": {
+      "survival_seconds": 322.605555555591,
+      "seconds_above_90": 57.00555555555397,
+      "maximum_wobble": 0.7038637772698757,
+      "total_loss": 4.0838856166137,
+      "total_gain": 3.12575746897106,
+      "censored_seeds": []
+    },
+    "F_defence_complements_low_input": {
+      "survival_seconds": 247.611111111193,
+      "seconds_above_90": 21.1166666666667,
+      "maximum_wobble": 0.6266053034628724,
+      "total_loss": 1.55438056470541,
+      "total_gain": 0.6237384433207254,
+      "censored_seeds": []
+    },
+    "F_new_roster_clutch_active": {
+      "survival_seconds": 327.26666666669735,
+      "seconds_above_90": 46.916666666673734,
+      "maximum_wobble": 0.9581896970655254,
+      "total_loss": 3.76645580954116,
+      "total_gain": 2.8059889123834867,
+      "censored_seeds": []
+    },
+    "F_new_roster_clutch_low_input": {
+      "survival_seconds": 353.93333333334033,
+      "seconds_above_90": 116.08888888888846,
+      "maximum_wobble": 0.910695600794796,
+      "total_loss": 2.4214726976441368,
+      "total_gain": 1.46223541553521,
+      "censored_seeds": []
+    }
+  },
+  "parent_equivalent_exact": true
+}

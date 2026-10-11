@@ -4,6 +4,8 @@ class_name PowerRuntime
 const PowerCatalog = preload("res://scripts/run_powers.gd")
 const Defence = preload("res://scripts/defence_runtime.gd")
 const GhostRoutes = preload("res://scripts/ghost_circuit_routes.gd")
+const BasePowers = preload("res://scripts/base_power_runtime.gd")
+var base_powers: RefCounted = BasePowers.new()
 var defence: RefCounted = Defence.new()
 var _ghost_routes: RefCounted = GhostRoutes.new()
 var _ghost_index_time: float = -1.0
@@ -79,6 +81,8 @@ const CHAIN_HARD_SEVERITY: float = 0.75
 func setup(battle: Object) -> void:
 	_battle = weakref(battle)
 	defence.setup(self)
+	var seed: Variant = battle.get("seed_value")
+	base_powers.setup(int(seed) if seed != null else 0)
 	time = 0.0
 	_next_event_id = 0
 	_stopped = false
@@ -97,6 +101,8 @@ func setup(battle: Object) -> void:
 	_chain_counts.clear()
 	_eliminated_ids.clear()
 	for fighter: Dictionary in _fighters():
+		PowerCatalog.normalize_retired_ownership(fighter)
+		base_powers.register(fighter)
 		_state(fighter)
 		fighter["redline_time"] = 0.0
 		fighter["iron_comet_time"] = 0.0
@@ -224,6 +230,7 @@ func begin_tick(dt: float) -> void:
 		return
 	time += dt
 	defence.begin_tick(dt)
+	base_powers.begin_tick(_fighters(), dt)
 	for fighter: Dictionary in _fighters():
 		var state: Dictionary = _state(fighter)
 		fighter["anchor_hit_time"] = maxf(0.0, float(fighter.get("anchor_hit_time", 0.0)) - dt)
@@ -286,6 +293,9 @@ func effective_rpm(fighter: Dictionary) -> float:
 	return minf(1.45 + float(fighter.get("runaway_heat", 0.0)) * 0.25, reserve + 0.55)
 
 func attack_multiplier(fighter: Dictionary) -> float:
+	return _existing_attack_multiplier(fighter) * base_powers.attack(fighter)
+
+func _existing_attack_multiplier(fighter: Dictionary) -> float:
 	if _modern(fighter):
 		if not redline_active(fighter): return 1.0
 		if float(_state(fighter)["redline_commit_until"]) > time: return 2.35
@@ -363,7 +373,6 @@ func burst_started(fighter: Dictionary, heading: Vector2, pre_cost_rpm: float) -
 			_record("chain_burst", int(fighter["entity_id"]), int(target["entity_id"]))
 
 func wall_rebound(fighter: Dictionary, outward_speed: float, normal: Vector2, contact_pos: Vector2) -> void:
-	if not mutation(fighter,"iron_comet").is_empty(): return
 	if _stopped or not _live(fighter) or not _has(fighter, "iron_comet") or outward_speed < 110.0:
 		return
 	var state: Dictionary = _state(fighter)
@@ -438,6 +447,7 @@ func movement_control(fighter: Dictionary, direction: Vector2, braking: bool, dt
 		modifiers["acceleration_limit"] = maxf(float(modifiers["acceleration_limit"]), 420.0 if deeper_crossing else 540.0)
 		modifiers["drain"] = float(modifiers["drain"]) * (0.82 if deeper_crossing else 0.55)
 	defence.movement(fighter, modifiers, dt)
+	base_powers.movement(fighter, modifiers)
 	return modifiers
 
 func inverse_mass(fighter: Dictionary) -> float:
@@ -447,7 +457,7 @@ func inverse_mass(fighter: Dictionary) -> float:
 	if mutation(fighter, "dead_centre") == "bulwark": multiplier = 1.0 + pow(charge, 4.0) * 80.0
 	elif _modern(fighter) and charge > 0.0:
 		multiplier = 1.0 + charge * charge * ((5.0 if rank(fighter, "dead_centre") <= 1 else 12.0) + float(fighter.get("anchor_maturity", 0.0)) * 3.0)
-	return 1.0 / (mass * multiplier * defence.mass_multiplier(fighter))
+	return base_powers.displacement(fighter) / (mass * multiplier * defence.mass_multiplier(fighter))
 
 ## The floor connection primarily preserves position. A modest reserve discount
 ## fades before positional hold, so a planted fortress still spends real spin.
@@ -465,6 +475,9 @@ func incoming_rpm_scale(fighter: Dictionary) -> float:
 ## Reserve attrition must not silently retune the accepted stability fantasy.
 ## Incoming wobble keeps the former brace discount and positional Stress curve.
 func incoming_wobble_scale(fighter: Dictionary) -> float:
+	return _existing_incoming_wobble_scale(fighter) * base_powers.wobble(fighter)
+
+func _existing_incoming_wobble_scale(fighter: Dictionary) -> float:
 	if not _modern(fighter) or not _live(fighter) or not _has(fighter, "dead_centre"): return 1.0
 	var charge: float = clampf(float(fighter.get("anchor_charge", 0.0)), 0.0, 1.0) * anchor_efficiency(fighter)
 	var maturity: float = clampf(float(fighter.get("anchor_maturity", 0.0)), 0.0, 1.0)
@@ -786,7 +799,7 @@ func _contact_owner(owner: Dictionary, target: Dictionary, severity: float, norm
 			_request(target, normal * ((48.0 if _small(target) else 18.0) if rank(owner, "impact_wake") >= 2 else (36.0 if _small(target) else 12.0)), _power_cause(cause, "impact_wake", int(owner["entity_id"])))
 		_record("impact_wake", int(owner["entity_id"]), int(target["entity_id"]), event_id)
 		_fx("impact_wake", position, normal, 1.0, {"owner_entity_id": int(owner["entity_id"]), "beast_trigger": true})
-	if _has(owner, "iron_comet") and mutation(owner,"iron_comet").is_empty() and float(state["comet_until"]) > time:
+	if _has(owner, "iron_comet") and float(state["comet_until"]) > time:
 		state["comet_until"] = 0.0
 		owner["iron_comet_time"] = 0.0
 		owner["comet_time"] = 0.0
@@ -1160,6 +1173,7 @@ func _outward(origin: Vector2, target: Vector2, fallback: Vector2) -> Vector2:
 func finish() -> void:
 	_stopped = true
 	defence.finish()
+	base_powers.finish(_fighters())
 	_requests.clear()
 	_next_tick_pulses.clear()
 	_eliminations.clear()
@@ -1221,10 +1235,6 @@ func _orbit_full_carve(fighter: Dictionary) -> void:
 	if status != null and status != "battle": return
 	if float(fighter.get("orbit_charge",0.0)) < 1.0 or Vector2(fighter.vel).length() <= 80.0 or float(_state(fighter).motion_input) <= 0.20: return
 	var rate: float = ORBIT_FULL_REGEN_I if rank(fighter,"orbit_drive") == 1 else ORBIT_FULL_REGEN_II
-	var branch: String = mutation(fighter,"orbit_drive")
-	if not branch.is_empty():
-		if not bool(fighter.get("orbit_flow",false)): return
-		rate = _host().roster.ecology.PERPETUAL_RECOVERY if branch == "perpetual_orbit" else _host().roster.ecology.CENTRIFUGE_RECOVERY
 	var gained: float = _gain(fighter,rate*_tick_dt,"orbit_drive")
 	if gained > 0.0:
 		fighter.energy = fighter.rpm
@@ -1261,10 +1271,10 @@ func public_state(fighter: Dictionary) -> Dictionary:
 	var sink_stored: float = float(fighter.get("sink_charge", 0.0)) if _has(fighter, "impact_sink") else 0.0
 	return {
 		"anchor": {"owned": _has(fighter, "dead_centre"), "charge": float(fighter.get("anchor_charge", 0.0)), "strength": float(fighter.get("anchor_charge", 0.0)) * anchor_efficiency(fighter), "stress": float(fighter.get("anchor_stress", 0.0)), "loaded": float(fighter.get("anchor_load", 0.0)), "venting": bool(fighter.get("anchor_venting", false)), "recovery_remaining": float(fighter.get("anchor_recovery_remaining", 0.0)), "rearm_progress": float(fighter.get("anchor_rearm_progress", 0.0)), "overloaded": bool(_state(fighter).anchor_overloaded), "recovering": bool(_state(fighter).anchor_overloaded), "safe_stress": ANCHOR_STRESS_REENGAGE, "overload_stress": ANCHOR_STRESS_OVERLOAD, "recovery_progress": float(fighter.get("anchor_recovery_progress", 0.0)), "rpm_loss_scale": incoming_rpm_scale(fighter)},
+		"base_powers": base_powers.snapshot(fighter),
 		"orbit": {"owned": _has(fighter, "orbit_drive"), "drive": clampf(float(fighter.get("orbit_charge", 0.0)), 0.0, 1.0), "drifting": bool(fighter.get("drift_active", false)), "mutation":mutation(fighter,"orbit_drive"),"flowing":bool(fighter.get("orbit_flow",false))},
 		"sink": {"owned": _has(fighter, "impact_sink"), "stored": sink_stored, "capacity": sink_capacity, "ratio": clampf(sink_stored / maxf(0.001, sink_capacity), 0.0, 1.0)},
 		"redline": {"owned": _has(fighter, "redline"), "active": redline_active(fighter), "overdrive": overdrive_active(fighter), "heat": float(fighter.get("redline_heat", 0.0)), "excess": maxf(0.0, float(fighter.get("rpm", 0.0)) - 1.0), "remaining": maxf(0.0, float(_state(fighter).redline_until) - time)},
-		"ecology": _host().roster.ecology.diagnostics(fighter) if _host().get("roster") != null and _host().roster.ecology.owns(fighter) else {}
 	}
 
 func _modern_tick(fighter: Dictionary, dt: float) -> void:

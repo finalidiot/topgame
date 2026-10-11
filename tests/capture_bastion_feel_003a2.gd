@@ -13,14 +13,14 @@ class ObservedBattle extends "res://scripts/battle.gd":
 	func apply_power_impulse(target: Dictionary,offered: Vector2,cause: Dictionary) -> void:
 		var before: Vector2=target.vel
 		super.apply_power_impulse(target,offered,cause)
-		if int(cause.get("owner_entity_id",0))==player_entity_id and str(cause.get("kind","")) in ["counterweight_release","return_spring","reactive_counter"]:
+		if int(cause.get("owner_entity_id",0))==player_entity_id and str(cause.get("kind","")) in ["counterweight_release","return_spring"]:
 			delivered.append({"time":elapsed,"target":target.entity_id,"offered":offered,"before_velocity":before,"after_velocity":target.vel,"actual_delta":Vector2(target.vel)-before,"cause":cause.duplicate(true)})
 const LOADOUTS: Dictionary = {
 	"naked":{"ranks":{},"mutations":{}},
 	"counter":{"ranks":{"dead_centre":3,"anchor_exchange":2,"momentum_bank":2},"mutations":{"dead_centre":"counterweight"}},
 	"sink":{"ranks":{"dead_centre":2,"impact_sink":3,"gyro_lock":1},"mutations":{"impact_sink":"return_spring"}},
 	"mixed":{"ranks":{"dead_centre":2,"impact_sink":2,"momentum_bank":2,"iron_comet":2,"crosscut":1},"mutations":{}},
-	"plating":{"ranks":{"crash_guard":3,"momentum_bank":2},"mutations":{"crash_guard":"reactive_plating"}}
+	"guard":{"ranks":{"crash_guard":2,"momentum_bank":2},"mutations":{}}
 }
 var report: String=""
 var plan_path: String=""
@@ -75,7 +75,7 @@ func defaults() -> Array[Dictionary]:
 	for starter: String in ["bastion","breaker","vane"]:
 		output.append({"id":starter+"_naked","seed":421717,"starter":starter,"loadout":"naked","policy":"movement","seconds":16})
 	for seed_value: int in [421,7341,2026]:
-		for loadout: String in ["counter","sink","mixed","plating"]:
+		for loadout: String in ["counter","sink","mixed","guard"]:
 			output.append({"id":loadout+"_"+str(seed_value),"seed":seed_value,"starter":"bastion","loadout":loadout,"policy":"active_defence","seconds":90})
 	return output
 func nearest_full() -> Dictionary:
@@ -136,7 +136,7 @@ func observed_controls(configuration: Dictionary,tick: int,state: Dictionary) ->
 				direction=offset.normalized()*.80;braking=false;bursting=true;phase="aimed_paid_burst_release"
 			elif float(player.get("sink_charge",0))>=15 and gap<62 and speed<=120 and not bool(state.get("last_brake",false)):
 				braking=true;direction=offset.normalized()*.22;phase="fresh_brake_earned_sink_vent"
-			elif configuration.loadout in ["mixed","plating"] and not target.is_empty():
+			elif configuration.loadout in ["mixed","guard"] and not target.is_empty():
 				direction=(offset-velocity*.3).normalized()*.65;phase="mixed_committed_approach"
 				if speed>80 and gap<100 and float(player.cooldown)<=0 and float(player.rpm)>.35: bursting=true;phase="mixed_paid_burst"
 		if radius>155: direction=(-position-velocity*.5).normalized()*.9;braking=speed>90;bursting=false;phase="ordinary_edge_recovery"
@@ -148,18 +148,18 @@ func observed_controls(configuration: Dictionary,tick: int,state: Dictionary) ->
 func simulation() -> Dictionary:
 	return {"battle":capture.snapshot(),"power_time":capture.powers.time,"power_states":capture.powers._states.duplicate(true),
 		"defence":capture.powers.defence.states.duplicate(true),"roster_time":capture.roster.time,"roster":capture.roster.states.duplicate(true),
-		"ecology_time":capture.roster.ecology.time,"ecology":capture.roster.ecology.states.duplicate(true),"events":capture.powers.events.duplicate(true),
+		"events":capture.powers.events.duplicate(true),
 		"traces":capture.powers.traces.duplicate(true),"economy":capture.continuous.economy.snapshot(),"director":capture.continuous.snapshot()}
 func body_reading() -> Dictionary:
 	var player: Dictionary=capture.player_entity()
-	return {"position":player.pos,"velocity":player.vel,"rpm":player.rpm,"wobble":player.wobble,"stored_force":player.get("stored_force",0),"sink_charge":player.get("sink_charge",0),"momentum_charge":player.get("momentum_charge",0),"anchor_stress":player.get("anchor_stress",0),"defence":capture.powers.defence.diagnostics(player),"ecology":capture.roster.ecology.diagnostics(player)}
+	return {"position":player.pos,"velocity":player.vel,"rpm":player.rpm,"wobble":player.wobble,"stored_force":player.get("stored_force",0),"sink_charge":player.get("sink_charge",0),"momentum_charge":player.get("momentum_charge",0),"anchor_stress":player.get("anchor_stress",0),"defence":capture.powers.defence.diagnostics(player)}
 func reading(tick: int,control: Dictionary) -> Dictionary:
 	var player: Dictionary=capture.player_entity()
 	return {"tick":tick,"time":capture.elapsed,"phase":control.phase,"position":player.pos,"velocity":player.vel,"rpm":player.rpm,"wobble":player.wobble,
 		"radius":Vector2(player.pos).length(),"speed":Vector2(player.vel).length(),"anchor_charge":player.get("anchor_charge",0),"anchor_stress":player.get("anchor_stress",0),
 		"anchor_rearm":player.get("anchor_rearm_progress",0),"anchor_remaining":player.get("anchor_recovery_remaining",0),"stored_force":player.get("stored_force",0),
 		"sink_charge":player.get("sink_charge",0),"momentum_charge":player.get("momentum_charge",0),"power_procs":capture.powers.counters.duplicate(),
-		"defence":capture.powers.defence.diagnostics(player),"roster_procs":capture.roster.counters.duplicate(),"ecology":capture.roster.ecology.diagnostics(player),
+		"defence":capture.powers.defence.diagnostics(player),"roster_procs":capture.roster.counters.duplicate(),
 		"economy":capture.continuous.economy.snapshot(),"simulation_sha256":digest(simulation())}
 func hud(stats: Dictionary) -> void:
 	if not is_instance_valid(menus): return

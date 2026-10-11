@@ -73,7 +73,7 @@ func run() -> void:
 		if arg.begins_with("--seeds="):seed_count=int(arg.trim_prefix("--seeds="))
 		if arg=="--require-new":require_new=true
 	if not output.is_absolute_path() or FileAccess.file_exists(output) or seed_count<8 or seed_count>1024:quit(2);return
-	if require_new:check(Powers.ACTIVE_IDS.size()==16 and Powers.VERTICAL_IDS.size()==11 and Powers.MUTATIONS.size()==22,"Final expanded catalogue has sixteen bases, elevenIII families and twenty-two mutations")
+	if require_new:check(Powers.ACTIVE_IDS.size()==22 and Powers.VERTICAL_IDS.size()==7 and Powers.MUTATIONS.size()==14,"Corrected catalogue has twenty-two bases and fourteen accepted mutations")
 	var cases: Array[Dictionary]=[];var groups: Dictionary={};var new_availability: Dictionary={};var actual_replays: int=0
 	for policy: String in Draft.POLICIES:
 		for seed_value: int in range(1,seed_count+1):
@@ -87,8 +87,8 @@ func run() -> void:
 			if seed_value%32==0:await process_frame
 		groups[policy]=group(cases,policy)
 	if require_new:
-		for family: String in Draft.NEW_PAIRS:
-			for branch: String in Draft.NEW_PAIRS[family]:check(int(new_availability.get(branch,0))>0,branch+" is reached by legal deterministic draft policies")
+		for family: String in Draft.RETAINED_PAIRS:
+			for branch: String in Draft.RETAINED_PAIRS[family]:check(int(new_availability.get(branch,0))>0,branch+" remains reachable through legal deterministic draft policies")
 	var forms: int=0
 	for family: String in Powers.ACTIVE_IDS:forms+=2+Powers.mutation_choices(family).size()
 	var result: Dictionary={"label":label,"checks":checks,"failures":failures,"seed_count":seed_count,"policies":Draft.POLICIES,

@@ -230,6 +230,8 @@ static func inspect(output: String) -> Dictionary:
 		if not bool(record.valid): failures.append(str(record.path))
 	var ecology: Dictionary = EcologyProbe.inspect()
 	for failure: String in ecology.failures: failures.append(failure)
+	var base_powers: Dictionary = preload("res://scripts/base_power_package_probe.gd").inspect()
+	for failure: String in base_powers.failures: failures.append(failure)
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file == null: return {"ok":false, "error":"Cannot write the external package asset report."}
 	file.store_string(JSON.stringify({"catalogue_sha256":FileAccess.get_sha256(Catalog.DATA_PATH), "catalogue_json":catalogue_json,
@@ -248,6 +250,7 @@ static func inspect(output: String) -> Dictionary:
 		"combat_audio_json":combat_audio_json,"combat_audio":combat_audio_records,
 		"music_variation_json":variation_json,"music_variation_score_json":FileAccess.get_file_as_string(MUSIC_VARIATION_SCORE),"music_variation_stems":variation_records,"music_asset_metadata":Music.asset_metadata(),
 		"ecology_json":ecology.json,"ecology_textures":ecology.textures,
+		"base_power_art":base_powers,
 		"failures":failures, "read_only_asset_inspection":true}, "\t"))
 	file.flush()
 	var write_error: Error = file.get_error()

@@ -203,7 +203,7 @@ func observe(c: Dictionary) -> Dictionary:
 			if int(event.owner)==1:row.player_semantic_procs[event.kind]=int(row.player_semantic_procs.get(event.kind,0))+1
 		var dt: float=b.elapsed-before; var speed: float=Vector2(p.vel).length();var radius: float=Vector2(p.pos).length()
 		fixed_steps_consistent=fixed_steps_consistent and (absf(dt)<.000001 or absf(dt-Battle.FIXED_DT)<.000001)
-		clocks_consistent=clocks_consistent and absf(b.powers.time-b.elapsed)<.000001 and absf(b.powers.defence.time-b.elapsed)<.000001 and absf(b.roster.time-b.elapsed)<.000001 and absf(b.roster.ecology.time-b.elapsed)<.000001
+		clocks_consistent=clocks_consistent and absf(b.powers.time-b.elapsed)<.000001 and absf(b.powers.defence.time-b.elapsed)<.000001 and absf(b.roster.time-b.elapsed)<.000001
 		row.finite=row.finite and Vector2(p.pos).is_finite() and Vector2(p.vel).is_finite() and is_finite(float(p.rpm))
 		row.movement_distance+=position.distance_to(p.pos);row.speed_integral+=speed*dt;row.radius_integral+=radius*dt;row.wobble_integral+=float(p.wobble)*dt
 		row.anchor_stress_integral+=float(p.get("anchor_stress",0))*dt
@@ -245,7 +245,7 @@ func observe(c: Dictionary) -> Dictionary:
 	var duration: float=b.elapsed;var closure: float=absf(float(row.initial_rpm)-lost+gained-float(p.rpm))
 	check(row.finite,"Finite actual physical states");check(closure<.000001,"Actual source RPM ledger closes")
 	check(fixed_steps_consistent,"Every actual advancing step is60Hz; impact holds advance no physical clock")
-	check(clocks_consistent,"Power/defence/roster/ecology clocks match actual battle throughout")
+	check(clocks_consistent,"Power/defence/roster clocks match actual battle throughout")
 	check(not event_overflow,"Owner semantic event telemetry never drops per-tick additions")
 	check(absf(float(row.idle_seconds)+float(row.active_control_seconds)-duration)<.000001,"True input-idle and active-control seconds partition advancing time")
 	check(b.accepted_player_bursts==roundi(float(economy.losses.burst)/.013),"Observed accepted player Burst hooks match canonical source spend")

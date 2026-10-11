@@ -44,7 +44,7 @@ func acquire(family: String, branch: String) -> void:
 			check(run.choose_mutation(token,branch),branch+" commits the selected legal sibling")
 			check(b.acquire_run_power(family,3,branch),branch+" installs through the production Battle method")
 			installed.append({"ordinal":ordinal+1,"token":token,"id":family,"rank":3,"branch":branch})
-			var other: String=str(Draft.NEW_PAIRS[family][1] if branch==Draft.NEW_PAIRS[family][0] else Draft.NEW_PAIRS[family][0])
+			var other: String=str(Draft.RETAINED_PAIRS[family][1] if branch==Draft.RETAINED_PAIRS[family][0] else Draft.RETAINED_PAIRS[family][0])
 			check(not run.choose_mutation(token,other) and not b.acquire_run_power(family,3,other),branch+" excludes its sibling and duplicate acquisition")
 			check(not Powers.can_progress(family,3,branch) and Powers.get_offer(family,3,branch).is_empty(),branch+" completes the family rather than reopening a fourth investment")
 			check(not family in run.pending_offer,branch+" is absent from subsequent normal offers")
@@ -71,15 +71,15 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):output=arg.trim_prefix("--report=")
 	if not output.is_absolute_path() or FileAccess.file_exists(output):quit(2);return
-	check(Powers.ACTIVE_IDS.size()==16 and Powers.VERTICAL_IDS.size()==11,"Sixteen bases and eleven developed families")
-	check(Powers.MUTATIONS.size()==22 and Powers.investment_capacity()==43 and Powers.FAMILY_CAP==7,"Twenty-two sibling choices retain seven machine slots and forty-three catalogue investments")
+	check(Powers.ACTIVE_IDS.size()==22 and Powers.VERTICAL_IDS.size()==7,"Twenty-two bases retain seven accepted mutation families")
+	check(Powers.MUTATIONS.size()==14 and Powers.investment_capacity()==51 and Powers.FAMILY_CAP==7,"Fourteen accepted siblings and six new base families retain seven machine slots")
 	var forms: int=0
 	for id: String in Powers.ACTIVE_IDS:
 		forms+=2+Powers.mutation_choices(id).size()
-	check(forms==54,"Fifty-four visible base/rank/branch forms")
-	for family: String in Draft.NEW_PAIRS:
-		check(Powers.mutation_choices(family)==Draft.NEW_PAIRS[family],family+" matches the agreed behavioral pair")
-		for branch: String in Draft.NEW_PAIRS[family]:acquire(family,branch)
+	check(forms==58,"Fifty-eight visible base/rank/accepted-branch forms")
+	for family: String in Draft.RETAINED_PAIRS:
+		check(Powers.mutation_choices(family)==Draft.RETAINED_PAIRS[family],family+" preserves the accepted behavioral pair")
+		for branch: String in Draft.RETAINED_PAIRS[family]:acquire(family,branch)
 	FileAccess.open(output,FileAccess.WRITE).store_string(JSON.stringify(Draft.portable({"checks":checks,"failures":failures,"acquisitions":rows,
-		"scope":"All eight new branches through genuine seeded RunContext offers, current claim IDs and production acquire_run_power during paused READY. Attributed XP events are declared level-queue fixtures, not natural won combat. No Main/profile/collection opened; no live physics or balance claim."}),"\t"))
+		"scope":"All fourteen retained branches through genuine seeded RunContext offers, current claim IDs and production acquire_run_power during paused READY. Obsolete eight-branch expectations archived as text; previous JSON evidence preserved. Attributed XP events are declared level-queue fixtures, not natural won combat. No Main/profile/collection opened; no live physics or balance claim."}),"\t"))
 	print("MUTATION_ACQUISITION_%s checks=%d failures=%d"%["PASS" if failures.is_empty() else "FAIL",checks,failures.size()]);quit(0 if failures.is_empty() else 1)

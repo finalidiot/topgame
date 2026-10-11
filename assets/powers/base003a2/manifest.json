@@ -1,0 +1,47 @@
+{
+	"card_frames": 6,
+	"cards": {
+		"group": "cards",
+		"path": "res://assets/powers/base003a2/cards.svg",
+		"size": [
+			384,
+			768
+		],
+		"source_sha256": "3ef87081e8d7331a42034c7419e1c95f6ca81767aecec5779385005869b8963d",
+		"valid": true,
+		"visible_rgba_sha256": "138c12dbd51719b5f2f7d999a14587cbd0b6da367dc6efb863c8d73ebe513767"
+	},
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"families": [
+		"crimson_impact",
+		"azure_stability",
+		"emerald_endurance",
+		"true_bearing",
+		"last_stand",
+		"prismatic_current"
+	],
+	"icons": {
+		"group": "icons",
+		"path": "res://assets/powers/base003a2/icons.svg",
+		"size": [
+			192,
+			16
+		],
+		"source_sha256": "d9cd491b8c01f9558db7179d9bc6bd195809c7eee9e8ce530a56567f000d9ede",
+		"valid": true,
+		"visible_rgba_sha256": "12730ac05e95894c87750a592980387fd5abdce8c672ca5c213fabdb3f987d3c"
+	},
+	"schema": "003a2-native-vector-identity-v1",
+	"source": "editable cards.svg and icons.svg; visible imported RGBA fingerprint",
+	"transparent_rgb_normalized": true
+}

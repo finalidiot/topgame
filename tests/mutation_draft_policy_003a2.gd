@@ -4,24 +4,24 @@ const Run = preload("res://scripts/run_context.gd")
 const Parts = preload("res://scripts/parts.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Seeds = preload("res://scripts/seed_utils.gd")
-const NEW_PAIRS: Dictionary = {
-	"iron_comet":["wallbreaker","ricochet_engine"],
-	"orbit_drive":["centrifuge","perpetual_orbit"],
-	"momentum_bank":["flywheel_release","countersteer"],
-	"crash_guard":["reactive_plating","sacrificial_damper"]
+const RETAINED_PAIRS: Dictionary = {
+	"redline":["runaway","breakneck"],"dead_centre":["bulwark","counterweight"],
+	"afterimage":["ghost_circuit","slipstream"],"high_gear":["terminal_velocity","flow_state"],
+	"gyro_lock":["keel","flywheel"],"impact_sink":["shock_bleed","return_spring"],
+	"anchor_exchange":["deep_footing","slip_anchor"]
 }
 const POLICIES: Dictionary = {
-	"aggression":["redline","iron_comet","momentum_bank","predator_line","chain_impact","high_gear","crosscut"],
-	"fortress":["crash_guard","dead_centre","impact_sink","anchor_exchange","gyro_lock","clutch","momentum_bank"],
-	"technique":["orbit_drive","momentum_bank","iron_comet","afterimage","crosscut","gyro_lock","high_gear"],
-	"endurance":["orbit_drive","clutch","gyro_lock","impact_sink","dead_centre","anchor_exchange","crash_guard"],
+	"aggression":["redline","crimson_impact","iron_comet","predator_line","chain_impact","high_gear","prismatic_current"],
+	"fortress":["azure_stability","dead_centre","impact_sink","true_bearing","anchor_exchange","gyro_lock","last_stand"],
+	"technique":["orbit_drive","momentum_bank","prismatic_current","afterimage","crosscut","gyro_lock","high_gear"],
+	"endurance":["emerald_endurance","clutch","last_stand","impact_sink","true_bearing","anchor_exchange","prismatic_current"],
 	"hybrid":[]
 }
 const PREFERRED_BRANCHES: Dictionary = {
-	"aggression":{"iron_comet":"wallbreaker","orbit_drive":"centrifuge","momentum_bank":"flywheel_release","crash_guard":"reactive_plating"},
-	"fortress":{"crash_guard":"sacrificial_damper","orbit_drive":"perpetual_orbit","momentum_bank":"countersteer","iron_comet":"ricochet_engine"},
-	"technique":{"iron_comet":"ricochet_engine","orbit_drive":"centrifuge","momentum_bank":"countersteer","crash_guard":"reactive_plating"},
-	"endurance":{"orbit_drive":"perpetual_orbit","crash_guard":"sacrificial_damper","momentum_bank":"countersteer","iron_comet":"ricochet_engine"}
+	"aggression":{"redline":"breakneck","high_gear":"terminal_velocity"},
+	"fortress":{"dead_centre":"bulwark","gyro_lock":"keel","anchor_exchange":"deep_footing"},
+	"technique":{"afterimage":"ghost_circuit","high_gear":"flow_state","anchor_exchange":"slip_anchor"},
+	"endurance":{"gyro_lock":"flywheel","impact_sink":"shock_bleed","afterimage":"slipstream"}
 }
 
 static func seeded_opening(family: String) -> int:

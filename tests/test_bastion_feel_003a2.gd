@@ -33,7 +33,7 @@ func physical(b: Node2D) -> Dictionary:
 		"result":b.last_result.duplicate(true),"pairs":b._pair_cooldowns.duplicate(true),
 		"powers":b.powers._states.duplicate(true),"power_events":b.powers.events.duplicate(true),
 		"defence":b.powers.defence.states.duplicate(true),"roster":b.roster.states.duplicate(true),
-		"ecology":b.roster.ecology.states.duplicate(true),"economy":b.continuous.economy.snapshot(),
+		"economy":b.continuous.economy.snapshot(),
 		"director":b.continuous.director.history.duplicate(true)}
 func make_run(acceleration: float,seed_value: int,invested: bool) -> Node2D:
 	var b: Node2D=Battle.new();root.add_child(b);b.visible=false;b.set_process(false);b.set_physics_process(false)
@@ -49,7 +49,7 @@ func make_run(acceleration: float,seed_value: int,invested: bool) -> Node2D:
 	b.player_entity().handling.acceleration=acceleration
 	return b
 func clock(b: Node2D) -> void:
-	check(near(b.elapsed,b.powers.time) and near(b.elapsed,b.roster.time) and near(b.elapsed,b.roster.ecology.time) and near(b.elapsed,b.powers.defence.time),"All live mechanics use the same advancing fixed-tick epoch")
+	check(near(b.elapsed,b.powers.time) and near(b.elapsed,b.roster.time) and near(b.elapsed,b.powers.defence.time),"All live mechanics use the same advancing fixed-tick epoch")
 func handling() -> void:
 	var chosen: Dictionary=Starters.HANDLING.bastion.duplicate(true)
 	var unchanged: Dictionary=chosen.duplicate(true);unchanged.acceleration=BASE_ACCELERATION
@@ -151,13 +151,6 @@ func earned_states() -> void:
 		counter.fixture_step(Vector2.RIGHT*.7,true,false)
 		check(int(counter.powers.counters.get("counterweight_release",0))==1,"Empty/cooldown Burst cannot repeat Counterweight release")
 		clock(counter);counter.free()
-		var reactive: Node2D=unit("crash_guard","reactive_plating",owner);p=reactive.entity(owner)
-		actual_hit(reactive,owner)
-		check(float(p.reactive_force)>0.0 and int(reactive.roster.ecology.counters.get("reactive_charge",0))==1,"A true canonical heavy incoming contact earns the short plating window")
-		check(int(reactive.roster.ecology.counters.get("reactive_counter",0))==0,"The charge contact cannot spend its own newly earned counter")
-		for tick: int in range(60):reactive.fixture_step(Vector2.ZERO,false,false)
-		check(float(p.reactive_force)==0.0 and int(reactive.roster.ecology.counters.get("reactive_counter",0))==0,"Unused plating expires without an automatic counter")
-		clock(reactive);reactive.free()
 
 func audio() -> void:
 	var sources: Dictionary={}
