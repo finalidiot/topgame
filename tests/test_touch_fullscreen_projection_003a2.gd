@@ -56,7 +56,7 @@ func live() -> void:
 func pose() -> Dictionary:
 	var player: Dictionary=game.battle.player_entity()
 	return {"pos":player.pos,"vel":player.vel,"rpm":player.rpm,"elapsed":game.battle.elapsed,
-		"power_time":game.battle.powers.time,"roster_time":game.battle.roster.time,"ecology_time":game.battle.roster.ecology.time}
+		"power_time":game.battle.powers.time,"roster_time":game.battle.roster.time}
 func rect_matches(values: Array, actual: Rect2) -> bool:
 	if values.size()!=4:return false
 	var expected: Array=[actual.position.x,actual.position.y,actual.size.x,actual.size.y]

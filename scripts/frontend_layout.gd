@@ -43,15 +43,11 @@ static func desktop(canvas_size: Vector2, screen_id: String, requested_safe: Rec
 				regions["audio"]=Rect2(body.position,Vector2(body.size.x,(body.size.y-gap)*.5))
 				regions["comfort"]=Rect2(Vector2(body.position.x,regions.audio.end.y+gap),regions.audio.size)
 				regions["controls"]=Rect2()
-			elif large:
+			else:
 				var width: float = (body.size.x-gap*2)/3
 				regions["audio"]=Rect2(body.position,Vector2(width,body.size.y))
 				regions["comfort"]=Rect2(body.position+Vector2(width+gap,0),Vector2(width,body.size.y))
 				regions["controls"]=Rect2(body.position+Vector2((width+gap)*2,0),Vector2(width,body.size.y))
-			else:
-				regions["audio"]=regions.left
-				regions["comfort"]=Rect2(regions.right.position,Vector2(half,(body.size.y-gap)*.58))
-				regions["controls"]=Rect2(Vector2(regions.right.position.x,regions.comfort.end.y+gap),Vector2(half,body.end.y-regions.comfort.end.y-gap))
 		"collection_workshop","garage":
 			if compact:
 				regions["station"]=Rect2(body.position,Vector2(body.size.x*.36,body.size.y))
@@ -111,8 +107,19 @@ static func map_rect(area: Rect2, reference: Rect2, destination: Rect2) -> Rect2
 	return Rect2(destination.position+(area.position-reference.position)*scalar,area.size*scalar)
 
 static func modal_scale(canvas_size: Vector2, screen_id: String) -> float:
-	if screen_id=="pause": return 1.0
 	return minf(1.5,minf(maxf(1,canvas_size.x-160)/640,maxf(1,canvas_size.y-120)/360))
+
+static func pause_overlay(canvas_size: Vector2, requested_safe: Rect2 = Rect2()) -> Dictionary:
+	var layout: Dictionary = desktop(canvas_size,"pause",requested_safe)
+	var safe: Rect2 = layout.safe_rect
+	var width: float = maxf(640,minf(safe.size.x*.85,safe.size.x-32))
+	var height: float = maxf(360,minf(safe.size.y*.88,safe.size.y-32))
+	width = minf(width,safe.size.x)
+	height = minf(height,safe.size.y)
+	layout.frame_rect = Rect2(safe.position+(safe.size-Vector2(width,height))*.5,Vector2(width,height))
+	layout.presentation_class = "modal"
+	layout.presentation_policy = "pause_overlay"
+	return layout
 
 
 const RUN_OVERLAYS: Array[String] = ["reward","mutation","level_up","acquisition"]

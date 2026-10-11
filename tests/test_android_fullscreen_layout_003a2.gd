@@ -204,24 +204,24 @@ func draft_fixture() -> void:
 	# An explicitly legal pending RankIII choice isolates the same actual
 	# RunContext/Main handlers; natural XP acquisition is not being claimed.
 	game._clear_run(); game.run_context.start(game.collection.equipped_build(),421,"vane")
-	game.run_context._owned_power_ids.assign(["orbit_drive","afterimage","momentum_bank"])
-	game.run_context._power_ranks = {"orbit_drive":2,"afterimage":1,"momentum_bank":1}
-	game.run_context._pending_offer.assign(["orbit_drive","afterimage","momentum_bank"])
+	game.run_context._owned_power_ids.assign(["high_gear","afterimage","momentum_bank"])
+	game.run_context._power_ranks = {"high_gear":2,"afterimage":1,"momentum_bank":1}
+	game.run_context._pending_offer.assign(["high_gear","afterimage","momentum_bank"])
 	game.run_context._draft_queue.assign([{"id":"draft/fullscreen_fixture","kind":"level","level":5}])
 	game._draft_resume_origin = "starting"; game.mode = "run"; game._show_reward()
 	await audit_screen("ability_draft","reward")
 	var choice: Button = button("choose_power")
 	for node: Node in descendants(game.menus):
-		if node is Button and node.get_meta("power_id","") == "orbit_drive": choice = node; break
+		if node is Button and node.get_meta("power_id","") == "high_gear": choice = node; break
 	check(is_instance_valid(choice),"Real RankIII eligible card exists")
 	if is_instance_valid(choice): await tap("choose_power",choice.get_meta("payload"))
 	await audit_screen("mutation_draft","mutation")
-	check(game.run_context.pending_mutation_offer == Powers.mutation_choices("orbit_drive"),"Both actual legal siblings are visible")
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==2 and game.run_context.power_mutations.is_empty(),"Upgrade contact and release cannot preselect either mutation")
+	check(game.run_context.pending_mutation_offer == Powers.mutation_choices("high_gear"),"Both actual legal siblings are visible")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==2 and game.run_context.power_mutations.is_empty(),"Upgrade contact and release cannot preselect either mutation")
 	var mutate: Button = button("choose_mutation")
 	if is_instance_valid(mutate): await tap("choose_mutation",mutate.get_meta("payload"))
 	await audit_screen("acquisition","acquisition")
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==3,"One actual RankIII claim persists in the temporary Run")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==3,"One actual RankIII claim persists in the temporary Run")
 	game._clear_run(); game._title()
 func navigation() -> void:
 	game._title_gate(); await audit_screen("title","title_gate")
@@ -264,7 +264,7 @@ func state(b: Node2D) -> Dictionary:
 	var entities: Array[Dictionary] = []
 	for actor: Dictionary in b.fighters:
 		var row: Dictionary = {}
-		for key: String in ["entity_id","owner_id","team_id","combatant_type","build","pos","vel","rpm","cooldown","burst_time","alive","outcome","powers","power_ranks","power_mutations","orbit_charge","orbit_flow","momentum_charge","ecology_commit_time","ecology_heading","reactive_force","reactive_time","damper_time","comet_time","ricochet_count","pilot"]:
+		for key: String in ["entity_id","owner_id","team_id","combatant_type","build","pos","vel","rpm","cooldown","burst_time","alive","outcome","powers","power_ranks","power_mutations","orbit_charge","orbit_flow","momentum_charge","pilot"]:
 			row[key] = actor.get(key,null)
 		entities.append(row)
 	var ai_rng: Dictionary = {}
@@ -273,17 +273,16 @@ func state(b: Node2D) -> Dictionary:
 		"simulation_rng":str(b._simulation_rng.state),"ai_rng":ai_rng,"pair_cooldowns":b._pair_cooldowns,"hit_stop":b._hit_stop,
 		"powers":{"time":b.powers.time,"states":b.powers._states,"events":b.powers.events,"counters":b.powers.counters,"traces":b.powers.traces},
 		"roster":{"time":b.roster.time,"states":b.roster.states,"counters":b.roster.counters},
-		"ecology":{"time":b.roster.ecology.time,"states":b.roster.ecology.states,"counters":b.roster.ecology.counters},
 		"defence":{"time":b.powers.defence.time,"states":b.powers.defence.states,"counters":b.powers.defence.counters},"progression":seen_progression}
 func battle_replay() -> void:
 	seen_progression.clear()
 	game._clear_run(); game.mode = "duel"; game.screen = "battle"; game.battle.visible = true; game.combat_frame.visible = true
 	var descriptor: Dictionary = {"opponent_build":Starters.build_for("bastion"),"difficulty":3,"seed":421,"live_time_limit":60.0,
 		"player_power_ids":["iron_comet","orbit_drive","momentum_bank","afterimage","chain_impact","impact_sink"],
-		"player_power_ranks":{"iron_comet":3,"orbit_drive":3,"momentum_bank":3,"afterimage":3,"chain_impact":2,"impact_sink":2},
-		"player_power_mutations":{"iron_comet":"wallbreaker","orbit_drive":"centrifuge","momentum_bank":"flywheel_release","afterimage":"ghost_circuit"},
-		"opponent_power_ids":["crash_guard","orbit_drive","redline"],"opponent_power_ranks":{"crash_guard":3,"orbit_drive":3,"redline":2},
-		"opponent_power_mutations":{"crash_guard":"reactive_plating","orbit_drive":"perpetual_orbit"}}
+		"player_power_ranks":{"iron_comet":2,"orbit_drive":2,"momentum_bank":2,"afterimage":3,"chain_impact":2,"impact_sink":2},
+		"player_power_mutations":{"afterimage":"ghost_circuit"},
+		"opponent_power_ids":["crash_guard","orbit_drive","redline"],"opponent_power_ranks":{"crash_guard":2,"orbit_drive":2,"redline":2},
+		"opponent_power_mutations":{}}
 	game.battle.begin_encounter(Starters.build_for("vane"),descriptor); game.battle.set_physics_process(false)
 	var ticks: Array[String] = []; var samples: Array[Dictionary] = []; var inputs: Array[Dictionary] = []
 	for tick: int in range(1200):

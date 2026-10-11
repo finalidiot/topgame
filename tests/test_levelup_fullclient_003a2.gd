@@ -60,7 +60,7 @@ func simulation() -> Dictionary:
 	return {"battle":game.battle.snapshot(),"power_time":game.battle.powers.time,
 		"power_states":game.battle.powers._states.duplicate(true),"traces":game.battle.powers.traces.duplicate(true),"events":game.battle.powers.events.duplicate(true),
 		"defence":game.battle.powers.defence.states.duplicate(true),"roster_time":game.battle.roster.time,"roster":game.battle.roster.states.duplicate(true),
-		"ecology_time":game.battle.roster.ecology.time,"ecology":game.battle.roster.ecology.states.duplicate(true),"director":game.battle.continuous.snapshot()}
+		"director":game.battle.continuous.snapshot()}
 func controls() -> Dictionary:
 	var cards: Array=[]
 	for node: Node in descendants(game.menus):
@@ -229,8 +229,8 @@ func prepare_case(size: Vector2i, name: String, is_mobile: bool = false) -> void
 	check(bool(game.collection.initialize_starter("vane").ok),"Normal starter ownership commits only the new isolated save")
 	if native: DisplayServer.window_set_title("Spinning Metal / ISOLATED LEVEL-UP FULL-CLIENT QA / "+case_id)
 	game._clear_run();game.run_context.start(game.collection.equipped_build(),421717,"vane")
-	game.run_context._owned_power_ids.assign(["orbit_drive","afterimage","momentum_bank"])
-	game.run_context._power_ranks={"orbit_drive":2,"afterimage":1,"momentum_bank":1}
+	game.run_context._owned_power_ids.assign(["high_gear","afterimage","momentum_bank"])
+	game.run_context._power_ranks={"high_gear":2,"afterimage":1,"momentum_bank":1}
 	game.run_context._pending_offer.clear();game.run_context._draft_queue.clear()
 	game._launch_run_encounter();game.battle.set_physics_process(false)
 	var ticks: int=0
@@ -239,15 +239,15 @@ func prepare_case(size: Vector2i, name: String, is_mobile: bool = false) -> void
 	for tick: int in range(12): game.battle.test_step(Physics.FIXED_DT,Vector2(.3,.1),false,false)
 	check(game.battle.battle_status=="battle","Actual initial Run solver entered combat before presentation fixture")
 	game.battle.set_paused(true);game._draft_resume_origin="battle"
-	game.run_context._pending_offer.assign(["orbit_drive","afterimage","momentum_bank"])
+	game.run_context._pending_offer.assign(["high_gear","afterimage","momentum_bank"])
 	game.run_context._draft_queue.assign([{"id":"draft/levelup_fullclient/"+case_id,"kind":"level","level":5}])
 	game.screen="level_up";game._level_up_remaining=.18;game.menus.show_level_up(5)
 func pause_regression() -> void:
 	game.screen="pause";game.pause_origin="reward";game.menus.show_pause(true)
 	await settle(5)
 	var snap: Dictionary=game.menus.presentation_snapshot()
-	check(snap.presentation_class=="modal" and str(snap.get("presentation_policy",""))=="modal","Pause retains accepted modal policy")
-	if not mobile: check(snap.root_scale==Vector2.ONE and snap.root_rect.is_equal_approx(Rect2((Vector2(snap.canvas_size)-Vector2(640,360))*.5,Vector2(640,360))),"Desktop Pause remains unchanged scale-one 640×360 panel")
+	check(snap.presentation_class=="modal" and str(snap.get("presentation_policy",""))==("modal" if mobile else "pause_overlay"),"Pause uses the current desktop overlay and retained mobile policy")
+	if not mobile: check(snap.root_scale==Vector2.ONE and snap.root_rect.is_equal_approx(Rect2(Vector2.ZERO,Vector2(snap.canvas_size))),"Desktop Pause reflows its controls across an independent full-client root")
 	inputs.append({"case":case_id,"type":"pause_regression","presentation":snap,"simulation_sha256":digest(simulation())})
 func navigation() -> void:
 	if case_id=="native_maximized":
@@ -257,7 +257,7 @@ func navigation() -> void:
 		check(before==digest(simulation()),"Native maximise cannot alter initial paused Run")
 	await audit("level_up");await phase("LEVEL UP / FULL CLIENT",60)
 	game._show_reward();await audit("reward",3)
-	var desired: Button=button("choose_power","orbit_drive")
+	var desired: Button=button("choose_power","high_gear")
 	await inspect_card(desired);await reconnect_proof()
 	if not mobile:
 		var original: Vector2i=root.size
@@ -278,20 +278,20 @@ func navigation() -> void:
 	check(frozen==digest(simulation()),case_id+" / reroll preserves actual frozen combat state")
 	# Re-present the declared legal offer after measuring the one real reroll.
 	# No new currency/pickup is injected and the revised draft identity is kept.
-	game.run_context._pending_offer.assign(["orbit_drive","afterimage","momentum_bank"]);game._show_reward();await settle(4)
-	await click(button("choose_power","orbit_drive"))
-	check(game.screen=="mutation" and game.run_context.pending_mutation_offer==Powers.mutation_choices("orbit_drive"),case_id+" / actual Rank II choice opens both legal siblings")
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==2 and game.run_context.power_mutations.is_empty(),case_id+" / parent pointer release cannot preselect either mutation")
+	game.run_context._pending_offer.assign(["high_gear","afterimage","momentum_bank"]);game._show_reward();await settle(4)
+	await click(button("choose_power","high_gear"))
+	check(game.screen=="mutation" and game.run_context.pending_mutation_offer==Powers.mutation_choices("high_gear"),case_id+" / actual Rank II choice opens both legal siblings")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==2 and game.run_context.power_mutations.is_empty(),case_id+" / parent pointer release cannot preselect either mutation")
 	check(frozen==digest(simulation()),case_id+" / opening mutation cannot advance or acquire a power before choice")
 	await audit("mutation",2);await inspect_card(button("choose_mutation"));await reconnect_proof();await phase("TWO MUTATIONS / INDEPENDENT CHOICE",110)
 	if mobile:
-		var read: Button=game.menus._content.get_node_or_null("ReadPower_orbit_drive")
+		var read: Button=game.menus._content.get_node_or_null("ReadPower_high_gear")
 		var ranks: Dictionary=game.run_context.power_ranks
 		await click(read)
 		check(game.screen=="mutation" and game.run_context.power_ranks==ranks,"Accepted Android READ is distinct from mutation commitment")
 	await click(button("choose_mutation"))
-	check(game.screen=="acquisition" and int(game.run_context.power_ranks.get("orbit_drive",0))==3,case_id+" / one actual mutation claim resolves to acquisition")
-	check(game.battle.player_entity().get("power_ranks",{}).get("orbit_drive",0)==3,case_id+" / actual in-run mutation reaches owned player state once")
+	check(game.screen=="acquisition" and int(game.run_context.power_ranks.get("high_gear",0))==3,case_id+" / one actual mutation claim resolves to acquisition")
+	check(game.battle.player_entity().get("power_ranks",{}).get("high_gear",0)==3,case_id+" / actual in-run mutation reaches owned player state once")
 	await audit("acquisition");await phase("LOCKED IN / REAL AUTHORED ACQUISITION",110)
 	await pause_regression()
 func valid_paths() -> bool:

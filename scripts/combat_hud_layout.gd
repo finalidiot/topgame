@@ -79,7 +79,7 @@ static func responsive(canvas_size: Vector2, mobile: bool = false, safe_rect: Re
 			"burst":Rect2(86,bottom_y,burst_width,28),
 			"progress":Rect2(progress_x,bottom_y,extent.x-86.0-progress_x,28),
 			"state_left":Rect2(left_rail,Vector2(rail_width,144)),
-			"state_right":Rect2(right_rail,Vector2(rail_width,144))},
+			"state_right":Rect2(right_rail,Vector2(rail_width,180))},
 		"nearest_neighbour":true,"world_dimensions_changed":false,"mobile_layout":mobile}
 
 ## EXPAND projection: one scalar covers the physical client, with at most one
@@ -155,7 +155,7 @@ static func _mobile_reference(canvas_size: Vector2, requested_safe: Rect2 = Rect
 			"pressure":Rect2(right_x,safe.position.y+6,rail_width,48),
 			"clock":Rect2(left_x,safe.position.y+60,rail_width,48),
 			"state_left":Rect2(left_x,safe.position.y+146,rail_width,144),
-			"state_right":Rect2(right_x,safe.position.y+66,rail_width,144),
+			"state_right":Rect2(right_x,safe.position.y+66,rail_width,180),
 			"impact":Rect2(left_x,safe.position.y+296,rail_width,44),
 			"burst":Rect2(right_x,bottom-214,rail_width,28),
 			"progress":Rect2(right_x,bottom-180,rail_width,40),

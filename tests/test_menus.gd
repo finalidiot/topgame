@@ -148,8 +148,8 @@ func _test_reward_cards() -> void:
 			check(menus.presentation_snapshot().safe_rect.encloses(card.get_global_rect()), "Reward card remains inside the actual full-client safe overlay")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
-			var focus: StyleBoxTexture = card.get_theme_stylebox("focus") as StyleBoxTexture
-			check(focus != null and focus.texture != null and focus.modulate_color.a > 0 and not focus.texture.get_image().is_invisible(), "Card has a visible authored focus frame")
+			var focus: StyleBoxFlat = card.get_theme_stylebox("focus") as StyleBoxFlat
+			check(focus != null and focus.border_color == Menus.AbilityCardStyle.FOCUS and focus.border_width_left >= 4 and focus.shadow_color == Menus.AbilityCardStyle.FOCUS_SEPARATOR, "Card has the corrected universal focus frame and dark separator")
 		check(_find_label(menus, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP]) != null, "Draft retains the current family capacity beside the fixed inspection")
 		await _key(KEY_LEFT)
 		check(root.gui_get_focus_owner() == cards[2], "Left key wraps first card to third")

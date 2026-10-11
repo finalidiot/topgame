@@ -5,6 +5,8 @@ const BASE_ACCENT: Color = Color("bdcbd3")
 const UPGRADE_ACCENT: Color = Color("64d8ef")
 const MUTATION_ACCENT: Color = Color("d49bf1")
 const BASE_BORDER: Color = Color("526776")
+const FOCUS: Color = Color("fff7d6")
+const FOCUS_SEPARATOR: Color = Color("080f17")
 
 static func get_card_tier_style(rank: int = 1, mutation: String = "") -> Dictionary:
 	var tier: String = "mutation" if rank >= 3 or not mutation.is_empty() else ("rank_ii" if rank == 2 else "power")
@@ -21,6 +23,9 @@ static func frame_style(style: Dictionary, focused: bool = false) -> StyleBoxFla
 	frame.bg_color = Color(0, 0, 0, 0)
 	frame.draw_center = false
 	frame.anti_aliasing = false
-	frame.border_color = style.accent_color if focused else style.border_color
-	frame.set_border_width_all(int(style.focus_width if focused else style.border_width))
+	frame.border_color = FOCUS if focused else style.border_color
+	frame.set_border_width_all(4 if focused else int(style.border_width))
+	if focused:
+		frame.shadow_color = FOCUS_SEPARATOR
+		frame.shadow_size = 3
 	return frame

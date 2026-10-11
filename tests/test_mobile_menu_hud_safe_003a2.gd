@@ -27,11 +27,11 @@ func stats() -> Dictionary:
 	return {"player_name":"BASTION","starter_id":"bastion","player_rpm":1.18,"player_rpm_value":10620,"overdrive_active":true,
 		"enemy_name":"BALLAST ELITE","enemy_rpm":0.9,"elapsed":887.0,"status":"battle","is_run":true,"continuous_run":true,
 		"level":19,"xp":241,"xp_threshold":460,"burst_cooldown":2.7,"burst_ready":false,"rerolls":2,
-		"owned_power_ids":FAMILY_IDS.duplicate(),"power_ranks":{"dead_centre":3,"impact_sink":2,"redline":2,"orbit_drive":3,"iron_comet":3,"momentum_bank":3,"crash_guard":3},
-		"power_mutations":{"dead_centre":"counterweight","orbit_drive":"centrifuge","iron_comet":"wallbreaker","momentum_bank":"countersteer","crash_guard":"reactive_plating"},
+		"owned_power_ids":FAMILY_IDS.duplicate(),"power_ranks":{"dead_centre":3,"impact_sink":2,"redline":2,"orbit_drive":2,"iron_comet":2,"momentum_bank":2,"crash_guard":2},
+		"power_mutations":{"dead_centre":"counterweight"},
 		"impact_confirmation":"ELITE RING OUT","run_state":{"director":true,"threat_number":124,"phase":"active","next_at":890.0,"census":{"full":6,"active_full":6,"small":12,"pressure":21.3},"limits":{"tier":9,"budget":25.0},"callout":"ELITE ENTERING","calm":false,"threats_cleared":123},
 		"power_state":{"anchor":{"owned":true,"strength":0.76,"stress":0.72},"sink":{"owned":true,"stored":115,"capacity":150,"ratio":115.0/150.0},
-			"redline":{"owned":true,"active":true,"heat":0.7,"excess":0.18},"orbit":{"owned":true,"drive":1.0,"drifting":true,"flowing":true,"mutation":"centrifuge"}}}
+			"redline":{"owned":true,"active":true,"heat":0.7,"excess":0.18},"orbit":{"owned":true,"drive":1.0,"drifting":true,"flowing":true,"mutation":""}}}
 
 func label_fits(key: String) -> void:
 	var label: Label = menus._hud[key]
@@ -78,7 +78,7 @@ func hud_case(canvas: Vector2, safe: Rect2) -> void:
 func mutation_read_geometry(canvas: Vector2, safe: Rect2) -> void:
 	menus.mobile_hud = true
 	menus.set_presentation_canvas(canvas,safe)
-	menus.show_mutation("momentum_bank",["flywheel_release","countersteer"],"qa-read-row",39,"",{"charges":1,"revision":0,"mutation_available":true})
+	menus.show_mutation("gyro_lock",["keel","flywheel"],"qa-read-row",39,"",{"charges":1,"revision":0,"mutation_available":true})
 	await settle()
 	var buttons: Array = menus._content.find_children("*","Button",true,false)
 	var reads: Array = buttons.filter(func(node: Node) -> bool: return node.text=="READ")
@@ -124,7 +124,7 @@ func menu_inset_change() -> void:
 	for child: Node in menus._content.get_children():
 		if child is Control and child.has_meta("mobile_full_canvas_overlay"): overlays.append(child)
 	check(overlays.size()==1 and overlays[0].get_global_rect().is_equal_approx(Rect2(Vector2.ZERO,canvas)),"Existing paused dim rectangle covers the full canvas once")
-	menus.show_mutation("momentum_bank",["flywheel_release","countersteer"],"qa-draft",39)
+	menus.show_mutation("gyro_lock",["keel","flywheel"],"qa-draft",39)
 	await settle()
 	var read_buttons: Array = menus._content.find_children("*","Button",true,false)
 	check(read_buttons.any(func(node: Node) -> bool: return node.text == "READ"),"Hosted mobile mutation screen has actual touch READ affordances")
@@ -136,7 +136,7 @@ func menu_inset_change() -> void:
 	menus.show_hud(stats())
 	check(menus._hud.player_panel.get_global_rect()==Rect2(86,6,248,48) and menus._hud.xp_panel.get_global_rect()==Rect2(326,450,388,28),"Desktop permanent HUD retains accepted panel positions")
 	check(menus._hud.xp_label.text=="LV 19  /  NEXT INVESTMENT" and menus._hud.burst.text=="BURST RECHARGING   2.7 s","Desktop captions remain unchanged")
-	menus.show_mutation("momentum_bank",["flywheel_release","countersteer"],"qa-desktop",39)
+	menus.show_mutation("gyro_lock",["keel","flywheel"],"qa-desktop",39)
 	check(not menus._content.find_children("*","Button",true,false).any(func(node: Node)->bool:return node.text=="READ"),"Desktop mutation keeps its accepted card arrangement")
 	var desktop_hint: Label
 	for node: Node in menus._content.get_children():

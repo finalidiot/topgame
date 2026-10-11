@@ -94,9 +94,9 @@ func run()->void:
 		menus.show_result({"won":true,"duration":48,"hits":32,"player_remaining":.7});await inspect("Duel result",canvas)
 		menus.show_result({"continuous_run":true,"duration":100,"level":8,"power_ids":["orbit_drive"],"power_ranks":{"orbit_drive":2}});await inspect("Run result",canvas)
 		menus.show_reward(["orbit_drive","momentum_bank","crash_guard"],[],1,"overlay-fixture",39);await inspect_run_overlay("Reward",canvas)
-		menus.show_mutation("orbit_drive",["centrifuge","perpetual_orbit"],"overlay-fixture",39);await inspect_run_overlay("Mutation",canvas)
+		menus.show_mutation("high_gear",["terminal_velocity","flow_state"],"overlay-fixture",39);await inspect_run_overlay("Mutation",canvas)
 		menus.show_level_up(8);await inspect_run_overlay("Level up",canvas)
-		menus.show_acquisition("orbit_drive","RETURN TO COMBAT",3,"centrifuge");await inspect_run_overlay("Acquisition",canvas)
+		menus.show_acquisition("high_gear","RETURN TO COMBAT",3,"flow_state");await inspect_run_overlay("Acquisition",canvas)
 	menus.set_presentation_canvas(Vector2(1280,720));menus.show_settings({"volume":.45});await settle()
 	var slider:HSlider=menus._frontend_settings_nodes.volume_slider
 	slider.grab_focus();slider.value=.8

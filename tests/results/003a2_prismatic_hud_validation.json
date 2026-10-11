@@ -1,0 +1,33 @@
+{
+  "schema": "003a2-prismatic-hud-validation-v1",
+  "status": "passed",
+  "checks": 903,
+  "failures": [],
+  "counts_note": "Native reruns the same899 geometry checks plus4 capture guards; repeated passes are not summed.",
+  "source": {
+    "scripts/power_state_meters.gd": "5b59be0d780a999ecb211cf215c80eff70be6ef3736f13be24ad42f89ba66701",
+    "scripts/combat_hud_layout.gd": "66830bee6f0d197d61b56145a3421ab5b417c45cce69275ca37067cff55b4388",
+    "tests/test_prismatic_hud_003a2.gd": "567497f41faa5f3df4059c8e52d8689436cbfc0eb0b2400910672dc57ef0ca89",
+    "tests/test_prismatic_hud_003a2.gd.uid": "468df4c67ff95847624d41d7d37ae0fa82c02d48a1faab6fa8cd628fd1305fb4"
+  },
+  "layout_compatibility": {
+    "actual_painted_rectangles": true,
+    "all_four_prismatic_emphases": true,
+    "cases": [
+      "native_desktop",
+      "native_mobile",
+      "wide_android_safe",
+      "narrow_mobile_safe"
+    ],
+    "arena_touch_burst_and_other_regions_exactly_equal_to_prefixed_snapshot": true,
+    "old_four_meters_keep66px_geometry_status_thresholds_and_bars": true,
+    "prism_height": 36,
+    "right_reserved_height": 180,
+    "countdown_thin_bar_y": 34
+  },
+  "physical_android_tested": false,
+  "earned_acquisition_claim": false,
+  "full_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_prismatic_hud_validation.json",
+  "native_image": "C:/GPT GAME BUILDING/GyroBrothers-QA/003A.2/images/003a2_prismatic_hud_native_attempt5/android_safe_five_meters.png",
+  "preserved_history_count": 4
+}

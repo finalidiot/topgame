@@ -335,9 +335,9 @@ func modal_fixture() -> void:
 	for tick: int in range(12): game.battle.test_step(Physics.FIXED_DT,Vector2(.4,0),false,false)
 	game.battle.set_paused(true)
 	game.run_context.start(game.collection.equipped_build(),421,"vane")
-	game.run_context._owned_power_ids.assign(["orbit_drive","afterimage","momentum_bank"])
-	game.run_context._power_ranks={"orbit_drive":2,"afterimage":1,"momentum_bank":1}
-	game.run_context._pending_offer.assign(["orbit_drive","afterimage","momentum_bank"])
+	game.run_context._owned_power_ids.assign(["high_gear","afterimage","momentum_bank"])
+	game.run_context._power_ranks={"high_gear":2,"afterimage":1,"momentum_bank":1}
+	game.run_context._pending_offer.assign(["high_gear","afterimage","momentum_bank"])
 	game.run_context._draft_queue.assign([{"id":"draft/frontend_fixture","kind":"level","level":5}])
 	game.mode="run";game._draft_resume_origin="starting"
 	game.screen="level_up";game._level_up_remaining=.18;game.menus.show_level_up(5)
@@ -345,11 +345,11 @@ func modal_fixture() -> void:
 	game._show_reward();await audit("ability_draft","reward","modal")
 	var choice: Button = target("choose_power")
 	for node: Node in descendants(game.menus):
-		if node is Button and node.get_meta("power_id","")=="orbit_drive": choice=node;break
+		if node is Button and node.get_meta("power_id","")=="high_gear": choice=node;break
 	if is_instance_valid(choice): await click(choice)
 	await audit("mutation_draft","mutation","modal")
-	check(game.run_context.pending_mutation_offer==Powers.mutation_choices("orbit_drive"),"Actual mutation modal retains both legal siblings")
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==2,"Parent physical click cannot also consume mutation choice")
+	check(game.run_context.pending_mutation_offer==Powers.mutation_choices("high_gear"),"Actual mutation modal retains both legal siblings")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==2,"Parent physical click cannot also consume mutation choice")
 	await mouse("choose_mutation")
 	await audit("acquisition","acquisition","modal")
 	game._clear_run();game._title()

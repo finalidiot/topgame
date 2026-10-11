@@ -36,7 +36,7 @@ func world_state() -> Dictionary:
 		fighters.append(row.duplicate(true))
 	return {"fighters":fighters,"elapsed":game.battle.elapsed,"seed":game.battle.seed_value,
 		"power_time":game.battle.powers.time,"roster_time":game.battle.roster.time,
-		"ecology_time":game.battle.roster.ecology.time,"hits":game.battle.hits,
+		"hits":game.battle.hits,
 		"limit":game.battle.live_time_limit,"projection":game.battle.project(Vector2.ZERO)}
 func button(intent: String) -> Button:
 	for node: Node in game.menus.find_children("*","Button",true,false):
@@ -71,7 +71,7 @@ func inspect(expected: String, label: String) -> Dictionary:
 				check(modal.is_equal_approx(Rect2(Vector2.ZERO,presentation.canvas_size)) and Vector2(actual.root_scale)==Vector2.ONE,label+": Run overlay uses the whole current client")
 				check(actual.get("presentation_policy","")=="run_overlay",label+": visible Run overlay exposes its responsive policy")
 			else:
-				check(modal.size.is_equal_approx(Vector2(640,360)) and Vector2(actual.root_scale)==Vector2.ONE,label+": accepted Pause remains the centered native component")
+				check(modal.is_equal_approx(Rect2(Vector2.ZERO,presentation.canvas_size)) and Vector2(actual.root_scale)==Vector2.ONE and actual.presentation_policy=="pause_overlay",label+": corrected desktop Pause independently reflows across the client")
 	observations.append({"label":label,"client_size":root.size,"menus":actual,"main":presentation})
 	return actual
 func stable_layout(label: String) -> void:

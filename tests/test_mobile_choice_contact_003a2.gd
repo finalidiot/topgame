@@ -70,27 +70,27 @@ func pad(pressed: bool) -> void:
 func fixture() -> void:
 	fixture_number += 1
 	game._clear_run(); game.run_context.start(game.collection.equipped_build(),421,"vane")
-	game.run_context._owned_power_ids.assign(["orbit_drive","afterimage","momentum_bank"])
-	game.run_context._power_ranks = {"orbit_drive":2,"afterimage":1,"momentum_bank":1}
-	game.run_context._pending_offer.assign(["orbit_drive","afterimage","momentum_bank"])
+	game.run_context._owned_power_ids.assign(["high_gear","afterimage","momentum_bank"])
+	game.run_context._power_ranks = {"high_gear":2,"afterimage":1,"momentum_bank":1}
+	game.run_context._pending_offer.assign(["high_gear","afterimage","momentum_bank"])
 	game.run_context._draft_queue.assign([{"id":"draft/contact_fixture_%d" % fixture_number,"kind":"level","level":5}])
 	game._draft_resume_origin = "starting"; game.mode = "run"; game._show_reward()
 	game.audit_actions.clear(); await settle()
-	check(game.screen=="reward" and button("choose_power","orbit_drive")!=null,"Declared eligible RankII fixture reaches actual power draft")
+	check(game.screen=="reward" and button("choose_power","high_gear")!=null,"Declared eligible RankII fixture reaches actual power draft")
 func upgrade(index: int = 7) -> Vector2:
-	var target: Button = button("choose_power","orbit_drive")
+	var target: Button = button("choose_power","high_gear")
 	if target==null: return Vector2.ZERO
 	var origin: Vector2 = point(target)
 	await touch(origin,true,index)
 	check(game.screen=="mutation" and game.menus.screen=="mutation","One real root touch opens the separate mutation screen")
 	check(actions("choose_power")==1 and actions("choose_mutation")==0,"Upgrade touch emits exactly the parent intent")
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==2 and game.run_context.power_mutations.is_empty(),"Parent touch does not commit RankIII or choose a sibling")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==2 and game.run_context.power_mutations.is_empty(),"Parent touch does not commit RankIII or choose a sibling")
 	var visible: Array = descendants(game.menus).filter(func(node: Node)->bool:return node is Button and node.is_visible_in_tree() and str(node.get_meta("intent",""))=="choose_mutation")
-	check(visible.size()==2 and game.run_context.pending_mutation_offer==Powers.mutation_choices("orbit_drive"),"Both actual legal siblings remain visible and unclaimed")
+	check(visible.size()==2 and game.run_context.pending_mutation_offer==Powers.mutation_choices("high_gear"),"Both actual legal siblings remain visible and unclaimed")
 	record("parent_press"); return origin
 func claimed(label: String) -> void:
 	check(game.screen=="acquisition" and actions("choose_mutation")==1,"Fresh %s commits exactly one sibling" % label)
-	check(int(game.run_context.power_ranks.get("orbit_drive",0))==3 and game.run_context.power_mutations.size()==1,"Only the fresh choice persists RankIII")
+	check(int(game.run_context.power_ranks.get("high_gear",0))==3 and game.run_context.power_mutations.size()==1,"Only the fresh choice persists RankIII")
 	record(label)
 func continuation_case() -> void:
 	await fixture()
@@ -104,7 +104,7 @@ func continuation_case() -> void:
 	await touch(destination,false)
 	await mouse(destination,true,true); await mouse(destination,false,true)
 	check(game.screen=="mutation" and actions("choose_mutation")==0,"Old contact drag, release and mouse echoes cannot claim the replacement screen")
-	check(int(game.run_context.power_ranks.orbit_drive)==2,"Release/echo preserves RankII")
+	check(int(game.run_context.power_ranks.high_gear)==2,"Release/echo preserves RankII")
 	record("release_and_echo")
 	await touch(destination,true,8); await touch(destination,false,8)
 	claimed("touch")
@@ -124,7 +124,7 @@ func explicit_order_case(mouse_first: bool) -> void:
 	# both paired events still enter the real root and production shell.
 	await fixture()
 	Input.emulate_mouse_from_touch=false
-	var target: Button=button("choose_power","orbit_drive")
+	var target: Button=button("choose_power","high_gear")
 	if target==null: Input.emulate_mouse_from_touch=true; return
 	var origin: Vector2=point(target)
 	if mouse_first:
@@ -132,7 +132,7 @@ func explicit_order_case(mouse_first: bool) -> void:
 	else:
 		await touch(origin,true,21); await mouse(origin,true,true)
 	check(game.screen=="mutation" and actions("choose_power")==1 and actions("choose_mutation")==0,"Explicit %s paired root events accept only the parent" % ("mouse-first" if mouse_first else "raw-first"))
-	check(int(game.run_context.power_ranks.orbit_drive)==2 and game.run_context.pending_mutation_offer.size()==2,"Both event orders preserve RankII and both visible siblings")
+	check(int(game.run_context.power_ranks.high_gear)==2 and game.run_context.pending_mutation_offer.size()==2,"Both event orders preserve RankII and both visible siblings")
 	await touch(origin,false,21); await mouse(origin,false,true)
 	var sibling: Button=button("choose_mutation")
 	if sibling==null: Input.emulate_mouse_from_touch=true; return
