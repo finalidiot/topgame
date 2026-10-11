@@ -17,13 +17,15 @@ const RunRewards = preload("res://scripts/run_rewards.gd")
 const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const ControllerRumble = preload("res://scripts/controller_rumble.gd")
 const TopStatusBars = preload("res://scripts/top_status_bars.gd")
 const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
 const FrontendLayout = preload("res://scripts/frontend_layout.gd")
 const IndustrialSurround = preload("res://scripts/industrial_surround.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false,"controller_rumble":true,"rumble_intensity":0.55}
+var rumble = ControllerRumble.new()
 var top_status_bars: Node2D
 var touch_controls: Node2D
 var _application_suspended: bool = false
@@ -34,7 +36,12 @@ var _android_qa_clock: float = 0.0
 var _android_qa_screen: String = ""
 var mode: String = "duel"
 var round_index: int = 0
-var screen: String = "title"
+var screen: String = "title":
+	set(value):
+		if screen != value and value != "battle" and is_instance_valid(rumble):
+			rumble.set_gameplay_active(false)
+			rumble.clear("menu")
+		screen = value
 var last_result: Dictionary = {}
 var battle: Node2D
 var combat_viewport: SubViewport
@@ -102,6 +109,9 @@ var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
 	_refresh_window_presentation()
+	if is_instance_valid(battle):
+		rumble.set_gameplay_active(_rumble_combat_active())
+		if _rumble_combat_active(): rumble.observe_grind(battle.player_grind_snapshot())
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
 		if _android_qa_clock <= 0.0:
@@ -201,6 +211,9 @@ func _ready() -> void:
 	battle.round_finished.connect(_round_finished)
 	battle.hud_updated.connect(_hud_updated)
 	battle.event_sfx.connect(_battle_sound)
+	battle.full_top_impact_accepted.connect(_rumble_impact)
+	battle.controller_feedback.connect(_rumble_event)
+	battle.feedback_lifecycle.connect(_rumble_lifecycle)
 	battle.progression_events.connect(_progression_events)
 	battle.threat_cleared.connect(_threat_cleared)
 	battle.threat_started.connect(_threat_started)
@@ -232,6 +245,8 @@ func _ready() -> void:
 	music = MusicScript.new()
 	music.configure_playback(not qa_assets_report_requested and not smoke_mode and DisplayServer.get_name() != "headless")
 	add_child(music)
+	# Added last so native ownership is observed before a menu consumes input.
+	add_child(rumble)
 	_refresh_window_presentation()
 	_apply_settings()
 	if smoke_mode or qa_assets_report_requested or qa_catalogue_requested or not practice_request.is_empty(): _title()
@@ -425,11 +440,11 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false}
-	for key: String in ["volume", "music_volume", "sfx_volume"]:
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false,"controller_rumble":true,"rumble_intensity":0.55}
+	for key: String in ["volume", "music_volume", "sfx_volume", "rumble_intensity"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]:
+	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers", "controller_rumble"]:
 		if values.get(key) is bool: result[key] = values[key]
 	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
@@ -443,6 +458,7 @@ func _save_preferences() -> void:
 
 func _apply_settings() -> void:
 	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
+	rumble.configure(settings)
 	sounds.apply_settings(settings)
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
@@ -458,6 +474,29 @@ func _apply_settings() -> void:
 
 func _controller_connection_changed(_device: int, _connected: bool) -> void:
 	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
+	rumble.connection_changed(_device, _connected)
+
+func _rumble_combat_active() -> bool:
+	return screen == "battle" and not _application_suspended and is_instance_valid(battle) and not battle.paused and battle.battle_status == "battle"
+
+func _rumble_impact(event: Dictionary) -> void:
+	if not _rumble_combat_active(): return
+	if int(event.get("first_entity_id",0)) != battle.player_entity_id and int(event.get("second_entity_id",0)) != battle.player_entity_id: return
+	rumble.set_gameplay_active(true)
+	rumble.accept_impact(event)
+
+func _rumble_event(event: Dictionary) -> void:
+	if screen != "battle" or _application_suspended or battle.paused: return
+	var finishing: bool = str(event.get("kind","")) == "takedown" and battle.battle_status == "finished"
+	if not _rumble_combat_active() and not finishing: return
+	if not finishing: rumble.set_gameplay_active(true)
+	rumble.accept_event(event, finishing)
+
+func _rumble_lifecycle(reason: String) -> void:
+	if reason == "run_reset": rumble.reset()
+	else:
+		rumble.set_gameplay_active(false)
+		rumble.clear(reason)
 
 func _hide_battle() -> void:
 	battle.set_paused(true)
@@ -771,6 +810,7 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	music.set_paused(false)
 
 func _clear_run() -> void:
+	rumble.reset()
 	if _pending_run_payout.is_empty():
 		if not _run_reward_token.is_empty(): collection.abort_reward_run(_run_reward_token)
 		_run_reward_token = ""
@@ -1196,13 +1236,17 @@ func _action(name: String, value: Variant = null) -> void:
 				settings = _validated_settings(settings)
 				_apply_settings()
 				_save_preferences()
+		"test_rumble":
+			if screen == "settings": menus.set_rumble_test_status(rumble.test_pulse())
 		"pause": _pause()
 		"resume": _resume()
 		"rematch":
 			if mode == "duel" and screen in ["pause", "result"]:
 				if not _practice_branch.is_empty(): _start_build_practice(_practice_branch)
 				else: _start_battle("duel", true, true)
-		"quit": get_tree().quit()
+		"quit":
+			rumble.clear("quit")
+			get_tree().quit()
 
 func _pause() -> void:
 	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "mutation", "result", "acquisition", "level_up"]): return
@@ -1270,6 +1314,7 @@ func _engage_application_input() -> void:
 func _resume_application() -> void:
 	if not _application_suspended or not is_instance_valid(battle): return
 	_application_suspended = false
+	rumble.set_focus(true)
 	if _resume_after_foreground and screen == "battle":
 		battle.begin_reentry()
 		music.set_paused(false)
@@ -1281,6 +1326,7 @@ func _notification(what: int) -> void:
 		menus.visible = true
 		_escape()
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT]:
+		rumble.set_focus(false)
 		if not is_instance_valid(battle): return
 		if what == NOTIFICATION_APPLICATION_PAUSED: _application_backgrounded = true
 		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
@@ -1294,6 +1340,9 @@ func _notification(what: int) -> void:
 		if what == NOTIFICATION_APPLICATION_RESUMED: _application_backgrounded = false
 		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
 		if not _application_backgrounded: _resume_application()
+
+func _exit_tree() -> void:
+	if is_instance_valid(rumble): rumble.clear("teardown")
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Control and not node.is_visible_in_tree(): return null

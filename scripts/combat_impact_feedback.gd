@@ -135,6 +135,20 @@ func observe_grinding(fighters: Array, dt: float) -> void:
 func grind_snapshot() -> Dictionary:
 	return _grind_state.duplicate()
 
+## Rumble uses only real sustained pairs involving the local player's top.
+## Audio retains its existing whole-arena mix. No second geometry solver.
+func grind_snapshot_for(entity_id: int) -> Dictionary:
+	var strength: float = 0.0
+	var count: int = 0
+	for key: String in _grind_pairs:
+		var ids: PackedStringArray = key.split(":")
+		if ids.size() != 2 or (int(ids[0]) != entity_id and int(ids[1]) != entity_id): continue
+		var pair: Dictionary = _grind_pairs[key]
+		if float(pair.held)+0.000001 < GRIND_CONTINUITY: continue
+		count += 1
+		strength = maxf(strength,clampf((float(pair.tangent)-GRIND_TANGENT)/250.0,0.10,1.0)*(0.65 if float(pair.missing)>0.0 else 1.0))
+	return {"active":count>0,"strength":strength,"pairs":count}
+
 func _record(event: Dictionary) -> void:
 	_events.append(event)
 	if _events.size() > MAX_HISTORY: _events.pop_front()

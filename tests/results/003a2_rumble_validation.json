@@ -1,0 +1,158 @@
+{
+  "scope": "TASK 003A.2 controller rumble, presentation-only accepted combat feedback",
+  "ok": true,
+  "checks": 9153,
+  "failures": [],
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "api": {
+    "capability_query": true,
+    "official_reference": "https://docs.godotengine.org/en/4.7/classes/class_input.html",
+    "start": true,
+    "stop": true
+  },
+  "engine_log_clean": true,
+  "source_unchanged": true,
+  "source": {
+    "battle_sha256": "e5c65c9c785584b50bbfb03b642aae017220974f3773e799143a791f54d6a56e",
+    "bindings_sha256": "2b43875ba7d4afe084b6c302fdc380b45756fa4ce0d053ce476d46ef33689811",
+    "main_sha256": "382b1ccf7ef00df9a237bfdfa48e6063c221e45a7d6e7bd7ffc0be765560e42e",
+    "rumble_sha256": "8afe4959fd55090ee0722f306e4a2ec07ff06b7091b4f3fe298eb7fb414caecd",
+    "test_sha256": "42f079ff4778a0be9be41133f7f777fad1a03a63825cb5e9043b25fef03bb183"
+  },
+  "bounded_workload": {
+    "output_segment_max_seconds": 0.075,
+    "ordinary_quiet_gap_seconds": 0.055,
+    "queued_events": 0,
+    "history_cap": 64,
+    "elimination_dedup_cap": 256,
+    "presentation_takedown_credit_seconds": 6.0,
+    "presentation_takedown_credit_cap": 32,
+    "grind_uses_existing_geometry": true,
+    "grind_requires_local_player_pair": true
+  },
+  "settings": {
+    "default_enabled": true,
+    "default_intensity": 0.55,
+    "independent_of_audio_and_visuals": true,
+    "isolated_path": "C:/GPT GAME BUILDING/GyroBrothers-QA/003A.2/temp/rumble/003a2_rumble_validation_attempt7_preferences.cfg",
+    "persisted_test_intensity": 0.35
+  },
+  "physical_devices": {
+    "connected_at_execution": [],
+    "status": "Pending physical testing on exact Windows/Android candidates; mock requests do not prove motor response.",
+    "tested": []
+  },
+  "validation_note": "Final accepted count is 9,153 checks only. Earlier passes cover earlier scope and are not added to this total. Physical motor feel remains untested.",
+  "full_evidence": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_rumble_validation.json",
+  "determinism": [
+    {
+      "accepted_contacts": 4,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.8666666666667,
+      "enabled_output_requests": 15,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": false,
+      "seed": 421
+    },
+    {
+      "accepted_contacts": 5,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.75,
+      "enabled_output_requests": 17,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": true,
+      "seed": 421
+    },
+    {
+      "accepted_contacts": 4,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.8666666666667,
+      "enabled_output_requests": 15,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": false,
+      "seed": 7341
+    },
+    {
+      "accepted_contacts": 5,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.75,
+      "enabled_output_requests": 17,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": true,
+      "seed": 7341
+    },
+    {
+      "accepted_contacts": 4,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.8666666666667,
+      "enabled_output_requests": 15,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": false,
+      "seed": 2026
+    },
+    {
+      "accepted_contacts": 5,
+      "assembly": "Lopsider / Flywheel / Needle",
+      "disabled_output_requests": 0,
+      "elapsed": 21.75,
+      "enabled_output_requests": 17,
+      "exact": true,
+      "fixed_step_calls": 1500,
+      "input": "25s horizon including natural launch; same 0.7 rotating input, Burst every 150 ticks, Brake final 30/210 ticks",
+      "rank_ii_defence_auras_prism": true,
+      "seed": 2026
+    }
+  ],
+  "preserved_failures": [
+    {
+      "attempt": 1,
+      "checks": 9116,
+      "assertion_failures": [],
+      "engine_error_count": 2250,
+      "status": "failed",
+      "report": "manifests/003a2_rumble_validation_attempt1.json",
+      "log": "logs/003a2_rumble_validation_attempt1.log",
+      "correction": "Root corrected Prismatic HUD typed conditional array; engine errors make this failed despite the internal assertion PASS line."
+    },
+    {
+      "attempt": 3,
+      "checks": 9141,
+      "assertion_failures": [
+        "Main routes accepted player collision into the central service",
+        "Actual Settings TEST RUMBLE route issues the authored short test"
+      ],
+      "engine_error_count": 2,
+      "status": "failed",
+      "report": "manifests/003a2_rumble_validation_attempt3.json",
+      "log": "logs/003a2_rumble_validation_attempt3.log",
+      "correction": "Harness now uses fresh per-attempt isolated preferences and collection paths, and a duplicate native release event; it no longer inherits its earlier intentional Off preference."
+    }
+  ],
+  "engine_log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_rumble_validation_attempt7.log",
+  "command": "Godot 4.7.2 --headless --path PROJECT_ROOT --script tests/test_controller_rumble_003a2.gd -- --out=<fresh absolute QA report>"
+}
