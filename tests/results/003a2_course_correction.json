@@ -1,0 +1,270 @@
+{
+  "schema": "003a2-course-correction-delivery-v1",
+  "status": "review_candidates_delivered_pending_human_and_two_visual_reproductions",
+  "identity": {
+    "workspace": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock",
+    "qa_root": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2",
+    "branch": "task-003a2-ability-ecology",
+    "origin": "https://github.com/finalidiot/topgame.git",
+    "starting_sha": "9bb45e4b8c2d92a37edb45514e14f6e16c536124",
+    "runtime_commit": "0b701ed296d60aadeb80058cded6d35fb987a689",
+    "documentation_commit": "Later report-only commit; final external receipt records actual SHA after verified push",
+    "main": "58cd1790561337be1fc7c4c114b87564c4617aa1",
+    "origin_main": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+    "main_unchanged": true
+  },
+  "content": {
+    "retired": [
+      "Wallbreaker",
+      "Ricochet Engine",
+      "Centrifuge",
+      "Perpetual Orbit",
+      "Flywheel Release",
+      "Countersteer",
+      "Reactive Plating",
+      "Sacrificial Damper"
+    ],
+    "retained_mutations": 14,
+    "new_base_families": 6,
+    "rank_cap_new": 2,
+    "active_families": 22,
+    "family_cap": 7,
+    "compatibility": "Matching retired parent II, deterministic; no Run save migration or random substitution",
+    "design": "docs/tasks/003A.2-course-correction-design.md"
+  },
+  "workshop": {
+    "ratings": {
+      "Power": 7.4,
+      "Stamina": 5.9,
+      "Grip": 1.7,
+      "Speed": 2.6,
+      "Stability": 2.7,
+      "Mass": 9.2
+    },
+    "production_calculator": true,
+    "preview_is_read_only": true,
+    "actual_starter_handling_separate": true
+  },
+  "ui": {
+    "arena_unchanged": true,
+    "large_responsive_pause": true,
+    "full_client_draft": true,
+    "shoulder_category_tabs": true,
+    "one_universal_card_focus": true,
+    "direct_reroll_excluded_from_navigation": true,
+    "prism_safe_five_meter_geometry": true,
+    "duplicate_badge_overflow_fixed": true
+  },
+  "rpm": {
+    "runs": 42,
+    "seeds": [
+      421,
+      7341,
+      2026
+    ],
+    "all_ended_naturally": true,
+    "ledger_error_max": 6.45913877939108e-13,
+    "baseline_corrected_equivalence_exact": true,
+    "historical_active_gain_primary": "Combat reclamation53.6%, paid Redline contact/motion40.6%; Clutch2.6%",
+    "parts_global_rpm_clutch_nerf": false,
+    "azure_secondary_shove_hook_corrected": true,
+    "enjoyment_claim": false
+  },
+  "visuals": {
+    "cropped_effect": "Unidentified; image missing. Retired renderer has no live hooks, but screenshot disappearance unproved.",
+    "packet_black_area": "Additional transient rectangle not reproduced across2340 checks/2304 full-page frames. Legitimate pouch mouth/reveal mat observed; no speculative animation change.",
+    "movie_source_boundary": "Final aura/physics/Prism HUD and LF vectors; predates only later packet-result caption change, which is outside this capture.",
+    "movie_frames": 8040,
+    "movie_seconds": 134.0,
+    "prismatic_states_seen": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "state_injection_disclosed": true,
+    "playback_normal_speed": true
+  },
+  "rumble": {
+    "api": "Godot4.7 Input capability/connected query and start_joy_vibration/stop_joy_vibration",
+    "active_actual_input_device_routing": true,
+    "event_profiles": [
+      "light",
+      "normal",
+      "grind",
+      "accepted_burst",
+      "actual_absorption_brace",
+      "hard_delivered",
+      "hard_received",
+      "takedown",
+      "elite_takedown",
+      "boss_takedown",
+      "extreme"
+    ],
+    "settings": "On/Off, independent intensity/default.55, persistence, short requested test",
+    "lifecycle_stops": true,
+    "bounded_segments_ms": 75,
+    "output_interval_ms": 40,
+    "queued_events": 0,
+    "checks": 9153,
+    "physical_controllers_tested": [],
+    "physical_android_tested": false
+  },
+  "candidates": {
+    "windows": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+      "sha256": "e0a950a56a4357a15d2deb3b247736d2b6d57ffe205117dbdc6295783354b73c",
+      "bytes": 152383400,
+      "runtime_commit": "0b701ed296d60aadeb80058cded6d35fb987a689",
+      "validation": "packaged isolated smoke and catalogue/art/music verification passed",
+      "latest_matches": true
+    },
+    "android": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\builds\\checkpoints\\003A.2\\SpinningMetal-android.apk",
+      "sha256": "442cd81c2df51c94449c3cc568dda08f87d5227ab84855776080009ae3e4404c",
+      "bytes": 89313376,
+      "runtime_commit": "0b701ed296d60aadeb80058cded6d35fb987a689",
+      "validation": "signature/package/source/import bytes passed; physical smoke pending",
+      "package": "org.spinningmetal.prototype",
+      "certificate_sha256": "7edf1dbedcf22a4373f62e57cee7827ed485eaf6b087d7fb0b9bb0f13cac7a43",
+      "debug_signed": true,
+      "latest_promoted": false
+    },
+    "engine": {
+      "path": "E:\\Desktop\\Godot_v4.7.2-stable_win64_console.exe",
+      "version": "4.7.2.stable.official.ed1daf0bf"
+    },
+    "movie": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_new_base_powers_review_v3.mp4",
+      "sha256": "2cee60059dafee096147f1f6f1035453a7fcac1732eda5af767f5b1495e5aa9f"
+    }
+  },
+  "evidence": {
+    "baseline": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_baseline.json",
+      "sha256": "c4bb8468d9d932ab51fd29ee9eab970c229f2cb5066c52caa453bc7fd5132b58"
+    },
+    "base_power_matrix": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_new_base_power_matrix.json",
+      "sha256": "87bdf31810500ae57b804d02eb252f81dd676c1208d5a6e6fe6de93b168ec091"
+    },
+    "workshop": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_workshop_build_stats.json",
+      "sha256": "85590bba140e30852ad80ee4b2b0d9fb57ed4c7cb2547ceb027d207cb8b6c386"
+    },
+    "ui": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_ui_validation.json",
+      "sha256": "55ed1b7e72b7a2c3fffc570e9635ed1a9b0a98ca0cd2a4f8fbe18c3a5ad5a061"
+    },
+    "packet": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packet_visual_investigation.json",
+      "sha256": "b481b907946705b68c7dc76c18e41a0d3b86d7af992f691e0d8f006810b93039"
+    },
+    "packet_caption_parts": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packet_caption_parts_followup_validation.json",
+      "sha256": "15ddf10904120e86fc8af0e930936aead869eaac393ae3f8e3ebb9bfa21c343f"
+    },
+    "prismatic_hud": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_prismatic_hud_validation.json",
+      "sha256": "19a186aa2eedf630730a5a261d71093c93c5f4c068996110a2a27c358e28d0b6"
+    },
+    "rpm": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_lopsider_flywheel_needle_rpm.json",
+      "sha256": "032b9ce880298fa9cf226ff92f5ef7a22827de18b6ead7426f9928d44624cfb8"
+    },
+    "rumble": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_rumble_validation.json",
+      "sha256": "3b3393d378811b89af1130506995086d14bd7666094ce80e081a4a28db0a46ea"
+    },
+    "performance": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_course_correction_performance_final_index.json",
+      "sha256": "074d155b17bf282b30f8dbe60976901a8b7535bec4ce1fdeaa13770335397ee7"
+    },
+    "headless_original": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_152519_050744.json",
+      "sha256": "e7f307f8d8fa179518ad39c301db35043607ba8e2fabc65e6c3a2ff8eb8043c7"
+    },
+    "headless_final": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154855_619344.json",
+      "sha256": "271906ad35134e0695c0da526eada4454c8fb4a429131e60749f5372ca9603f5"
+    },
+    "python_original": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_python_20261011_152734_479255.json",
+      "sha256": "51b3e411c1a8c03ebba60e4d4a9bdbb2fcee08b4fc3733db0f5e2cfa35759bb4"
+    },
+    "audio_corrected": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_audio_dependency_attempt02.json",
+      "sha256": "87fe4d518222a1af2e598d71c7735b5927a361f3aee25cdeaf549c802aae4591"
+    },
+    "windows_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-55b4c8f07239.json",
+      "sha256": "a3fc461d4ebd8bdaae6643467e91cd23b87478d6a3fe7aceafd0cb0494e82d7b"
+    },
+    "windows_package": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_0538e785d36e40e0b0107c70532a022d.json",
+      "sha256": "55af212c1d1b2fa2e48ad8d8fd0ed8d1daf36777419d3d7025fdd64da246765b"
+    },
+    "android_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-5f786418023b.json",
+      "sha256": "dcf0adb7c954f4ee42f6f09b9ea4d00b518c66b8ff2e4f9e2d3b72dc30f93a51"
+    },
+    "android_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_android_package_audit_02.json",
+      "sha256": "b9c103e4e8aa90271c610b87aa93a6f03b2e2941c6906910724904a5e1953605"
+    },
+    "movie": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_base_power_review_05_20261011_152954.json",
+      "sha256": "938124c3e362119c992f81efb8017ca974dc50d708b74a18f320c95fda1f6ea2"
+    },
+    "vector_input_normalization": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_new_vector_git_input_normalization.json",
+      "sha256": "e95fde26016978c171733fc90f4df2615d17d19c1c698c6975a5188270446323"
+    },
+    "preservation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_preservation_after_delivery.json",
+      "sha256": "9a9ae25a524e464257309a82449b40e525045a39d6cba99cdf6959030c0fca1b"
+    }
+  },
+  "human_review": [
+    "Auras and combined silhouettes/contact readability; four Prism emphases and new defence feel",
+    "Exact-build resource pacing during human Windows play",
+    "Workshop pre-run notes/preview, shoulder wrap, Pause/draft focus and direct reroll",
+    "Exact Windows/Android controller connection: subtle grind, distinct huge hits, output stops, no buzzing",
+    "Physical Android install/touch/safe areas/save/audio/performance",
+    "Provide missing crop/loadout screenshots and transient packet black-area reproduction"
+  ],
+  "merge_performed": false,
+  "003B_started": false,
+  "validation": {
+    "headless_unique_suites": 131,
+    "headless_checks": 327102,
+    "headless_scope": "117 passing broad frozen suites plus13 corrected suites and one new Prism HUD suite; latest passing result selected once per suite. Original13 failures preserved. Final source changes from broad were only new SVG/manifest newline provenance and the verified packet result badge; exact package pixels and final UI regressions cover them.",
+    "python_tests": 287,
+    "independent_android_audit_checks": 207,
+    "draft_diversity_checks": 780007,
+    "performance_checks_per_mode": 84504,
+    "native_performance_frames": 6480,
+    "native_frame_wall_median_p95_ms": {
+      "4_hostiles_plus_player": [
+        13.1685,
+        18.147
+      ],
+      "5_hostiles_plus_player": [
+        15.098,
+        19.62
+      ],
+      "6_hostiles_plus_player": [
+        16.549,
+        21.88
+      ]
+    },
+    "limitations": "Finite desktop stress samples; no guaranteed60fps, long-duration leak proof or phone performance.",
+    "preserved_failures": [
+      "Original broad13 failing suites with superseded UI/content/test snapshot assumptions and genuine badge clipping; all corrected without gameplay guard removal",
+      "Missing NumPy under Python3.13; unchanged audio suite passes4 tests with bundled3.12/NumPy2.3.5 and explicit18 music byte locks",
+      "One mid-import native0xC0000005 before supplementary tests; failed receipt/log preserved, fresh final cold import passed; retry recognizer unchanged",
+      "Earlier malformed/partial capture attempts and unrecognized native import/UID provenance failures retained",
+      "Independent initial APK audit mistakenly expected stripped editor deps metadata; corrected remap/byte audit passed207"
+    ]
+  }
+}
