@@ -30,6 +30,9 @@ CONTROLLER_GUIDE = (
     "Menu/Start pauses. In Options choose CONTROLLER: AUTO, XBOX, NINTENDO or PLAYSTATION.\n"
     "Nintendo: printed A confirms; printed B goes back (B bursts in combat).\n"
     "Xbox: A confirms; B goes back. PlayStation: Cross confirms; Circle goes back.\n"
+    "Workshop: LB/RB (L/R or L1/R1) switch part categories without equipping.\n"
+    "Draft: RB (R or R1) rerolls directly; keyboard R. Reroll is outside card navigation.\n"
+    "Options: controller rumble On/Off, intensity and an explicit short test.\n"
 )
 SMOKE_MARKER = "INTEGRATION_SMOKE_PASS"
 ERRORS = re.compile(r"SCRIPT ERROR|(?:^|\n)ERROR:|FAIL:|Assertion failed", re.I)
@@ -544,7 +547,7 @@ def build(args: argparse.Namespace) -> dict:
         provisional_c5 = args.checkpoint == "002C.5" or args.checkpoint.startswith("002C.5.")
         acceptance = "PENDING HOME HUMAN PLAYTEST" if provisional_c5 else "PENDING HUMAN PRESENTATION PLAYTEST" if args.checkpoint == "002C.6" else "PENDING HUMAN PROGRESSION PLAYTEST" if args.checkpoint in SHOP_TASKS else "Human acceptance is separate from automated validation."
         report["human_acceptance"] = acceptance
-        readme = ("Spinning Metal / GyroBrothers\n"
+        readme = ("RINGBREAKER: Gyro Shock / Spinning Metal runtime\n"
                   f"Task/checkpoint: {args.checkpoint} (workspace/build task {args.task})\n"
                   f"Git SHA: {report['source']['git_sha']}\n"
                   f"Branch: {report['source']['branch']}\n"

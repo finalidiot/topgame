@@ -95,8 +95,8 @@ func _test_main_and_pickups() -> void:
 	var old_id: String = str(game.run_context.pending_offer[0])
 	var old_payload: Dictionary = {"encounter_id":game.run_context.pending_draft_id,"power_id":old_id,"run_seed":seed_value,"offer_revision":0}
 	var reroll: Button = game.menus._content.get_node("RerollPower")
-	check(not reroll.disabled and "1 LEFT" in reroll.text, "Draft presents an available keyboard/controller reroll button")
-	check(not reroll.focus_neighbor_top.is_empty() and reroll.get_node(reroll.focus_neighbor_top) is Button, "Reroll participates in card/controller focus navigation")
+	check(not reroll.disabled and int(reroll.get_meta("charges",0)) == 1 and "REROLL ×1" in reroll.text, "Draft presents an available platform-prompted direct reroll action with its real charge")
+	check(reroll.focus_mode == Control.FOCUS_NONE and reroll.focus_neighbor_top.is_empty() and reroll.focus_neighbor_bottom.is_empty() and reroll.focus_neighbor_left.is_empty() and reroll.focus_neighbor_right.is_empty(), "Direct reroll action is excluded from card/controller focus navigation")
 	reroll.pressed.emit()
 	check(game.screen == "reward" and game.run_context.reroll_charges == 0, "Actual Main route rerolls without launching battle")
 	game._action("choose_power", old_payload)
