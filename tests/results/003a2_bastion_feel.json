@@ -1,0 +1,284 @@
+{
+  "schema": "003a2-bastion-feel-results-v1",
+  "status": "validated_candidates_awaiting_human_review",
+  "starting_sha": "ad7e53a885724ad96722b1850bc1062b68fe8470",
+  "accepted_main": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "branch": "task-003a2-ability-ecology",
+  "runtime_sha": "0349d39493ee1c7070a5a958f251cdb58e16ae69",
+  "runtime_files_changed": [
+    "scripts/starters.gd",
+    "scripts/sound.gd"
+  ],
+  "handling": {
+    "acceleration_before": 0.72,
+    "acceleration_after": 0.82,
+    "speed_before_after": 0.78,
+    "mass_before_after": 1.35,
+    "impact_before_after": 1.0,
+    "breaker_vane_unchanged": true,
+    "brake_burst_costs_rules_unchanged": true,
+    "new_counter_resource": false,
+    "new_rpm_dr_damage_bonus": false,
+    "speed50_seconds_before_after": [
+      0.4,
+      0.35
+    ],
+    "post_brake90_seconds_before_after": [
+      0.16666666666666666,
+      0.11666666666666667
+    ],
+    "unbraked90_seconds_before_after": [
+      0.7166666666666667,
+      0.7166666666666667
+    ],
+    "ordinary_full_reserve_speed_cap_before_after": 113.178,
+    "uncapped_curve_average_speed_before_after": [
+      65.743232,
+      73.847138
+    ]
+  },
+  "diagnosis": {
+    "base": "Naked acceleration response contributes; selected smallest measured experimental gain. Inertia/low speed ceiling unchanged.",
+    "dead_centre": "Intentional planted drag and Stress/quota/rearm; no global nerf.",
+    "stack": "Plant/paid brace overlap restricts movement; moving Gyro, recoil-required Sink, paid Exchange and aimed counters retain distinct activity requirements.",
+    "presentation": "Seven already-emitted defence events were silent because missing Sound mappings; now quiet existing authored cues.",
+    "enemy_interaction": "Current AI/Director retained; new actual-Run studies use them."
+  },
+  "sound_events": [
+    "gyro_lock_set",
+    "gyro_lock_break",
+    "sink_store",
+    "sink_vent",
+    "sink_return",
+    "exchange_set",
+    "exchange_release"
+  ],
+  "long_balance": {
+    "scope": "Three seeded legal initial 16-investment stack fixtures, actual production Director, adaptive disclosed policies, no state top-ups; horizons right-censored.",
+    "seeds": [
+      421,
+      7341,
+      2026
+    ],
+    "afk_before_after_spinout_seconds": [
+      205.366667,
+      168.35,
+      140.316667
+    ],
+    "afk_traces_and_ledgers_exact": true,
+    "active_before": [
+      {
+        "seconds": 343.533333,
+        "reason": "ring_out"
+      },
+      {
+        "seconds": 360,
+        "reason": "right_censored"
+      },
+      {
+        "seconds": 360,
+        "reason": "right_censored"
+      }
+    ],
+    "active_after": [
+      {
+        "seconds": 360,
+        "reason": "right_censored"
+      },
+      {
+        "seconds": 360,
+        "reason": "right_censored"
+      },
+      {
+        "seconds": 216.466667,
+        "reason": "ring_out"
+      }
+    ],
+    "current_active_outlasts_afk_all3": true,
+    "survival_improvement_universal": false,
+    "earlier_current_rearm_ringout": "Sampled policy steers outward at 0.7 strength during vent/rearm without Brake and overshoots its 95 px transition. An actual contact precedes gate defeat; earlier Bank Bursts are not asserted as the direct cause.",
+    "additional_committed_course_ringouts": {
+      "before": 3,
+      "after": 9,
+      "out_of": 48,
+      "scope": "Six additional HighGear/mixed package\u00d7seed-label rows share identical early route; not independent probability trials."
+    }
+  },
+  "validation": {
+    "regression_and_focused_suites": 35,
+    "assertions": 101103,
+    "explicit_historical72_assertions": 43,
+    "historical_fixture": "Original 504 s warmup / 329 s paired .72 benchmark retained through initialization-only acceleration override; all 35 assertion predicates unchanged, 43 checks. Actual .82 old warmup physically ends at 490.733 s; adverse evidence is preserved. Actual candidate is tested independently.",
+    "study_batches": 15,
+    "study_observations": 468,
+    "study_checks": 3329,
+    "exploratory_observations": 112,
+    "exact_source_observations": 356,
+    "capture_checks": 408,
+    "capture_scope": "Normalized inputs each call, whole-state hash every 15 ticks and all stored contacts/events/delivered impulses equal same-source headless reference. Native MovieWriter PCM, external captions; no whole-pixel/every-tick-state/FPS/hardware acceptance claim.",
+    "git_diff_check": "passed",
+    "core_aggregate_scope": "Twenty passed core rows are counted; the original aggregate remains failed because the old current 504 s warmup ends early. Its hash/asset/player guards apply; executed harness guards are supplied separately by focused, UI, historical and observation wrappers."
+  },
+  "performance": {
+    "new_searches": 0,
+    "new_gameplay_state_arrays": 0,
+    "sound_channel_cap": 8,
+    "sound_peak_budget": 0.62,
+    "semantic_keys_added": 7
+  },
+  "preservation": {
+    "runtime_files": 838,
+    "unchanged_other_runtime": 836,
+    "assets_exact": 720,
+    "music_exact": 18,
+    "current_player_primary_exact": 3,
+    "current_recovery_backups_exact": 30,
+    "capture_protected_player_paths_exact": 447,
+    "previous_delivery_files_preserved_exact": 12
+  },
+  "builds": {
+    "source_inputs_both_platforms": 867,
+    "input_digest": "a32fe1c141c6b7c6f027c5e9c86c4685b0b4dc43e202e20c665aa2ee878fed15",
+    "windows": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal.exe",
+    "windows_latest": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\latest\\SpinningMetal.exe",
+    "windows_sha256": "5674d2a29bd2bdddae41efaa0478e6bd77fa18cc311952b36729cd0e692c21ca",
+    "windows_bytes": 152258368,
+    "android": "C:\\GPT GAME BUILDING\\GyroBrothers\\builds\\checkpoints\\003A.2\\SpinningMetal-android.apk",
+    "android_sha256": "a351a7ed809e8ed7f8b3e84042a81ca38c3fdf71a2d76229c6617aedabb79a92",
+    "android_bytes": 89185339,
+    "android_status": "awaiting_android_smoke",
+    "physical_android_acceptance": false,
+    "android_latest_promoted": false,
+    "physical_android_review": "AWAITING PHYSICAL ANDROID REVIEW",
+    "fresh_adb_inventory": []
+  },
+  "evidence": {
+    "baseline": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_feel_baseline_20261011_033101_321676.json",
+      "bytes": 270172,
+      "sha256": "3c979868c6e86787c7864eb1a303a7c2299241cf1a5193812312abc297b970bc"
+    },
+    "prebuild_preservation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_prebuild_preservation_20261011_041732_558879.json",
+      "bytes": 113867,
+      "sha256": "09244319d72699cbcf4ce768dba5462d7723ad2b5a084d257dbaff8c27ef1705"
+    },
+    "source_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_feel_source_audit_20261011_033714_695922.json",
+      "bytes": 26642,
+      "sha256": "0154fe1ba85176f7201b27e6cd6f5e2e8bd4d7d1f0fff6e935e84af5a70e3b38"
+    },
+    "current_core20": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_core_regression_20261011_034419_355147.json",
+      "bytes": 208323,
+      "sha256": "c49d88add186d7b6f0eabd1d3c54b375cb53bd62888969a1d345398aa847551f"
+    },
+    "ui13": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_headless_20261011_034434_931544.json",
+      "bytes": 234091,
+      "sha256": "4fac7decf3e229bb46797f50102e1ca44e918ea81b370037a36c2aa3707c1f71"
+    },
+    "historical": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_frontend_validation_headless_20261011_040656_067414.json",
+      "bytes": 211487,
+      "sha256": "c05344b826570c96a10f212d23dc98c282d1df4eadbbdf17f7e7c7f6631950a5"
+    },
+    "focused": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_feel_focused_headless_20261011_035126_693542.json",
+      "bytes": 214515,
+      "sha256": "2cc27ec8187c0783274f14fab666bbd21f22752c1fef33207254297e725d2e3c"
+    },
+    "study_ledger_corrected": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_feel_delivery_v2_20261011_042303_294514.json",
+      "bytes": 87170,
+      "sha256": "aae688eca845a637b6f30e5270e4e1916313a9607f390c7b68a9153cdd8595bc"
+    },
+    "bastion_comparison": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_bastion_feel_comparison.json",
+      "bytes": 218038855,
+      "sha256": "462ed4a70f8d13ba3a4b542bd5468442eef562f924604451681db52679ed9ad2"
+    },
+    "starter_comparison": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\003a2_starter_handling_comparison.json",
+      "bytes": 7964062,
+      "sha256": "4474093697e2247bd8a5e47de186bb0a8ec038489aab4883e837cc62a59d7fc8"
+    },
+    "before_after": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_bastion_before_after.mp4",
+      "bytes": 12326155,
+      "sha256": "9568f3e63c7604776950da6dc1dada23d461290b9fdab2875d61d20042fc4119"
+    },
+    "active_showcase": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\video\\003a2_bastion_active_defence_showcase.mp4",
+      "bytes": 13067281,
+      "sha256": "c8010165d90d14b0ada3d4f1af9a147e2c7f26d81922229ef7622e1a569e514d"
+    },
+    "capture_publication": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_feel_publication_20261011_042216_326631.json",
+      "bytes": 232781,
+      "sha256": "995f818ffbc62cc3c7acd1856f704bfa8d0342e255a1b988fefb2f209c968483"
+    },
+    "capture_integrity": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_capture_integrity_final_20261011_042800.json",
+      "bytes": 14208,
+      "sha256": "60af9bfd5b95bffd665f435ca7a9e4c3f5b0971d153b3e70c40c0ad3635c6ff4"
+    },
+    "windows_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\windows-003a2-12edcb515817.json",
+      "bytes": 174315,
+      "sha256": "5e5772eaa6be9f09cbdb3092a9815ca94086d85ac061bc1154a3bfb1aa290bc7"
+    },
+    "windows_catalogue": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_packaged_catalogue_1be7b68b715d48899e3699921b3adc8b.json",
+      "bytes": 16077,
+      "sha256": "aa76a2a65e1b7a52867a4d57ed50598fc31b4f9897c795bfe212d8d24a908038"
+    },
+    "android_build": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\android-003a2-64e229fd140a.json",
+      "bytes": 314531,
+      "sha256": "c00f9b10f33a12ccf2fc8469f5104e1b6e96ffc1c9cf03829a609d875749686d"
+    },
+    "android_actual_gdc_audit": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_android_package_audit_20261011_042147_025405.json",
+      "bytes": 406353,
+      "sha256": "85adc96a2d92d1e7467546a3b5fabada5f1359b48ea16bbb7de31e65b9d0901c"
+    },
+    "delivery": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_builds_delivered_20261011_042631_660566.json",
+      "bytes": 11406,
+      "sha256": "c80931879a5258c2dc18969e681fe522d9905af76be4d969d2286e83cdfc2997"
+    },
+    "github_publication": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_download_release_20261011_042952_341322.json",
+      "bytes": 232874,
+      "sha256": "9cd72ab352fbb07cd551102f78813faae6ef97420f5c5032ed9015eaebd26987"
+    },
+    "github_public_verification": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_public_download_20261011_043419_195438.json",
+      "bytes": 10406,
+      "sha256": "4e78b16d93550d27062bda29530ad380ad3b44ac8f5edec0e035bfddcb041a7b"
+    },
+    "final_preservation": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_bastion_preservation_closure_20261011_043548_761694.json",
+      "bytes": 1915,
+      "sha256": "49681ef1211d8a0d326e54ddf3603efc21bff9523d69c9dfd4208dd880e242c0"
+    }
+  },
+  "human_review": [
+    "Judge short reposition/Brake-release responsiveness while Bastion stays heavy/slow.",
+    "Judge audible earned Sink/Exchange/Gyro feedback without overpowering massive hits/music.",
+    "Play DeadCentre and mixed HighGear/Bank at the edge; actual overshoot/defeat remain possible.",
+    "Install APK on exact landscape phone to assess real fullscreen/safe/touch/audio/resume."
+  ],
+  "merged_main": false,
+  "began003b": false,
+  "publication": {
+    "release_url": "https://github.com/finalidiot/topgame/releases/tag/003a2-bastion-review-0349d39",
+    "tag": "003a2-bastion-review-0349d39",
+    "runtime_commit": "0349d39493ee1c7070a5a958f251cdb58e16ae69",
+    "status": "public_download_verified",
+    "files": 6,
+    "verification_scope": "Unauthenticated public HEAD sizes, complete GitHub upload SHA256 digests and first/middle/last 64 KiB binary ranges; complete small files. Does not prove a completed download on a particular mobile network."
+  },
+  "delivery_commit_scope": "Compiled runtime is 0349d39493ee1c7070a5a958f251cdb58e16ae69. Final review-record commit adds documentation/evidence only; runtime/build inputs remain exact."
+}
