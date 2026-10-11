@@ -18,6 +18,11 @@ func flow(profile: String) -> void:
 	capture_group = "level_up_back"
 	await boot(profile)
 	await intent("start_run")
+	# Mutation Back coverage requires a retained Rank-III family. The broadened
+	# starting pool also contains I/II-only families, so disclose this offer fixture.
+	game.run_context._pending_offer.assign(["redline"])
+	game._show_reward()
+	events.append({"frame":frame(), "type":"retained_mutation_family_offer_fixture", "power_id":"redline"})
 	await probe_back("reward")
 	await intent("choose_power")
 	await probe_back("acquisition")

@@ -20,7 +20,8 @@ func _initialize()->void:
 			if page=="settings" and not actual.compact:
 				check(not actual.regions.audio.intersects(actual.regions.comfort) and not actual.regions.audio.intersects(actual.regions.controls) and not actual.regions.comfort.intersects(actual.regions.controls),"Options panes separate")
 			if page=="collection_workshop" and not actual.compact:check(actual.regions.catalogue.end.x<actual.regions.station.position.x and actual.regions.station.end.x<actual.regions.details.position.x,"Workshop catalogue / machine / inspector separate")
-		check(Policy.modal_scale(canvas,"pause")==1,"Pause stays native centered modal")
+		var pause: Dictionary = Policy.pause_overlay(canvas)
+		check(pause.presentation_class=="modal" and pause.frame_rect.get_center().is_equal_approx(canvas*.5) and Rect2(Vector2.ZERO,canvas).encloses(pause.frame_rect) and pause.frame_rect.size.x>=640 and pause.frame_rect.size.y>=360,"Pause remains a readable centered modal within the actual client")
 		for screen:String in ["reward","mutation","level_up","acquisition"]:
 			var overlay:Dictionary=Policy.run_overlay(canvas,screen)
 			check(Policy.uses_run_overlay(screen) and Policy.presentation_class(screen)=="modal","Run overlay retains combat-modal classification: "+screen)

@@ -177,6 +177,7 @@ func _payout_retry() -> void:
 	check(game.collection.credits == 24 and game._pending_run_payout.is_empty() and not game.last_result.payout_pending, "Retry saves the same verified reward exactly once")
 	game._action("retry_run_payout")
 	check(game.collection.credits == 24, "Repeated Results retry cannot pay twice")
+	await _settle() # Synchronous Results rebuild must finish responsive layout before pointer coordinates.
 	await _click(_button("open_shop"))
 	check(game.screen == "shop", "Successfully saved retry restores ordinary Results routes")
 

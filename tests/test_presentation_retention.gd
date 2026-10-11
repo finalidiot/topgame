@@ -34,6 +34,7 @@ class SnapshotGraph extends RefCounted:
 	var counter: int = 0
 	var child: RefCounted
 	var alias: RefCounted
+	var nested: Dictionary = {}
 	var _parent: WeakRef
 	var parent: RefCounted:
 		get: return _parent.get_ref() if _parent != null else null
@@ -58,6 +59,26 @@ func check(value: bool, message: String) -> void:
 	checks += 1
 	if not value and failures.size() < 30: failures.append(message); push_error(message)
 
+func snapshot_value(value: Variant, references: Dictionary) -> Variant:
+	# Native owner RNGs may live inside dictionaries/arrays. Capture exact seed
+	# and state recursively, keeping alias topology just like script runtimes.
+	if value is RandomNumberGenerator:
+		var identity: int = value.get_instance_id()
+		if references.has(identity): return {"runtime_reference":int(references[identity])}
+		references[identity] = references.size()
+		return {"seed":value.seed,"state":value.state}
+	if value is RefCounted and not value is Resource and not value is WeakRef and value.get_script() != null:
+		return script_state(value,references)
+	if value is Dictionary:
+		var state: Dictionary = {}
+		for key: Variant in value: state[key] = snapshot_value(value[key],references)
+		return state
+	if value is Array:
+		var state: Array = []
+		for item: Variant in value: state.append(snapshot_value(item,references))
+		return state
+	return value
+
 func script_state(subject: Object, visited: Variant = null) -> Dictionary:
 	# Enumerate all script variables, including guards/queues omitted from public
 	# telemetry. A computed weak parent getter can expose the owning runtime.
@@ -72,14 +93,38 @@ func script_state(subject: Object, visited: Variant = null) -> Dictionary:
 		if (int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0: continue
 		var name: String = str(property.name)
 		var value: Variant = subject.get(name)
-		if value is RandomNumberGenerator:
-			state[name] = {"seed":value.seed,"state":value.state}
-		elif value is Object:
-			if value is RefCounted and not value is Resource and not value is WeakRef and value.get_script() != null:
-				state[name] = script_state(value,references)
-		elif value is Dictionary or value is Array: state[name] = value.duplicate(true)
-		else: state[name] = value
+		# Keep the original boundary for native resources/weak references outside
+		# script state. Nested native values remain present rather than skipped.
+		if value is Object and not value is RandomNumberGenerator:
+			if not (value is RefCounted and not value is Resource and not value is WeakRef and value.get_script() != null): continue
+		state[name] = snapshot_value(value,references)
 	return state
+
+func test_nested_snapshot_rng() -> void:
+	var first := SnapshotGraph.new()
+	var second := SnapshotGraph.new()
+	var first_rng := RandomNumberGenerator.new()
+	var second_rng := RandomNumberGenerator.new()
+	first_rng.seed = 77; second_rng.seed = 77
+	first.nested = {"steps":[{"rng":first_rng}],"same_rng":first_rng}
+	second.nested = {"steps":[{"rng":second_rng}],"same_rng":second_rng}
+	var before: Dictionary = script_state(first)
+	check(before == script_state(second),"Equivalent nested owner RNGs compare exact values despite differing ObjectIDs")
+	check(before.nested.steps[0].rng == {"seed":first_rng.seed,"state":first_rng.state},"Nested dictionary/array snapshot includes exact native RNG seed and state")
+	check(before.nested.same_rng == {"runtime_reference":1},"Repeated nested RNG preserves alias topology")
+	var original_state: int = first_rng.state
+	first_rng.randf()
+	check(script_state(first) != before,"Advancing only nested RNG state is detected by full snapshot comparison")
+	first_rng.state = original_state
+	check(script_state(first) == before,"Restoring exact nested RNG state restores equivalence")
+	first_rng.seed = 78
+	check(script_state(first) != before,"Changing only nested RNG seed is detected by full snapshot comparison")
+	first_rng.seed = 77
+	var detached_rng := RandomNumberGenerator.new(); detached_rng.seed = 77
+	first.nested.same_rng = detached_rng
+	check(script_state(first) != before,"Breaking a nested RNG alias is detected even with matching seed/state")
+	first.nested.same_rng = first_rng
+	check(script_state(first) == before and first_rng.state == original_state,"Snapshot reads consume no nested RNG state")
 
 func combat_state(b: Node2D) -> Dictionary:
 	# Before the opening draft is chosen, Battle is genuinely uninitialized;
@@ -317,6 +362,7 @@ func test_main_boundaries() -> void:
 
 func run() -> void:
 	test_snapshot_references()
+	test_nested_snapshot_rng()
 	var base: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if base.is_empty(): base = ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
 	var qa_task: String = "002C.6"

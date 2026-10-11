@@ -57,7 +57,7 @@ func reroll_contracts() -> void:
 		await pad(JOY_BUTTON_RIGHT_SHOULDER)
 		check(game.screen == "reward" and game.run_context.reroll_charges == charges-1,"Right bumper debits exactly one charge for " + profile)
 		check(game.run_context.pending_offer != previous and int(game.run_context.reroll_snapshot().revision) == 1,"Reroll changes actual draft and revision for " + profile)
-		check(game.menus._reroll_control.text.begins_with(Front.prompt(profile,"reroll")),"Visible bumper label matches profile " + profile)
+		check(game.menus._reroll_control.text.begins_with("[%s]" % Front.prompt(profile,"reroll")),"Visible bracketed bumper label matches profile " + profile)
 		check(Bindings.reroll_button(profile) == JOY_BUTTON_RIGHT_SHOULDER,"Printed shoulder mapping is position-stable for " + profile)
 		var count: int = game.run_context.reroll_charges
 		await pad(JOY_BUTTON_X)
@@ -152,7 +152,8 @@ func touch_contracts() -> void:
 	check(not Touch.BURST_RECT.intersects(Layout.PLAY_REGION) and not Touch.BRAKE_RECT.intersects(Layout.PLAY_REGION),"Android action controls frame rather than obscure arena")
 	control.clear()
 	game.run_context.clear(); game._title()
-	check(game.menus._content.position == Vector2(80,60) and game.menus._content.size == Vector2(640,360),"Menus keep canonical art extent and centered native composition")
+	var presentation: Dictionary = game.menus.presentation_snapshot()
+	check(presentation.presentation_class=="frontend" and presentation.root_rect==Rect2(0,0,800,480) and presentation.root_scale==Vector2.ONE,"Title owns the full native client at scale one")
 	check(Layout.menu_point(Vector2(302,132)) == Vector2(222,72) and Layout.arena_point(Vector2(400,225)) == Vector2(320,165),"Root-screen translation preserves menu gestures and native arena pivots")
 func native_presentation() -> void:
 	game.run_context.clear(); game.run_context.start(Starters.build_for("breaker"),7341,"breaker")

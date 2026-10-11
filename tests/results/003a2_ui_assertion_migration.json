@@ -1,0 +1,63 @@
+{
+  "schema": "003a2-ui-assertion-migration-v1",
+  "status": "passed",
+  "checks": 2792,
+  "suites": [
+    {
+      "name": "controller",
+      "checks": 1128,
+      "passed": true,
+      "report": null,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154555_178516_controller.log"
+    },
+    {
+      "name": "combat_hud_003a1",
+      "checks": 829,
+      "passed": true,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154555_178516_combat_hud_003a1.json",
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154555_178516_combat_hud_003a1.log"
+    },
+    {
+      "name": "level_up_back_003a1",
+      "checks": 125,
+      "passed": true,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154555_178516_level_up_back_003a1.json",
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154555_178516_level_up_back_003a1.log"
+    },
+    {
+      "name": "frontend_layout_003a2",
+      "checks": 710,
+      "passed": true,
+      "report": null,
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154555_178516_frontend_layout_003a2.log"
+    }
+  ],
+  "source_unchanged": true,
+  "canonical_source_unchanged": true,
+  "player_unchanged": true,
+  "harness_unchanged": true,
+  "focused_frozen_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154555_178516.json",
+  "preserved_failure_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_152519_050744.json",
+  "archived_originals_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_obsolete_ui_assertions_originals.json",
+  "migration": {
+    "old_failed_assertions": {
+      "controller": 40,
+      "combat_hud_003a1": 24,
+      "level_up_back_003a1": 39,
+      "frontend_layout_003a2": 5
+    },
+    "controller": "The test navigator respects the physical-notes panel consuming Up/Down while demanding actual D-pad reachability and scroll visibility for every category/part. Focus frame coverage retains visible Texture frames and adds the explicit four-sided4px border/opaque3px separator contract for current card frames. Toggle inventory includes controller_rumble and verifies its real mapped Confirm action.",
+    "combat_hud": "Options controls must fit the actual responsive menu root; all canonical world/RPM/attachment/control and setting-action checks retained.",
+    "level_up_back": "Original seeded first family was Azure Stability for all three profiles, which correctly terminates atII. Explicit retained Redline starting-offer fixture exercises the still-supported mutation Back flow, preserving every claim/elapsed/focus/held-Back/Pause/READY/GO predicate. Accepted count125 versus prior134 reflects nine failure-only timeout/missing-target diagnostics no longer triggered; no positive assertion was removed.",
+    "frontend_layout": "Pause must be a centered modal inside the client with at least640x360 readable area, following the actual enlarged Pause policy; Run-overlay exclusion and all other safe-region predicates retained.",
+    "production_files_changed": 0,
+    "gameplay_input_and_lifecycle_predicates_relaxed": 0,
+    "scope": "Synthetic logical controller/UI policy fixtures; no physical-controller/phone acceptance claimed."
+  },
+  "test_sha256": {
+    "test_controller.gd": "114f0e5447e7c542061a2834ed40dd4007ff96ab8f1cde714faf0328b36f8137",
+    "test_combat_hud_003a1.gd": "1238f16da131823e9df5ca45f2ca15c8c0075dc2a66825b125b383185c5a9131",
+    "test_level_up_back_003a1.gd": "916cf21eda067adb7f88108f7eb5d0b9caeab95ea5d541aaa28ab5533b51d66c",
+    "test_frontend_layout_003a2.gd": "514244d6a9c0541f4b632ff36656ef756160ab6b3e45323f384e0ffcd419f789"
+  }
+}

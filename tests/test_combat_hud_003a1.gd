@@ -36,7 +36,7 @@ func navigate_status_option(app: Node2D, profile_id: String) -> bool:
 	for press: int in range(16):
 		var focused: Control = root.gui_get_focus_owner()
 		if is_instance_valid(focused) and str(focused.get_meta("setting_key", "")) == "top_status_bars":
-			check(Rect2(80,60,640,360).encloses(focused.get_global_rect()), "Focused status option stays visible inside native menu for " + profile_id)
+			check(Rect2(app.menus.presentation_snapshot().root_rect).encloses(focused.get_global_rect()), "Focused status option stays visible inside its responsive menu for " + profile_id)
 			return true
 		# The paired comfort row has Impact Numbers directly under the rightward
 		# toggle column; a normal left press reaches Top Status Bars in that row.
@@ -56,7 +56,7 @@ func controller_options(app: Node2D) -> void:
 			await joy_tap(Bindings.confirm_button(profile_id))
 			check(app.settings.top_status_bars and app.top_status_bars.visible, "Printed Confirm toggles status bars ON for " + profile_id)
 		for node: Node in app.menus._content.get_children():
-			if node is Button or node is HSlider: check(Rect2(80,60,640,360).encloses(node.get_global_rect()), "Options control stays within centred native menu for " + profile_id)
+			if node is Button or node is HSlider: check(Rect2(app.menus.presentation_snapshot().root_rect).encloses(node.get_global_rect()), "Options control stays within its actual responsive menu for " + profile_id)
 		await joy_tap(Bindings.back_button(profile_id))
 		check(app.screen == "title", "Printed Back leaves Options without triggering Confirm for " + profile_id)
 		evidence.append({"profile": profile_id, "confirm_button": Bindings.confirm_button(profile_id), "back_button": Bindings.back_button(profile_id), "synthetic_logical_device": 7, "physical_hardware": "Not tested by this fixture"})

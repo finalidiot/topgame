@@ -47,7 +47,7 @@ def main():
                 if name in ['input_acceptance_003a1','overdrive_lifecycle_003a1','level_up_back_003a1']:command+=['--profiles='+str(profile)]
                 if name=='level_up_back_003a1':command+=['--kind=flow']
                 if name in ['mobile_shell_layout_003a1','touch_fullscreen_projection_003a2','frontend_classes_003a2']:command+=['--profile='+str(profile)+'.json']
-                if name in ['frontend_interactions_003a2','android_fullscreen_layout_003a2','controller_rumble_003a2','course_correction_ui_003a2']:command+=['--profile-prefix='+str(profile)]
+                if name in ['frontend_interactions_003a2','android_fullscreen_layout_003a2','mobile_choice_contact_003a2','levelup_fullclient_003a2','controller_rumble_003a2','course_correction_ui_003a2']:command+=['--profile-prefix='+str(profile)]
                 if name=='shop_ux_003a1':command+=['--mode=all','--diagnostic','--profile='+str(profile)+'.json']
                 if name=='baseline_physics':command+=['--baseline-source='+str(ROOT.parent/'GyroBrothers-Worktrees/topgame-task-002a-baseline/scripts/battle.gd')]
             start=time.monotonic();code=None;timed_out=False

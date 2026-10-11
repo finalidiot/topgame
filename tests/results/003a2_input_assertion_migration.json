@@ -1,0 +1,45 @@
+{
+  "schema": "003a2-input-assertion-migration-v1",
+  "status": "passed",
+  "checks": 359,
+  "suites": [
+    {
+      "name": "input_acceptance_003a1",
+      "checks": 277,
+      "passed": true,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154025_038076_input_acceptance_003a1.json",
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154025_038076_input_acceptance_003a1.log"
+    },
+    {
+      "name": "combat_acceptance_hud_003a1",
+      "checks": 82,
+      "passed": true,
+      "report": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154025_038076_combat_acceptance_hud_003a1.json",
+      "log": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_regression_headless_20261011_154025_038076_combat_acceptance_hud_003a1.log"
+    }
+  ],
+  "source_unchanged": true,
+  "canonical_source_unchanged": true,
+  "player_unchanged": true,
+  "harness_unchanged": true,
+  "focused_frozen_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_154025_038076.json",
+  "preserved_failure_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_regression_headless_20261011_152519_050744.json",
+  "archived_originals_receipt": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_obsolete_input_assertions_originals.json",
+  "migration": {
+    "old_failed_assertions": {
+      "input_acceptance_003a1": 8,
+      "combat_acceptance_hud_003a1": 4
+    },
+    "edited_predicates": 3,
+    "input_pointer": "Target must fit the actual responsive menu root; product-surface and real GUI dispatch checks retained.",
+    "title": "Title front end must fill the native800x480 client at scale one.",
+    "reroll": "Visible printed shoulder prompt must use the current bracketed profile prefix: [RB], [R], [R1].",
+    "production_files_changed": 0,
+    "gameplay_input_wallet_and_lifecycle_predicates_relaxed": 0,
+    "scope": "Existing logical mouse, keyboard, controller-profile and synthetic touch flows; physical controller/Android acceptance is not claimed."
+  },
+  "test_sha256": {
+    "test_input_acceptance_003a1.gd": "b84b249c359b47ac81c6e9937b7586620b00d2dbb825bf666e6e263aea1c9928",
+    "test_combat_acceptance_hud_003a1.gd": "8675c50b83d8a518cf6d66b66d4702eb1d9a1a2bce22c06ea7028c865e01b4ee"
+  }
+}
