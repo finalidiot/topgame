@@ -7,9 +7,9 @@ const Parts = preload("res://scripts/parts.gd")
 const IDS: Array[String] = ["breaker", "bastion", "vane"]
 const HANDLING: Dictionary = {
 	"breaker":{"acceleration":1.32,"speed":1.20,"mass":1.0,"impact":1.30,"spin_drain":1.0,"orbit":1.5,"bank":0.85,"recovery":1.0},
-	# Guard / Low / Ball already provide stamina. Keep fortress weight and
-	# recovery, but spend the normal reserve cost instead of a free 10% discount.
-	"bastion":{"acceleration":0.72,"speed":0.78,"mass":1.35,"impact":1.0,"spin_drain":1.0,"orbit":0.25,"bank":1.35,"recovery":1.3},
+	# Quicker short-range response, with the same low speed ceiling and weight.
+	# Guard / Low / Ball still pay the normal reserve cost without a discount.
+	"bastion":{"acceleration":0.82,"speed":0.78,"mass":1.35,"impact":1.0,"spin_drain":1.0,"orbit":0.25,"bank":1.35,"recovery":1.3},
 	"vane":{"acceleration":1.18,"speed":1.12,"mass":0.94,"impact":1.05,"spin_drain":0.82,"orbit":1.6,"bank":1.0,"recovery":1.15}
 }
 const DEFINITIONS: Dictionary = {
@@ -20,7 +20,7 @@ const DEFINITIONS: Dictionary = {
 	},
 	"bastion": {
 		"id":"bastion", "name":"BASTION", "role":"DEFENCE / CONTROL / STABILITY", "accent":Color("64b6f4"),
-		"tagline":"HEAVY. STABLE. HARD TO MOVE.", "strengths":"Holds centre. Forgives mistakes.", "weakness":"Slow to chase. Less explosive.",
+		"tagline":"HEAVY. RESPONSIVE. HARD TO DISPLACE.", "strengths":"Brace. Reposition. Reclaim centre.", "weakness":"Slow to chase. Less explosive.",
 		"assembly":{"blade":"guard", "ratchet":"low", "bit":"ball"}, "motion":"anchored"
 	},
 	"vane": {
