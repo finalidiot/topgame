@@ -23,13 +23,30 @@ static func report(game: Node, request_data: Dictionary) -> void:
 	var screen_size: Vector2i = DisplayServer.screen_get_size()
 	var surface: Rect2 = Rect2(Vector2.ZERO,viewport_size)
 	if game.get_viewport().get_parent() is SubViewportContainer: surface = game.get_viewport().get_parent().get_global_rect()
+	var presentation: Dictionary = game.window_presentation_snapshot()
+	var touch_layout: Dictionary = game.touch_controls.layout_snapshot()
+	var canvas_safe: Rect2 = presentation.get("safe_rect",Rect2(Vector2.ZERO,viewport_size))
+	var arena_rect: Rect2 = Rect2(game.combat_frame.position,game.combat_frame.size)
+	var burst_rect: Rect2 = touch_layout.burst_rect
+	var brake_rect: Rect2 = touch_layout.brake_rect
+	var steering_rect: Rect2 = touch_layout.steering_rect
+	var menu_origin: Vector2 = presentation.get("menu_origin",Vector2(80,60))
+	var menu_scale: float = float(presentation.get("menu_scale",1.0))
 	var machines: Array = []
 	for machine: Dictionary in game.battle.fighters:
 		machines.append({"entity_id":machine.entity_id,"team":machine.team_id,"outcome":machine.outcome,"pos":[machine.pos.x,machine.pos.y],"vel":[machine.vel.x,machine.vel.y],"rpm":machine.get("rpm",machine.get("energy",0.0)),"cooldown":machine.get("cooldown",0.0)})
 	var data: Dictionary = {"run_id":request_data.run_id,"platform":OS.get_name(), "debug":OS.has_feature("debug"),
 		"isolated_collection":game.collection.save_path,"screen":game.screen,"mode":game.mode,
 		"viewport":[viewport_size.x,viewport_size.y],"physical_screen":[screen_size.x,screen_size.y],
+		"canvas_size":[viewport_size.x,viewport_size.y],
+		"canvas_safe_area":[canvas_safe.position.x,canvas_safe.position.y,canvas_safe.size.x,canvas_safe.size.y],
 		"combat_viewport":[game.combat_viewport.size.x,game.combat_viewport.size.y],"arena_origin":[game.combat_frame.position.x,game.combat_frame.position.y],
+		"arena_rect":[arena_rect.position.x,arena_rect.position.y,arena_rect.size.x,arena_rect.size.y],
+		"arena_scale":arena_rect.size.x/float(game.combat_viewport.size.x),
+		"menu_origin":[menu_origin.x,menu_origin.y],"menu_scale":menu_scale,"menu_native_view":[640,360],
+		"action_bounds":{"burst":[burst_rect.position.x,burst_rect.position.y,burst_rect.size.x,burst_rect.size.y],
+			"brake":[brake_rect.position.x,brake_rect.position.y,brake_rect.size.x,brake_rect.size.y]},
+		"steering_bounds":[steering_rect.position.x,steering_rect.position.y,steering_rect.size.x,steering_rect.size.y],
 		"safe_area":[safe.position.x,safe.position.y,safe.size.x,safe.size.y],
 		"native_surface":[surface.position.x,surface.position.y,surface.size.x,surface.size.y],
 		"fps":Engine.get_frames_per_second(),"process_ms":Performance.get_monitor(Performance.TIME_PROCESS)*1000.0,

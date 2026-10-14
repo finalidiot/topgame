@@ -1,0 +1,521 @@
+{
+  "schema": "003a2-course-correction-performance-v1",
+  "sources": {
+    "fixture": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_performance_final_fixture.json",
+      "sha256": "5663747162b4fa91ee812fc0e3b0b3d8e9231744b6b48b5268ec649f6ff4ff5b"
+    },
+    "runtime_snapshot": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_corrected_runtime_attempt03.json",
+      "sha256": "bc9c260a1bb588570c0b0b2650cab4e4a167e17ecd50a3002952ec414f89c802"
+    },
+    "runtime_source_fingerprint": "b8b482df2742b20ec75e1dd626515ea98985f06a82f607fc396ecf2061e7feb5",
+    "post_run_source_verification": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_performance_final_source_verification.json",
+      "sha256": "79cb3ae8a2cad0982de926c5a673ed7c6cd1ebdcea1965eb269721f37e476ea2"
+    },
+    "native_headless_gameplay_parity": {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_course_correction_performance_native_headless_parity.json",
+      "sha256": "b833a094c39940893a7e455a4b57574283e91505d959bd99854ef7058a9a1cae"
+    }
+  },
+  "seeds": [
+    421,
+    7341,
+    2026
+  ],
+  "ticks_per_case": 720,
+  "native_resolution": [
+    1280,
+    720
+  ],
+  "native_render_method": "OpenGL compatibility, VSync disabled, uncapped engine frame loop",
+  "reports": {
+    "headless": {
+      "report": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_course_correction_performance_headless_final.json",
+        "sha256": "5f4b106726b61f6b2e10795d7fd9e43a791a5bf54116cce510c98e8ec3e43c21"
+      },
+      "log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_correction_performance_headless_final.log",
+        "sha256": "4e2e1bdcc2fb7af2cb5f1d6f010e6b4545a7a2ef63efe77ff5df84a8af3805cb"
+      },
+      "checks": 84504,
+      "failures": [],
+      "processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+      "gpu": "",
+      "rendered": false,
+      "densities": [
+        {
+          "hostile_full_tops": 4,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.716666666666667,
+            11.783333333333333,
+            11.666666666666666
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 2.538,
+            "p95_ms": 5.81,
+            "maximum_ms": 11.235
+          },
+          "mean_case_median_physics_ms": 2.552,
+          "worst_case_p95_physics_ms": 6.036,
+          "draw_submission_ms": {
+            "samples": 18,
+            "median_ms": 5.5435,
+            "p95_ms": 41.904,
+            "maximum_ms": 41.904
+          },
+          "rendered_wall_ms": {
+            "samples": 0
+          },
+          "peaks": {
+            "active_full_enemies": 4.0,
+            "circuit_points": 0.0,
+            "defence_states": 2.0,
+            "draw_calls": 0.0,
+            "drive_peak": 0.44,
+            "enemy_buckets": 1.0,
+            "fighters": 5.0,
+            "fx": 30.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 60.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1750.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 151.0,
+            "power_states": 5.0,
+            "powered_enemies": 4.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 2.0,
+            "recovery_events": 3.0,
+            "resources": 114.0,
+            "roster_states": 5.0,
+            "route_owners": 2.0,
+            "static_memory_bytes": 133104034.0,
+            "target_entries": 6.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        },
+        {
+          "hostile_full_tops": 5,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.9,
+            11.816666666666666,
+            9.166666666666666
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            9.333333333333334
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 3.5365,
+            "p95_ms": 7.519,
+            "maximum_ms": 23.68
+          },
+          "mean_case_median_physics_ms": 3.5523333333333333,
+          "worst_case_p95_physics_ms": 8.514,
+          "draw_submission_ms": {
+            "samples": 18,
+            "median_ms": 6.093,
+            "p95_ms": 23.124,
+            "maximum_ms": 23.124
+          },
+          "rendered_wall_ms": {
+            "samples": 0
+          },
+          "peaks": {
+            "active_full_enemies": 5.0,
+            "circuit_points": 217.0,
+            "defence_states": 3.0,
+            "draw_calls": 0.0,
+            "drive_peak": 0.4975,
+            "enemy_buckets": 0.0,
+            "fighters": 6.0,
+            "fx": 11.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 65.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1751.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 182.0,
+            "power_states": 6.0,
+            "powered_enemies": 5.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 2.0,
+            "recovery_events": 2.0,
+            "resources": 114.0,
+            "roster_states": 6.0,
+            "route_owners": 2.0,
+            "static_memory_bytes": 134908838.0,
+            "target_entries": 6.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        },
+        {
+          "hostile_full_tops": 6,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.65,
+            11.65,
+            11.333333333333334
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 4.234999999999999,
+            "p95_ms": 8.608,
+            "maximum_ms": 20.017
+          },
+          "mean_case_median_physics_ms": 4.259666666666667,
+          "worst_case_p95_physics_ms": 9.723,
+          "draw_submission_ms": {
+            "samples": 18,
+            "median_ms": 6.2490000000000006,
+            "p95_ms": 12.142,
+            "maximum_ms": 12.142
+          },
+          "rendered_wall_ms": {
+            "samples": 0
+          },
+          "peaks": {
+            "active_full_enemies": 6.0,
+            "circuit_points": 183.0,
+            "defence_states": 3.0,
+            "draw_calls": 0.0,
+            "drive_peak": 0.5465,
+            "enemy_buckets": 2.0,
+            "fighters": 7.0,
+            "fx": 11.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 72.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1753.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 222.0,
+            "power_states": 7.0,
+            "powered_enemies": 6.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 3.0,
+            "recovery_events": 7.0,
+            "resources": 114.0,
+            "roster_states": 7.0,
+            "route_owners": 3.0,
+            "static_memory_bytes": 137256694.0,
+            "target_entries": 8.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        }
+      ]
+    },
+    "native": {
+      "report": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_course_correction_performance_native_final.json",
+        "sha256": "35018bf11d87693077c75cd4bade9759f5bd42990658467dd46c347cdb880160"
+      },
+      "log": {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\logs\\003a2_course_correction_performance_native_final.log",
+        "sha256": "2da8cd85c174eb02a190a04f015015a12c08d9041f2c9210af68ded701e08646"
+      },
+      "checks": 84504,
+      "failures": [],
+      "processor": "Intel(R) Core(TM) i3-10105F CPU @ 3.70GHz",
+      "gpu": "NVIDIA GeForce GTX 1660",
+      "rendered": true,
+      "densities": [
+        {
+          "hostile_full_tops": 4,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.716666666666667,
+            11.783333333333333,
+            11.666666666666666
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 2.928,
+            "p95_ms": 6.65,
+            "maximum_ms": 11.763
+          },
+          "mean_case_median_physics_ms": 2.9333333333333336,
+          "worst_case_p95_physics_ms": 6.904,
+          "draw_submission_ms": {
+            "samples": 1983,
+            "median_ms": 6.945,
+            "p95_ms": 9.577,
+            "maximum_ms": 18.188
+          },
+          "rendered_wall_ms": {
+            "samples": 1980,
+            "median_ms": 13.1685,
+            "p95_ms": 18.147,
+            "maximum_ms": 36.267
+          },
+          "peaks": {
+            "active_full_enemies": 4.0,
+            "circuit_points": 0.0,
+            "defence_states": 2.0,
+            "draw_calls": 510.0,
+            "drive_peak": 0.44,
+            "enemy_buckets": 1.0,
+            "fighters": 5.0,
+            "fx": 30.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 60.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1671.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 151.0,
+            "power_states": 5.0,
+            "powered_enemies": 4.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 2.0,
+            "recovery_events": 3.0,
+            "resources": 115.0,
+            "roster_states": 5.0,
+            "route_owners": 2.0,
+            "static_memory_bytes": 55402003.0,
+            "target_entries": 6.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        },
+        {
+          "hostile_full_tops": 5,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.9,
+            11.816666666666666,
+            9.166666666666666
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            9.333333333333334
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 3.6464999999999996,
+            "p95_ms": 6.844,
+            "maximum_ms": 20.552
+          },
+          "mean_case_median_physics_ms": 3.629,
+          "worst_case_p95_physics_ms": 7.131,
+          "draw_submission_ms": {
+            "samples": 1983,
+            "median_ms": 7.747,
+            "p95_ms": 9.662,
+            "maximum_ms": 19.087
+          },
+          "rendered_wall_ms": {
+            "samples": 1980,
+            "median_ms": 15.097999999999999,
+            "p95_ms": 19.62,
+            "maximum_ms": 45.151
+          },
+          "peaks": {
+            "active_full_enemies": 5.0,
+            "circuit_points": 217.0,
+            "defence_states": 3.0,
+            "draw_calls": 483.0,
+            "drive_peak": 0.4975,
+            "enemy_buckets": 0.0,
+            "fighters": 6.0,
+            "fx": 11.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 65.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1672.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 182.0,
+            "power_states": 6.0,
+            "powered_enemies": 5.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 2.0,
+            "recovery_events": 2.0,
+            "resources": 115.0,
+            "roster_states": 6.0,
+            "route_owners": 2.0,
+            "static_memory_bytes": 57248295.0,
+            "target_entries": 6.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        },
+        {
+          "hostile_full_tops": 6,
+          "player": 1,
+          "cases": 3,
+          "actual_fixed_frames": 2160,
+          "advancing_seconds_at_requested_density": [
+            11.65,
+            11.65,
+            11.333333333333334
+          ],
+          "all_frames_density_seconds": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "physics_ms": {
+            "samples": 1980,
+            "median_ms": 4.4465,
+            "p95_ms": 8.348,
+            "maximum_ms": 20.455
+          },
+          "mean_case_median_physics_ms": 4.461666666666667,
+          "worst_case_p95_physics_ms": 8.649,
+          "draw_submission_ms": {
+            "samples": 1983,
+            "median_ms": 8.104,
+            "p95_ms": 10.305,
+            "maximum_ms": 19.52
+          },
+          "rendered_wall_ms": {
+            "samples": 1980,
+            "median_ms": 16.549,
+            "p95_ms": 21.88,
+            "maximum_ms": 33.58
+          },
+          "peaks": {
+            "active_full_enemies": 6.0,
+            "circuit_points": 183.0,
+            "defence_states": 3.0,
+            "draw_calls": 522.0,
+            "drive_peak": 0.5465,
+            "enemy_buckets": 2.0,
+            "fighters": 7.0,
+            "fx": 11.0,
+            "last_stand_active_owners": 0.0,
+            "live_routes": 72.0,
+            "loaded_owners": 1.0,
+            "motion_owners": 0.0,
+            "motion_points": 0.0,
+            "objects": 1674.0,
+            "particles": 12.0,
+            "pilot_history": 12.0,
+            "power_events": 222.0,
+            "power_states": 7.0,
+            "powered_enemies": 6.0,
+            "prismatic_fields_per_owner": 4.0,
+            "prismatic_rng_owners": 3.0,
+            "recovery_events": 7.0,
+            "resources": 115.0,
+            "roster_states": 7.0,
+            "route_owners": 3.0,
+            "static_memory_bytes": 59627455.0,
+            "target_entries": 8.0,
+            "trace_points": 10.0
+          },
+          "natural_end_statuses": [
+            "battle",
+            "battle",
+            "battle"
+          ]
+        }
+      ]
+    }
+  },
+  "scope": "Four/five/six hostile full tops plus player. All six new powers are on the player with accepted Ghost Circuit; NPC ownership is an explicit representative stress fixture, not production package grants. Initial legal builds, invested powers, positions/velocities and 640/880-second epochs are declared fixtures. New admissions are suspended; ordinary pilots, contacts, power updates, fixed ticks, impact holds, outcomes and retirement continue. Last Stand is not forced active. No Main/HUD/menu/music or Collection instance. This is a finite stress profile rather than a natural survival or human-playtest movie.",
+  "bounds": {
+    "new_aura_family_lanes_per_body_max": 6,
+    "new_aura_segments_per_body_max": 18,
+    "points_per_arc": 9,
+    "prismatic_rng_objects_per_owned_live_prism_body": 1,
+    "prismatic_state_change_period_seconds": 8,
+    "new_base_modifier_query_state": "Fresh bounded scalar queries; no global catalogue writes, gain source or target search.",
+    "paid_routes_max": 72,
+    "particles_max": 120,
+    "power_fx_max": 32,
+    "power_events_max": 256,
+    "recovery_events_max": 128,
+    "motion_history_owner_max": 16,
+    "motion_history_points_max": 10,
+    "pilot_history_max": 12,
+    "prismatic_owner_fields_checked_max": 20,
+    "target_map_checked_limit": "At most three maps per owner, each bounded by admitted bodies; measured total <= fighters^2 * 3.",
+    "rumble": "This fixture emits Battle requests without Main or physical output. Rumble queue/credit bounds are checked in the separate mock validation suite."
+  },
+  "limitations": [
+    "Physics timing covers the existing real test_step call and excludes subsequent read-only inspection. Native frame wall includes inspection and process scheduling; draw submission is CPU time and excludes GPU completion.",
+    "Nine 12-second fixed-tick cases, with naturally held frames and possible retirement. This is not long-duration leak proof, Android hardware performance or a guaranteed FPS claim.",
+    "Native runtime source predates the final compact Prism HUD/layout reservation and Workshop handling-note text. Both are presentation deltas outside this fixture; separate focused native/UI tests cover them."
+  ],
+  "latest_root_runtime_deltas": [
+    "scripts/combat_hud_layout.gd",
+    "scripts/power_state_meters.gd",
+    "scripts/workshop_build_stats.gd"
+  ],
+  "superseded_exploratory_report": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_course_correction_performance_headless_attempt01.json",
+    "sha256": "742db8374147aff1aaa21f2f6ba60fe940f963eb6078d89de9c3a223d69b49de"
+  },
+  "headless_native_gameplay_state_exact": true
+}

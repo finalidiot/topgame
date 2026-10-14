@@ -1,11 +1,12 @@
 extends SceneTree
-# Native-resolution UI regression tests use real keyboard input and shaped Label
+# Presentation-class UI regression tests use real keyboard input and shaped Label
 # measurements. Pixel-level visual review remains part of the separate smoke test.
 
 const Menus = preload("res://scripts/menus.gd")
 const Powers = preload("res://scripts/run_powers.gd")
 const Parts = preload("res://scripts/parts.gd")
 const Starters = preload("res://scripts/starters.gd")
+const Presentation = preload("res://scripts/frontend_layout.gd")
 const PRODUCT_RECT: Rect2 = Rect2(0, 0, 800, 480)
 const MENU_RECT: Rect2 = Rect2(80, 60, 640, 360)
 
@@ -80,17 +81,18 @@ func _find_label(parent: Node, text: String) -> Label:
 
 func _check_label_fits(label: Label) -> void:
 	var rect: Rect2 = label.get_global_rect()
-	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else MENU_RECT
-	check(menus._content.position == (Vector2.ZERO if menus.screen == "hud" else MENU_RECT.position), "HUD and native menus use their correct product origin")
+	var screen_rect: Rect2 = PRODUCT_RECT if menus.screen == "hud" else menus._content.get_global_rect()
+	var full_client: bool = menus.presentation_mode in ["frontend", "combat"] or (not menus.mobile_hud and Presentation.uses_run_overlay(menus.screen))
+	check(menus._content.position == (Vector2.ZERO if full_client else MENU_RECT.position), "HUD/full-client pages and centered modals use their actual presentation origins")
 	var parent: Node = label.get_parent()
 	var clipped_strip: bool = false
 	while parent != null:
 		if parent is ScrollContainer:
 			clipped_strip = true
-			check(screen_rect.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays inside the native menu")
+			check(screen_rect.encloses(parent.get_global_rect()), "Catalogue scroll viewport stays inside the actual presentation root")
 			break
 		parent = parent.get_parent()
-	if not clipped_strip: check(screen_rect.encloses(rect), "Label stays inside its native menu or product HUD: %s %s" % [label.text, rect])
+	if not clipped_strip: check(screen_rect.encloses(rect), "Label stays inside its actual presentation root or product HUD: %s %s" % [label.text, rect])
 	if label.text.is_empty(): return
 	var font: Font = label.get_theme_font("font")
 	var font_size: int = label.get_theme_font_size("font_size")
@@ -143,11 +145,11 @@ func _test_reward_cards() -> void:
 			check(_find_label(card, str(power.name).to_upper()) != null, "Card shows full power name: "+str(power.name))
 			var expected_copy: String = str(Menus.AbilityInspection.describe(str(power.id), 0).get("what", power.get("card_copy", power.description)))
 			check(_find_label(card, expected_copy) != null, "Card shows the concise mechanism description: "+str(power.name))
-			check(MENU_RECT.encloses(card.get_global_rect()), "Reward card remains inside the centred native 640x360 menu")
+			check(menus.presentation_snapshot().safe_rect.encloses(card.get_global_rect()), "Reward card remains inside the actual full-client safe overlay")
 			if index > 0:
 				check(not card.get_global_rect().intersects(cards[index - 1].get_global_rect()), "Reward cards never overlap")
-			var focus: StyleBoxTexture = card.get_theme_stylebox("focus") as StyleBoxTexture
-			check(focus != null and focus.texture != null and focus.modulate_color.a > 0 and not focus.texture.get_image().is_invisible(), "Card has a visible authored focus frame")
+			var focus: StyleBoxFlat = card.get_theme_stylebox("focus") as StyleBoxFlat
+			check(focus != null and focus.border_color == Menus.AbilityCardStyle.FOCUS and focus.border_width_left >= 4 and focus.shadow_color == Menus.AbilityCardStyle.FOCUS_SEPARATOR, "Card has the corrected universal focus frame and dark separator")
 		check(_find_label(menus, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP]) != null, "Draft retains the current family capacity beside the fixed inspection")
 		await _key(KEY_LEFT)
 		check(root.gui_get_focus_owner() == cards[2], "Left key wraps first card to third")

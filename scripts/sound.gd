@@ -79,6 +79,17 @@ const MIX_PEAK_BUDGET: float = 0.62
 const GRIND_DB: float = -29.0
 const IMPACT_GAIN: Dictionary = {"metal_light":-22.0,"metal_normal":-16.0,"metal_edge":-19.0,"metal_scrape":-26.0,"metal_clang":-10.0,"metal_massive":-8.0,"metal_extreme":-6.0,"metal_crack":-15.0,"metal_wall":-16.0,"metal_takedown":-7.0}
 const IMPACT_COOLDOWN: Dictionary = {"metal_light":0.08,"metal_normal":0.10,"metal_clang":0.12,"metal_edge":0.08,"metal_scrape":0.16,"metal_massive":0.28,"metal_extreme":0.35,"metal_crack":0.22,"hit":0.08}
+## Existing mechanical samples give earned defence actions a quiet response.
+## Semantic keys keep their own cooldowns; important impacts retain priority.
+const DEFENCE_CUES: Dictionary = {
+	"gyro_lock_set":{"sample":"anchor","gain":-16.0,"cooldown":0.55,"priority":2},
+	"gyro_lock_break":{"sample":"anchor_break","gain":-17.0,"cooldown":0.35,"priority":2},
+	"sink_store":{"sample":"counterweight_store","gain":-17.0,"cooldown":0.35,"priority":2},
+	"sink_vent":{"sample":"momentum_release","gain":-14.0,"cooldown":0.60,"priority":2},
+	"sink_return":{"sample":"counterweight_release","gain":-13.0,"cooldown":0.60,"priority":2},
+	"exchange_set":{"sample":"crash_guard","gain":-16.0,"cooldown":0.55,"priority":2},
+	"exchange_release":{"sample":"momentum_release","gain":-15.0,"cooldown":0.40,"priority":2}
+}
 const PRIORITY: Dictionary = {"pickup_collect":5,"boss_port":6,"boss_payoff":6,"rpm_reclaim":3,"low_rpm":2,"breakneck_recovery":3,"scrape": 0, "small_hit": 0, "afterimage": 1, "hit": 1, "wall": 1, "burst": 2, "heavy": 3, "power_wake": 3, "chain": 3, "redline": 4, "comet_charge": 3, "comet_release": 4, "wave": 4, "launch": 4, "ring_out": 4, "spin_out": 3, "second_wind": 5, "win": 6, "loss": 6, "acquire": 6, "ui": 6, "ui_focus": 5, "card_select": 6, "near_level": 4, "level_up": 7, "resume": 6,
 	"rank_up": 7, "mutation_available": 8, "mutation_select": 8,
 	"redline_ii": 4, "runaway": 4, "runaway_hit": 3,
@@ -207,13 +218,14 @@ func play_sound(kind: String) -> void:
 	if kind == "metal_grind": return # The contact envelope owns its one loop.
 	var aliases: Dictionary = {"boss_warning":"boss_port","boss_entry":"boss_port","impact":"hit", "light_impact":"hit", "heavy_impact":"heavy", "collision":"hit", "bounce":"wall", "land":"wall", "countdown":"ui", "victory":"win", "defeat":"loss", "impact_wake":"power_wake", "chain_impact":"chain", "swarm_wave":"wave", "small_contact":"small_hit", "small_small":"small_hit", "iron_comet":"comet_charge", "power_acquired":"acquire", "card_focus":"ui_focus", "power_selected":"card_select", "progression_near":"near_level", "round_resume":"resume"}
 	var key: String = str(aliases.get(kind, kind))
+	var defence: Dictionary = DEFENCE_CUES.get(key,{})
 	# Legacy callers keep their intent; physical families replace their samples.
-	var sample_key: String = {"hit":"metal_light","small_hit":"metal_light","heavy":"metal_clang","wall":"metal_wall","scrape":"metal_scrape"}.get(key,key)
+	var sample_key: String = str(defence.get("sample",{"hit":"metal_light","small_hit":"metal_light","heavy":"metal_clang","wall":"metal_wall","scrape":"metal_scrape"}.get(key,key)))
 	if not SOUNDS.has(sample_key): return
-	if audio_time - float(last_played.get(key, -100.0)) < float(IMPACT_COOLDOWN.get(key,COOLDOWN.get(key, 0.0))):
+	if audio_time - float(last_played.get(key, -100.0)) < float(defence.get("cooldown",IMPACT_COOLDOWN.get(key,COOLDOWN.get(key, 0.0)))):
 		suppressed_count += 1
 		return
-	var priority: int = int({"metal_light":1,"metal_normal":2,"metal_clang":4,"metal_edge":1,"metal_scrape":0,"metal_massive":6,"metal_extreme":7,"metal_crack":5,"metal_takedown":6,"metal_wall":2}.get(key,PRIORITY.get(key, 2)))
+	var priority: int = int(defence.get("priority",{"metal_light":1,"metal_normal":2,"metal_clang":4,"metal_edge":1,"metal_scrape":0,"metal_massive":6,"metal_extreme":7,"metal_crack":5,"metal_takedown":6,"metal_wall":2}.get(key,PRIORITY.get(key, 2))))
 	var slot: int = -1
 	# Use a free channel first; otherwise replace the oldest least-important cue.
 	# Twelve small-top contacts can never steal a recovery or acquisition cue.
@@ -283,6 +295,7 @@ func play_sound(kind: String) -> void:
 		player.volume_db = -3.0
 	if sample_key.begins_with("metal_"):
 		player.volume_db = -26.0 if key == "small_hit" else float(IMPACT_GAIN.get(sample_key,-16.0))
+	if not defence.is_empty(): player.volume_db = float(defence.gain)
 	_channel_base_db[slot] = player.volume_db
 	_apply_headroom(0.0,slot)
 	player.play()

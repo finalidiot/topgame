@@ -1,5 +1,5 @@
 extends SceneTree
-## Native 640x360 first-save UI, exercised through actual GUI input dispatch.
+## Responsive first-save UI, exercised through actual GUI input dispatch.
 ## Device 3 is synthetic controller coverage, not a physical-hardware claim.
 
 class QuietMain extends "res://scripts/main.gd":
@@ -58,10 +58,10 @@ func _labels() -> Array[Label]:
 	return found
 
 func _check_layout(context: String) -> void:
-	var native_rect: Rect2 = Rect2(game.menus._content.global_position, Vector2(640, 360))
+	var native_rect: Rect2 = game.menus._content.get_global_rect()
 	for node: Node in _descendants(game.menus):
 		if node is Button and _scroll_ancestor(node) == null:
-			check(native_rect.encloses(node.get_global_rect()), context+" button remains on the native screen: "+node.text)
+			check(native_rect.encloses(node.get_global_rect()), context+" button remains inside the actual presentation root: "+node.text)
 	for label: Label in _labels():
 		if not label.is_visible_in_tree(): continue
 		if _scroll_ancestor(label) == null:
@@ -92,7 +92,7 @@ func _scroll_ancestor(node: Node) -> ScrollContainer:
 func _focus(context: String) -> void:
 	var focused: Control = root.gui_get_focus_owner()
 	check(focused != null and focused.is_visible_in_tree() and focused.focus_mode != Control.FOCUS_NONE, context+" has an obvious navigable focus target")
-	if focused != null: check(Rect2(game.menus._content.global_position, Vector2(640, 360)).encloses(focused.get_global_rect()), context+" focus stays on screen")
+	if focused != null: check(game.menus._content.get_global_rect().encloses(focused.get_global_rect()), context+" focus stays on screen")
 
 func _joy(button: JoyButton, pressed: bool) -> void:
 	var event: InputEventJoypadButton = InputEventJoypadButton.new()

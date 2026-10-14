@@ -180,7 +180,7 @@ func _check_mutation_layout(cards: Array[Button]) -> void:
 	var inspector: Control = game.menus._ability_inspector
 	check(is_instance_valid(inspector) and inspector.visible and is_equal_approx(inspector.size.x,188.0), "Mutation has a fixed 188px reading panel")
 	for card: Button in cards:
-		check(is_equal_approx(card.size.x,192.0), "Mutation retains larger 192px cards beside the reading panel")
+		check(is_equal_approx(card.scale.x,card.scale.y) and card.get_global_rect().size.x>=192.0, "Mutation keeps a uniformly scaled readable card beside the reading panel")
 		check(card.focus_mode == Control.FOCUS_ALL, "Each mutation remains a native keyboard/controller focus target")
 		if is_instance_valid(inspector):
 			check(not card.get_global_rect().intersects(inspector.get_global_rect()), "Mutation card and reading panel have separate nonoverlapping areas")
@@ -192,7 +192,7 @@ func _check_mutation_layout(cards: Array[Button]) -> void:
 			check(authored[0].size == Vector2(128,128) and (authored[0].texture as AtlasTexture).region.size == Vector2(64,64), "Mutation illustration keeps its complete native cell at integer2x")
 	check(not cards[0].get_global_rect().intersects(cards[1].get_global_rect()), "Opposing mutation cards do not overlap each other")
 	if is_instance_valid(inspector):
-		check(Rect2(80,60,640,360).encloses(inspector.get_global_rect()), "Fixed reading panel stays inside the centred native menu")
+		check(game.menus.presentation_snapshot().safe_rect.encloses(inspector.get_global_rect()), "Authored reading component stays inside the actual full-client safe overlay")
 		check(get_root().gui_get_focus_owner() in cards and str(inspector.get("mutation_id")) == game.menus.focused_power_id(), "Native focused branch drives the fixed reading panel")
 
 func _test_branch(power_id: String, branch_id: String) -> void:
@@ -221,7 +221,7 @@ func _test_branch(power_id: String, branch_id: String) -> void:
 	var cards: Array[Button] = []
 	for node: Node in _nodes(game.menus):
 		if node is Button and str(node.get_meta("intent", "")) == "choose_mutation": cards.append(node)
-	check(game.menus._content.get_global_rect() == Rect2(80,60,640,360), "Mutation retains exact native menu dimensions in the800x480 product frame")
+	check(game.menus._content.get_global_rect().is_equal_approx(Rect2(Vector2.ZERO,game.menus._presentation_canvas)) and game.menus._content.scale==Vector2.ONE, "Mutation fills the current client at scaleONE while the underlying battle stays canonical")
 	_check_mutation_layout(cards)
 	_check_layout()
 	await _capture("mutation-" + power_id)

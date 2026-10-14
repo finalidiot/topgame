@@ -86,7 +86,8 @@ func pointer(target: Control, touch: bool) -> void:
 	if not is_instance_valid(target): return
 	var point: Vector2 = target.get_global_rect().get_center()
 	var target_intent: String = str(target.get_meta("intent", ""))
-	check(Rect2(80,60,640,360).encloses(target.get_global_rect()),"Pointer target stays inside the centred native640x360 menu")
+	var presentation: Dictionary = game.menus.presentation_snapshot()
+	check(Rect2(presentation.root_rect).encloses(target.get_global_rect()),"Pointer target stays inside the actual responsive menu surface")
 	check(Rect2(0,0,800,480).has_point(point),"Pointer target is on the product surface")
 	if not touch:
 		var motion := InputEventMouseMotion.new()

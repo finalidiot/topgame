@@ -9,7 +9,6 @@ class QuietMain extends "res://scripts/main.gd":
 const Parts = preload("res://scripts/parts.gd")
 const Collection = preload("res://scripts/collection_save.gd")
 const Starters = preload("res://scripts/starters.gd")
-const NATIVE_RECT: Rect2 = Rect2(80, 60, 640, 360)
 var checks: int = 0
 var failures: int = 0
 var files: Array[String] = []
@@ -99,7 +98,7 @@ func _check_inspector(game: QuietMain, category: String, id: String) -> void:
 	var metadata: Label = game.menus._catalogue_metadata
 	var description: Label = game.menus._catalogue_description
 	check(metadata.text.contains(str(data.name)) and metadata.text.contains(category.to_upper()) and metadata.text.contains(str(data.rarity)), "Focused part shows its full name, type and rarity")
-	check(description.text == str(data.description), "Focused part's full physical description reaches the inspector")
+	check(description.text.begins_with(str(data.description) + "\n\nASSEMBLY PHYSICS / BASE PARTS\n"), "Focused part's full physical description is retained before the assembly mechanical notes")
 	var font: Font = metadata.get_theme_font("font")
 	var font_size: int = metadata.get_theme_font_size("font_size")
 	check(font.get_string_size(metadata.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= metadata.size.x, "Part metadata fits the native inspector width")
@@ -141,10 +140,10 @@ func _test_ordinary_collections() -> void:
 			game.menus.focus_collection_part(category, last)
 			await _settle()
 			var focused: Control = root.gui_get_focus_owner()
-			check(NATIVE_RECT.encloses(focused.get_global_rect()), "Focus automatically scrolls the far catalogue card into the native viewport")
+			check(game.menus._content.get_global_rect().encloses(focused.get_global_rect()), "Focus automatically scrolls the far catalogue card into the actual full-client presentation")
 			check(game.menus._part_scrolls[category].get_global_rect().encloses(focused.get_global_rect()), "Far-card focus is fully contained by its clipped strip")
 			check(game.menus._catalogue_metadata.text.contains(str(Parts.PARTS[category][last].get("rarity", "COMMON"))), "Inspector exposes rarity text independently of part colour")
-			check(game.menus._catalogue_description.text == str(Parts.PARTS[category][last].description), "Inspector gives the focused part's mechanical trade-off")
+			check(game.menus._catalogue_description.text.begins_with(str(Parts.PARTS[category][last].description) + "\n\nASSEMBLY PHYSICS / BASE PARTS\n"), "Inspector retains the focused part's full mechanical trade-off before assembly notes")
 			game._action("inspect_locked_part", {"category":category, "id":last})
 			game._action("equip_part", {"category":category, "id":last})
 			check(game.collection.owned_count() == 3 and game.build == Starters.build_for(starter), "Locked inspection and equip attempts grant no parts")
@@ -177,7 +176,7 @@ func _test_isolated_qa() -> void:
 			await _navigate(game.menus._part_buttons[category][id])
 			var focused: Control = root.gui_get_focus_owner()
 			check(str(focused.get_meta("part_id")) == id, "Actual keyboard focus traverses catalogue order")
-			check(NATIVE_RECT.encloses(focused.get_global_rect()), "Every traversed card is visible at native resolution")
+			check(game.menus._content.get_global_rect().encloses(focused.get_global_rect()), "Every traversed card is visible inside the actual full-client presentation")
 			check(game.menus._part_scrolls[category].get_global_rect().encloses(focused.get_global_rect()), "Every keyboard-focused card is fully contained by its clipped catalogue")
 			_check_inspector(game, category, id)
 			await _tap(KEY_ENTER)
@@ -192,10 +191,18 @@ func _test_isolated_qa() -> void:
 				await _tap(KEY_LEFT)
 				check(str(root.gui_get_focus_owner().get_meta("part_id")) == id, "Left returns through the same native catalogue row")
 			index += 1
-		# Tab traverses the real footer/category controls, then wraps to the
-		# first entry. Horizontal row wrapping must not fake linear scrolling.
-		for step: int in range(game.menus._catalogue_footer.size() + game.menus._catalogue_tabs.size() + 1): await _tap(KEY_TAB)
-		check(str(root.gui_get_focus_owner().get_meta("part_id")) == first, "Tab navigation wraps through the entire view and scrolls to the first catalogue card")
+		# The reading rail is now focusable so controller/keyboard users can
+		# scroll the full physical notes. Tab includes it before the footer.
+		var traversed: Array[Control] = []
+		for step: int in range(game.menus._catalogue_footer.size() + game.menus._catalogue_tabs.size() + 2):
+			await _tap(KEY_TAB)
+			traversed.append(root.gui_get_focus_owner())
+		check(game.menus._catalogue_note_scroll in traversed, "Tab reaches the full physical-notes reading rail")
+		for control: Control in game.menus._catalogue_footer:
+			check(control in traversed, "Tab retains every footer action in the live catalogue cycle")
+		for control: Control in game.menus._catalogue_tabs.values():
+			check(control in traversed, "Tab retains every category tab in the live catalogue cycle")
+		check(str(root.gui_get_focus_owner().get_meta("part_id", "")) == first, "Tab navigation wraps through the entire view and scrolls to the first catalogue card")
 		check(game.menus._part_scrolls[category].get_global_rect().encloses(root.gui_get_focus_owner().get_global_rect()), "Wrapped first-card focus is fully visible in the native catalogue")
 	await _capture("002c5_2_isolated_catalogue_native")
 	var chosen: Dictionary = game.collection.equipped_build()

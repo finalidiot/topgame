@@ -36,7 +36,7 @@ func navigate_status_option(app: Node2D, profile_id: String) -> bool:
 	for press: int in range(16):
 		var focused: Control = root.gui_get_focus_owner()
 		if is_instance_valid(focused) and str(focused.get_meta("setting_key", "")) == "top_status_bars":
-			check(Rect2(80,60,640,360).encloses(focused.get_global_rect()), "Focused status option stays visible inside native menu for " + profile_id)
+			check(Rect2(app.menus.presentation_snapshot().root_rect).encloses(focused.get_global_rect()), "Focused status option stays visible inside its responsive menu for " + profile_id)
 			return true
 		# The paired comfort row has Impact Numbers directly under the rightward
 		# toggle column; a normal left press reaches Top Status Bars in that row.
@@ -56,7 +56,7 @@ func controller_options(app: Node2D) -> void:
 			await joy_tap(Bindings.confirm_button(profile_id))
 			check(app.settings.top_status_bars and app.top_status_bars.visible, "Printed Confirm toggles status bars ON for " + profile_id)
 		for node: Node in app.menus._content.get_children():
-			if node is Button or node is HSlider: check(Rect2(80,60,640,360).encloses(node.get_global_rect()), "Options control stays within centred native menu for " + profile_id)
+			if node is Button or node is HSlider: check(Rect2(app.menus.presentation_snapshot().root_rect).encloses(node.get_global_rect()), "Options control stays within its actual responsive menu for " + profile_id)
 		await joy_tap(Bindings.back_button(profile_id))
 		check(app.screen == "title", "Printed Back leaves Options without triggering Confirm for " + profile_id)
 		evidence.append({"profile": profile_id, "confirm_button": Bindings.confirm_button(profile_id), "back_button": Bindings.back_button(profile_id), "synthetic_logical_device": 7, "physical_hardware": "Not tested by this fixture"})
@@ -116,10 +116,23 @@ func edge_layout() -> void:
 			"redline": {"owned": true, "active": true, "heat": 1, "excess": 0.24},
 			"orbit": {"owned": true, "drive": 1, "drifting": true}}})
 		var geometry: Dictionary = menus.combat_layout_snapshot()
-		for rect: Rect2 in geometry.regions.values():
-			check(not rect.intersects(geometry.play_region), "Permanent Windows/mobile HUD does not cut through reserved gameplay rectangle")
-			check(Layout.VIEW.encloses(rect), "Permanent HUD stays in native viewport")
-			if mobile: check(not rect.intersects(Layout.MOBILE_ACTION_RAIL), "Mobile HUD leaves accepted Burst/Brake rail unobstructed")
+		#003A.2 exposes the actual responsive thumb targets and temporary READY
+		# rectangle alongside permanent HUD panels. Classify them truthfully;
+		# permanent panels still cannot cover the world or action buttons.
+		var action_rail: Rect2 = geometry.mobile_action_rail if mobile else Rect2()
+		for key: String in geometry.regions:
+			var rect: Rect2 = geometry.regions[key]
+			check(Rect2(Vector2.ZERO,geometry.canvas_size).encloses(rect), "HUD and controls stay in their actual presentation canvas")
+			if key == "announcement":
+				check(not geometry.temporary_announcements_live_combat and Rect2(geometry.play_region).encloses(rect), "Only temporary countdown/reentry can use the reserved arena overlay")
+				continue
+			check(not rect.intersects(geometry.play_region), "Permanent Windows/mobile HUD and thumb buttons cannot cut through gameplay")
+			if mobile and key in ["burst_button","brake_button"]:
+				check(action_rail.encloses(rect), "Actual thumb button occupies its declared responsive action rail")
+			elif mobile:
+				check(not rect.intersects(action_rail), "Permanent mobile HUD leaves actual Burst/Brake controls unobstructed")
+		if mobile:
+			check(not Rect2(geometry.regions.burst_button).intersects(geometry.regions.brake_button), "Responsive thumb actions remain distinct")
 		check(not geometry.duplicate_anchor_label and not menus._hud.has("anchor"), "Anchor has one danger/recharge meter")
 		var anchor: Dictionary = menus._hud.state_meters.diagnostic_snapshot().rows.left[0]
 		check(anchor.status == "RECHARGE" and anchor.bars.size() == 1 and anchor.bars[0].value == 0.84, "Main Anchor bar communicates real overload/recharge through stress")
@@ -178,7 +191,7 @@ func isolated_options() -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report = arg.trim_prefix("--report=")
-	var valid: bool = report.is_absolute_path() and report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") and not FileAccess.file_exists(report)
+	var valid: bool = report.is_absolute_path() and (report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\", "/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")) and not FileAccess.file_exists(report)
 	if not valid: push_error("Fresh absolute 003A.1 QA report required; no player profile opened"); quit(2); return
 	root.size = Vector2i(800, 480); root.content_scale_size = Vector2i(800, 480)
 	Input.use_accumulated_input = false

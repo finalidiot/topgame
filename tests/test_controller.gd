@@ -262,10 +262,17 @@ func _focus_is_visible(context: String) -> void:
 	check(focused != null, context+": an initial control owns focus")
 	if focused == null: return
 	check(focused.is_visible_in_tree() and focused.focus_mode == Control.FOCUS_ALL, context+": focused control is visible and navigable")
-	check(game.menus._content.position == Vector2(80, 60), context+": menu keeps its centred native origin")
-	check(Rect2(80, 60, 640, 360).encloses(focused.get_global_rect()), context+": focused control is inside the native menu")
-	var style: StyleBoxTexture = focused.get_theme_stylebox("focus") as StyleBoxTexture
-	check(style != null and style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible(), context+": focus has a visible authored pixel frame")
+	var actual_root: Rect2 = game.menus._content.get_global_rect()
+	var mode: String = str(game.menus.presentation_snapshot().get("presentation_class", ""))
+	check((actual_root.position == Vector2.ZERO and actual_root.size == game.menus._presentation_canvas) if mode == "frontend" else actual_root.get_center().is_equal_approx(game.menus._presentation_canvas*0.5), context+": full-client pages and centred combat modals use their own root policy")
+	check(actual_root.encloses(focused.get_global_rect()), context+": focused control is inside the actual presentation root")
+	var style: StyleBox = focused.get_theme_stylebox("focus")
+	var visible_frame: bool = false
+	if style is StyleBoxTexture:
+		visible_frame = style.texture != null and style.modulate_color.a > 0.0 and not style.texture.get_image().is_invisible()
+	elif style is StyleBoxFlat:
+		visible_frame = not style.draw_center and style.border_color.a > 0.0 and style.border_width_left >= 4 and style.border_width_right >= 4 and style.border_width_top >= 4 and style.border_width_bottom >= 4 and style.shadow_size >= 3 and style.shadow_color.a > 0.0
+	check(visible_frame, context+": focus has a visible pixel frame or the strong border-only card frame with its dark separator")
 
 func _navigate(target: Control) -> bool:
 	check(target != null, "Requested navigation target exists")
@@ -281,6 +288,8 @@ func _navigate(target: Control) -> bool:
 		for side: Side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
 			# Sliders consume horizontal UI input to change their value.
 			if current is Slider and side in [SIDE_LEFT, SIDE_RIGHT]: continue
+			# The physical-notes panel consumes vertical input to scroll text.
+			if current == game.menus._catalogue_note_scroll and side in [SIDE_TOP, SIDE_BOTTOM]: continue
 			var next: Control = current.find_valid_focus_neighbor(side)
 			if next == null or paths.has(next): continue
 			var path: Array = paths[current].duplicate()
@@ -359,7 +368,7 @@ func _test_title_garage_settings() -> void:
 		check(float(game.settings.volume) < volume, "Gamepad changes volume with slider focus")
 		await _tap(JOY_BUTTON_DPAD_RIGHT)
 		check(is_equal_approx(float(game.settings.volume), volume), "Slider supports both horizontal directions")
-	var setting_keys: Array[String] = ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]
+	var setting_keys: Array[String] = ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers", "controller_rumble"]
 	check(toggles.size() == setting_keys.size(), "All settings toggles are present")
 	for index: int in range(mini(toggles.size(), setting_keys.size())):
 		var key: String = str(toggles[index].get_meta("setting_key", ""))

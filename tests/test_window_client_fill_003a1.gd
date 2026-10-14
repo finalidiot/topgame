@@ -69,7 +69,7 @@ func inspect(client: Vector2i, ui_scale: float) -> Dictionary:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="):output=arg.trim_prefix("--report=")
-	if not output.is_absolute_path() or FileAccess.file_exists(output) or not output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/"):
+	if not output.is_absolute_path() or FileAccess.file_exists(output) or not (output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or output.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")):
 		push_error("Fresh external003A.1 --report required");quit(2);return
 	root.size=Vector2i(800,480)
 	var native_mode: int=DisplayServer.window_get_mode();var native_borderless: bool=DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
@@ -102,11 +102,12 @@ func run() -> void:
 	var mobile_layout: Dictionary=mobile.window_presentation_snapshot()
 	check(mobile_layout.mobile_layout and mobile_layout.canvas_size==Vector2(800,480),"Actual hosted mobile branch stays800x480")
 	check(mobile.combat_viewport.size==Vector2i(640,360) and mobile.combat_frame.get_rect()==Layout.PLAY_REGION,"Hosted mobile world stays native640x360 at80,60")
-	check(mobile.presentation_surround==null,"Desktop casing does not enter hosted mobile layout")
+	check(is_instance_valid(mobile.presentation_surround) and mobile.presentation_surround.extent==Vector2(800,480),"Hosted mobile background covers its complete reference canvas")
 	check(mobile_layout.ui_policy.ui_scale==1.0,"Hosted mobile UI ignores desktop1.5/2 thresholds")
-	check(Layout.responsive(Vector2(3840,2160),true).arena_rect==Layout.PLAY_REGION,"Even large mobile hosts retain accepted logical play region")
+	var expanded_mobile: Dictionary=Layout.responsive(Vector2(3840,2160),true)
+	check(expanded_mobile.canvas_size==Vector2(3840,2160) and expanded_mobile.arena_scale>1.0 and expanded_mobile.arena_rect.size.is_equal_approx(Vector2(640,360)*float(expanded_mobile.arena_scale)),"Larger hosted mobile canvases expand presentation uniformly without changing world geometry")
 	check(world_state()==original,"Hosted mobile construction cannot touch existing world")
 	var file: FileAccess=FileAccess.open(output,FileAccess.WRITE)
-	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"observed":observed,"hosted_mobile":mobile_layout,"isolated_collection":game.collection_path,"scope":"Headless actual Main/SubViewport/HUD/style/layout contracts with paused legal four-power ownership fixture, including UI1/1.5/2 and hosted800x480 mobile branch. No production writes, OS mode actuation or native pixel/physical Android acceptance claim; native client/window screenshots are separate."},"\t"));file.close()
+	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"observed":observed,"hosted_mobile":mobile_layout,"isolated_collection":game.collection_path,"scope":"Headless actual Main/SubViewport/HUD/style/layout contracts with paused legal four-power ownership fixture, including unchanged desktop UI1/1.5/2, hosted800x480 reference and responsive expanded mobile branch. No production writes, OS mode actuation or native pixel/physical Android acceptance claim; native client/window screenshots are separate."},"\t"));file.close()
 	host.free();game.free();await settle()
 	print("WINDOW_CLIENT_FILL_003A1_%s checks=%d"%["PASS" if failures.is_empty() else "FAIL",checks]);quit(0 if failures.is_empty() else 1)

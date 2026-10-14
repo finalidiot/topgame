@@ -92,7 +92,7 @@ func run() -> void:
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
 		if arg.begins_with("--horizon="): horizon=float(arg.trim_prefix("--horizon="))
 		if arg.begins_with("--case-set="): case_set=arg.trim_prefix("--case-set=")
-	var valid: bool=report.is_absolute_path() and report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") and not FileAccess.file_exists(report)
+	var valid: bool=report.is_absolute_path() and (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")) and not FileAccess.file_exists(report)
 	if not valid: quit(2); return
 	for config: Dictionary in configurations:
 		if (case_set=="manual")!=str(config.id).contains("manual"): continue

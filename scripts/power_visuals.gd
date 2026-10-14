@@ -2,6 +2,7 @@ extends RefCounted
 ## Presentation-only atlas renderer. All positions arrive already projected.
 ## No collision queries, random numbers, timers, or gameplay writes belong here.
 
+const BaseArt = preload("res://scripts/base_power_art.gd")
 const Signature = preload("res://scripts/signature_visuals.gd")
 const Identity = preload("res://scripts/power_identity.gd")
 const Defence = preload("res://scripts/defence_art.gd")
@@ -295,6 +296,8 @@ static func draw_spawn(canvas: CanvasItem, position: Vector2, progress: float) -
 	_cell(canvas, "effects", EFFECTS, _frame("effects", "floor_stamp", age), position, Color(1.0, 0.90, 0.65))
 
 static func icon_region(power_id: String) -> Rect2:
+	var base_art: Dictionary = BaseArt.art(power_id)
+	if not base_art.is_empty(): return Rect2(int(base_art.icon_frame)*16,0,16,16)
 	var defence_art: Dictionary = Defence.art(power_id)
 	if not defence_art.is_empty(): return Rect2(int(defence_art.icon_frame) * 16, 0, 16, 16)
 	var authored: Dictionary = Identity.art(power_id)
@@ -310,6 +313,8 @@ static func icon_region(power_id: String) -> Rect2:
 	return Rect2(float(frame) * 16.0, 0.0, 16.0, 16.0)
 
 static func icon_texture(power_id: String) -> Texture2D:
+	var base_art: Dictionary = BaseArt.art(power_id)
+	if not base_art.is_empty(): return Identity.texture(str(base_art.icon))
 	var defence_art: Dictionary = Defence.art(power_id)
 	if not defence_art.is_empty(): return Defence.texture(str(defence_art.icon))
 	var authored: Dictionary = Identity.art(power_id)

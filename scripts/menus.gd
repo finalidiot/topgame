@@ -20,6 +20,8 @@ const TouchButton = preload("res://scripts/touch_button.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
 const PowerStateMeters = preload("res://scripts/power_state_meters.gd")
 const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const FrontendLayout = preload("res://scripts/frontend_layout.gd")
+const WorkshopStats = preload("res://scripts/workshop_build_stats.gd")
 const INK: Color = FrontEnd.INK
 const PANEL: Color = FrontEnd.PANEL
 const BORDER: Color = FrontEnd.BORDER
@@ -48,14 +50,27 @@ var _part_descriptions: Dictionary = {}
 var _part_scrolls: Dictionary = {}
 var _catalogue_metadata: Label
 var _catalogue_description: Label
+var _catalogue_note_scroll: ScrollContainer
 var _stat_bars: Dictionary = {}
 var _stat_numbers: Dictionary = {}
+var _stat_names: Dictionary = {}
+var _workshop_stats: Control
+var _workshop_stats_heading: Label
+var _workshop_compare_heading: Label
+var _workshop_machine_heading: Label
+var _workshop_notes: Label
+var _workshop_preview_build: Dictionary = {}
+var _catalogue_last_parts: Dictionary = {}
+var _catalogue_shoulder_hint: Label
+var _shoulder_needs_release: Dictionary = {}
 var _assembly_name: Label
 var _hud: Dictionary = {}
 var _run_active: bool = false
 var _default_focus: Control
 var _accept_needs_release: bool = false
 var _acquisition_elapsed: float = 0.0
+var _acquisition_home_y: float = 83.0
+var _run_overlay_shade: ColorRect
 var _acquisition_icon: TextureRect
 var _acquisition_flash: ColorRect
 var _card_animations: Array[Dictionary] = []
@@ -108,19 +123,46 @@ var _shop_reaction: String = "IDLE"
 var _ability_inspector: Control
 var _credit_transfer: Control
 var _inspection_owned_state: Dictionary = {}
+var _pause_run_info: Dictionary = {}
 var reduced_flashing: bool = false
 ## Native layout audit may select the production mobile arrangement explicitly.
 var mobile_hud: bool = OS.has_feature("mobile")
 var _presentation_canvas: Vector2 = Vector2(800,480)
+var _presentation_safe: Rect2 = Rect2()
+var _presentation_background: Control
+var _presentation_dimmed: bool = true
+var _hud_layout: Dictionary = {}
 var _presentation_mobile: bool = OS.has_feature("mobile")
 var _packet_touch_index: int = -1
 var _packet_touch_origin: Vector2 = Vector2.ZERO
-var input_suspended: bool = false
+var input_suspended: bool = false:
+	set(value):
+		input_suspended = value
+		if value:
+			_menu_touch_fingers.clear()
+			_touch_transition_fingers.clear()
+			_touch_mouse_continuation_blocked = false
+			_last_ui_event_was_touch = false
+			_last_ui_event_was_emulated_mouse = false
+			_touch_transition_awaits_raw_contact = false
 var _reroll_control: Button
 var _reroll_needs_release: bool = false
+var _menu_touch_fingers: Dictionary = {}
+var _touch_transition_fingers: Dictionary = {}
+var _touch_mouse_continuation_blocked: bool = false
+var _last_ui_event_was_touch: bool = false
+var _last_ui_event_was_emulated_mouse: bool = false
+var _last_emulated_mouse_pressed: bool = false
+var _touch_transition_awaits_raw_contact: bool = false
+var presentation_mode: String = "frontend"
+var _frontend_reflow_pending: bool = false
+var _frontend_layout_revision: int = 0
+var _frontend_layout: Dictionary = {}
+var _frontend_result_kind: String = "result"
+var _frontend_settings_nodes: Dictionary = {}
 
 func _ready() -> void:
-	if OS.has_feature("mobile"): _input_profile = "touch"
+	if mobile_hud: _input_profile = "touch"
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -142,7 +184,7 @@ func _process(_delta: float) -> void:
 	if screen == "acquisition" and is_instance_valid(_acquisition_icon):
 		_acquisition_elapsed += _delta
 		_acquisition_icon.modulate.a = minf(1.0, 0.6 + _acquisition_elapsed * 5.0)
-		_acquisition_icon.position.y = 83.0 - roundf(minf(2.0, _acquisition_elapsed * 15.0))
+		_acquisition_icon.position.y = _acquisition_home_y - roundf(minf(2.0, _acquisition_elapsed * 15.0))
 		if is_instance_valid(_acquisition_flash): _acquisition_flash.color.a = maxf(0.0, 0.18 - _acquisition_elapsed * 1.1)
 	if screen == "hud" and _run_active:
 		_xp_display = move_toward(_xp_display, _xp_target, _delta * 1.6)
@@ -168,7 +210,26 @@ func _input(event: InputEvent) -> void:
 	var local_press: bool = (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed and not event.canceled)
 	if event is InputEventJoypadButton and event.pressed and (_ui_owner_device < 0 or event.device == _ui_owner_device): local_press = true
 	if local_press: input_engaged.emit()
+	if mobile_hud and _fence_mobile_touch_continuation(event):
+		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventJoypadButton and event.button_index in [JOY_BUTTON_LEFT_SHOULDER, JOY_BUTTON_RIGHT_SHOULDER]:
+		var shoulder_key: String = "%d:%d" % [event.device, event.button_index]
+		if not event.pressed: _shoulder_needs_release.erase(shoulder_key)
+		elif screen in ["collection_workshop", "garage"]:
+			if _ui_owner_device >= 0 and event.device != _ui_owner_device: return
+			_note_input_profile(ControllerBindings.profile(event.device))
+			if not _shoulder_needs_release.has(shoulder_key):
+				_shoulder_needs_release[shoulder_key] = true
+				cycle_catalogue_category(-1 if event.button_index == JOY_BUTTON_LEFT_SHOULDER else 1)
+			get_viewport().set_input_as_handled()
+			return
 	if event.is_action_released("draft_reroll"): _reroll_needs_release = false
+	if screen in ["collection_workshop","garage"] and is_instance_valid(_catalogue_note_scroll) and _catalogue_note_scroll.has_focus():
+		if event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down"):
+			_catalogue_note_scroll.scroll_vertical += roundi(_catalogue_note_scroll.size.y*.45) * (-1 if event.is_action_pressed("ui_up") else 1)
+			get_viewport().set_input_as_handled()
+			return
 	if screen in ["reward", "mutation"] and event.is_action_pressed("draft_reroll"):
 		if event is InputEventKey and event.echo: return
 		if event is InputEventJoypadButton and _ui_owner_device >= 0 and event.device != _ui_owner_device: return
@@ -181,7 +242,10 @@ func _input(event: InputEvent) -> void:
 		if is_instance_valid(_reroll_control) and not _reroll_control.disabled: _reroll_control.pressed.emit()
 		get_viewport().set_input_as_handled()
 		return
-	var local_point: Vector2 = _content.get_global_transform_with_canvas().affine_inverse() * event.position if is_instance_valid(_content) and (event is InputEventScreenTouch or event is InputEventScreenDrag) else Vector2.ZERO
+	var local_point: Vector2 = _packet_view.get_global_transform_with_canvas().affine_inverse() * event.position if is_instance_valid(_packet_view) and (event is InputEventScreenTouch or event is InputEventScreenDrag) else Vector2.ZERO
+	# Inverse component transforms introduce tiny float error at authored pouch
+	# edges. Restore subpixel native coordinates before the unchanged bounds/gate.
+	local_point=(local_point*1024.0).round()/1024.0
 	if event is InputEventScreenTouch:
 		_note_input_profile("touch")
 		if (not event.pressed or event.canceled) and event.index == _packet_touch_index: _packet_touch_index = -1
@@ -202,7 +266,7 @@ func _input(event: InputEvent) -> void:
 				return
 			if (event is InputEventJoypadButton and event.pressed) or (event is InputEventJoypadMotion and absf(event.axis_value) >= 0.55):
 				_note_input_profile(ControllerBindings.profile(event.device))
-		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (OS.has_feature("mobile") and event.device == InputEvent.DEVICE_ID_EMULATION)):
+		elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and not (mobile_hud and event.device == InputEvent.DEVICE_ID_EMULATION)):
 			_note_input_profile("keyboard")
 	# A result/draft may open while Burst/Confirm is held. Require its release
 	# before any new screen can accept it, including keyboard echo events.
@@ -245,6 +309,9 @@ func _input(event: InputEvent) -> void:
 func _move_analogue_focus(direction: String) -> void:
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused == null: return
+	if focused == _catalogue_note_scroll and direction in ["top","bottom"]:
+		_catalogue_note_scroll.scroll_vertical += roundi(_catalogue_note_scroll.size.y*.45) * (-1 if direction == "top" else 1)
+		return
 	if screen == "shop" and focused.has_meta("shop_product") and str(focused.get_meta("intent", "")) != "packet_odds" and direction in ["left", "right"]:
 		cycle_shop_quantity(-1 if direction == "left" else 1)
 		return
@@ -255,6 +322,48 @@ func _move_analogue_focus(direction: String) -> void:
 	var target: Control = focused.get_node_or_null(path) as Control
 	if target != null: target.grab_focus()
 
+func _fence_mobile_touch_continuation(event: InputEvent) -> bool:
+	# A press may replace its own screen before the corresponding emulated
+	# mouse/release finishes. That contact cannot act on the replacement screen.
+	if event is InputEventScreenTouch:
+		_last_ui_event_was_touch = true
+		_last_ui_event_was_emulated_mouse = false
+		if not event.pressed or event.canceled:
+			_menu_touch_fingers.erase(event.index)
+			_touch_transition_fingers.erase(event.index)
+			_touch_transition_awaits_raw_contact = false
+			return false
+		# Godot may dispatch the emulated mouse press before its raw touch.
+		# If that mouse already replaced the screen, this is the same contact.
+		if _touch_transition_awaits_raw_contact:
+			_touch_transition_awaits_raw_contact = false
+			_menu_touch_fingers[event.index] = true
+			_touch_transition_fingers[event.index] = true
+			return true
+		var inherited: bool = _menu_touch_fingers.has(event.index) or _touch_transition_fingers.has(event.index)
+		if not inherited and _touch_transition_fingers.is_empty(): _touch_mouse_continuation_blocked = false
+		_menu_touch_fingers[event.index] = true
+		if inherited or not _touch_transition_fingers.is_empty():
+			_touch_transition_fingers[event.index] = true
+			return true
+	elif event is InputEventScreenDrag:
+		_last_ui_event_was_touch = true
+		_last_ui_event_was_emulated_mouse = false
+		return _touch_transition_fingers.has(event.index)
+	elif event is InputEventMouseButton or event is InputEventMouseMotion:
+		_last_ui_event_was_touch = event.device == InputEvent.DEVICE_ID_EMULATION
+		_last_ui_event_was_emulated_mouse = _last_ui_event_was_touch
+		_last_emulated_mouse_pressed = event is InputEventMouseButton and event.pressed
+		return _last_ui_event_was_touch and _touch_mouse_continuation_blocked
+	elif event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		_last_ui_event_was_touch = false
+		_last_ui_event_was_emulated_mouse = false
+	return false
+
+func _emit_menu_intent(intent: String, payload: Variant) -> void:
+	if mobile_hud and _last_ui_event_was_touch and _touch_mouse_continuation_blocked: return
+	action.emit(intent,payload)
+
 func _make_theme() -> Theme:
 	return FrontEnd.make_theme()
 
@@ -262,9 +371,19 @@ func _box(fill: Color, outline: Color, border_width: int = 1) -> StyleBox:
 	return FrontEnd.plate(fill, outline, border_width)
 
 func _clear(next_screen: String, dim: bool = true) -> void:
+	if mobile_hud and (_last_ui_event_was_touch or not _menu_touch_fingers.is_empty()):
+		_touch_transition_fingers = _menu_touch_fingers.duplicate()
+		_touch_mouse_continuation_blocked = true
+		_touch_transition_awaits_raw_contact = _last_ui_event_was_emulated_mouse and _last_emulated_mouse_pressed and _menu_touch_fingers.is_empty()
 	_reroll_control = null
+	_run_overlay_shade = null
+	_acquisition_home_y = 83.0
 	_reroll_needs_release = next_screen in ["reward", "mutation"] and Input.is_action_pressed("draft_reroll")
 	screen = next_screen
+	presentation_mode = FrontendLayout.presentation_class(next_screen)
+	_frontend_layout.clear()
+	_frontend_settings_nodes.clear()
+	_frontend_result_kind = "result"
 	_packet_touch_index = -1
 	_appearance_elapsed = 0.0
 	_prompt_labels.clear()
@@ -272,8 +391,17 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_catalogue_tabs.clear()
 	_catalogue_groups.clear()
 	_catalogue_footer.clear()
+	_catalogue_shoulder_hint = null
+	_workshop_preview_build.clear()
+	_workshop_stats = null
+	_workshop_stats_heading = null
+	_workshop_compare_heading = null
+	_workshop_machine_heading = null
+	_workshop_notes = null
 	_equipped_slot_labels.clear()
 	_packet_view = null
+	_presentation_background = null
+	_presentation_dimmed = dim
 	_packet_controls.clear()
 	_shop_detail = null
 	_shop_cards.clear()
@@ -295,6 +423,8 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_card_animations.clear()
 	_art_animations.clear()
 	for device: int in Input.get_connected_joypads():
+		for button: int in [JOY_BUTTON_LEFT_SHOULDER, JOY_BUTTON_RIGHT_SHOULDER]:
+			if Input.is_joy_button_pressed(device, button): _shoulder_needs_release["%d:%d" % [device, button]] = true
 		for axis: int in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
 			if absf(Input.get_joy_axis(device, axis)) >= 0.55: _axis_latches["%d:%d" % [device, axis]] = true
 	for child in get_children():
@@ -306,20 +436,33 @@ func _clear(next_screen: String, dim: bool = true) -> void:
 	_part_scrolls.clear()
 	_catalogue_metadata = null
 	_catalogue_description = null
+	_catalogue_note_scroll = null
 	_stat_bars.clear()
 	_stat_numbers.clear()
+	_stat_names.clear()
 	_content = Control.new()
 	_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	if next_screen != "hud":
 		_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-		_content.position = CombatLayout.responsive(_presentation_canvas,mobile_hud).menu_origin
+		var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+		_content.position = layout.menu_origin
+		_content.scale = Vector2.ONE*float(layout.get("menu_scale",1.0)) if mobile_hud else Vector2.ONE
 		_content.size = Vector2(640,360)
+		if presentation_mode=="frontend" and not mobile_hud:
+			_content.position=Vector2.ZERO
+			_content.scale=Vector2.ONE
+			_content.size=_presentation_canvas
 	_content.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_content)
+	_content.child_entered_tree.connect(_schedule_frontend_reflow)
 	if dim:
-		var backdrop: Control = FrontEnd.new()
-		backdrop.screen_id = next_screen
-		_content.add_child(backdrop)
+		if mobile_hud or presentation_mode=="frontend": _create_mobile_background()
+		else:
+			var backdrop: Control = FrontEnd.new()
+			backdrop.screen_id = next_screen
+			_content.add_child(backdrop)
+	_schedule_frontend_reflow()
+	if presentation_mode=="modal": call_deferred("_reflow_menu")
 
 func _focus_rows(rows: Array, first: Control = null) -> void:
 	# Explicit links make every control reachable even across the workshop's
@@ -363,6 +506,9 @@ func _rect(parent: Node, area: Rect2, color: Color) -> ColorRect:
 	node.color = color
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(node)
+	if mobile_hud and parent == _content and screen != "hud" and area == Rect2(0,0,640,360):
+		node.set_meta("mobile_full_canvas_overlay",true)
+		_fit_mobile_overlay(node)
 	return node
 
 func _panel(parent: Node, area: Rect2, fill: Color = PANEL, border: Color = BORDER) -> Panel:
@@ -397,6 +543,7 @@ func _label(parent: Node, value: String, area: Rect2, font_size: int = 12, color
 
 func _button(parent: Node, value: String, area: Rect2, intent: String = "", payload: Variant = null, primary: bool = false) -> Button:
 	var node: Button = TouchButton.new()
+	node.touch_targets = mobile_hud
 	node.text = value
 	node.focus_mode = Control.FOCUS_ALL
 	node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -407,7 +554,7 @@ func _button(parent: Node, value: String, area: Rect2, intent: String = "", payl
 	if intent != "":
 		node.set_meta("intent", intent)
 		if payload != null: node.set_meta("payload", payload)
-		node.pressed.connect(func() -> void: action.emit(intent, payload))
+		node.pressed.connect(func() -> void: _emit_menu_intent(intent,payload))
 	parent.add_child(node)
 	node.position = area.position
 	node.size = area.size
@@ -457,6 +604,7 @@ func _note_input_profile(profile: String) -> void:
 	if profile == _input_profile: return
 	_input_profile = profile
 	_refresh_reroll_prompt()
+	_refresh_catalogue_shoulder_hint()
 	_refresh_ability_prompts()
 	for purpose: String in _prompt_labels:
 		var label: Label = _prompt_labels[purpose]
@@ -467,7 +615,7 @@ func _note_input_profile(profile: String) -> void:
 
 func _refresh_reroll_prompt() -> void:
 	if not is_instance_valid(_reroll_control): return
-	_reroll_control.text = "%s  REROLL / %d LEFT" % [FrontEnd.prompt(_input_profile, "reroll"), int(_reroll_control.get_meta("charges",0))]
+	_reroll_control.text = "[%s]  REROLL ×%d%s" % [FrontEnd.prompt(_input_profile, "reroll"), int(_reroll_control.get_meta("charges",0)), " / EMPTY" if _reroll_control.disabled else ""]
 	_reroll_control.tooltip_text = "Right bumper rerolls the current draft. Mutation preview returns to a fresh power draft."
 
 func _input_footer(y: float = 333.0) -> void:
@@ -509,26 +657,31 @@ func _part_image(parent: Node, category: String, id: String, area: Rect2) -> voi
 
 func _build_station(collection_mode: bool) -> void:
 	_panel(_content, Rect2(16, 62, 220, 245), Color("18242c"), BORDER)
-	_label(_content, "EQUIPPED MACHINE" if collection_mode else "PRACTICE MACHINE", Rect2(27, 70, 154, 16), 10, BLUE)
-	_preview = _new_preview(Rect2(22, 86, 208, 108), 3.0)
+	_workshop_machine_heading = _label(_content, "EQUIPPED MACHINE" if collection_mode else "PRACTICE MACHINE", Rect2(27, 70, 154, 16), 10, BLUE)
+	_preview = _new_preview(Rect2(22, 86, 208, 75), 2.4)
 	if collection_mode: _set_preview_build_identity(_preview, _build)
-	_assembly_name = _label(_content, PartCatalog.title(_build), Rect2(25, 195, 202, 21), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+	_assembly_name = _label(_content, PartCatalog.title(_build), Rect2(25, 161, 202, 24), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_assembly_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	for index: int in range(3):
-		var category: String = ["blade", "ratchet", "bit"][index]
-		var name: String = str(PartCatalog.PARTS[category].get(str(_build.get(category, "")), {}).get("name", "EMPTY"))
-		_label(_content, category.to_upper(), Rect2(26, 218 + index * 14, 51, 13), 10, MUTED)
-		_equipped_slot_labels[category] = _label(_content, name, Rect2(79, 218 + index * 14, 147, 13), 10, TEXT)
+	_assembly_name.add_theme_constant_override("line_spacing",0)
+	_workshop_stats = Control.new()
+	_workshop_stats.name = "WorkshopBuildStats"
+	_workshop_stats.position = Vector2(25, 185)
+	_workshop_stats.size = Vector2(202, 122)
+	_workshop_stats.mouse_filter = Control.MOUSE_FILTER_PASS
+	_content.add_child(_workshop_stats)
+	_workshop_stats_heading = _label(_workshop_stats, "BUILD STATS / PRE-RUN", Rect2(0,0,202,12), 10, BLUE)
+	_workshop_compare_heading = _label(_workshop_stats,"EQUIPPED > PREVIEW (+/-)",Rect2(0,12,202,11),10,MUTED)
+	_workshop_compare_heading.visible = false
 	var stat_ids: Array[String] = ["power", "stamina", "grip", "speed", "stability", "mass"]
 	var stat_names: Array[String] = ["POWER", "STAMINA", "GRIP", "SPEED", "STABILITY", "MASS"]
 	for index: int in range(6):
-		var column: int = index % 2
-		var row: int = index / 2
-		var x: float = 26 + column * 101
-		var y: float = 260 + row * 15
-		_label(_content, stat_names[index], Rect2(x, y, 63, 10), 10, MUTED)
-		_stat_numbers[stat_ids[index]] = _label(_content, "", Rect2(x + 63, y, 28, 10), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
-		_stat_bars[stat_ids[index]] = _bar(_content, Rect2(x, y + 11, 91, 2), ORANGE if index == 0 else BLUE)
+		var y: float = 24 + index * 12
+		_stat_names[stat_ids[index]] = _label(_workshop_stats, stat_names[index], Rect2(0,y,62,10), 10, MUTED)
+		_stat_numbers[stat_ids[index]] = _label(_workshop_stats, "", Rect2(63,y,139,10), 10, TEXT, HORIZONTAL_ALIGNMENT_RIGHT)
+		_stat_bars[stat_ids[index]] = _bar(_workshop_stats, Rect2(0,y+10,202,2), ORANGE if index == 0 else BLUE)
+	_workshop_notes = _label(_workshop_stats, "", Rect2(0,97,202,25), 10, TEXT)
+	_workshop_notes.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_workshop_notes.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 
 func _header(title: String, subtitle: String) -> void:
 	_label(_content, title, Rect2(22, 12, 580, 26), 23)
@@ -559,7 +712,7 @@ func show_title(build: Dictionary, settings: Dictionary) -> void:
 
 ## Production collection flow is separate from the unrestricted prototype UI
 ## below. These screens emit intent; ownership is only changed by the save API.
-func show_collection_title(build: Dictionary, settings: Dictionary, initialized: bool) -> void:
+func show_collection_title(build: Dictionary, settings: Dictionary, initialized: bool, snapshot: Dictionary = {}) -> void:
 	_build = build.duplicate()
 	_settings = settings.duplicate()
 	_clear("collection_title")
@@ -580,7 +733,9 @@ func show_collection_title(build: Dictionary, settings: Dictionary, initialized:
 		preview.set("show_station", true)
 		var name: Label = _label(_content, PartCatalog.title(_build), Rect2(350, 258, 256, 23), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_label(_content, "PERMANENT PARTS / TEMPORARY POWERS", Rect2(350, 286, 256, 13), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		var owned_count: int=0
+		for category: String in ["blade","ratchet","bit"]: owned_count+=snapshot.get("owned_parts",{}).get(category,[]).size()
+		_label(_content, "%d CREDITS / %d SALVAGE\n%d OWNED PARTS / PERMANENT COLLECTION" % [int(snapshot.get("credits",0)),int(snapshot.get("salvage",0)),owned_count], Rect2(350,284,256,22),10,MUTED,HORIZONTAL_ALIGNMENT_CENTER)
 	else:
 		_label(_content, "YOUR FIRST MACHINE" if not initialized else "ASSEMBLY INCOMPLETE", Rect2(350, 104, 256, 26), 20, BLUE, HORIZONTAL_ALIGNMENT_CENTER)
 		for index: int in range(3):
@@ -922,8 +1077,8 @@ func _show_packet_summary() -> void:
 		_label(_content, str(row.category).to_upper(), Rect2(x, 219, 152, 15), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 		_label(_content, str(PartCatalog.PARTS[row.category][row.id].name), Rect2(x, 237, 152, 17), 10, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 		_label(_content, str(row.rarity), Rect2(x, 257, 152, 16), 10, accent, HORIZONTAL_ALIGNMENT_CENTER)
-		_panel(_content, Rect2(x + 5, 279, 142, 20), Color("263640"), ORANGE if bool(row.new) else BORDER)
-		_label(_content, "NEW DESIGN" if bool(row.new) else "DUPLICATE / +%d SALVAGE" % int(row.salvage), Rect2(x + 6, 282, 140, 14), 10, ORANGE if bool(row.new) else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+		_panel(_content, Rect2(x, 279, 152, 20), Color("263640"), ORANGE if bool(row.new) else BORDER)
+		_label(_content, "NEW DESIGN" if bool(row.new) else "DUPLICATE +%d SALVAGE" % int(row.salvage), Rect2(x + 1, 282, 150, 14), 10, ORANGE if bool(row.new) else MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 		focus_sound.emit("packet_new" if bool(row.new) else "packet_recycle")
 		if str(row.rarity) in ["RARE", "EPIC", "LEGENDARY"]: focus_sound.emit("packet_rare")
 	var workshop: Button = _button(_content, "WORKSHOP", Rect2(22, 309, 174, 27), "packet_workshop", null, true)
@@ -1079,7 +1234,17 @@ func show_collection_workshop(build: Dictionary, snapshot: Dictionary) -> void:
 
 func _create_catalogue_inspector() -> void:
 	_catalogue_metadata = _label(_content, "", Rect2(254, 249, 362, 16), 10, BLUE)
-	_catalogue_description = _label(_content, "", Rect2(254, 266, 362, 39), 10, TEXT)
+	_catalogue_metadata.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_catalogue_note_scroll = ScrollContainer.new()
+	_catalogue_note_scroll.name = "WorkshopPhysicalNotes"
+	_catalogue_note_scroll.position=Vector2(254,266)
+	_catalogue_note_scroll.size=Vector2(362,39)
+	_catalogue_note_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	_catalogue_note_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO
+	_catalogue_note_scroll.focus_mode = Control.FOCUS_ALL
+	_catalogue_note_scroll.tooltip_text = "Physical notes: Up/Down scroll. Left/Right return to parts or actions."
+	_content.add_child(_catalogue_note_scroll)
+	_catalogue_description = _label(_catalogue_note_scroll, "", Rect2(0,0,344,39), 10, TEXT)
 	_catalogue_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_catalogue_description.add_theme_constant_override("line_spacing", 0)
 	_catalogue_description.vertical_alignment = VERTICAL_ALIGNMENT_TOP
@@ -1087,6 +1252,8 @@ func _create_catalogue_inspector() -> void:
 func _create_workshop_catalogue() -> void:
 	_panel(_content, Rect2(246, 62, 378, 245), Color("17232b"), BORDER)
 	_create_catalogue_inspector()
+	_catalogue_shoulder_hint = _label(_content, "LB / RB  CATEGORY", Rect2(254,94,362,12),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_refresh_catalogue_shoulder_hint()
 	for index: int in range(3):
 		var category: String = ["blade", "ratchet", "bit"][index]
 		var tab: Button = _button(_content, category.to_upper(), Rect2(254 + index * 122, 68, 116, 25))
@@ -1096,8 +1263,8 @@ func _create_workshop_catalogue() -> void:
 		tab.pressed.connect(func() -> void: _show_catalogue_category(category))
 		_catalogue_tabs[category] = tab
 		var scroll: ScrollContainer = ScrollContainer.new()
-		scroll.position = Vector2(254, 98)
-		scroll.size = Vector2(362, 146)
+		scroll.position = Vector2(254, 108)
+		scroll.size = Vector2(362, 136)
 		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
 		scroll.follow_focus = true
@@ -1133,13 +1300,75 @@ func _create_workshop_catalogue() -> void:
 			button.add_theme_stylebox_override("normal", _box(Color("704c33") if selected else (Color("263640") if owned else Color("162129")), ORANGE if selected else BORDER))
 			if _catalogue_practice: button.pressed.connect(func() -> void: _choose_part(category, id))
 			button.focus_entered.connect(func() -> void:
+				_catalogue_last_parts[category] = id
 				_reveal_catalogue_part(category, button)
 				if _catalogue_practice: _describe_practice_part(category, id)
 				else: _describe_collection_part(category, id))
 			button.mouse_entered.connect(func() -> void:
+				_catalogue_last_parts[category] = id
 				if _catalogue_practice: _describe_practice_part(category, id)
 				else: _describe_collection_part(category, id))
+			button.mouse_exited.connect(_restore_workshop_focus_preview)
+			button.focus_exited.connect(func() -> void: _restore_workshop_focus_preview.call_deferred())
 			_part_buttons[category][id] = button
+
+func _refresh_catalogue_shoulder_hint() -> void:
+	if not is_instance_valid(_catalogue_shoulder_hint): return
+	var hints: Dictionary = {"xbox":"LB / RB", "nintendo":"L / R", "playstation":"L1 / R1"}
+	_catalogue_shoulder_hint.text = "%s  CATEGORY" % str(hints.get(_input_profile,"LB / RB"))
+
+func cycle_catalogue_category(direction: int) -> void:
+	if screen not in ["collection_workshop","garage"]: return
+	var categories: Array[String] = ["blade","ratchet","bit"]
+	var index: int = categories.find(_catalogue_category)
+	_show_catalogue_category(categories[posmod(index+direction,categories.size())])
+
+func _restore_workshop_focus_preview() -> void:
+	if screen not in ["collection_workshop","garage"] or not is_instance_valid(_workshop_stats): return
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if is_instance_valid(focused) and focused.has_meta("part_category") and focused.is_visible_in_tree():
+		_preview_workshop_part(str(focused.get_meta("part_category")),str(focused.get_meta("part_id")))
+	else:
+		_workshop_preview_build = _build.duplicate()
+		_refresh_workshop_stats()
+
+func _preview_workshop_part(category: String, id: String) -> void:
+	if not PartCatalog.PARTS.get(category,{}).has(id): return
+	_workshop_preview_build = _build.duplicate()
+	_workshop_preview_build[category] = id
+	_refresh_workshop_stats()
+
+func workshop_stats_snapshot() -> Dictionary:
+	if not _complete_build(_build): return {"complete":false,"current_build":_build.duplicate()}
+	var result: Dictionary = WorkshopStats.compare(_build,_workshop_preview_build if not _workshop_preview_build.is_empty() else _build)
+	result["complete"] = true
+	result["scope"] = "Pre-run base parts; temporary powers, starter handling and recovery excluded."
+	return result
+
+func _refresh_workshop_stats() -> void:
+	if not is_instance_valid(_workshop_stats): return
+	var complete: bool = _catalogue_practice or _owned_build_is_complete()
+	var comparison: Dictionary = workshop_stats_snapshot()
+	var is_preview: bool = complete and bool(comparison.get("is_preview",false))
+	_workshop_stats_heading.text = "PREVIEW / NOT EQUIPPED" if is_preview else "BUILD STATS / PRE-RUN"
+	_workshop_stats_heading.add_theme_color_override("font_color",ORANGE if is_preview else BLUE)
+	_workshop_compare_heading.visible = true
+	_workshop_compare_heading.text = "EQUIPPED > PREVIEW (+/-)" if is_preview else "RATINGS 1–10 / BASE PARTS"
+	_workshop_machine_heading.text = "HIGHLIGHTED PREVIEW" if is_preview else ("PRACTICE MACHINE" if _catalogue_practice else "EQUIPPED MACHINE")
+	_assembly_name.text = ("EQUIPPED: " if is_preview else "") + PartCatalog.title(_build) if complete else "ASSEMBLY INCOMPLETE"
+	var current: Dictionary = comparison.get("current",{}).get("ratings",{})
+	var candidate: Dictionary = comparison.get("preview",{}).get("ratings",{})
+	for stat: String in _stat_bars:
+		var value: float = float(current.get(stat,0))
+		_stat_bars[stat].value = float(candidate.get(stat,value))/10.0 if complete else 0
+		_stat_numbers[stat].text = "%.1f > %.1f (%+.1f)" % [value,float(candidate[stat]),float(comparison.deltas[stat])] if is_preview else ("%.1f" % value if complete else "--")
+		_stat_numbers[stat].tooltip_text = "Equipped > preview (signed difference). Ratings are bounded 1–10, not percentages or damage units."
+	if complete:
+		_workshop_notes.text = str(comparison.preview.summary)
+		_workshop_notes.tooltip_text = "\n".join(comparison.preview.notes)
+		_preview.set_build(comparison.preview.build)
+		if not _catalogue_practice: _set_preview_build_identity(_preview,comparison.preview.build)
+	else: _workshop_notes.text = "Complete the owned assembly."
 
 func _show_catalogue_category(category: String, focus_part: bool = true) -> void:
 	if not _catalogue_groups.has(category): return
@@ -1148,7 +1377,8 @@ func _show_catalogue_category(category: String, focus_part: bool = true) -> void
 		_catalogue_groups[id].visible = id == category
 		_catalogue_tabs[id].add_theme_stylebox_override("normal", _box(Color("704c33") if id == category else Color("263640"), ORANGE if id == category else BORDER))
 		for button: Button in _part_buttons[id].values(): button.focus_mode = Control.FOCUS_ALL if id == category else Control.FOCUS_NONE
-	var selected: Button = _part_buttons[category].get(str(_build.get(category, ""))) as Button
+	var remembered: String = str(_catalogue_last_parts.get(category,_build.get(category,""))) if focus_part else str(_build.get(category,""))
+	var selected: Button = _part_buttons[category].get(remembered) as Button
 	if selected == null: selected = _part_buttons[category].values()[0]
 	if _catalogue_practice: _describe_practice_part(category, str(selected.get_meta("part_id")))
 	else: _describe_collection_part(category, str(selected.get_meta("part_id")))
@@ -1161,10 +1391,16 @@ func _catalogue_navigation(first: Control = null) -> void:
 	if _catalogue_footer.is_empty() or not _part_buttons.has(_catalogue_category): return
 	var rows: Array = [_catalogue_tabs.values()]
 	var buttons: Array = _part_buttons[_catalogue_category].values()
-	for index: int in range(0, buttons.size(), 2): rows.append(buttons.slice(index, mini(index + 2, buttons.size())))
+	var columns: int = 2
+	if _part_scrolls.has(_catalogue_category) and _part_scrolls[_catalogue_category].get_child_count()>0:
+		columns = maxi(1,int(_part_scrolls[_catalogue_category].get_child(0).columns))
+	for index: int in range(0, buttons.size(), columns): rows.append(buttons.slice(index, mini(index + columns, buttons.size())))
 	rows.append(_catalogue_footer)
+	rows.insert(rows.size()-1,[_catalogue_note_scroll])
 	if first == null or not is_instance_valid(first) or not first.is_visible_in_tree(): first = _catalogue_tabs[_catalogue_category]
 	_focus_rows(rows, first)
+	_catalogue_note_scroll.focus_neighbor_left = _catalogue_note_scroll.get_path_to(buttons.back())
+	_catalogue_note_scroll.focus_neighbor_right = _catalogue_note_scroll.get_path_to(_catalogue_footer[0])
 
 func _reveal_catalogue_part(category: String, button: Button) -> void:
 	if not is_instance_valid(button) or not _part_scrolls.has(category): return
@@ -1180,8 +1416,12 @@ func _describe_collection_part(category: String, id: String) -> void:
 	var data: Dictionary = PartCatalog.PARTS[category][id]
 	var ownership: String = "EQUIPPED" if owned and str(_build.get(category, "")) == id else ("OWNED" if owned else "NOT OWNED")
 	_catalogue_metadata.text = "%s / %s / %s / %s" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON")), ownership]
-	_part_descriptions[category].text = str(data.description)
+	_preview_workshop_part(category,id)
+	var notes: Array = WorkshopStats.inspect(_workshop_preview_build).notes
+	_part_descriptions[category].text = str(data.description) + "\n\nASSEMBLY PHYSICS / BASE PARTS\n" + "\n\n".join(notes)
+	_part_descriptions[category].tooltip_text = str(data.description) + "\n" + "\n".join(notes)
 	_part_descriptions[category].add_theme_color_override("font_color", BLUE if owned else MUTED)
+	_fit_catalogue_notes()
 
 func inspect_locked_part(category: String, id: String) -> void:
 	# Kept in-place so an attempted selection never changes layout or focus.
@@ -1289,11 +1529,14 @@ func focused_starter_id() -> String:
 func _style_card(card: Button, accent: Color, semantic: Dictionary = {}) -> void:
 	var border: Color = semantic.get("border_color", Color("385266"))
 	var width: int = int(semantic.get("border_width", 1))
-	var focus_width: int = int(semantic.get("focus_width", 2))
 	card.add_theme_stylebox_override("normal", _box(Color("172737"), border, width))
 	card.add_theme_stylebox_override("hover", _box(Color("22364a"), accent, width))
 	card.add_theme_stylebox_override("pressed", _box(Color("294459"), accent, maxi(2, width)))
-	card.add_theme_stylebox_override("focus", _box(Color(0, 0, 0, 0), accent, focus_width))
+	card.add_theme_stylebox_override("focus", AbilityCardStyle.frame_style(semantic if not semantic.is_empty() else {"border_color":border,"border_width":width},true))
+	# Hover becomes the one visible confirmation target. Controller movement
+	# then moves this same focus, rather than leaving a second selected card.
+	card.mouse_entered.connect(func() -> void:
+		if card.is_visible_in_tree(): card.grab_focus())
 	_card_animations.append({"card":card, "position":card.position, "accent":accent, "normal_border":border, "normal_width":width, "focused":null})
 
 func _style_ability_card(card: Button, metadata: Dictionary) -> Dictionary:
@@ -1352,7 +1595,25 @@ func _describe_practice_part(category: String, id: String) -> void:
 	if not is_instance_valid(_catalogue_description): return
 	var data: Dictionary = PartCatalog.PARTS[category][id]
 	_catalogue_metadata.text = "%s / %s / %s / PRACTICE" % [str(data.name), category.to_upper(), str(data.get("rarity", "COMMON"))]
-	_catalogue_description.text = str(data.description)
+	_preview_workshop_part(category,id)
+	_catalogue_description.text = str(data.description) + "\n\nASSEMBLY PHYSICS / BASE PARTS\n" + "\n\n".join(WorkshopStats.inspect(_workshop_preview_build).notes)
+	_catalogue_description.tooltip_text = str(data.description) + "\n" + "\n".join(WorkshopStats.inspect(_workshop_preview_build).notes)
+	_fit_catalogue_notes()
+
+func _fit_catalogue_notes() -> void:
+	if not is_instance_valid(_catalogue_note_scroll): return
+	var width: float = maxf(20,_catalogue_note_scroll.size.x-18)
+	var font_size: int = 10 if mobile_hud or bool(_frontend_layout.get("compact",true)) else maxi(20,roundi(10*float(_frontend_layout.get("text_scale",1))))
+	_catalogue_description.add_theme_font_size_override("font_size",font_size)
+	_catalogue_description.custom_minimum_size.x = width
+	_catalogue_description.size.x = width
+	# Measure the actual shaped Label, including blank/trailing lines. Font-only
+	# sizing omits a final line and would clip descriptions without extra notes.
+	var height: float = 8.0
+	for line: int in range(_catalogue_description.get_line_count()): height += _catalogue_description.get_line_height(line)
+	height += maxi(0,_catalogue_description.get_line_count()-1)*_catalogue_description.get_theme_constant("line_spacing")
+	_catalogue_description.custom_minimum_size = Vector2(width,height)
+	_catalogue_description.size = Vector2(width,height)
 
 func _choose_part(category: String, id: String) -> void:
 	_build[category] = id
@@ -1377,11 +1638,8 @@ func _refresh_garage() -> void:
 			if status != null:
 				status.text = "EQUIPPED" if selected else ("PRACTICE" if _catalogue_practice else ("OWNED" if owned else "NOT OWNED"))
 				status.add_theme_color_override("font_color", ORANGE if selected else (BLUE if owned else MUTED))
-	var stats: Dictionary = PartCatalog.derive(_build)
-	for stat: String in _stat_bars:
-		var amount: float = float(stats.get(stat, 5.0))
-		_stat_bars[stat].value = clampf(amount / 10.0, 0.0, 1.0) if complete else 0
-		_stat_numbers[stat].text = "%.1f" % amount if complete else "--"
+	_workshop_preview_build = _build.duplicate()
+	_refresh_workshop_stats()
 
 func show_help() -> void:
 	_clear("help")
@@ -1410,15 +1668,16 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 	_settings = settings.duplicate()
 	_clear("settings")
 	_header("OPTIONS", "Changes apply immediately. Your collection is independent of these settings.")
-	_panel(_content, Rect2(22, 65, 596, 123))
-	_label(_content, "AUDIO", Rect2(34, 71, 116, 15), 10, ORANGE)
+	_frontend_settings_nodes["audio_panel"]=_panel(_content, Rect2(22, 65, 596, 123))
+	_frontend_settings_nodes["audio_title"]=_label(_content, "AUDIO", Rect2(34, 71, 116, 15), 10, ORANGE)
 	var controls: Array = []
 	for index: int in range(3):
 		var key: String = ["volume", "music_volume", "sfx_volume"][index]
 		var caption: String = ["MASTER", "MUSIC", "SFX"][index]
 		var y: float = 91 + index * 22
-		_label(_content, caption, Rect2(34, y, 112, 17), 10, TEXT)
+		_frontend_settings_nodes[key+"_label"]=_label(_content, caption, Rect2(34, y, 112, 17), 10, TEXT)
 		var value_label: Label = _label(_content, "%d%%" % roundi(float(_settings.get(key, 0.65)) * 100), Rect2(542, y, 64, 17), 10, BLUE, HORIZONTAL_ALIGNMENT_RIGHT)
+		_frontend_settings_nodes[key+"_value"]=value_label
 		var slider: HSlider = HSlider.new()
 		slider.name = {"volume":"VolumeSlider", "music_volume":"MusicVolumeSlider", "sfx_volume":"SfxVolumeSlider"}[key]
 		slider.set_meta("setting_key", key)
@@ -1434,6 +1693,7 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 			value_label.text = "%d%%" % roundi(value * 100)
 			action.emit("settings_changed", _settings.duplicate()))
 		_content.add_child(slider)
+		_frontend_settings_nodes[key+"_slider"]=slider
 		var outline: Panel = _panel(slider, Rect2(Vector2(-3, -3), slider.size + Vector2(6, 6)), Color(0, 0, 0, 0), ORANGE)
 		outline.name = "FocusOutline"
 		outline.add_theme_stylebox_override("panel", slider.get_theme_stylebox("focus"))
@@ -1443,19 +1703,54 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		controls.append([slider])
 	var mute: Button = _toggle_setting("muted", "MUTE AUDIO", 159, false)
 	controls.append([mute])
-	_panel(_content, Rect2(22, 193, 596, 122))
-	_label(_content, "DISPLAY / COMFORT", Rect2(34, 196, 310, 15), 10, ORANGE)
+	_frontend_settings_nodes["comfort_panel"]=_panel(_content, Rect2(22, 193, 596, 122))
+	_frontend_settings_nodes["comfort_title"]=_label(_content, "DISPLAY / COMFORT", Rect2(34, 196, 310, 15), 10, ORANGE)
 	var shake: Button = _toggle_setting("screen_shake", "SCREEN SHAKE", 215, true)
 	controls.append([shake])
 	var reduced: Button = _toggle_setting("reduced_flashing", "REDUCED FLASHING", 239, false)
 	controls.append([reduced])
 	controls.append([_toggle_setting("top_status_bars", "TOP STATUS BARS", 263, true,34,270), _toggle_setting("impact_numbers","IMPACT NUMBERS",263,false,336,270)])
-	if OS.has_feature("mobile"): _label(_content, "LANDSCAPE / HOLD AND DRAG TO STEER", Rect2(34,291,562,20),10,MUTED)
-	else: _label(_content,"WINDOW / USE WINDOWS MAXIMISE AND RESTORE",Rect2(34,291,562,20),10,MUTED)
+	_frontend_settings_nodes["window_note"]=_label(_content,"LANDSCAPE / HOLD AND DRAG TO STEER" if mobile_hud else "WINDOW / USE WINDOWS MAXIMISE AND RESTORE",Rect2(34,291,562,20),10,MUTED)
+	_frontend_settings_nodes.window_note.visible = false
+	var rumble: Button = _toggle_setting("controller_rumble","PAD RUMBLE",289,true,34,160)
+	_frontend_settings_nodes.controller_rumble_label.size.x=80
+	rumble.position.x=118; rumble.size.x=76
+	controls.append([rumble])
+	_frontend_settings_nodes["rumble_intensity_label"]=_label(_content,"INTENSITY",Rect2(208,290,72,17),10,TEXT)
+	var rumble_value: Label = _label(_content,"%d%%" % roundi(float(_settings.get("rumble_intensity",.55))*100),Rect2(419,290,34,17),10,BLUE,HORIZONTAL_ALIGNMENT_RIGHT)
+	_frontend_settings_nodes["rumble_intensity_value"] = rumble_value
+	var intensity := HSlider.new()
+	intensity.name = "RumbleIntensitySlider"
+	intensity.set_meta("setting_key","rumble_intensity")
+	intensity.position=Vector2(285,291)
+	intensity.size=Vector2(127,15)
+	intensity.min_value=0; intensity.max_value=1; intensity.step=.05
+	intensity.focus_mode = Control.FOCUS_ALL
+	intensity.value=float(_settings.get("rumble_intensity",.55))
+	intensity.value_changed.connect(func(value: float) -> void:
+		_settings["rumble_intensity"]=value
+		rumble_value.text="%d%%" % roundi(value*100)
+		action.emit("settings_changed",_settings.duplicate()))
+	_content.add_child(intensity)
+	_frontend_settings_nodes["rumble_intensity_slider"]=intensity
+	var intensity_outline: Panel = _panel(intensity,Rect2(Vector2(-3,-3),intensity.size+Vector2(6,6)),Color(0,0,0,0),ORANGE)
+	intensity_outline.name = "FocusOutline"
+	intensity_outline.add_theme_stylebox_override("panel",intensity.get_theme_stylebox("focus"))
+	intensity_outline.visible = false
+	intensity.focus_entered.connect(intensity_outline.show)
+	intensity.focus_exited.connect(intensity_outline.hide)
+	controls.append([intensity])
+	var test_rumble: Button = _button(_content,"TEST RUMBLE",Rect2(462,287,144,24),"test_rumble")
+	_frontend_settings_nodes["test_rumble"]=test_rumble
+	controls.append([test_rumble])
+	_frontend_settings_nodes["rumble_status"]=_label(_content,"Physical response needs your confirmation.",Rect2(34,46,572,12),10,MUTED)
+	_frontend_settings_nodes.rumble_status.visible=false
 	var back: Button = _button(_content, "BACK", Rect2(22, 321, 134, 28), return_intent)
+	_frontend_settings_nodes["back"]=back
 	var footer: Array = [back]
 	var layout_button: Button = _button(_content, "CONTROLLER: " + str(_settings.get("controller_layout", "auto")).to_upper(), Rect2(166, 321, 228, 28))
 	layout_button.set_meta("setting_key", "controller_layout")
+	_frontend_settings_nodes["controller_button"]=layout_button
 	layout_button.tooltip_text = "AUTO detects the controller. Choose NINTENDO when an adapter reports Xbox but your buttons are labelled A on the right and B below."
 	layout_button.pressed.connect(func() -> void:
 		var layouts: Array[String] = ["auto", "nintendo", "xbox", "playstation"]
@@ -1464,14 +1759,32 @@ func show_settings(settings: Dictionary, return_intent: String = "main_menu", sa
 		action.emit("settings_changed", _settings.duplicate()))
 	footer.append(layout_button)
 	if save_tools_allowed:
-		footer.append(_button(_content, "SAVE / TESTING TOOLS", Rect2(405, 321, 213, 28), "save_tools"))
+		var tools: Button=_button(_content, "SAVE / TESTING TOOLS", Rect2(405, 321, 213, 28), "save_tools")
+		_frontend_settings_nodes["save_tools"]=tools
+		footer.append(tools)
 	controls.append(footer)
 	_focus_rows(controls)
+	if not mobile_hud:
+		_frontend_settings_nodes["controls_panel"]=_panel(_content,Rect2(22,65,596,123))
+		_content.move_child(_frontend_settings_nodes.controls_panel,0)
+		_frontend_settings_nodes["controls_title"]=_label(_content,"CONTROLS",Rect2(34,71,400,20),20,ORANGE)
+		_frontend_settings_nodes["controls_copy"]=_label(_content,"STEER / ARROWS OR LEFT STICK\nBURST / SPACE OR FACE BUTTON\nBRAKE / SHIFT OR SHOULDER\nPAUSE / ESC OR MENU",Rect2(34,96,540,80),10,TEXT)
+
+func set_rumble_test_status(value: String) -> void:
+	if screen != "settings" or not _frontend_settings_nodes.has("rumble_status"): return
+	_frontend_settings_nodes.rumble_status.text = value
+	_frontend_settings_nodes.rumble_status.visible = true
+	_frontend_settings_nodes.test_rumble.tooltip_text = value
+	if mobile_hud or bool(_frontend_layout.get("compact",true)):
+		_frontend_settings_nodes.rumble_status.position = Vector2(34,46)
+		_frontend_settings_nodes.rumble_status.size = Vector2(572,12)
 
 func _toggle_setting(key: String, title: String, y: float, fallback: bool, x: float=34, width: float=572) -> Button:
-	_label(_content,title,Rect2(x,y,width-104,23),10,TEXT)
+	var caption: Label=_label(_content,title,Rect2(x,y,width-104,23),10,TEXT)
 	var button: Button = _button(_content,"ON" if bool(_settings.get(key,fallback)) else "OFF",Rect2(x+width-80,y,80,23))
 	button.set_meta("setting_key", key)
+	_frontend_settings_nodes[key+"_label"]=caption
+	_frontend_settings_nodes[key+"_button"]=button
 	button.pressed.connect(func() -> void:
 		_settings[key] = not bool(_settings.get(key, fallback))
 		button.text = "ON" if _settings[key] else "OFF"
@@ -1509,10 +1822,10 @@ func show_pause(is_run: bool = false) -> void:
 	_clear("pause", false)
 	_rect(_content, Rect2(0, 0, 640, 360), Color(0.02, 0.03, 0.04, 0.77))
 	var powers: Array = _inspection_owned_state.get("ids", [])
-	if is_run and not powers.is_empty():
+	if is_run:
 		_panel(_content, Rect2(22, 35, 390, 289))
 		_label(_content, "RUN PAUSED", Rect2(38, 48, 358, 31), 20, TEXT)
-		_label(_content, "Your machine waits. Inspect your mechanisms.", Rect2(38, 86, 358, 17), 10, MUTED)
+		_label(_content, "LEVEL %d / %.0fs / RPM %d%%" % [int(_pause_run_info.get("level",1)),float(_pause_run_info.get("elapsed",0)),roundi(float(_pause_run_info.get("rpm",1))*100)], Rect2(38, 86, 358, 17), 10, MUTED)
 		var resume: Button = _button(_content, "RESUME", Rect2(38, 116, 182, 31), "resume", null, true)
 		var options: Button = _button(_content, "OPTIONS", Rect2(38, 159, 182, 29), "settings")
 		var restart: Button = _button(_content, "RESTART RUN", Rect2(38, 200, 182, 29), "restart_run")
@@ -1520,6 +1833,9 @@ func show_pause(is_run: bool = false) -> void:
 		_label(_content, "ASSEMBLY LOCKED", Rect2(38, 285, 182, 17), 10, MUTED)
 		_label(_content, "RUN POWERS", Rect2(234, 99, 162, 14), 10, ORANGE)
 		_create_power_inspector(Rect2(430, 65, 188, 242))
+		if powers.is_empty():
+			_label(_content,"No powers committed yet.",Rect2(234,116,164,66),10,MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			_label(_content,"Choose power cards as you level up. Focus an owned power here to inspect its current rank and limits.",Rect2(430,95,188,142),10,TEXT).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		var rows: Array = [[resume], [options], [restart], [end]]
 		for index: int in range(mini(powers.size(), Powers.FAMILY_CAP)):
 			var id: String = str(powers[index])
@@ -1531,9 +1847,9 @@ func show_pause(is_run: bool = false) -> void:
 			_bind_power_inspection(inspect, id, rank, mutation)
 			rows.append([inspect])
 		_focus_rows(rows, resume)
-		_ability_inspector.inspect(str(powers[0]), int(_inspection_owned_state.get("ranks", {}).get(powers[0], 1)), str(_inspection_owned_state.get("mutations", {}).get(powers[0], "")))
+		if not powers.is_empty(): _ability_inspector.inspect(str(powers[0]), int(_inspection_owned_state.get("ranks", {}).get(powers[0], 1)), str(_inspection_owned_state.get("mutations", {}).get(powers[0], "")))
 		return
-	_panel(_content, Rect2(170, 35, 300, 289), Color("1c2933"), BORDER)
+	_panel(_content, Rect2(22, 35, 596, 289), Color("1c2933"), BORDER)
 	_label(_content, "RUN PAUSED" if is_run else "DUEL PAUSED", Rect2(187, 50, 266, 31), 20, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, "Take a breath. Your spin can wait.", Rect2(187, 88, 266, 17), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 	var resume: Button = _button(_content, "RESUME", Rect2(190, 119, 260, 31), "resume", null, true)
@@ -1575,7 +1891,7 @@ func _bind_power_inspection(control: Control, id: String, rank: int, mutation: S
 func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, run_seed: int, focus_id: String = "", context: Dictionary = {}) -> void:
 	_clear("reward")
 	_header(str(context.get("title", "VICTORY / PICK A POWER")), str(context.get("subtitle", "Before the final" if slot == 7 else "Encounter %d cleared. Choose one for the Run." % slot)))
-	_label(_content, "CHOOSE ONE / TAP READ FOR DETAILS" if OS.has_feature("mobile") else "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
+	_label(_content, "CHOOSE ONE / TAP READ FOR DETAILS" if mobile_hud else "CHOOSE ONE / FOCUS TO INSPECT", Rect2(24, 60, 390, 18), 10, ORANGE)
 	_create_power_inspector(Rect2(430, 65, 188, 242))
 	var cards: Array[Button] = []
 	var selected: Control
@@ -1598,13 +1914,14 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		_power_art(card, id, Rect2(30, 23, 64, 64), card, power)
 		var power_name: Label = _label(card, str(power.name).to_upper(), Rect2(8, 91, 108, 22), 10, style.title_color)
 		power_name.name = "AbilityCardTitle"
-		if id == "anchor_exchange":
+		if id == "anchor_exchange" or FrontEnd.pixel_font().get_string_size(power_name.text,HORIZONTAL_ALIGNMENT_LEFT,-1,10).x > 108:
 			power_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			power_name.add_theme_constant_override("line_spacing", 0)
 			power_name.position.y = 89
 			power_name.size.y = 28
 		var reading: Dictionary = AbilityInspection.describe(id, rank, mutation)
-		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 120 if id=="anchor_exchange" else 116, 108, 57 if id=="anchor_exchange" else 61), 10, TEXT)
+		var wrapped_title: bool = power_name.autowrap_mode != TextServer.AUTOWRAP_OFF
+		var description: Label = _label(card, str(reading.get("what" if rank == 0 else "next", power.get("card_copy", power.description))), Rect2(8, 120 if wrapped_title else 116, 108, 57 if wrapped_title else 61), 10, TEXT)
 		description.name = "AbilityCardBody"
 		description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description.add_theme_constant_override("line_spacing", 0)
@@ -1612,7 +1929,7 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		_ability_confirm(card, style, Rect2(8, 181, 108, 14), "CHOOSE" if rank == 2 else ("UPGRADE" if rank == 1 else "COLLECT"))
 		cards.append(card)
 		if id == focus_id: selected = card
-	if not OS.has_feature("mobile"): _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
+	if not mobile_hud: _label(_content, "FAMILIES %d/%d" % [owned.size(), Powers.FAMILY_CAP], Rect2(24, 293, 390, 16), 10, MUTED)
 	var rows: Array = [cards]
 	if context.has("rerolls"):
 		var rerolls: Dictionary = context.rerolls
@@ -1623,8 +1940,8 @@ func show_reward(offer: Array, owned: Array, slot: int, encounter_id: String, ru
 		_reroll_control = reroll
 		reroll.set_meta("charges",int(rerolls.charges))
 		_refresh_reroll_prompt()
-		if not reroll.disabled: rows.append([reroll])
-		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if OS.has_feature("mobile") else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
+		reroll.focus_mode = Control.FOCUS_NONE
+		_label(_content, "TAP CARD TO CHOOSE / TAP REROLL" if mobile_hud else "CONFIRM: CHOOSE / MENU: PAUSE", Rect2(24, 334, 402, 16), 10, MUTED)
 	else:
 		_label(_content, "ARROWS / STICK: INSPECT  CONFIRM: COLLECT  MENU: PAUSE", Rect2(24, 334, 592, 16), 10, MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
@@ -1667,8 +1984,8 @@ func show_mutation(power_id: String, branches: Array, draft_id: String, run_seed
 		_reroll_control.disabled = not bool(rerolls.get("mutation_available",false))
 		_reroll_control.set_meta("charges",int(rerolls.charges))
 		_refresh_reroll_prompt()
-		if not _reroll_control.disabled: rows.append([_reroll_control])
-	_label(_content, "TAP READ / TAP CARD TO COMMIT" if OS.has_feature("mobile") else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(24,334,402,16),10,MUTED)
+		_reroll_control.focus_mode = Control.FOCUS_NONE
+	_label(_content, "READ / CARD: COMMIT" if mobile_hud else "CONFIRM: MUTATE / REROLL: FRESH DRAFT", Rect2(437,309,179,14) if mobile_hud else Rect2(24,334,402,16),10,MUTED)
 	if not cards.is_empty(): _focus_rows(rows, selected)
 
 func focused_power_id() -> String:
@@ -1676,9 +1993,9 @@ func focused_power_id() -> String:
 	return str(focused.get_meta("power_id", "")) if focused != null else ""
 
 func _touch_info(card: Button, id: String, rank: int, mutation: String, branch_preview: bool = false) -> void:
-	if not OS.has_feature("mobile"): return
+	if not mobile_hud: return
 	# A separate tap reads the complete guide without accepting a permanent choice.
-	var info: Button = _button(_content, "READ", Rect2(card.position.x, 290, card.size.x, 44))
+	var info: Button = _button(_content, "READ", Rect2(card.position.x, 310 if branch_preview else 290, card.size.x, 44))
 	info.name = "ReadPower_" + id
 	info.pressed.connect(func() -> void:
 		card.grab_focus()
@@ -1758,6 +2075,7 @@ func show_acquisition(power_id: String, resume_label: String = "RETURN TO COMBAT
 	var power: Dictionary = Powers.get_owned_power(power_id, rank, mutation)
 	_acquisition_elapsed = 0.0
 	_acquisition_icon = _power_art(_content, power_id, Rect2(256, 83, 128, 128), null, power)
+	_acquisition_icon.set_meta("frontend_reference",Rect2(256,83,128,128))
 	_label(_content, str(power.name).to_upper() + (" MUTATED" if rank == 3 else (" TUNED" if rank == 2 else " ACQUIRED")), Rect2(114, 222, 412, 32), 21, style.title_color, HORIZONTAL_ALIGNMENT_CENTER)
 	_label(_content, str(style.badge) + "  /  " + ("MACHINE TRANSFORMED" if rank == 3 else ("MECHANISM TUNED" if rank == 2 else "NEW FAMILY")), Rect2(114, 68, 412, 14), 9, style.accent_color, HORIZONTAL_ALIGNMENT_CENTER)
 	if rank > 1:
@@ -1782,6 +2100,7 @@ func show_result(result: Dictionary) -> void:
 		_show_run_result(result)
 		return
 	_clear("result", false)
+	_frontend_result_kind = "duel_result"
 	_rect(_content, Rect2(0, 0, 640, 360), Color(0.025, 0.045, 0.07, 0.87))
 	_panel(_content, Rect2(121, 35, 398, 290))
 	var won: bool = bool(result.get("won", false))
@@ -1886,6 +2205,7 @@ func _show_run_result(result: Dictionary) -> void:
 	_focus_rows(rows, restart)
 
 func show_hud(stats: Dictionary) -> void:
+	_pause_run_info = {"level":stats.get("level",1),"elapsed":stats.get("run_elapsed",stats.get("elapsed",0)),"rpm":stats.get("player_rpm",1)}
 	_inspection_owned_state = {"ids":stats.get("owned_power_ids", []).duplicate(), "ranks":stats.get("power_ranks", {}).duplicate(), "mutations":stats.get("power_mutations", {}).duplicate(), "state":stats.get("power_state", {}).duplicate(true)}
 
 	if screen != "hud":
@@ -1994,10 +2314,6 @@ func show_hud(stats: Dictionary) -> void:
 	var ids: Array = stats.get("owned_power_ids", [])
 	for index: int in range(Powers.ACTIVE_IDS.size()):
 		var icon: TextureRect = _hud["power_%d" % index]
-		var slot_x: float = (400.0 if mobile_hud else _presentation_canvas.x*0.5)-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0
-		_hud["power_panel_%d" % index].position.x = slot_x
-		icon.position.x = slot_x+2.0
-		_hud["power_rank_%d" % index].position.x = slot_x+18.0
 		var id: String = str(ids[index]) if index < ids.size() else ""
 		icon.visible = not id.is_empty()
 		_hud["power_panel_%d" % index].visible = not id.is_empty()
@@ -2015,6 +2331,28 @@ func show_hud(stats: Dictionary) -> void:
 		_hud["power_rank_%d" % index].text = str(rank) if not id.is_empty() else ""
 		_hud["power_rank_%d" % index].visible = not id.is_empty()
 	_hud["power_note"].text = "RUN POWERS" if not ids.is_empty() else ""
+	_place_hud_power_slots(ids)
+	_compact_mobile_hud_text(stats)
+
+func _compact_mobile_hud_text(stats: Dictionary) -> void:
+	var wide: bool = mobile_hud and bool(_hud_layout.get("mobile_wide",false))
+	_hud["pressure_counts"].visible = wide and bool(stats.get("continuous_run",false)) and bool(stats.get("run_state",{}).get("director",false))
+	if mobile_hud and bool(stats.get("continuous_run",false)) and bool(stats.get("run_state",{}).get("director",false)):
+		_hud["round"].text = "T%d / %d CLEARED" % [int(stats.run_state.limits.tier),int(stats.run_state.threats_cleared)]
+	if not wide: return
+	_hud["player_rpm"].text = "%d RPM" % int(stats.get("player_rpm_value",float(stats.get("player_rpm",1.0))*9000.0))
+	var cooldown: float = float(stats.get("burst_cooldown",0.0))
+	var ready: bool = bool(stats.get("burst_ready",cooldown <= 0.0))
+	_hud["burst"].text = "BURST READY" if ready else ("LOW SPIN" if cooldown <= 0.0 else "BURST %.1fs" % cooldown)
+	if _run_active:
+		var level: int = int(stats.get("level",1))
+		_hud["xp_label"].text = "LV %d / %s" % [level,"MAX" if bool(stats.get("progression_max",false)) else "NEXT"]
+	if _hud["pressure_counts"].visible:
+		var state: Dictionary = stats.run_state
+		var census: Dictionary = state.census
+		_hud["enemy_name"].text = "PRESSURE"
+		_hud["enemy_rpm"].text = "%.1f / %.1f" % [float(census.pressure),float(state.limits.budget)]
+		_hud["pressure_counts"].text = "%dRIVALS/%dSMALL" % [int(census.get("active_full",census.full)),int(census.small)]
 
 func _create_hud() -> void:
 	_clear("hud", false)
@@ -2032,6 +2370,8 @@ func _create_hud() -> void:
 	_hud["enemy_bar"] = _bar(_content,Rect2(476,26,228,7),ORANGE)
 	_hud["player_rpm"] = _label(_content,"",Rect2(96,36,228,14),10,MUTED)
 	_hud["enemy_rpm"] = _label(_content,"",Rect2(476,36,228,14),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["pressure_counts"] = _label(_content,"",Rect2(466,56,248,10),10,MUTED,HORIZONTAL_ALIGNMENT_RIGHT)
+	_hud["pressure_counts"].visible = false
 	_hud["impact_confirmation"] = _label(_content,"",Rect2(6,248,68,68),10,ORANGE)
 	_hud["impact_confirmation"].autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	_hud["state_meters"] = PowerStateMeters.new()
@@ -2079,13 +2419,429 @@ func _create_hud() -> void:
 			if is_instance_valid(_ability_inspector) and screen == "hud": _ability_inspector.visible = false)
 	_reflow_hud()
 
-func set_presentation_canvas(canvas_size: Vector2) -> void:
-	if _presentation_canvas == canvas_size and _presentation_mobile == mobile_hud: return
+func set_presentation_canvas(canvas_size: Vector2, safe_rect: Rect2 = Rect2()) -> void:
+	if _presentation_canvas == canvas_size and _presentation_safe == safe_rect and _presentation_mobile == mobile_hud: return
+	var changed_mobile: bool = _presentation_mobile != mobile_hud
 	_presentation_canvas = canvas_size
+	_presentation_safe = safe_rect
 	_presentation_mobile = mobile_hud
+	if changed_mobile and mobile_hud: _note_input_profile("touch")
 	if not is_instance_valid(_content): return
+	if changed_mobile:
+		for child: Node in _content.find_children("*","Button",true,false):
+			if child.get_script() == TouchButton: child.touch_targets = mobile_hud
 	if screen == "hud": _reflow_hud()
-	else: _content.position = CombatLayout.responsive(canvas_size,mobile_hud).menu_origin
+	else: _reflow_menu()
+
+func _create_mobile_background() -> void:
+	if (not mobile_hud and presentation_mode!="frontend") or not _presentation_dimmed or screen == "hud": return
+	var atlas: AtlasTexture = AtlasTexture.new()
+	atlas.atlas = load(FrontEnd.BACKGROUND_PATH)
+	var frame: int = int(FrontEnd.SCREEN_REGISTRY.get(screen,{}).get("background",1))
+	atlas.region = Rect2(maxi(0,frame)*640,0,640,360)
+	var backdrop: TextureRect = TextureRect.new()
+	backdrop.name = "FullCanvasMobileMenuBackground"
+	backdrop.texture = atlas
+	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.size = _presentation_canvas
+	add_child(backdrop)
+	move_child(backdrop,0)
+	_presentation_background = backdrop
+
+func _fit_mobile_overlay(node: Control) -> void:
+	# The existing dim rectangle covers the whole mobile canvas while the
+	# authored interactive panel remains uniformly centred inside safe bounds.
+	node.position = -_content.position / _content.scale
+	node.size = _presentation_canvas / _content.scale
+
+func _reflow_menu() -> void:
+	if not is_instance_valid(_content) or screen == "hud": return
+	if presentation_mode=="frontend":
+		_reflow_frontend()
+		return
+	if not mobile_hud and FrontendLayout.uses_run_overlay(screen):
+		_reflow_run_overlay()
+		return
+	if not mobile_hud and screen == "pause":
+		_reflow_pause()
+		return
+	if FrontendLayout.uses_run_overlay(screen) or screen == "pause": _restore_run_overlay_reference()
+	_frontend_layout.clear()
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = layout.menu_origin
+	_content.scale = Vector2.ONE*float(layout.get("menu_scale",1.0)) if mobile_hud else Vector2.ONE
+	_content.size = Vector2(640,360)
+	if not mobile_hud:
+		var modal_scale: float = FrontendLayout.modal_scale(_presentation_canvas,screen)
+		_content.scale = Vector2.ONE*modal_scale
+		_content.position = (_presentation_canvas-_content.size*modal_scale)*.5
+	var native_background: Control = null
+	for child: Node in _content.get_children():
+		if child.get_script() == FrontEnd:
+			native_background = child
+			child.visible = not mobile_hud
+		if child is Control and child.has_meta("mobile_full_canvas_overlay"):
+			_fit_mobile_overlay(child)
+	if mobile_hud and _presentation_dimmed and not is_instance_valid(_presentation_background): _create_mobile_background()
+	if is_instance_valid(_presentation_background):
+		_presentation_background.visible = mobile_hud
+		_presentation_background.position = Vector2.ZERO
+		_presentation_background.size = _presentation_canvas
+	if not mobile_hud and _presentation_dimmed and not is_instance_valid(native_background):
+		var backdrop: Control = FrontEnd.new()
+		backdrop.screen_id = screen
+		_content.add_child(backdrop)
+		_content.move_child(backdrop,0)
+
+func _restore_run_overlay_reference() -> void:
+	if is_instance_valid(_run_overlay_shade): _run_overlay_shade.visible=false
+	for child: Node in _content.get_children():
+		if not child is Control or not child.has_meta("run_overlay_transformed"): continue
+		var reference: Rect2=child.get_meta("frontend_reference")
+		child.position=reference.position
+		child.size=reference.size
+		child.scale=Vector2.ONE
+		if child is Label or child is BaseButton: child.add_theme_font_size_override("font_size",int(child.get_meta("frontend_font",10)))
+	for entry: Dictionary in _card_animations:
+		if is_instance_valid(entry.card):
+			entry.position=entry.card.position
+			entry.card.position=entry.position+Vector2(0,-2 if entry.card.has_focus() else 0)
+	_acquisition_home_y=83.0
+
+func _reflow_pause() -> void:
+	_frontend_layout = FrontendLayout.pause_overlay(_presentation_canvas,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = Vector2.ZERO
+	_content.scale = Vector2.ONE
+	_content.size = _presentation_canvas
+	var frame: Rect2 = _frontend_layout.frame_rect
+	for child: Node in _content.get_children():
+		if not child is Control: continue
+		var reference: Rect2 = _frontend_reference(child)
+		var destination: Rect2 = Rect2(Vector2.ZERO,_presentation_canvas) if reference.size.x >= 639 and reference.size.y >= 359 else FrontendLayout.map_rect(reference,Rect2(0,0,640,360),frame)
+		_frontend_fit_control(child,destination,float(_frontend_layout.text_scale))
+		child.set_meta("run_overlay_transformed",true)
+	_frontend_layout_revision += 1
+
+func _reflow_run_overlay() -> void:
+	_frontend_layout=FrontendLayout.run_overlay(_presentation_canvas,screen,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position=Vector2.ZERO
+	_content.scale=Vector2.ONE
+	_content.size=_presentation_canvas
+	var regions: Dictionary=_frontend_layout.regions
+	var text_scale: float=float(_frontend_layout.text_scale)
+	if _presentation_dimmed:
+		if not is_instance_valid(_run_overlay_shade):
+			_run_overlay_shade=ColorRect.new()
+			_run_overlay_shade.name="RunOverlayShade"
+			_run_overlay_shade.color=Color(INK.r,INK.g,INK.b,.80)
+			_run_overlay_shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			_content.add_child(_run_overlay_shade)
+			_content.move_child(_run_overlay_shade,0)
+		_run_overlay_shade.visible=true
+		_run_overlay_shade.size=_presentation_canvas
+	var cards: Array[Control]=[]
+	for child: Node in _content.get_children():
+		if child is Button and str(child.get_meta("intent","")) in ["choose_power","choose_mutation"]: cards.append(child)
+	var gap: float=float(_frontend_layout.gap)
+	var choices: Rect2=regions.choices
+	var note_height: float=28 if not mobile_hud else 20
+	var card_area: Rect2=Rect2(choices.position,Vector2(choices.size.x,maxf(1,choices.size.y-note_height)))
+	var cell_width: float=(card_area.size.x-gap*maxi(0,cards.size()-1))/maxi(1,cards.size())
+	for index: int in range(cards.size()):
+		var card: Control=cards[index]
+		var native: Rect2=_frontend_reference(card)
+		var destination: Rect2=Rect2(card_area.position+Vector2(index*(cell_width+gap),0),Vector2(cell_width,card_area.size.y))
+		var scalar: float=minf(destination.size.x/native.size.x,destination.size.y/native.size.y)
+		card.position=destination.position+(destination.size-native.size*scalar)*.5
+		card.size=native.size
+		card.scale=Vector2.ONE*scalar
+		card.set_meta("run_overlay_transformed",true)
+	for child: Node in _content.get_children():
+		if not child is Control or child==_run_overlay_shade or child in cards: continue
+		if child.get_script()==FrontEnd:
+			child.visible=false
+			continue
+		var reference: Rect2=_frontend_reference(child)
+		var destination: Rect2=reference
+		if reference.size.x>=639 and reference.size.y>=359:
+			destination=Rect2(Vector2.ZERO,_presentation_canvas)
+		elif screen=="level_up":
+			var band: Rect2=regions.banner
+			if child is Label:
+				destination=Rect2(_frontend_layout.frame_rect.position.x,band.position.y+band.size.y*(.12 if reference.position.y<180 else .65),_frontend_layout.frame_rect.size.x,band.size.y*(.48 if reference.position.y<180 else .24))
+			elif reference.size.y<=2: destination=Rect2(0,band.position.y-2 if reference.position.y<180 else band.end.y,_presentation_canvas.x,2)
+			else: destination=band
+		elif screen=="acquisition":
+			destination=FrontendLayout.map_rect(reference,Rect2(104,67,432,226),regions.acquisition)
+			if child==_acquisition_icon:
+				var edge: float=minf(destination.size.x,destination.size.y)
+				destination=Rect2(destination.position+(destination.size-Vector2.ONE*edge)*.5,Vector2.ONE*edge)
+		elif child==_ability_inspector:
+			destination=regions.inspector
+		elif child==_reroll_control:
+			destination=Rect2(regions.footer.end.x-minf(360,regions.footer.size.x*.29),regions.footer.position.y,minf(360,regions.footer.size.x*.29),regions.footer.size.y)
+		elif reference.position.y>=309:
+			destination=Rect2(regions.footer.position,Vector2(regions.footer.size.x*(.67 if is_instance_valid(_reroll_control) else 1.0),regions.footer.size.y))
+		elif reference.position.y>=290:
+			destination=Rect2(choices.position.x,choices.end.y-note_height,choices.size.x,note_height)
+		elif reference.position.y<60:
+			destination=Rect2(regions.header.position+Vector2(0,0 if reference.position.y<30 else regions.header.size.y*.60),Vector2(regions.header.size.x,regions.header.size.y*(.55 if reference.position.y<30 else .35)))
+		else:
+			destination=Rect2(choices.position.x,regions.header.end.y+2,choices.size.x,18)
+		_frontend_fit_control(child,destination,text_scale)
+		child.set_meta("run_overlay_transformed",true)
+	if is_instance_valid(_acquisition_icon): _acquisition_home_y=_acquisition_icon.position.y
+	for entry: Dictionary in _card_animations:
+		if is_instance_valid(entry.card):
+			entry.position=entry.card.position
+			entry.card.position=entry.position+Vector2(0,-2 if entry.card.has_focus() else 0)
+	_frontend_layout_revision+=1
+
+func _schedule_frontend_reflow(_node: Node = null) -> void:
+	if presentation_mode!="frontend" or _frontend_reflow_pending: return
+	_frontend_reflow_pending=true
+	call_deferred("_finish_frontend_reflow")
+
+func _finish_frontend_reflow() -> void:
+	if not _frontend_reflow_pending: return
+	_frontend_reflow_pending=false
+	if presentation_mode=="frontend" and is_instance_valid(_content): _reflow_frontend()
+
+func _frontend_reference(node: Control) -> Rect2:
+	if not node.has_meta("frontend_reference"):
+		var area: Rect2=Rect2(node.position,node.size)
+		for entry: Dictionary in _card_animations:
+			if entry.card==node: area.position=entry.position
+		node.set_meta("frontend_reference",area)
+		node.set_meta("frontend_font",node.get_theme_font_size("font_size"))
+	return node.get_meta("frontend_reference")
+
+func _frontend_component(node: Control) -> bool:
+	return node is Preview or node.get_script() in [ShopMerchant,PacketView,CreditTransfer,AbilityInspection]
+
+func _frontend_fit_control(node: Control, destination: Rect2, text_scale: float) -> void:
+	var reference: Rect2=_frontend_reference(node)
+	if _frontend_component(node):
+		var scalar: float=minf(destination.size.x/maxf(1,reference.size.x),destination.size.y/maxf(1,reference.size.y))
+		node.position=destination.position+(destination.size-reference.size*scalar)*.5
+		node.size=reference.size
+		node.scale=Vector2.ONE*scalar
+		return
+	node.position=destination.position
+	node.size=destination.size
+	node.scale=Vector2.ONE
+	if node is Label or node is BaseButton:
+		var native_font: int=int(node.get_meta("frontend_font",10))
+		var desired: int=maxi(10,roundi(native_font*text_scale))
+		if not mobile_hud and not bool(_frontend_layout.get("compact",false)): desired=maxi(20,desired)
+		var face: Font=node.get_theme_font("font")
+		if node is Label:
+			while desired>10:
+				var measured: Vector2=face.get_multiline_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,destination.size.x if node.autowrap_mode!=TextServer.AUTOWRAP_OFF else -1,desired)
+				if measured.x<=destination.size.x and measured.y<=destination.size.y: break
+				desired-=1
+		elif node is BaseButton:
+			while desired>10 and (face.get_string_size(node.text,HORIZONTAL_ALIGNMENT_LEFT,-1,desired).x>destination.size.x-12 or face.get_height(desired)>destination.size.y-8): desired-=1
+		node.add_theme_font_size_override("font_size",desired)
+	if node is TextureRect: node.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var scale: Vector2=destination.size/Vector2(maxf(1,reference.size.x),maxf(1,reference.size.y))
+	for child: Node in node.get_children():
+		if child is Control and not node is Container:
+			var child_reference: Rect2=_frontend_reference(child)
+			_frontend_fit_control(child,Rect2(child_reference.position*scale,child_reference.size*scale),text_scale)
+
+func _reflow_frontend() -> void:
+	if not is_instance_valid(_content) or presentation_mode!="frontend": return
+	_frontend_reflow_pending=false
+	if mobile_hud:
+		# Android retains its accepted authored safe panel, including all touch
+		# coordinate transforms. Only the separate background spans the canvas.
+		var mobile: Dictionary=CombatLayout.responsive(_presentation_canvas,true,_presentation_safe)
+		_content.position=mobile.menu_origin
+		_content.scale=Vector2.ONE*float(mobile.menu_scale)
+		_content.size=Vector2(640,360)
+		_frontend_layout={"safe_rect":mobile.safe_rect,"frame_rect":_content.get_global_rect(),"regions":{"frame":_content.get_global_rect()}}
+		for child: Node in _content.get_children():
+			if child.get_script()==FrontEnd: child.visible=false
+			if child is Control and child.has_meta("mobile_full_canvas_overlay"): _fit_mobile_overlay(child)
+		if is_instance_valid(_presentation_background): _presentation_background.size=_presentation_canvas
+		_frontend_layout_revision+=1
+		return
+	var layout_id: String=_frontend_result_kind if screen=="result" else screen
+	_frontend_layout=FrontendLayout.desktop(_presentation_canvas,layout_id,_presentation_safe)
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position=Vector2.ZERO
+	_content.scale=Vector2.ONE
+	_content.size=_presentation_canvas
+	var references: Dictionary=FrontendLayout.reference_regions(layout_id)
+	var regions: Dictionary=_frontend_layout.regions
+	var text_scale: float=float(_frontend_layout.text_scale)
+	for child: Node in _content.get_children():
+		if not child is Control: continue
+		if child.get_script()==FrontEnd:
+			child.visible=false
+			continue
+		var reference: Rect2=_frontend_reference(child)
+		var region: String=FrontendLayout.reference_region(layout_id,reference)
+		var destination: Rect2
+		if child==_packet_view:
+			destination=regions.get("packet",regions.body)
+		elif region=="background": destination=Rect2(Vector2.ZERO,_presentation_canvas)
+		else:
+			var source: Rect2=references.get(region,references.body)
+			var target: Rect2=regions.get(region,regions.body)
+			if region=="details" and not regions.has("details"): target=regions.catalogue
+			destination=FrontendLayout.map_rect(reference,source,target)
+		_frontend_fit_control(child,destination,text_scale)
+	for entry: Dictionary in _card_animations:
+		if is_instance_valid(entry.card): entry.position=entry.card.position
+	if not mobile_hud and screen in ["collection_workshop","garage"]: _reflow_frontend_catalogue()
+	if not mobile_hud and screen=="settings": _reflow_frontend_settings()
+	if is_instance_valid(_presentation_background):
+		_presentation_background.position=Vector2.ZERO
+		_presentation_background.size=_presentation_canvas
+	_frontend_layout_revision+=1
+
+func _reflow_frontend_catalogue() -> void:
+	var regions: Dictionary=_frontend_layout.regions
+	var area: Rect2=regions.catalogue
+	var inset: float=12
+	var tabs_y: float=area.position.y+inset
+	var tab_width: float=(area.size.x-inset*2-12)/3
+	for index: int in range(3):
+		var category: String=["blade","ratchet","bit"][index]
+		_catalogue_tabs[category].position=Vector2(area.position.x+inset+index*(tab_width+6),tabs_y)
+		_catalogue_tabs[category].size=Vector2(tab_width,36 if not _frontend_layout.compact else 25)
+	var hint_y: float = tabs_y+(40 if not _frontend_layout.compact else 28)
+	_frontend_fit_control(_catalogue_shoulder_hint,Rect2(area.position.x+inset,hint_y,area.size.x-inset*2,20 if not _frontend_layout.compact else 12),float(_frontend_layout.text_scale))
+	var scroll_top: float=tabs_y+(68 if not _frontend_layout.compact else 44)
+	var scroll_bottom: float=area.end.y-inset if regions.has("details") else area.end.y-112
+	var columns: int=maxi(2,floori((area.size.x-inset*2)/220)) if not _frontend_layout.compact else 2
+	for category: String in _part_scrolls:
+		var scroll: ScrollContainer=_part_scrolls[category]
+		scroll.position=Vector2(area.position.x+inset,scroll_top)
+		scroll.size=Vector2(floorf(area.size.x-inset*2),floorf(maxf(44,scroll_bottom-scroll_top)))
+		var grid: GridContainer=scroll.get_child(0)
+		grid.columns=columns
+		grid.add_theme_constant_override("h_separation",8)
+		grid.add_theme_constant_override("v_separation",10)
+		var cell: Vector2=Vector2(floorf((scroll.size.x-16-(columns-1)*8)/columns),44 if _frontend_layout.compact else 88)
+		for control: Button in _part_buttons[category].values():
+			control.custom_minimum_size=cell
+			_frontend_fit_control(control,Rect2(control.position,cell),float(_frontend_layout.text_scale))
+	var detail: Rect2=regions.get("details",Rect2(area.position.x+inset,area.end.y-106,area.size.x-inset*2,100))
+	var metadata_height: float=minf(120,detail.size.y*.30) if regions.has("details") else 24
+	_frontend_fit_control(_catalogue_metadata,Rect2(detail.position+Vector2(10,10),Vector2(detail.size.x-20,metadata_height)),float(_frontend_layout.text_scale))
+	_catalogue_note_scroll.position = detail.position+Vector2(10,metadata_height+22)
+	_catalogue_note_scroll.size = Vector2(detail.size.x-20,detail.size.y-metadata_height-32)
+	_fit_catalogue_notes()
+	var focused: Control=get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	_catalogue_navigation(focused)
+
+func _reflow_frontend_settings() -> void:
+	var regions: Dictionary=_frontend_layout.regions
+	var compact: bool=bool(_frontend_layout.compact)
+	var names: Array[String]=["controls_panel","controls_title","controls_copy"]
+	for key: String in names:
+		if _frontend_settings_nodes.has(key): _frontend_settings_nodes[key].visible=not compact
+	if compact: return
+	var text_scale: float=float(_frontend_layout.text_scale)
+	var font: int=maxi(20,roundi(10*text_scale))
+	var audio: Rect2=regions.audio
+	var comfort: Rect2=regions.comfort
+	var controls: Rect2=regions.controls
+	var padding: float=18
+	var section_font: int=mini(30,FrontEnd.font_size(roundi(20*text_scale)))
+	for key: String in ["audio","comfort","controls"]:
+		var area: Rect2=regions[key]
+		_frontend_fit_control(_frontend_settings_nodes[key+"_panel"],area,text_scale)
+		_frontend_fit_control(_frontend_settings_nodes[key+"_title"],Rect2(area.position+Vector2(padding,16),Vector2(area.size.x-padding*2,32)),text_scale)
+		_frontend_settings_nodes[key+"_title"].add_theme_font_size_override("font_size",section_font)
+	var row: float=minf(106,(audio.size.y-118)/3)
+	for index: int in range(3):
+		var key: String=["volume","music_volume","sfx_volume"][index]
+		var origin: Vector2=audio.position+Vector2(padding,62+index*row)
+		_frontend_fit_control(_frontend_settings_nodes[key+"_label"],Rect2(origin,Vector2(audio.size.x-padding*2-74,26)),text_scale)
+		_frontend_fit_control(_frontend_settings_nodes[key+"_value"],Rect2(origin+Vector2(audio.size.x-padding*2-74,0),Vector2(74,26)),text_scale)
+		var slider: HSlider=_frontend_settings_nodes[key+"_slider"]
+		slider.position=origin+Vector2(0,34)
+		slider.size=Vector2(audio.size.x-padding*2,24)
+		slider.get_node("FocusOutline").position=Vector2(-3,-3)
+		slider.get_node("FocusOutline").size=slider.size+Vector2(6,6)
+	var mute_y: float=audio.end.y-52
+	_frontend_fit_control(_frontend_settings_nodes.muted_label,Rect2(audio.position.x+padding,mute_y,audio.size.x-padding*2-94,32),text_scale)
+	_frontend_fit_control(_frontend_settings_nodes.muted_button,Rect2(audio.end.x-padding-84,mute_y,84,32),text_scale)
+	var comfort_row: float=minf(84,(comfort.size.y-66)/4)
+	for index: int in range(4):
+		var key: String=["screen_shake","reduced_flashing","top_status_bars","impact_numbers"][index]
+		var y: float=comfort.position.y+58+index*comfort_row
+		_frontend_fit_control(_frontend_settings_nodes[key+"_label"],Rect2(comfort.position.x+padding,y,comfort.size.x-padding*2-94,32),text_scale)
+		_frontend_fit_control(_frontend_settings_nodes[key+"_button"],Rect2(comfort.end.x-padding-84,y,84,32),text_scale)
+	var controller: Button=_frontend_settings_nodes.controller_button
+	_frontend_fit_control(controller,Rect2(controls.position+Vector2(padding,56),Vector2(controls.size.x-padding*2,36)),text_scale)
+	_frontend_settings_nodes.controller_rumble_label.text = "CONTROLLER RUMBLE"
+	_frontend_fit_control(_frontend_settings_nodes.controller_rumble_label,Rect2(controls.position+Vector2(padding,108),Vector2(controls.size.x-padding*2-94,32)),text_scale)
+	_frontend_fit_control(_frontend_settings_nodes.controller_rumble_button,Rect2(controls.end.x-padding-84,controls.position.y+108,84,32),text_scale)
+	_frontend_fit_control(_frontend_settings_nodes.rumble_intensity_label,Rect2(controls.position+Vector2(padding,154),Vector2(controls.size.x-padding*2-74,26)),text_scale)
+	_frontend_fit_control(_frontend_settings_nodes.rumble_intensity_value,Rect2(controls.end.x-padding-74,controls.position.y+154,74,26),text_scale)
+	var intensity: HSlider = _frontend_settings_nodes.rumble_intensity_slider
+	intensity.position=controls.position+Vector2(padding,188)
+	intensity.size=Vector2(controls.size.x-padding*2,24)
+	intensity.get_node("FocusOutline").size=intensity.size+Vector2(6,6)
+	_frontend_fit_control(_frontend_settings_nodes.test_rumble,Rect2(controls.position+Vector2(padding,234),Vector2(controls.size.x-padding*2,36)),text_scale)
+	var status: Label = _frontend_settings_nodes.rumble_status
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_frontend_fit_control(status,Rect2(controls.position+Vector2(padding,280),Vector2(controls.size.x-padding*2,64)),text_scale)
+	var copy: Label=_frontend_settings_nodes.controls_copy
+	copy.vertical_alignment=VERTICAL_ALIGNMENT_TOP
+	copy.text="STEER / ARROWS OR LEFT STICK\nBURST / SPACE OR FACE BUTTON\nBRAKE / SHIFT OR SHOULDER\nPAUSE / ESC OR MENU"
+	copy.visible = controls.size.y >= 540
+	_frontend_fit_control(copy,Rect2(controls.position+Vector2(padding,356),Vector2(controls.size.x-padding*2,maxf(30,controls.size.y-410))),text_scale)
+	var note: Label=_frontend_settings_nodes.window_note
+	note.visible = controls.size.y >= 540
+	note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	_frontend_fit_control(note,Rect2(controls.position+Vector2(padding,controls.size.y-(48 if _frontend_layout.large else 28)),Vector2(controls.size.x-padding*2,34 if _frontend_layout.large else 24)),text_scale)
+	# The same existing controls move between panes; their focus owner and values
+	# survive a resize. Refresh explicit links using the currently focused node.
+	var focused: Control=get_viewport().gui_get_focus_owner()
+	var footer: Array=[_frontend_settings_nodes.back]
+	if _frontend_settings_nodes.has("save_tools"): footer.append(_frontend_settings_nodes.save_tools)
+	_focus_rows([[_frontend_settings_nodes.volume_slider],[_frontend_settings_nodes.music_volume_slider],[_frontend_settings_nodes.sfx_volume_slider],[_frontend_settings_nodes.muted_button],[_frontend_settings_nodes.screen_shake_button],[_frontend_settings_nodes.reduced_flashing_button],[_frontend_settings_nodes.top_status_bars_button],[_frontend_settings_nodes.impact_numbers_button],[controller],[_frontend_settings_nodes.controller_rumble_button],[intensity],[_frontend_settings_nodes.test_rumble],footer],focused)
+
+func presentation_snapshot() -> Dictionary:
+	_finish_frontend_reflow()
+	var panels: Array=[]
+	if is_instance_valid(_content):
+		for node: Node in _content.get_children():
+			if node is Panel and node.is_visible_in_tree(): panels.append({"name":str(node.name),"rect":node.get_global_rect()})
+	var focused: Control=get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	return {"screen_id":screen,"presentation_class":presentation_mode,"presentation_policy":_frontend_layout.get("presentation_policy","run_overlay" if not mobile_hud and FrontendLayout.uses_run_overlay(screen) else presentation_mode),"canvas_size":_presentation_canvas,
+		"safe_rect":_frontend_layout.get("safe_rect",_presentation_safe),"root_rect":_content.get_global_rect() if is_instance_valid(_content) else Rect2(),
+		"root_scale":_content.scale if is_instance_valid(_content) else Vector2.ONE,
+		"frame_rect":_frontend_layout.get("frame_rect",_content.get_global_rect() if is_instance_valid(_content) else Rect2()),
+		"regions":_frontend_layout.get("regions",{}),"panels":panels,"focus":str(focused.name) if is_instance_valid(focused) else "",
+		"content_instance_id":_content.get_instance_id() if is_instance_valid(_content) else 0,"layout_revision":_frontend_layout_revision}
+
+func _place_hud_power_slots(ids: Array) -> void:
+	if _hud.is_empty(): return
+	var layout: Dictionary = _hud_layout
+	var wide: bool = mobile_hud and bool(layout.get("mobile_wide",false))
+	var power_area: Rect2 = layout.get("regions",{}).get("powers",Rect2(0,float(layout.get("powers_y",424)),640,22))
+	var columns: int = maxi(1,int(layout.get("powers_columns",1)))
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,_presentation_canvas))
+	var centre: float = safe.get_center().x if mobile_hud else _presentation_canvas.x*0.5
+	for index: int in range(Powers.ACTIVE_IDS.size()):
+		var slot: Vector2 = Vector2(centre-minf(float(ids.size()),float(Powers.ACTIVE_IDS.size()))*16.0+index*32.0,float(layout.get("powers_y",424)))
+		if wide: slot = power_area.position+Vector2((index%columns)*32,(index/columns)*24)
+		_hud["power_panel_%d" % index].position = slot
+		_hud["power_%d" % index].position = slot+Vector2(2,3)
+		_hud["power_rank_%d" % index].position = slot+Vector2(18,5)
 
 func _fit_hud(key: String, rect: Rect2) -> void:
 	if not _hud.has(key): return
@@ -2095,10 +2851,15 @@ func _fit_hud(key: String, rect: Rect2) -> void:
 
 func _reflow_hud() -> void:
 	if screen != "hud" or _hud.is_empty(): return
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
+	_hud_layout = layout
+	if mobile_hud:
+		_reflow_mobile_hud(layout)
+		return
 	var extent: Vector2 = layout.canvas_size
 	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	_content.position = Vector2.ZERO
+	_content.scale = Vector2.ONE
 	_content.size = extent
 	var width: float = layout.top_width
 	var right_x: float = layout.right_x
@@ -2136,14 +2897,76 @@ func _reflow_hud() -> void:
 	_fit_hud("impact_confirmation",Rect2(6,layout.state_left.y+172.0,layout.state_width,68))
 	_hud.state_meters.set_layout(layout)
 
+func _reflow_mobile_hud(presentation: Dictionary) -> void:
+	var layout: Dictionary = presentation.get("hud_layout",presentation)
+	_hud_layout = layout
+	var regions: Dictionary = layout.regions
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,layout.canvas_size))
+	var wide: bool = bool(layout.get("mobile_wide",false))
+	_content.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_content.position = presentation.get("hud_origin",Vector2.ZERO)
+	_content.scale = Vector2.ONE*float(presentation.get("hud_scale",1.0))
+	_content.size = layout.canvas_size
+	_content.clip_contents = true
+	for pair: Array in [["player_panel","player_reserve"],["enemy_panel","pressure"],["burst_panel","burst"],["xp_panel","progress"],["xp_hit","progress"]]:
+		_fit_hud(pair[0],regions[pair[1]])
+	for column: Array in [["player","player_reserve"],["enemy","pressure"]]:
+		var area: Rect2 = regions[column[1]]
+		var inner: float = maxf(1.0,area.size.x-20.0)
+		_fit_hud(column[0]+"_name",Rect2(area.position+Vector2(10,2),Vector2(inner,15)))
+		_fit_hud(column[0]+"_bar",Rect2(area.position+Vector2(10,20),Vector2(inner,7)))
+		_fit_hud(column[0]+"_rpm",Rect2(area.position+Vector2(10,30),Vector2(inner,14)))
+	var player: Rect2 = regions.player_reserve
+	_fit_hud("rpm_overflow",Rect2(player.position+Vector2(10,20),Vector2(maxf(1.0,player.size.x-20.0),3)))
+	var pressure: Rect2 = regions.pressure
+	_fit_hud("swarm_objective",Rect2(pressure.position+Vector2(10,18),Vector2(maxf(1.0,pressure.size.x-20.0),12)))
+	_fit_hud("pressure_counts",Rect2(Vector2(pressure.position.x,pressure.end.y+2.0),Vector2(pressure.size.x,10)))
+	var clock: Rect2 = regions.clock
+	var clock_width: float = minf(112.0,clock.size.x)
+	_fit_hud("clock_panel",Rect2(Vector2(clock.get_center().x-clock_width*0.5,clock.position.y),Vector2(clock_width,48)))
+	_fit_hud("time",Rect2(Vector2(clock.get_center().x-minf(108.0,clock.size.x)*0.5,clock.position.y),Vector2(minf(108.0,clock.size.x),25)))
+	_fit_hud("round",Rect2(Vector2(clock.get_center().x-minf(116.0,clock.size.x)*0.5,clock.position.y+25),Vector2(minf(116.0,clock.size.x),11)))
+	_fit_hud("director_callout",Rect2(Vector2(clock.get_center().x-clock.size.x*0.5,clock.position.y+37),Vector2(clock.size.x,11)))
+	_fit_hud("pause_button",regions.get("pause",Rect2(safe.position+Vector2(6,8),Vector2(68,24))))
+	_fit_hud("announcement",regions.get("announcement",Rect2(layout.arena_rect.get_center()-Vector2(175,32),Vector2(350,64))))
+	_fit_hud("rerolls",regions.get("rerolls",Rect2(safe.position+Vector2(6,safe.size.y-55),Vector2(74,24))))
+	_fit_hud("power_note",regions.get("power_note",Rect2(safe.position+Vector2(86,float(layout.powers_y)-safe.position.y),Vector2(136,18))))
+	_place_hud_power_slots(_inspection_owned_state.get("ids",[]))
+	var burst: Rect2 = regions.burst
+	_fit_hud("burst",Rect2(burst.position+Vector2(11,2),Vector2(maxf(1.0,burst.size.x-21.0),16)))
+	_fit_hud("burst_bar",Rect2(burst.position+Vector2(11,burst.size.y-6.0),Vector2(maxf(1.0,burst.size.x-21.0),3)))
+	var progress: Rect2 = regions.progress
+	if wide:
+		_fit_hud("xp_label",Rect2(progress.position+Vector2(6,1),Vector2(maxf(1.0,progress.size.x-12.0),12)))
+		_fit_hud("xp_detail",Rect2(progress.position+Vector2(6,13),Vector2(maxf(1.0,progress.size.x-12.0),10)))
+	else:
+		_fit_hud("xp_label",Rect2(progress.position+Vector2(10,2),Vector2(maxf(1.0,progress.size.x-158.0),15)))
+		_fit_hud("xp_detail",Rect2(Vector2(progress.end.x-140.0,progress.position.y+2),Vector2(130,15)))
+	_fit_hud("xp_bar",Rect2(progress.position+Vector2(10,progress.size.y-6.0),Vector2(maxf(1.0,progress.size.x-20.0),4)))
+	_hud.controls.visible = false
+	_fit_hud("impact_confirmation",regions.get("impact",Rect2(layout.state_left+Vector2(0,172),Vector2(layout.state_width,68))))
+	_hud.state_meters.set_layout(layout)
+	if is_instance_valid(_ability_inspector):
+		_ability_inspector.position = Vector2(clampf(layout.arena_rect.end.x-194.0,safe.position.x,safe.end.x-188.0),clampf(safe.get_center().y-121.0,safe.position.y,safe.end.y-242.0))
+
+
 func combat_layout_snapshot() -> Dictionary:
 	var result: Dictionary = CombatLayout.snapshot(mobile_hud)
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud)
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas,mobile_hud,_presentation_safe)
 	result["regions"] = layout.regions
 	result["play_region"] = layout.arena_rect
 	result["canvas_size"] = layout.canvas_size
 	result["arena_scale"] = layout.arena_scale
 	result["arena_origin"] = layout.arena_rect.position
+	result["safe_rect"] = layout.get("safe_rect",Rect2(Vector2.ZERO,layout.canvas_size))
+	result["menu_origin"] = layout.menu_origin
+	result["menu_scale"] = layout.get("menu_scale",1.0)
+	result["mobile_wide"] = layout.get("mobile_wide",false)
+	if mobile_hud:
+		result["native_view"] = [layout.canvas_size.x,layout.canvas_size.y]
+		result["mobile_action_rail"] = layout.burst_rect.merge(layout.brake_rect)
+		result["left_edge"] = Rect2(0,layout.arena_rect.position.y,layout.arena_rect.position.x,layout.arena_rect.size.y)
+		result["right_edge"] = Rect2(layout.arena_rect.end.x,layout.arena_rect.position.y,layout.canvas_size.x-layout.arena_rect.end.x,layout.arena_rect.size.y)
 	result["duplicate_anchor_label"] = _hud.has("anchor")
 	result["temporary_announcements_live_combat"] = false
 	result["hud_overlaps_arena"] = false

@@ -564,7 +564,7 @@ func run() -> void:
 	for family: String in FAMILIES:
 		expected.append(family); expected.append(family + "_ii")
 		for branch: String in C.MUTATION_BRANCHES.get(family, []): expected.append(branch)
-	check(expected.size() == 34 and not I.art("second_wind").size(), "Complete current roster owns new art while Second Wind is explicitly historical")
+	check(expected.size() == 34 and not I.art("second_wind").size(), "Original thirteen identity families retain thirty-four live states; Second Wind stays historical")
 	check(not I.has_active("crash_guard", "guarded") and I.family_info("crash_guard").event_tags.get("crash_guard", "") == "damper_contact", "Crash Guard art is a contact response without a persistent orbiting shield")
 	for family: String in FAMILIES:
 		var info: Dictionary = I.family_info(family)

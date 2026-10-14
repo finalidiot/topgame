@@ -1,0 +1,112 @@
+{
+  "schema": "course-ui-003a2-v1",
+  "baseline": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_correction_baseline.json",
+    "sha256": "c4bb8468d9d932ab51fd29ee9eab970c229f2cb5066c52caa453bc7fd5132b58"
+  },
+  "source_files": {
+    "scripts/menus.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\scripts\\menus.gd",
+      "sha256": "087801d41cbad1d6e06a48cc6296f27ad998fcd3fb7737efd1d0097446282901"
+    },
+    "scripts/frontend_layout.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\scripts\\frontend_layout.gd",
+      "sha256": "3cfefdf29adec2d7581cd8800ef382cefec47c65e4ded3042cb9175964158408"
+    },
+    "scripts/ability_card_style.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\scripts\\ability_card_style.gd",
+      "sha256": "6c4e8c8e8fe067541982e196285a066a3ad0f08e441dc2367e8efadcb0ade636"
+    },
+    "scripts/workshop_build_stats.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\scripts\\workshop_build_stats.gd",
+      "sha256": "993755276a945d4c330259ffd085c746b1f0908be6f35c6d2e6d45a7d2f6da4a"
+    },
+    "tests/test_course_correction_ui_003a2.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\tests\\test_course_correction_ui_003a2.gd",
+      "sha256": "f1e681db19b1391ac70789b453d85fc519aca4e4d69f8715beb75bc7160d46fd"
+    },
+    "tests/capture_packet_phases_003a2.gd": {
+      "path": "C:\\GPT GAME BUILDING\\RINGBREAKER - Gyro Shock\\tests\\capture_packet_phases_003a2.gd",
+      "sha256": "4b1ab00ea6a67eed9db4587401165b33a4887ea364a6a6906e40e48f31a6edfc"
+    }
+  },
+  "checks": {
+    "focused_ui": 84,
+    "original_menus": 5497,
+    "ability_card_hierarchy": 2121,
+    "frontend_pages": 4089,
+    "frontend_classes": 544,
+    "levelup_fullclient": 527,
+    "android_fullscreen": 6580,
+    "frontend_fullscreen": 6321
+  },
+  "checks_total": 25763,
+  "passed_reports": [
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_ui_final_01.json",
+      "sha256": "9e47a393e8c2b0634b3121f99227dcca08e92a161a5e86be691c279da7668fdd"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_card_hierarchy_02.json",
+      "sha256": "de745527f628e8ce5ee6a2d7148a4f62058221651f9cc854ae2e7b1cfee4e485"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_frontend_pages_01.json",
+      "sha256": "37248b9c4c8a4e951fc380d4379aeca2f8d953713cdde22d145b47de1b5cc9ad"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_frontend_classes_01.json",
+      "sha256": "e21823fd69ea741927d6f8de55dcce6a66ce015b2d6574c72dc326cdc0054c61"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_levelup_01.json",
+      "sha256": "b85eadbf6984ba69c942fc518a1ad95abc18f970b64d2121370e6a1d1c6f6ab5"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_android_ui_01.json",
+      "sha256": "86c07ea0a711a79925542f19aa2016f3efe6985303f42bfb30918717e5672bcb"
+    },
+    {
+      "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_frontend_fullscreen_02.json",
+      "sha256": "53989e24a99f6921ef778dae98764f8d0c3f23f1a4ad4e053970386628cdcba7"
+    }
+  ],
+  "native_ui_report": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_course_ui_native_04.json",
+    "sha256": "832b55590e3fdeca540022030e655f40fb98426a76701925c8266733a738d1a7"
+  },
+  "native_ui_images": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\frames\\003a2_course_ui_native_04",
+  "changes": [
+    "Production six-rating assembly parity with current versus highlighted preview, signed neutral deltas and direct physical-note inspection",
+    "Exact starter Run handling is described separately from base ratings using actual current assembly identity",
+    "Shoulder category wrap and per-category focus, owning-device and release guards",
+    "Reroll excluded from directional/Tab/fallback focus, direct keyboard/controller press-release action remains",
+    "Universal bright focus and dark separator independent of power art/investment colour; hover and confirm use one target",
+    "Pause independently reflows to a large desktop overlay; accepted world/Android safe policy preserved",
+    "Controller rumble settings/intensity/test UI integrated with central service"
+  ],
+  "history_preserved": {
+    "logs": [
+      "003a2_course_ui_menus_initial.log",
+      "003a2_course_ui_menus_02.log",
+      "003a2_course_ui_01.log",
+      "003a2_course_card_hierarchy_01.log",
+      "003a2_course_frontend_fullscreen_01.log",
+      "003a2_packet_phases_before_01.log",
+      "003a2_packet_phases_before_02.log"
+    ],
+    "corrections": [
+      "Removed ecology dangling condition was repaired by content pass",
+      "Authored-focus-type expectation was superseded by universal focus requirement; all other menu assertions retained",
+      "Pause diagnostic policy field was added",
+      "New long card titles wrap and new inspector captions shortened truthfully",
+      "Physical-note Label height uses actual shaping including a final blank line",
+      "Packet result fixtures acquired required currency/total_salvage fields; errored initial captures excluded"
+    ]
+  },
+  "physical_controller_acceptance": false,
+  "physical_android_acceptance": false,
+  "arena_changes": false,
+  "packet_runtime_changes": false,
+  "scope": "Logical input, real production UI nodes, safe declared build/ownership/offer fixtures, exact base calculators and synthetic mobile viewport. This is not player save mutation, physical rumble, phone acceptance or fun validation."
+}

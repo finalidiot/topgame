@@ -45,6 +45,10 @@ func source_pcm(path: String) -> PackedByteArray:
 	return PackedByteArray()
 
 func run() -> void:
+	var qa_task: String = "003A.1"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--qa-task="): qa_task = argument.trim_prefix("--qa-task=")
+	if qa_task not in ["003A.1","003A.2"]: quit(2); return
 	var profile: String = OS.get_user_data_dir();before=fingerprints(profile)
 	var art: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_ART_MANIFEST))
 	var identity: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Probe.COMBAT_IDENTITY_MANIFEST))
@@ -98,7 +102,7 @@ func run() -> void:
 		check(not Probe._inspect_combat_pcm(kind,path,int(meta.frames),false,false).valid,"Mono substitution for stereo synchronized stem is rejected: "+kind)
 	var qa_root: String = OS.get_environment("TOPGAME_QA_ROOT")
 	if qa_root.is_empty():qa_root=ProjectSettings.globalize_path("res://").trim_suffix("/").get_base_dir().path_join("GyroBrothers-QA")
-	var folder: String = qa_root.path_join("003A.1/manifests");DirAccess.make_dir_recursive_absolute(folder)
+	var folder: String = qa_root.path_join(qa_task+"/manifests");DirAccess.make_dir_recursive_absolute(folder)
 	var output: String = folder.path_join("003a1_combat_actual_imports_%d_%d.json" % [OS.get_process_id(),Time.get_ticks_usec()])
 	var status: Dictionary = Probe.inspect(output)
 	check(status.get("ok",false),"Full additive production package probe preserves all earlier asset/economy guards")

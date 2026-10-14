@@ -76,7 +76,7 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
 		if arg=="--native": native=true
-	if not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/"):
+	if not report.is_absolute_path() or FileAccess.file_exists(report) or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/")):
 		push_error("A fresh isolated003A.1 report is required"); quit(2); return
 	root.size = Vector2i(800,480)
 	game = QuietMain.new()
@@ -122,9 +122,10 @@ func run() -> void:
 	for child: Node in game.menus._content.get_children():
 		if child is Button: check(str(child.get_meta("setting_key","")) != "fullscreen","Options has no misleading fullscreen toggle")
 	game._title()
-	check(game.menus._content.position == Vector2(80,60),"Small normal window restores canonical menu composition")
+	var frontend: Dictionary = game.menus.presentation_snapshot()
+	check(frontend.presentation_class == "frontend" and Rect2(frontend.root_rect).is_equal_approx(Rect2(Vector2.ZERO,game.window_presentation_snapshot().canvas_size)) and Vector2(frontend.root_scale).is_equal_approx(Vector2.ONE),"Small normal window restores the full-client frontend without scaling a fixed menu island")
 	var mobile: Dictionary = Layout.responsive(Vector2(1600,960),true)
-	check(mobile.arena_rect == Layout.PLAY_REGION and mobile.canvas_size == Vector2(800,480),"Android's accepted native layout remains separate")
+	check(mobile.canvas_size == Vector2(1600,960) and float(mobile.arena_scale)>1.0 and is_equal_approx(mobile.arena_rect.size.x/640.0,mobile.arena_rect.size.y/360.0),"Android expands independently while preserving a uniform canonical world")
 	var file: FileAccess = FileAccess.open(report,FileAccess.WRITE)
 	file.store_string(JSON.stringify({"checks":checks,"failures":failures,"native":native,"observed":observed,"scope":"Client reflow and actual rendered/native OS API window contracts. Legal initial four-power loadout and paused world are disclosed presentation fixtures, not balance acceptance. Retained real human Maximise evidence is separate; automated Restore is OS API actuation."},"\t")); file.close()
 	game.queue_free(); await settle()

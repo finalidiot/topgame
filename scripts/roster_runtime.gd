@@ -148,7 +148,8 @@ func velocity(f: Dictionary, before: Vector2, after: Vector2, dt: float) -> Vect
 	s.speed_samples = int(s.speed_samples)+1
 	return after.limit_length(SPEED_CLAMP) if has(f,"high_gear") or has(f,"orbit_drive") else after
 
-func burst(f: Dictionary, heading: Vector2) -> void:
+func burst(f: Dictionary, heading: Vector2, _pre_velocity: Vector2 = Vector2.INF) -> void:
+	if not live(f): return
 	var s: Dictionary = state(f)
 	if has(f,"momentum_bank") and float(s.bank) >= 15.0:
 		var bank: float = float(s.bank)

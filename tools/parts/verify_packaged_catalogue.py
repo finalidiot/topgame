@@ -567,6 +567,34 @@ def verify_music_variation_assets(assets: dict,source_root: Path=ROOT) -> dict:
     return {"music_variation_stems_verified":2,"music_variation_pcm_exact":True,"music_variation_metadata_exact":True,"music_seven_stem_asset_metadata_verified":True,"original_five_music_bytes_preserved":True,"music_variation_import_loop_mode":0,"music_variation_runtime_loop_owner":"Music._ready sets exact shared PCM bounds on duplicated resources","music_variation_receipts":verified}
 
 
+def verify_optional_ecology_assets(assets: dict, source_root: Path=ROOT) -> dict:
+    # Historical/minimal source fixtures without this new family retain their
+    # existing contracts. Current source requires the actual compiled receipt.
+    if not (source_root / "assets/powers/ecology003a2/manifest.json").is_file():
+        return {}
+    sys.path.insert(0, str(ROOT / "tools/art"))
+    from verify_ecology_package import verify_ecology_assets
+    return verify_ecology_assets(assets, source_root)
+
+
+def verify_base_power_assets(assets: dict, source_root: Path=ROOT) -> dict:
+    manifest_path = source_root / "assets/powers/base003a2/manifest.json"
+    if not manifest_path.is_file():
+        return {}
+    expected = json.loads(manifest_path.read_text(encoding="utf-8"))
+    actual = assets.get("base_power_art", {})
+    assert actual.get("read_only") is True and actual.get("failures") == [], "New base-power packaged probe failed"
+    assert actual.get("families") == expected["families"], "Packaged new roster identity differs"
+    assert json.loads(actual["manifest"]) == expected, "Packaged vector identity manifest differs"
+    rows = {row["group"]: row for row in actual["textures"]}
+    assert set(rows) == {"cards", "icons"}, "Both new vector sheets must be inspected"
+    for group, row in rows.items():
+        assert row["valid"] is True and row["size"] == expected[group]["size"]
+        assert row["visible_rgba_sha256"] == expected[group]["visible_rgba_sha256"], "Packaged visible vector pixels differ"
+        assert pipeline.sha256(source_root / row["path"].removeprefix("res://")) == expected[group]["source_sha256"], "Vector source changed since manifest authoring"
+    return {"new_base_power_families": len(actual["families"]), "new_base_power_vector_sheets": len(rows), "new_base_power_pixels_exact": True}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exe", type=Path, required=True, help="Explicit candidate or latest Windows executable")
@@ -678,6 +706,8 @@ def main() -> None:
         report["assets"].update(verify_combat_presentation_assets(assets))
         report["assets"].update(verify_combat_audio_assets(assets))
         report["assets"].update(verify_music_variation_assets(assets))
+        report["assets"].update(verify_optional_ecology_assets(assets))
+        report["assets"].update(verify_base_power_assets(assets))
         report["status"] = "passed"
     except Exception as error:
         report.update(status="failed", error=str(error))

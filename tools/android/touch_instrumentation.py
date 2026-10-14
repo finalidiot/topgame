@@ -2,13 +2,15 @@
 
 No general device UI automation is exposed. The companion APK targets only
 org.spinningmetal.prototype and verifies window focus before every MotionEvent.
-Native points map through the explicit safe800x480 product surface. Menu and
-Battle content each retain640x360 pixels at canvas origin80,60.
+Native points map through the actual reported responsive product surface.
+Authored menu and Battle coordinates remain640x360; their origins and uniform
+presentation scales are supplied by the connected game state.
 """
 from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import shlex
@@ -32,6 +34,12 @@ MANIFEST='''<?xml version="1.0" encoding="utf-8"?>
   <instrumentation android:name="org.spinningmetal.qa003a.TouchDriver" android:targetPackage="org.spinningmetal.prototype" android:functionalTest="true" android:handleProfiling="false" />
 </manifest>
 '''
+
+def native_canvas_size(value) -> list:
+    """Match the native receiver's finite positive bounded canvas contract."""
+    if not isinstance(value,list) or len(value)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v<=0 or v>8192 for v in value):
+        raise ValueError('Explicit finite positive native canvas dimensions<=8192 required')
+    return value.copy()
 
 def execute(command: list[str],log: Path,timeout=180) -> dict:
     return pipeline.run_logged(command,log,timeout)
@@ -85,7 +93,7 @@ def run(args) -> dict:
         assert args.script is not None,'--script or --session is required'
         script=json.loads(args.script.read_text(encoding='utf-8-sig'))
         assert set(script)== {'viewport','native_size','steps'} and len(script['viewport'])==4
-        assert script['native_size']==[800,480], 'Explicit current800x480 canvas required; preserve historical640x360 scripts unchanged'
+        native_canvas_size(script['native_size'])
         assert 1<=len(script['steps'])<=240
         assert all(step['type'] in ['down','move','up','cancel','wait'] for step in script['steps'])
     if args.install:

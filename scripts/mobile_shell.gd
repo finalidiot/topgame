@@ -1,16 +1,17 @@
 extends Node2D
-## Render the same native game inside an integer-scaled, cutout-safe surface.
+## Full physical Android client, uniformly projected into a responsive logical
+## surface. The separate combat SubViewport remains 640x360 inside Main.
 const Game = preload("res://scripts/main.gd")
+const Layout = preload("res://scripts/combat_hud_layout.gd")
 const NATIVE = Vector2i(800,480)
 var surface: SubViewportContainer
 var game_view: SubViewport
+var content: Node
+var _display_layout: Dictionary = {}
 
 static func fit_surface(available: Rect2i) -> Rect2i:
-	var scale: int = mini(available.size.x/NATIVE.x,available.size.y/NATIVE.y)
-	# Whole authored pixels whenever the display fits. Smaller safe surfaces
-	# use a bounded uniform5:3 fit rather than cropping either HUD margin.
-	var size: Vector2i = NATIVE*scale if scale>=1 else Vector2i(5,3)*maxi(0,mini(available.size.x/5,available.size.y/3))
-	return Rect2i(available.position+(available.size-size)/2,size)
+	# Compatibility accessor now means full client coverage, not a5:3 island.
+	return available
 
 func _ready() -> void:
 	if not OS.has_feature("mobile"):
@@ -18,30 +19,53 @@ func _ready() -> void:
 		return
 	mount_mobile_surface(Game.new())
 
-## Production Android and isolated nested-viewport tests share this exact path.
-## The caller supplies the content; this method never creates or opens a save.
-func mount_mobile_surface(content: Node) -> void:
+func mount_mobile_surface(game: Node) -> void:
+	# Window pixels are the physical outer surface. EXPAND is applied exactly
+	# once by mobile_canvas below; a second Window stretch would distort input.
 	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
 	get_window().content_scale_factor = 1.0
+	get_window().content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
+	get_window().content_scale_stretch = Window.CONTENT_SCALE_STRETCH_FRACTIONAL
+	content = game
 	surface = SubViewportContainer.new()
 	surface.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	surface.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(surface)
 	game_view = SubViewport.new()
-	game_view.size = NATIVE
 	game_view.disable_3d = true
 	game_view.handle_input_locally = true
 	game_view.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	surface.add_child(game_view)
 	get_window().size_changed.connect(_fit)
 	_fit()
-	game_view.add_child(content)
+	game_view.add_child(game)
+
+func _process(_dt: float) -> void:
+	# Android can change insets without changing client size after returning
+	# from a gesture/system UI overlay. Refit is inert while values are stable.
+	if is_instance_valid(game_view): _fit()
 
 func _fit() -> void:
-	var screen: Rect2i = Rect2i(Vector2i.ZERO,get_window().size)
-	var safe: Rect2i = DisplayServer.get_display_safe_area().intersection(screen)
-	if safe.size.x <= 0 or safe.size.y <= 0: safe = screen
-	var area: Rect2i = fit_surface(safe)
-	surface.position = Vector2(area.position)
-	surface.size = Vector2(NATIVE)
-	surface.scale = Vector2(float(area.size.x)/NATIVE.x,float(area.size.y)/NATIVE.y)
+	var client: Vector2i = get_window().size
+	var safe: Rect2i = Rect2i(Vector2i.ZERO,client)
+	if OS.has_feature("mobile"):
+		safe = DisplayServer.get_display_safe_area()
+	apply_display_layout(client,safe)
+
+## Public physical projection also used by declared display/cutout QA fixtures.
+## It only changes presentation and never starts/resets/steps a combat world.
+func apply_display_layout(display_size: Vector2i, safe_area: Rect2i) -> Dictionary:
+	var layout: Dictionary = Layout.mobile_canvas(display_size,safe_area)
+	if _display_layout == layout: return layout
+	_display_layout = layout
+	if not is_instance_valid(surface) or not is_instance_valid(game_view): return layout
+	game_view.size = layout.canvas_size
+	surface.position = Vector2.ZERO
+	surface.size = Vector2(layout.canvas_size)
+	surface.scale = Vector2.ONE*float(layout.ui_scale)
+	if is_instance_valid(content) and content.has_method("set_mobile_presentation"):
+		content.set_mobile_presentation(Vector2(layout.canvas_size),layout.safe_rect)
+	return layout
+
+func layout_snapshot() -> Dictionary:
+	return _display_layout.duplicate(true)

@@ -14,6 +14,29 @@ var direction: Vector2 = Vector2.ZERO
 var owners: Dictionary = {}
 var blocked: Dictionary = {}
 var _was_burst: bool = false
+var _layout: Dictionary = {"canvas_size":Vector2(800,480), "safe_rect":CombatLayout.VIEW,
+	"arena_rect":CombatLayout.PLAY_REGION, "steering_rect":CombatLayout.PLAY_REGION,
+	"burst_rect":BURST_RECT, "brake_rect":BRAKE_RECT}
+
+func configure_layout(layout: Dictionary) -> Dictionary:
+	# Rotation or a changed cutout must never retarget a still-held contact.
+	# Repeated identical layout publication leaves prepared steering intact.
+	var canvas: Vector2 = layout.get("canvas_size",CombatLayout.VIEW.size)
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,canvas))
+	var arena: Rect2 = layout.get("arena_rect",CombatLayout.PLAY_REGION)
+	var actions_y: float = minf(arena.position.y+234.0,safe.end.y-126.0)
+	var next: Dictionary = {"canvas_size":canvas,"safe_rect":safe,"arena_rect":arena,
+		"burst_rect":layout.get("burst_rect",Rect2(safe.end.x-76.0,actions_y,70,52)),
+		"brake_rect":layout.get("brake_rect",Rect2(safe.end.x-76.0,actions_y+60.0,70,52))}
+	next["steering_rect"] = layout.get("steering_rect",Rect2(next.arena_rect).intersection(Rect2(next.safe_rect)))
+	if next != _layout:
+		clear()
+		_layout = next
+	queue_redraw()
+	return layout_snapshot()
+
+func layout_snapshot() -> Dictionary:
+	return _layout.duplicate(true)
 
 func set_enabled(value: bool) -> void:
 	if enabled and not value: clear()
@@ -44,9 +67,13 @@ func sample() -> Dictionary:
 		"burst": action_down("burst") or Input.is_action_pressed("burst"),
 		"brake": action_down("brake") or Input.is_action_pressed("brake")}
 
-static func valid_gameplay_point(point: Vector2) -> bool:
+static func valid_gameplay_point(point: Vector2, layout: Dictionary = {}) -> bool:
 	# HUD, margins and the opposite-thumb actions never acquire a steering finger.
-	return CombatLayout.PLAY_REGION.has_point(point) and not BURST_RECT.has_point(point) and not BRAKE_RECT.has_point(point)
+	var play: Rect2 = layout.get("steering_rect",layout.get("arena_rect",CombatLayout.PLAY_REGION))
+	var safe: Rect2 = layout.get("safe_rect",Rect2(Vector2.ZERO,layout.get("canvas_size",CombatLayout.VIEW.size)))
+	var burst: Rect2 = layout.get("burst_rect",BURST_RECT)
+	var brake: Rect2 = layout.get("brake_rect",BRAKE_RECT)
+	return safe.has_point(point) and play.has_point(point) and not burst.has_point(point) and not brake.has_point(point)
 
 func handle_touch(event: InputEvent) -> bool:
 	if event is InputEventScreenTouch:
@@ -62,9 +89,10 @@ func handle_touch(event: InputEvent) -> bool:
 			return owned
 		if not enabled or blocked.has(finger) or owners.has(finger): return false
 		show_controls = true
-		if BURST_RECT.has_point(event.position): owners[finger] = "burst"
-		elif BRAKE_RECT.has_point(event.position): owners[finger] = "brake"
-		elif steering_finger < 0 and valid_gameplay_point(event.position):
+		if not Rect2(_layout.safe_rect).has_point(event.position): return false
+		if Rect2(_layout.burst_rect).has_point(event.position): owners[finger] = "burst"
+		elif Rect2(_layout.brake_rect).has_point(event.position): owners[finger] = "brake"
+		elif steering_finger < 0 and valid_gameplay_point(event.position,_layout):
 			steering_finger = finger
 			origin = event.position
 			direction = Vector2.ZERO
@@ -86,7 +114,7 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	if not enabled or not show_controls: return
 	var font: Font = FrontEnd.pixel_font()
-	for item: Array in [["burst", BURST_RECT], ["brake", BRAKE_RECT]]:
+	for item: Array in [["burst", _layout.burst_rect], ["brake", _layout.brake_rect]]:
 		var rect: Rect2 = item[1]
 		draw_style_box(FrontEnd.authored_style("button_caps", "PRESSED" if action_down(item[0]) else "NORMAL"), rect)
 		if font != null:

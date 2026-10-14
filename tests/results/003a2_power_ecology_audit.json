@@ -1,0 +1,1876 @@
+{
+  "task": "003A.2",
+  "revision": "final_prebuild_evidence_4",
+  "created_utc": "2026-10-10T05:45:52.100020+00:00",
+  "starting_git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da",
+  "branch": "task-003a2-ability-ecology",
+  "scope_baseline": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_scope_baseline.json",
+    "sha256": "9df2c76a3e7e7167e998e207f29424e998a70ba5d18640c405ed1efe4c3bf2ec",
+    "protected_counts": {
+      "player": 438,
+      "music": 18,
+      "assets": 695,
+      "scripts": 106,
+      "protected_deliveries": 8
+    }
+  },
+  "design_contract": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\temp\\mutation_contract.md",
+    "sha256": "cd0c0ff2ef91bfda517cd95e5f3f0a7603b63628b817ba45418eeb9fcb7f470f"
+  },
+  "evidence_scope": "Accepted b476 I/II and existing mutation audit remain immutable in baseline fields. Current16 bases /11 III families /22 branches /54 forms are implemented and source-reviewed; final114 headless,13 native,270 Python, legal study, qualitative movies and serial performance pass. Candidate exports, packaged smoke and human acceptance remain pending.",
+  "accepted_source_fingerprints": {
+    "scripts/run_powers.gd": "3ea9ede1452cd6727c6edfa4ae2d182315039cbb1442ed65f8dd1cc0af78b429",
+    "scripts/power_runtime.gd": "5cc8bc1f77b103be7fcb239c902ea36e32efdb158fe8a4aa3f7a9390f53b63bd",
+    "scripts/roster_runtime.gd": "b68b292428ab325074ac57e63bce5a1916d8376f5ad77318746e4ed0d227bad0",
+    "scripts/defence_runtime.gd": "072ebe5a15b87c6322b46cee420bd34e1db7b8a4320b8f33c6953c70e54e5dc0",
+    "scripts/spin_economy.gd": "72640e95d769a6472729b8445c91b43fa05e683d306747d678a94001cc992fdc",
+    "scripts/run_context.gd": "e436422b1bed7d4bcc6eff543a00c16886cdff7ba5711383e85e60718e75331f",
+    "scripts/run_progression.gd": "f5c6c50191238abe7bd2e1d75c9ec5979424ed654d89469c024a5cce07627d17",
+    "scripts/battle.gd": "f9fb024f672a5d76efcdd98ff111a9432a27c1657fc430a57a27fb4c862c429a",
+    "scripts/enemy_roles.gd": "01988fff367767e2031a5b9fe7a9c1101fb96adca7c1c7c5e2a401700fc1ec63",
+    "scripts/enemy_power_packages.gd": "6a2e0e18167dc8dc30a387b2b244982ddb93a51f24c3cff7fc7d82c15f61195c",
+    "scripts/ghost_circuit_routes.gd": "ab02a63b8ec3db06f5300bfe5ae23add85b005f824144ddab56f1e81f80ae01e"
+  },
+  "implementation_evidence": {
+    "status": "Completed prebuild automated/source/native evidence; candidate and human acceptance pending.",
+    "reports": [
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_coverage_review_20261010_063117_102932.json",
+        "sha256": "c6196646b5b4757b1e745096a04e47ee3f0c36ac68db8907b72e045ba8812e4e",
+        "scope": "Source review and scoped281 acquisition/329 semantic/159 solver integration evidence; its pending Centrifuge scene policy was later resolved; pre-neutral-correction source.",
+        "checks": null,
+        "status": null,
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_neutral_host_compatibility_review_20261010_064429_579710.json",
+        "sha256": "5b3f4ba1ef9ea0e6aeb514361692c1bbf749ed0123d6a6c751c3ae42aad14bf4",
+        "scope": "Current neutral compatibility1596, unchanged old readability4387 and Mobile124 focused proof; exact new-test inverse and old Mobile one-line scope proof.",
+        "checks": null,
+        "status": null,
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_art_20261010_055143_892939.json",
+        "sha256": "2170e24c8ff6e524573a3b08e4b5fc18199c4beacf165013f2d9ca4ae7917ef2",
+        "scope": "13 Python native-master/export cases and229 actual Menus/art checks at captured owned art/copy boundary.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_package_probe_20261010_062016_199962.json",
+        "sha256": "dc152ffc72e8315ead9c4a65e4ed14cdcfa0c4ead5b0ffdf3b8c87d71d521c70",
+        "scope": "15 strict unit cases plus actual imported source-resource receipt; actual compiled EXE acceptance still pending.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_full_preservation_20261010_062443_666807.json",
+        "sha256": "5fd65d4129767df8c7cbc9f1f51e5bcb99935bdf8d262254697d18b706a9a87c",
+        "scope": "327314 recorded protected group entries byte-exact before authorised candidate promotion.",
+        "checks": null,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_062304_972171.json",
+        "sha256": "9c0a5c665f6fda3511128cddea5564bb9da2047d5789f271128064f79666491c",
+        "scope": "Retained failed112-suite broad attempt:107 passes235870 selected successful checks and5 strict failures; not final acceptance.",
+        "checks": 235870,
+        "status": "failed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_python_20261010_064638_124089.json",
+        "sha256": "01cc977ccd2739774bdcc89f964b40c107666039d3d4185c609901a4bdc179e7",
+        "scope": "Final current-source7 categories270 cases allPASS, source/harness/player exact.",
+        "checks": 270,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_native_20261010_064638_159717.json",
+        "sha256": "023e7091d60ba2a411ed84b174ece9b5ae3f6bd84fe703598da78c57282b94d2",
+        "scope": "Final current-source13 native suites25700 checks allPASS; Windows renderer/audio/menu/synthetic input, no physical Android claim.",
+        "checks": 25700,
+        "status": "passed",
+        "failures": null
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_validation_headless_20261010_064638_124479.json",
+        "sha256": "656a602b59a2f4cc0cc69421a9dd4a14a26abb3f4f8fad9fbe139f3690595b3a",
+        "scope": "Final 114 headless suites /244052 checks; zero failures; production, harness and438 real player files unchanged."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_legal_diversity_20261010_064826_637333_comparison.json",
+        "sha256": "56d2b1f165883e4d6abfd33443ff7c7cc1923e280e1cda74ac799e4595634c8b",
+        "scope": "Final256 matched seeds x5 declared analytical policies;1280 cases and3840 starter-label replays per source. Legal availability/depth, not natural acquisition or survival balance."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_diversity_simulation.json",
+        "sha256": "61f38b673265b171907e602ce3987f179865dcd0cd51f882db073ded522e60a6",
+        "scope": "Required combined final legal study and all eight actual runtime scene packages, controls, events, ledgers and clock evidence."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_actual_boundary_equality_20261010_064954_473439.json",
+        "sha256": "2a13d4e3ca7e971885ba8ecb5343cf4d64ab278033464159198ba9b35c0e804f",
+        "scope": "All eight scenes /820 actor samples exact across the neutral legacy-host compatibility correction."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_build_ecology_showcase.json",
+        "sha256": "6308457a0b0094a88ab4d306b396b5d2c326cdc5a5c7c3107b8c92b598dd8643",
+        "scope": "Final native fixed60 Windows eight-scene movie provenance: actual paid procs; declared initial loadouts/poses/velocities and sampled controls; no live resource or state holds."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_draft_showcase.json",
+        "sha256": "02f8480c66f3258b2b8925464956dae558e58579377172e1730d3520d2c569eb",
+        "scope": "Final actual Main seed39 draft-to-Flywheel movie provenance; declared attributed-XP and one paused pose fixture; normal READY then control-earned release."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_native_headless_actual_equality_20261010_070001_290519.json",
+        "sha256": "4cf68bf6e5671d600fffc9a3a6129b5b76a1d4d316582a679256e995136ac6d1",
+        "scope": "Complete native/headless equality for all eight scenes /820 actor samples and actual Main progression, events, controls, ledgers and clocks."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_simulation_final_neutral.json",
+        "sha256": "057318bb4cb6efc679117bfb878fe9bf852eb5e5a30ac3c201441c7f94cbe186",
+        "scope": "12 baseline and12 current seeded cases at4/5/6 total tops plus7-top stress; simulation workload and censoring, separate from regression totals."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\benchmarks\\003a2_ecology_performance_native_final_neutral.json",
+        "sha256": "dea3d98085c5d95008ee67c9f9c10df893abc1c03ecba5a6a5486308b05c85af",
+        "scope": "Serial native24-case workload; exact24 simulation replays; host timing and bounded workload evidence, excluding full Main/HUD/music and Android."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_performance_validation_20261010_071219_540817.json",
+        "sha256": "5444c2bdd54c75cf97664e0853c68a407ab67dc4dcd82184a0509544c7a8d3f5",
+        "scope": "Compact final performance ledger: group metrics, bounds, actual procs, replay, censoring and explicit scope limits."
+      },
+      {
+        "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_preservation_prebuild_20261010_071338_860490.json",
+        "sha256": "30d09860d31daf78e478df49e65c9e65e3e097a80f17f31c4eec3b902c307567",
+        "scope": "Fresh prebuild438 player /18 music /695 accepted assets /8 accepted delivery files byte-exact;836 current runtime files match final114 source boundary."
+      }
+    ],
+    "regression": {
+      "headless_suites": 114,
+      "headless_checks": 244052,
+      "native_suites": 13,
+      "native_checks": 25700,
+      "godot_suites_total": 127,
+      "godot_checks_total": 269752,
+      "python_categories": 7,
+      "python_cases": 270,
+      "failed_suites": 0,
+      "counting": "Focused reruns, legal-model/data checks, art/source reviews and performance checks are not added a second time."
+    },
+    "counting": "Focused reruns, legal-model/data checks, art/source reviews and performance checks are not added a second time."
+  },
+  "inventory": {
+    "active_family_count": 16,
+    "family_cap": 7,
+    "baseline_vertical_families": 7,
+    "baseline_mutations": 14,
+    "baseline_visible_forms": 46,
+    "baseline_content_investments": 39,
+    "selected_new_vertical_families": 4,
+    "expected_vertical_families": 11,
+    "expected_mutations": 22,
+    "expected_visible_forms": 54,
+    "expected_content_investments": 43,
+    "maximum_single_build_investments": 21,
+    "new_base_powers": 0,
+    "current_vertical_families": 11,
+    "current_mutations": 22,
+    "current_visible_forms": 54,
+    "current_content_investments": 43
+  },
+  "families": [
+    {
+      "id": "impact_wake",
+      "name": "Impact Wake",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Local crowd separation from heavy accepted contact",
+      "activation": "Opposing accepted contact severity >=0.55; owner cooldown1.25s I/1.05s II.",
+      "trigger": "Opposing accepted contact severity >=0.55; owner cooldown1.25s I/1.05s II.",
+      "rpm_cost": "No additional direct RPM charge; real contact still pays canonical collision and movement costs.",
+      "rpm_recovery": "No family-specific recovery; any ordinary reclamation remains separately eligible and capped.",
+      "cost": "No additional direct RPM charge; real contact still pays canonical collision and movement costs.",
+      "payoff": "Outward delta velocity around real contact: radius52 I/68 II. Opposing secondary full tops receive18/25 and small tops60/80. With no secondary target, the primary receives12/18 full or36/48 small.",
+      "physical_behavior": "Outward delta velocity around real contact: radius52 I/68 II. Opposing secondary full tops receive18/25 and small tops60/80. With no secondary target, the primary receives12/18 full or36/48 small.",
+      "risk": "Dispersing a crowd may move targets toward a gate or out of the next attack; small taps do nothing.",
+      "agency": "Choose a heavy contact location and crowd geometry; effect after contact is automatic.",
+      "skill_requirement": "Aim an earned heavy hit near useful targets; no special input sequence.",
+      "burst": "Only ordinary Burst changes speed/contact commitment; no separate Wake Burst gate.",
+      "brake": "No dedicated Brake interaction.",
+      "collision": "One accepted contact drives one owner-gated wake; never recursive collisions.",
+      "wall": "No wall trigger.",
+      "edge": "Can physically displace rivals toward an edge; no gate protection.",
+      "wobble": "No direct family wobble manipulation.",
+      "position": "Real contact origin and nearby rival locations determine effect.",
+      "offence": "Physical local displacement.",
+      "defence": "Can create room after a hit; no damage immunity.",
+      "mobility": "No owner speed buff.",
+      "endurance": "No direct sustain.",
+      "rank_ii": "Wider and stronger wake with shorter cooldown; same trigger and role.",
+      "rank_iii": "No accepted Rank III at baseline.",
+      "synergy": [
+        "Chain Impact: the same genuinely hard hit can also open a separate bounded follow-up.",
+        "Dead Centre: drawing opponents near the central socket may create local contacts; no added combo bonus."
+      ],
+      "overlap": [
+        "Chain Impact shares radial contact displacement but uses a higher hard threshold, delayed pulse and short Burst follow-up."
+      ],
+      "recommendation": "Keep I/II; a new III crowd pulse would overlap Chain and existing Return Spring more than the selected gaps.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_contact_owner",
+          "line": 737,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Opposing accepted contact severity >=0.55; owner cooldown1.25s I/1.05s II.",
+          "Dispersing a crowd may move targets toward a gate or out of the next attack; small taps do nothing."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2
+      ],
+      "mutation_branches": [],
+      "current_mutation_branches": []
+    },
+    {
+      "id": "redline",
+      "name": "Redline",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "runaway",
+        "breakneck"
+      ],
+      "role": "Paid aggressive overclock with heat and committed-attack risk",
+      "activation": "Accepted ordinary Burst with pre-cost RPM>=0.13 activates modern Redline3.2s; Breakneck preparation4.8s. Real fast movement/hits earn heat and reserve.",
+      "trigger": "Accepted ordinary Burst with pre-cost RPM>=0.13 activates modern Redline3.2s; Breakneck preparation4.8s. Real fast movement/hits earn heat and reserve.",
+      "rpm_cost": "Extra activation .025 I/.045 II; active drain(.003+heat*.006)/s. Ordinary Burst .013 remains. Excess reserve is paid away at expiry.",
+      "rpm_recovery": "Aggressive input>=.35, speed>=135, off Brake and radius<170 earns .045/s limited by .14 activation quota and overclock bucket. Active contacts>=.35 with motion gates earn min(.055,.015+severity*.025), target/global cooldowns and shared/small budgets.",
+      "cost": "Extra activation .025 I/.045 II; active drain(.003+heat*.006)/s. Ordinary Burst .013 remains. Excess reserve is paid away at expiry.",
+      "payoff": "Thrust/speed and heat-dependent attack response; real reserve cap1.12 I/1.18 II/1.24 Runaway. Heat slows response and braking/recovery; Breakneck commits physically to one line.",
+      "physical_behavior": "Thrust/speed and heat-dependent attack response; real reserve cap1.12 I/1.18 II/1.24 Runaway. Heat slows response and braking/recovery; Breakneck commits physically to one line.",
+      "risk": "RPM expenditure, control lag, wobble, excess vent and increased Anchor Stress while genuinely overclocking.",
+      "agency": "Choose Burst timing, safe fast movement, contacts and when to stop/recover.",
+      "skill_requirement": "Commit without wasting motion; manage heat and avoid a missed high-risk strike.",
+      "burst": "Activation; Breakneck needs another paid Burst after heat>=.32 or pre-Burst reserve>=1.025.",
+      "brake": "Brake stops motion recovery/heat build; heat weakens braking effectiveness; committed Breakneck forbids Brake.",
+      "collision": "Actual moving accepted hits earn bounded contact returns; Runaway extends paid active window, Breakneck spends one hit.",
+      "wall": "No dedicated wall trigger; wall costs remain.",
+      "edge": "Unsafe high speed/locked strikes can reach real gates; no rescue.",
+      "wobble": "Heat and misses add wobble; genuine contact may cancel part of recoil.",
+      "position": "Aggressive movement recovery requires radius<170.",
+      "offence": "Strong paid moving offence.",
+      "defence": "Heat reduces safe handling; no blanket guard.",
+      "mobility": "Temporary thrust and speed.",
+      "endurance": "Earned bounded overclock, not an inactive ownership grant.",
+      "rank_ii": "Higher thrust and attack response with higher paid activation/wobble; accepted modern runtime remains authoritative.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Momentum Bank: an ordinary accepted Burst can spend both paid stores, with both costs.",
+        "Dead Centre: active overclock triples loaded contact/work Stress and adds running torque; this is a tradeoff, not a bonus."
+      ],
+      "overlap": [
+        "High Gear provides permanent movement factors without the overclock/heat cycle; Flywheel Release will commit stored motion without an attack multiplier."
+      ],
+      "recommendation": "Keep accepted pair and I/II; do not retune global overclock or economy.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_burst",
+          "line": 1309,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_movement",
+          "line": 1379,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_contact",
+          "line": 1422,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_end_redline",
+          "line": 1348,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_anchor_stress_movement",
+          "line": 512,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Accepted ordinary Burst with pre-cost RPM>=0.13 activates modern Redline3.2s; Breakneck preparation4.8s. Real fast movement/hits earn heat and reserve.",
+          "RPM expenditure, control lag, wobble, excess vent and increased Anchor Stress while genuinely overclocking."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "runaway",
+        "breakneck"
+      ],
+      "current_mutation_branches": [
+        "runaway",
+        "breakneck"
+      ]
+    },
+    {
+      "id": "iron_comet",
+      "name": "Iron Comet",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Solid-wall setup into the next physical strike",
+      "activation": "Actual solid-wall outward speed>=110 arms I2.0s/II2.8s; cooldown1.0/.8s. Next accepted opposing contact consumes charge, without an I/II severity gate.",
+      "trigger": "Actual solid-wall outward speed>=110 arms I2.0s/II2.8s; cooldown1.0/.8s. Next accepted opposing contact consumes charge, without an I/II severity gate.",
+      "rpm_cost": "No extra base family charge; real wall reserve loss and wobble still apply.",
+      "rpm_recovery": "None.",
+      "cost": "No extra base family charge; real wall reserve loss and wobble still apply.",
+      "payoff": "One normal-direction shove at next contact: full25 I/34 II; small75 I/90 II.",
+      "physical_behavior": "One normal-direction shove at next contact: full25 I/34 II; small75 I/90 II.",
+      "risk": "Wall setup costs reserve and positional control; charge can expire or be spent on an unhelpful contact.",
+      "agency": "Select actual solid wall, entry angle and route back to a rival within charge time.",
+      "skill_requirement": "Aim rebound and timed approach; gate mouths are not walls.",
+      "burst": "No separate accepted I/II Burst interaction.",
+      "brake": "Normal braking may help setup but has no dedicated accepted hook.",
+      "collision": "First accepted opposing contact spends stored wall charge.",
+      "wall": "Unique existing family with actual wall-rebound setup.",
+      "edge": "Canonical gate test precedes walls and can ring out; Comet does not protect openings.",
+      "wobble": "Ordinary wall wobble remains; no base recovery.",
+      "position": "Route from solid wall to timed rival contact.",
+      "offence": "Delayed single physical strike.",
+      "defence": "No direct guard.",
+      "mobility": "Rebound geometry only; no base extra thrust.",
+      "endurance": "No direct sustain.",
+      "rank_ii": "Longer2.8s charge, shorter arm cooldown and stronger single shove.",
+      "rank_iii": "Two implemented mutually exclusive terminal branches; exact current gates and source references in the complete matrix. Direct boundary/acquisition fixtures plus actual earned scene diagnostics execute; final native/balance/candidate evidence is separately scoped.",
+      "synergy": [
+        "High Gear: more speed can reach wall threshold, with the same costs and route risk.",
+        "Momentum Bank: rebound routes may lead into real steered braking and Burst, but no automatic stored motion is granted."
+      ],
+      "overlap": [
+        "Breakneck commits a paid overclock; new Wallbreaker must use actual reflected wall geometry. Rim Runner should be absorbed into wall-routing III rather than a duplicate base."
+      ],
+      "recommendation": "SELECT for Rank III: Wallbreaker commits harder; Ricochet Engine preserves controlled oblique routes with lower strike payoff.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "wall_rebound",
+          "line": 365,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_contact_owner",
+          "line": 737,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_resolve_boundary",
+          "line": 1214,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [
+        "wallbreaker",
+        "ricochet_engine"
+      ],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Actual solid-wall outward speed>=110 arms I2.0s/II2.8s; cooldown1.0/.8s. Next accepted opposing contact consumes charge, without an I/II severity gate.",
+          "Wall setup costs reserve and positional control; charge can expire or be spent on an unhelpful contact."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "wallbreaker",
+        "ricochet_engine"
+      ],
+      "current_mutation_branches": [
+        "wallbreaker",
+        "ricochet_engine"
+      ]
+    },
+    {
+      "id": "dead_centre",
+      "name": "Dead Centre",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "bulwark",
+        "counterweight"
+      ],
+      "role": "Finite central floor hold, counterpressure and physical Stress management",
+      "activation": "At radius<=115, speed<=85 and Brake or input<=.28, off Burst, charge builds1.10s I/.85s II. Central mature benefits need charge>=.70, radius<=58, speed<=55, live RPM>.045; maturity6s.",
+      "trigger": "At radius<=115, speed<=85 and Brake or input<=.28, off Burst, charge builds1.10s I/.85s II. Central mature benefits need charge>=.70, radius<=58, speed<=55, live RPM>.045; maturity6s.",
+      "rpm_cost": "Ordinary spin/collision costs remain. Recovery reserve finite .20 I/.28 II. Physical incoming force, delivered pull/counter work and loaded overclock create Stress; quiet idle time does not.",
+      "rpm_recovery": "Central rate .003→.009 I/.004→.012 II per second scaled by actual maturity/Stress, shared budget, quota and ceiling .78/.86 (.90 Bulwark). Reload requires6s released input>=.35, speed>=35 outside radius82, stress<=.30 and overload cleared.",
+      "cost": "Ordinary spin/collision costs remain. Recovery reserve finite .20 I/.28 II. Physical incoming force, delivered pull/counter work and loaded overclock create Stress; quiet idle time does not.",
+      "payoff": "Extra effective mass, damping and wobble recovery; mature bounded inward velocity offers radius44→104/124, max16 targets and120 inward-speed cap. Stress weakens connection to15% at maximum; overloaded hold stays limited until real recovery.",
+      "physical_behavior": "Extra effective mass, damping and wobble recovery; mature bounded inward velocity offers radius44→104/124, max16 targets and120 inward-speed cap. Stress weakens connection to15% at maximum; overloaded hold stays limited until real recovery.",
+      "risk": "Limited quota, central exposure, weaker reserve protection under Stress, broken anchor on Burst/heavy force; overload requires5s actual released movement and stress<=.30.",
+      "agency": "Hold useful ground, receive pressure, leave to vent/reload, then return; zero input cannot manufacture renewable earned kills.",
+      "skill_requirement": "Observe Stress/quota and choose an outside route before loaded connection becomes unsafe.",
+      "burst": "Always breaks anchor; Counterweight additionally spends accepted stored force on aimed physical release.",
+      "brake": "Can build hold, but simply releasing Brake without real movement does not vent Stress.",
+      "collision": "Real force can load Stress and reduce/break charge; Bulwark reflects bounded physical force; Counterweight stores capped150.",
+      "wall": "No wall trigger; outside rearm cannot be completed by standing at a wall.",
+      "edge": "No gate safety; reposition route remains physical.",
+      "wobble": "Central damping scaled by true strength; Stress does not directly damage RPM.",
+      "position": "Centre-specific hold and radius82 outside rearm.",
+      "offence": "Pull/counterforce creates contacts with real attribution.",
+      "defence": "Strong positional floor connection with finite recovery.",
+      "mobility": "Movement sacrifices loaded hold.",
+      "endurance": "Finite central quota, shared budget and paid participation; no perpetual idle income.",
+      "rank_ii": "Faster/heavier brace, more finite quota and central pull/rates; same recovery loop.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Impact Sink: fresh accepted-force Brake vent can ease Stress up to .24.",
+        "Anchor Exchange: paid brace>=.60 plus aimed release can ease Stress .10/.14.",
+        "Counterweight: actual stored-force Burst with steering eases Stress up to .38."
+      ],
+      "overlap": [
+        "Gyro Lock moves off Brake; Exchange is portable paid Brake footing. They cannot be treated as identical interchangeable defence."
+      ],
+      "recommendation": "Keep accepted family and mutations. Broad utility is conditional; no automatic nerf justified by ownership alone.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "movement_control",
+          "line": 381,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_anchor_movement",
+          "line": 546,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_anchor_stress_movement",
+          "line": 512,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_anchor_pull",
+          "line": 605,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_anchor_contact",
+          "line": 647,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_release_counterweight",
+          "line": 681,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": true,
+        "conditional_limits": [
+          "At radius<=115, speed<=85 and Brake or input<=.28, off Burst, charge builds1.10s I/.85s II. Central mature benefits need charge>=.70, radius<=58, speed<=55, live RPM>.045; maturity6s.",
+          "Limited quota, central exposure, weaker reserve protection under Stress, broken anchor on Burst/heavy force; overload requires5s actual released movement and stress<=.30."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "bulwark",
+        "counterweight"
+      ],
+      "current_mutation_branches": [
+        "bulwark",
+        "counterweight"
+      ]
+    },
+    {
+      "id": "afterimage",
+      "name": "Afterimage",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "ghost_circuit",
+        "slipstream"
+      ],
+      "role": "Paid live route geometry: area control, crossing or hijack",
+      "activation": "Actual modern speed>112 and path movement>=6 emits a visible paid segment at .14s cadence; live ownership preserved.",
+      "trigger": "Actual modern speed>112 and path movement>=6 emits a visible paid segment at .14s cadence; live ownership preserved.",
+      "rpm_cost": "Each modern emission .0008 I/.0011 II or III; minimum reserve gate .002/.003. Normal motion costs remain.",
+      "rpm_recovery": "Only Slipstream own-route crossing returns .004 through shared budget; Ghost closure briefly improves drain .75, not free reserve.",
+      "cost": "Each modern emission .0008 I/.0011 II or III; minimum reserve gate .002/.003. Normal motion costs remain.",
+      "payoff": "Live path crossing pushes rivals sideways with owner-target .6s cooldown: full18/30 and small50/72 plus bounded wobble. II own old crossing grants modest speed; Ghost closes paid self/hostile geometry for a closer-owned pulse.",
+      "physical_behavior": "Live path crossing pushes rivals sideways with owner-target .6s cooldown: full18/30 and small50/72 plus bounded wobble. II own old crossing grants modest speed; Ghost closes paid self/hostile geometry for a closer-owned pulse.",
+      "risk": "Expired/consumed geometry, paid route drain, motion and spatial closure requirements; hostile Ghost can use the route against its original owner.",
+      "agency": "Draw useful real paths, revisit paid routes or physically close live geometry.",
+      "skill_requirement": "Path planning, crossing timing, ownership reading and speed maintenance.",
+      "burst": "Ordinary Burst may help attain motion; no automatic path or closure.",
+      "brake": "Slowing erases buffer growth; no dedicated Brake trigger.",
+      "collision": "Trail effects request physical impulses with owner attribution; no synthetic collision callbacks.",
+      "wall": "No wall-specific trigger.",
+      "edge": "Route planning can herd toward edges but grants no gate safety.",
+      "wobble": "II trail crossing can lower own wobble; trails/circuit can add bounded target wobble.",
+      "position": "Real visible paths, proximity/crossing and enclosure geometry.",
+      "offence": "Local route displacement and one consumed circuit pulse.",
+      "defence": "A route can delay approaches; no armour.",
+      "mobility": "Crossing speed and drain windows.",
+      "endurance": "Paid geometry and small budgeted Slipstream returns.",
+      "rank_ii": "Longer4.6s trails vs3.4s I, stronger push, .30s small own-route surge; III Ghost trails6s.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Orbit Drive: sustained physical curves can emit useful live routes while maintaining DRIVE; both still require paid motion.",
+        "High Gear: speed supports real path emission."
+      ],
+      "overlap": [
+        "Orbit uses heading-curvature state; Afterimage needs visible geometry. Ghost ownership/consumption is not an aura."
+      ],
+      "recommendation": "Keep accepted pair and bounded solver; no additional route family or perpetual farm.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "after_movement",
+          "line": 807,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_cross_slipstream",
+          "line": 920,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_modern_circuit",
+          "line": 1497,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/ghost_circuit_routes.gd",
+          "function": "rebuild",
+          "line": 11,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Actual modern speed>112 and path movement>=6 emits a visible paid segment at .14s cadence; live ownership preserved.",
+          "Expired/consumed geometry, paid route drain, motion and spatial closure requirements; hostile Ghost can use the route against its original owner."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "ghost_circuit",
+        "slipstream"
+      ],
+      "current_mutation_branches": [
+        "ghost_circuit",
+        "slipstream"
+      ]
+    },
+    {
+      "id": "chain_impact",
+      "name": "Chain Impact",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Hard-contact pulse plus short nearby paid Burst follow-up",
+      "activation": "Accepted opposing hard contact severity>=.75; owner cooldown2s I/1.65s II. Knockouts alone do nothing.",
+      "trigger": "Accepted opposing hard contact severity>=.75; owner cooldown2s I/1.65s II. Knockouts alone do nothing.",
+      "rpm_cost": "No extra prime charge; follow-up requires ordinary paid Burst .013. Real accepted collision costs remain.",
+      "rpm_recovery": "No family-specific RPM recovery.",
+      "cost": "No extra prime charge; follow-up requires ordinary paid Burst .013. Real accepted collision costs remain.",
+      "payoff": "One next-fixed-tick outward physical pulse radius42 I/56 II, full15/24 or small65/82; a2s/3s target-specific nearby Burst window adds a further full15/24.",
+      "physical_behavior": "One next-fixed-tick outward physical pulse radius42 I/56 II, full15/24 or small65/82; a2s/3s target-specific nearby Burst window adds a further full15/24.",
+      "risk": "Must earn a hard hit and stay near the struck rival before window closes; separates nearby geometry and can waste follow-up.",
+      "agency": "Choose hard contact and when/where to Burst after it.",
+      "skill_requirement": "Commitment, proximity and short follow-up timing.",
+      "burst": "Actual accepted paid Burst consumes the short primed window whether target remains valid or not.",
+      "brake": "No dedicated Brake interaction.",
+      "collision": "Prime is accepted physical hard contact, not elimination or recursive power damage.",
+      "wall": "No wall trigger.",
+      "edge": "Physical pulse can change ring-out routes; no forced knockout.",
+      "wobble": "No direct family wobble hook.",
+      "position": "Real contact origin and nearby struck rival.",
+      "offence": "Physical local hard-hit follow-up.",
+      "defence": "Can separate crowd without guard.",
+      "mobility": "No owner speed factor.",
+      "endurance": "No free reserve.",
+      "rank_ii": "Wider/stronger pulse,3s follow-up and shorter owner cooldown.",
+      "rank_iii": "No accepted Rank III at baseline.",
+      "synergy": [
+        "Impact Wake: hard contacts can independently qualify both cooldowns; bounded effects remain separately attributed.",
+        "Momentum Bank: ordinary Burst may release stored motion while consuming Chain follow-up; both range/timing/costs apply."
+      ],
+      "overlap": [
+        "Wake is lower-threshold crowd separation. New Reactive Plating must remain single stored counter, not another radial pulse."
+      ],
+      "recommendation": "Keep accepted hard-hit semantics and I/II; no new pair in this task.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_contact_owner",
+          "line": 737,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "burst_started",
+          "line": 321,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_apply_pulse",
+          "line": 1140,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Accepted opposing hard contact severity>=.75; owner cooldown2s I/1.65s II. Knockouts alone do nothing.",
+          "Must earn a hard hit and stay near the struck rival before window closes; separates nearby geometry and can waste follow-up."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2
+      ],
+      "mutation_branches": [],
+      "current_mutation_branches": []
+    },
+    {
+      "id": "clutch",
+      "name": "Clutch",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Finite earned low-RPM catch for moving contact play",
+      "activation": "Live reserve .045< RPM<=.28 with armed state opens6s I/8s II;9s cooldown. Rearm only above .36 after cooldown.",
+      "trigger": "Live reserve .045< RPM<=.28 with armed state opens6s I/8s II;9s cooldown. Rearm only above .36 after cooldown.",
+      "rpm_cost": "No extra activation charge; actual movement/hits continue paying their costs. Finite catch quota .09 I/.13 II.",
+      "rpm_recovery": "Moving full-top accepted hit>=.22, precontact low RPM<=.30, input>=.12, speed>=25, global .7s and target1.4s cooldown earn .035 I/.055 II limited by quota/shared bucket.",
+      "cost": "No extra activation charge; actual movement/hits continue paying their costs. Finite catch quota .09 I/.13 II.",
+      "payoff": "Gentle input .12–.8 at radius<150 reduces drain to .65 I/.52 II and increases recovery factor1.22; qualifying hits lower wobble .04.",
+      "physical_behavior": "Gentle input .12–.8 at radius<150 reduces drain to .65 I/.52 II and increases recovery factor1.22; qualifying hits lower wobble .04.",
+      "risk": "Needs low reserve and living owner, expiry/quota/rearm; cannot catch a defeated top or farm small targets.",
+      "agency": "Steer controlled survival and deliberately hit a full rival within low-spin window.",
+      "skill_requirement": "Low-RPM approach timing rather than idle rescue.",
+      "burst": "Ordinary Burst costs still apply and may overspend scarce reserve; no dedicated proc.",
+      "brake": "No fresh Brake reward.",
+      "collision": "Full target real moving hit only, using precontact reserve to avoid earned-hit cancellation.",
+      "wall": "No wall trigger.",
+      "edge": "Controlled drain gate radius<150; no edge rescue.",
+      "wobble": "Catch lowers wobble; no resurrection.",
+      "position": "Stay in controlled safe area and reach rival.",
+      "offence": "Contact is necessary for catch.",
+      "defence": "Temporary low-spin control aid.",
+      "mobility": "No raw extra speed.",
+      "endurance": "Bounded conditional recovery, not passive or repeatable low-spin loop.",
+      "rank_ii": "Longer8s window, .13 quota, larger .055 contact catch and deeper controlled drain reduction.",
+      "rank_iii": "No accepted Rank III at baseline.",
+      "synergy": [
+        "Crash Guard: a later guarded contact may reduce loss during the low-spin catch window, while Clutch still requires real movement/contact.",
+        "Momentum Bank: stored motion offers an approach but costs additional RPM to release."
+      ],
+      "overlap": [
+        "Second Wind is a retired one-shot automatic rescue. Sink exchanges incoming recoil on fresh Brake; Clutch earns from moving offensive/receptive full-top contact."
+      ],
+      "recommendation": "Keep I/II. Broad comeback utility merits matched legal-play evidence, not an ownership-based nerf or a passive third-rank rescue.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_clutch_recover",
+          "line": 1459,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_clutch_movement",
+          "line": 1417,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_clutch_contact",
+          "line": 1475,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": true,
+        "conditional_limits": [
+          "Live reserve .045< RPM<=.28 with armed state opens6s I/8s II;9s cooldown. Rearm only above .36 after cooldown.",
+          "Needs low reserve and living owner, expiry/quota/rearm; cannot catch a defeated top or farm small targets."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2
+      ],
+      "mutation_branches": [],
+      "current_mutation_branches": []
+    },
+    {
+      "id": "high_gear",
+      "name": "High Gear",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "terminal_velocity",
+        "flow_state"
+      ],
+      "role": "Higher physical acceleration and speed ceiling",
+      "activation": "Owned movement modifier; meaningful travel still follows actual input and velocity.",
+      "trigger": "Owned movement modifier; meaningful travel still follows actual input and velocity.",
+      "rpm_cost": "No extra I/II direct family charge; higher travel/hard steering/Brake retain canonical costs.",
+      "rpm_recovery": "No direct I/II RPM grant.",
+      "cost": "No extra I/II direct family charge; higher travel/hard steering/Brake retain canonical costs.",
+      "payoff": "Acceleration1.35 I/1.55 II; speed ceiling1.27/1.46; II moving aligned travel reduces drag .10. Velocity remains bounded480.",
+      "physical_behavior": "Acceleration1.35 I/1.55 II; speed ceiling1.27/1.46; II moving aligned travel reduces drag .10. Velocity remains bounded480.",
+      "risk": "More momentum reaches walls/gates faster; raw speed is less forgiving of late corrections.",
+      "agency": "Choose route, steering and stopping distance; passive modifier responds to piloting.",
+      "skill_requirement": "Plan line and speed before correction.",
+      "burst": "Ordinary Burst adds real velocity; Terminal event only observes it.",
+      "brake": "Canonical Brake; Terminal adds .006*speed/230/s cost.",
+      "collision": "No independent contact proc; speed changes physical approach.",
+      "wall": "Walls keep normal reserve/recoil costs.",
+      "edge": "Actual gate risk persists.",
+      "wobble": "No direct I/II wobble recovery.",
+      "position": "Committed lines and smooth routes.",
+      "offence": "Indirect through real approach.",
+      "defence": "No guard.",
+      "mobility": "Raw speed/thrust; Flow/Terminal specialise it.",
+      "endurance": "Flow reduces moving drain .70 off Brake, not RPM gain.",
+      "rank_ii": "More thrust/speed and retained aligned motion.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Iron Comet: sufficient real speed helps reach wall rebound gate.",
+        "Afterimage: paid routes need real high-speed motion."
+      ],
+      "overlap": [
+        "Perpetual Orbit must keep curvature/DRIVE condition, unlike general Flow State velocity retention."
+      ],
+      "recommendation": "Keep accepted speed pair; new speed family would dilute existing role.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "movement",
+          "line": 53,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Owned movement modifier; meaningful travel still follows actual input and velocity.",
+          "More momentum reaches walls/gates faster; raw speed is less forgiving of late corrections."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "terminal_velocity",
+        "flow_state"
+      ],
+      "current_mutation_branches": [
+        "terminal_velocity",
+        "flow_state"
+      ]
+    },
+    {
+      "id": "orbit_drive",
+      "name": "Orbit Drive",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Same-sign real curve technique, drifting and earned full-DRIVE sustain",
+      "activation": "Actual speed>80, input>.20, heading-change rate .12–3.5rad/s, consistent sign builds .42/s (.72/s real Brake drift). Reversal resets, sign flip loses .65; other motion decays .75/s.",
+      "trigger": "Actual speed>80, input>.20, heading-change rate .12–3.5rad/s, consistent sign builds .42/s (.72/s real Brake drift). Reversal resets, sign flip loses .65; other motion decays .75/s.",
+      "rpm_cost": "Canonical real movement/Brake costs; base drift RPM>.13. No extra I/II RPM charge.",
+      "rpm_recovery": "Exactly1.0 DRIVE, live moving speed>80 and input>.20 earn .009/s I/.012/s II through the same player/NPC capped bucket after actual movement. Idle, decayed charge, pause and death grant nothing.",
+      "cost": "Canonical real movement/Brake costs; base drift RPM>.13. No extra I/II RPM charge.",
+      "payoff": "DRIVE speed +12%/+20%, thrust+22%, moving drain reduction20%/32%. Real Brake-turn carving retains motion and rotates physical velocity; no auto-orbit.",
+      "physical_behavior": "DRIVE speed +12%/+20%, thrust+22%, moving drain reduction20%/32%. Real Brake-turn carving retains motion and rotates physical velocity; no auto-orbit.",
+      "risk": "Straightening, slowing, countersteering or abrupt reversal loses DRIVE; curve can intersect threats/edges.",
+      "agency": "Hold a real useful curved route, choose Brake drift and control correction.",
+      "skill_requirement": "Sustained consistent heading curvature, spacing and drift exit.",
+      "burst": "Ordinary Burst may disrupt actual curve; no I/II attack proc.",
+      "brake": "Lateral moving Brake creates drift; straight safety Brake does not.",
+      "collision": "No I/II collision proc; real curved approach affects contact.",
+      "wall": "No special wall protection.",
+      "edge": "No automatic curve correction away from gates.",
+      "wobble": "No direct family wobble return.",
+      "position": "Useful turning radius and same-sign route.",
+      "offence": "Indirect movement setup at I/II.",
+      "defence": "Can avoid approaches through actual steering, no blanket resistance.",
+      "mobility": "Physical carve/DRIVE motion.",
+      "endurance": "Full active curve can net actual RPM after costs, bounded shared return.",
+      "rank_ii": "Stronger carve and DRIVE benefit, .012 full recovery; same charge growth as I.",
+      "rank_iii": "Two implemented mutually exclusive terminal branches; exact current gates and source references in the complete matrix. Direct boundary/acquisition fixtures plus actual earned scene diagnostics execute; final native/balance/candidate evidence is separately scoped.",
+      "synergy": [
+        "Afterimage: real curves can create paid visible paths.",
+        "Gyro Lock: compatible smooth off-Brake curve subset can retain moving brace; tight drift/Brake breaks Gyro."
+      ],
+      "overlap": [
+        "High Gear/Flow gives general moving efficiency; Orbit earns only sustained real curvature. Momentum Bank cannot store during Orbit drift."
+      ],
+      "recommendation": "SELECT for Rank III: Centrifuge spends DRIVE on a moving glancing shear; Perpetual Orbit commits harder to stable curves and punishes correction. Preserve accepted I/II100% reward.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "movement",
+          "line": 53,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "_orbit_full_carve",
+          "line": 1216,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [
+        "centrifuge",
+        "perpetual_orbit"
+      ],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": true,
+        "conditional_limits": [
+          "Actual speed>80, input>.20, heading-change rate .12–3.5rad/s, consistent sign builds .42/s (.72/s real Brake drift). Reversal resets, sign flip loses .65; other motion decays .75/s.",
+          "Straightening, slowing, countersteering or abrupt reversal loses DRIVE; curve can intersect threats/edges."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "centrifuge",
+        "perpetual_orbit"
+      ],
+      "current_mutation_branches": [
+        "centrifuge",
+        "perpetual_orbit"
+      ]
+    },
+    {
+      "id": "crash_guard",
+      "name": "Crash Guard",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Short later-contact loss discount after an accepted heavy collision",
+      "activation": "Opposing accepted contact severity>=.45, full owner and3s cooldown. Baseline does NOT require rival directional approach; state arms after this triggering hit.",
+      "trigger": "Opposing accepted contact severity>=.45, full owner and3s cooldown. Baseline does NOT require rival directional approach; state arms after this triggering hit.",
+      "rpm_cost": "No extra I/II charge; triggering collision already paid ordinary loss before guard starts.",
+      "rpm_recovery": "None.",
+      "cost": "No extra I/II charge; triggering collision already paid ordinary loss before guard starts.",
+      "payoff": "Later contact loss multiplier .68 I/.48 II during1.15s/1.65s guard. No I/II recoil cancellation.",
+      "physical_behavior": "Later contact loss multiplier .68 I/.48 II during1.15s/1.65s guard. No I/II recoil cancellation.",
+      "risk": "Initial hit is unguarded; window expires and cooldown prevents constant coverage.",
+      "agency": "Choose exposure and use/leave the short window; activation after collision is automatic.",
+      "skill_requirement": "Read contact timing; basic guard has lower input burden than other defences.",
+      "burst": "Ordinary Burst can spend the guarded window to move or attack; no dedicated proc.",
+      "brake": "No I/II dedicated Brake gate.",
+      "collision": "Guard state is set after real accepted contact; subsequent loss is discounted.",
+      "wall": "No wall trigger or wall loss discount.",
+      "edge": "No gate rescue.",
+      "wobble": "No direct wobble manipulation; lower later loss indirectly lowers collision wobble calculation.",
+      "position": "Timing/repeated contact exposure rather than centre requirement.",
+      "offence": "No attack proc.",
+      "defence": "Short scalar loss discount; new III will alter physical collision response.",
+      "mobility": "No I/II mobility change.",
+      "endurance": "Reduces later loss without granting RPM.",
+      "rank_ii": "Deeper later-contact discount and longer window.",
+      "rank_iii": "Two implemented mutually exclusive terminal branches; exact current gates and source references in the complete matrix. Direct boundary/acquisition fixtures plus actual earned scene diagnostics execute; final native/balance/candidate evidence is separately scoped.",
+      "synergy": [
+        "Clutch: living low-spin contacts may use a guard window and still must earn their catch.",
+        "Impact Sink: sink only stores actual remaining accepted recoil; guard grants no force stock itself."
+      ],
+      "overlap": [
+        "Impact Sink/Counterweight already store physical force. Reactive Plating must be a brief next aimed single-contact counter with no Brake vent, radial pulse or RPM recovery."
+      ],
+      "recommendation": "SELECT for Rank III: Reactive Plating converts a genuine reception into an aimed brief counter; Sacrificial Damper protects one high incoming collision and pays a buckled movement window.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "_contact",
+          "line": 175,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "collision_cost",
+          "line": 162,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_resolve_pair_records",
+          "line": 917,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [
+        "reactive_plating",
+        "sacrificial_damper"
+      ],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Opposing accepted contact severity>=.45, full owner and3s cooldown. Baseline does NOT require rival directional approach; state arms after this triggering hit.",
+          "Initial hit is unguarded; window expires and cooldown prevents constant coverage."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "reactive_plating",
+        "sacrificial_damper"
+      ],
+      "current_mutation_branches": [
+        "reactive_plating",
+        "sacrificial_damper"
+      ]
+    },
+    {
+      "id": "momentum_bank",
+      "name": "Momentum Bank",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Finite storage of actual steered Brake motion for paid Burst release",
+      "activation": "Steer>.08 while Brake, no Orbit drift, pre-movement speed>75, RPM>.13; capture actual positive before→after speed loss .62 I/.85 II.",
+      "trigger": "Steer>.08 while Brake, no Orbit drift, pre-movement speed>75, RPM>.13; capture actual positive before→after speed loss .62 I/.85 II.",
+      "rpm_cost": "Braking spends normal spin; Burst store>=15 spends whole bank plus .009+bank*.000065 RPM and normal Burst .013.",
+      "rpm_recovery": "No RPM recovery.",
+      "cost": "Braking spends normal spin; Burst store>=15 spends whole bank plus .009+bank*.000065 RPM and normal Burst .013.",
+      "payoff": "Bank max95 I/150 II, leak7/s; actual accepted Burst adds heading*bank physical velocity and .45s impulse carry, capped480.",
+      "physical_behavior": "Bank max95 I/150 II, leak7/s; actual accepted Burst adds heading*bank physical velocity and .45s impulse carry, capped480.",
+      "risk": "Stored speed leaks, repeated braking loses travel/RPM, release consumes all and can miss or reach a gate.",
+      "agency": "Build speed, steer Brake at useful setup time, choose aimed Burst line before leak.",
+      "skill_requirement": "Timing and direction of genuine braking/release.",
+      "burst": "Required ordinary paid Burst consumes actual stored speed.",
+      "brake": "Steered normal braking captures loss; lateral Orbit drift cannot bank.",
+      "collision": "No I/II direct damage multiplier; resulting velocity changes accepted collision.",
+      "wall": "No wall trigger; a rebound can precede later real braking.",
+      "edge": "Released velocity remains physically risky near gates.",
+      "wobble": "No I/II extra wobble payoff.",
+      "position": "Move, stop and release along a chosen line.",
+      "offence": "Physical approach velocity.",
+      "defence": "No guard.",
+      "mobility": "Stored-motion impulse, never teleport.",
+      "endurance": "No reserve grant; resource is motion with real spin cost.",
+      "rank_ii": "More capture and larger150 storage; same leak/release pattern.",
+      "rank_iii": "Two implemented mutually exclusive terminal branches; exact current gates and source references in the complete matrix. Direct boundary/acquisition fixtures plus actual earned scene diagnostics execute; final native/balance/candidate evidence is separately scoped.",
+      "synergy": [
+        "Counterweight: same ordinary accepted Burst may spend both distinct finite stores and break Anchor.",
+        "Chain Impact: Burst can also consume nearby primed follow-up, with independent range and costs."
+      ],
+      "overlap": [
+        "Retired Slip Gear text duplicates this base. Flywheel Cache RPM savings would duplicate existing recovery; new Flywheel Release must store motion only."
+      ],
+      "recommendation": "SELECT for Rank III: Flywheel Release commits a larger paid bank straight; Countersteer spends it only on an angled escape/redirect with less forward payoff.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "velocity",
+          "line": 111,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "burst",
+          "line": 151,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/battle.gd",
+          "function": "_attempt_burst",
+          "line": 714,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [
+        "flywheel_release",
+        "countersteer"
+      ],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Steer>.08 while Brake, no Orbit drift, pre-movement speed>75, RPM>.13; capture actual positive before→after speed loss .62 I/.85 II.",
+          "Stored speed leaks, repeated braking loses travel/RPM, release consumes all and can miss or reach a gate."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "flywheel_release",
+        "countersteer"
+      ],
+      "current_mutation_branches": [
+        "flywheel_release",
+        "countersteer"
+      ]
+    },
+    {
+      "id": "predator_line",
+      "name": "Predator Line",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Target-specific pursuit earned through repeated real full-top hits",
+      "activation": "Accepted full-rival contact>=.32 and own precontact forward normal speed>=25, owner cooldown .65s.",
+      "trigger": "Accepted full-rival contact>=.32 and own precontact forward normal speed>=25, owner cooldown .65s.",
+      "rpm_cost": "No extra family direct charge; real movement/contact spend remains.",
+      "rpm_recovery": "No family RPM recovery.",
+      "cost": "No extra family direct charge; real movement/contact spend remains.",
+      "payoff": "Up to3 stacks on same target; switching resets to1, expiry4.5s I/6s II clears. Target-specific attack factor+10%/+16% per stack and approach input dot>.65 within160 adds10% thrust per stack.",
+      "physical_behavior": "Up to3 stacks on same target; switching resets to1, expiry4.5s I/6s II clears. Target-specific attack factor+10%/+16% per stack and approach input dot>.65 within160 adds10% thrust per stack.",
+      "risk": "Target switch, waiting or target leaving range loses useful pursuit; chasing can expose a bad route.",
+      "agency": "Maintain physical pressure on one chosen rival and deliberately pursue its line.",
+      "skill_requirement": "Repeated hit timing and target commitment.",
+      "burst": "Only normal paid Burst helps pursuit; no dedicated proc.",
+      "brake": "No dedicated Brake proc.",
+      "collision": "Meaningful actual same full-top contact only; no small-target stacks.",
+      "wall": "No wall trigger.",
+      "edge": "Chasing still exposes owner to real gates.",
+      "wobble": "No direct family wobble manipulation.",
+      "position": "Same rival, distance160 and approach direction.",
+      "offence": "Target-specific physical attack and pursuit.",
+      "defence": "No guard.",
+      "mobility": "Conditional pursuit acceleration.",
+      "endurance": "No direct recovery.",
+      "rank_ii": "Stronger target-specific physical attack response and6s memory.",
+      "rank_iii": "No accepted Rank III at baseline.",
+      "synergy": [
+        "Redline: genuine moving hard hits may qualify both distinct systems, with heat and cost still present.",
+        "Crosscut: aim lateral contacts without abandoning target memory."
+      ],
+      "overlap": [
+        "Wallbreaker/Flywheel Release are timed line commitments; Predator is sustained target selection."
+      ],
+      "recommendation": "Keep I/II; extra pursuit III is less urgent than selected control/resource transformations.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "_contact",
+          "line": 175,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "attack_multiplier",
+          "line": 167,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "movement",
+          "line": 53,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Accepted full-rival contact>=.32 and own precontact forward normal speed>=25, owner cooldown .65s.",
+          "Target switch, waiting or target leaving range loses useful pursuit; chasing can expose a bad route."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2
+      ],
+      "mutation_branches": [],
+      "current_mutation_branches": []
+    },
+    {
+      "id": "crosscut",
+      "name": "Crosscut",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2
+      ],
+      "baseline_mutation_branches": [],
+      "role": "Paid lateral steering through a moving glancing collision",
+      "activation": "Accepted opposing contact>=.22, own precontact speed>=70, lateral input abs>=.25 and RPM>.08.",
+      "trigger": "Accepted opposing contact>=.22, own precontact speed>=70, lateral input abs>=.25 and RPM>.08.",
+      "rpm_cost": ".008 I/.012 II per cut; cooldown1.25/.85s, normal collision costs and own physical recoil.",
+      "rpm_recovery": "No recovery.",
+      "cost": ".008 I/.012 II per cut; cooldown1.25/.85s, normal collision costs and own physical recoil.",
+      "payoff": "Contact tangent*input-sign delta velocity38 I/62 II to rival, owner recoil25% of cut, real cause/owner.",
+      "physical_behavior": "Contact tangent*input-sign delta velocity38 I/62 II to rival, owner recoil25% of cut, real cause/owner.",
+      "risk": "Wrong lateral choice moves opponent unhelpfully; price/recoil and moving-contact requirement.",
+      "agency": "Steer across a glance and choose side; no auto-aim cut.",
+      "skill_requirement": "Contact angle, actual lateral input and approach speed.",
+      "burst": "Normal Burst contributes motion; no special Burst gate.",
+      "brake": "No dedicated Brake gate; stopping prevents speed qualification.",
+      "collision": "One real glancing accepted contact drives tangent response.",
+      "wall": "No wall trigger.",
+      "edge": "Lateral physical shove may position rival toward a gate, with own recoil risk.",
+      "wobble": "No dedicated wobble effect.",
+      "position": "Actual contact tangent and chosen input side.",
+      "offence": "Physical lateral displacement.",
+      "defence": "Can divert approach but no guard.",
+      "mobility": "Own recoil changes route.",
+      "endurance": "Costs reserve; no recovery.",
+      "rank_ii": "Stronger62 cut and shorter cooldown at higher .012 price.",
+      "rank_iii": "No accepted Rank III at baseline.",
+      "synergy": [
+        "Orbit Drive: curved glancing setup can create lateral contact. Centrifuge must spend full DRIVE/fresh curvature and use velocity-derived payoff, not just a stronger Crosscut.",
+        "Predator Line: directed repeated glances can maintain target pressure."
+      ],
+      "overlap": [
+        "Centrifuge shares tangent geometry but spends hard-earned full DRIVE, loses sustain state and has different speed/curvature gates."
+      ],
+      "recommendation": "Keep I/II. Reject a ninth new branch duplicating shear; selected Orbit branch must preserve distinct earned resource.",
+      "source_evidence": [
+        {
+          "path": "scripts/roster_runtime.gd",
+          "function": "_contact",
+          "line": 175,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Accepted opposing contact>=.22, own precontact speed>=70, lateral input abs>=.25 and RPM>.08.",
+          "Wrong lateral choice moves opponent unhelpfully; price/recoil and moving-contact requirement."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2
+      ],
+      "mutation_branches": [],
+      "current_mutation_branches": []
+    },
+    {
+      "id": "gyro_lock",
+      "name": "Gyro Lock",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "keel",
+        "flywheel"
+      ],
+      "role": "Moving smooth-steer ballast, broken by stop/Brake/Burst",
+      "activation": "Input>=.25, speed16–205, off Brake/Burst, heading rate<=1.8rad/s; fill1.7s I/1.25s II. Keel rate1.25; Flywheel2.8 and speed<=260.",
+      "trigger": "Input>=.25, speed16–205, off Brake/Burst, heading rate<=1.8rad/s; fill1.7s I/1.25s II. Keel rate1.25; Flywheel2.8 and speed<=260.",
+      "rpm_cost": "No direct extra RPM grant/charge; normal travelling costs remain.",
+      "rpm_recovery": "None.",
+      "cost": "No direct extra RPM grant/charge; normal travelling costs remain.",
+      "payoff": "Mass multiplier1+charge²*2 I/*3.5 II, Keel*6; uncontrolled decay2/s, sharp rate>1.5*limit or Burst resets0.",
+      "physical_behavior": "Mass multiplier1+charge²*2 I/*3.5 II, Keel*6; uncontrolled decay2/s, sharp rate>1.5*limit or Burst resets0.",
+      "risk": "Idle and Brake lose lock; tight correction/Burst break it with .65s Burst lockout. Keel trades up to24% speed and12% acceleration.",
+      "agency": "Keep smooth purposeful moving steering, decide when to sacrifice lock.",
+      "skill_requirement": "Stable curves and deliberate lock breaks.",
+      "burst": "Breaks charge, imposes .65s rearm delay.",
+      "brake": "Brake prevents controlled build and decays charge.",
+      "collision": "Effective mass changes real solver displacement, no collision RPM refund.",
+      "wall": "No wall trigger.",
+      "edge": "Mass cannot prevent canonical gate ring-out.",
+      "wobble": "No direct wobble recovery.",
+      "position": "Moving route rather than centre socket.",
+      "offence": "No direct proc.",
+      "defence": "Moving displacement resistance.",
+      "mobility": "Keel slower; Flywheel supports wider/faster curves.",
+      "endurance": "No RPM gain.",
+      "rank_ii": "Fill faster and heavier moving ballast.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Dead Centre: smooth moving brace can help released repositioning, but central recovery still requires its own hold conditions.",
+        "Orbit Drive: compatible off-Brake curves; drift Brake breaks Gyro."
+      ],
+      "overlap": [
+        "Anchor Exchange is slow paid Brake footing; Dead Centre is central finite hold."
+      ],
+      "recommendation": "Keep accepted moving-defence pair; no new base or III needed here.",
+      "source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "movement",
+          "line": 71,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "mass_multiplier",
+          "line": 128,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "burst",
+          "line": 143,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Input>=.25, speed16–205, off Brake/Burst, heading rate<=1.8rad/s; fill1.7s I/1.25s II. Keel rate1.25; Flywheel2.8 and speed<=260.",
+          "Idle and Brake lose lock; tight correction/Burst break it with .65s Burst lockout. Keel trades up to24% speed and12% acceleration."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "keel",
+        "flywheel"
+      ],
+      "current_mutation_branches": [
+        "keel",
+        "flywheel"
+      ]
+    },
+    {
+      "id": "impact_sink",
+      "name": "Impact Sink",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "shock_bleed",
+        "return_spring"
+      ],
+      "role": "Finite actual incoming-recoil reservoir and fresh Brake exchange",
+      "activation": "Opposing accepted contact>=.40, incoming force>=55, actual recoil>=4, owner .25s cooldown and reservoir room>=4; not a small owner.",
+      "trigger": "Opposing accepted contact>=.40, incoming force>=55, actual recoil>=4, owner .25s cooldown and reservoir room>=4; not a small owner.",
+      "rpm_cost": "Storage reflects accepted paid recoil, not reserve loss refund. Return Spring vent additionally pays .008; ordinary Brake costs remain.",
+      "rpm_recovery": "Fresh Brake while non-Burst speed<=120 and store>=15,1.5s vent cooldown. Base min(.028,store*.00022), Shock Bleed min(.045,store*.00035), same capped recovery bucket.",
+      "cost": "Storage reflects accepted paid recoil, not reserve loss refund. Return Spring vent additionally pays .008; ordinary Brake costs remain.",
+      "payoff": "Cancels only24% I/36% II of actual incoming velocity delta within room and stores its magnitude; max90/150. Unused stock leaks14/s after4s. Fresh vent consumes whole stock; recovery also lowers wobble up to .35.",
+      "physical_behavior": "Cancels only24% I/36% II of actual incoming velocity delta within room and stores its magnitude; max90/150. Unused stock leaks14/s after4s. Fresh vent consumes whole stock; recovery also lowers wobble up to .35.",
+      "risk": "Need actual recoil, finite room, slow fresh Brake opportunity; holding Brake cannot repeatedly vent. Return Spring replaces recovery.",
+      "agency": "Receive real force, decide where to slow/tap Brake and whether to recover or counter.",
+      "skill_requirement": "Reception/vent timing and positioning under pressure.",
+      "burst": "Burst cannot vent; does not add stored force.",
+      "brake": "Fresh edge only, non-Burst and actual low-speed gate.",
+      "collision": "Only partial actual delta cancellation; no teleports, fake contacts or invented stock.",
+      "wall": "No wall-based storage.",
+      "edge": "Recoil reduction can help position but no gate rescue.",
+      "wobble": "Stored recovery vent lowers wobble; no passive lowering.",
+      "position": "Low-speed vent; Return Spring opposing recipients within64.",
+      "offence": "Return Spring paid pulse up to6targets, min95 velocity from real stock.",
+      "defence": "Partial physical recoil catch.",
+      "mobility": "No owner thrust.",
+      "endurance": "Finite paid-stock bounded recovery, no idle generation.",
+      "rank_ii": "More actual recoil capture and larger150 reservoir.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Dead Centre: fresh real-force vent eases Stress min(.24,store*.0016).",
+        "Crash Guard: different reserve-loss timing; Sink stores actual physical recoil only."
+      ],
+      "overlap": [
+        "Reactive Plating must expire quickly and spend on next distinct aimed contact, not Brake/RPM/radial vent. Retired Reversal duplicates much of fresh reception→Brake recovery."
+      ],
+      "recommendation": "Keep accepted pair. Broad utility has real force/input/stock limitations; no ownership-based nerf.",
+      "source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "contact",
+          "line": 154,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "vent",
+          "line": 173,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "begin_tick",
+          "line": 51,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": true,
+        "conditional_limits": [
+          "Opposing accepted contact>=.40, incoming force>=55, actual recoil>=4, owner .25s cooldown and reservoir room>=4; not a small owner.",
+          "Need actual recoil, finite room, slow fresh Brake opportunity; holding Brake cannot repeatedly vent. Return Spring replaces recovery."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "shock_bleed",
+        "return_spring"
+      ],
+      "current_mutation_branches": [
+        "shock_bleed",
+        "return_spring"
+      ]
+    },
+    {
+      "id": "anchor_exchange",
+      "name": "Anchor Exchange",
+      "baseline_active": true,
+      "baseline_ranks": [
+        1,
+        2,
+        3
+      ],
+      "baseline_mutation_branches": [
+        "deep_footing",
+        "slip_anchor"
+      ],
+      "role": "Paid portable slow Brake brace and release timing",
+      "activation": "Held Brake, speed<78, RPM>.08 and no Burst builds brace .42s I/.30s II. Deep Footing needs speed<34.",
+      "trigger": "Held Brake, speed<78, RPM>.08 and no Burst builds brace .42s I/.30s II. Deep Footing needs speed<34.",
+      "rpm_cost": ".0055*brace RPM/s, Deep Footing .010*brace/s, normal Brake costs remain.",
+      "rpm_recovery": "No RPM grant.",
+      "cost": ".0055*brace RPM/s, Deep Footing .010*brace/s, normal Brake costs remain.",
+      "payoff": "Effective mass1+brace*6 I/*10 II or*20 Deep; at full brace acceleration-72%, speed-56%, drag+2.5. Slip Anchor carries65% brace for .35s after release.",
+      "physical_behavior": "Effective mass1+brace*6 I/*10 II or*20 Deep; at full brace acceleration-72%, speed-56%, drag+2.5. Slip Anchor carries65% brace for .35s after release.",
+      "risk": "Paid ongoing spin, greatly slowed movement, carry expiry/Burst clear; Brake cannot keep a renewable return.",
+      "agency": "Choose where/when to nearly stop and brace, then aim release/reposition.",
+      "skill_requirement": "Brace timing under real approaching force.",
+      "burst": "Clears brace and carry; no free discharge.",
+      "brake": "Hold builds paid brace; aimed release with charge>=.60 can ease Dead Centre Stress .10(.14 Deep).",
+      "collision": "Effective mass affects actual incoming solver displacement; no reserve refund.",
+      "wall": "Portable but no wall-specific trigger.",
+      "edge": "No automatic boundary protection.",
+      "wobble": "No direct wobble recovery.",
+      "position": "Portable slow brace; no centre-only requirement.",
+      "offence": "No direct attack.",
+      "defence": "Paid high footing.",
+      "mobility": "Release permits motion; Slip carries brief resistance.",
+      "endurance": "Always spends reserve while braced.",
+      "rank_ii": "Faster charge and heavier portable footing.",
+      "rank_iii": "Existing mutually exclusive branches; see mutation matrix.",
+      "synergy": [
+        "Dead Centre: paid aimed release consumes developed brace to ease Stress; no extra RPM bonus.",
+        "Impact Sink: can catch remaining actual recoil, but heavier brace can reduce catchable delta."
+      ],
+      "overlap": [
+        "Gyro needs moving off-Brake smooth control. Sacrificial Damper must be one physical incoming hit followed by a paid weakness, not general portable brace."
+      ],
+      "recommendation": "Keep accepted pair and costs; no extra anchoring base.",
+      "source_evidence": [
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "movement",
+          "line": 71,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "mass_multiplier",
+          "line": 128,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/defence_runtime.gd",
+          "function": "burst",
+          "line": 143,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ],
+      "proposed_mutation_branches": [],
+      "final_expected_ranks": [
+        1,
+        2,
+        3
+      ],
+      "universal_pick_assessment": {
+        "status": "Not established by this source audit; requires matched legal-build/play-policy evidence.",
+        "opportunity_cost": "One of seven family slots and real earned rank investments.",
+        "broad_utility_candidate": false,
+        "conditional_limits": [
+          "Held Brake, speed<78, RPM>.08 and no Burst builds brace .42s I/.30s II. Deep Footing needs speed<34.",
+          "Paid ongoing spin, greatly slowed movement, carry expiry/Burst clear; Brake cannot keep a renewable return."
+        ],
+        "recommendation": "No automatic nerf; retain actual eligibility/cost/recovery limits and examine legal played comparisons."
+      },
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "mutation_branches": [
+        "deep_footing",
+        "slip_anchor"
+      ],
+      "current_mutation_branches": [
+        "deep_footing",
+        "slip_anchor"
+      ]
+    }
+  ],
+  "inactive_prototypes": [
+    {
+      "id": "second_wind",
+      "name": "Second Wind",
+      "status": "Legacy-owned-only, excluded from ACTIVE_IDS normal drafts",
+      "runtime": "Real one-shot near-spinout/wobble recovery survives for historical fixtures; <=.14 RPM or wobble>=.75 withRPM<=.28, up to .18 grant and -.25 wobble; never saves terminal outcome. Only this legacy source bypasses the normal recovery token bucket.",
+      "overlap": "Automatic rescue is intentionally displaced by active finite Clutch play.",
+      "recommendation": "Preserve historical compatibility; do not reactivate or use as a hidden fallback.",
+      "source_evidence": [
+        {
+          "path": "scripts/power_runtime.gd",
+          "function": "recover",
+          "line": 1021,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/run_powers.gd",
+          "function": "get_power",
+          "line": 141,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        },
+        {
+          "path": "scripts/spin_economy.gd",
+          "function": "gain",
+          "line": 66,
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "id": "reversal",
+      "name": "Reversal",
+      "status": "Inactive catalogue-only prototype; no current runtime hook",
+      "runtime": "Text proposes Brake after an unstable hit for recovery; source search finds identity text only.",
+      "overlap": "Impact Sink already stores real recoil and exchanges it on fresh Brake; Reactive Plating offers a short aimed physical counter without RPM.",
+      "recommendation": "Keep inactive; reuse reception timing idea within chosen existing families, not a new recovery base.",
+      "source_evidence": [
+        {
+          "path": "scripts/run_powers.gd",
+          "symbol": "DEFINITIONS.reversal",
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "id": "slip_gear",
+      "name": "Slip Gear",
+      "status": "Inactive catalogue-only prototype; no current runtime hook",
+      "runtime": "Text proposes Brake-turn-Burst stored momentum.",
+      "overlap": "Momentum Bank already implements paid Brake storage and Burst release; Countersteer will deepen angled release.",
+      "recommendation": "Keep inactive; no duplicate base.",
+      "source_evidence": [
+        {
+          "path": "scripts/run_powers.gd",
+          "symbol": "DEFINITIONS.slip_gear",
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "id": "rim_runner",
+      "name": "Rim Runner",
+      "status": "Inactive catalogue-only prototype; no current runtime hook",
+      "runtime": "Text proposes braked wall ride and chosen exit; no wall movement implementation exists.",
+      "overlap": "Solid-wall oblique routing can meaningfully deepen Iron Comet Ricochet Engine without another acquisition.",
+      "recommendation": "Reuse wall-route intent only; do not grant gate protection or silently claim braked wall-riding is implemented.",
+      "source_evidence": [
+        {
+          "path": "scripts/run_powers.gd",
+          "symbol": "DEFINITIONS.rim_runner",
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    },
+    {
+      "id": "flywheel_cache",
+      "name": "Flywheel Cache",
+      "status": "Inactive catalogue-only prototype; no current runtime hook",
+      "runtime": "Text proposes early spin caching and later low-reserve release, without current storage/cost hook.",
+      "overlap": "RPM cache would overlap finite Clutch/Sink/Dead Centre sustain. New Flywheel Release stores lost motion, not reserve.",
+      "recommendation": "Keep inactive; reuse resource-planning concept without creating a passive RPM cache.",
+      "source_evidence": [
+        {
+          "path": "scripts/run_powers.gd",
+          "symbol": "DEFINITIONS.flywheel_cache",
+          "git_sha": "b476c6d9240a2c9f03942cda70d43576cc3903da"
+        }
+      ]
+    }
+  ],
+  "selected_families": [
+    {
+      "id": "iron_comet",
+      "coverage": "aggression",
+      "reason": "Only existing solid-wall setup family; distinguish committed reflection from controlled oblique routing."
+    },
+    {
+      "id": "crash_guard",
+      "coverage": "defence",
+      "reason": "Current scalar later-contact guard can deepen actual accepted force response with clear paid consequences."
+    },
+    {
+      "id": "orbit_drive",
+      "coverage": "technique",
+      "reason": "DRIVE is a real earned curve resource; choosing to spend it versus preserve it changes piloting."
+    },
+    {
+      "id": "momentum_bank",
+      "coverage": "resource",
+      "reason": "Lost motion already costs Brake and leaks; larger locked spend versus angled redirect makes resource planning matter."
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "id": "clutch",
+      "reason": "Already a finite active low-spin catch; another recovery/rescue branch risks hiding failure and duplicating Sink."
+    },
+    {
+      "id": "impact_wake",
+      "reason": "Further local pulses overlap accepted Chain/Return Spring more than chosen physical gaps."
+    },
+    {
+      "id": "chain_impact",
+      "reason": "Freshly accepted hard-hit follow-up already has a distinct immediate/delayed purpose; preserve it."
+    },
+    {
+      "id": "predator_line",
+      "reason": "Same-target pressure already has clear agency; wall/control/resource and collision-response gaps are stronger."
+    },
+    {
+      "id": "crosscut",
+      "reason": "A second glancing-shear progression would duplicate Centrifuge unless its full-DRIVE spending remains distinct."
+    }
+  ],
+  "ecology_findings": [
+    "Few deeper families cover distinct roles without changing the sixteen-base acquisition pool.",
+    "Crash Guard baseline activation is accepted opposing severity, not guaranteed directional reception; guard starts after the triggering hit.",
+    "Momentum Bank captures genuine braking loss outside Orbit drift, so simultaneous drift and banking cannot be described as a free combo.",
+    "Effective defence masses may stack, but input/position/movement gates conflict and stored force must be based on actual accepted remaining recoil.",
+    "Reactive Plating overlaps Sink/Counterweight conceptually; next distinct aimed single-hit use, short expiry, no Brake vent or RPM return make the selected contract distinct.",
+    "Perpetual Orbit overlaps Flow State efficiency; real same-sign full DRIVE and costly correction keep it a technique choice, not general passive drain tuning.",
+    "Centrifuge overlaps Crosscut tangent geometry; spending full fresh earned DRIVE and losing sustain makes it a resource/route decision.",
+    "No source-only universal best-pick claim or automatic nerf is justified for Clutch, Dead Centre, Impact Sink or Orbit Drive.",
+    "Rank III must change control/geometry/timing decisions rather than only increase a numeric factor.",
+    "Accepted neutral standalone Host compatibility is restored by pure catalogue/rank validation and early neutral gates; no extra Host Battle fields or I/II recipes were introduced."
+  ],
+  "shared_contracts": {
+    "rpm": "No global tuning. Existing general recovery bucket capacity .09/rate .026, small capacity .008/rate .002 and redline-motion capacity .15/rate .025; owner-specific NPC buckets use same limits. Actual gains use live state, cap and source ledger.",
+    "burst": "Canonical accepted Burst requires RPM>=.13/cooldown; pays .013 before family hooks. Extra branch costs are additional and source-accounted.",
+    "brake": "No hidden automatic combo. Fresh/held Brake distinctions and actual lost motion/recoil remain authoritative.",
+    "team_owner_terminal": "One live owner, opposing recipients, immutable real causes, no late terminal payoff or NPC ownership asymmetry.",
+    "draft": "Same16 ACTIVE_IDS and7 family cap; III consumes one earned rank investment and exactly one selected sibling. Extra four upgrade eligibilities can change later offer choices, but maximum single-build21 remains.",
+    "npc": "Exactly existing elite/boss Anvil Crash Guard becomes Sacrificial Damper; same package IDs/counts/ordinary pilot. Other package mutation assignments unchanged. All branch capability uses same real input/physics/cost hooks; legal ownership fixtures are not natural occurrence rates.",
+    "art": "Eight new mutation card/icon identities from four new family masters plus icon masters; accepted I/II/native assets/music untouched. Parity and readable mounted feedback pending.",
+    "performance": "No new scans/queues. Per-owner bounded ecology helper; actual4/5/6 powered-NPC serial measurements required, pending."
+  },
+  "pending_evidence": [
+    "Windows/Android candidate export, actual packaged catalogue and Shop receipt smoke, and any authorised promotion.",
+    "Emulator/physical Android and human acceptance remain separate; no physical phone acceptance is claimed.",
+    "Main remains unmerged and003B unstarted."
+  ],
+  "updated_utc": "2026-10-10T07:19:28.743986+00:00",
+  "prior_design_artifacts": [
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_power_ecology_audit.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_power_ecology_audit.json",
+      "bytes": 91161,
+      "sha256": "68a81d58d996a2d6a28b7953312510b74c2bab2969640223b0e40da34b9ead77"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_matrix.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_mutation_matrix.json",
+      "bytes": 52781,
+      "sha256": "b1dd714c31d6d1a882afb946b407bd45723c18e8128c7059a65d35c2ace4c495"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review.json",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003a2_ecology_source_review.json",
+      "bytes": 8828,
+      "sha256": "58c30dc7ebb051cb59aaf227431bd6dd2a84f45a5633365ecfb3114a863d916f"
+    },
+    {
+      "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\tasks\\003A.2.md",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_review3_20261010_065202_243966\\003A.2.md",
+      "bytes": 19891,
+      "sha256": "9300f1e6ee3e2dee4e36a34171db920f5e96491e308549f7638363759d998d49"
+    },
+    {
+      "revision": "before_final_prebuild_4",
+      "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986",
+      "files": [
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_power_ecology_audit.json",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003a2_power_ecology_audit.json",
+          "bytes": 99526,
+          "sha256": "048e74b71be20090ab61a6494f41c708c3730a9ef7565c8d0551a4e3ca99b1f3"
+        },
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_mutation_matrix.json",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003a2_mutation_matrix.json",
+          "bytes": 63117,
+          "sha256": "6fa553e7dfa1867cfe4138e2faef5a6365dab46ca0ba9271b7e34502667d1c5d"
+        },
+        {
+          "original": "C:\\GPT GAME BUILDING\\GyroBrothers\\docs\\tasks\\003A.2.md",
+          "archive": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\archive\\ecology_evidence_before_final_prebuild_20261010_071928_743986\\003A.2.md",
+          "bytes": 29574,
+          "sha256": "7048800bf3aabe5383ea7d1da20e531f186e3e2b63461d58a2c70499f9afca5a"
+        }
+      ]
+    }
+  ],
+  "landed_source_review": {
+    "path": "C:\\GPT GAME BUILDING\\GyroBrothers-QA\\003A.2\\manifests\\003a2_ecology_source_review_final_prebuild_20261010_071928_743986.json",
+    "sha256": "ec41126f9fe8184e565812d5b2169bc1ac7ba7caf4ffbaf8246b7fe3af071f12",
+    "source_snapshot": "a8b665a6aa508a18be532458f8ea1dd659d4a11906f974c7ff79f3f286bbdf59"
+  },
+  "canonical_impulse_contract": "Listed target shove values are offered deltas. Canonical apply_power_impulse caps offers100, applies actual target Anchor/Gyro/Exchange resistance, then full velocity cap340; measured delivery can be smaller.",
+  "committed_control_priority": "Live Bank release >live Wallbreaker reflected line >ordinary existing power direction; same prepared line before power/roster eligibility and after direction modifiers. Noncommits unchanged."
+}

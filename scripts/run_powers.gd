@@ -3,6 +3,8 @@ class_name RunPowerCatalog
 
 const IdentityArt = preload("res://scripts/power_identity.gd")
 const DefenceArt = preload("res://scripts/defence_art.gd")
+const BaseArt = preload("res://scripts/base_power_art.gd")
+const Retired = preload("res://scripts/retired_power_metadata.gd")
 const CardStyle = preload("res://scripts/ability_card_style.gd")
 
 ## Catalogue identity stays stable as the implemented draft pool grows.
@@ -11,9 +13,10 @@ const IDS: Array[String] = [
 	"impact_wake", "second_wind", "redline", "iron_comet", "dead_centre", "afterimage",
 	"reversal", "chain_impact", "slip_gear", "rim_runner", "flywheel_cache", "crosscut",
 	"clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line",
-	"gyro_lock", "impact_sink", "anchor_exchange"
+	"gyro_lock", "impact_sink", "anchor_exchange",
+	"crimson_impact", "azure_stability", "emerald_endurance", "true_bearing", "last_stand", "prismatic_current"
 ]
-const ACTIVE_IDS: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut", "gyro_lock", "impact_sink", "anchor_exchange"]
+const ACTIVE_IDS: Array[String] = ["impact_wake", "redline", "iron_comet", "dead_centre", "afterimage", "chain_impact", "clutch", "high_gear", "orbit_drive", "crash_guard", "momentum_bank", "predator_line", "crosscut", "gyro_lock", "impact_sink", "anchor_exchange", "crimson_impact", "azure_stability", "emerald_endurance", "true_bearing", "last_stand", "prismatic_current"]
 const VERTICAL_IDS: Array[String] = ["redline", "dead_centre", "afterimage", "high_gear", "gyro_lock", "impact_sink", "anchor_exchange"]
 const FAMILY_CAP: int = 7
 # Retired IDs remain readable for historical fixtures; normal drafts use ACTIVE_IDS.
@@ -36,7 +39,7 @@ const MUTATION_BRANCHES: Dictionary = {
 	"high_gear":["terminal_velocity", "flow_state"],
 	"gyro_lock":["keel", "flywheel"],
 	"impact_sink":["shock_bleed", "return_spring"],
-	"anchor_exchange":["deep_footing", "slip_anchor"]
+	"anchor_exchange":["deep_footing", "slip_anchor"],
 }
 # Native 64px, six discrete poses per row. Presentation reads source timing.
 const CARD_DURATIONS_MS: Array[int] = [110, 90, 75, 75, 100, 170]
@@ -58,7 +61,13 @@ const CARD_COPY: Dictionary = {
 	"crosscut": {"category":"SHEAR", "copy":"Steer across a glance. Pay RPM for a sideways cut."},
 	"gyro_lock": {"category":"CONTROLLED DEFENCE", "copy":"Steer smoothly while moving. Build a moving brace."},
 	"impact_sink": {"category":"SHOCK STORAGE", "copy":"Store real recoil. Tap Brake slowly to recover."},
-	"anchor_exchange": {"category":"ACTIVE BRACE", "copy":"Hold Brake near rest. Pay RPM for heavy footing."}
+	"anchor_exchange": {"category":"ACTIVE BRACE", "copy":"Hold Brake near rest. Pay RPM for heavy footing."},
+	"crimson_impact": {"category":"IMPACT AURA","copy":"Impact +8%."},
+	"azure_stability": {"category":"STABILITY AURA","copy":"Less wobble and displacement."},
+	"emerald_endurance": {"category":"EFFICIENCY AURA","copy":"Running drain -6%. No regeneration."},
+	"true_bearing": {"category":"WOBBLE CONTROL","copy":"Wobble recovers faster. No RPM restored."},
+	"last_stand": {"category":"LOW-SPIN DEFENCE","copy":"Low RPM: resist incoming wobble."},
+	"prismatic_current": {"category":"CHANGING AURA","copy":"Every 8s: one visible stat emphasis."}
 }
 const CONDITIONS: Dictionary = {
 	"impact_wake":"Heavy hit / brief cooldown",
@@ -77,7 +86,13 @@ const CONDITIONS: Dictionary = {
 	"crosscut":"Moving glancing contact / lateral steering / RPM cost and recoil",
 	"gyro_lock":"Smooth moving steering off Brake / idle, sharp turns or Burst break lock",
 	"impact_sink":"Stored recoil / fresh Brake below high speed / finite storage and vent cooldown",
-	"anchor_exchange":"Held Brake below 78 speed / ongoing RPM cost / release to move"
+	"anchor_exchange":"Held Brake below 78 speed / ongoing RPM cost / release to move",
+	"crimson_impact": "Always active while owned.",
+	"azure_stability": "Always active while owned; no damage immunity.",
+	"emerald_endurance": "Always active; running costs only; existing minimum passive drain.",
+	"true_bearing": "Passive wobble recovery; existing low-spin floor remains.",
+	"last_stand": "Reserve below 35%; no recovery or damage immunity.",
+	"prismatic_current": "Run-seeded state; one bonus at a time; changes every 8 seconds; no immediate repeat."
 }
 const DEFINITIONS: Dictionary = {
 	"impact_wake": {"id":"impact_wake", "name":"Impact Wake", "description":"Land a heavy hit to shove nearby rivals with a pressure ring. Small taps do not trigger it; each ring has a short cooldown.", "short_label":"WAKE", "tags":["impact"], "icon":"", "active":true},
@@ -100,7 +115,13 @@ const DEFINITIONS: Dictionary = {
 	"predator_line": {"id":"predator_line", "name":"Predator Line", "description":"Keep landing meaningful hits on the same full-size rival to strengthen pursuit and follow-up hits. Switching targets or waiting loses the pressure.", "short_label":"HUNT", "tags":["impact", "pressure"], "icon":"", "active":true},
 	"gyro_lock": {"id":"gyro_lock", "name":"Gyro Lock", "description":"Steer smoothly while moving off Brake to build a displacement-resistant lock. Watch it steady your line; idle, sharp correction and Burst break it.", "short_label":"GYRO", "tags":["defence", "control"], "icon":"", "active":true},
 	"impact_sink": {"id":"impact_sink", "name":"Impact Sink", "description":"Take real incoming recoil to fill a finite STORED FORCE reservoir. Tap Brake at low speed to spend it on RPM and wobble recovery. Unused force leaks; holding Brake cannot vent again.", "short_label":"SINK", "tags":["defence", "recovery", "brake"], "icon":"", "active":true},
-	"anchor_exchange": {"id":"anchor_exchange", "name":"Anchor Exchange", "description":"Hold Brake near rest to pay RPM for heavy portable footing. Braces resist shoves but slow you. Release Brake and steer to reposition; a developed paid brace can ease Dead Centre Stress.", "short_label":"BRACE", "tags":["defence", "brake"], "icon":"", "active":true}
+	"anchor_exchange": {"id":"anchor_exchange", "name":"Anchor Exchange", "description":"Hold Brake near rest to pay RPM for heavy portable footing. Braces resist shoves but slow you. Release Brake and steer to reposition; a developed paid brace can ease Dead Centre Stress.", "short_label":"BRACE", "tags":["defence", "brake"], "icon":"", "active":true},
+	"crimson_impact": {"id":"crimson_impact","name":"Crimson Impact","description":"Outgoing impacts gain 8% strength. A red rim marks your offensive emphasis.","short_label":"CRIMSON","tags":["offence","aura"],"icon":"","active":true},
+	"azure_stability": {"id":"azure_stability","name":"Azure Stability","description":"Incoming wobble is reduced by 10%. Blue footing improves displacement resistance; the actual shove depends on both tops and their active braces.","short_label":"AZURE","tags":["defence","aura"],"icon":"","active":true},
+	"emerald_endurance": {"id":"emerald_endurance","name":"Emerald Endurance","description":"Reduce continuous passive, movement, Brake and wobble drain by 6%, subject to the existing passive floor. This conserves spin; it never restores RPM.","short_label":"EMERALD","tags":["efficiency","aura"],"icon":"","active":true},
+	"true_bearing": {"id":"true_bearing","name":"True Bearing","description":"Recover wobble 16% faster through the existing recovery system. Low-spin instability still has its normal floor. No RPM is restored.","short_label":"BEARING","tags":["defence","control"],"icon":"","active":true},
+	"last_stand": {"id":"last_stand","name":"Last Stand","description":"Below 35% reserve, incoming wobble is reduced by 14%. An amber split brace brightens while active. It never refills reserve.","short_label":"STAND","tags":["defence","low_spin"],"icon":"","active":true},
+	"prismatic_current": {"id":"prismatic_current","name":"Prismatic Current","description":"Every 8 seconds, shift to IMPACT +6%, SPEED +5%, incoming STABILITY wobble -9%, or EFFICIENCY running drain -5%. The aura colour and state label show the active bonus.","short_label":"PRISM","tags":["aura","randomness"],"icon":"","active":true}
 }
 
 const RANK_II: Dictionary = {
@@ -119,7 +140,13 @@ const RANK_II: Dictionary = {
 	"crosscut": {"name":"Crosscut II", "description":"Steer across a glance to cut harder and more often than Rank I. Each cut spends more RPM and recoils on your top.", "card_copy":"Stronger cuts. Shorter cooldown. More RPM cost.", "category":"SHEAR", "short_label":"CUT II", "art_id":"crosscut_ii"},
 	"gyro_lock": {"name":"Gyro Lock II", "description":"Smooth moving steering builds a heavier displacement lock sooner. Idle, Brake, sharp turns and Burst still break it.", "card_copy":"Build a heavier moving lock sooner.", "category":"CONTROLLED DEFENCE", "short_label":"GYRO II", "art_id":"gyro_lock_ii"},
 	"impact_sink": {"name":"Impact Sink II", "description":"Catch more incoming recoil and hold a larger force reservoir. Tap Brake slowly to vent; unused force still leaks and recovery stays bounded.", "card_copy":"Catch more recoil. Hold more stored force.", "category":"DEEP SHOCK STORAGE", "short_label":"SINK II", "art_id":"impact_sink_ii"},
-	"anchor_exchange": {"name":"Anchor Exchange II", "description":"Held Brake builds heavier footing sooner than Rank I. The brace still pays RPM and slows travel; release and steer to reposition.", "card_copy":"Build heavier portable footing sooner.", "category":"HEAVY ACTIVE BRACE", "short_label":"BRACE II", "art_id":"anchor_exchange_ii"}
+	"anchor_exchange": {"name":"Anchor Exchange II", "description":"Held Brake builds heavier footing sooner than Rank I. The brace still pays RPM and slows travel; release and steer to reposition.", "card_copy":"Build heavier portable footing sooner.", "category":"HEAVY ACTIVE BRACE", "short_label":"BRACE II", "art_id":"anchor_exchange_ii"},
+	"crimson_impact": {"name":"Crimson Impact II","description":"Outgoing impacts gain 14% strength. The red rim stays close to your top.","card_copy":"Impact +14%.","category":"IMPACT AURA","short_label":"CRIMSON II","art_id":"crimson_impact_ii"},
+	"azure_stability": {"name":"Azure Stability II","description":"Incoming wobble is reduced by 18%, with stronger blue footing. Actual shove resistance depends on both tops; heavy hits still move and damage you.","card_copy":"Stronger wobble and displacement resistance.","category":"STABILITY AURA","short_label":"AZURE II","art_id":"azure_stability_ii"},
+	"emerald_endurance": {"name":"Emerald Endurance II","description":"Reduce continuous running drain by 10%, subject to the existing passive floor. Collisions, Burst and power costs are unchanged. No RPM is restored.","card_copy":"Running drain -10%. No regeneration.","category":"EFFICIENCY AURA","short_label":"EMERALD II","art_id":"emerald_endurance_ii"},
+	"true_bearing": {"name":"True Bearing II","description":"Recover wobble 28% faster. This supports bracing and repositioning without restoring RPM or removing the low-spin floor.","card_copy":"Stronger wobble recovery. No RPM restored.","category":"WOBBLE CONTROL","short_label":"BEARING II","art_id":"true_bearing_ii"},
+	"last_stand": {"name":"Last Stand II","description":"Below 35% reserve, incoming wobble is reduced by 24%. Low spin still threatens spin-out; this does not restore RPM.","card_copy":"Low RPM: stronger wobble resistance.","category":"LOW-SPIN DEFENCE","short_label":"STAND II","art_id":"last_stand_ii"},
+	"prismatic_current": {"name":"Prismatic Current II","description":"Every 8 seconds, shift to IMPACT +10%, SPEED +8%, incoming STABILITY wobble -15%, or EFFICIENCY running drain -8%. One state at a time, without immediate repeats or RPM regeneration.","card_copy":"Stronger changing emphasis; same 8s rhythm.","category":"CHANGING AURA","short_label":"PRISM II","art_id":"prismatic_current_ii"}
 }
 const MUTATIONS: Dictionary = {
 	"runaway": {"id":"runaway", "power_id":"redline", "name":"Runaway", "description":"Burst, move and keep landing hard hits to extend Redline and build more heat. Higher impact power brings growing control risk; misses end the sustaining chain.", "card_copy":"Hard moving hits sustain heat. Keep attacking.", "category":"SUSTAINED OVERLOAD", "short_label":"RUNAWAY", "condition":"Heavy contacts during Redline / misses end the chain"},
@@ -135,7 +162,7 @@ const MUTATIONS: Dictionary = {
 	"shock_bleed": {"id":"shock_bleed", "power_id":"impact_sink", "name":"Shock Bleed", "description":"Take recoil, then tap Brake slowly to spend stored force on stronger RPM and wobble recovery. Only accepted stored force pays, and recovery remains capped.", "card_copy":"Store recoil. Tap Brake for stronger recovery.", "category":"STORED RECOVERY", "short_label":"BLEED", "condition":"Stored incoming force / fresh Brake / shared recovery budget"},
 	"return_spring": {"id":"return_spring", "power_id":"impact_sink", "name":"Return Spring", "description":"Take recoil, then tap Brake slowly to spend stored force on a physical pulse against nearby rivals. This replaces recovery and spends a little RPM.", "card_copy":"Store recoil. Tap Brake for a close counter pulse.", "category":"ACTIVE COUNTER PULSE", "short_label":"SPRING", "condition":"Stored force / fresh Brake / six nearby targets maximum"},
 	"deep_footing": {"id":"deep_footing", "power_id":"anchor_exchange", "name":"Deep Footing", "description":"Almost stop and hold Brake to build extreme portable footing. It costs more RPM than normal Anchor Exchange and sharply limits movement.", "card_copy":"Almost stop. Hold Brake. Pay for extreme footing.", "category":"PORTABLE FORTRESS", "short_label":"FOOTING", "condition":"Brake below 34 speed / extra spin cost / limited movement"},
-	"slip_anchor": {"id":"slip_anchor", "power_id":"anchor_exchange", "name":"Slip Anchor", "description":"Build a brace, then release Brake to carry some footing into your repositioning. The carry fades in 0.35 seconds; Burst clears it.", "card_copy":"Brace, release and move. Carry brief footing.", "category":"BRACED REPOSITION", "short_label":"SLIP", "condition":"Release a developed brace / 0.35 s carry / Burst clears it"}
+	"slip_anchor": {"id":"slip_anchor", "power_id":"anchor_exchange", "name":"Slip Anchor", "description":"Build a brace, then release Brake to carry some footing into your repositioning. The carry fades in 0.35 seconds; Burst clears it.", "card_copy":"Brace, release and move. Carry brief footing.", "category":"BRACED REPOSITION", "short_label":"SLIP", "condition":"Release a developed brace / 0.35 s carry / Burst clears it"},
 }
 
 static func get_power(power_id: String) -> Dictionary:
@@ -213,6 +240,10 @@ static func get_offer(power_id: String, rank: int = 0, mutation: String = "") ->
 
 static func get_mutation(branch_id: String) -> Dictionary:
 	var branch: Dictionary = MUTATIONS.get(branch_id, {}).duplicate(true)
+	if branch.is_empty() and Retired.MUTATIONS.has(branch_id):
+		branch = Retired.MUTATIONS[branch_id].duplicate(true)
+		branch.merge({"active":false,"archived":true,"rank":3,"mutation":branch_id,"rank_label":"RETIRED / HISTORICAL","replacement_rank":2},true)
+		return branch
 	if branch.is_empty(): return branch
 	branch["active"] = true
 	branch["rank"] = 3
@@ -227,6 +258,9 @@ static func get_mutation(branch_id: String) -> Dictionary:
 
 ## Current ownership metadata is distinct from the next investment offer.
 static func get_owned_power(power_id: String, rank: int = 1, mutation: String = "") -> Dictionary:
+	if Retired.MUTATIONS.get(mutation, {}).get("power_id", "") == power_id:
+		rank = 2
+		mutation = ""
 	if not (power_id in ACTIVE_IDS or power_id in LEGACY_OWNED_IDS) or rank < 1 or rank > max_rank(power_id): return {}
 	if rank == 3:
 		return get_mutation(mutation) if mutation in mutation_choices(power_id) else {}
@@ -239,6 +273,10 @@ static func get_owned_power(power_id: String, rank: int = 1, mutation: String = 
 	return power
 
 static func _apply_art(power: Dictionary, art_id: String) -> void:
+	var base_art: Dictionary = BaseArt.art(art_id)
+	if not base_art.is_empty():
+		power.merge(base_art, true)
+		return
 	var defence_art: Dictionary = DefenceArt.art(art_id)
 	if not defence_art.is_empty():
 		power.merge(defence_art, true)
@@ -266,3 +304,17 @@ static func display_names(power_ids: Array) -> Array[String]:
 	for power_id: String in power_ids:
 		if DEFINITIONS.has(power_id): names.append(str(DEFINITIONS[power_id].name))
 	return names
+
+static func normalize_retired_ownership(fighter: Dictionary) -> Array[Dictionary]:
+	var changes: Array[Dictionary] = []
+	var ranks: Dictionary = fighter.get("power_ranks", {})
+	var mutations: Dictionary = fighter.get("power_mutations", {})
+	for family: String in mutations.keys():
+		var old: String = str(mutations[family])
+		if Retired.MUTATIONS.get(old, {}).get("power_id", "") != family: continue
+		ranks[family] = 2
+		mutations.erase(family)
+		changes.append({"family":family,"retired":old,"rank":2,"policy":"parent_rank_ii"})
+	fighter["power_ranks"] = ranks
+	fighter["power_mutations"] = mutations
+	return changes

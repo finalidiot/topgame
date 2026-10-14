@@ -66,7 +66,7 @@ func verify_card(card: Button, power: Dictionary, context: String) -> Dictionary
 	check(frame.border_color == style.border_color and frame.border_width_left == style.border_width and not frame.draw_center, context + " unfocused semantic frame preserves the authored body")
 	card.grab_focus(); ui._animate_cards()
 	frame = (card.get_node("SemanticCardFrame") as Panel).get_theme_stylebox("panel")
-	check(frame.border_color == style.accent_color and frame.border_width_left == style.focus_width, context + " focus keeps the same semantic accent")
+	check(frame.border_color == Styles.FOCUS and frame.border_width_left == 4 and frame.shadow_color == Styles.FOCUS_SEPARATOR, context + " focus uses a universal bright frame and dark separator while the badge retains investment colour")
 	var art: TextureRect
 	for child: Node in card.get_children():
 		if child is TextureRect: art = child; break
@@ -81,7 +81,7 @@ func verify_card(card: Button, power: Dictionary, context: String) -> Dictionary
 		"art":str(power.card_texture), "art_sha256":FileAccess.get_sha256(ProjectSettings.globalize_path(str(power.card_texture))), "body":body.text}
 
 func audit_roster() -> void:
-	check(Powers.ACTIVE_IDS.size() == 16 and Powers.MUTATIONS.size() == 14, "The audit covers the actual sixteen families and fourteen mutation choices")
+	check(Powers.ACTIVE_IDS.size() == 22 and Powers.MUTATIONS.size() == 14, "The corrected audit covers twenty-two families and fourteen retained mutation choices")
 	for id: String in Powers.ACTIVE_IDS:
 		for rank: int in [0,1]:
 			var power: Dictionary = Powers.get_offer(id,rank)
@@ -103,7 +103,7 @@ func audit_roster() -> void:
 			for candidate: Button in cards():
 				if candidate.get_meta("power_id") == branch: card = candidate
 			roster.append(verify_card(card,power,branch))
-	check(roster.size() == 46,"Every active base, Rank II and mutation is actually rendered and audited")
+	check(roster.size() == Powers.ACTIVE_IDS.size()*2+Powers.MUTATIONS.size(),"Every active base, Rank II and retained mutation is actually rendered and audited")
 	for row: Dictionary in roster:
 		check(row.body_colour == "e3e8dc",row.name + " body stays neutral")
 		check(row.accent_colour == {1:"bdcbd3",2:"64d8ef",3:"d49bf1"}[row.rank],row.name + " uses the same tier accent as unrelated families")
@@ -148,7 +148,7 @@ func input_hierarchy() -> void:
 	check(row[0].get_meta("ability_badge") == "POWER" and row[1].get_meta("ability_badge") == "RANK II" and row[2].get_meta("ability_badge") == "MUTATION", "One mixed draft exposes all three investment meanings")
 	row[0].grab_focus(); await settle(); await key(KEY_RIGHT)
 	check(row[1].has_focus(), "Real keyboard focus reaches the Rank II card")
-	await motion(row[2]); check(ui._ability_inspector.power_id == "afterimage","Hover reads another card without replacing the focused tier")
+	await motion(row[2]); check(ui._ability_inspector.power_id == "afterimage" and row[2].has_focus(),"Hover reads and focuses the same visible confirmation target")
 	check(row[1].get_node("AbilityTierBadge").text == "RANK II" and row[2].get_node("AbilityTierBadge").text == "MUTATION","Focused and hovered cards retain explicit badges")
 	await click(row[0]);check(not actions.is_empty() and actions.back().name == "choose_power" and actions.back().value.power_id == "redline","Actual mouse selection emits the original power intent and payload")
 	var previous: String = Bindings.layout
@@ -193,7 +193,7 @@ func reduced_flashing_hierarchy() -> void:
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--report="): report=arg.trim_prefix("--report=")
-	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/")):
+	if not report.is_empty() and (not report.is_absolute_path() or FileAccess.file_exists(report) or not (report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.1/manifests/") or report.replace("\\","/").to_lower().contains("gyrobrothers-qa/003a.2/manifests/"))):
 		push_error("Fresh external QA report required");quit(2);return
 	root.size=Vector2i(800,480);root.content_scale_size=Vector2i(800,480)
 	Input.use_accumulated_input=false
@@ -201,6 +201,6 @@ func run() -> void:
 	await settle();await audit_roster();await inspector_hierarchy();await input_hierarchy();await reduced_flashing_hierarchy()
 	if not report.is_empty():
 		var file=FileAccess.open(report,FileAccess.WRITE)
-		file.store_string(JSON.stringify({"checks":checks,"failures":failures,"card_count":roster.size(),"roster":roster,"inputs":actions,"scope":"Actual production menu nodes, font/layout and mapped events; no save opened, no physical controller/phone acceptance. Authored art remains unmodified and untinted. Roster contains16base+16RankII+14mutations; future power rarity is not implemented."},"\t"));file.close()
+		file.store_string(JSON.stringify({"checks":checks,"failures":failures,"card_count":roster.size(),"roster":roster,"inputs":actions,"scope":"Actual production menu nodes, font/layout and mapped events; no save opened, no physical controller/phone acceptance. Authored art remains untinted. Corrected roster contains22base+22RankII+14retainedmutations; focus uses a universal frame independent of semantic tier."},"\t"));file.close()
 	print("ABILITY_CARD_HIERARCHY_003A1_%s checks=%d failures=%d cards=%d" % ["PASS" if failures.is_empty() else "FAIL",checks,failures.size(),roster.size()])
 	ui.free();quit(0 if failures.is_empty() else 1)

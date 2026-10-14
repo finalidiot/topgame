@@ -12,9 +12,9 @@ record the state at their own checkpoint.
 | Content | Location |
 | --- | --- |
 | GitHub repository | https://github.com/finalidiot/topgame |
-| Working game repository | `C:\GPT GAME BUILDING\GyroBrothers` |
-| Active Git metadata and object store | `C:\GPT GAME BUILDING\GyroBrothers\.git` |
-| Active LFS objects | `C:\GPT GAME BUILDING\GyroBrothers\.git\lfs\objects` |
+| Working game repository | `C:\GPT GAME BUILDING\RINGBREAKER - Gyro Shock` |
+| Active Git metadata and object store | `C:\GPT GAME BUILDING\RINGBREAKER - Gyro Shock\.git` |
+| Active LFS objects | `C:\GPT GAME BUILDING\RINGBREAKER - Gyro Shock\.git\lfs\objects` |
 | Registered historical checkouts with preserved local work | `C:\GPT GAME BUILDING\GyroBrothers-Worktrees` |
 | Large QA and human review | `C:\GPT GAME BUILDING\GyroBrothers-QA` |
 | Newest validated playable Windows executable | `builds/latest/SpinningMetal.exe` |
@@ -199,7 +199,7 @@ and folders are outside this task's management boundary.
 
 The canonical project is now a normal self-contained Git working repository.
 Its active metadata, refs, objects, reflogs and LFS store are inside
-`C:\GPT GAME BUILDING\GyroBrothers\.git`. Copying/backing up the whole canonical
+`C:\GPT GAME BUILDING\RINGBREAKER - Gyro Shock\.git`. Copying/backing up the whole canonical
 folder preserves the repository without depending on QA. The four registered
 historical checkouts live under `C:\GPT GAME BUILDING\GyroBrothers-Worktrees`.
 That separate root contains preserved unique local work and is essential source
@@ -219,3 +219,14 @@ checkout points there. Its old paths and reflogs are recovery evidence only;
 do not repair that snapshot into the active topology. All evidence about the
 conversion is in `002C.5.1/manifests/git-storage-hotfix/`. The historical 002B
 copied Git pointer remains inactive documentation, never a registered worktree.
+
+## Approved project-folder rename, 2026-10-11
+
+The human explicitly authorized renaming the existing checkout in place to
+`C:\GPT GAME BUILDING\RINGBREAKER - Gyro Shock` during the 003A.2 course
+correction. Its HEAD remained `9bb45e4b8c2d92a37edb45514e14f6e16c536124`.
+`git worktree repair` repaired the four historical checkout pointers without
+changing their files, branches or commits. QA remains at `GyroBrothers-QA` and
+historical checkouts remain at `GyroBrothers-Worktrees`. Earlier absolute paths
+in immutable evidence describe their original source boundary. Package,
+executable, application and save identifiers remain unchanged.

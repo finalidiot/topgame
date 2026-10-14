@@ -202,5 +202,96 @@ class AndroidPromotionGuards(unittest.TestCase):
         self.assertFalse((self.root / "builds/.promotion.lock").exists())
 
 
+    def prepare_phone_review(self):
+        self.manifest["validation"] = "awaiting_android_smoke"
+        self.manifest.pop("android_smoke", None)
+        android.write_delivery(self.candidate, self.manifest)
+        windows.write_json(self.checkpoint / "build-manifest.json", {"validation": "passed", "source": {"git_sha": "a" * 40}})
+
+    def test_phone_review_checkpoint_only_preserves_latest(self):
+        self.prepare_phone_review()
+        before = {p.name: p.read_bytes() for p in self.latest.iterdir() if p.is_file()}
+        # Only the explicitly synthetic Windows fixture is accepted by this
+        # mock; production must execute its full packaged validation verifier.
+        with patch.object(android, "current_source"), patch.object(windows,"verify_candidate",return_value={}) as verified_windows:
+            result = android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        verified_windows.assert_called_once_with(self.checkpoint)
+        self.assertIsNone(result["latest"])
+        self.assertEqual(result["validation"], "awaiting_android_smoke")
+        self.assertFalse(result["physical_android_acceptance"])
+        self.assertEqual({p.name: p.read_bytes() for p in self.latest.iterdir() if p.is_file()}, before)
+        self.assertEqual((self.checkpoint / windows.EXE).read_bytes(), b"preserved Windows fixture")
+        self.assertTrue((self.checkpoint / "unknown-note.txt").is_file())
+        self.assertIn("AWAITING PHYSICAL ANDROID REVIEW", (self.checkpoint / android.README).read_text())
+        with self.assertRaises(ValueError): android.verify_candidate(self.checkpoint)
+        android.verify_candidate(self.checkpoint, require_smoke=False)
+        archive = Path(result["preserved_previous"])
+        for name in android.DELIVERY_FILES:
+            self.assertEqual((archive / "003A" / name).read_bytes(), ("old Android fixture " + name).encode())
+
+    def test_phone_review_rejects_windows_metadata_without_payload_proof(self):
+        self.prepare_phone_review()
+        with patch.object(android, "current_source"):
+            with self.assertRaises(ValueError): android.promote(self.candidate,self.root,self.qa,"003A",phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_requires_explicit_matching_checkpoint(self):
+        self.prepare_phone_review()
+        with patch.object(android, "current_source"):
+            for checkpoint in (None, "003A.2"):
+                with self.assertRaises(ValueError): android.promote(self.candidate, self.root, self.qa, checkpoint, phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_requires_original_qa_root(self):
+        self.prepare_phone_review()
+        with patch.object(android, "current_source"):
+            with self.assertRaises(ValueError): android.promote(self.candidate, self.root, self.base / "other-qa", "003A", phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_requires_validated_windows(self):
+        self.prepare_phone_review()
+        windows.write_json(self.checkpoint / "build-manifest.json", {"validation":"failed", "source":{"git_sha":"a" * 40}})
+        with patch.object(android, "current_source"):
+            with self.assertRaises(ValueError): android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_rejects_stale_source(self):
+        self.prepare_phone_review()
+        with patch.object(android, "current_source", side_effect=ValueError("stale source")):
+            with self.assertRaises(ValueError): android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_rejects_tampered_package(self):
+        self.prepare_phone_review()
+        (self.candidate / android.APK).write_bytes(b"tampered candidate")
+        with patch.object(android, "current_source"):
+            with self.assertRaises(ValueError): android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        self.assert_previous()
+
+    def test_phone_review_shared_lock_is_preserved(self):
+        self.prepare_phone_review()
+        lock = self.root / "builds/.promotion.lock"
+        lock.write_text("another guarded delivery")
+        with patch.object(android, "current_source"):
+            with self.assertRaises(FileExistsError): android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        self.assertEqual(lock.read_text(), "another guarded delivery")
+        self.assert_previous()
+
+    def test_phone_review_mid_transfer_rolls_back(self):
+        self.prepare_phone_review()
+        original = Path.rename
+        injected = False
+        def fail_once(path, target):
+            nonlocal injected
+            if not injected and path.name == android.README and path.parent.name.startswith(".android-promotion"):
+                injected = True
+                raise OSError("synthetic phone-review transfer failure")
+            return original(path, target)
+        with patch.object(android, "current_source"), patch.object(windows,"verify_candidate",return_value={}), patch.object(Path, "rename", fail_once):
+            with self.assertRaises(OSError): android.promote(self.candidate, self.root, self.qa, "003A", phone_review=True)
+        self.assert_previous()
+        self.assertFalse((self.root / "builds/.promotion.lock").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

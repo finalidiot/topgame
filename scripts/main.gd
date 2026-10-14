@@ -17,12 +17,15 @@ const RunRewards = preload("res://scripts/run_rewards.gd")
 const TouchControls = preload("res://scripts/touch_controls.gd")
 const AndroidQA = preload("res://scripts/android_qa.gd")
 const ControllerBindings = preload("res://scripts/controller_bindings.gd")
+const ControllerRumble = preload("res://scripts/controller_rumble.gd")
 const TopStatusBars = preload("res://scripts/top_status_bars.gd")
 const CombatLayout = preload("res://scripts/combat_hud_layout.gd")
+const FrontendLayout = preload("res://scripts/frontend_layout.gd")
 const IndustrialSurround = preload("res://scripts/industrial_surround.gd")
 
 var build: Dictionary = {"blade":"balance", "ratchet":"mid", "bit":"ball"}
-var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false}
+var settings: Dictionary = {"volume":0.65, "music_volume":0.55, "sfx_volume":1.0, "muted":false, "screen_shake":true, "fullscreen":false, "reduced_flashing":false, "controller_layout":"auto", "top_status_bars":true,"impact_numbers":false,"controller_rumble":true,"rumble_intensity":0.55}
+var rumble = ControllerRumble.new()
 var top_status_bars: Node2D
 var touch_controls: Node2D
 var _application_suspended: bool = false
@@ -33,7 +36,12 @@ var _android_qa_clock: float = 0.0
 var _android_qa_screen: String = ""
 var mode: String = "duel"
 var round_index: int = 0
-var screen: String = "title"
+var screen: String = "title":
+	set(value):
+		if screen != value and value != "battle" and is_instance_valid(rumble):
+			rumble.set_gameplay_active(false)
+			rumble.clear("menu")
+		screen = value
 var last_result: Dictionary = {}
 var battle: Node2D
 var combat_viewport: SubViewport
@@ -42,6 +50,10 @@ var presentation_surround: Node2D
 var _presentation_client_size: Vector2i = Vector2i.ZERO
 var _presentation_canvas_size: Vector2 = Vector2(800,480)
 var _presentation_applied_size: Vector2 = Vector2.ZERO
+var _presentation_applied_safe: Rect2 = Rect2()
+var _presentation_applied_mobile: bool = false
+var _mobile_canvas_override: Vector2 = Vector2.ZERO
+var _mobile_safe_override: Rect2 = Rect2()
 var menus: Control
 var sounds: Node
 var music: Node
@@ -97,7 +109,9 @@ var packet_rng_override: RandomNumberGenerator = null
 
 func _process(delta: float) -> void:
 	_refresh_window_presentation()
-	if is_instance_valid(combat_frame) and is_instance_valid(battle): combat_frame.visible = battle.visible
+	if is_instance_valid(battle):
+		rumble.set_gameplay_active(_rumble_combat_active())
+		if _rumble_combat_active(): rumble.observe_grind(battle.player_grind_snapshot())
 	if not _android_qa.is_empty():
 		_android_qa_clock -= delta
 		if _android_qa_clock <= 0.0:
@@ -171,10 +185,9 @@ func _ready() -> void:
 		if not _reset_on_boot_dialog: _collection_reset_failed = not bool(collection.reset_collection(true).ok)
 	if qa_catalogue_requested and qa_catalogue_error.is_empty(): _prepare_qa_catalogue()
 	if collection.can_launch(): build = collection.equipped_build()
-	if not OS.has_feature("mobile") and not get_viewport() is SubViewport:
-		presentation_surround = IndustrialSurround.new()
-		presentation_surround.name = "AuthoredIndustrialSurround"
-		add_child(presentation_surround)
+	presentation_surround = IndustrialSurround.new()
+	presentation_surround.name = "AuthoredIndustrialSurround"
+	add_child(presentation_surround)
 	combat_viewport = SubViewport.new()
 	combat_viewport.name = "CanonicalCombatViewport"
 	combat_viewport.size = Vector2i(640,360)
@@ -198,6 +211,9 @@ func _ready() -> void:
 	battle.round_finished.connect(_round_finished)
 	battle.hud_updated.connect(_hud_updated)
 	battle.event_sfx.connect(_battle_sound)
+	battle.full_top_impact_accepted.connect(_rumble_impact)
+	battle.controller_feedback.connect(_rumble_event)
+	battle.feedback_lifecycle.connect(_rumble_lifecycle)
 	battle.progression_events.connect(_progression_events)
 	battle.threat_cleared.connect(_threat_cleared)
 	battle.threat_started.connect(_threat_started)
@@ -213,12 +229,14 @@ func _ready() -> void:
 	layer.layer = 10
 	add_child(layer)
 	menus = MenuScript.new()
+	menus.mobile_hud = _uses_mobile_presentation()
 	layer.add_child(menus)
 	menus.action.connect(_action)
 	menus.focus_sound.connect(_battle_sound)
 	menus.input_engaged.connect(_engage_application_input)
 	Input.joy_connection_changed.connect(_controller_connection_changed)
 	touch_controls = TouchControls.new()
+	touch_controls.show_controls = _uses_mobile_presentation()
 	layer.add_child(touch_controls)
 	battle.input_provider = touch_controls
 	sounds = SoundScript.new()
@@ -227,6 +245,8 @@ func _ready() -> void:
 	music = MusicScript.new()
 	music.configure_playback(not qa_assets_report_requested and not smoke_mode and DisplayServer.get_name() != "headless")
 	add_child(music)
+	# Added last so native ownership is observed before a menu consumes input.
+	add_child(rumble)
 	_refresh_window_presentation()
 	_apply_settings()
 	if smoke_mode or qa_assets_report_requested or qa_catalogue_requested or not practice_request.is_empty(): _title()
@@ -245,11 +265,26 @@ func _ready() -> void:
 	elif not practice_request.is_empty(): call_deferred("_start_build_practice", practice_request)
 	if not _android_qa.is_empty(): call_deferred("_inspect_android_assets")
 
+## Shell supplies the full logical canvas and cutout-safe bounds before Ready,
+## then updates them together after resize. Geometry never changes world pixels.
+func set_mobile_presentation(canvas_size: Vector2, safe_rect: Rect2) -> void:
+	if canvas_size.x <= 0.0 or canvas_size.y <= 0.0: return
+	_mobile_canvas_override = canvas_size
+	_mobile_safe_override = safe_rect
+	_refresh_window_presentation()
+
+func _uses_mobile_presentation() -> bool:
+	return OS.has_feature("mobile") or get_viewport() is SubViewport or _mobile_canvas_override != Vector2.ZERO
+
 func _refresh_window_presentation() -> void:
 	if not is_instance_valid(combat_frame) or not is_instance_valid(menus): return
-	# The Android shell owns the outer window transform. A hosted native canvas
-	# must remain800x480 even when that same production shell is tested on PC.
-	var mobile: bool = OS.has_feature("mobile") or get_viewport() is SubViewport
+	# The accepted arena/casing belongs to combat and its overlays. Front-end
+	# pages own their full-client foundation, even when a paused world is retained.
+	var presentation_class: String = FrontendLayout.presentation_class(menus.screen)
+	combat_frame.visible = battle.visible and presentation_class != "frontend"
+	if is_instance_valid(presentation_surround): presentation_surround.visible = presentation_class != "frontend"
+	var mobile: bool = _uses_mobile_presentation()
+	var safe_rect: Rect2 = Rect2()
 	if not mobile:
 		var client_size: Vector2i = get_window().size
 		if client_size != _presentation_client_size:
@@ -261,24 +296,35 @@ func _refresh_window_presentation() -> void:
 			get_window().content_scale_size = policy.canvas_size
 			_presentation_canvas_size = Vector2(policy.canvas_size)
 	else:
-		_presentation_canvas_size = Vector2(800,480)
-	if _presentation_applied_size == _presentation_canvas_size: return
+		_presentation_canvas_size = _mobile_canvas_override if _mobile_canvas_override != Vector2.ZERO else get_viewport().get_visible_rect().size
+		safe_rect = _mobile_safe_override if _mobile_canvas_override != Vector2.ZERO else Rect2(Vector2.ZERO,_presentation_canvas_size)
+	if _presentation_applied_size == _presentation_canvas_size and _presentation_applied_safe == safe_rect and _presentation_applied_mobile == mobile: return
 	_presentation_applied_size = _presentation_canvas_size
-	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile)
+	_presentation_applied_safe = safe_rect
+	_presentation_applied_mobile = mobile
+	var presentation: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile,safe_rect)
 	combat_frame.position = presentation.arena_rect.position
 	combat_frame.size = presentation.arena_rect.size
 	if is_instance_valid(presentation_surround): presentation_surround.set_layout(presentation)
-	menus.set_presentation_canvas(_presentation_canvas_size)
+	menus.mobile_hud = mobile
+	menus.set_presentation_canvas(_presentation_canvas_size,presentation.get("safe_rect",safe_rect))
+	if is_instance_valid(touch_controls) and touch_controls.has_method("configure_layout"):
+		touch_controls.configure_layout(presentation)
 	# No window mode, monitor, position or restore-size write occurs here. Native
 	# Maximise/Restore belongs to Windows; only the client presentation reflows.
 
 func window_presentation_snapshot() -> Dictionary:
 	var hosted_native: bool = get_viewport() is SubViewport
-	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,OS.has_feature("mobile") or hosted_native)
+	var mobile: bool = _uses_mobile_presentation()
+	var layout: Dictionary = CombatLayout.responsive(_presentation_canvas_size,mobile,_presentation_applied_safe)
 	layout["client_size"] = get_window().size
 	layout["window_mode"] = DisplayServer.window_get_mode()
 	layout["borderless"] = DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS)
-	layout["ui_policy"] = {"canvas_size":Vector2i(800,480),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":true} if hosted_native or OS.has_feature("mobile") else CombatLayout.desktop_canvas(get_window().size)
+	layout["presentation_class"] = FrontendLayout.presentation_class(menus.screen)
+	layout["menu_screen"] = menus.screen
+	layout["combat_frame_visible"] = combat_frame.visible
+	layout["industrial_surround_visible"] = presentation_surround.visible if is_instance_valid(presentation_surround) else false
+	layout["ui_policy"] = {"canvas_size":Vector2i(_presentation_canvas_size),"ui_scale":1,"changes_window_mode":false,"hosted_native_canvas":hosted_native,"full_canvas_mobile":true} if mobile else CombatLayout.desktop_canvas(get_window().size)
 	return layout
 
 func _inspect_android_assets() -> void:
@@ -394,11 +440,11 @@ func _load_preferences() -> void:
 	settings = _validated_settings(settings)
 
 func _validated_settings(values: Dictionary) -> Dictionary:
-	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false}
-	for key: String in ["volume", "music_volume", "sfx_volume"]:
+	var result: Dictionary = {"volume":0.65,"music_volume":0.55,"sfx_volume":1.0,"muted":false,"screen_shake":true,"fullscreen":false,"reduced_flashing":false,"controller_layout":"auto","top_status_bars":true,"impact_numbers":false,"controller_rumble":true,"rumble_intensity":0.55}
+	for key: String in ["volume", "music_volume", "sfx_volume", "rumble_intensity"]:
 		var value: Variant = values.get(key, result[key])
 		if (value is int or value is float) and is_finite(float(value)): result[key] = clampf(float(value), 0.0, 1.0)
-	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers"]:
+	for key: String in ["muted", "screen_shake", "reduced_flashing", "top_status_bars", "impact_numbers", "controller_rumble"]:
 		if values.get(key) is bool: result[key] = values[key]
 	if str(values.get("controller_layout", "auto")) in ["auto", "nintendo", "xbox", "playstation"]: result.controller_layout = str(values.get("controller_layout", "auto"))
 	return result
@@ -412,6 +458,7 @@ func _save_preferences() -> void:
 
 func _apply_settings() -> void:
 	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
+	rumble.configure(settings)
 	sounds.apply_settings(settings)
 	if is_instance_valid(music): music.apply_settings(settings)
 	battle.screen_shake_enabled = bool(settings.screen_shake)
@@ -427,6 +474,29 @@ func _apply_settings() -> void:
 
 func _controller_connection_changed(_device: int, _connected: bool) -> void:
 	ControllerBindings.configure(str(settings.get("controller_layout", "auto")))
+	rumble.connection_changed(_device, _connected)
+
+func _rumble_combat_active() -> bool:
+	return screen == "battle" and not _application_suspended and is_instance_valid(battle) and not battle.paused and battle.battle_status == "battle"
+
+func _rumble_impact(event: Dictionary) -> void:
+	if not _rumble_combat_active(): return
+	if int(event.get("first_entity_id",0)) != battle.player_entity_id and int(event.get("second_entity_id",0)) != battle.player_entity_id: return
+	rumble.set_gameplay_active(true)
+	rumble.accept_impact(event)
+
+func _rumble_event(event: Dictionary) -> void:
+	if screen != "battle" or _application_suspended or battle.paused: return
+	var finishing: bool = str(event.get("kind","")) == "takedown" and battle.battle_status == "finished"
+	if not _rumble_combat_active() and not finishing: return
+	if not finishing: rumble.set_gameplay_active(true)
+	rumble.accept_event(event, finishing)
+
+func _rumble_lifecycle(reason: String) -> void:
+	if reason == "run_reset": rumble.reset()
+	else:
+		rumble.set_gameplay_active(false)
+		rumble.clear(reason)
 
 func _hide_battle() -> void:
 	battle.set_paused(true)
@@ -449,7 +519,7 @@ func _title() -> void:
 		_show_packet(true)
 		return
 	screen = "title"
-	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized())
+	menus.show_collection_title(collection.equipped_build(), settings, collection.is_initialized(), collection.snapshot())
 	if is_instance_valid(music):
 		music.set_context("title")
 		music.set_paused(false)
@@ -527,7 +597,7 @@ func _confirm_packet_purchase(token: Variant) -> void:
 	if screen != "packet_purchase" or not token is int or int(token) != _packet_purchase_token: return
 	if _packet_product not in ["standard", "reclaimed"] or run_context.is_active(): return
 	var source: RandomNumberGenerator = null
-	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
+	if packet_rng_override != null and (qa_task_id in ["003A", "003A.1", "003A.2"] or smoke_mode) and _is_isolated_qa_path(collection_path, "temp"):
 		source = packet_rng_override
 	var purchase: Dictionary = collection.purchase_packet_batch(_packet_product, _packet_quantity, source, _packet_request_id)
 	if not bool(purchase.ok):
@@ -740,6 +810,7 @@ func _start_battle(selected_mode: String = "duel", next: bool = false, replay: b
 	music.set_paused(false)
 
 func _clear_run() -> void:
+	rumble.reset()
 	if _pending_run_payout.is_empty():
 		if not _run_reward_token.is_empty(): collection.abort_reward_run(_run_reward_token)
 		_run_reward_token = ""
@@ -1165,13 +1236,17 @@ func _action(name: String, value: Variant = null) -> void:
 				settings = _validated_settings(settings)
 				_apply_settings()
 				_save_preferences()
+		"test_rumble":
+			if screen == "settings": menus.set_rumble_test_status(rumble.test_pulse())
 		"pause": _pause()
 		"resume": _resume()
 		"rematch":
 			if mode == "duel" and screen in ["pause", "result"]:
 				if not _practice_branch.is_empty(): _start_build_practice(_practice_branch)
 				else: _start_battle("duel", true, true)
-		"quit": get_tree().quit()
+		"quit":
+			rumble.clear("quit")
+			get_tree().quit()
 
 func _pause() -> void:
 	if screen != "battle" and not (run_context.is_active() and screen in ["reward", "mutation", "result", "acquisition", "level_up"]): return
@@ -1239,6 +1314,7 @@ func _engage_application_input() -> void:
 func _resume_application() -> void:
 	if not _application_suspended or not is_instance_valid(battle): return
 	_application_suspended = false
+	rumble.set_focus(true)
 	if _resume_after_foreground and screen == "battle":
 		battle.begin_reentry()
 		music.set_paused(false)
@@ -1250,6 +1326,7 @@ func _notification(what: int) -> void:
 		menus.visible = true
 		_escape()
 	if what in [NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_APPLICATION_FOCUS_OUT]:
+		rumble.set_focus(false)
 		if not is_instance_valid(battle): return
 		if what == NOTIFICATION_APPLICATION_PAUSED: _application_backgrounded = true
 		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
@@ -1263,6 +1340,9 @@ func _notification(what: int) -> void:
 		if what == NOTIFICATION_APPLICATION_RESUMED: _application_backgrounded = false
 		if is_instance_valid(menus): menus.input_suspended = _application_backgrounded
 		if not _application_backgrounded: _resume_application()
+
+func _exit_tree() -> void:
+	if is_instance_valid(rumble): rumble.clear("teardown")
 
 func _find_button(node: Node, text: String) -> Button:
 	if node is Control and not node.is_visible_in_tree(): return null
